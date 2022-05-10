@@ -9,6 +9,9 @@ export const login = (email: string, password: string) =>
 
 export const register = (email: string, password: string) =>
     api.post<AuthResponse>('auth/local/register', {
+        username: email,
         email,
         password,
     });
+
+export const getUserInfo = () => api.get('/users/me');
