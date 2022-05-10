@@ -12,6 +12,8 @@ class RootStore {
 
 export default RootStore;
 
+export const store = new RootStore();
+
 export function useStores() {
     return useContext(MobXProviderContext) as RootStore;
 }

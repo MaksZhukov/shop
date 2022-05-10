@@ -1,4 +1,7 @@
 export interface AuthResponse {
     jwt: string;
-    user: any;
+    user: {
+        id: string;
+        email: string;
+    };
 }
