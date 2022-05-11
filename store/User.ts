@@ -26,11 +26,20 @@ export default class UserStore implements User {
         this.id = data.id;
         this.email = data.email;
     }
+    setJWT(jwt: string){
+        this.jwt = jwt;
+    }
     async login(email: string, password: string) {
         const { data } = await login(email, password);
         this.jwt = data.jwt;
         this.id = data.user.id;
         this.email = data.user.email;
         saveJwt(data.jwt);
+    }
+    async logout(){
+        this.jwt = '';
+        this.id = '';
+        this.email = '';
+        saveJwt('');
     }
 }

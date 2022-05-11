@@ -14,20 +14,22 @@ import { getJwt } from '../services/LocalStorageService';
 let theme = createTheme({
     palette: {
         primary: lightGreen,
-        secondary: red,
-    },
+        secondary: red
+    }
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
     useEffect(() => {
         let token = getJwt();
         if (token) {
+            store.user.setJWT(token);
             store.user.getInfo();
         }
     }, []);
+
     return (
         <ThemeProvider theme={theme}>
-            <Provider {...store}>
+            <Provider store={store}>
                 <Layout>
                     <Header></Header>
                     <Content>
