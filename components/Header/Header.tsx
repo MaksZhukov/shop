@@ -1,20 +1,5 @@
-import {
-    AppBar,
-    Box,
-    Button,
-    Container,
-    Link,
-    Modal,
-    TextField,
-    Typography,
-} from '@mui/material';
-import {
-    ChangeEvent,
-    ChangeEventHandler,
-    FormEventHandler,
-    useState,
-} from 'react';
-import { useStores } from '../../store';
+import { AppBar, Button } from '@mui/material';
+import { useState } from 'react';
 import ModalAuth from '../ModalAuth';
 import styles from './Header.module.scss';
 

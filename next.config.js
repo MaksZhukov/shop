@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true,
+    reactStrictMode: false,
     publicRuntimeConfig: {
-        backendUrl: process.env.API_URL,
-    },
+        backendUrl: process.env.API_URL
+    }
 };
 
 module.exports = nextConfig;

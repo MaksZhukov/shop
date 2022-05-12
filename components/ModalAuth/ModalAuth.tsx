@@ -1,20 +1,22 @@
 import { Box, Button, Modal, TextField, Typography, Link } from '@mui/material';
 import axios from 'axios';
-import { ChangeEvent, FormEvent, FormEventHandler, useState } from 'react';
+import { observer } from 'mobx-react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { ErrorTypes } from '../../api/types';
 import { register } from '../../api/user/user';
-import { useStores } from '../../store';
+import { useStore } from '../../store';
 import styles from './ModalAuth.module.scss';
 
 interface Props {
     onChangeModalOpened: (value: boolean) => void;
 }
 
-const ModalAuth = ({ onChangeModalOpened }: Props) => {
+const ModalAuth = observer(({ onChangeModalOpened }: Props) => {
     const [email, setEmail] = useState<string>('');
     const [type, setType] = useState<'login' | 'register'>('login');
     const [password, setPassword] = useState<string>('');
-    const { user } = useStores();
+
+    const store = useStore();
 
     const handleModalClose = () => {
         onChangeModalOpened(false);
@@ -31,12 +33,12 @@ const ModalAuth = ({ onChangeModalOpened }: Props) => {
         e.preventDefault();
         if (type === 'login') {
             try {
-                await user.login(email, password);
-                onChangeModalOpened(false);
+                await store.user.login(email, password);
+                // onChangeModalOpened(false);
             } catch (err) {
                 if (axios.isAxiosError(err)) {
                     if (
-                        err.response?.data.error.name ===
+                        err.response?.data?.error.name ===
                         ErrorTypes.ValidationError
                     ) {
                     }
@@ -95,6 +97,6 @@ const ModalAuth = ({ onChangeModalOpened }: Props) => {
             </form>
         </Modal>
     );
-};
+});
 
 export default ModalAuth;
