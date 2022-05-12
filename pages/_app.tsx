@@ -24,6 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         if (token) {
             store.user.setJWT(token);
             store.user.getInfo();
+            store.cart.getShoppingCart();
         }
     }, []);
 

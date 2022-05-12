@@ -1,3 +1,9 @@
-import { api } from "..";
+import { api } from '..';
+import { ApiResponse } from '../types';
+import { ShoppingCartItem } from './types';
 
-export const getShoppingCart = () => api.get('shopping-cart');
+export const getShoppingCart = () =>
+    api.get<ApiResponse<ShoppingCartItem[]>>('shopping-cart');
+
+export const removeItemFromShoppingCart = (id: string) =>
+    api.delete<ApiResponse<ShoppingCartItem>>(`shopping-cart/${id}`);
