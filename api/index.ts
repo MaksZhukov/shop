@@ -3,9 +3,8 @@ import getConfig from 'next/config';
 import { store } from '../store';
 
 const { publicRuntimeConfig } = getConfig();
-
 export const api = axios.create({
-    baseURL: publicRuntimeConfig.backendUrl,
+    baseURL: publicRuntimeConfig.backendUrl + 'api/',
 });
 
 api.interceptors.request.use((config) => {

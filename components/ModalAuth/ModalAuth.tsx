@@ -1,102 +1,88 @@
 import { Box, Button, Modal, TextField, Typography, Link } from '@mui/material';
 import axios from 'axios';
 import { observer } from 'mobx-react';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import {
+    ChangeEvent,
+    FormEvent,
+    ReactElement,
+    ReactNode,
+    useState,
+} from 'react';
 import { ErrorTypes } from '../../api/types';
 import { register } from '../../api/user/user';
 import { useStore } from '../../store';
+import AuthRegisterForm from './AuthRegisterForm';
+import ForgotForm from './ForgotForm/ForgotForm';
 import styles from './ModalAuth.module.scss';
+import ResetForm from './ResetForm';
+import { ModalAuthStates } from './types';
 
 interface Props {
     onChangeModalOpened: (value: boolean) => void;
+    isResetPassword: boolean;
 }
 
-const ModalAuth = observer(({ onChangeModalOpened }: Props) => {
-    const [email, setEmail] = useState<string>('');
-    const [type, setType] = useState<'login' | 'register'>('login');
-    const [password, setPassword] = useState<string>('');
+const ModalAuth = observer(
+    ({ onChangeModalOpened, isResetPassword }: Props) => {
+        const [type, setType] = useState<ModalAuthStates>(
+            isResetPassword ? 'reset' : 'login'
+        );
 
-    const store = useStore();
+        const handleModalClose = () => {
+            onChangeModalOpened(false);
+        };
 
-    const handleModalClose = () => {
-        onChangeModalOpened(false);
-    };
-    const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-    };
+        const handleClickToggleType = (newType: ModalAuthStates) => () => {
+            setType(newType);
+        };
+        let renderAuthRegisterForm = (
+            <AuthRegisterForm
+                type={type}
+                onChangeType={setType}></AuthRegisterForm>
+        );
 
-    const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-    };
+        const formElement = {
+            ['forgot']: <ForgotForm></ForgotForm>,
+            ['reset']: <ResetForm onChangeType={setType}></ResetForm>,
+            ['login']: renderAuthRegisterForm,
+            ['register']: renderAuthRegisterForm,
+        };
 
-    const handleClickSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (type === 'login') {
-            try {
-                await store.user.login(email, password);
-                // onChangeModalOpened(false);
-            } catch (err) {
-                if (axios.isAxiosError(err)) {
-                    if (
-                        err.response?.data?.error.name ===
-                        ErrorTypes.ValidationError
-                    ) {
-                    }
-                }
-            }
-        }
-        if (type === 'register') {
-            try {
-                await register(email, password);
-                setType('login');
-                setEmail('');
-                setPassword('');
-            } catch (err) {
-                if (axios.isAxiosError(err)) {
-                }
-            }
-        }
-    };
-
-    const handleClickToggleType = () => {
-        setType(type === 'login' ? 'register' : 'login');
-        setEmail('');
-        setPassword('');
-    };
-    return (
-        <Modal open onClose={handleModalClose}>
-            <form onSubmit={handleClickSubmit} className={styles.form}>
-                <Typography textAlign='center' variant='h4'>
-                    {type === 'login' ? 'Авторизация' : 'Регистрация'}
-                </Typography>
-                <TextField
-                    fullWidth
-                    margin='normal'
-                    name='email'
-                    onChange={handleChangeEmail}
-                    value={email}
-                    required
-                    placeholder='Почта'></TextField>
-                <TextField
-                    fullWidth
-                    margin='normal'
-                    required
-                    value={password}
-                    onChange={handleChangePassword}
-                    type='password'
-                    name='password'
-                    placeholder='Пароль'></TextField>
-                <Button variant='contained' type='submit' fullWidth>
-                    {type === 'login' ? 'Войти' : 'Зарегистрироваться'}
-                </Button>
-                <Box textAlign='center' marginTop='10px'>
-                    <Link onClick={handleClickToggleType}>
-                        {type === 'login' ? 'Зарегистрироваться' : 'Войти'}
-                    </Link>
-                </Box>
-            </form>
-        </Modal>
-    );
-});
+        return (
+            <Modal open onClose={handleModalClose}>
+                <div className={styles.container}>
+                    {formElement[type]}
+                    {type !== 'reset' && (
+                        <>
+                            {' '}
+                            <Box textAlign='center' marginTop='10px'>
+                                <Link
+                                    onClick={handleClickToggleType(
+                                        type === 'login' ? 'register' : 'login'
+                                    )}>
+                                    {type === 'login'
+                                        ? 'Зарегистрироваться'
+                                        : 'Войти'}
+                                </Link>
+                            </Box>
+                            <Box textAlign='center' marginTop='10px'>
+                                <Link
+                                    onClick={handleClickToggleType(
+                                        type === 'forgot'
+                                            ? 'register'
+                                            : 'forgot'
+                                    )}>
+                                    {type === 'forgot'
+                                        ? 'Зарегистрироваться'
+                                        : 'Забыли пароль'}
+                                </Link>
+                            </Box>
+                        </>
+                    )}
+                </div>
+            </Modal>
+        );
+    }
+);
 
 export default ModalAuth;
