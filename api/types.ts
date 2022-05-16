@@ -13,3 +13,18 @@ export type ApiResponse<T = any> = {
         };
     };
 };
+
+export type CollectionParams = {
+    sort?: string[];
+    filters?: {
+        [field: string]: {
+            [operator: string]: string;
+        };
+    };
+    populate: string[];
+    fields?: string[];
+    pagination: {
+        page: number;
+        pageSize: number;
+    };
+};

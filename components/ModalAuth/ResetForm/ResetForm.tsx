@@ -5,12 +5,12 @@ import { resetPassword } from '../../../api/user/user';
 import { ModalAuthStates } from '../types';
 
 interface Props {
-    onChangeType: ModalAuthStates;
+    onChangeType: (type: ModalAuthStates) => void;
 }
 
 const ResetForm = ({ onChangeType }: Props) => {
     const router = useRouter();
-    const { code }: { code: string } = router.query;
+    const { code } = router.query as { code: string };
 
     const [password, setPassword] = useState<string>('');
     const [passwordConfirmation, setPasswordConfirmation] =
