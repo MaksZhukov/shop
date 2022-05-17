@@ -6,16 +6,18 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, Snackbar, Stack, ThemeProvider } from '@mui/material';
 import { green, lightGreen, lime, red } from '@mui/material/colors';
 import { useEffect } from 'react';
 import { getJwt } from '../services/LocalStorageService';
+import { observable } from 'mobx';
+import Notification from '../components/Notification';
 
 let theme = createTheme({
     palette: {
         primary: lightGreen,
-        secondary: red,
-    },
+        secondary: red
+    }
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -37,6 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <Component {...pageProps} />
                     </Content>
                     <Footer></Footer>
+                    <Notification></Notification>
                 </Layout>
             </Provider>
         </ThemeProvider>

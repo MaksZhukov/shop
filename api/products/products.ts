@@ -1,10 +1,9 @@
 import { api } from '..';
-import { CollectionParams } from '../types';
+import { ApiResponse, CollectionParams } from '../types';
+import { Product } from './types';
 
 export const fetchProducts = (params: CollectionParams) =>
-    api.get('/products', { params });
+    api.get<Product[]>('/products', { params });
 
 export const fetchProduct = (idOrSlug: string) =>
-    api.get(`/product/${idOrSlug}`);
-
-const obj = { data: { name: 'Product 3', description: 'Product 3' } };
+    api.get<ApiResponse<Product>>(`/products/${idOrSlug}`);
