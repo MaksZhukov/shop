@@ -10,12 +10,11 @@ import { createTheme, Snackbar, Stack, ThemeProvider } from '@mui/material';
 import { green, lightGreen, lime, red } from '@mui/material/colors';
 import { useEffect } from 'react';
 import { getJwt } from '../services/LocalStorageService';
-import { observable } from 'mobx';
 import Notification from '../components/Notification';
 
 let theme = createTheme({
     palette: {
-        primary: lightGreen,
+        primary: green,
         secondary: red
     }
 });
@@ -25,8 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         let token = getJwt();
         if (token) {
             store.user.setJWT(token);
-            store.user.getInfo();
-            store.cart.getShoppingCart();
+            Promise.all([store.user.getInfo(), store.cart.getShoppingCart(), store.favorites.getFavorites()]);
         }
     }, []);
 

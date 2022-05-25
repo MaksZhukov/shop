@@ -15,6 +15,8 @@ export default class UserStore implements User {
     jwt: string = '';
     id: string = '';
     email: string = '';
+    phone: string = '';
+    address: string = '';
 
     constructor(root: RootStore) {
         this.root = root;
@@ -36,10 +38,17 @@ export default class UserStore implements User {
         this.email = data.user.email;
         saveJwt(data.jwt);
     }
-    async logout() {
+    clearUser() {
         this.jwt = '';
         this.id = '';
         this.email = '';
+        this.phone = '';
+        this.address = '';
+    }
+    async logout() {
+        this.clearUser();
+        this.root.cart.clearShoppingCart();
+        this.root.favorites.clearFavorites();
         saveJwt('');
     }
 }

@@ -1,12 +1,12 @@
 import { makeAutoObservable } from 'mobx';
 import RootStore from '.';
-import { getShoppingCart } from '../api/cart/cart';
+import { getFavorites } from '../api/favorites/favorites';
 
-export interface Cart {
+export interface Favorites {
     items: any[];
 }
 
-export default class CartStore implements Cart {
+export default class FavoritesStore implements Favorites {
     root: RootStore;
 
     items: any[] = [];
@@ -15,13 +15,13 @@ export default class CartStore implements Cart {
         this.root = root;
         makeAutoObservable(this);
     }
-    async getShoppingCart() {
+    async getFavorites() {
         const {
             data: { data },
-        } = await getShoppingCart();
+        } = await getFavorites();
         this.items = data;
     }
-    clearShoppingCart() {
+    clearFavorites() {
         this.items = [];
     }
 }
