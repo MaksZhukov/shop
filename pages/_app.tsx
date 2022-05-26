@@ -11,21 +11,30 @@ import { green, lightGreen, lime, red } from '@mui/material/colors';
 import { useEffect } from 'react';
 import { getJwt } from '../services/LocalStorageService';
 import Notification from '../components/Notification';
+import RouteShield from '../components/RouteShield/RouteShield';
 
 let theme = createTheme({
     palette: {
         primary: green,
-        secondary: red
-    }
+        secondary: red,
+    },
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
     useEffect(() => {
-        let token = getJwt();
-        if (token) {
-            store.user.setJWT(token);
-            Promise.all([store.user.getInfo(), store.cart.getShoppingCart(), store.favorites.getFavorites()]);
-        }
+        const tryFetchData = async () => {
+            let token = getJwt();
+            if (token) {
+                store.user.setJWT(token);
+                await Promise.all([
+                    store.user.getInfo(),
+                    store.cart.getShoppingCart(),
+                    store.favorites.getFavorites(),
+                ]);
+            }
+            store.setIsInitialRequestDone();
+        };
+        tryFetchData();
     }, []);
 
     return (
@@ -34,7 +43,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <Layout>
                     <Header></Header>
                     <Content>
-                        <Component {...pageProps} />
+                        <RouteShield>
+                            <Component {...pageProps} />
+                        </RouteShield>
                     </Content>
                     <Footer></Footer>
                     <Notification></Notification>

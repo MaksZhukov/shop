@@ -15,6 +15,7 @@ export default class UserStore implements User {
     jwt: string = '';
     id: string = '';
     email: string = '';
+    username: string = '';
     phone: string = '';
     address: string = '';
 
@@ -51,4 +52,8 @@ export default class UserStore implements User {
         this.root.favorites.clearFavorites();
         saveJwt('');
     }
+
+	async saveUserInfo() {
+		
+	}
 }

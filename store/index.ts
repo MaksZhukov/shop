@@ -1,3 +1,4 @@
+import { makeAutoObservable } from 'mobx';
 import { enableStaticRendering, MobXProviderContext } from 'mobx-react';
 import { useContext } from 'react';
 import CartStore from './Cart';
@@ -12,11 +13,16 @@ class RootStore {
     cart: CartStore;
     favorites: FavoriteStore;
     notification: NotificationStore;
+    isInitialRequestDone: boolean = false;
     constructor() {
         this.user = new UserStore(this);
         this.cart = new CartStore(this);
         this.favorites = new FavoriteStore(this);
-        this.notification = new NotificationStore(this)
+        this.notification = new NotificationStore(this);
+        makeAutoObservable(this);
+    }
+    setIsInitialRequestDone() {
+        this.isInitialRequestDone = true;
     }
 }
 
