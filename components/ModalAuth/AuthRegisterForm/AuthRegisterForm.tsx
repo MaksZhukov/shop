@@ -34,7 +34,7 @@ const AuthRegisterForm = ({ type, onChangeType, onChangeModalOpened }: Props) =>
                 store.notification.showMessage({ message: 'Вы вошли в свой аккаунт' });
                 setTimeout(() => {
                     store.notification.closeMessage();
-                }, 2000);
+                }, 3000);
             } catch (err) {
                 if (axios.isAxiosError(err)) {
                     if (err.response?.data?.error.name === ErrorTypes.ValidationError) {
@@ -48,7 +48,7 @@ const AuthRegisterForm = ({ type, onChangeType, onChangeModalOpened }: Props) =>
                 store.notification.showMessage({ message: 'Вы успешно зарегистрировались' });
                 setTimeout(() => {
                     store.notification.closeMessage();
-                }, 2000);
+                }, 3000);
                 onChangeType('login');
                 setEmail('');
                 setPassword('');

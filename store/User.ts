@@ -1,7 +1,7 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, action, runInAction } from 'mobx';
 import RootStore from '.';
-import { getUserInfo, login } from '../api/user/user';
-import { getJwt, saveJwt } from '../services/LocalStorageService';
+import { getUserInfo, login, updateUserInfo } from '../api/user/user';
+import { saveJwt } from '../services/LocalStorageService';
 
 export interface User {
     jwt: string;
@@ -25,9 +25,11 @@ export default class UserStore implements User {
     }
     async getInfo() {
         const { data } = await getUserInfo();
-        this.jwt = data.jwt;
         this.id = data.id;
         this.email = data.email;
+        this.username = data.username;
+        this.phone = data.phone;
+        this.address = data.address;
     }
     setJWT(jwt: string) {
         this.jwt = jwt;
@@ -37,6 +39,9 @@ export default class UserStore implements User {
         this.jwt = data.jwt;
         this.id = data.user.id;
         this.email = data.user.email;
+        this.username = data.user.username;
+        this.phone = data.user.phone;
+        this.address = data.user.address;
         saveJwt(data.jwt);
     }
     clearUser() {
@@ -53,7 +58,17 @@ export default class UserStore implements User {
         saveJwt('');
     }
 
-	async saveUserInfo() {
-		
-	}
+    setUsername(username: string) {
+        this.username = username;
+    }
+    setPhone(phone: string) {
+        this.phone = phone;
+    }
+    setAddress(address: string) {
+        this.address = address;
+    }
+
+    async saveUserInfo() {
+        await updateUserInfo({ phone: this.phone, address: this.address, username: this.username });
+    }
 }

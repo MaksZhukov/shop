@@ -16,7 +16,7 @@ const ForgotForm = () => {
             store.notification.showMessage({ message: 'Проверьте свою почту' });
             setTimeout(() => {
                 store.notification.closeMessage();
-            }, 2000);
+            }, 3000);
         } catch (err) {}
     };
     return (

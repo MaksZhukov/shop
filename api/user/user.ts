@@ -35,3 +35,5 @@ export const resetPassword = (
     });
 
 export const getUserInfo = () => api.get('/users/me');
+
+export const updateUserInfo = (data: { username: string, phone: string, address: string }) => api.put('/users/me', data)

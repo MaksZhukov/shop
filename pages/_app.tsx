@@ -9,15 +9,17 @@ import Layout from '../components/Layout';
 import { createTheme, Snackbar, Stack, ThemeProvider } from '@mui/material';
 import { green, lightGreen, lime, red } from '@mui/material/colors';
 import { useEffect } from 'react';
-import { getJwt } from '../services/LocalStorageService';
+import { getJwt, saveJwt } from '../services/LocalStorageService';
 import Notification from '../components/Notification';
 import RouteShield from '../components/RouteShield/RouteShield';
 
 let theme = createTheme({
     palette: {
-        primary: green,
-        secondary: red,
-    },
+        primary: {
+            ...green,
+            contrastText: '#fff'
+        }
+    }
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -26,11 +28,15 @@ function MyApp({ Component, pageProps }: AppProps) {
             let token = getJwt();
             if (token) {
                 store.user.setJWT(token);
-                await Promise.all([
-                    store.user.getInfo(),
-                    store.cart.getShoppingCart(),
-                    store.favorites.getFavorites(),
-                ]);
+                try {
+                    await Promise.all([
+                        store.user.getInfo(),
+                        store.cart.getShoppingCart(),
+                        store.favorites.getFavorites()
+                    ]);
+                } catch (err) {
+                    saveJwt('');
+                }
             }
             store.setIsInitialRequestDone();
         };

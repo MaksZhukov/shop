@@ -31,7 +31,7 @@ const ResetForm = ({ onChangeType }: Props) => {
             store.notification.showMessage({ message: 'Ваш пароль изменен успешно' });
             setTimeout(() => {
                 store.notification.closeMessage();
-            }, 2000);
+            }, 3000);
             router.push('/');
             onChangeType('login');
         } catch (err) {}

@@ -1,0 +1,20 @@
+.wrapper {
+    display: flex;
+}
+
+.sider {
+    flex: 1;
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 10px;
+}
+
+.search-wrapper {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 10px;
+}
+
+.content {
+    flex: 4;
+}
