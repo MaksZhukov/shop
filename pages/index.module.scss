@@ -1,20 +1,36 @@
 .wrapper {
-    display: flex;
+	display: flex;
 }
 
 .sider {
-    flex: 1;
-    background-color: #fff;
-    padding: 1em;
-    border-radius: 10px;
-}
-
-.search-wrapper {
-    background-color: #fff;
-    padding: 1em;
-    border-radius: 10px;
+	flex: 1;
+	background-color: #fff;
+	padding: 1em;
+	border-radius: 10px;
 }
 
 .content {
-    flex: 4;
+	flex: 4;
+	&__header {
+		background-color: #fff;
+		padding: 1em;
+		border-radius: 10px;
+	}
+	&__products {
+		background-color: #fff;
+		padding: 1em;
+		border-radius: 10px;
+	}
+	&__pagination {
+		background-color: #fff;
+		padding: 1em;
+		border-radius: 10px;
+	}
+}
+.search {
+	margin-right: 1em;
+	flex: 3;
+}
+.sort-select {
+	flex: 1;
 }

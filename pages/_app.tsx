@@ -14,51 +14,51 @@ import Notification from '../components/Notification';
 import RouteShield from '../components/RouteShield/RouteShield';
 
 let theme = createTheme({
-    palette: {
-        primary: {
-            ...green,
-            contrastText: '#fff'
-        }
-    }
+	palette: {
+		primary: {
+			...green,
+			contrastText: '#fff',
+		},
+	},
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-    useEffect(() => {
-        const tryFetchData = async () => {
-            let token = getJwt();
-            if (token) {
-                store.user.setJWT(token);
-                try {
-                    await Promise.all([
-                        store.user.getInfo(),
-                        store.cart.getShoppingCart(),
-                        store.favorites.getFavorites()
-                    ]);
-                } catch (err) {
-                    saveJwt('');
-                }
-            }
-            store.setIsInitialRequestDone();
-        };
-        tryFetchData();
-    }, []);
+	useEffect(() => {
+		const tryFetchData = async () => {
+			let token = getJwt();
+			if (token) {
+				store.user.setJWT(token);
+				try {
+					await Promise.all([
+						store.user.getInfo(),
+						store.cart.getShoppingCart(),
+						store.favorites.getFavorites(),
+					]);
+				} catch (err) {
+					saveJwt('');
+				}
+			}
+			store.setIsInitialRequestDone();
+		};
+		tryFetchData();
+	}, []);
 
-    return (
-        <ThemeProvider theme={theme}>
-            <Provider store={store}>
-                <Layout>
-                    <Header></Header>
-                    <Content>
-                        <RouteShield>
-                            <Component {...pageProps} />
-                        </RouteShield>
-                    </Content>
-                    <Footer></Footer>
-                    <Notification></Notification>
-                </Layout>
-            </Provider>
-        </ThemeProvider>
-    );
+	return (
+		<ThemeProvider theme={theme}>
+			<Provider store={store}>
+				<Layout>
+					<Header></Header>
+					<Content>
+						<RouteShield>
+							<Component {...pageProps} />
+						</RouteShield>
+					</Content>
+					<Footer></Footer>
+					<Notification></Notification>
+				</Layout>
+			</Provider>
+		</ThemeProvider>
+	);
 }
 
 export default MyApp;

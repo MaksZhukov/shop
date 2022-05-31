@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.1",
+    "@rooks/use-throttle": "^4.11.2",
     "axios": "^0.27.2",
     "mobx": "^6.6.0",
     "mobx-react": "^7.5.0",
@@ -22,7 +23,8 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-input-mask": "^2.0.4",
-    "sass": "^1.52.1"
+    "sass": "^1.52.1",
+    "use-debounce": "^8.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.18.2",
