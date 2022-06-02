@@ -9,7 +9,7 @@ import {
 	Select,
 	SelectChangeEvent,
 } from '@mui/material';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { login } from '../api/user/user';
 import styles from './index.module.scss';
 import { Box } from '@mui/system';
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
 		min = '',
 		max = '',
 		sort = 'createdAt:desc',
-		page = 1,
+		page = '1',
 	} = router.query as {
 		searchValue: string;
 		min: string;
@@ -55,11 +55,17 @@ const Home: NextPage = () => {
 				name: { $contains: searchValue },
 				price: { $gte: min || '0', $lte: max || '1000000' },
 			},
+			pagination: searchValue ? {} : { page: +page },
+			publicationState: 'preview',
 			sort,
 		});
 		setProducts(data);
 		if (pagination) {
 			setPageCount(pagination.pageCount);
+			if (pagination.pageCount < +page) {
+				router.query.page = (pagination.pageCount || 1).toString();
+				router.push({ pathname: router.pathname, query: router.query });
+			}
 		}
 	}, 300);
 
@@ -67,7 +73,7 @@ const Home: NextPage = () => {
 		if (router.isReady) {
 			throttledFetchProducts();
 		}
-	}, [sort]);
+	}, [sort, page]);
 
 	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		router.query.searchValue = e.target.value;
@@ -89,9 +95,13 @@ const Home: NextPage = () => {
 		router.push({ pathname: router.pathname, query: router.query });
 	};
 
-	const handleChangePage = () => {
-		
-	}
+	const handleChangePage = (
+		e: MouseEvent<HTMLButtonElement>,
+		newPage: number
+	) => {
+		router.query.page = newPage.toString();
+		router.push({ pathname: router.pathname, query: router.query });
+	};
 
 	const handleClickFind = () => {
 		throttledFetchProducts();
@@ -166,7 +176,7 @@ const Home: NextPage = () => {
 						display='flex'
 						justifyContent='center'>
 						<Pagination
-							page={page}
+							page={+page}
 							siblingCount={2}
 							color='primary'
 							count={pageCount}

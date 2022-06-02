@@ -24,7 +24,8 @@ export type CollectionParams = {
 	populate?: string[];
 	fields?: string[];
 	pagination?: {
-		page: number;
-		pageSize: number;
+		page?: number;
+		pageSize?: number;
 	};
+	publicationState?: 'live' | 'preview';
 };
