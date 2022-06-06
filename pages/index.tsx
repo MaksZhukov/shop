@@ -2,12 +2,18 @@ import type { NextPage } from 'next';
 import {
 	AppBar,
 	Button,
+	Card,
+	CardContent,
+	CardMedia,
 	Container,
+	IconButton,
 	Input,
 	MenuItem,
+	Modal,
 	Pagination,
 	Select,
 	SelectChangeEvent,
+	Typography,
 } from '@mui/material';
 import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { login } from '../api/user/user';
@@ -17,6 +23,11 @@ import { Product } from '../api/products/types';
 import { fetchProducts } from '../api/products/products';
 import { useRouter } from 'next/router';
 import useThrottle from '@rooks/use-throttle';
+import getConfig from 'next/config';
+import classNames from 'classnames';
+import ProductItem from '../components/ProductItem';
+
+const { publicRuntimeConfig } = getConfig();
 
 const selectSortItems = [
 	{ name: 'Новые', value: 'createdAt:desc' },
@@ -27,6 +38,7 @@ const selectSortItems = [
 
 const Home: NextPage = () => {
 	const [products, setProducts] = useState<Product[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [pageCount, setPageCount] = useState<number>(0);
 	const router = useRouter();
 
@@ -45,6 +57,7 @@ const Home: NextPage = () => {
 	};
 
 	const [throttledFetchProducts] = useThrottle(async () => {
+		setIsLoading(true);
 		const {
 			data: {
 				data,
@@ -53,9 +66,10 @@ const Home: NextPage = () => {
 		} = await fetchProducts({
 			filters: {
 				name: { $contains: searchValue },
-				price: { $gte: min || '0', $lte: max || '1000000' },
+				price: { $gte: min || '0', $lte: max || undefined },
 			},
 			pagination: searchValue ? {} : { page: +page },
+			populate: 'image',
 			publicationState: 'preview',
 			sort,
 		});
@@ -67,13 +81,14 @@ const Home: NextPage = () => {
 				router.push({ pathname: router.pathname, query: router.query });
 			}
 		}
+		setIsLoading(false);
 	}, 300);
 
 	useEffect(() => {
 		if (router.isReady) {
 			throttledFetchProducts();
 		}
-	}, [sort, page]);
+	}, [sort, page, router.isReady]);
 
 	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		router.query.searchValue = e.target.value;
@@ -105,6 +120,10 @@ const Home: NextPage = () => {
 
 	const handleClickFind = () => {
 		throttledFetchProducts();
+	};
+
+	const handleClickMore = (slug: string) => () => {
+		router.push('/products/' + slug);
 	};
 
 	return (
@@ -164,11 +183,13 @@ const Home: NextPage = () => {
 					</Box>
 					<Box
 						marginBottom='1em'
-						className={styles['content__products']}>
+						className={classNames(styles['content__products'], {
+							[styles['content__products_loading']]: isLoading,
+						})}>
 						{products.map((item) => (
-							<div key={item.id}>
-								{item.name} {item.price}
-							</div>
+							<ProductItem
+								key={item.id}
+								data={item}></ProductItem>
 						))}
 					</Box>
 					<Box

@@ -18,10 +18,10 @@ export type CollectionParams = {
 	sort?: string[] | string;
 	filters?: {
 		[field: string]: {
-			[operator: string]: string;
+			[operator: string]: string | undefined;
 		};
 	};
-	populate?: string[];
+	populate?: string[] | string;
 	fields?: string[];
 	pagination?: {
 		page?: number;
