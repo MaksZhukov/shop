@@ -13,6 +13,8 @@ import { useStore } from '../../store';
 import { Product } from '../../api/products/types';
 import styles from './ProductItem.module.scss';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import StarIcon from '@mui/icons-material/Star';
 import getConfig from 'next/config';
 import {
@@ -20,6 +22,7 @@ import {
 	removeFromFavorites,
 } from '../../api/favorites/favorites';
 import { observer } from 'mobx-react-lite';
+import { addToShoppingCart, removeItemFromShoppingCart } from 'api/cart/cart';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -32,6 +35,10 @@ const ProductItem = ({ data }: Props) => {
 	const router = useRouter();
 	const favorite = store.favorites.items.find(
 		(item) => item.product?.id === data.id
+	);
+
+	const cartItem = store.cart.items.find(
+		(item) => item.product.id === data.id
 	);
 
 	let thumbnailUrl = data.image
@@ -70,7 +77,33 @@ const ProductItem = ({ data }: Props) => {
 		} catch (err) {}
 	};
 
-	console.log(favorite, favorite ? 'Star Icon' + data.name : 'No star');
+	const handleClickCart = async () => {
+		try {
+			if (cartItem) {
+				await removeItemFromShoppingCart(cartItem.id);
+				store.cart.removeCartItem(cartItem.id);
+				store.notification.showMessage({
+					content: (
+						<Alert variant='filled'>
+							Вы успешно удалили товар из корзины
+						</Alert>
+					),
+				});
+			} else {
+				let {
+					data: { data: shoppingCartItem },
+				} = await addToShoppingCart(data.id);
+				store.cart.addCartItem(shoppingCartItem);
+				store.notification.showMessage({
+					content: (
+						<Alert variant='filled'>
+							Вы успешно добавили товар в корзину
+						</Alert>
+					),
+				});
+			}
+		} catch (err) {}
+	};
 
 	return (
 		<Card sx={{ marginBottom: '2em' }} className={styles.product}>
@@ -105,6 +138,13 @@ const ProductItem = ({ data }: Props) => {
 							<StarIcon color='primary'></StarIcon>
 						) : (
 							<StarOutlineIcon color='primary'></StarOutlineIcon>
+						)}
+					</IconButton>
+					<IconButton onClick={handleClickCart}>
+						{cartItem ? (
+							<ShoppingCartIcon color='primary'></ShoppingCartIcon>
+						) : (
+							<ShoppingCartOutlinedIcon color='primary'></ShoppingCartOutlinedIcon>
 						)}
 					</IconButton>
 				</Box>

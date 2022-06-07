@@ -6,9 +6,9 @@ export const getShoppingCart = () =>
 	api.get<ApiResponse<ShoppingCartItem[]>>('shopping-cart');
 
 export const addToShoppingCart = (productId: number) =>
-	api.get<ApiResponse<ShoppingCartItem[]>>('shopping-cart', {
+	api.post<ApiResponse<ShoppingCartItem>>('shopping-cart', {
 		data: { product: productId },
 	});
 
 export const removeItemFromShoppingCart = (id: string) =>
-	api.delete<ApiResponse<ShoppingCartItem>>(`shopping-cart/${id}`);
+	api.delete<ApiResponse<ShoppingCartItem>>(`shopping-carts/${id}`);
