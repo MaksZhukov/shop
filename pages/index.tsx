@@ -20,12 +20,12 @@ import { login } from '../api/user/user';
 import styles from './index.module.scss';
 import { Box } from '@mui/system';
 import { Product } from '../api/products/types';
-import { fetchProducts } from '../api/products/products';
 import { useRouter } from 'next/router';
 import useThrottle from '@rooks/use-throttle';
 import getConfig from 'next/config';
 import classNames from 'classnames';
-import ProductItem from '../components/ProductItem';
+import ProductItem from 'components/ProductItem';
+import { fetchProducts } from 'api/products/products';
 
 const { publicRuntimeConfig } = getConfig();
 
