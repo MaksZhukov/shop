@@ -20,6 +20,9 @@
 		background-color: #fff;
 		padding: 1em;
 		border-radius: 10px;
+		&_loading {
+			opacity: 0.5;
+		}
 	}
 	&__pagination {
 		background-color: #fff;
@@ -33,4 +36,8 @@
 }
 .sort-select {
 	flex: 1;
+}
+
+.product {
+	display: flex;
 }
