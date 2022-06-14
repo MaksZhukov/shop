@@ -2,7 +2,10 @@ import { api } from '..';
 import { ApiResponse } from '../types';
 import { Favorite } from './types';
 
-export const getFavorites = () => api.get<ApiResponse<Favorite[]>>('favorites');
+export const getFavorites = () =>
+	api.get<ApiResponse<Favorite[]>>('favorites', {
+		params: { publicationState: 'preview' },
+	});
 
 export const addToFavorites = (productId: number) =>
 	api.post<ApiResponse<Favorite>>('favorites', {

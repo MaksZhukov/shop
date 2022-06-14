@@ -69,7 +69,7 @@ const Home: NextPage = () => {
 				price: { $gte: min || '0', $lte: max || undefined },
 			},
 			pagination: searchValue ? {} : { page: +page },
-			populate: 'image',
+			populate: 'images',
 			publicationState: 'preview',
 			sort,
 		});

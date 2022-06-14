@@ -24,6 +24,7 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-input-mask": "^2.0.4",
+    "react-material-ui-carousel": "^3.4.2",
     "sass": "^1.52.1",
     "use-debounce": "^8.0.1"
   },
