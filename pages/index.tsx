@@ -8,6 +8,8 @@ import useThrottle from '@rooks/use-throttle';
 import classNames from 'classnames';
 import ProductItem from 'components/ProductItem';
 import { fetchProducts } from 'api/products/products';
+import Reviews from 'components/Reviews';
+import WhiteBox from 'components/WhiteBox';
 
 const selectSortItems = [
     { name: 'Новые', value: 'createdAt:desc' },
@@ -102,18 +104,29 @@ const Home: NextPage = () => {
         <Container>
             <Box padding="3em 1em" alignItems="baseline" className={styles.wrapper}>
                 <Box marginRight="1em" component="aside" className={styles.sider}>
-                    <Box display="flex">
-                        <Input onChange={handleChangeMin} value={min} placeholder="Цена от руб" type="number"></Input>
-                        <Input onChange={handleChangeMax} value={max} placeholder="Цена до руб" type="number"></Input>
-                    </Box>
-                    <Box marginTop="1em" textAlign="center">
-                        <Button onClick={handleClickFind} fullWidth variant="contained">
-                            Найти
-                        </Button>
-                    </Box>
+                    <WhiteBox>
+                        <Box display="flex">
+                            <Input
+                                onChange={handleChangeMin}
+                                value={min}
+                                placeholder="Цена от руб"
+                                type="number"></Input>
+                            <Input
+                                onChange={handleChangeMax}
+                                value={max}
+                                placeholder="Цена до руб"
+                                type="number"></Input>
+                        </Box>
+                        <Box marginTop="1em" textAlign="center">
+                            <Button onClick={handleClickFind} fullWidth variant="contained">
+                                Найти
+                            </Button>
+                        </Box>
+                    </WhiteBox>
+                    <Reviews></Reviews>
                 </Box>
                 <Box className={styles.content}>
-                    <Box display="flex" marginBottom="1em" className={styles['content__header']}>
+                    <WhiteBox display="flex">
                         <Input
                             className={styles['search']}
                             value={searchValue}
@@ -132,17 +145,16 @@ const Home: NextPage = () => {
                                 </MenuItem>
                             ))}
                         </Select>
-                    </Box>
-                    <Box
-                        marginBottom="1em"
-                        className={classNames(styles['content__products'], {
-                            [styles['content__products_loading']]: isLoading
+                    </WhiteBox>
+                    <WhiteBox
+                        className={classNames({
+                            [styles['loading']]: isLoading
                         })}>
                         {products.map((item) => (
                             <ProductItem key={item.id} data={item}></ProductItem>
                         ))}
-                    </Box>
-                    <Box className={styles['content__pagination']} display="flex" justifyContent="center">
+                    </WhiteBox>
+                    <WhiteBox display="flex" justifyContent="center">
                         <Pagination
                             page={+page}
                             siblingCount={2}
@@ -151,7 +163,7 @@ const Home: NextPage = () => {
                             onChange={handleChangePage}
                             variant="outlined"
                         />
-                    </Box>
+                    </WhiteBox>
                 </Box>
             </Box>
         </Container>

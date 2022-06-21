@@ -26,6 +26,7 @@ export type CollectionParams = {
     pagination?: {
         page?: number;
         pageSize?: number;
+        limit?: number;
     };
     publicationState?: 'live' | 'preview';
 };

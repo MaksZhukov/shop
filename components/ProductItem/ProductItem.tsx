@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, IconButton, Typography, Button, Alert } from '@mui/material';
+import { Card, CardContent, CardMedia, IconButton, Button, Alert } from '@mui/material';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
 import { Product } from '../../api/products/types';
@@ -7,6 +7,7 @@ import getConfig from 'next/config';
 import ShoppingCartButton from 'components/ShoppingCartButton';
 import FavoriteButton from 'components/FavoriteButton';
 import EmptyImageIcon from 'components/EmptyImageIcon';
+import Typography from 'components/Typography';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -38,15 +39,10 @@ const ProductItem = ({ data }: Props) => {
                     <EmptyImageIcon size={200} cursor="pointer" onClick={handleClickMore(data.slug)}></EmptyImageIcon>
                 )}
                 <CardContent sx={{ flex: 1, paddingBottom: '0!important' }}>
-                    <Typography
-                        title={data.name}
-                        className={styles.name}
-                        component="div"
-                        marginBottom="0.5em"
-                        variant="h5">
+                    <Typography lineClamp={1} title={data.name} component="div" marginBottom="0.5em" variant="h5">
                         {data.name}
                     </Typography>
-                    <Typography variant="body1" color="text.secondary" className={styles.description}>
+                    <Typography lineClamp={4} variant="body1" color="text.secondary">
                         {data.description}
                     </Typography>
                 </CardContent>
