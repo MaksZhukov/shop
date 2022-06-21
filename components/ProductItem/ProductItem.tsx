@@ -59,8 +59,8 @@ const ProductItem = ({ data }: Props) => {
                 <Button onClick={handleClickMore(data.slug)} variant="outlined">
                     Подробнее
                 </Button>
-                <FavoriteButton productId={data.id}></FavoriteButton>
-                <ShoppingCartButton productId={data.id}></ShoppingCartButton>
+                <FavoriteButton product={data}></FavoriteButton>
+                <ShoppingCartButton product={data}></ShoppingCartButton>
             </CardContent>
         </Card>
     );

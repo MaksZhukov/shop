@@ -23,13 +23,13 @@ export default class UserStore implements User {
         this.root = root;
         makeAutoObservable(this);
     }
-    async getInfo() {
+    async loadInfo() {
         const { data } = await getUserInfo();
         this.id = data.id;
         this.email = data.email;
         this.username = data.username;
-        this.phone = data.phone;
-        this.address = data.address;
+        this.phone = data.phone || '';
+        this.address = data.address || '';
     }
     setJWT(jwt: string) {
         this.jwt = jwt;

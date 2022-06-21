@@ -34,8 +34,8 @@ const ProductPage = ({ data }: Props) => {
                         component="h1">
                         {data.name}
                     </Typography>
-                    <ShoppingCartButton productId={data.id}></ShoppingCartButton>
-                    <FavoriteButton productId={data.id}></FavoriteButton>
+                    <ShoppingCartButton product={data}></ShoppingCartButton>
+                    <FavoriteButton product={data}></FavoriteButton>
                 </Box>
                 <Box display="flex">
                     {data.images ? (

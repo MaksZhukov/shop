@@ -15,6 +15,7 @@ const { publicRuntimeConfig } = getConfig();
 const Favorites = () => {
     const store = useStore();
     let items = store.favorites.items;
+    console.log(items);
     return (
         <Container>
             <Box className={styles.favorites}>
@@ -46,8 +47,8 @@ const Favorites = () => {
                                                 {item.product.description}
                                             </Typography>
                                         </Box>
-                                        <ShoppingCartButton productId={item.product.id}></ShoppingCartButton>
-                                        <FavoriteButton productId={item.product.id}></FavoriteButton>
+                                        <ShoppingCartButton product={item.product}></ShoppingCartButton>
+                                        <FavoriteButton product={item.product}></FavoriteButton>
                                     </ListItem>
                                     {index !== items.length - 1 && <Divider light></Divider>}
                                 </Fragment>

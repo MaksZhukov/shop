@@ -1,18 +1,40 @@
-import { Avatar, Divider, IconButton, Menu, MenuItem } from '@mui/material';
-import { useState } from 'react';
+import { Avatar, Badge, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useStore } from '../../../store';
 import styles from './Profile.module.scss';
+import { observer } from 'mobx-react';
 
-const Profile = () => {
+interface Props {
+    onClickSignIn: () => void;
+}
+
+const Profile = ({ onClickSignIn }: Props) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isOpened = !!anchorEl;
+    const [isInvisibleBadge, setIsInvisibleBadge] = useState<boolean>(true);
+    const isMountedAndLoadedData = useRef<boolean>(false);
 
     const store = useStore();
     const router = useRouter();
 
+    useEffect(() => {
+        if (store.isInitialRequestDone) {
+            setTimeout(() => {
+                isMountedAndLoadedData.current = true;
+            }, 0);
+        }
+    }, [store.isInitialRequestDone]);
+
+    useEffect(() => {
+        if (isMountedAndLoadedData.current) {
+            setIsInvisibleBadge(false);
+        }
+    }, [store.cart.items.length, store.favorites.items.length]);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
+        setIsInvisibleBadge(true);
     };
     const handleClose = () => {
         setAnchorEl(null);
@@ -26,6 +48,7 @@ const Profile = () => {
     const handleClickLink = (path: string) => () => {
         router.push(path);
     };
+
     return (
         <>
             <IconButton
@@ -34,7 +57,9 @@ const Profile = () => {
                 aria-haspopup="true"
                 aria-expanded={isOpened ? 'true' : undefined}
                 onClick={handleClick}>
-                <Avatar>{store.user.email.slice(0, 4)}</Avatar>
+                <Badge color="warning" variant="dot" invisible={isInvisibleBadge}>
+                    {store.user.email ? <Avatar>{store.user.email.slice(0, 4)}</Avatar> : <Avatar></Avatar>}
+                </Badge>
             </IconButton>
             <Menu
                 anchorEl={anchorEl}
@@ -44,13 +69,28 @@ const Profile = () => {
                 onClick={handleClose}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-                <MenuItem onClick={handleClickLink('/profile')}>Профиль</MenuItem>
-                <MenuItem onClick={handleClickLink('/favorites')}>Избранное</MenuItem>
-                <Divider />
-                <MenuItem onClick={handleClickLogout}>Выход</MenuItem>
+                {store.user.id ? (
+                    <MenuItem onClick={handleClickLink('/profile')}>Профиль</MenuItem>
+                ) : (
+                    <MenuItem onClick={onClickSignIn}>Войти</MenuItem>
+                )}
+                <MenuItem onClick={handleClickLink('/favorites')}>
+                    Избранные{' '}
+                    <Typography component="span" color="primary" paddingLeft="5px">
+                        ({store.favorites.items.length})
+                    </Typography>
+                </MenuItem>
+                <MenuItem onClick={handleClickLink('/shopping-cart')}>
+                    Корзина{' '}
+                    <Typography component="span" color="primary" paddingLeft="5px">
+                        ({store.cart.items.length})
+                    </Typography>
+                </MenuItem>
+                {store.user.id && <Divider />}
+                {store.user.id && <MenuItem onClick={handleClickLogout}>Выход</MenuItem>}
             </Menu>
         </>
     );
 };
 
-export default Profile;
+export default observer(Profile);

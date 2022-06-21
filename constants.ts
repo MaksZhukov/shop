@@ -1,1 +1,1 @@
-export const PRIVATE_PATHS = ['/profile', '/favorites'];
+export const PRIVATE_PATHS = ['/profile'];

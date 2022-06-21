@@ -29,7 +29,7 @@ const AuthRegisterForm = ({ type, onChangeType, onChangeModalOpened }: Props) =>
         if (type === 'login') {
             try {
                 await store.user.login(email, password);
-                await Promise.all([store.cart.getShoppingCart(), store.favorites.getFavorites()]);
+                await Promise.all([store.cart.loadShoppingCart(), store.favorites.loadFavorites()]);
                 onChangeModalOpened(false);
                 store.notification.showMessage({ message: 'Вы вошли в свой аккаунт' });
                 setTimeout(() => {
