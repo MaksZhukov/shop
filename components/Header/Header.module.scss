@@ -1,9 +1,13 @@
+.toolbar {
+	padding: 0 !important;
+}
+
 .menu {
-    &__item {
-        color: white !important;
-    }
+	&__item {
+		color: white !important;
+	}
 }
 
 .avatar {
-    cursor: pointer;
+	cursor: pointer;
 }
