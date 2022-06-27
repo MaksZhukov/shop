@@ -8,6 +8,8 @@ import {
 } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import { addReview } from 'api/reviews/reviews';
+import { ErrorTypes } from 'api/types';
+import axios from 'axios';
 import Loader from 'components/Loader';
 import { observer } from 'mobx-react-lite';
 import { ChangeEvent, FormEvent, useState } from 'react';
@@ -20,6 +22,9 @@ const AddReview = () => {
 	const [rating, setRating] = useState<number | undefined>(undefined);
 	const [name, setName] = useState<string>('');
 	const [email, setEmail] = useState<string>('');
+	const [validation, setValidation] = useState<{ email: string }>({
+		email: '',
+	});
 	const [description, setDescription] = useState<string>('');
 
 	const handleChangeRating = (_: any, newValue: number) => {
@@ -57,7 +62,17 @@ const AddReview = () => {
 				),
 			});
 			store.user.setReviewStatus('draft');
-		} catch (err) {}
+			setValidation({ email: '' });
+		} catch (err) {
+			if (axios.isAxiosError(err)) {
+				if (
+					err.response?.data?.error.name ===
+					ErrorTypes.ValidationError
+				) {
+					setValidation({ email: 'Укажите верную почту' });
+				}
+			}
+		}
 	};
 
 	const renderByStatus = {
@@ -87,18 +102,20 @@ const AddReview = () => {
 								onChange={handleChangeName}
 								sx={{ marginRight: '1em' }}
 								value={name}
+								inputProps={{ maxLength: 100 }}
 								variant='standard'
 								label='Имя'></TextField>
 							<TextField
 								required
 								onChange={handleChangeEmail}
 								value={email}
+								error={!!validation['email']}
+								helperText={validation['email']}
 								variant='standard'
 								label='Почта'></TextField>
 						</Box>
 					)}
 					<TextField
-						required
 						onChange={handleChangeDescription}
 						label='Отзыв до 500 символов'
 						multiline

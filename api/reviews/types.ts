@@ -3,6 +3,6 @@ export interface Review {
 	email: string;
 	authorName: string;
 	rating: number;
-	description: string;
+	description?: string;
 	publishedAt: string;
 }

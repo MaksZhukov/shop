@@ -1,6 +1,7 @@
 import {
 	Alert,
 	Button,
+	Divider,
 	FormControl,
 	Pagination,
 	Rating,
@@ -15,7 +16,7 @@ import AddReview from 'components/pages/reviews/AddReview';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, Fragment, useEffect, useState } from 'react';
 import { saveReviewEmail } from 'services/LocalStorageService';
 import { useStore } from 'store';
 import styles from './reviews.module.scss';
@@ -24,32 +25,32 @@ let COUNT_REVIEWS = 10;
 
 const Reviews = () => {
 	const [reviews, setReviews] = useState<Review[]>([]);
-	const [pageCount, setPageCount] = useState<number>(0);
+	const [pageCount, setPageCount] = useState<number>(1);
 
 	const router = useRouter();
 
 	const { page = '1' } = router.query as {
 		page: string;
 	};
-
+	const fetchData = async () => {
+		const {
+			data: {
+				data,
+				meta: { pagination },
+			},
+		} = await fetchReviews({
+			pagination: { pageSize: COUNT_REVIEWS, page: +page },
+			publicationState: 'preview',
+			sort: 'publishedAt:desc',
+		});
+		if (pagination?.pageCount) {
+			setPageCount(pagination.pageCount);
+		}
+		setReviews(data);
+	};
 	useEffect(() => {
-		const fetchData = async () => {
-			const {
-				data: {
-					data,
-					meta: { pagination },
-				},
-			} = await fetchReviews({
-				pagination: { limit: COUNT_REVIEWS },
-				sort: 'publishedAt:desc',
-			});
-			if (pagination) {
-				setPageCount(pagination.pageCount);
-			}
-			setReviews(data);
-		};
 		fetchData();
-	}, []);
+	}, [page]);
 
 	const handleChangePage = (_, newPage: number) => {
 		router.query.page = newPage.toString();
@@ -59,17 +60,44 @@ const Reviews = () => {
 	return (
 		<Container>
 			<WhiteBox>
-				{reviews.map((item) => (
-					<Box key={item.id}>{item.description}</Box>
+				<Typography component='h1' variant='h4' textAlign='center'>
+					Отзывы
+				</Typography>
+				{reviews.map((item, index) => (
+					<Fragment key={item.id}>
+						<Box paddingY='1em' key={item.id}>
+							<Typography color='text.secondary'>
+								{item.authorName}
+							</Typography>
+							<Rating readOnly value={item.rating}></Rating>
+							<Typography color='text.secondary'>
+								{new Date(
+									item.publishedAt
+								).toLocaleDateString()}
+							</Typography>
+							{item.description && (
+								<Typography
+									marginTop='0.5em'
+									color='text.secondary'>
+									{item.description}
+								</Typography>
+							)}
+						</Box>
+						{reviews.length - 1 !== index && <Divider></Divider>}
+					</Fragment>
 				))}
-				<Pagination
-					page={+page}
-					siblingCount={2}
-					color='primary'
-					count={pageCount}
-					onChange={handleChangePage}
-					variant='outlined'
-				/>
+				{pageCount !== 1 && (
+					<Box display='flex' marginY='1.5em' justifyContent='center'>
+						<Pagination
+							page={+page}
+							siblingCount={2}
+							color='primary'
+							count={pageCount}
+							onChange={handleChangePage}
+							variant='outlined'
+						/>
+					</Box>
+				)}
 				<AddReview></AddReview>
 			</WhiteBox>
 		</Container>
