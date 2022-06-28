@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useStore } from '../../../store';
 import styles from './Profile.module.scss';
 import { observer } from 'mobx-react';
+import classNames from 'classnames';
 
 interface Props {
     onClickSignIn: () => void;
@@ -17,6 +18,7 @@ const Profile = ({ onClickSignIn }: Props) => {
 
     const store = useStore();
     const router = useRouter();
+
 
     useEffect(() => {
         if (store.isInitialRequestDone) {
@@ -70,17 +72,31 @@ const Profile = ({ onClickSignIn }: Props) => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
                 {store.user.id ? (
-                    <MenuItem onClick={handleClickLink('/profile')}>Профиль</MenuItem>
+                    <MenuItem
+                        className={classNames({
+                            [styles['account-menu__item_active']]: router.pathname === '/profile'
+                        })}
+                        onClick={handleClickLink('/profile')}>
+                        Профиль
+                    </MenuItem>
                 ) : (
                     <MenuItem onClick={onClickSignIn}>Войти</MenuItem>
                 )}
-                <MenuItem onClick={handleClickLink('/favorites')}>
+                <MenuItem
+                    className={classNames({
+                        [styles['account-menu__item_active']]: router.pathname === '/favorites'
+                    })}
+                    onClick={handleClickLink('/favorites')}>
                     Избранные{' '}
                     <Typography component="span" color="primary" paddingLeft="5px">
                         ({store.favorites.items.length})
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={handleClickLink('/shopping-cart')}>
+                <MenuItem
+                    className={classNames({
+                        [styles['account-menu__item_active']]: router.pathname === '/shopping-cart'
+                    })}
+                    onClick={handleClickLink('/shopping-cart')}>
                     Корзина{' '}
                     <Typography component="span" color="primary" paddingLeft="5px">
                         ({store.cart.items.length})
