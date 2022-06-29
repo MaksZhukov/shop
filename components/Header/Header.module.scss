@@ -1,13 +1,21 @@
 .toolbar {
-	padding: 0 !important;
+    padding: 0 !important;
 }
 
 .menu {
-	&__item {
-		color: white !important;
-	}
+    &__item {
+        color: white !important;
+        &:hover,
+        &_active {
+            text-decoration: underline !important;
+        }
+        &_mobile {
+            width: 100%;
+            justify-content: start !important;
+        }
+    }
 }
 
 .avatar {
-	cursor: pointer;
+    cursor: pointer;
 }
