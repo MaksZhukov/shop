@@ -73,13 +73,16 @@ const Profile = observer(() => {
 					value={store.user.phone}
 					maskChar=' '
 					onChange={handleChangePhone}>
-					{() => (
-						<TextField
-							label='Телефон'
-							margin='normal'
-							variant='standard'
-							fullWidth></TextField>
-					)}
+					{
+						//@ts-ignore
+						() => (
+							<TextField
+								label='Телефон'
+								margin='normal'
+								variant='standard'
+								fullWidth></TextField>
+						)
+					}
 				</InputMask>
 				<TextField
 					value={store.user.address}
