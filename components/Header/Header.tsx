@@ -22,13 +22,14 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { observer } from 'mobx-react';
 import Profile from './Profile';
 import classNames from 'classnames';
+import Image from 'next/image';
 
 const pages = [
     { name: 'Главная', path: '/' },
-    { name: 'Ожидаемые авто', path: '/' },
-    { name: 'Покупка авто на запчасти', path: '/' },
-    { name: 'Доставка/ Оплата', path: '/' },
-    { name: 'Гарантия', path: '/' },
+    { name: 'Ожидаемые авто', path: '/1' },
+    { name: 'Покупка авто на запчасти', path: '/2' },
+    { name: 'Доставка/ Оплата', path: '/3' },
+    { name: 'Гарантия', path: '/4' },
     { name: 'Отзывы', path: '/reviews' },
     { name: 'Контакты', path: '/contacts' }
 ];
@@ -66,11 +67,15 @@ const Header = observer(() => {
             sx={{
                 display: type == 'desktop' ? { xs: 'none', md: 'flex' } : { xs: 'flex', md: 'none' }
             }}
-            {...(type === 'mobile' ? { flex: 1 } : {})}>
+            {...(type === 'mobile' ? {} : {})}>
             <Link passHref href="/">
-                <Typography component="a" variant="h5" color="white">
-                    Logo
-                </Typography>
+                <Image
+                    style={{ cursor: 'pointer' }}
+                    alt="Picture of the author"
+                    width={150}
+                    height={42}
+                    src="/logo.jpg"
+                />
             </Link>
         </Box>
     );
@@ -98,13 +103,13 @@ const Header = observer(() => {
     return (
         <AppBar position="fixed">
             <Container>
-                <Toolbar className={styles.toolbar}>
+                <Toolbar sx={{ justifyContent: 'space-between' }} className={styles.toolbar}>
                     {renderLogo('desktop')}
                     <Box
                         color="white"
-                        flex="1"
                         sx={{
-                            display: { xs: 'flex', md: 'none' }
+                            display: { xs: 'flex', md: 'none' },
+                            flex: { xs: 'initial', md: '1' }
                         }}
                         className={styles['mobile-menu']}>
                         <IconButton
