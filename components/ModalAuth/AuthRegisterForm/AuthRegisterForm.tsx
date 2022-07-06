@@ -1,5 +1,5 @@
-import { Button, TextField, Typography } from '@mui/material';
-import axios from 'axios';
+import { Alert, Button, TextField, Typography } from '@mui/material';
+import axios, { AxiosError } from 'axios';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { ErrorTypes } from '../../../api/types';
 import { register } from '../../../api/user/user';
@@ -32,12 +32,16 @@ const AuthRegisterForm = ({ type, onChangeType, onChangeModalOpened }: Props) =>
                 await Promise.all([store.cart.loadShoppingCart(), store.favorites.loadFavorites()]);
                 onChangeModalOpened(false);
                 store.notification.showMessage({ message: 'Вы вошли в свой аккаунт' });
-                setTimeout(() => {
-                    store.notification.closeMessage();
-                }, 3000);
             } catch (err) {
                 if (axios.isAxiosError(err)) {
-                    if (err.response?.data?.error.name === ErrorTypes.ValidationError) {
+                    if (err.response?.data.error.name === ErrorTypes.ValidationError) {
+                        store.notification.showMessage({
+                            content: (
+                                <Alert severity="error" variant="filled">
+                                    Неверные данные
+                                </Alert>
+                            )
+                        });
                     }
                 }
             }
@@ -46,14 +50,22 @@ const AuthRegisterForm = ({ type, onChangeType, onChangeModalOpened }: Props) =>
             try {
                 await register(email, password);
                 store.notification.showMessage({ message: 'Вы успешно зарегистрировались' });
-                setTimeout(() => {
-                    store.notification.closeMessage();
-                }, 3000);
                 onChangeType('login');
                 setEmail('');
                 setPassword('');
             } catch (err) {
                 if (axios.isAxiosError(err)) {
+                    if (err.response?.data.error.status === 400) {
+                        if (err.response.data.error.message === 'Email is already taken') {
+                            store.notification.showMessage({
+                                content: (
+                                    <Alert severity="warning" variant="filled">
+                                        Такой пользователь уже существует
+                                    </Alert>
+                                )
+                            });
+                        }
+                    }
                 }
             }
         }

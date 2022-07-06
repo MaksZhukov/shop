@@ -14,9 +14,6 @@ const ForgotForm = () => {
         try {
             await forgotPassword(email);
             store.notification.showMessage({ message: 'Проверьте свою почту' });
-            setTimeout(() => {
-                store.notification.closeMessage();
-            }, 3000);
         } catch (err) {}
     };
     return (

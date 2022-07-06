@@ -1,4 +1,4 @@
-import { Avatar, Badge, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { Alert, Avatar, Badge, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useStore } from '../../../store';
@@ -18,7 +18,6 @@ const Profile = ({ onClickSignIn }: Props) => {
 
     const store = useStore();
     const router = useRouter();
-
 
     useEffect(() => {
         if (store.isInitialRequestDone) {
@@ -44,6 +43,7 @@ const Profile = ({ onClickSignIn }: Props) => {
 
     const handleClickLogout = () => {
         store.user.logout();
+        store.notification.showMessage({ content: <Alert variant="filled">Вы успешно вышли из аккаунта</Alert> });
         router.push('/');
     };
 
