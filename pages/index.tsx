@@ -7,8 +7,10 @@ import {
 	MenuItem,
 	Pagination,
 	Select,
-    Link,
+	Link,
 	SelectChangeEvent,
+	Autocomplete,
+	TextField,
 } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import styles from './index.module.scss';
@@ -20,6 +22,9 @@ import ProductItem from 'components/ProductItem';
 import { fetchProducts } from 'api/products/products';
 import Reviews from 'components/Reviews';
 import WhiteBox from 'components/WhiteBox';
+import { Brand } from 'api/brands/types';
+import { getBrands } from 'api/brands/brands';
+import Filters from 'components/Filters';
 
 const selectSortItems = [
 	{ name: 'Новые', value: 'createdAt:desc' },
@@ -38,12 +43,16 @@ const Home: NextPage = () => {
 		searchValue = '',
 		min = '',
 		max = '',
+		brandId = '',
+		modelId = '',
 		sort = 'createdAt:desc',
 		page = '1',
 	} = router.query as {
 		searchValue: string;
 		min: string;
 		max: string;
+		brandId: string;
+		modelId: string;
 		sort: string;
 		page: string;
 	};
@@ -59,6 +68,8 @@ const Home: NextPage = () => {
 			filters: {
 				name: { $contains: searchValue },
 				price: { $gte: min || '0', $lte: max || undefined },
+				brand: brandId || undefined,
+				model: modelId || undefined,
 			},
 			pagination: searchValue ? {} : { page: +page },
 			populate: 'images',
@@ -86,16 +97,6 @@ const Home: NextPage = () => {
 		router.push({ pathname: router.pathname, query: router.query });
 	};
 
-	const handleChangeMin = (e: ChangeEvent<HTMLInputElement>) => {
-		router.query.min = e.target.value;
-		router.push({ pathname: router.pathname, query: router.query });
-	};
-
-	const handleChangeMax = (e: ChangeEvent<HTMLInputElement>) => {
-		router.query.max = e.target.value;
-		router.push({ pathname: router.pathname, query: router.query });
-	};
-
 	const handleChangeSort = (e: SelectChangeEvent<HTMLInputElement>) => {
 		router.query.sort = e.target.value as string;
 		router.push({ pathname: router.pathname, query: router.query });
@@ -106,10 +107,6 @@ const Home: NextPage = () => {
 		router.push({ pathname: router.pathname, query: router.query });
 	};
 
-	const handleClickFind = () => {
-		throttledFetchProducts();
-	};
-
 	return (
 		<Container>
 			<Box alignItems='baseline' className={styles.wrapper}>
@@ -117,28 +114,7 @@ const Home: NextPage = () => {
 					marginRight='1em'
 					component='aside'
 					className={styles.sider}>
-					<WhiteBox>
-						<Box display='flex'>
-							<Input
-								onChange={handleChangeMin}
-								value={min}
-								placeholder='Цена от руб'
-								type='number'></Input>
-							<Input
-								onChange={handleChangeMax}
-								value={max}
-								placeholder='Цена до руб'
-								type='number'></Input>
-						</Box>
-						<Box marginTop='1em' textAlign='center'>
-							<Button
-								onClick={handleClickFind}
-								fullWidth
-								variant='contained'>
-								Найти
-							</Button>
-						</Box>
-					</WhiteBox>
+					<Filters fetchProducts={throttledFetchProducts}></Filters>
 					<Reviews></Reviews>
 				</Box>
 				<Box className={styles.content}>
