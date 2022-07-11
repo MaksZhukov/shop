@@ -10,6 +10,8 @@ import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState } from 'react';
 import { arrayOfYears } from './config';
+import { BODY_STYLES } from './constants';
+import styles from './Filters.module.scss';
 
 interface Props {
 	fetchProducts: () => void;
@@ -32,6 +34,7 @@ const Filters = ({ fetchProducts }: Props) => {
 		sparePartName = '',
 		yearFrom = '',
 		yearTo = '',
+		bodyStyle = '',
 	} = router.query as {
 		min: string;
 		max: string;
@@ -43,6 +46,7 @@ const Filters = ({ fetchProducts }: Props) => {
 		sparePartName: string;
 		yearFrom: string;
 		yearTo: string;
+		bodyStyle: string;
 	};
 
 	const handleOpenBrandAutocomplete = async () => {
@@ -132,6 +136,15 @@ const Filters = ({ fetchProducts }: Props) => {
 		router.push({ pathname: router.pathname, query: router.query });
 	};
 
+	const handleChangeBodyStyleAutocomplete = (_, selected: string | null) => {
+		if (selected) {
+			router.query.bodyStyle = selected;
+		} else {
+			delete router.query.bodyStyle;
+		}
+		router.push({ pathname: router.pathname, query: router.query });
+	};
+
 	const handleChangeMin = (e: ChangeEvent<HTMLInputElement>) => {
 		router.query.min = e.target.value;
 		router.push({ pathname: router.pathname, query: router.query });
@@ -139,6 +152,11 @@ const Filters = ({ fetchProducts }: Props) => {
 
 	const handleChangeMax = (e: ChangeEvent<HTMLInputElement>) => {
 		router.query.max = e.target.value;
+		router.push({ pathname: router.pathname, query: router.query });
+	};
+
+	const handleChangeVolume = (e: ChangeEvent<HTMLInputElement>) => {
+		router.query.volume = e.target.value;
 		router.push({ pathname: router.pathname, query: router.query });
 	};
 
@@ -202,32 +220,36 @@ const Filters = ({ fetchProducts }: Props) => {
 						placeholder='Модель'
 					/>
 				)}></Autocomplete>
-			<Autocomplete
-				options={arrayOfYearsFrom}
-				fullWidth
-				noOptionsText='Совпадений нет'
-				onChange={handleChangeYearFromAutocomplete}
-				value={yearFrom}
-				renderInput={(params) => (
-					<TextField
-						{...params}
-						variant='standard'
-						placeholder='Год от'
-					/>
-				)}></Autocomplete>
-			<Autocomplete
-				options={arrayOfYearsTo}
-				fullWidth
-				noOptionsText='Совпадений нет'
-				onChange={handleChangeYearToAutocomplete}
-				value={yearTo}
-				renderInput={(params) => (
-					<TextField
-						{...params}
-						variant='standard'
-						placeholder='Год до'
-					/>
-				)}></Autocomplete>
+			<Box display='flex'>
+				<Autocomplete
+					classes={{ inputRoot: styles['autocomplete__input-root'] }}
+					options={arrayOfYearsFrom}
+					fullWidth
+					noOptionsText='Совпадений нет'
+					onChange={handleChangeYearToAutocomplete}
+					value={yearFrom}
+					renderInput={(params) => (
+						<TextField
+							{...params}
+							variant='standard'
+							placeholder='Год от'
+						/>
+					)}></Autocomplete>
+				<Autocomplete
+					classes={{ inputRoot: styles['autocomplete__input-root'] }}
+					options={arrayOfYearsTo}
+					fullWidth
+					noOptionsText='Совпадений нет'
+					onChange={handleChangeYearToAutocomplete}
+					value={yearTo}
+					renderInput={(params) => (
+						<TextField
+							{...params}
+							variant='standard'
+							placeholder='Год до'
+						/>
+					)}></Autocomplete>
+			</Box>
 			<Autocomplete
 				options={spareParts.map((item) => ({
 					label: item.name,
@@ -246,6 +268,24 @@ const Filters = ({ fetchProducts }: Props) => {
 						{...params}
 						variant='standard'
 						placeholder='Запчасть'
+					/>
+				)}></Autocomplete>
+			<Input
+				onChange={handleChangeVolume}
+				placeholder='Обьем 2.0'
+				type='number'></Input>
+			<Autocomplete
+				classes={{ inputRoot: styles['autocomplete__input-root'] }}
+				options={BODY_STYLES}
+				fullWidth
+				noOptionsText='Совпадений нет'
+				onChange={handleChangeBodyStyleAutocomplete}
+				value={bodyStyle}
+				renderInput={(params) => (
+					<TextField
+						{...params}
+						variant='standard'
+						placeholder='Кузов'
 					/>
 				)}></Autocomplete>
 			<Box marginTop='1em' textAlign='center'>
