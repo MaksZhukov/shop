@@ -22,7 +22,8 @@ export type CollectionParams = {
 					[operator: string]: string | undefined;
 			  }
 			| string
-			| number[];
+			| number[]
+			| undefined;
 	};
 	populate?: string[] | string;
 	fields?: string[];

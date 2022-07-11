@@ -45,6 +45,9 @@ const Home: NextPage = () => {
 		max = '',
 		brandId = '',
 		modelId = '',
+		sparePartId = '',
+		yearTo = '',
+		yearFrom = '',
 		sort = 'createdAt:desc',
 		page = '1',
 	} = router.query as {
@@ -53,6 +56,9 @@ const Home: NextPage = () => {
 		max: string;
 		brandId: string;
 		modelId: string;
+		sparePartId: string;
+		yearFrom: string;
+		yearTo: string;
 		sort: string;
 		page: string;
 	};
@@ -70,6 +76,11 @@ const Home: NextPage = () => {
 				price: { $gte: min || '0', $lte: max || undefined },
 				brand: brandId || undefined,
 				model: modelId || undefined,
+				sparePart: sparePartId || undefined,
+				year: {
+					$gte: yearFrom || undefined,
+					$lte: yearTo || undefined,
+				},
 			},
 			pagination: searchValue ? {} : { page: +page },
 			populate: 'images',
