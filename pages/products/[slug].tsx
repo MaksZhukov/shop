@@ -74,7 +74,7 @@ export const getServerSideProps: GetServerSideProps<{}, { slug: string }> = asyn
             notFound = true;
         }
     }
-
+    console.log(data);
     return {
         notFound,
         props: { data }

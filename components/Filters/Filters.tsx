@@ -6,295 +6,244 @@ import { getModels } from 'api/models/models';
 import { Model } from 'api/models/types';
 import { getSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
+import { CollectionParams } from 'api/types';
 import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { arrayOfYears } from './config';
-import { BODY_STYLES } from './constants';
+import { BODY_STYLES, FUELS, TRANSMISSIONS } from './constants';
 import styles from './Filters.module.scss';
 
 interface Props {
-	fetchProducts: () => void;
+    fetchProducts: () => void;
 }
 
 const Filters = ({ fetchProducts }: Props) => {
-	const [brands, setBrands] = useState<Brand[]>([]);
-	const [models, setModels] = useState<Model[]>([]);
-	const [spareParts, setSpareParts] = useState<SparePart[]>([]);
-	const router = useRouter();
+    const [brands, setBrands] = useState<Brand[]>([]);
+    const [models, setModels] = useState<Model[]>([]);
+    const [spareParts, setSpareParts] = useState<SparePart[]>([]);
+    const router = useRouter();
 
-	const {
-		min = '',
-		max = '',
-		brandName = '',
-		brandId = '',
-		modelId = '',
-		modelName = '',
-		sparePartId = '',
-		sparePartName = '',
-		yearFrom = '',
-		yearTo = '',
-		bodyStyle = '',
-	} = router.query as {
-		min: string;
-		max: string;
-		brandName: string;
-		brandId: string;
-		modelName: string;
-		modelId: string;
-		sparePartId: string;
-		sparePartName: string;
-		yearFrom: string;
-		yearTo: string;
-		bodyStyle: string;
-	};
+    const {
+        min = '',
+        max = '',
+        brandName = '',
+        brandId = '',
+        modelId = '',
+        modelName = '',
+        sparePartId = '',
+        sparePartName = '',
+        yearFrom = '',
+        yearTo = '',
+        bodyStyle = '',
+        transmission = '',
+        fuel = ''
+    } = router.query as {
+        min: string;
+        max: string;
+        brandName: string;
+        brandId: string;
+        modelName: string;
+        modelId: string;
+        sparePartId: string;
+        sparePartName: string;
+        yearFrom: string;
+        yearTo: string;
+        bodyStyle: string;
+        transmission: string;
+        fuel: string;
+    };
 
-	const handleOpenBrandAutocomplete = async () => {
-		if (!brands.length) {
-			const {
-				data: { data },
-			} = await getBrands({ pagination: { limit: MAX_LIMIT } });
-			setBrands(data);
-		}
-	};
+    const handleOpenAutocomplete =
+        (
+            hasData: boolean,
+            setState: Dispatch<SetStateAction<any>>,
+            fetchFunc: (params: CollectionParams) => Promise<any>
+        ) =>
+        async () => {
+            if (!hasData) {
+                const {
+                    data: { data }
+                } = await fetchFunc({ pagination: { limit: MAX_LIMIT } });
+                setState(data);
+            }
+        };
 
-	const handleOpenModelAutocomplete = async () => {
-		if (!models.length) {
-			const {
-				data: { data },
-			} = await getModels({
-				filters: { brand: brandId },
-				pagination: { limit: MAX_LIMIT },
-			});
-			setModels(data);
-		}
-	};
+    const handleChangeBrandAutocomplete = (_, selected: Brand | null) => {
+        if (selected) {
+            router.query.brandName = selected.name.toString();
+            router.query.brandId = selected.id.toString();
+        } else {
+            delete router.query.brandName;
+            delete router.query.brandId;
+            delete router.query.modelName;
+            delete router.query.modelId;
+        }
+        router.push({ pathname: router.pathname, query: router.query });
+        setModels([]);
+    };
 
-	const handleOpenSparePartAutocomplete = async () => {
-		if (!models.length) {
-			const {
-				data: { data },
-			} = await getSpareParts({ pagination: { limit: MAX_LIMIT } });
-			setSpareParts(data);
-		}
-	};
+    const changeParam = (params: { [field: string]: string | null | undefined }) => {
+        Object.keys(params).forEach((key) => {
+            if (params[key]) {
+                router.query[key] = params[key] as string;
+            } else {
+                delete router.query[key];
+            }
+        });
+        router.push({ pathname: router.pathname, query: router.query });
+    };
 
-	const handleChangeBrandAutocomplete = (_, selected: Brand | null) => {
-		if (selected) {
-			router.query.brandName = selected.name.toString();
-			router.query.brandId = selected.id.toString();
-		} else {
-			delete router.query.brandName;
-			delete router.query.brandId;
-			delete router.query.modelName;
-			delete router.query.modelId;
-		}
-		router.push({ pathname: router.pathname, query: router.query });
-		setModels([]);
-	};
+    const handleChangeObjAutocomplete =
+        (name: string, id: string) => (_, selected: { name: string; id: number } | null) => {
+            changeParam({ [name]: selected?.name, [id]: selected?.id.toString() });
+        };
 
-	const handleChangeModelAutocomplete = (_, selected: Model | null) => {
-		if (selected) {
-			router.query.modelName = selected.name.toString();
-			router.query.modelId = selected.id.toString();
-		} else {
-			delete router.query.modelName;
-			delete router.query.modelId;
-		}
-		router.push({ pathname: router.pathname, query: router.query });
-	};
+    const handleChangeAutocomplete = (param: string) => (_, selected: string | null) => {
+        changeParam({ [param]: selected });
+    };
 
-	const handleChangeSparePartAutocomplete = (
-		_,
-		selected: SparePart | null
-	) => {
-		if (selected) {
-			router.query.sparePartName = selected.name.toString();
-			router.query.sparePartId = selected.id.toString();
-		} else {
-			delete router.query.sparePartName;
-			delete router.query.sparePartId;
-		}
-		router.push({ pathname: router.pathname, query: router.query });
-	};
+    const handleChangeNumberInput = (param: string) => (e: ChangeEvent<HTMLInputElement>) => {
+        changeParam({ [param]: e.target.value });
+    };
 
-	const handleChangeYearToAutocomplete = (_, selected: string | null) => {
-		if (selected) {
-			router.query.yearTo = selected;
-		} else {
-			delete router.query.yearTo;
-		}
-		router.push({ pathname: router.pathname, query: router.query });
-	};
+    const handleClickFind = () => {
+        fetchProducts();
+    };
 
-	const handleChangeYearFromAutocomplete = (_, selected: string | null) => {
-		if (selected) {
-			router.query.yearFrom = selected;
-		} else {
-			delete router.query.yearFrom;
-		}
-		router.push({ pathname: router.pathname, query: router.query });
-	};
+    const arrayOfYearsFrom = yearTo ? arrayOfYears.filter((value) => +value <= +yearTo) : arrayOfYears;
+    const arrayOfYearsTo = yearFrom ? arrayOfYears.filter((value) => +value >= +yearFrom) : arrayOfYears;
 
-	const handleChangeBodyStyleAutocomplete = (_, selected: string | null) => {
-		if (selected) {
-			router.query.bodyStyle = selected;
-		} else {
-			delete router.query.bodyStyle;
-		}
-		router.push({ pathname: router.pathname, query: router.query });
-	};
-
-	const handleChangeMin = (e: ChangeEvent<HTMLInputElement>) => {
-		router.query.min = e.target.value;
-		router.push({ pathname: router.pathname, query: router.query });
-	};
-
-	const handleChangeMax = (e: ChangeEvent<HTMLInputElement>) => {
-		router.query.max = e.target.value;
-		router.push({ pathname: router.pathname, query: router.query });
-	};
-
-	const handleChangeVolume = (e: ChangeEvent<HTMLInputElement>) => {
-		router.query.volume = e.target.value;
-		router.push({ pathname: router.pathname, query: router.query });
-	};
-
-	const handleClickFind = () => {
-		fetchProducts();
-	};
-
-	const arrayOfYearsFrom = yearTo
-		? arrayOfYears.filter((value) => +value <= +yearTo)
-		: arrayOfYears;
-	const arrayOfYearsTo = yearFrom
-		? arrayOfYears.filter((value) => +value >= +yearFrom)
-		: arrayOfYears;
-
-	return (
-		<WhiteBox>
-			<Box display='flex'>
-				<Input
-					onChange={handleChangeMin}
-					value={min}
-					placeholder='Цена от руб'
-					type='number'></Input>
-				<Input
-					onChange={handleChangeMax}
-					value={max}
-					placeholder='Цена до руб'
-					type='number'></Input>
-			</Box>
-			<Autocomplete
-				options={brands.map((item) => ({
-					label: item.name,
-					...item,
-				}))}
-				noOptionsText='Совпадений нет'
-				onOpen={handleOpenBrandAutocomplete}
-				onChange={handleChangeBrandAutocomplete}
-				fullWidth
-				value={{ label: brandName, id: +brandId, name: brandName }}
-				renderInput={(params) => (
-					<TextField
-						{...params}
-						variant='standard'
-						placeholder='Марка'
-					/>
-				)}></Autocomplete>
-			<Autocomplete
-				options={models.map((item) => ({
-					label: item.name,
-					...item,
-				}))}
-				noOptionsText='Совпадений нет'
-				disabled={!brandId}
-				onOpen={handleOpenModelAutocomplete}
-				onChange={handleChangeModelAutocomplete}
-				fullWidth
-				value={{ label: modelName, id: +modelId, name: modelName }}
-				renderInput={(params) => (
-					<TextField
-						{...params}
-						variant='standard'
-						placeholder='Модель'
-					/>
-				)}></Autocomplete>
-			<Box display='flex'>
-				<Autocomplete
-					classes={{ inputRoot: styles['autocomplete__input-root'] }}
-					options={arrayOfYearsFrom}
-					fullWidth
-					noOptionsText='Совпадений нет'
-					onChange={handleChangeYearToAutocomplete}
-					value={yearFrom}
-					renderInput={(params) => (
-						<TextField
-							{...params}
-							variant='standard'
-							placeholder='Год от'
-						/>
-					)}></Autocomplete>
-				<Autocomplete
-					classes={{ inputRoot: styles['autocomplete__input-root'] }}
-					options={arrayOfYearsTo}
-					fullWidth
-					noOptionsText='Совпадений нет'
-					onChange={handleChangeYearToAutocomplete}
-					value={yearTo}
-					renderInput={(params) => (
-						<TextField
-							{...params}
-							variant='standard'
-							placeholder='Год до'
-						/>
-					)}></Autocomplete>
-			</Box>
-			<Autocomplete
-				options={spareParts.map((item) => ({
-					label: item.name,
-					...item,
-				}))}
-				noOptionsText='Совпадений нет'
-				onOpen={handleOpenSparePartAutocomplete}
-				onChange={handleChangeSparePartAutocomplete}
-				value={{
-					label: sparePartName,
-					id: +sparePartId,
-					name: sparePartName,
-				}}
-				renderInput={(params) => (
-					<TextField
-						{...params}
-						variant='standard'
-						placeholder='Запчасть'
-					/>
-				)}></Autocomplete>
-			<Input
-				onChange={handleChangeVolume}
-				placeholder='Обьем 2.0'
-				type='number'></Input>
-			<Autocomplete
-				classes={{ inputRoot: styles['autocomplete__input-root'] }}
-				options={BODY_STYLES}
-				fullWidth
-				noOptionsText='Совпадений нет'
-				onChange={handleChangeBodyStyleAutocomplete}
-				value={bodyStyle}
-				renderInput={(params) => (
-					<TextField
-						{...params}
-						variant='standard'
-						placeholder='Кузов'
-					/>
-				)}></Autocomplete>
-			<Box marginTop='1em' textAlign='center'>
-				<Button onClick={handleClickFind} fullWidth variant='contained'>
-					Найти
-				</Button>
-			</Box>
-		</WhiteBox>
-	);
+    return (
+        <WhiteBox>
+            <Box display="flex">
+                <Input
+                    onChange={handleChangeNumberInput('min')}
+                    value={min}
+                    placeholder="Цена от руб"
+                    type="number"></Input>
+                <Input
+                    onChange={handleChangeNumberInput('max')}
+                    value={max}
+                    placeholder="Цена до руб"
+                    type="number"></Input>
+            </Box>
+            <Autocomplete
+                options={brands.map((item) => ({
+                    label: item.name,
+                    ...item
+                }))}
+                noOptionsText="Совпадений нет"
+                onOpen={handleOpenAutocomplete(!!brands.length, setBrands, getBrands)}
+                onChange={handleChangeBrandAutocomplete}
+                fullWidth
+                value={{ label: brandName, id: +brandId, name: brandName }}
+                renderInput={(params) => (
+                    <TextField {...params} variant="standard" placeholder="Марка" />
+                )}></Autocomplete>
+            <Autocomplete
+                options={models.map((item) => ({
+                    label: item.name,
+                    ...item
+                }))}
+                noOptionsText="Совпадений нет"
+                disabled={!brandId}
+                onOpen={handleOpenAutocomplete(!!models.length, setModels, getModels)}
+                onChange={handleChangeObjAutocomplete('modelName', 'modelId')}
+                fullWidth
+                value={{ label: modelName, id: +modelId, name: modelName }}
+                renderInput={(params) => (
+                    <TextField {...params} variant="standard" placeholder="Модель" />
+                )}></Autocomplete>
+            <Box display="flex">
+                <Autocomplete
+                    classes={{ inputRoot: styles['autocomplete__input-root'] }}
+                    options={arrayOfYearsFrom}
+                    fullWidth
+                    noOptionsText="Совпадений нет"
+                    onChange={handleChangeAutocomplete('yearFrom')}
+                    value={yearFrom}
+                    renderInput={(params) => (
+                        <TextField {...params} variant="standard" placeholder="Год от" />
+                    )}></Autocomplete>
+                <Autocomplete
+                    classes={{ inputRoot: styles['autocomplete__input-root'] }}
+                    options={arrayOfYearsTo}
+                    fullWidth
+                    noOptionsText="Совпадений нет"
+                    onChange={handleChangeAutocomplete('yearTo')}
+                    value={yearTo}
+                    renderInput={(params) => (
+                        <TextField {...params} variant="standard" placeholder="Год до" />
+                    )}></Autocomplete>
+            </Box>
+            <Autocomplete
+                options={spareParts.map((item) => ({
+                    label: item.name,
+                    ...item
+                }))}
+                noOptionsText="Совпадений нет"
+                onOpen={handleOpenAutocomplete(!!spareParts.length, setSpareParts, getSpareParts)}
+                onChange={handleChangeObjAutocomplete('sparePartName', 'sparePartId')}
+                value={{
+                    label: sparePartName,
+                    id: +sparePartId,
+                    name: sparePartName
+                }}
+                renderInput={(params) => (
+                    <TextField {...params} variant="standard" placeholder="Запчасть" />
+                )}></Autocomplete>
+            <Input onChange={handleChangeNumberInput('volume')} placeholder="Обьем 2.0" type="number"></Input>
+            <Autocomplete
+                options={spareParts.map((item) => ({
+                    label: item.name,
+                    ...item
+                }))}
+                noOptionsText="Совпадений нет"
+                onOpen={handleOpenAutocomplete(!!spareParts.length, setSpareParts, getSpareParts)}
+                onChange={handleChangeObjAutocomplete('sparePartName', 'sparePartId')}
+                value={{
+                    label: sparePartName,
+                    id: +sparePartId,
+                    name: sparePartName
+                }}
+                renderInput={(params) => (
+                    <TextField {...params} variant="standard" placeholder="Запчасть" />
+                )}></Autocomplete>
+            <Autocomplete
+                options={BODY_STYLES}
+                fullWidth
+                noOptionsText="Совпадений нет"
+                onChange={handleChangeAutocomplete('bodyStyle')}
+                value={bodyStyle}
+                renderInput={(params) => (
+                    <TextField {...params} variant="standard" placeholder="Кузов" />
+                )}></Autocomplete>
+            <Autocomplete
+                options={TRANSMISSIONS}
+                fullWidth
+                noOptionsText="Совпадений нет"
+                onChange={handleChangeAutocomplete('transmission')}
+                value={transmission}
+                renderInput={(params) => (
+                    <TextField {...params} variant="standard" placeholder="Коробка" />
+                )}></Autocomplete>
+            <Autocomplete
+                options={FUELS}
+                fullWidth
+                noOptionsText="Совпадений нет"
+                onChange={handleChangeAutocomplete('fuel')}
+                value={fuel}
+                renderInput={(params) => (
+                    <TextField {...params} variant="standard" placeholder="Топливо" />
+                )}></Autocomplete>
+            <Box marginTop="1em" textAlign="center">
+                <Button onClick={handleClickFind} fullWidth variant="contained">
+                    Найти
+                </Button>
+            </Box>
+        </WhiteBox>
+    );
 };
 
 export default Filters;
