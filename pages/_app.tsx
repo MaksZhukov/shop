@@ -10,11 +10,11 @@ import { createTheme, Snackbar, Stack, ThemeProvider } from '@mui/material';
 import { green, lightGreen, lime, red, grey } from '@mui/material/colors';
 import { useEffect } from 'react';
 import {
-	getCartProductIDs,
-	getFavoriteProductIDs,
-	getJwt,
-	getReviewEmail,
-	saveJwt,
+    getCartProductIDs,
+    getFavoriteProductIDs,
+    getJwt,
+    getReviewEmail,
+    saveJwt
 } from '../services/LocalStorageService';
 import Notification from '../components/Notification';
 import RouteShield from '../components/RouteShield/RouteShield';
@@ -23,61 +23,64 @@ import { Favorite } from 'api/favorites/types';
 import { ShoppingCartItem } from 'api/cart/types';
 
 let theme = createTheme({
-	palette: {
-		primary: {
-			...green,
-			contrastText: '#fff',
-		},
-	},
+    typography: {
+        fontFamily: 'Lato, Arial'
+    },
+    palette: {
+        primary: {
+            ...green,
+            contrastText: '#fff'
+        }
+    }
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-	useEffect(() => {
-		const tryFetchData = async () => {
-			let token = getJwt();
-			if (token) {
-				store.user.setJWT(token);
-				try {
-					await Promise.all([
-						store.user.loadInfo(),
-						store.cart.loadShoppingCart(),
-						store.favorites.loadFavorites(),
-					]);
-				} catch (err) {
-					saveJwt('');
-				}
-			} else {
-				const email = getReviewEmail();
+    useEffect(() => {
+        const tryFetchData = async () => {
+            let token = getJwt();
+            if (token) {
+                store.user.setJWT(token);
+                try {
+                    await Promise.all([
+                        store.user.loadInfo(),
+                        store.cart.loadShoppingCart(),
+                        store.favorites.loadFavorites()
+                    ]);
+                } catch (err) {
+                    saveJwt('');
+                }
+            } else {
+                const email = getReviewEmail();
 
-				const [cartItems, favoriteItems, data] = await Promise.all([
-					store.cart.getShoppingCartByLocalStorage(),
-					store.favorites.getFavoritesByLocalStorage(),
-					...(email ? [store.user.loadReviewStatus(email)] : []),
-				]);
-				store.cart.setCartItems(cartItems);
-				store.favorites.setFavorites(favoriteItems);
-			}
-			store.setIsInitialRequestDone();
-		};
-		tryFetchData();
-	}, []);
+                const [cartItems, favoriteItems, data] = await Promise.all([
+                    store.cart.getShoppingCartByLocalStorage(),
+                    store.favorites.getFavoritesByLocalStorage(),
+                    ...(email ? [store.user.loadReviewStatus(email)] : [])
+                ]);
+                store.cart.setCartItems(cartItems);
+                store.favorites.setFavorites(favoriteItems);
+            }
+            store.setIsInitialRequestDone();
+        };
+        tryFetchData();
+    }, []);
 
-	return (
-		<ThemeProvider theme={theme}>
-			<Provider store={store}>
-				<Layout>
-					<Header></Header>
-					<Content>
-						<RouteShield>
-							<Component {...pageProps} />
-						</RouteShield>
-					</Content>
-					<Footer></Footer>
-					<Notification></Notification>
-				</Layout>
-			</Provider>
-		</ThemeProvider>
-	);
+    return (
+        <ThemeProvider theme={theme}>
+            <Provider store={store}>
+                <Layout>
+                    <Header></Header>
+                    <Content>
+                        <RouteShield>
+                            <Component {...pageProps} />
+                        </RouteShield>
+                    </Content>
+                    <Footer></Footer>
+                    <Notification></Notification>
+                </Layout>
+            </Provider>
+        </ThemeProvider>
+    );
 }
 
 export default MyApp;

@@ -49,15 +49,49 @@ const ProductPage = ({ data }: Props) => {
                     ) : (
                         <EmptyImageIcon size={500}></EmptyImageIcon>
                     )}
-                    <Box flex="1" width="200px">
-                        <Typography textAlign="right" variant="h5" width="100%" color="primary">
-                            {data.price} р.
-                        </Typography>
+                    <Box flex="1" display="flex" width="200px">
+                        <Box paddingX="1em" flex="1">
+                            <Box>
+                                <Typography mr="1em" fontWeight="500" variant="subtitle1" component="span">
+                                    Артикул:
+                                </Typography>
+                                <Typography component="span">{data.id}</Typography>
+                            </Box>
+                            <Box>
+                                <Typography mr="1em" fontWeight="500" variant="subtitle1" component="span">
+                                    Марка:
+                                </Typography>
+                                <Typography component="span">{data.brand?.name}</Typography>
+                            </Box>
+                            <Box>
+                                <Typography mr="1em" fontWeight="500" variant="subtitle1" component="span">
+                                    Модель:
+                                </Typography>
+                                <Typography component="span">{data.model?.name}</Typography>
+                            </Box>
+                            <Box>
+                                <Typography mr="1em" fontWeight="500" variant="subtitle1" component="span">
+                                    Запчасть:
+                                </Typography>
+                                <Typography component="span">{data.sparePart?.name}</Typography>
+                            </Box>
+                        </Box>
+                        <Box>
+                            <Typography textAlign="right" variant="h5" width="100%" color="primary">
+                                {data.price} р.
+                            </Typography>
+                            <Typography textAlign="right" variant="h5" width="100%" color="text.secondary">
+                                ~ {data.priceUSD?.toFixed()} $
+                            </Typography>
+                        </Box>
                     </Box>
                 </Box>
-                <Typography marginTop="1em" color="text.secondary">
-                    {data.description}
-                </Typography>
+                <Box marginTop="1em">
+                    <Typography mr="1em" fontWeight="500" variant="subtitle1" component="span">
+                        Описание:
+                    </Typography>
+                    <Typography color="text.secondary">{data.description}</Typography>
+                </Box>
             </Box>
         </Container>
     );
@@ -74,7 +108,7 @@ export const getServerSideProps: GetServerSideProps<{}, { slug: string }> = asyn
             notFound = true;
         }
     }
-    console.log(data);
+
     return {
         notFound,
         props: { data }
