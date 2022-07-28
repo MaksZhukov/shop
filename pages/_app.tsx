@@ -18,8 +18,8 @@ import {
 import Notification from "../components/Notification";
 import RouteShield from "../components/RouteShield/RouteShield";
 
-const propertyId = "62d12b117b967b117999a7b7";
-const tawkId = "1g80h0foo";
+const propertyId = "62e2456354f06e12d88bbae4";
+const tawkId = "1g91tu3hb";
 
 let theme = createTheme({
   typography: {
