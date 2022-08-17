@@ -52,7 +52,7 @@ const Reviews = () => {
 		fetchData();
 	}, [page]);
 
-	const handleChangePage = (_, newPage: number) => {
+	const handleChangePage = (_: any, newPage: number) => {
 		router.query.page = newPage.toString();
 		router.push({ pathname: router.pathname, query: router.query });
 	};

@@ -69,7 +69,7 @@ const Filters = ({ fetchProducts }: Props) => {
 			}
 		};
 
-	const handleChangeBrandAutocomplete = (_, selected: Brand | null) => {
+	const handleChangeBrandAutocomplete = (_: any, selected: Brand | null) => {
 		if (selected) {
 			router.query.brandName = selected.name.toString();
 			router.query.brandId = selected.id.toString();
@@ -98,7 +98,7 @@ const Filters = ({ fetchProducts }: Props) => {
 
 	const handleChangeObjAutocomplete =
 		(name: string, id: string) =>
-		(_, selected: { name: string; id: number } | null) => {
+		(_: any, selected: { name: string; id: number } | null) => {
 			changeParam({
 				[name]: selected?.name,
 				[id]: selected?.id.toString(),
@@ -106,7 +106,7 @@ const Filters = ({ fetchProducts }: Props) => {
 		};
 
 	const handleChangeAutocomplete =
-		(param: string) => (_, selected: string | null) => {
+		(param: string) => (_: any, selected: string | null) => {
 			changeParam({ [param]: selected });
 		};
 

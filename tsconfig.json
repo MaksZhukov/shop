@@ -15,8 +15,8 @@
     "jsx": "preserve",
     "incremental": true,
 	"experimentalDecorators": true,
-	"baseUrl": "."
+	"baseUrl": ".",
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "declarations.d.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "declarations.d.ts", "declarations_tawk.d.ts"],
   "exclude": ["node_modules"]
 }
