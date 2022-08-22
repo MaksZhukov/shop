@@ -8,56 +8,82 @@ import ResetForm from './ResetForm';
 import { ModalAuthStates } from './types';
 
 interface Props {
-    onChangeModalOpened: (value: boolean) => void;
-    isResetPassword: boolean;
+	onChangeModalOpened: (value: boolean) => void;
+	isResetPassword: boolean;
 }
 
 const ModalAuth = ({ onChangeModalOpened, isResetPassword }: Props) => {
-    const [type, setType] = useState<ModalAuthStates>(isResetPassword ? 'reset' : 'login');
+	const [type, setType] = useState<ModalAuthStates>(
+		isResetPassword ? 'reset' : 'login'
+	);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const handleModalClose = () => {
-        onChangeModalOpened(false);
-    };
+	const handleModalClose = () => {
+		if (!isLoading) {
+			onChangeModalOpened(false);
+		}
+	};
 
-    const handleClickToggleType = (newType: ModalAuthStates) => () => {
-        setType(newType);
-    };
-    let renderAuthRegisterForm = (
-        <AuthRegisterForm
-            type={type}
-            onChangeModalOpened={onChangeModalOpened}
-            onChangeType={setType}></AuthRegisterForm>
-    );
+	const handleClickToggleType = (newType: ModalAuthStates) => () => {
+		setType(newType);
+	};
+	let renderAuthRegisterForm = (
+		<AuthRegisterForm
+			isLoading={isLoading}
+			onChangeIsLoading={setIsLoading}
+			type={type}
+			onChangeModalOpened={onChangeModalOpened}
+			onChangeType={setType}></AuthRegisterForm>
+	);
 
-    const formElement = {
-        ['forgot']: <ForgotForm></ForgotForm>,
-        ['reset']: <ResetForm onChangeType={setType}></ResetForm>,
-        ['login']: renderAuthRegisterForm,
-        ['register']: renderAuthRegisterForm
-    };
+	const formElement = {
+		['forgot']: (
+			<ForgotForm
+				isLoading={isLoading}
+				onChangeIsLoading={setIsLoading}></ForgotForm>
+		),
+		['reset']: (
+			<ResetForm
+				isLoading={isLoading}
+				onChangeIsLoading={setIsLoading}
+				onChangeType={setType}></ResetForm>
+		),
+		['login']: renderAuthRegisterForm,
+		['register']: renderAuthRegisterForm,
+	};
 
-    return (
-        <Modal open onClose={handleModalClose}>
-            <div className={styles.container}>
-                {formElement[type]}
-                {type !== 'reset' && (
-                    <>
-                        {' '}
-                        <Box textAlign="center" marginTop="10px">
-                            <Link onClick={handleClickToggleType(type === 'login' ? 'register' : 'login')}>
-                                {type === 'login' ? 'Зарегистрироваться' : 'Войти'}
-                            </Link>
-                        </Box>
-                        <Box textAlign="center" marginTop="10px">
-                            <Link onClick={handleClickToggleType(type === 'forgot' ? 'register' : 'forgot')}>
-                                {type === 'forgot' ? 'Зарегистрироваться' : 'Забыли пароль'}
-                            </Link>
-                        </Box>
-                    </>
-                )}
-            </div>
-        </Modal>
-    );
+	return (
+		<Modal open onClose={handleModalClose}>
+			<div className={styles.container}>
+				{formElement[type]}
+				{type !== 'reset' && (
+					<>
+						{' '}
+						<Box textAlign='center' marginTop='10px'>
+							<Link
+								onClick={handleClickToggleType(
+									type === 'login' ? 'register' : 'login'
+								)}>
+								{type === 'login'
+									? 'Зарегистрироваться'
+									: 'Войти'}
+							</Link>
+						</Box>
+						<Box textAlign='center' marginTop='10px'>
+							<Link
+								onClick={handleClickToggleType(
+									type === 'forgot' ? 'register' : 'forgot'
+								)}>
+								{type === 'forgot'
+									? 'Зарегистрироваться'
+									: 'Забыли пароль'}
+							</Link>
+						</Box>
+					</>
+				)}
+			</div>
+		</Modal>
+	);
 };
 
 export default ModalAuth;
