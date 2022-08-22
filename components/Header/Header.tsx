@@ -29,7 +29,7 @@ const pages = [
 	{ name: 'Ожидаемые авто', path: '/1' },
 	{ name: 'Покупка авто на запчасти', path: '/2' },
 	{ name: 'Доставка/ Оплата', path: '/3' },
-	{ name: 'Гарантия', path: '/4' },
+	{ name: 'Гарантия', path: '/guarantee' },
 	{ name: 'Отзывы', path: '/reviews' },
 	{ name: 'Контакты', path: '/contacts' },
 ];
