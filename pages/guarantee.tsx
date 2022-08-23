@@ -20,9 +20,10 @@ const Guarantee = () => {
 				<Typography gutterBottom variant='h6'>
 					Гарантия распространяется на:
 				</Typography>
-				<Typography gutterBottom variant='subtitle1'>
-					двигатель, навесное оборудование, электронные механизмы,
-					электронные блоки, МКПП/АКПП, колёсные диски.
+				<Typography paddingLeft='1em' gutterBottom variant='subtitle1'>
+					двигатель <br></br> навесное оборудование <br></br>
+					электронные механизмы <br></br> электронные блоки <br></br>
+					МКПП/АКПП<br></br> колёсные диски
 				</Typography>
 				<Typography gutterBottom variant='h6'>
 					Гарантия не распространяется на:
@@ -68,18 +69,21 @@ const Guarantee = () => {
 					Возврат запчастей осуществляется при выполнении следующих
 					условий:
 				</Typography>
-				<Typography gutterBottom variant='subtitle1'>
-					сохранение внешнего вида; сохранение защитных пломб;
-					сохранение маркировки; комплектность; имеются доказательства
-					приобретения на гродненской авторазборке Полотково.
+				<Typography paddingLeft='1em' gutterBottom variant='subtitle1'>
+					сохранение внешнего вида <br></br> сохранение защитных пломб{' '}
+					<br></br> сохранение маркировки <br></br> комплектность{' '}
+					<br></br>
+					имеются доказательства приобретения на гродненской
+					авторазборке Полотково
 				</Typography>
 				<Typography gutterBottom variant='h6'>
 					Товар возврату не подлежит в случае:
 				</Typography>
-				<Typography gutterBottom variant='subtitle1'>
-					истечения гарантийного срока; отсутствия (повреждении) меток
-					продавца; отсутствия или утери чека; неправильной установки
-					б/у детали, что привело к её поломке.
+				<Typography paddingLeft='1em' gutterBottom variant='subtitle1'>
+					истечения гарантийного срока <br></br> отсутствия
+					(повреждении) меток продавца <br></br> отсутствия или утери
+					чека <br></br> неправильной установки б/у детали, что
+					привело к её поломке.
 				</Typography>
 				<Typography gutterBottom variant='subtitle1'>
 					В случае возврата приобретённых б/у запчастей, затраты
