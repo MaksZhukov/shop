@@ -241,6 +241,7 @@ const Filters = ({ fetchProducts }: Props) => {
 					/>
 				)}></Autocomplete>
 			<Input
+				fullWidth
 				onChange={handleChangeNumberInput('volume')}
 				placeholder='Обьем 2.0'
 				type='number'></Input>
