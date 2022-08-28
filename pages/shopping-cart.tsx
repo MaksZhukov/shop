@@ -8,8 +8,10 @@ import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react';
 import getConfig from 'next/config';
+import Image from 'next/image';
 import NextLink from 'next/link';
 import { Fragment, useState } from 'react';
+import Slider from 'react-slick';
 import { useStore } from 'store';
 import styles from './shopping-cart.module.scss';
 
@@ -35,21 +37,38 @@ const ShoppingCart = () => {
 					<>
 						<List>
 							{items.map((item, index) => {
-								let thumbnailUrl = item.product.images
-									? publicRuntimeConfig.backendUrl +
-									  item.product.images[0].formats.thumbnail
-											.url
-									: null;
 								return (
 									<Fragment key={item.id}>
 										<ListItem key={item.id}>
-											{thumbnailUrl ? (
-												<img
-													className={styles.img}
-													src={thumbnailUrl}
-													alt={
-														item.product.name
-													}></img>
+											{item.product.images ? (
+												<Slider
+													className={styles.slider}
+													autoplay
+													autoplaySpeed={3000}
+													arrows={false}
+													pauseOnHover>
+													{item.product.images.map(
+														(image) => (
+															<Image
+																src={
+																	publicRuntimeConfig.backendUrl +
+																	image
+																		.formats
+																		.thumbnail
+																		.url
+																}
+																alt={
+																	item.product
+																		.name
+																}
+																width={150}
+																height={100}
+																key={
+																	image.id
+																}></Image>
+														)
+													)}
+												</Slider>
 											) : (
 												<EmptyImageIcon></EmptyImageIcon>
 											)}

@@ -1,16 +1,12 @@
 import type { NextPage } from 'next';
 import {
 	Box,
-	Button,
 	Container,
 	Input,
 	MenuItem,
 	Pagination,
 	Select,
-	Link,
 	SelectChangeEvent,
-	Autocomplete,
-	TextField,
 } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import styles from './index.module.scss';
@@ -25,6 +21,7 @@ import WhiteBox from 'components/WhiteBox';
 import { Brand } from 'api/brands/types';
 import { getBrands } from 'api/brands/brands';
 import Filters from 'components/Filters';
+import NewProducts from 'components/NewProducts';
 
 const selectSortItems = [
 	{ name: 'Новые', value: 'createdAt:desc' },
@@ -180,6 +177,7 @@ const Home: NextPage = () => {
 					</WhiteBox>
 				</Box>
 			</Box>
+			<NewProducts></NewProducts>
 		</Container>
 	);
 };

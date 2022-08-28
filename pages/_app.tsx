@@ -17,6 +17,9 @@ import {
 } from '../services/LocalStorageService';
 import Notification from '../components/Notification';
 import RouteShield from '../components/RouteShield/RouteShield';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import './app.scss';
 
 const propertyId = '62e2456354f06e12d88bbae4';
 const tawkId = '1g91tu3hb';

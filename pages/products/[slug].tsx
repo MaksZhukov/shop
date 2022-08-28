@@ -6,8 +6,9 @@ import FavoriteButton from 'components/FavoriteButton';
 import ShoppingCartButton from 'components/ShoppingCartButton';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
+import Image from 'next/image';
 import { FC, useEffect } from 'react';
-import Carousel from 'react-material-ui-carousel';
+import Slider from 'react-slick';
 import { api } from '../../api';
 import { fetchProduct } from '../../api/products/products';
 import { Product } from '../../api/products/types';
@@ -43,23 +44,27 @@ const ProductPage = ({ data }: Props) => {
 				</Box>
 				<Box display='flex'>
 					{data.images ? (
-						<Carousel className={styles.carousel}>
+						<Slider
+							autoplay
+							autoplaySpeed={3000}
+							dots
+							className={styles.slider}>
 							{data.images.map((item) => (
-								<Box
+								<Image
 									key={item.id}
-									display='flex'
-									justifyContent='center'>
-									<img
-										alt={data.name}
-										src={
-											publicRuntimeConfig.backendUrl +
-											item.url
-										}></img>
-								</Box>
+									alt={data.name}
+									width={640}
+									height={480}
+									src={
+										publicRuntimeConfig.backendUrl +
+										item.url
+									}></Image>
 							))}
-						</Carousel>
+						</Slider>
 					) : (
-						<EmptyImageIcon size={500}></EmptyImageIcon>
+						<EmptyImageIcon
+							size={700}
+							margin='-80px'></EmptyImageIcon>
 					)}
 					<Box flex='1' display='flex' width='200px'>
 						<Box paddingX='1em' flex='1'>
