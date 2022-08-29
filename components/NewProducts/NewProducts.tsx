@@ -77,7 +77,7 @@ const NewProducts = () => {
 											key={image.id}
 											alt={item.name}
 											src={
-												publicRuntimeConfig.backendUrl +
+												publicRuntimeConfig.backendLocalUrl +
 												image.formats.thumbnail.url
 											}
 											width={200}

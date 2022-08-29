@@ -38,7 +38,7 @@ const ProductItem = ({ data }: Props) => {
 							<Image
 								key={item.id}
 								src={
-									publicRuntimeConfig.backendUrl +
+									publicRuntimeConfig.backendLocalUrl +
 									item.formats.thumbnail.url
 								}
 								width={200}

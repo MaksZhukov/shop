@@ -56,7 +56,7 @@ const ProductPage = ({ data }: Props) => {
 									width={640}
 									height={480}
 									src={
-										publicRuntimeConfig.backendUrl +
+										publicRuntimeConfig.backendLocalUrl +
 										item.url
 									}></Image>
 							))}

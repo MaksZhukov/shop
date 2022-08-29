@@ -51,7 +51,7 @@ const ShoppingCart = () => {
 														(image) => (
 															<Image
 																src={
-																	publicRuntimeConfig.backendUrl +
+																	publicRuntimeConfig.backendLocalUrl +
 																	image
 																		.formats
 																		.thumbnail
