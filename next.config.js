@@ -7,7 +7,7 @@ const nextConfig = {
 		backendLocalUrl: process.env.BACKEND_LOCAL_URL,
 	},
 	images: {
-		domains: ['localhost'],
+		domains: process.env.IMAGES_DOMAINS.split(','),
 	},
 };
 
