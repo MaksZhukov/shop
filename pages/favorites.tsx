@@ -36,7 +36,6 @@ const Favorites = () => {
 				{items.length ? (
 					<List>
 						{items.map((item, index) => {
-							console.log(item.product);
 							return (
 								<Fragment key={item.id}>
 									<ListItem key={item.id}>
