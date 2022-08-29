@@ -23,35 +23,33 @@ const Reviews = () => {
 		fetchData();
 	}, []);
 
-	return (
-		!!reviews.length && (
-			<WhiteBox>
-				<Typography marginBottom='0.5em' variant='h5'>
-					Отзывы
-				</Typography>
-				{reviews.map((item, index) => (
-					<Fragment key={item.id}>
-						<Box marginY='0.5em' key={item.id}>
-							<Typography
-								title={item.authorName}
-								lineClamp={1}
-								component='legend'>
-								{item.authorName}
-							</Typography>
-							<Rating readOnly value={item.rating}></Rating>
-							<Typography
-								title={item.description}
-								lineClamp={2}
-								variant='body1'>
-								{item.description}
-							</Typography>
-						</Box>
-						{index !== reviews.length - 1 && <Divider></Divider>}
-					</Fragment>
-				))}
-			</WhiteBox>
-		)
-	);
+	return reviews.length ? (
+		<WhiteBox>
+			<Typography marginBottom='0.5em' variant='h5'>
+				Отзывы
+			</Typography>
+			{reviews.map((item, index) => (
+				<Fragment key={item.id}>
+					<Box marginY='0.5em' key={item.id}>
+						<Typography
+							title={item.authorName}
+							lineClamp={1}
+							component='legend'>
+							{item.authorName}
+						</Typography>
+						<Rating readOnly value={item.rating}></Rating>
+						<Typography
+							title={item.description}
+							lineClamp={2}
+							variant='body1'>
+							{item.description}
+						</Typography>
+					</Box>
+					{index !== reviews.length - 1 && <Divider></Divider>}
+				</Fragment>
+			))}
+		</WhiteBox>
+	) : null;
 };
 
 export default Reviews;

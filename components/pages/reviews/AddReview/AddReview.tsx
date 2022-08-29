@@ -27,18 +27,20 @@ const AddReview = () => {
 	});
 	const [description, setDescription] = useState<string>('');
 
-	const handleChangeRating = (_: any, newValue: number) => {
-		setRating(newValue);
+	const handleChangeRating = (_: any, newValue: number | null): void => {
+		setRating(newValue as number);
 	};
-	const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
 		setName(e.target.value);
 	};
 
-	const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>): void => {
 		setEmail(e.target.value);
 	};
 
-	const handleChangeDescription = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleChangeDescription = (
+		e: ChangeEvent<HTMLInputElement>
+	): void => {
 		setDescription(e.target.value);
 	};
 

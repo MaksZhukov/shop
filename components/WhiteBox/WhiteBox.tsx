@@ -8,6 +8,8 @@ const WhiteBox = ({
 	display,
 	justifyContent,
 	className,
+	marginX,
+	textAlign,
 	component,
 }: BoxProps) => {
 	return (
@@ -15,8 +17,10 @@ const WhiteBox = ({
 		<Box
 			className={className}
 			marginBottom='1em'
+			marginX={marginX}
 			padding='1em'
 			borderRadius='10px'
+			textAlign={textAlign}
 			component={component}
 			sx={{ backgroundColor: '#fff' }}
 			display={display}

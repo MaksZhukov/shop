@@ -19,7 +19,7 @@ export type CollectionParams = {
 	filters?: {
 		[field: string]:
 			| {
-					[operator: string]: string | undefined;
+					[operator: string]: number | string | undefined;
 			  }
 			| string
 			| number[]
