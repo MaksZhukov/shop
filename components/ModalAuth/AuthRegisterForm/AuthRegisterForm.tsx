@@ -1,4 +1,13 @@
-import { Alert, Button, TextField, Typography } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Alert,
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import axios, { AxiosError } from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ErrorTypes } from "../../../api/types";
@@ -20,6 +29,7 @@ const AuthRegisterForm = ({
   onChangeModalOpened,
 }: Props) => {
   const [email, setEmail] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
 
   const store = useStore();
@@ -99,6 +109,10 @@ const AuthRegisterForm = ({
     onChangeIsLoading(false);
   };
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <form onSubmit={handleClickSubmit}>
       <Typography textAlign="center" variant="h4">
@@ -114,17 +128,28 @@ const AuthRegisterForm = ({
         required
         placeholder="Почта"
       ></TextField>
-      <TextField
+      <OutlinedInput
         disabled={isLoading}
         fullWidth
-        margin="normal"
         required
+        sx={{ marginBottom: "1em" }}
         value={password}
         onChange={handleChangePassword}
-        type="password"
+        type={showPassword ? "text" : "password"}
         name="password"
         placeholder="Пароль"
-      ></TextField>
+        endAdornment={
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowPassword}
+              edge="end"
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </InputAdornment>
+        }
+      ></OutlinedInput>
       <Button disabled={isLoading} variant="contained" type="submit" fullWidth>
         {type === "login" ? "Войти" : "Зарегистрироваться"}
       </Button>

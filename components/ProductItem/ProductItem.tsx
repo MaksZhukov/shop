@@ -115,7 +115,7 @@ const ProductItem = ({ data }: Props) => {
       <CardContent sx={{ display: "flex", alignItems: "center" }}>
         <Typography flex="1" fontWeight="bold" variant="body1" color="primary">
           Цена: {data.price} руб{" "}
-          {data.priceUSD && (
+          {!!data.priceUSD && (
             <Typography color="text.secondary" component="sup">
               (~{data.priceUSD.toFixed()}$)
             </Typography>
