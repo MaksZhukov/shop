@@ -19,8 +19,6 @@ import ProductItem from "components/ProductItem";
 import { fetchProducts } from "api/products/products";
 import Reviews from "components/Reviews";
 import WhiteBox from "components/WhiteBox";
-import { Brand } from "api/brands/types";
-import { getBrands } from "api/brands/brands";
 import Filters from "components/Filters";
 import NewProducts from "components/NewProducts";
 
@@ -34,13 +32,14 @@ const selectSortItems = [
 const Home: NextPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>("");
   const [pageCount, setPageCount] = useState<number>(0);
   const router = useRouter();
 
   const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
 
   const {
-    searchValue = "",
+    searchValue: querySearchValue = "",
     min = "",
     max = "",
     brandId = "",
@@ -106,15 +105,21 @@ const Home: NextPage = () => {
     setIsLoading(false);
   }, 300);
 
+  const [throttledChangeRouterQuery] = useThrottle((field, value) => {
+    router.query[field] = value;
+    router.replace({ pathname: router.pathname, query: router.query });
+  }, 100);
+
   useEffect(() => {
     if (router.isReady) {
       throttledFetchProducts();
+      setSearchValue(querySearchValue);
     }
   }, [sort, page, router.isReady]);
 
   const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    router.query.searchValue = e.target.value;
-    router.push({ pathname: router.pathname, query: router.query });
+    setSearchValue(e.target.value);
+    throttledChangeRouterQuery("searchValue", e.target.value);
   };
 
   const handleChangeSort = (e: SelectChangeEvent<HTMLInputElement>) => {
@@ -141,7 +146,7 @@ const Home: NextPage = () => {
           component="aside"
           className={classNames(styles.sider, isTablet && styles.sider_tablet)}
         >
-          <Filters fetchProducts={throttledFetchProducts}></Filters>
+          <Filters fetchData={throttledFetchProducts}></Filters>
           <Reviews></Reviews>
         </Box>
         <Box
@@ -153,8 +158,8 @@ const Home: NextPage = () => {
           <WhiteBox display="flex">
             <Input
               className={styles["search"]}
-              value={searchValue}
               onChange={handleChangeSearch}
+              value={searchValue}
               placeholder="Поиск детали ..."
               fullWidth
             ></Input>

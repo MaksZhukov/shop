@@ -15,14 +15,15 @@ import { BODY_STYLES, FUELS, TRANSMISSIONS } from "./constants";
 import styles from "./Filters.module.scss";
 
 interface Props {
-  fetchProducts: () => void;
+  fetchData: () => void;
 }
 
-const Filters = ({ fetchProducts }: Props) => {
+const Filters = ({ fetchData }: Props) => {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [models, setModels] = useState<Model[]>([]);
   const [spareParts, setSpareParts] = useState<SparePart[]>([]);
   const router = useRouter();
+  const isAwaitingAutoPage = router.pathname === "/awaiting-auto";
 
   const {
     min = "",
@@ -116,7 +117,7 @@ const Filters = ({ fetchProducts }: Props) => {
     };
 
   const handleClickFind = () => {
-    fetchProducts();
+    fetchData();
   };
 
   const arrayOfYearsFrom = yearTo
@@ -128,22 +129,24 @@ const Filters = ({ fetchProducts }: Props) => {
 
   return (
     <WhiteBox>
-      <Box display="flex">
-        <Input
-          fullWidth
-          onChange={handleChangeNumberInput("min")}
-          value={min}
-          placeholder="Цена от руб"
-          type="number"
-        ></Input>
-        <Input
-          fullWidth
-          onChange={handleChangeNumberInput("max")}
-          value={max}
-          placeholder="Цена до руб"
-          type="number"
-        ></Input>
-      </Box>
+      {!isAwaitingAutoPage && (
+        <Box display="flex">
+          <Input
+            fullWidth
+            onChange={handleChangeNumberInput("min")}
+            value={min}
+            placeholder="Цена от руб"
+            type="number"
+          ></Input>
+          <Input
+            fullWidth
+            onChange={handleChangeNumberInput("max")}
+            value={max}
+            placeholder="Цена до руб"
+            type="number"
+          ></Input>
+        </Box>
+      )}
       <Autocomplete
         options={brands.map((item) => ({
           label: item.name,
@@ -197,27 +200,29 @@ const Filters = ({ fetchProducts }: Props) => {
           )}
         ></Autocomplete>
       </Box>
-      <Autocomplete
-        options={spareParts.map((item) => ({
-          label: item.name,
-          ...item,
-        }))}
-        noOptionsText="Совпадений нет"
-        onOpen={handleOpenAutocomplete(
-          !!spareParts.length,
-          setSpareParts,
-          getSpareParts
-        )}
-        onChange={handleChangeObjAutocomplete("sparePartName", "sparePartId")}
-        value={{
-          label: sparePartName,
-          id: +sparePartId,
-          name: sparePartName,
-        }}
-        renderInput={(params) => (
-          <TextField {...params} variant="standard" placeholder="Запчасть" />
-        )}
-      ></Autocomplete>
+      {!isAwaitingAutoPage && (
+        <Autocomplete
+          options={spareParts.map((item) => ({
+            label: item.name,
+            ...item,
+          }))}
+          noOptionsText="Совпадений нет"
+          onOpen={handleOpenAutocomplete(
+            !!spareParts.length,
+            setSpareParts,
+            getSpareParts
+          )}
+          onChange={handleChangeObjAutocomplete("sparePartName", "sparePartId")}
+          value={{
+            label: sparePartName,
+            id: +sparePartId,
+            name: sparePartName,
+          }}
+          renderInput={(params) => (
+            <TextField {...params} variant="standard" placeholder="Запчасть" />
+          )}
+        ></Autocomplete>
+      )}
       <Input
         fullWidth
         onChange={handleChangeNumberInput("volume")}

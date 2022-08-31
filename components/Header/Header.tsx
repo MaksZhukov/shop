@@ -23,7 +23,7 @@ import useOutsideClick from "@rooks/use-outside-click";
 
 const pages = [
   { name: "Главная", path: "/" },
-  { name: "Ожидаемые авто", path: "/1" },
+  { name: "Ожидаемые авто", path: "/awaiting-auto" },
   { name: "Покупка авто на запчасти", path: "/buyingCar" },
   { name: "Доставка/Оплата", path: "/shippingAndPayment" },
   { name: "Гарантия", path: "/guarantee" },
