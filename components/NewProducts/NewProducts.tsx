@@ -1,4 +1,4 @@
-import { Link } from '@mui/material';
+import { Box, Link, useTheme } from '@mui/material';
 import { fetchProducts } from 'api/products/products';
 import { Product } from 'api/products/types';
 import EmptyImageIcon from 'components/EmptyImageIcon';
@@ -10,13 +10,13 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import styles from './NewProducts.module.scss';
-
 const { publicRuntimeConfig } = getConfig();
 const COUNT_DAYS_FOR_NEW_PRODUCT = 7;
 
 const NewProducts = () => {
 	const [data, setData] = useState<Product[]>([]);
 	const router = useRouter();
+	const { breakpoints } = useTheme();
 
 	useEffect(() => {
 		let date = new Date();
@@ -44,7 +44,7 @@ const NewProducts = () => {
 	};
 
 	return data.length ? (
-		<>
+		<Box paddingX='1em'>
 			<Typography
 				marginBottom='1em'
 				marginTop='1em'
@@ -53,12 +53,38 @@ const NewProducts = () => {
 				Новые запчасти
 			</Typography>
 			<Slider
-				// autoplay
+				autoplay
 				autoplaySpeed={5000}
 				className={styles.slider}
 				infinite
 				slidesToShow={data.length < 4 ? data.length : 4}
-				slidesToScroll={1}>
+				slidesToScroll={1}
+				responsive={[
+					{
+						breakpoint: breakpoints.values.sm,
+						settings: {
+							slidesToShow: 1,
+							slidesToScroll: 1,
+							infinite: true,
+						},
+					},
+					{
+						breakpoint: breakpoints.values.md,
+						settings: {
+							slidesToShow: data.length < 2 ? data.length : 2,
+							slidesToScroll: 1,
+							infinite: true,
+						},
+					},
+					{
+						breakpoint: breakpoints.values.lg,
+						settings: {
+							slidesToShow: data.length < 3 ? data.length : 3,
+							slidesToScroll: 1,
+							infinite: true,
+						},
+					},
+				]}>
 				{data.map((item) => {
 					return (
 						<WhiteBox
@@ -77,7 +103,7 @@ const NewProducts = () => {
 											key={image.id}
 											alt={item.name}
 											src={
-												publicRuntimeConfig.backendLocalUrl +
+												publicRuntimeConfig.backendUrl +
 												image.formats.thumbnail.url
 											}
 											width={200}
@@ -116,7 +142,7 @@ const NewProducts = () => {
 					);
 				})}
 			</Slider>
-		</>
+		</Box>
 	) : (
 		<></>
 	);

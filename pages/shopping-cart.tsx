@@ -1,5 +1,14 @@
-import { Box, Button, Divider, ListItem, List, Link } from '@mui/material';
+import {
+	Box,
+	Button,
+	Divider,
+	ListItem,
+	List,
+	Link,
+	useMediaQuery,
+} from '@mui/material';
 import { Container } from '@mui/system';
+import classNames from 'classnames';
 import CheckoutForm from 'components/CheckoutForm';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
@@ -20,6 +29,9 @@ const { publicRuntimeConfig } = getConfig();
 const ShoppingCart = () => {
 	const [isCheckoutFormOpened, setIsCheckoutFormOpened] =
 		useState<boolean>(false);
+	const isMobile = useMediaQuery((theme: any) =>
+		theme.breakpoints.down('sm')
+	);
 	const store = useStore();
 	let items = store.cart.items;
 
@@ -39,10 +51,19 @@ const ShoppingCart = () => {
 							{items.map((item, index) => {
 								return (
 									<Fragment key={item.id}>
-										<ListItem key={item.id}>
+										<ListItem
+											className={classNames(
+												isMobile &&
+													styles.list__item_mobile
+											)}
+											key={item.id}>
 											{item.product.images ? (
 												<Slider
-													className={styles.slider}
+													className={classNames(
+														styles.slider,
+														isMobile &&
+															styles.slider_mobile
+													)}
 													autoplay
 													autoplaySpeed={3000}
 													arrows={false}
@@ -51,18 +72,33 @@ const ShoppingCart = () => {
 														(image) => (
 															<Image
 																src={
-																	publicRuntimeConfig.backendLocalUrl +
-																	image
-																		.formats
-																		.thumbnail
-																		.url
+																	publicRuntimeConfig.backendUrl +
+																	`${
+																		isMobile
+																			? image
+																					.formats
+																					.small
+																					.url
+																			: image
+																					.formats
+																					.thumbnail
+																					.url
+																	}`
 																}
 																alt={
 																	item.product
 																		.name
 																}
-																width={150}
-																height={100}
+																width={
+																	isMobile
+																		? 500
+																		: 150
+																}
+																height={
+																	isMobile
+																		? 375
+																		: 100
+																}
 																key={
 																	image.id
 																}></Image>
@@ -94,13 +130,29 @@ const ShoppingCart = () => {
 													{item.product.description}
 												</Typography>
 											</Box>
-											<Box>
+											<Box
+												display={
+													isMobile ? 'flex' : 'block'
+												}
+												{...(isMobile && {
+													justifyContent: 'end',
+												})}>
 												<Typography
 													textAlign='center'
 													marginBottom='0.5em'
 													color='primary'
 													variant='h5'>
-													{item.product.price} р.
+													{item.product.price} руб.
+													{!!item.product
+														.priceUSD && (
+														<Typography
+															color='text.secondary'
+															component='sup'>
+															(~
+															{item.product.priceUSD.toFixed()}
+															$)
+														</Typography>
+													)}
 												</Typography>
 												<ShoppingCartButton
 													product={

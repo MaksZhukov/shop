@@ -1,0 +1,13 @@
+.wrapper {
+  display: flex;
+  &_tablet {
+    display: initial;
+  }
+}
+
+.sider {
+  width: 250px;
+  &_tablet {
+    width: 100%;
+  }
+}
