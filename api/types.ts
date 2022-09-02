@@ -2,6 +2,15 @@ export const enum ErrorTypes {
 	ValidationError = 'ValidationError',
 }
 
+export type Image = {
+	id: number;
+	url: string;
+	formats: {
+		thumbnail: { url: string };
+		small: { url: string };
+	};
+};
+
 export type ApiResponse<T = any> = {
 	data: T;
 	meta: {
