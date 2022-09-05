@@ -1,7 +1,14 @@
-import { Alert, Container, Pagination, Typography } from '@mui/material';
+import {
+	Alert,
+	Container,
+	Pagination,
+	Typography,
+	useMediaQuery,
+} from '@mui/material';
 import { Box } from '@mui/system';
 import { fetchCars } from 'api/cars/cars';
 import { Car } from 'api/cars/types';
+import classNames from 'classnames';
 import CarItem from 'components/CarItem';
 import Filters from 'components/Filters';
 import WhiteBox from 'components/WhiteBox';
@@ -12,19 +19,29 @@ import styles from './awaiting-cars.module.scss';
 
 const AwaitingCars = () => {
 	const [cars, setCars] = useState<Car[]>([]);
+	const [total, setTotal] = useState<null | number>(null);
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const store = useStore();
+
+	const isTablet = useMediaQuery((theme: any) =>
+		theme.breakpoints.down('md')
+	);
+
 	const {
 		brandId = '',
 		modelId = '',
 		fuel = '',
 		bodyStyle = '',
 		transmission = '',
+		yearFrom = '',
+		yearTo = '',
 		sort = 'createdAt:desc',
 		page = '1',
 	} = router.query as {
+		yearFrom: string;
+		yearTo: string;
 		brandId: string;
 		modelId: string;
 		sparePartId: string;
@@ -44,7 +61,17 @@ const AwaitingCars = () => {
 					meta: { pagination },
 				},
 			} = await fetchCars({
-				filters: {},
+				filters: {
+					brand: brandId || undefined,
+					model: modelId || undefined,
+					year: {
+						$gte: yearFrom || undefined,
+						$lte: yearTo || undefined,
+					},
+					transmission: transmission || undefined,
+					fuel: fuel || undefined,
+					bodyStyle: bodyStyle || undefined,
+				},
 				pagination: { page: +page },
 				populate: ['images', 'model', 'brand'],
 			});
@@ -58,6 +85,7 @@ const AwaitingCars = () => {
 						query: router.query,
 					});
 				}
+				setTotal(pagination.total);
 			}
 		} catch (err) {
 			store.notification.showMessage({
@@ -86,26 +114,51 @@ const AwaitingCars = () => {
 					Ожидаемые авто
 				</Typography>
 			</WhiteBox>
-			<Box className={styles.wrapper}>
-				<Box marginRight='1em' className={styles.sider}>
-					<Filters fetchData={fetchData}></Filters>
+			<Box
+				className={classNames(
+					styles.wrapper,
+					isTablet && styles.wrapper_tablet
+				)}>
+				<Box
+					marginRight='1em'
+					className={classNames(
+						styles.sider,
+						isTablet && styles.sider_tablet
+					)}>
+					<Filters total={total} fetchData={fetchData}></Filters>
 				</Box>
-				<Box className={styles.content}>
-					<WhiteBox>
-						{cars.map((item) => (
-							<CarItem key={item.id} data={item}></CarItem>
-						))}
+				<Box
+					className={classNames(
+						styles.content,
+						isTablet && styles.content_tablet
+					)}>
+					<WhiteBox
+						className={classNames(
+							isLoading && styles.loading,
+							!cars.length && styles['content-items_no-data']
+						)}>
+						{!!cars.length ? (
+							cars.map((item) => (
+								<CarItem key={item.id} data={item}></CarItem>
+							))
+						) : (
+							<Typography textAlign='center' variant='h5'>
+								Данных не найдено
+							</Typography>
+						)}
 					</WhiteBox>
-					<WhiteBox display='flex' justifyContent='center'>
-						<Pagination
-							page={+page}
-							siblingCount={2}
-							color='primary'
-							count={pageCount}
-							onChange={handleChangePage}
-							variant='outlined'
-						/>
-					</WhiteBox>
+					{!!cars.length && (
+						<WhiteBox display='flex' justifyContent='center'>
+							<Pagination
+								page={+page}
+								siblingCount={2}
+								color='primary'
+								count={pageCount}
+								onChange={handleChangePage}
+								variant='outlined'
+							/>
+						</WhiteBox>
+					)}
 				</Box>
 			</Box>
 		</Container>

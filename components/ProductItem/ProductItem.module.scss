@@ -1,25 +1,13 @@
-.description {
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.name {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .slider {
-  width: 200px;
-  margin-bottom: 1em;
-  &_mobile {
-    margin: 0 auto 1em;
-    max-width: 500px;
-    width: 100%;
-  }
+	width: 200px;
+	margin-bottom: 1em;
+	&_mobile {
+		margin: 0 auto 1em;
+		max-width: 500px;
+		width: 100%;
+	}
+}
+
+.product {
+	margin-bottom: 2em;
 }

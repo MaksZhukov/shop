@@ -24,7 +24,6 @@ interface Props {
 }
 
 const CarItem = ({ data }: Props) => {
-	console.log(data);
 	const router = useRouter();
 	const isMobile = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('sm')
@@ -33,9 +32,13 @@ const CarItem = ({ data }: Props) => {
 	const handleClickMore = (slug: string) => () => {
 		router.push('/awaiting-cars/' + slug);
 	};
+	let manufactureYear = new Date(data.manufactureDate).getFullYear();
+
+	let name =
+		data.brand?.name + ' ' + data.model?.name + ' ' + manufactureYear;
 
 	return (
-		<Card sx={{ marginBottom: '2em' }} className={styles.product}>
+		<Card className={styles.item}>
 			<Box
 				sx={{
 					display: 'flex',
@@ -65,22 +68,27 @@ const CarItem = ({ data }: Props) => {
 								}
 								width={isMobile ? 500 : 200}
 								height={isMobile ? 375 : 150}
-								alt={data.name}></Image>
+								alt={name}></Image>
 						))}
 					</Slider>
 				) : (
-					<EmptyImageIcon size={250} margin='-25px'></EmptyImageIcon>
+					<EmptyImageIcon
+						size={isMobile ? 300 : 250}
+						margin={
+							isMobile ? '-30px auto' : '-25px'
+						}></EmptyImageIcon>
 				)}
-				<CardContent sx={{ flex: 1, paddingY: '0!important' }}>
+				<CardContent
+					sx={{ flex: 1, paddingY: '0!important', width: '100%' }}>
 					<Typography
 						onClick={handleClickMore(data.slug)}
 						lineClamp={1}
-						title={data.name}
+						title={name}
 						component='div'
 						variant='h5'>
-						<Link underline='hover'>{data.name}</Link>
+						<Link underline='hover'>{name}</Link>
 					</Typography>
-					<Grid columnSpacing={2} container>
+					<Grid marginBottom='1em' columnSpacing={2} container>
 						<Grid item>
 							<Typography
 								fontWeight='500'
@@ -99,7 +107,32 @@ const CarItem = ({ data }: Props) => {
 							</Typography>
 							{data.model?.name}
 						</Grid>
+						<Grid item>
+							<Typography
+								fontWeight='500'
+								component='div'
+								variant='subtitle1'>
+								Двигатель
+							</Typography>
+							{data.engine}
+						</Grid>
+						<Grid item>
+							<Typography
+								fontWeight='500'
+								component='div'
+								variant='subtitle1'>
+								Год
+							</Typography>
+							{manufactureYear}
+						</Grid>
 					</Grid>
+					<Box marginBottom='1em' textAlign='right'>
+						<Button
+							onClick={handleClickMore(data.slug)}
+							variant='outlined'>
+							Подробнее
+						</Button>
+					</Box>
 				</CardContent>
 			</Box>
 		</Card>

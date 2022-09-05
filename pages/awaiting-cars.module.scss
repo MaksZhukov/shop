@@ -12,6 +12,14 @@
 	}
 }
 
+.loading {
+	opacity: 0.5;
+}
+
+.content-items_no-data {
+	min-height: calc(100% - 1em);
+}
+
 .content {
 	width: calc(100% - 250px - 1em);
 	&_tablet {

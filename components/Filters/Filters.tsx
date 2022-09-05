@@ -1,4 +1,12 @@
-import { Autocomplete, Box, Button, Input, TextField } from '@mui/material';
+import {
+	Alert,
+	Autocomplete,
+	Box,
+	Button,
+	Input,
+	TextField,
+	Typography,
+} from '@mui/material';
 import { getBrands } from 'api/brands/brands';
 import { Brand } from 'api/brands/types';
 import { MAX_LIMIT } from 'api/constants';
@@ -16,9 +24,10 @@ import styles from './Filters.module.scss';
 
 interface Props {
 	fetchData: () => void;
+	total: null | number;
 }
 
-const Filters = ({ fetchData }: Props) => {
+const Filters = ({ fetchData, total }: Props) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
 	const [spareParts, setSpareParts] = useState<SparePart[]>([]);
@@ -291,11 +300,14 @@ const Filters = ({ fetchData }: Props) => {
 						placeholder='Топливо'
 					/>
 				)}></Autocomplete>
-			<Box marginTop='1em' textAlign='center'>
+			<Box marginY='1em' textAlign='center'>
 				<Button onClick={handleClickFind} fullWidth variant='contained'>
 					Найти
 				</Button>
 			</Box>
+			<Typography textAlign='center' variant='subtitle1' color='primary'>
+				Найдено: {total}
+			</Typography>
 		</WhiteBox>
 	);
 };
