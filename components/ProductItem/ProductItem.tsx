@@ -59,7 +59,7 @@ const ProductItem = ({ data }: Props) => {
 								<Image
 									key={item.id}
 									src={
-										publicRuntimeConfig.backendUrl +
+										publicRuntimeConfig.backendLocalUrl +
 										`${
 											isMobile
 												? item.formats?.small.url
