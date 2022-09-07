@@ -10,6 +10,7 @@ const WhiteBox = ({
 	className,
 	marginX,
 	textAlign,
+	padding,
 	component,
 }: BoxProps) => {
 	return (
@@ -18,7 +19,7 @@ const WhiteBox = ({
 			className={className}
 			marginBottom='1em'
 			marginX={marginX}
-			padding='1em'
+			padding={padding || '1em'}
 			borderRadius='10px'
 			textAlign={textAlign}
 			component={component}

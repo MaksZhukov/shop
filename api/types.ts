@@ -5,7 +5,7 @@ export const enum ErrorTypes {
 export type Image = {
 	id: number;
 	url: string;
-	formats: {
+	formats?: {
 		thumbnail: { url: string };
 		small: { url: string };
 	};

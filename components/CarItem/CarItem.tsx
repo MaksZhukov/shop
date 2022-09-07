@@ -45,7 +45,7 @@ const CarItem = ({ data }: Props) => {
 					alignItems: 'flex-start',
 					flexDirection: isMobile ? 'column' : 'row',
 				}}>
-				{data.images ? (
+				{data.images && data.images.some((image) => image.formats) ? (
 					<Slider
 						className={classNames(
 							styles.slider,
@@ -55,21 +55,23 @@ const CarItem = ({ data }: Props) => {
 						pauseOnHover
 						autoplay
 						autoplaySpeed={3000}>
-						{data.images.map((item) => (
-							<Image
-								key={item.id}
-								src={
-									publicRuntimeConfig.backendUrl +
-									`${
-										isMobile
-											? item.formats.small.url
-											: item.formats.thumbnail.url
-									}`
-								}
-								width={isMobile ? 500 : 200}
-								height={isMobile ? 375 : 150}
-								alt={name}></Image>
-						))}
+						{data.images
+							.filter((item) => item.formats)
+							.map((item) => (
+								<Image
+									key={item.id}
+									src={
+										publicRuntimeConfig.backendUrl +
+										`${
+											isMobile
+												? item.formats?.small.url
+												: item.formats?.thumbnail.url
+										}`
+									}
+									width={isMobile ? 500 : 200}
+									height={isMobile ? 375 : 150}
+									alt={name}></Image>
+							))}
 					</Slider>
 				) : (
 					<EmptyImageIcon

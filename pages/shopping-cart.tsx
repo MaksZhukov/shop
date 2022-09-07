@@ -57,7 +57,7 @@ const ShoppingCart = () => {
 													styles.list__item_mobile
 											)}
 											key={item.id}>
-											{item.product.images ? (
+											{item.product.images && item.product.images.some((image) => image.formats) ? (
 												<Slider
 													className={classNames(
 														styles.slider,
@@ -68,21 +68,15 @@ const ShoppingCart = () => {
 													autoplaySpeed={3000}
 													arrows={false}
 													pauseOnHover>
-													{item.product.images.map(
+													{item.product.images.filter(item=>item.formats).map(
 														(image) => (
 															<Image
 																src={
 																	publicRuntimeConfig.backendUrl +
 																	`${
 																		isMobile
-																			? image
-																					.formats
-																					.small
-																					.url
-																			: image
-																					.formats
-																					.thumbnail
-																					.url
+																			? image.formats?.small.url
+																			: image.formats?.thumbnail.url
 																	}`
 																}
 																alt={

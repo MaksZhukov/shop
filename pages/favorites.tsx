@@ -45,7 +45,7 @@ const Favorites = () => {
                     className={classNames(isMobile && styles.list__item_mobile)}
                     key={item.id}
                   >
-                    {item.product.images ? (
+                    {item.product.images && item.product.images.some((image) => image.formats) ? (
                       <Slider
                         className={classNames(
                           styles.slider,
@@ -56,14 +56,14 @@ const Favorites = () => {
                         pauseOnHover
                         autoplaySpeed={3000}
                       >
-                        {item.product.images.map((image) => (
+                        {item.product.images.filter(item=>item.formats).map((image) => (
                           <Image
                             src={
                               publicRuntimeConfig.backendUrl +
                               `${
                                 isMobile
-                                  ? image.formats.small.url
-                                  : image.formats.thumbnail.url
+                                  ? image.formats?.small.url
+                                  : image.formats?.thumbnail.url
                               }`
                             }
                             alt={item.product.name}

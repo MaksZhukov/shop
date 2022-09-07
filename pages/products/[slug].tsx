@@ -1,9 +1,10 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import axios from 'axios';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import ShoppingCartButton from 'components/ShoppingCartButton';
+import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Image from 'next/image';
@@ -21,9 +22,26 @@ interface Props {
 }
 
 const ProductPage = ({ data }: Props) => {
+	const isTablet = useMediaQuery((theme: any) =>
+		theme.breakpoints.down('md')
+	);
+	const isMobile = useMediaQuery((theme: any) =>
+		theme.breakpoints.down('sm')
+	);
+
+	let printOptions = [
+		{ text: 'Артикул', value: data.id },
+		{ text: 'Марка', value: data.brand?.name },
+		{ text: 'Модель', value: data.brand?.name },
+		{ text: 'Запчасть', value: data.sparePart?.name },
+		{ text: 'Коробка', value: data.transmission },
+		{ text: 'Поколение', value: data.generation },
+		{ text: 'Обьем', value: data.volume },
+	];
+
 	return (
 		<Container>
-			<Box className={styles.product}>
+			<WhiteBox padding='2em'>
 				<Box
 					marginBottom='1em'
 					display='flex'
@@ -42,7 +60,9 @@ const ProductPage = ({ data }: Props) => {
 					<ShoppingCartButton product={data}></ShoppingCartButton>
 					<FavoriteButton product={data}></FavoriteButton>
 				</Box>
-				<Box display='flex'>
+				<Box
+					display='flex'
+					sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
 					{data.images ? (
 						<Slider
 							autoplay
@@ -63,59 +83,38 @@ const ProductPage = ({ data }: Props) => {
 						</Slider>
 					) : (
 						<EmptyImageIcon
-							size={700}
-							margin='-80px'></EmptyImageIcon>
+							size={isMobile ? 300 : isTablet ? 500 : 700}
+							margin={'-8%'}></EmptyImageIcon>
 					)}
-					<Box flex='1' display='flex' width='200px'>
-						<Box paddingX='1em' flex='1'>
-							<Box>
-								<Typography
-									mr='1em'
-									fontWeight='500'
-									variant='subtitle1'
-									component='span'>
-									Артикул:
-								</Typography>
-								<Typography component='span'>
-									{data.id}
-								</Typography>
-							</Box>
-							<Box>
-								<Typography
-									mr='1em'
-									fontWeight='500'
-									variant='subtitle1'
-									component='span'>
-									Марка:
-								</Typography>
-								<Typography component='span'>
-									{data.brand?.name}
-								</Typography>
-							</Box>
-							<Box>
-								<Typography
-									mr='1em'
-									fontWeight='500'
-									variant='subtitle1'
-									component='span'>
-									Модель:
-								</Typography>
-								<Typography component='span'>
-									{data.model?.name}
-								</Typography>
-							</Box>
-							<Box>
-								<Typography
-									mr='1em'
-									fontWeight='500'
-									variant='subtitle1'
-									component='span'>
-									Запчасть:
-								</Typography>
-								<Typography component='span'>
-									{data.sparePart?.name}
-								</Typography>
-							</Box>
+					<Box
+						flex='1'
+						display='flex'
+						sx={{
+							flexDirection: {
+								xs: 'column-reverse',
+								sm: 'row',
+								md: 'column-reverse',
+								lg: 'row',
+							},
+						}}>
+						<Box
+							flex='1'
+							sx={{ padding: { xs: '0', md: '0 1em 0 3em' } }}>
+							{printOptions.map((item) => (
+								<Box display='flex' key={item.value}>
+									<Typography
+										mr='1em'
+										width='80px'
+										fontWeight='500'
+										variant='subtitle1'
+										component='span'>
+										{item.text}:
+									</Typography>
+									<Typography component='span'>
+										{item.value}
+									</Typography>
+								</Box>
+							))}
 						</Box>
 						<Box>
 							<Typography
@@ -135,7 +134,7 @@ const ProductPage = ({ data }: Props) => {
 						</Box>
 					</Box>
 				</Box>
-				<Box marginTop='1em'>
+				<Box>
 					<Typography
 						mr='1em'
 						fontWeight='500'
@@ -147,7 +146,7 @@ const ProductPage = ({ data }: Props) => {
 						{data.description}
 					</Typography>
 				</Box>
-			</Box>
+			</WhiteBox>
 		</Container>
 	);
 };

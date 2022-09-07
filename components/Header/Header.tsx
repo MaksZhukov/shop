@@ -24,8 +24,8 @@ import useOutsideClick from '@rooks/use-outside-click';
 const pages = [
 	{ name: 'Главная', path: '/' },
 	{ name: 'Ожидаемые авто', path: '/awaiting-cars' },
-	{ name: 'Покупка авто на запчасти', path: '/buyingCar' },
-	{ name: 'Доставка/Оплата', path: '/shippingAndPayment' },
+	{ name: 'Покупка авто на запчасти', path: '/buying-car' },
+	{ name: 'Доставка/Оплата', path: '/shipping-and-payment' },
 	{ name: 'Гарантия', path: '/guarantee' },
 	{ name: 'Отзывы', path: '/reviews' },
 	{ name: 'Контакты', path: '/contacts' },

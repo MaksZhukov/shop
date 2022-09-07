@@ -91,25 +91,28 @@ const NewProducts = () => {
 							textAlign='center'
 							className={styles.slider__item}
 							key={item.id}>
-							{item.images ? (
+							{item.images &&
+							item.images.some((image) => image.formats) ? (
 								<Slider
 									pauseOnHover
 									arrows={false}
 									autoplay
 									className={styles['inner-slider']}
 									autoplaySpeed={3000}>
-									{item.images.map((image) => (
-										<Image
-											key={image.id}
-											alt={item.name}
-											src={
-												publicRuntimeConfig.backendUrl +
-												image.formats.thumbnail.url
-											}
-											width={200}
-											height={150}
-										/>
-									))}
+									{item.images
+										.filter((item) => item.formats)
+										.map((image) => (
+											<Image
+												key={image.id}
+												alt={item.name}
+												src={
+													publicRuntimeConfig.backendUrl +
+													image.formats?.thumbnail.url
+												}
+												width={200}
+												height={150}
+											/>
+										))}
 								</Slider>
 							) : (
 								<EmptyImageIcon

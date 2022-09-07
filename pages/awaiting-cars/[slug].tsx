@@ -1,10 +1,13 @@
-import { Box, Typography } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchCar } from 'api/cars/cars';
+import { Car } from 'api/cars/types';
 import axios from 'axios';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import ShoppingCartButton from 'components/ShoppingCartButton';
+import Typography from 'components/Typography';
+import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Image from 'next/image';
@@ -18,33 +21,57 @@ import styles from './awaiting-car.module.scss';
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
-	data: Product;
+	data: Car;
 }
 
-const ProductPage = ({ data }: Props) => {
+const CarPage = ({ data }: Props) => {
+	const isTablet = useMediaQuery((theme: any) =>
+		theme.breakpoints.down('md')
+	);
+	const isMobile = useMediaQuery((theme: any) =>
+		theme.breakpoints.down('sm')
+	);
+	let printOptions = [
+		{ text: 'Артикул', value: data.id },
+		{ text: 'Марка', value: data.brand?.name },
+		{ text: 'Модель', value: data.brand?.name },
+		{ text: 'Тип кузова', value: data.bodyStyle },
+		{ text: 'Поколение', value: data.generation },
+		{ text: 'Двигатель', value: data.engine },
+		{ text: 'Тип топлива', value: data.fuel },
+		{ text: 'Обьем', value: data.volume },
+		{
+			text: 'Год',
+			value: data.manufactureDate,
+		},
+		{
+			text: 'Дата поставки',
+			value: data.deliveryDate,
+		},
+		{ text: 'Пробег', value: data.mileage },
+	];
+
+	let manufactureYear = new Date(data.manufactureDate).getFullYear();
+	let name =
+		data.brand?.name + ' ' + data.model?.name + ' ' + manufactureYear;
 	return (
 		<Container>
-			<Box className={styles.product}>
+			<WhiteBox padding='2em'>
+				<Typography
+					marginBottom='0.5em'
+					variant='h4'
+					flex='1'
+					overflow='hidden'
+					title={name}
+					textOverflow='ellipsis'
+					whiteSpace='nowrap'
+					component='h1'>
+					{name}
+				</Typography>
 				<Box
-					marginBottom='1em'
 					display='flex'
-					alignItems='center'
-					justifyContent='center'>
-					<Typography
-						variant='h4'
-						flex='1'
-						overflow='hidden'
-						title={data.name}
-						textOverflow='ellipsis'
-						whiteSpace='nowrap'
-						component='h1'>
-						{data.name}
-					</Typography>
-					<ShoppingCartButton product={data}></ShoppingCartButton>
-					<FavoriteButton product={data}></FavoriteButton>
-				</Box>
-				<Box display='flex'>
-					{data.images ? (
+					sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
+					{data.images && data.images.some((item) => item.formats) ? (
 						<Slider
 							autoplay
 							autoplaySpeed={3000}
@@ -53,7 +80,7 @@ const ProductPage = ({ data }: Props) => {
 							{data.images.map((item) => (
 								<Image
 									key={item.id}
-									alt={data.name}
+									alt={data.bodyStyle}
 									width={640}
 									height={480}
 									src={
@@ -64,51 +91,39 @@ const ProductPage = ({ data }: Props) => {
 						</Slider>
 					) : (
 						<EmptyImageIcon
-							size={700}
-							margin='-80px'></EmptyImageIcon>
+							size={isMobile ? 300 : isTablet ? 500 : 700}
+							margin={'-8%'}></EmptyImageIcon>
 					)}
-					<Box flex='1' display='flex' width='200px'>
-						<Box paddingX='1em' flex='1'>
-							<Box>
-								<Typography
-									mr='1em'
-									fontWeight='500'
-									variant='subtitle1'
-									component='span'>
-									Артикул:
-								</Typography>
-								<Typography component='span'>
-									{data.id}
-								</Typography>
-							</Box>
-							<Box>
-								<Typography
-									mr='1em'
-									fontWeight='500'
-									variant='subtitle1'
-									component='span'>
-									Марка:
-								</Typography>
-								<Typography component='span'>
-									{data.brand?.name}
-								</Typography>
-							</Box>
-							<Box>
-								<Typography
-									mr='1em'
-									fontWeight='500'
-									variant='subtitle1'
-									component='span'>
-									Модель:
-								</Typography>
-								<Typography component='span'>
-									{data.model?.name}
-								</Typography>
-							</Box>
+					<Box flex='1' display='flex'>
+						<Box
+							flex='1'
+							sx={{
+								padding: {
+									xs: '0',
+									md: '0 1em 0 5em',
+								},
+							}}>
+							{printOptions.map((item) => (
+								<Box
+									display='flex'
+									key={item.value?.toString()}>
+									<Typography
+										mr='1em'
+										width='100px'
+										fontWeight='500'
+										variant='subtitle1'
+										component='span'>
+										{item.text}:
+									</Typography>
+									<Typography component='span'>
+										{item.value?.toString()}
+									</Typography>
+								</Box>
+							))}
 						</Box>
 					</Box>
 				</Box>
-			</Box>
+			</WhiteBox>
 		</Container>
 	);
 };
@@ -135,4 +150,4 @@ export const getServerSideProps: GetServerSideProps<
 	};
 };
 
-export default ProductPage;
+export default CarPage;

@@ -12,6 +12,7 @@ export interface Car {
 	manufactureDate: Date;
 	bodyStyle: string;
 	engine: string;
+	generation: string;
 	model?: Model;
 	brand?: Brand;
 	images?: Image[];

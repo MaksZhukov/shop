@@ -24,6 +24,7 @@ export interface Product {
 	id: number;
 	slug: string;
 	name: string;
+	volume: number;
 	description: string;
 	price: number;
 	priceUSD?: number;
@@ -31,4 +32,6 @@ export interface Product {
 	brand?: Brand;
 	sparePart?: SparePart;
 	images?: Image[];
+	transmission: string;
+	generation: string;
 }
