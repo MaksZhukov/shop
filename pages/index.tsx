@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import {
+	Alert,
 	Box,
 	Container,
 	Input,
@@ -22,6 +23,7 @@ import Reviews from 'components/Reviews';
 import WhiteBox from 'components/WhiteBox';
 import Filters from 'components/Filters';
 import NewProducts from 'components/NewProducts';
+import { useStore } from 'store';
 
 const selectSortItems = [
 	{ name: 'Новые', value: 'createdAt:desc' },
@@ -34,6 +36,7 @@ const Home: NextPage = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const [searchValue, setSearchValue] = useState<string>('');
 	const [pageCount, setPageCount] = useState<number>(0);
 	const router = useRouter();
@@ -41,6 +44,7 @@ const Home: NextPage = () => {
 	const isTablet = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('md')
 	);
+	const store = useStore();
 
 	const {
 		searchValue: querySearchValue = '',
@@ -74,38 +78,52 @@ const Home: NextPage = () => {
 
 	const [throttledFetchProducts] = useThrottle(async () => {
 		setIsLoading(true);
-		const {
-			data: {
-				data,
-				meta: { pagination },
-			},
-		} = await fetchProducts({
-			filters: {
-				name: { $contains: searchValue },
-				price: { $gte: min || '0', $lte: max || undefined },
-				brand: brandId || undefined,
-				model: modelId || undefined,
-				sparePart: sparePartId || undefined,
-				year: {
-					$gte: yearFrom || undefined,
-					$lte: yearTo || undefined,
+		try {
+			const {
+				data: {
+					data,
+					meta: { pagination },
 				},
-				transmission: transmission || undefined,
-				fuel: fuel || undefined,
-				bodyStyle: bodyStyle || undefined,
-			},
-			pagination: searchValue ? {} : { page: +page },
-			populate: ['images', 'model', 'brand', 'sparePart'],
-			sort,
-		});
-		setProducts(data);
-		if (pagination) {
-			setPageCount(pagination.pageCount);
-			if (pagination.pageCount < +page) {
-				router.query.page = (pagination.pageCount || 1).toString();
-				router.push({ pathname: router.pathname, query: router.query });
+			} = await fetchProducts({
+				filters: {
+					name: { $contains: searchValue },
+					price: { $gte: min || '0', $lte: max || undefined },
+					brand: brandId || undefined,
+					model: modelId || undefined,
+					sparePart: sparePartId || undefined,
+					year: {
+						$gte: yearFrom || undefined,
+						$lte: yearTo || undefined,
+					},
+					transmission: transmission || undefined,
+					fuel: fuel || undefined,
+					bodyStyle: bodyStyle || undefined,
+				},
+				pagination: searchValue ? {} : { page: +page },
+				populate: ['images', 'model', 'brand', 'sparePart'],
+				sort,
+			});
+			setProducts(data);
+			if (pagination) {
+				setPageCount(pagination.pageCount);
+				if (pagination.pageCount < +page) {
+					router.query.page = (pagination.pageCount || 1).toString();
+					router.push({
+						pathname: router.pathname,
+						query: router.query,
+					});
+				}
+				setTotal(pagination.total);
 			}
-			setTotal(pagination.total);
+			setIsFirstDataLoaded(true);
+		} catch (err) {
+			store.notification.showMessage({
+				content: (
+					<Alert severity='error' variant='filled'>
+						Произошла какая-то ошибка, обратитесь в поддержку
+					</Alert>
+				),
+			});
 		}
 		setIsLoading(false);
 	}, 300);
@@ -195,10 +213,12 @@ const Home: NextPage = () => {
 									key={item.id}
 									data={item}></ProductItem>
 							))
-						) : (
+						) : isFirstDataLoaded && !isLoading ? (
 							<Typography textAlign='center' variant='h5'>
 								Данных не найдено
 							</Typography>
+						) : (
+							<></>
 						)}
 					</WhiteBox>
 					{!!products.length && (

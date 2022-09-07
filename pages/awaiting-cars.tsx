@@ -22,6 +22,7 @@ const AwaitingCars = () => {
 	const [total, setTotal] = useState<null | number>(null);
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const router = useRouter();
 	const store = useStore();
 
@@ -37,7 +38,6 @@ const AwaitingCars = () => {
 		transmission = '',
 		yearFrom = '',
 		yearTo = '',
-		sort = 'createdAt:desc',
 		page = '1',
 	} = router.query as {
 		yearFrom: string;
@@ -87,6 +87,7 @@ const AwaitingCars = () => {
 				}
 				setTotal(pagination.total);
 			}
+			setIsFirstDataLoaded(true);
 		} catch (err) {
 			store.notification.showMessage({
 				content: (
@@ -141,10 +142,12 @@ const AwaitingCars = () => {
 							cars.map((item) => (
 								<CarItem key={item.id} data={item}></CarItem>
 							))
-						) : (
+						) : isFirstDataLoaded && !isLoading ? (
 							<Typography textAlign='center' variant='h5'>
 								Данных не найдено
 							</Typography>
+						) : (
+							<></>
 						)}
 					</WhiteBox>
 					{!!cars.length && (

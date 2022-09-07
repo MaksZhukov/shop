@@ -116,8 +116,8 @@ const NewProducts = () => {
 								</Slider>
 							) : (
 								<EmptyImageIcon
-									margin={'-45px -25px -55px'}
-									size={250}></EmptyImageIcon>
+									margin={'-30px 0 -40px'}
+									size={225}></EmptyImageIcon>
 							)}
 							<Typography
 								onClick={handleClickMore(item.slug)}
