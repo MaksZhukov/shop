@@ -160,14 +160,16 @@ const ShoppingCart = () => {
 														</Typography>
 													)}
 												</Typography>
-												<ShoppingCartButton
-													product={
-														item.product
-													}></ShoppingCartButton>
-												<FavoriteButton
-													product={
-														item.product
-													}></FavoriteButton>
+												<Box textAlign='right'>
+													<ShoppingCartButton
+														product={
+															item.product
+														}></ShoppingCartButton>
+													<FavoriteButton
+														product={
+															item.product
+														}></FavoriteButton>
+												</Box>
 											</Box>
 										</ListItem>
 										{index !== items.length - 1 && (
