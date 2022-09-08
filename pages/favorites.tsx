@@ -59,7 +59,7 @@ const Favorites = () => {
                         {item.product.images.filter(item=>item.formats).map((image) => (
                           <Image
                             src={
-                              publicRuntimeConfig.backendUrl +
+                              publicRuntimeConfig.backendLocalUrl +
                               `${
                                 isMobile
                                   ? image.formats?.small.url
