@@ -34,7 +34,7 @@ const CarPage = ({ data }: Props) => {
 	let printOptions = [
 		{ text: 'Артикул', value: data.id },
 		{ text: 'Марка', value: data.brand?.name },
-		{ text: 'Модель', value: data.brand?.name },
+		{ text: 'Модель', value: data.model?.name },
 		{ text: 'Тип кузова', value: data.bodyStyle },
 		{ text: 'Поколение', value: data.generation },
 		{ text: 'Двигатель', value: data.engine },
