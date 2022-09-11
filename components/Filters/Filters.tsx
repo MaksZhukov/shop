@@ -7,14 +7,15 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
-import { getBrands } from 'api/brands/brands';
+import { fetchBrands } from 'api/brands/brands';
 import { Brand } from 'api/brands/types';
 import { MAX_LIMIT } from 'api/constants';
-import { getModels } from 'api/models/models';
+import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
-import { getSpareParts } from 'api/spareParts/spareParts';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
-import { CollectionParams } from 'api/types';
+import { ApiResponse, CollectionParams } from 'api/types';
+import { AxiosResponse } from 'axios';
 import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
@@ -65,16 +66,16 @@ const Filters = ({ fetchData, total }: Props) => {
 	};
 
 	const handleOpenAutocomplete =
-		(
+		<T extends any>(
 			hasData: boolean,
-			setState: Dispatch<SetStateAction<any>>,
-			fetchFunc: (params: CollectionParams) => Promise<any>
+			setState: Dispatch<SetStateAction<T[]>>,
+			fetchFunc: () => Promise<AxiosResponse<ApiResponse<T[]>>>
 		) =>
 		async () => {
 			if (!hasData) {
 				const {
 					data: { data },
-				} = await fetchFunc({ pagination: { limit: MAX_LIMIT } });
+				} = await fetchFunc();
 				setState(data);
 			}
 		};
@@ -160,10 +161,13 @@ const Filters = ({ fetchData, total }: Props) => {
 					...item,
 				}))}
 				noOptionsText='Совпадений нет'
-				onOpen={handleOpenAutocomplete(
+				onOpen={handleOpenAutocomplete<Brand>(
 					!!brands.length,
 					setBrands,
-					getBrands
+					() =>
+						fetchBrands({
+							pagination: { limit: MAX_LIMIT },
+						})
 				)}
 				onChange={handleChangeBrandAutocomplete}
 				fullWidth
@@ -182,10 +186,14 @@ const Filters = ({ fetchData, total }: Props) => {
 				}))}
 				noOptionsText='Совпадений нет'
 				disabled={!brandId}
-				onOpen={handleOpenAutocomplete(
+				onOpen={handleOpenAutocomplete<Model>(
 					!!models.length,
 					setModels,
-					getModels
+					() =>
+						fetchModels({
+							filters: { brand: brandId },
+							pagination: { limit: MAX_LIMIT },
+						})
 				)}
 				onChange={handleChangeObjAutocomplete('modelName', 'modelId')}
 				fullWidth
@@ -234,10 +242,13 @@ const Filters = ({ fetchData, total }: Props) => {
 						...item,
 					}))}
 					noOptionsText='Совпадений нет'
-					onOpen={handleOpenAutocomplete(
+					onOpen={handleOpenAutocomplete<SparePart>(
 						!!spareParts.length,
 						setSpareParts,
-						getSpareParts
+						() =>
+							fetchSpareParts({
+								pagination: { limit: MAX_LIMIT },
+							})
 					)}
 					onChange={handleChangeObjAutocomplete(
 						'sparePartName',
