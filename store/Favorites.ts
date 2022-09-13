@@ -1,7 +1,5 @@
 import { fetchSpareParts } from "api/spareParts/spareParts";
 import { Product } from "api/types";
-import { Tire } from "api/tires/types";
-import { Wheel } from "api/wheels/types";
 import { makeAutoObservable } from "mobx";
 import {
   getFavoriteProductIDs,
@@ -23,7 +21,7 @@ export interface Favorites {
 export default class FavoritesStore implements Favorites {
   root: RootStore;
 
-  items: Favorite[] = [];
+  items: Product[] = [];
 
   constructor(root: RootStore) {
     this.root = root;
@@ -34,27 +32,23 @@ export default class FavoritesStore implements Favorites {
       data: { data },
     } = await getFavorites();
     const items = await this.getFavoritesByLocalStorage(data);
-    this.items = [...data, ...items];
+    this.items = [...data.spareParts, ...items];
   }
-  async getFavoritesByLocalStorage(userFavorites: Favorite[] = []) {
+  async getFavoritesByLocalStorage(userFavorites: Favorite) {
     let favoriteProductIDs = getFavoriteProductIDs();
     let uniqueFavoriteProductIDs = favoriteProductIDs.filter(
-      (id) => !userFavorites.some((item) => item.product.id === id)
+      (id) => !userFavorites.spareParts.some((item) => item.id === id)
     );
     if (!uniqueFavoriteProductIDs.length) {
       return [];
     }
     const {
-      data: { data: products },
+      data: { data },
     } = await fetchSpareParts({
       filters: { id: uniqueFavoriteProductIDs },
       populate: ["images"],
     });
-    let cartItems: Favorite[] = products.map((item) => ({
-      id: new Date().getTime(),
-      product: item,
-    }));
-    return cartItems;
+    return data;
   }
   async addFavorite(product: Product) {
     let favorite: Favorite | null = null;
@@ -62,12 +56,11 @@ export default class FavoritesStore implements Favorites {
       let { data } = await addToFavorites(product.id);
       favorite = data.data;
     } else {
-      favorite = { id: new Date().getTime(), product };
       saveFavoriteProductID(product.id);
     }
-    this.items.push(favorite);
+    this.items.push(product);
   }
-  setFavorites(items: Favorite[]) {
+  setFavorites(items: Product[]) {
     this.items = items;
   }
   async removeFavorite(productId: number, favoriteId: number) {
@@ -77,12 +70,12 @@ export default class FavoritesStore implements Favorites {
     } else {
       await removeFromFavorites(favoriteId);
     }
-    this.items = this.items.filter((el) => el.product.id !== productId);
+    this.items = this.items.filter((el) => el.id !== productId);
   }
   clearFavorites() {
     let favoriteProductIDs = getFavoriteProductIDs();
     this.items = this.items.filter((item) =>
-      favoriteProductIDs.some((productID) => productID === item.product.id)
+      favoriteProductIDs.some((productID) => productID === item.id)
     );
   }
 }
