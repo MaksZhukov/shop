@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
-import { Product } from '../../api/products/types';
+import { Product } from '../../api/types';
 import styles from './ProductItem.module.scss';
 import getConfig from 'next/config';
 import ShoppingCartButton from 'components/ShoppingCartButton';
@@ -18,14 +18,16 @@ import Typography from 'components/Typography';
 import Image from 'next/image';
 import Slider from 'react-slick';
 import classNames from 'classnames';
+import { Image as IImage } from 'api/types';
 
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
+	dataFieldsToShow: { id: keyof Product; name: string }[];
 	data: Product;
 }
 
-const ProductItem = ({ data }: Props) => {
+const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 	const router = useRouter();
 	const isMobile = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('sm')
@@ -88,43 +90,30 @@ const ProductItem = ({ data }: Props) => {
 						<Link underline='hover'>{data.name}</Link>
 					</Typography>
 					<Grid columnSpacing={2} container>
-						<Grid item>
-							<Typography
-								fontWeight='500'
-								component='div'
-								variant='subtitle1'>
-								Марка
-							</Typography>
-							{data.brand?.name}
-						</Grid>
-						<Grid item>
-							<Typography
-								fontWeight='500'
-								component='div'
-								variant='subtitle1'>
-								Модель
-							</Typography>
-							{data.model?.name}
-						</Grid>
-						<Grid item>
-							<Typography
-								fontWeight='500'
-								component='div'
-								variant='subtitle1'>
-								Запчасть
-							</Typography>
-							{data.sparePart?.name}
-						</Grid>
+						{dataFieldsToShow.map((item) => (
+							<Grid key={item.id} item>
+								<Typography
+									fontWeight='500'
+									component='div'
+									variant='subtitle1'>
+									{item.name}
+								</Typography>
+								{typeof data[item.id] === 'object'
+									? data[item.id].name
+									: data[item.id]}
+							</Grid>
+						))}
 					</Grid>
-					<Typography mt='0.5em' lineClamp={2} variant='body1'>
-						<Typography
-							fontWeight='500'
-							component='span'
-							variant='subtitle1'>
-							Описание:
-						</Typography>{' '}
-						{data.description}
-					</Typography>
+					{!!data.description && (
+						<Typography mt='0.5em' lineClamp={2} variant='body1'>
+							<Typography
+								fontWeight='500'
+								component='span'
+								variant='subtitle1'>
+								Описание:
+							</Typography>
+						</Typography>
+					)}
 				</CardContent>
 			</Box>
 

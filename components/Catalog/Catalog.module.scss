@@ -1,0 +1,37 @@
+.wrapper {
+	display: flex;
+	&_tablet {
+		display: initial;
+	}
+}
+
+.sider {
+	width: 250px;
+	&_tablet {
+		width: 100%;
+	}
+}
+.loading {
+	opacity: 0.5;
+}
+
+.content-items_no-data {
+	min-height: calc(100% - 64px - 2em);
+}
+.content {
+	width: calc(100% - 250px - 1em);
+	&_tablet {
+		width: 100%;
+	}
+}
+.search {
+	margin-right: 1em;
+	flex: 3;
+}
+.sort-select {
+	flex: 1;
+}
+
+.product {
+	display: flex;
+}

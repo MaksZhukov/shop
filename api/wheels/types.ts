@@ -1,9 +1,14 @@
+import { Image } from 'api/types';
+
 export interface Wheel {
-  id: string;
-  diameter: string;
-  width: number;
-  height: number;
-  brand: string;
-  price: number;
-  priceUSD: number;
+	id: number;
+	name: string;
+	slug: string;
+	diameter: string;
+	width: number;
+	height: number;
+	brand: string;
+	price: number;
+	priceUSD: number;
+	images: Image[];
 }

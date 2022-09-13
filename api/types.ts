@@ -1,6 +1,12 @@
+import { SparePart } from "./spareParts/types";
+import { Tire } from "./tires/types";
+import { Wheel } from "./wheels/types";
+
 export const enum ErrorTypes {
 	ValidationError = 'ValidationError',
 }
+
+export type Product = Wheel | Tire | SparePart;
 
 export type Image = {
 	id: number;

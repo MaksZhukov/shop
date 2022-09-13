@@ -1,6 +1,6 @@
 import { ShoppingCartItem } from 'api/cart/types';
-import { fetchProducts } from 'api/products/products';
-import { Product } from 'api/products/types';
+import { fetchProducts } from 'api/spareParts/spareParts';
+import { Product } from 'api/spareParts/types';
 import { makeAutoObservable } from 'mobx';
 import {
 	getCartProductIDs,

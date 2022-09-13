@@ -11,14 +11,14 @@ import Image from 'next/image';
 import { FC, useEffect } from 'react';
 import Slider from 'react-slick';
 import { api } from '../../api';
-import { fetchProduct } from '../../api/products/products';
-import { Product } from '../../api/products/types';
+import { fetchSparePart } from '../../api/spareParts/spareParts';
+import { SparePart } from '../../api/spareParts/types';
 import styles from './product.module.scss';
 
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
-	data: Product;
+	data: SparePart;
 }
 
 const ProductPage = ({ data }: Props) => {
@@ -158,7 +158,7 @@ export const getServerSideProps: GetServerSideProps<
 	let data = null;
 	let notFound = false;
 	try {
-		const response = await fetchProduct(context.params?.slug || '', true);
+		const response = await fetchSparePart(context.params?.slug || '', true);
 
 		data = response.data.data;
 	} catch (err) {

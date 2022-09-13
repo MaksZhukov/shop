@@ -1,12 +1,17 @@
-export type Season = "зимние" | "летние" | "всесезонные";
+import { Image } from 'api/types';
+
+export type Season = 'зимние' | 'летние' | 'всесезонные';
 
 export interface Tire {
-  id: string;
-  diameter: string;
-  width: number;
-  height: number;
-  season: Season;
-  brand: string;
-  price: number;
-  priceUSD: number;
+	id: number;
+	name: string;
+	slug: string;
+	diameter: string;
+	width: number;
+	height: number;
+	season: Season;
+	brand: string;
+	price: number;
+	priceUSD: number;
+	images: Image[];
 }

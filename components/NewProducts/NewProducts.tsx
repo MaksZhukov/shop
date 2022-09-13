@@ -1,6 +1,6 @@
 import { Box, Link, useTheme } from '@mui/material';
-import { fetchProducts } from 'api/products/products';
-import { Product } from 'api/products/types';
+import { fetchProducts } from 'api/spareParts/spareParts';
+import { Product } from 'api/spareParts/types';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';

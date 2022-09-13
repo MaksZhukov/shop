@@ -1,5 +1,7 @@
-import { fetchProducts } from 'api/products/products';
-import { Product } from 'api/products/types';
+import { fetchProducts, fetchSpareParts } from 'api/spareParts/spareParts';
+import { Product } from 'api/types';
+import { Tire } from 'api/tires/types';
+import { Wheel } from 'api/wheels/types';
 import { makeAutoObservable } from 'mobx';
 import {
 	getFavoriteProductIDs,
@@ -44,7 +46,7 @@ export default class FavoritesStore implements Favorites {
 		}
 		const {
 			data: { data: products },
-		} = await fetchProducts({
+		} = await fetchSpareParts({
 			filters: { id: uniqueFavoriteProductIDs },
 			populate: ['images'],
 		});
