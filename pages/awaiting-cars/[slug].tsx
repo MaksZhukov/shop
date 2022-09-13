@@ -13,9 +13,6 @@ import getConfig from 'next/config';
 import Image from 'next/image';
 import { FC, useEffect } from 'react';
 import Slider from 'react-slick';
-import { api } from '../../api';
-import { fetchProduct } from '../../api/spareParts/spareParts';
-import { Product } from '../../api/spareParts/types';
 import styles from './awaiting-car.module.scss';
 
 const { publicRuntimeConfig } = getConfig();

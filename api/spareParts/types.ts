@@ -30,7 +30,7 @@ export interface SparePart {
 	priceUSD?: number;
 	model?: Model;
 	brand?: Brand;
-	sparePart?: SparePart;
+	kindSparePart?: SparePart;
 	images?: Image[];
 	transmission: string;
 	generation: string;
