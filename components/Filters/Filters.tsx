@@ -3,6 +3,7 @@ import {
 	Autocomplete,
 	Box,
 	Button,
+	CircularProgress,
 	Input,
 	TextField,
 	Typography,
@@ -31,6 +32,7 @@ interface Props {
 const Filters = ({ fetchData, total }: Props) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [spareParts, setSpareParts] = useState<SparePart[]>([]);
 	const router = useRouter();
 	const isAwaitingCarsPage = router.pathname === '/awaiting-cars';
@@ -73,10 +75,12 @@ const Filters = ({ fetchData, total }: Props) => {
 		) =>
 		async () => {
 			if (!hasData) {
+				setIsLoading(true);
 				const {
 					data: { data },
 				} = await fetchFunc();
 				setState(data);
+				setIsLoading(false);
 			}
 		};
 
@@ -160,7 +164,14 @@ const Filters = ({ fetchData, total }: Props) => {
 					label: item.name,
 					...item,
 				}))}
-				noOptionsText='Совпадений нет'
+				classes={{ noOptions: styles['autocomplete__no-options'] }}
+				noOptionsText={
+					isLoading ? (
+						<CircularProgress size={20} />
+					) : (
+						<>Совпадений нет</>
+					)
+				}
 				onOpen={handleOpenAutocomplete<Brand>(
 					!!brands.length,
 					setBrands,
@@ -184,7 +195,14 @@ const Filters = ({ fetchData, total }: Props) => {
 					label: item.name,
 					...item,
 				}))}
-				noOptionsText='Совпадений нет'
+				classes={{ noOptions: styles['autocomplete__no-options'] }}
+				noOptionsText={
+					isLoading ? (
+						<CircularProgress size={20} />
+					) : (
+						<>Совпадений нет</>
+					)
+				}
 				disabled={!brandId}
 				onOpen={handleOpenAutocomplete<Model>(
 					!!models.length,
@@ -210,7 +228,6 @@ const Filters = ({ fetchData, total }: Props) => {
 					classes={{ inputRoot: styles['autocomplete__input-root'] }}
 					options={arrayOfYearsFrom}
 					fullWidth
-					noOptionsText='Совпадений нет'
 					onChange={handleChangeAutocomplete('yearFrom')}
 					value={yearFrom}
 					renderInput={(params) => (
@@ -224,7 +241,6 @@ const Filters = ({ fetchData, total }: Props) => {
 					classes={{ inputRoot: styles['autocomplete__input-root'] }}
 					options={arrayOfYearsTo}
 					fullWidth
-					noOptionsText='Совпадений нет'
 					onChange={handleChangeAutocomplete('yearTo')}
 					value={yearTo}
 					renderInput={(params) => (
@@ -241,7 +257,14 @@ const Filters = ({ fetchData, total }: Props) => {
 						label: item.name,
 						...item,
 					}))}
-					noOptionsText='Совпадений нет'
+					classes={{ noOptions: styles['autocomplete__no-options'] }}
+					noOptionsText={
+						isLoading ? (
+							<CircularProgress size={20} />
+						) : (
+							<>Совпадений нет</>
+						)
+					}
 					onOpen={handleOpenAutocomplete<SparePart>(
 						!!spareParts.length,
 						setSpareParts,
