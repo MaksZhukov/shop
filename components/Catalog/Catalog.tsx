@@ -15,6 +15,7 @@ import { ApiResponse, CollectionParams, Image } from "api/types";
 import { AxiosResponse } from "axios";
 import classNames from "classnames";
 import Filters from "components/Filters";
+import { AutocompleteType, NumberType } from "components/Filters/types";
 import NewProducts from "components/NewProducts";
 import ProductItem from "components/ProductItem";
 import Reviews from "components/Reviews";
@@ -30,16 +31,23 @@ const selectSortItems = [
   { name: "Дешевые", value: "price:asc" },
   { name: "Дорогие", value: "price:desc" },
 ];
-
 interface Props {
   title: string;
   dataFieldsToShow: { id: string; name: string }[];
+  filtersConfig: (AutocompleteType | NumberType)[][];
+  generateFiltersByQuery: (filter: { [key: string]: string }) => any;
   fetchData: (
     params: CollectionParams
   ) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
 }
 
-const Catalog = ({ fetchData, title, dataFieldsToShow }: Props) => {
+const Catalog = ({
+  fetchData,
+  title,
+  dataFieldsToShow,
+  filtersConfig,
+  generateFiltersByQuery,
+}: Props) => {
   const [data, setData] = useState<Product[]>([]);
   const [total, setTotal] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -53,32 +61,14 @@ const Catalog = ({ fetchData, title, dataFieldsToShow }: Props) => {
 
   const {
     searchValue: querySearchValue = "",
-    min = "",
-    max = "",
-    brandId = "",
-    modelId = "",
-    sparePartId = "",
-    yearTo = "",
-    yearFrom = "",
-    fuel = "",
-    bodyStyle = "",
-    transmission = "",
     sort = "createdAt:desc",
     page = "1",
+    ...othersQuery
   } = router.query as {
     searchValue: string;
-    min: string;
-    max: string;
-    brandId: string;
-    modelId: string;
-    sparePartId: string;
-    yearFrom: string;
-    yearTo: string;
-    fuel: string;
-    bodyStyle: string;
-    transmission: string;
     sort: string;
     page: string;
+    [key: string]: string;
   };
 
   const [throttledFetchProducts] = useThrottle(async () => {
@@ -92,17 +82,7 @@ const Catalog = ({ fetchData, title, dataFieldsToShow }: Props) => {
       } = await fetchData({
         filters: {
           name: { $contains: searchValue },
-          price: { $gte: min || "0", $lte: max || undefined },
-          brand: brandId || undefined,
-          model: modelId || undefined,
-          sparePart: sparePartId || undefined,
-          year: {
-            $gte: yearFrom || undefined,
-            $lte: yearTo || undefined,
-          },
-          transmission: transmission || undefined,
-          fuel: fuel || undefined,
-          bodyStyle: bodyStyle || undefined,
+          ...generateFiltersByQuery(othersQuery),
         },
         pagination: searchValue ? {} : { page: +page },
         populate: "*",
@@ -186,7 +166,11 @@ const Catalog = ({ fetchData, title, dataFieldsToShow }: Props) => {
           component="aside"
           className={classNames(styles.sider, isTablet && styles.sider_tablet)}
         >
-          <Filters total={total} fetchData={throttledFetchProducts}></Filters>
+          <Filters
+            config={filtersConfig}
+            total={total}
+            fetchData={throttledFetchProducts}
+          ></Filters>
           <Reviews></Reviews>
         </Box>
         <Box

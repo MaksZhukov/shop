@@ -1,5 +1,6 @@
 .autocomplete {
-	&__input-root {
-		padding-right: 44px !important;
-	}
+  &__no-options {
+    padding: 5px 15px;
+    text-align: center;
+  }
 }
