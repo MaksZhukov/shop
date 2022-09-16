@@ -10,7 +10,7 @@ import {
   MenuList,
   Toolbar,
 } from "@mui/material";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { Fragment, MutableRefObject, useEffect, useRef, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -131,9 +131,9 @@ const Header = observer(() => {
     >
       {navigation.map((page) => {
         return (
-          <>
+          <Fragment key={page.name}>
             {page.path ? (
-              <Link key={page.name} href={page.path}>
+              <Link href={page.path}>
                 <Button
                   onClick={handleClickMenuItem}
                   className={classNames(styles.menu__item, {
@@ -212,7 +212,7 @@ const Header = observer(() => {
                 )}
               </>
             )}
-          </>
+          </Fragment>
         );
       })}
     </Box>

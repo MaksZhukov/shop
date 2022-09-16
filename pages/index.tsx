@@ -20,6 +20,7 @@ import { fetchBrands } from "api/brands/brands";
 import { fetchModels } from "api/models/models";
 import { fetchKindSpareParts } from "api/kindSpareParts/kindSpareParts";
 import Head from "next/head";
+import News from "components/News";
 
 const Home: NextPage = () => {
   const [brands, setBrands] = useState<Brand[]>([]);
