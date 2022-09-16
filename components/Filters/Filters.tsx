@@ -104,13 +104,14 @@ const Filters = ({ fetchData, total, config }: Props) => {
       {config.map((items) => {
         return (
           <Box key={items.map((item) => item.id).toString()} display="flex">
-            {items.map(
-              (item) =>
-                ({
-                  number: renderInput(item as NumberType),
-                  autocomplete: renderAutocomplete(item as AutocompleteType),
-                }[item.type])
-            )}
+            {items.map((item) => {
+              if (item.type === "autocomplete") {
+                return renderAutocomplete(item as AutocompleteType);
+              }
+              if (item.type === "number") {
+                return renderInput(item as NumberType);
+              }
+            })}
           </Box>
         );
       })}

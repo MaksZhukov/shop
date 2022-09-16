@@ -17,6 +17,7 @@ import classNames from "classnames";
 import Filters from "components/Filters";
 import { AutocompleteType, NumberType } from "components/Filters/types";
 import NewProducts from "components/NewProducts";
+import News from "components/News";
 import ProductItem from "components/ProductItem";
 import Reviews from "components/Reviews";
 import WhiteBox from "components/WhiteBox";
@@ -81,7 +82,7 @@ const Catalog = ({
         },
       } = await fetchData({
         filters: {
-          name: { $contains: searchValue },
+          // name: { $contains: searchValue },
           ...generateFiltersByQuery(othersQuery),
         },
         pagination: searchValue ? {} : { page: +page },
@@ -172,6 +173,7 @@ const Catalog = ({
             fetchData={throttledFetchProducts}
           ></Filters>
           <Reviews></Reviews>
+          <News></News>
         </Box>
         <Box
           className={classNames(

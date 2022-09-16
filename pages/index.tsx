@@ -19,6 +19,8 @@ import { MAX_LIMIT } from "api/constants";
 import { fetchBrands } from "api/brands/brands";
 import { fetchModels } from "api/models/models";
 import { fetchKindSpareParts } from "api/kindSpareParts/kindSpareParts";
+import Head from "next/head";
+import News from "components/News";
 
 const Home: NextPage = () => {
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -224,7 +226,7 @@ const Home: NextPage = () => {
     [key: string]: string;
   }): Filters => {
     let filters: Filters = {
-      price: { $gte: min || "0", $lte: max || undefined },
+      price: { $gte: min || 0, $lte: max || undefined },
       year: {
         $gte: yearFrom || undefined,
         $lte: yearTo || undefined,
@@ -237,28 +239,33 @@ const Home: NextPage = () => {
   };
 
   return (
-    <Container>
-      <Catalog
-        dataFieldsToShow={[
-          {
-            id: "brand",
-            name: "Марка",
-          },
-          {
-            id: "model",
-            name: "Модель",
-          },
-          {
-            id: "kindSparePart",
-            name: "Запчасть",
-          },
-        ]}
-        filtersConfig={filtersConfig}
-        title="запчасти"
-        fetchData={fetchSpareParts}
-        generateFiltersByQuery={generateFiltersByQuery}
-      ></Catalog>
-    </Container>
+    <>
+      <Head>
+        <title>Запчасти</title>
+      </Head>
+      <Container>
+        <Catalog
+          dataFieldsToShow={[
+            {
+              id: "brand",
+              name: "Марка",
+            },
+            {
+              id: "model",
+              name: "Модель",
+            },
+            {
+              id: "kindSparePart",
+              name: "Запчасть",
+            },
+          ]}
+          filtersConfig={filtersConfig}
+          title="запчасти"
+          fetchData={fetchSpareParts}
+          generateFiltersByQuery={generateFiltersByQuery}
+        ></Catalog>
+      </Container>
+    </>
   );
 };
 

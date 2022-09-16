@@ -27,6 +27,7 @@ import {
   TRANSMISSIONS,
 } from "components/Filters/constants";
 import WhiteBox from "components/WhiteBox";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useStore } from "../store";
@@ -241,65 +242,75 @@ const AwaitingCars = () => {
   };
 
   return (
-    <Container>
-      <WhiteBox>
-        <Typography component="h1" variant="h4" textAlign="center">
-          Ожидаемые авто
-        </Typography>
-      </WhiteBox>
-      <Box
-        className={classNames(
-          styles.wrapper,
-          isTablet && styles.wrapper_tablet
-        )}
-      >
-        <Box
-          marginRight="1em"
-          className={classNames(styles.sider, isTablet && styles.sider_tablet)}
-        >
-          <Filters
-            config={filtersConfig}
-            total={total}
-            fetchData={fetchData}
-          ></Filters>
-        </Box>
+    <>
+      <Head>
+        <title>Ожидаемые авто</title>
+      </Head>
+      <Container>
+        <WhiteBox>
+          <Typography component="h1" variant="h4" textAlign="center">
+            Ожидаемые авто
+          </Typography>
+        </WhiteBox>
         <Box
           className={classNames(
-            styles.content,
-            isTablet && styles.content_tablet
+            styles.wrapper,
+            isTablet && styles.wrapper_tablet
           )}
         >
-          <WhiteBox
+          <Box
+            marginRight="1em"
             className={classNames(
-              isLoading && styles.loading,
-              !cars.length && styles["content-items_no-data"]
+              styles.sider,
+              isTablet && styles.sider_tablet
             )}
           >
-            {!!cars.length ? (
-              cars.map((item) => <CarItem key={item.id} data={item}></CarItem>)
-            ) : isFirstDataLoaded && !isLoading ? (
-              <Typography textAlign="center" variant="h5">
-                Данных не найдено
-              </Typography>
-            ) : (
-              <></>
+            <Filters
+              config={filtersConfig}
+              total={total}
+              fetchData={fetchData}
+            ></Filters>
+          </Box>
+          <Box
+            className={classNames(
+              styles.content,
+              isTablet && styles.content_tablet
             )}
-          </WhiteBox>
-          {!!cars.length && (
-            <WhiteBox display="flex" justifyContent="center">
-              <Pagination
-                page={+page}
-                siblingCount={2}
-                color="primary"
-                count={pageCount}
-                onChange={handleChangePage}
-                variant="outlined"
-              />
+          >
+            <WhiteBox
+              className={classNames(
+                isLoading && styles.loading,
+                !cars.length && styles["content-items_no-data"]
+              )}
+            >
+              {!!cars.length ? (
+                cars.map((item) => (
+                  <CarItem key={item.id} data={item}></CarItem>
+                ))
+              ) : isFirstDataLoaded && !isLoading ? (
+                <Typography textAlign="center" variant="h5">
+                  Данных не найдено
+                </Typography>
+              ) : (
+                <></>
+              )}
             </WhiteBox>
-          )}
+            {!!cars.length && (
+              <WhiteBox display="flex" justifyContent="center">
+                <Pagination
+                  page={+page}
+                  siblingCount={2}
+                  color="primary"
+                  count={pageCount}
+                  onChange={handleChangePage}
+                  variant="outlined"
+                />
+              </WhiteBox>
+            )}
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </>
   );
 };
 
