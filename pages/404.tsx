@@ -1,5 +1,12 @@
+import { Container } from "@mui/material";
+import WhiteBox from "components/WhiteBox";
+
 const PageNotFound = () => {
-    return <>Page not Found</>;
+  return (
+    <Container>
+      <WhiteBox>Страница не найдена</WhiteBox>
+    </Container>
+  );
 };
 
 export default PageNotFound;
