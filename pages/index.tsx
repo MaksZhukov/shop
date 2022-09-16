@@ -25,6 +25,7 @@ import Filters from "components/Filters";
 import NewProducts from "components/NewProducts";
 import { useStore } from "store";
 import Head from "next/head";
+import News from "components/News";
 
 const selectSortItems = [
   { name: "Новые", value: "createdAt:desc" },
@@ -179,6 +180,7 @@ const Home: NextPage = () => {
           >
             <Filters total={total} fetchData={throttledFetchProducts}></Filters>
             <Reviews></Reviews>
+            <News></News>
           </Box>
           <Box
             className={classNames(
