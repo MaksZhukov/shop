@@ -8,6 +8,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import { SparePart } from "api/spareParts/types";
 import classNames from "classnames";
 import EmptyImageIcon from "components/EmptyImageIcon";
 import FavoriteButton from "components/FavoriteButton";
@@ -52,8 +53,8 @@ const Favorites = () => {
                       )}
                       key={item.id}
                     >
-                      {item.product.images &&
-                      item.product.images.some((image) => image.formats) ? (
+                      {item.images &&
+                      item.images.some((image) => image.formats) ? (
                         <Slider
                           className={classNames(
                             styles.slider,
@@ -64,7 +65,7 @@ const Favorites = () => {
                           pauseOnHover
                           autoplaySpeed={3000}
                         >
-                          {item.product.images
+                          {item.images
                             .filter((item) => item.formats)
                             .map((image) => (
                               <Image
@@ -76,7 +77,7 @@ const Favorites = () => {
                                       : image.formats?.thumbnail.url
                                   }`
                                 }
-                                alt={item.product.name}
+                                alt={item.name}
                                 key={image.id}
                                 width={isMobile ? 500 : 150}
                                 height={isMobile ? 375 : 100}
@@ -87,15 +88,15 @@ const Favorites = () => {
                         <EmptyImageIcon></EmptyImageIcon>
                       )}
                       <Box flex="1" padding="1em">
-                        <NextLink href={`/products/${item.product.slug}`}>
+                        <NextLink href={`/products/${item.slug}`}>
                           <Typography
                             lineClamp={1}
-                            title={item.product.name}
+                            title={item.name}
                             marginBottom="0.5em"
                             variant="h5"
                             component="h2"
                           >
-                            <Link underline="hover">{item.product.name}</Link>
+                            <Link underline="hover">{item.name}</Link>
                           </Typography>
                         </NextLink>
                         <Typography
@@ -103,7 +104,7 @@ const Favorites = () => {
                           color="text.secondary"
                           className={styles.description}
                         >
-                          {item.product.description}
+                          {(item as SparePart).description}
                         </Typography>
                       </Box>
                       <Box
@@ -118,22 +119,20 @@ const Favorites = () => {
                           color="primary"
                           variant="h5"
                         >
-                          {item.product.price} руб.
-                          {!!item.product.priceUSD && (
+                          {item.price} руб.
+                          {!!item.priceUSD && (
                             <Typography color="text.secondary" component="sup">
                               (~
-                              {item.product.priceUSD.toFixed()}
+                              {item.priceUSD.toFixed()}
                               $)
                             </Typography>
                           )}
                         </Typography>
                         <Box textAlign="right">
                           <ShoppingCartButton
-                            product={item.product}
+                            product={item}
                           ></ShoppingCartButton>
-                          <FavoriteButton
-                            product={item.product}
-                          ></FavoriteButton>
+                          <FavoriteButton product={item}></FavoriteButton>
                         </Box>
                       </Box>
                     </ListItem>

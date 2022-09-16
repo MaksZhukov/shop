@@ -9,6 +9,7 @@ export interface KindSparePart {
 
 export interface SparePart {
   id: number;
+  type: "sparePart";
   slug: string;
   name: string;
   volume: number;

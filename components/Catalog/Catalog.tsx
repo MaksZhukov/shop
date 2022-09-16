@@ -82,7 +82,7 @@ const Catalog = ({
         },
       } = await fetchData({
         filters: {
-          name: { $contains: searchValue },
+          // name: { $contains: searchValue },
           ...generateFiltersByQuery(othersQuery),
         },
         pagination: searchValue ? {} : { page: +page },

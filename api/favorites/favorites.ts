@@ -4,10 +4,14 @@ import { Favorite } from "./types";
 
 export const getFavorites = () => api.get<ApiResponse<Favorite>>("favorites");
 
-export const addToFavorites = (productId: number) =>
-  api.post<ApiResponse<Favorite>>("favorites", {
-    data: { sparePart: productId },
+export const changeFavorites = (
+  id: number,
+  data: {
+    sparePart: number[];
+    wheel: number[];
+    tire: number[];
+  }
+) =>
+  api.put<ApiResponse<Favorite>>("favorites/" + id, {
+    data: { spareParts: data.sparePart, wheels: data.wheel, tires: data.tire },
   });
-
-export const removeFromFavorites = (id: number) =>
-  api.delete<ApiResponse<Favorite>>(`favorites/${id}`);

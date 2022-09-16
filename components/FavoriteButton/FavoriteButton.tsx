@@ -2,7 +2,6 @@ import { Alert, IconButton } from "@mui/material";
 import { useStore } from "store";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import StarIcon from "@mui/icons-material/Star";
-import { addToFavorites, removeFromFavorites } from "api/favorites/favorites";
 import { Product } from "api/types";
 import { observer } from "mobx-react";
 import {
@@ -21,7 +20,8 @@ const FavoriteButton = ({ product }: Props) => {
   const handleClick = async () => {
     try {
       if (favorite) {
-        await store.favorites.removeFavorite(product.id, favorite.id);
+        debugger;
+        await store.favorites.removeFavorite(favorite);
         store.notification.showMessage({
           content: (
             <Alert variant="filled">
