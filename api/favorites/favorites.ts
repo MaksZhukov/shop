@@ -1,17 +1,26 @@
-import { api } from "..";
-import { ApiResponse } from "../types";
-import { Favorite } from "./types";
+import { api } from '..';
+import { ApiResponse } from '../types';
+import { Favorite } from './types';
 
-export const getFavorites = () => api.get<ApiResponse<Favorite>>("favorites");
+export const fetchFavorites = () =>
+	api.get<ApiResponse<Favorite[]>>('favorites');
 
-export const changeFavorites = (
-  id: number,
-  data: {
-    sparePart: number[];
-    wheel: number[];
-    tire: number[];
-  }
+export const addFavorite = (
+	productId: number,
+	type: 'sparePart' | 'wheel' | 'tire'
 ) =>
-  api.put<ApiResponse<Favorite>>("favorites/" + id, {
-    data: { spareParts: data.sparePart, wheels: data.wheel, tires: data.tire },
-  });
+	api.post<ApiResponse<Favorite>>('favorites', {
+		data: {
+			product: [
+				{
+					__component: `product.${
+						type === 'sparePart' ? 'spare-part' : type
+					}`,
+					product: productId,
+				},
+			],
+		},
+	});
+
+export const removeFavorite = (favoriteId: number) =>
+	api.delete(`favorites/${favoriteId}`);
