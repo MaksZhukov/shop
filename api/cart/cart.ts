@@ -5,9 +5,21 @@ import { ShoppingCartItem } from './types';
 export const getShoppingCart = () =>
 	api.get<ApiResponse<ShoppingCartItem[]>>('shopping-cart');
 
-export const addToShoppingCart = (productId: number) =>
+export const addToShoppingCart = (
+	productId: number,
+	type: 'sparePart' | 'wheel' | 'tire'
+) =>
 	api.post<ApiResponse<ShoppingCartItem>>('shopping-cart', {
-		data: { product: productId },
+		data: {
+			product: [
+				{
+					__component: `product.${
+						type === 'sparePart' ? 'spare-part' : type
+					}`,
+					product: productId,
+				},
+			],
+		},
 	});
 
 export const removeItemFromShoppingCart = (id: number) =>

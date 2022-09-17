@@ -1,4 +1,5 @@
 import { Favorite } from 'api/favorites/types';
+import { ProductType } from 'api/types';
 
 export const saveJwt = (jwt: string) => {
 	localStorage.setItem('token', jwt);
@@ -8,56 +9,53 @@ export const getJwt = (): string | null => {
 	return localStorage.getItem('token');
 };
 
-export interface FavoriteLocalStorage {
-	sparePart: number[];
-	wheel: number[];
-	tire: number[];
+interface ProductLocalStorage {
+	id: number;
+	type: ProductType;
+	createdAt: number;
 }
 
-export const getFavoriteProductIDs = (): FavoriteLocalStorage => {
+export const getFavoriteProducts = (): ProductLocalStorage[] => {
 	let result = localStorage.getItem('favoriteProducts');
-	return result ? JSON.parse(result) : { sparePart: [], wheel: [], tire: [] };
-};
-
-export const saveFavoriteProductID = (
-	key: keyof FavoriteLocalStorage,
-	id: number
-) => {
-	let favoriteProducts = getFavoriteProductIDs();
-	favoriteProducts[key] = [...favoriteProducts[key], id];
-	localStorage.setItem(
-		'favoriteProductIDs',
-		JSON.stringify(favoriteProducts)
-	);
-};
-
-export const removeFavoriteProductID = (
-	key: keyof FavoriteLocalStorage,
-	id: number
-) => {
-	let favoriteProducts = getFavoriteProductIDs();
-	favoriteProducts[key] = favoriteProducts[key].filter((item) => item !== id);
-	localStorage.setItem(
-		'favoriteProductIDs',
-		JSON.stringify(favoriteProducts)
-	);
-};
-
-export const getCartProductIDs = (): number[] => {
-	let result = localStorage.getItem('cartProductIDs');
 	return result ? JSON.parse(result) : [];
 };
 
-export const saveCartProductID = (id: number) => {
-	let productIDs = getCartProductIDs();
-	localStorage.setItem('cartProductIDs', JSON.stringify([...productIDs, id]));
+export const saveFavoriteProduct = (id: number, type: ProductType) => {
+	let favoriteProducts = getFavoriteProducts();
+	favoriteProducts.push({ id, type, createdAt: new Date().getTime() });
+	localStorage.setItem('favoriteProducts', JSON.stringify(favoriteProducts));
 };
 
-export const removeCartProductID = (id: number) => {
-	let productIDs = getCartProductIDs();
+export const removeFavoriteProduct = (id: number, type: ProductType) => {
+	let favoriteProducts = getFavoriteProducts();
+	localStorage.setItem(
+		'favoriteProducts',
+		JSON.stringify(
+			favoriteProducts.filter(
+				(item) => item.id !== id && item.type === type
+			)
+		)
+	);
+};
+
+export const getCartProducts = (): ProductLocalStorage[] => {
+	let result = localStorage.getItem('cartProducts');
+	return result ? JSON.parse(result) : [];
+};
+
+export const saveCartProduct = (id: number, type: ProductType) => {
+	let cartProducts = getCartProducts();
+	cartProducts.push({ id, type, createdAt: new Date().getTime() });
+	localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+};
+
+export const removeCartProduct = (id: number, type: ProductType) => {
+	let cartProducts = getCartProducts();
 	localStorage.setItem(
 		'cartProductIDs',
-		JSON.stringify(productIDs.filter((productID) => productID !== id))
+		JSON.stringify(
+			cartProducts.filter((item) => item.id !== id && item.type === type)
+		)
 	);
 };
 

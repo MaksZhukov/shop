@@ -2,12 +2,7 @@ import { Alert, IconButton } from '@mui/material';
 import { useStore } from 'store';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { addToShoppingCart, removeItemFromShoppingCart } from 'api/cart/cart';
 import { observer } from 'mobx-react';
-import {
-	removeCartProductID,
-	saveCartProductID,
-} from 'services/LocalStorageService';
 import { Product } from 'api/types';
 
 interface Props {
@@ -23,7 +18,7 @@ const ShoppingCartButton = ({ product }: Props) => {
 	const handleClick = async () => {
 		try {
 			if (cartItem) {
-				await store.cart.removeCartItem(product.id, cartItem.id);
+				await store.cart.removeCartItem(cartItem);
 				store.notification.showMessage({
 					content: (
 						<Alert variant='filled'>
@@ -32,7 +27,10 @@ const ShoppingCartButton = ({ product }: Props) => {
 					),
 				});
 			} else {
-				await store.cart.addCartItem(product);
+				await store.cart.addCartItem({
+					id: new Date().getTime(),
+					product,
+				});
 				store.notification.showMessage({
 					content: (
 						<Alert variant='filled'>

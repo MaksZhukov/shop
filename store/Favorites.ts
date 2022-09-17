@@ -5,10 +5,9 @@ import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import { makeAutoObservable } from 'mobx';
 import {
-	FavoriteLocalStorage,
-	getFavoriteProductIDs,
-	removeFavoriteProductID,
-	saveFavoriteProductID,
+	getFavoriteProducts,
+	removeFavoriteProduct,
+	saveFavoriteProduct,
 } from 'services/LocalStorageService';
 import RootStore from '.';
 import {
@@ -37,19 +36,25 @@ export default class FavoritesStore implements Favorites {
 			} = await fetchFavorites();
 			this.items = data;
 		} else {
-			const favoriteProductIDs = getFavoriteProductIDs();
+			const favoriteProducts = getFavoriteProducts();
 			try {
 				const [spareParts, wheels, tires] = await Promise.all([
 					this.getFavoritesByTypes(
-						favoriteProductIDs.sparePart,
+						favoriteProducts
+							.filter((item) => item.type === 'sparePart')
+							.map((item) => item.id),
 						fetchSpareParts
 					),
 					this.getFavoritesByTypes(
-						favoriteProductIDs.wheel,
+						favoriteProducts
+							.filter((item) => item.type === 'wheel')
+							.map((item) => item.id),
 						fetchWheels
 					),
 					this.getFavoritesByTypes(
-						favoriteProductIDs.tire,
+						favoriteProducts
+							.filter((item) => item.type === 'tire')
+							.map((item) => item.id),
 						fetchTiers
 					),
 				]);
@@ -96,35 +101,27 @@ export default class FavoritesStore implements Favorites {
 				console.log(err);
 			}
 		} else {
-			saveFavoriteProductID(favorite.product.type, favorite.product.id);
+			saveFavoriteProduct(favorite.product.id, favorite.product.type);
 			this.items.push(favorite);
 		}
 	}
-	setFavorites(items: Favorite[]) {
-		this.items = items;
-	}
 	async removeFavorite(favorite: Favorite) {
-		let favoriteProductIDs = getFavoriteProductIDs();
-		if (
-			favoriteProductIDs[favorite.product.type].some(
-				(productID) => productID === favorite.product.id
-			)
-		) {
-			removeFavoriteProductID(favorite.product.type, favorite.product.id);
-		} else {
+		if (this.root.user.id) {
 			await removeFavorite(favorite.id);
+		} else {
+			removeFavoriteProduct(favorite.product.id, favorite.product.type);
 		}
 		this.items = this.items.filter(
-			(el) => el.product.id !== favorite.product.id
+			(el) =>
+				el.product.id !== favorite.product.id &&
+				el.product.type === favorite.product.type
 		);
 	}
 	clearFavorites() {
-		let favoriteProductIDs = getFavoriteProductIDs();
+		let favoriteProducts = getFavoriteProducts();
 		this.items = this.items.filter((item) => {
-			return Object.keys(favoriteProductIDs).filter((key) =>
-				favoriteProductIDs[key as keyof FavoriteLocalStorage].some(
-					(productId) => productId === item.id
-				)
+			return favoriteProducts.filter(
+				(el) => el.id === item.id && el.type === item.product.type
 			);
 		});
 	}
