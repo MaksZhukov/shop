@@ -71,6 +71,8 @@ export default class UserStore implements User {
 		this.root.cart.clearShoppingCart();
 		this.root.favorites.clearFavorites();
 		saveJwt('');
+		this.root.cart.loadShoppingCart();
+		this.root.favorites.loadFavorites();
 		const email = getReviewEmail();
 		if (email) {
 			await this.loadReviewStatus(email);

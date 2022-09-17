@@ -77,7 +77,7 @@ const CheckoutForm = () => {
 					email: store.user.email,
 					phone,
 					username,
-					products: store.cart.items.map((item) => item.product.id),
+					products: store.cart.items.map((item) => item.product),
 				}),
 				removeAllItemsFromShoppingCart(),
 			]);

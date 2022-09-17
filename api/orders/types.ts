@@ -1,4 +1,4 @@
-import { Product } from 'api/spareParts/types';
+import { Product } from 'api/types';
 
 export interface Order {
 	id: number;

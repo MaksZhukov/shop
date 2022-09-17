@@ -45,21 +45,20 @@ function MyApp({ Component, pageProps }: AppProps) {
 				try {
 					await Promise.all([
 						store.user.loadInfo(),
-						// store.cart.loadShoppingCart(),
+						store.cart.loadShoppingCart(),
 						store.favorites.loadFavorites(),
 					]);
 				} catch (err) {
-					//   saveJwt("");
+					saveJwt('');
 				}
 			} else {
 				const email = getReviewEmail();
 
-				const [cartItems] = await Promise.all([
-					store.cart.getShoppingCartByLocalStorage(),
+				await Promise.all([
+					store.cart.loadShoppingCart(),
 					store.favorites.loadFavorites(),
 					...(email ? [store.user.loadReviewStatus(email)] : []),
 				]);
-				store.cart.setCartItems(cartItems);
 			}
 			store.setIsInitialRequestDone();
 		};
