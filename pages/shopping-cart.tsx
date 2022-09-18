@@ -8,6 +8,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Container } from "@mui/system";
+import { SparePart } from "api/spareParts/types";
 import classNames from "classnames";
 import CheckoutForm from "components/CheckoutForm";
 import EmptyImageIcon from "components/EmptyImageIcon";
@@ -110,7 +111,7 @@ const ShoppingCart = () => {
                             color="text.secondary"
                             className={styles.description}
                           >
-                            {item.product.description}
+							{(item.product as SparePart).description}	
                           </Typography>
                         </Box>
                         <Box

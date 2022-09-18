@@ -1,14 +1,23 @@
 .wrapper {
 	display: flex;
 	&_tablet {
-		display: initial;
+		flex-direction: column;
 	}
 }
 
 .sider {
 	width: 250px;
+	&_left {
+		order: 1;
+	}
+	&_right {
+		order: 3;
+	}
 	&_tablet {
 		width: 100%;
+		&.sider_right {
+			order: 2;
+		}
 	}
 }
 
@@ -21,8 +30,10 @@
 }
 
 .content {
+	order: 2;
 	width: calc(100% - 250px - 250px - 1em);
 	&_tablet {
 		width: 100%;
+		order: 3;
 	}
 }

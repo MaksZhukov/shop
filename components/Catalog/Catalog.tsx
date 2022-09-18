@@ -167,6 +167,7 @@ const Catalog = ({
 					component='aside'
 					className={classNames(
 						styles.sider,
+						styles.sider_left,
 						isTablet && styles.sider_tablet
 					)}>
 					<Filters
@@ -238,6 +239,7 @@ const Catalog = ({
 					component='aside'
 					className={classNames(
 						styles.sider,
+						styles.sider_right,
 						isTablet && styles.sider_tablet
 					)}>
 					<News></News>

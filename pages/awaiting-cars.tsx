@@ -27,6 +27,7 @@ import {
 	TRANSMISSIONS,
 } from 'components/Filters/constants';
 import News from 'components/News';
+import Reviews from 'components/Reviews';
 import WhiteBox from 'components/WhiteBox';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -270,12 +271,14 @@ const AwaitingCars = () => {
 						marginRight='1em'
 						className={classNames(
 							styles.sider,
+							styles.sider_left,
 							isTablet && styles.sider_tablet
 						)}>
 						<Filters
 							config={filtersConfig}
 							total={total}
 							fetchData={fetchData}></Filters>
+						<Reviews></Reviews>
 					</Box>
 					<Box
 						marginRight='1em'
@@ -319,6 +322,7 @@ const AwaitingCars = () => {
 						component='aside'
 						className={classNames(
 							styles.sider,
+							styles.sider_right,
 							isTablet && styles.sider_tablet
 						)}>
 						<News></News>
