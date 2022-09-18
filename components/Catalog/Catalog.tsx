@@ -174,9 +174,9 @@ const Catalog = ({
 						total={total}
 						fetchData={throttledFetchProducts}></Filters>
 					<Reviews></Reviews>
-					{/* <News></News> */}
 				</Box>
 				<Box
+					marginRight='1em'
 					className={classNames(
 						styles.content,
 						isTablet && styles.content_tablet
@@ -233,6 +233,14 @@ const Catalog = ({
 							/>
 						</WhiteBox>
 					)}
+				</Box>
+				<Box
+					component='aside'
+					className={classNames(
+						styles.sider,
+						isTablet && styles.sider_tablet
+					)}>
+					<News></News>
 				</Box>
 			</Box>
 			<NewProducts title={title}></NewProducts>

@@ -21,7 +21,7 @@
 }
 
 .content {
-	width: calc(100% - 250px - 1em);
+	width: calc(100% - 250px - 250px - 1em);
 	&_tablet {
 		width: 100%;
 	}
