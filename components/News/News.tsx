@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { useEffect, useState } from 'react';
 
-const TWO_HOURS = 3600000;
+const TWO_HOURS = 3600000 * 2;
 
 const News = () => {
 	const [news, setNews] = useState<OneNews[]>([]);
