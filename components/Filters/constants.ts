@@ -14,3 +14,5 @@ export const BODY_STYLES = [
 	'бортовой',
 	'тягач',
 ];
+
+export const SEASONS = ['зимние', 'летние', 'всесезонные'];

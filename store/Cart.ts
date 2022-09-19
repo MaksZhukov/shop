@@ -113,7 +113,7 @@ export default class CartStore implements Cart {
 		this.items = this.items.filter(
 			(el) =>
 				el.product.id !== cartItem.product.id &&
-				el.product.type === cartItem.product.type
+				el.product.type !== cartItem.product.type
 		);
 	}
 	clearShoppingCart() {

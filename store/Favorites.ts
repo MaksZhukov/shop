@@ -114,7 +114,7 @@ export default class FavoritesStore implements Favorites {
 		this.items = this.items.filter(
 			(el) =>
 				el.product.id !== favorite.product.id &&
-				el.product.type === favorite.product.type
+				el.product.type !== favorite.product.type
 		);
 	}
 	clearFavorites() {
