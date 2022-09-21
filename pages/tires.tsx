@@ -5,17 +5,16 @@ import { SEASONS } from 'components/Filters/constants';
 import { ApiResponse, Filters } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import Head from 'next/head';
-import { fetchWheels } from 'api/wheels/wheels';
 import { useRouter } from 'next/router';
 import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
 import { Brand } from 'api/brands/types';
 import { fetchBrands } from 'api/brands/brands';
+import { fetchTires } from 'api/tires/tires';
 
 const Home: NextPage = () => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const router = useRouter();
 
 	const handleOpenAutocomplete =
 		<T extends any>(
@@ -154,7 +153,7 @@ const Home: NextPage = () => {
 					]}
 					filtersConfig={filtersConfig}
 					title='шины'
-					fetchData={fetchWheels}
+					fetchData={fetchTires}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 			</Container>
 		</>

@@ -96,7 +96,7 @@ const ShoppingCart = () => {
                           <EmptyImageIcon></EmptyImageIcon>
                         )}
                         <Box flex="1" padding="1em">
-                          <NextLink href={`/products/${item.product.slug}`}>
+                          <NextLink href={`/products/${item.product.type}/${item.product.slug}`}>
                             <Typography
                               lineClamp={1}
                               marginBottom="0.5em"

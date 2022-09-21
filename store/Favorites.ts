@@ -1,5 +1,5 @@
 import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { fetchTiers } from 'api/tires/tires';
+import { fetchTires } from 'api/tires/tires';
 import { ApiResponse, CollectionParams, Product } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
@@ -55,7 +55,7 @@ export default class FavoritesStore implements Favorites {
 						favoriteProducts
 							.filter((item) => item.type === 'tire')
 							.map((item) => item.id),
-						fetchTiers
+						fetchTires
 					),
 				]);
 

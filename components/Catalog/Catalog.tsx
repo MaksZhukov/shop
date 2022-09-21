@@ -245,7 +245,7 @@ const Catalog = ({
 					<News></News>
 				</Box>
 			</Box>
-			<NewProducts title={title}></NewProducts>
+			<NewProducts fetchData={fetchData} title={title}></NewProducts>
 		</>
 	);
 };

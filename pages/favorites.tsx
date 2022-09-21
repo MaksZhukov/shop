@@ -112,7 +112,7 @@ const Favorites = () => {
 											)}
 											<Box flex='1' padding='1em'>
 												<NextLink
-													href={`/products/${item.product.slug}`}>
+													href={`/products/${item.product.type}/${item.product.slug}`}>
 													<Typography
 														lineClamp={1}
 														title={
