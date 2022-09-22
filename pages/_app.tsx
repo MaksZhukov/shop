@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
 import { createTheme, Snackbar, Stack, ThemeProvider } from '@mui/material';
-import { green, lightGreen, lime, red, grey } from '@mui/material/colors';
+import { green } from '@mui/material/colors';
 import { useEffect } from 'react';
 import {
 	getJwt,
