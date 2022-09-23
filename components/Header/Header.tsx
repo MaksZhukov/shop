@@ -31,7 +31,7 @@ const navigation = [
 		children: [
 			{ name: 'Запчасти', path: '/' },
 			{ name: 'Шины', path: '/tires' },
-			//   { name: "Диски", path: "/wheels" },
+			{ name: 'Диски', path: '/wheels' },
 		],
 	},
 	{ name: 'Ожидаемые авто', path: '/awaiting-cars' },

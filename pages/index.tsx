@@ -235,7 +235,7 @@ const Home: NextPage = () => {
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			price: { $gte: min || 0, $lte: max || undefined },
+			price: { $gte: min || undefined, $lte: max || undefined },
 			year: {
 				$gte: yearFrom || undefined,
 				$lte: yearTo || undefined,

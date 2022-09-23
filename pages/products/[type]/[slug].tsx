@@ -53,7 +53,12 @@ const ProductPage = ({ data }: Props) => {
 		{ text: 'Ширина', value: item.width },
 		{ text: 'Сезон', value: item.season },
 	];
-	const getWheelPrintOptions = (item: Wheel) => [];
+	const getWheelPrintOptions = (item: Wheel) => [
+		{ text: 'Артикул', value: item.id },
+		{ text: 'Диаметр', value: item.diameter },
+		{ text: 'Высота', value: item.height },
+		{ text: 'Ширина', value: item.width },
+	];
 
 	let printOptions = {
 		tire: getTirePrintOptions(data as Tire),

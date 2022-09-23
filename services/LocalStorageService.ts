@@ -52,7 +52,7 @@ export const saveCartProduct = (id: number, type: ProductType) => {
 export const removeCartProduct = (id: number, type: ProductType) => {
 	let cartProducts = getCartProducts();
 	localStorage.setItem(
-		'cartProductIDs',
+		'cartProducts',
 		JSON.stringify(
 			cartProducts.filter((item) => item.id !== id && item.type === type)
 		)

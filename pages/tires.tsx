@@ -12,7 +12,7 @@ import { Brand } from 'api/brands/types';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchTires } from 'api/tires/tires';
 
-const Home: NextPage = () => {
+const Tires: NextPage = () => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -110,11 +110,7 @@ const Home: NextPage = () => {
 	const generateFiltersByQuery = ({
 		min,
 		max,
-		yearFrom,
-		yearTo,
 		brandId,
-		modelId,
-		sparePartId,
 		...others
 	}: {
 		[key: string]: string;
@@ -160,4 +156,4 @@ const Home: NextPage = () => {
 	);
 };
 
-export default Home;
+export default Tires;
