@@ -14,9 +14,8 @@ import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Image from 'next/image';
-import { FC, useEffect } from 'react';
 import Slider from 'react-slick';
-import { api } from '../../../api';
+import { isSparePart } from 'services/ProductService';
 import { fetchSparePart } from '../../../api/spareParts/spareParts';
 import { SparePart } from '../../../api/spareParts/types';
 import styles from './product.module.scss';
@@ -167,7 +166,7 @@ const ProductPage = ({ data }: Props) => {
 							</Box>
 						</Box>
 					</Box>
-					{(data as SparePart).description && (
+					{isSparePart(data) && (
 						<Box>
 							<Typography
 								mr='1em'
@@ -177,7 +176,7 @@ const ProductPage = ({ data }: Props) => {
 								Описание:
 							</Typography>
 							<Typography color='text.secondary'>
-								{(data as SparePart).description}
+								{data.description}
 							</Typography>
 						</Box>
 					)}
