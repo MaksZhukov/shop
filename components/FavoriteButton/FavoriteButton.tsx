@@ -29,6 +29,7 @@ const FavoriteButton = ({ product }: Props) => {
 			} else {
 				await store.favorites.addFavorite({
 					id: new Date().getTime(),
+					uid: new Date().getTime().toString(),
 					product,
 				});
 				store.notification.showMessage({

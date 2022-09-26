@@ -29,6 +29,7 @@ const ShoppingCartButton = ({ product }: Props) => {
 			} else {
 				await store.cart.addCartItem({
 					id: new Date().getTime(),
+					uid: new Date().getTime().toString(),
 					product,
 				});
 				store.notification.showMessage({

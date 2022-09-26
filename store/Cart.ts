@@ -63,6 +63,7 @@ export default class CartStore implements Cart {
 				this.items = [...spareParts, ...wheels, ...tires].map(
 					(item) => ({
 						id: new Date().getTime(),
+						uid: new Date().getTime().toString(),
 						product: item,
 					})
 				);
@@ -113,7 +114,7 @@ export default class CartStore implements Cart {
 		this.items = this.items.filter(
 			(el) =>
 				el.product.id !== cartItem.product.id &&
-				el.product.type !== cartItem.product.type
+				el.product.type === cartItem.product.type
 		);
 	}
 	clearShoppingCart() {

@@ -5,5 +5,6 @@ import { Product } from 'api/types';
 
 export interface Favorite {
 	id: number;
+	uid: string;
 	product: Product;
 }
