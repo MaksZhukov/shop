@@ -26,7 +26,7 @@ const tawkId = '1g91tu3hb';
 
 let theme = createTheme({
 	typography: {
-		fontFamily: 'Lato, Arial',
+		fontFamily: 'Lato',
 	},
 	palette: {
 		primary: {
