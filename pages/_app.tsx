@@ -63,7 +63,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 			store.setIsInitialRequestDone();
 		};
 		tryFetchData();
-		new TawkTo(propertyId, tawkId);
+		// Timeout needs to resolve prod cors error
+		setTimeout(() => {
+			new TawkTo(propertyId, tawkId);
+		}, 1000);
 	}, []);
 
 	return (
