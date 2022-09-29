@@ -7,6 +7,7 @@ export default function Document() {
 				<link
 					rel='preload'
 					href='https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css'
+					as='font'
 				/>
 			</Head>
 			<body>
