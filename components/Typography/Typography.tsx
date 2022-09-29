@@ -6,13 +6,14 @@ import {
 
 const Typography = ({
 	children,
+	lineClamp,
 	...props
 }: TypographyProps & { component?: React.ElementType; lineClamp?: number }) => {
-	let sx: SxProps = props.lineClamp
+	let sx: SxProps = lineClamp
 		? {
 				display: '-webkit-box',
 				WebkitBoxOrient: 'vertical',
-				WebkitLineClamp: props.lineClamp,
+				WebkitLineClamp: lineClamp,
 				overflow: 'hidden',
 				textOverflow: 'ellipsis',
 		  }

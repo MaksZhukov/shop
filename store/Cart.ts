@@ -4,7 +4,7 @@ import { fetchTires } from 'api/tires/tires';
 import { ApiResponse, CollectionParams, Product } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import {
 	getCartProducts,
 	removeCartProduct,
@@ -35,7 +35,9 @@ export default class CartStore implements Cart {
 			const {
 				data: { data },
 			} = await getShoppingCart();
-			this.items = data;
+			runInAction(() => {
+				this.items = data;
+			});
 		} else {
 			const cartProducts = getCartProducts();
 			try {
@@ -60,13 +62,15 @@ export default class CartStore implements Cart {
 					),
 				]);
 
-				this.items = [...spareParts, ...wheels, ...tires].map(
-					(item) => ({
-						id: new Date().getTime(),
-						uid: new Date().getTime().toString(),
-						product: item,
-					})
-				);
+				runInAction(() => {
+					this.items = [...spareParts, ...wheels, ...tires].map(
+						(item) => ({
+							id: new Date().getTime(),
+							uid: new Date().getTime().toString(),
+							product: item,
+						})
+					);
+				});
 			} catch (err) {
 				console.error(err);
 			}
@@ -103,7 +107,9 @@ export default class CartStore implements Cart {
 			shoppingCartItem = cartItem;
 			saveCartProduct(cartItem.product.id, cartItem.product.type);
 		}
-		this.items.push(shoppingCartItem);
+		runInAction(() => {
+			this.items.push(shoppingCartItem as ShoppingCartItem);
+		});
 	}
 	async removeCartItem(cartItem: ShoppingCartItem) {
 		if (this.root.user.id) {
@@ -111,11 +117,13 @@ export default class CartStore implements Cart {
 		} else {
 			removeCartProduct(cartItem.product.id, cartItem.product.type);
 		}
-		this.items = this.items.filter(
-			(el) =>
-				el.product.id !== cartItem.product.id &&
-				el.product.type === cartItem.product.type
-		);
+		runInAction(() => {
+			this.items = this.items.filter(
+				(el) =>
+					el.product.id !== cartItem.product.id &&
+					el.product.type === cartItem.product.type
+			);
+		});
 	}
 	clearShoppingCart() {
 		let cartProducts = getCartProducts();

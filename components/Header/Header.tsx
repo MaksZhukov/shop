@@ -9,6 +9,7 @@ import {
 	MenuItem,
 	MenuList,
 	Toolbar,
+	Typography,
 } from '@mui/material';
 import { Fragment, MutableRefObject, useEffect, useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -106,13 +107,18 @@ const Header = observer(() => {
 			}}
 			{...(type === 'mobile' ? {} : {})}>
 			<Link passHref href='/'>
-				<Image
-					style={{ cursor: 'pointer' }}
-					alt='Picture of the author'
-					width={150}
-					height={42}
-					src='/logo.jpg'
-				/>
+				{
+					// Needs fragment to not show error forward ...
+				}
+				<>
+					<Image
+						style={{ cursor: 'pointer' }}
+						alt='Picture of the author'
+						width={150}
+						height={42}
+						src='/logo.jpg'
+					/>
+				</>
 			</Link>
 		</Box>
 	);

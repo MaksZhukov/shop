@@ -29,11 +29,13 @@ export default class UserStore implements User {
 	}
 	async loadInfo() {
 		const { data } = await getUserInfo();
-		this.id = data.id;
-		this.email = data.email;
-		this.username = data.username;
-		this.phone = data.phone || '';
-		this.address = data.address || '';
+		runInAction(() => {
+			this.id = data.id;
+			this.email = data.email;
+			this.username = data.username;
+			this.phone = data.phone || '';
+			this.address = data.address || '';
+		});
 		await this.loadReviewStatus(data.email);
 	}
 	async loadReviewStatus(email: string) {
@@ -42,19 +44,23 @@ export default class UserStore implements User {
 				data: { status },
 			},
 		} = await checkReviewStatus(email);
-		this.reviewStatus = status;
+		runInAction(() => {
+			this.reviewStatus = status;
+		});
 	}
 	setJWT(jwt: string) {
 		this.jwt = jwt;
 	}
 	async login(email: string, password: string) {
 		const { data } = await login(email, password);
-		this.jwt = data.jwt;
-		this.id = data.user.id;
-		this.email = data.user.email;
-		this.username = data.user.username;
-		this.phone = data.user.phone;
-		this.address = data.user.address;
+		runInAction(() => {
+			this.jwt = data.jwt;
+			this.id = data.user.id;
+			this.email = data.user.email;
+			this.username = data.user.username;
+			this.phone = data.user.phone;
+			this.address = data.user.address;
+		});
 		saveJwt(data.jwt);
 		await this.loadReviewStatus(data.user.email);
 	}

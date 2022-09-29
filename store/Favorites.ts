@@ -3,7 +3,7 @@ import { fetchTires } from 'api/tires/tires';
 import { ApiResponse, CollectionParams, Product } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import {
 	getFavoriteProducts,
 	removeFavoriteProduct,
@@ -34,7 +34,9 @@ export default class FavoritesStore implements Favorites {
 			const {
 				data: { data },
 			} = await fetchFavorites();
-			this.items = data;
+			runInAction(() => {
+				this.items = data;
+			});
 		} else {
 			const favoriteProducts = getFavoriteProducts();
 			try {
@@ -59,13 +61,15 @@ export default class FavoritesStore implements Favorites {
 					),
 				]);
 
-				this.items = [...spareParts, ...wheels, ...tires].map(
-					(item) => ({
-						id: new Date().getTime(),
-						uid: new Date().getTime().toString(),
-						product: item,
-					})
-				);
+				runInAction(() => {
+					this.items = [...spareParts, ...wheels, ...tires].map(
+						(item) => ({
+							id: new Date().getTime(),
+							uid: new Date().getTime().toString(),
+							product: item,
+						})
+					);
+				});
 			} catch (err) {
 				console.error(err);
 			}
@@ -97,13 +101,17 @@ export default class FavoritesStore implements Favorites {
 					favorite.product.id,
 					favorite.product.type
 				);
-				this.items.push(data);
+				runInAction(() => {
+					this.items.push(data);
+				});
 			} catch (err) {
 				console.log(err);
 			}
 		} else {
 			saveFavoriteProduct(favorite.product.id, favorite.product.type);
-			this.items.push(favorite);
+			runInAction(() => {
+				this.items.push(favorite);
+			});
 		}
 	}
 	async removeFavorite(favorite: Favorite) {
@@ -112,11 +120,13 @@ export default class FavoritesStore implements Favorites {
 		} else {
 			removeFavoriteProduct(favorite.product.id, favorite.product.type);
 		}
-		this.items = this.items.filter(
-			(el) =>
-				el.product.id !== favorite.product.id &&
-				el.product.type === favorite.product.type
-		);
+		runInAction(() => {
+			this.items = this.items.filter(
+				(el) =>
+					el.product.id !== favorite.product.id &&
+					el.product.type === favorite.product.type
+			);
+		});
 	}
 	clearFavorites() {
 		let favoriteProducts = getFavoriteProducts();
