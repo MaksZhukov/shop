@@ -26,14 +26,16 @@ import {
 	FUELS,
 	TRANSMISSIONS,
 } from 'components/Filters/constants';
-import News from 'components/News';
-import Reviews from 'components/Reviews';
 import WhiteBox from 'components/WhiteBox';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useStore } from '../store';
 import styles from './awaiting-cars.module.scss';
+
+const DynamicNews = dynamic(() => import('components/News'));
+const DynamicReviews = dynamic(() => import('components/Reviews'));
 
 const AwaitingCars = () => {
 	const [brands, setBrands] = useState<Brand[]>([]);
@@ -283,7 +285,7 @@ const AwaitingCars = () => {
 							config={filtersConfig}
 							total={total}
 							fetchData={fetchData}></Filters>
-						<Reviews></Reviews>
+						<DynamicReviews></DynamicReviews>
 					</Box>
 					<Box
 						marginRight='1em'
@@ -330,7 +332,7 @@ const AwaitingCars = () => {
 							styles.sider_right,
 							isTablet && styles.sider_tablet
 						)}>
-						<News></News>
+						<DynamicNews></DynamicNews>
 					</Box>
 				</Box>
 			</Container>

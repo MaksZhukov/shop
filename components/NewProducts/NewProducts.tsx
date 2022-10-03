@@ -7,12 +7,11 @@ import WhiteBox from 'components/WhiteBox';
 import getConfig from 'next/config';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import styles from './NewProducts.module.scss';
 const { publicRuntimeConfig } = getConfig();
-const COUNT_DAYS_FOR_NEW_PRODUCT = 7;
+const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
 interface Props {
 	title: string;
@@ -23,7 +22,7 @@ interface Props {
 
 const NewProducts: FC<Props> = ({ title, fetchData }) => {
 	const [data, setData] = useState<Product[]>([]);
-	const router = useRouter();
+
 	const { breakpoints } = useTheme();
 
 	useEffect(() => {
@@ -128,11 +127,11 @@ const NewProducts: FC<Props> = ({ title, fetchData }) => {
 								variant='h6'
 								title={item.name}
 								lineClamp={1}>
-								<Link underline='hover'>
-									<NextLink href={'/products/' + item.slug}>
-										{item.name}
-									</NextLink>
-								</Link>
+								<NextLink
+									href={'/products/' + item.slug}
+									passHref>
+									<Link underline='hover'>{item.name}</Link>
+								</NextLink>
 							</Typography>
 							<Typography
 								flex='1'

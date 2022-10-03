@@ -16,15 +16,17 @@ import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
 import Filters from 'components/Filters';
 import { AutocompleteType, NumberType } from 'components/Filters/types';
-import NewProducts from 'components/NewProducts';
-import News from 'components/News';
 import ProductItem from 'components/ProductItem';
-import Reviews from 'components/Reviews';
 import WhiteBox from 'components/WhiteBox';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState, Suspense } from 'react';
 import { useStore } from 'store';
 import styles from './Catalog.module.scss';
+
+const DynamicNews = dynamic(() => import('components/News'));
+const DynamicReviews = dynamic(() => import('components/Reviews'));
+const DynamicNewProducts = dynamic(() => import('components/NewProducts'));
 
 const selectSortItems = [
 	{ name: 'Новые', value: 'createdAt:desc' },
@@ -174,7 +176,7 @@ const Catalog = ({
 						config={filtersConfig}
 						total={total}
 						fetchData={throttledFetchProducts}></Filters>
-					<Reviews></Reviews>
+					<DynamicReviews></DynamicReviews>
 				</Box>
 				<Box
 					marginRight='1em'
@@ -242,10 +244,12 @@ const Catalog = ({
 						styles.sider_right,
 						isTablet && styles.sider_tablet
 					)}>
-					<News></News>
+					<DynamicNews></DynamicNews>
 				</Box>
 			</Box>
-			<NewProducts fetchData={fetchData} title={title}></NewProducts>
+			<DynamicNewProducts
+				fetchData={fetchData}
+				title={title}></DynamicNewProducts>
 		</>
 	);
 };
