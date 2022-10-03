@@ -162,9 +162,9 @@ const Header = observer(() => {
 									}}
 									{...(!isTablet
 										? {
-												id: 'products',
+												id: 'products-button',
 												'aria-controls': anchorEl
-													? 'fade-menu'
+													? 'products-list'
 													: undefined,
 												'aria-haspopup': 'true',
 												'aria-expanded': anchorEl
@@ -206,9 +206,10 @@ const Header = observer(() => {
 											list: styles.submenu,
 											paper: styles['submenu-wrapper'],
 										}}
-										id='products'
+										id='products-menu'
 										MenuListProps={{
-											'aria-labelledby': 'products',
+											'aria-labelledby':
+												'products-button',
 										}}
 										anchorEl={anchorEl}
 										open={!!anchorEl}
