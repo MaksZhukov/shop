@@ -65,6 +65,12 @@ const ProductPage = ({ data }: Props) => {
 		wheel: getWheelPrintOptions(data as Wheel),
 	}[data.type];
 
+	const keywordsContent = {
+		sparePart: 'запчасть, купить запчасть, продажа запчасти, запчасть авто',
+		wheel: 'диск, купить диск, продажа диска, диск авто',
+		tire: 'шина, купить шину, продажа шины, шина авто',
+	}[data.type];
+
 	return (
 		<>
 			<Head>
@@ -72,6 +78,7 @@ const ProductPage = ({ data }: Props) => {
 				<meta
 					name='description'
 					content={`Описание ${data.name}`}></meta>
+				<meta name='keywords' content={keywordsContent} />
 			</Head>
 			<Container>
 				<WhiteBox padding='2em'>

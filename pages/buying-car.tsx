@@ -11,6 +11,10 @@ const BuyingCar = () => {
 				<meta
 					name='description'
 					content='Описание покупки автмобилей на запчасти'></meta>
+				<meta
+					name='keywords'
+					content='покупка на запчасти, покупка авто на запчасти, покупка автомобилей на запчасти, автозапчасти, авто в пути'
+				/>
 			</Head>
 			<Container>
 				<WhiteBox>

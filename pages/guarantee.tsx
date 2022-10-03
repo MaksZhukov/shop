@@ -9,6 +9,10 @@ const Guarantee = () => {
 			<Head>
 				<title>Гарантия</title>
 				<meta name='description' content='Гарантия на товары'></meta>
+				<meta
+					name='keywords'
+					content='гарантия, гарантия на запчасти, запчасти, гарантия на товары, условия гарантии'
+				/>
 			</Head>
 			<Container>
 				<WhiteBox>

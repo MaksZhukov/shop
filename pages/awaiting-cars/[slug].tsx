@@ -54,6 +54,10 @@ const CarPage = ({ data }: Props) => {
 			<Head>
 				<title>{name}</title>
 				<meta name='description' content={`Описание ${name}`}></meta>
+				<meta
+					name='keywords'
+					content='авто, ожидаемое авто, автомобиль, ожидаемый автомобиль, авто в пути'
+				/>
 			</Head>
 			<Container>
 				<WhiteBox padding='2em'>

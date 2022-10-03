@@ -127,6 +127,10 @@ const Tires: NextPage = () => {
 			<Head>
 				<title>Шины</title>
 				<meta name='description' content='Шины'></meta>
+				<meta
+					name='keywords'
+					content='шины, шины для автомобилей, купить шины, колеса'
+				/>
 			</Head>
 			<Container>
 				<Catalog

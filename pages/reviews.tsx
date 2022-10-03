@@ -63,6 +63,10 @@ const Reviews = () => {
 			<Head>
 				<title>Отзывы</title>
 				<meta name='description' content='Отзывы покупателей'></meta>
+				<meta
+					name='keywords'
+					content='отзывы от покупателей, отзывы, рейтинг магазина'
+				/>
 			</Head>
 			<Container>
 				<WhiteBox>

@@ -11,6 +11,10 @@ const ShippingAndPayment = () => {
 				<meta
 					name='description'
 					content='Доставка и оплата товаров'></meta>
+				<meta
+					name='keywords'
+					content='оплата, доставка, способы оплаты, расчет, доставка запчастей'
+				/>
 			</Head>
 			<Container>
 				<WhiteBox>

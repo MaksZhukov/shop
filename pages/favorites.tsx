@@ -40,6 +40,10 @@ const Favorites = () => {
 			<Head>
 				<title>Избранные</title>
 				<meta name='description' content='Избранные товары'></meta>
+				<meta
+					name='keywords'
+					content='авто, ожидаемые авто, автомобили, ожидаемые автомобили'
+				/>
 			</Head>
 			<Container>
 				<WhiteBox className={styles.favorites}>

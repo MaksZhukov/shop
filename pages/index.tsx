@@ -254,6 +254,10 @@ const Home: NextPage = () => {
 				<meta
 					name='description'
 					content='Запчасти от автомобилей'></meta>
+				<meta
+					name='keywords'
+					content='запчасти, запчасти от авто, запчасти на продажу, купить запчасти'
+				/>
 			</Head>
 			<Container>
 				<Catalog

@@ -12,6 +12,10 @@ const Contacts = () => {
 			<Head>
 				<title>Контакты</title>
 				<meta name='description' content='Наши контакты'></meta>
+				<meta
+					name='keywords'
+					content='контакты, контакты разбор авто, разбор авто'
+				/>
 			</Head>
 			<Container>
 				<WhiteBox>
