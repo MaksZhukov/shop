@@ -7,7 +7,6 @@ import {
 	useMediaQuery,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useRouter } from 'next/router';
 import { Product } from '../../api/types';
 import styles from './ProductItem.module.scss';
 import getConfig from 'next/config';
@@ -15,6 +14,7 @@ import ShoppingCartButton from 'components/ShoppingCartButton';
 import FavoriteButton from 'components/FavoriteButton';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import Typography from 'components/Typography';
+import NextLink from 'next/link';
 import Image from 'next/image';
 import Slider from 'react-slick';
 import classNames from 'classnames';
@@ -28,15 +28,10 @@ interface Props {
 }
 
 const ProductItem = ({ data, dataFieldsToShow }: Props) => {
-	const router = useRouter();
 	const isMobile = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('sm')
 	);
-
-	const handleClickMore = (slug: string) => () => {
-		router.push(`/products/${data.type}/` + slug);
-	};
-
+	console.log(data);
 	return (
 		<Card className={styles.product}>
 			<Box
@@ -82,12 +77,15 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 				)}
 				<CardContent sx={{ flex: 1, paddingY: '0!important' }}>
 					<Typography
-						onClick={handleClickMore(data.slug)}
 						lineClamp={1}
 						title={data.name}
 						component='div'
 						variant='h5'>
-						<Link underline='hover'>{data.name}</Link>
+						<NextLink
+							passHref
+							href={`/products/${data.type}/` + data.slug}>
+							<Link underline='hover'>{data.name}</Link>
+						</NextLink>
 					</Typography>
 					<Grid columnSpacing={2} container>
 						{dataFieldsToShow.map((item) => (
@@ -143,8 +141,10 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 						</Typography>
 					)}
 				</Typography>
-				<Button onClick={handleClickMore(data.slug)} variant='outlined'>
-					Подробнее
+				<Button variant='outlined'>
+					<NextLink href={`/products/${data.type}/` + data.slug}>
+						Подробнее
+					</NextLink>
 				</Button>
 				<FavoriteButton product={data}></FavoriteButton>
 				<ShoppingCartButton product={data}></ShoppingCartButton>

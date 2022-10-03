@@ -106,11 +106,8 @@ const Header = observer(() => {
 						: { xs: 'flex', md: 'none' },
 			}}
 			{...(type === 'mobile' ? {} : {})}>
-			<Link passHref href='/'>
-				{
-					// Needs fragment to not show error forward ...
-				}
-				<>
+			<Link href='/' passHref>
+				<Typography component='a'>
 					<Image
 						style={{ cursor: 'pointer' }}
 						alt='Picture of the author'
@@ -118,7 +115,7 @@ const Header = observer(() => {
 						height={42}
 						src='/logo.jpg'
 					/>
-				</>
+				</Typography>
 			</Link>
 		</Box>
 	);
@@ -140,7 +137,7 @@ const Header = observer(() => {
 				return (
 					<Fragment key={page.name}>
 						{page.path ? (
-							<Link href={page.path}>
+							<Link href={page.path} passHref>
 								<Button
 									onClick={handleClickMenuItem}
 									className={classNames(styles.menu__item, {
@@ -196,7 +193,9 @@ const Header = observer(() => {
 												onClick={handleSubMenuClick(
 													item.path
 												)}>
-												{item.name}
+												<Link href={item.path}>
+													{item.name}
+												</Link>
 											</MenuItem>
 										))}
 									</MenuList>
@@ -216,11 +215,14 @@ const Header = observer(() => {
 										onClose={handleSubMenuClose}>
 										{page.children?.map((item) => (
 											<MenuItem
+												href={item.path}
 												key={item.name}
 												onClick={handleSubMenuClick(
 													item.path
 												)}>
-												{item.name}
+												<Link href={item.path}>
+													{item.name}
+												</Link>
 											</MenuItem>
 										))}
 									</Menu>

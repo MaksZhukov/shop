@@ -111,21 +111,20 @@ const Favorites = () => {
 												<EmptyImageIcon></EmptyImageIcon>
 											)}
 											<Box flex='1' padding='1em'>
-												<NextLink
-													href={`/products/${item.product.type}/${item.product.slug}`}>
-													<Typography
-														lineClamp={1}
-														title={
-															item.product.name
-														}
-														marginBottom='0.5em'
-														variant='h5'
-														component='h2'>
+												<Typography
+													lineClamp={1}
+													title={item.product.name}
+													marginBottom='0.5em'
+													variant='h5'
+													component='h2'>
+													<NextLink
+														href={`/products/${item.product.type}/${item.product.slug}`}
+														passHref>
 														<Link underline='hover'>
 															{item.product.name}
 														</Link>
-													</Typography>
-												</NextLink>
+													</NextLink>
+												</Typography>
 												<Typography
 													lineClamp={2}
 													color='text.secondary'

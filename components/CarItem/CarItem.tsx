@@ -12,6 +12,7 @@ import styles from './CarItem.module.scss';
 import getConfig from 'next/config';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import Typography from 'components/Typography';
+import NextLink from 'next/link';
 import Image from 'next/image';
 import Slider from 'react-slick';
 import classNames from 'classnames';
@@ -29,9 +30,6 @@ const CarItem = ({ data }: Props) => {
 		theme.breakpoints.down('sm')
 	);
 
-	const handleClickMore = (slug: string) => () => {
-		router.push('/awaiting-cars/' + slug);
-	};
 	let manufactureYear = new Date(data.manufactureDate).getFullYear();
 
 	let name =
@@ -83,12 +81,13 @@ const CarItem = ({ data }: Props) => {
 				<CardContent
 					sx={{ flex: 1, paddingY: '0!important', width: '100%' }}>
 					<Typography
-						onClick={handleClickMore(data.slug)}
 						lineClamp={1}
 						title={name}
 						component='div'
 						variant='h5'>
-						<Link underline='hover'>{name}</Link>
+						<NextLink href={'/awaiting-cars/' + data.slug} passHref>
+							<Link underline='hover'>{name}</Link>
+						</NextLink>
 					</Typography>
 					<Grid marginBottom='1em' columnSpacing={2} container>
 						<Grid item>
@@ -129,10 +128,10 @@ const CarItem = ({ data }: Props) => {
 						</Grid>
 					</Grid>
 					<Box marginBottom='1em' textAlign='right'>
-						<Button
-							onClick={handleClickMore(data.slug)}
-							variant='outlined'>
-							Подробнее
+						<Button variant='outlined'>
+							<NextLink href={'/awaiting-cars/' + data.slug}>
+								Подробнее
+							</NextLink>
 						</Button>
 					</Box>
 				</CardContent>

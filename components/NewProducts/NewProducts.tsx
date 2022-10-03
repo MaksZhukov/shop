@@ -6,6 +6,7 @@ import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import getConfig from 'next/config';
 import Image from 'next/image';
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import Slider from 'react-slick';
@@ -45,10 +46,6 @@ const NewProducts: FC<Props> = ({ title, fetchData }) => {
 		};
 		fetchNewProducts();
 	}, []);
-
-	const handleClickMore = (slug: string) => () => {
-		router.push('/products/' + slug);
-	};
 
 	return data.length ? (
 		<Box paddingX='1em'>
@@ -127,12 +124,15 @@ const NewProducts: FC<Props> = ({ title, fetchData }) => {
 									size={225}></EmptyImageIcon>
 							)}
 							<Typography
-								onClick={handleClickMore(item.slug)}
 								marginTop='1em'
 								variant='h6'
 								title={item.name}
 								lineClamp={1}>
-								<Link underline='hover'>{item.name}</Link>
+								<Link underline='hover'>
+									<NextLink href={'/products/' + item.slug}>
+										{item.name}
+									</NextLink>
+								</Link>
 							</Typography>
 							<Typography
 								flex='1'
