@@ -23,6 +23,7 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 import { Fragment, useState } from 'react';
 import Slider from 'react-slick';
+import { isSparePart } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './shopping-cart.module.scss';
 
@@ -45,6 +46,7 @@ const ShoppingCart = () => {
 		<>
 			<Head>
 				<title>Корзина</title>
+				<meta name='description' content='Корзина товаров'></meta>
 			</Head>
 			<Container>
 				<WhiteBox>
@@ -139,18 +141,21 @@ const ShoppingCart = () => {
 														</NextLink>
 													</Typography>
 
-													<Typography
-														lineClamp={2}
-														color='text.secondary'
-														className={
-															styles.description
-														}>
-														{
-															(
-																item.product as SparePart
-															).description
-														}
-													</Typography>
+													{isSparePart(
+														item.product
+													) && (
+														<Typography
+															lineClamp={2}
+															color='text.secondary'
+															className={
+																styles.description
+															}>
+															{
+																item.product
+																	.description
+															}
+														</Typography>
+													)}
 												</Box>
 												<Box
 													display={

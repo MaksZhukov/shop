@@ -19,6 +19,7 @@ import Image from 'next/image';
 import Slider from 'react-slick';
 import classNames from 'classnames';
 import { Image as IImage } from 'api/types';
+import { isSparePart } from 'services/ProductService';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -105,26 +106,17 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 							</Grid>
 						))}
 					</Grid>
-					{
-						//@ts-ignore
-						data.description && (
+					{isSparePart(data) && (
+						<Typography mt='0.5em' lineClamp={2} variant='body1'>
 							<Typography
-								mt='0.5em'
-								lineClamp={2}
-								variant='body1'>
-								<Typography
-									fontWeight='500'
-									component='span'
-									variant='subtitle1'>
-									Описание:
-								</Typography>{' '}
-								{
-									//@ts-ignore
-									data.description
-								}
-							</Typography>
-						)
-					}
+								fontWeight='500'
+								component='span'
+								variant='subtitle1'>
+								Описание:
+							</Typography>{' '}
+							{data.description}
+						</Typography>
+					)}
 				</CardContent>
 			</Box>
 

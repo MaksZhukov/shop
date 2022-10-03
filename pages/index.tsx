@@ -251,6 +251,9 @@ const Home: NextPage = () => {
 		<>
 			<Head>
 				<title>Запчасти</title>
+				<meta
+					name='description'
+					content='Запчасти от автомобилей'></meta>
 			</Head>
 			<Container>
 				<Catalog

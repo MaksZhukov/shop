@@ -69,6 +69,9 @@ const ProductPage = ({ data }: Props) => {
 		<>
 			<Head>
 				<title>{data.name}</title>
+				<meta
+					name='description'
+					content={`Описание ${data.name}`}></meta>
 			</Head>
 			<Container>
 				<WhiteBox padding='2em'>

@@ -255,6 +255,7 @@ const AwaitingCars = () => {
 		<>
 			<Head>
 				<title>Ожидаемые авто</title>
+				<meta name='description' content='Ожидаемые авто'></meta>
 			</Head>
 			<Container>
 				<WhiteBox>

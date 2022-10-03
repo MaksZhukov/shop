@@ -22,6 +22,7 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 import { Fragment } from 'react';
 import Slider from 'react-slick';
+import { isSparePart } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './favorites.module.scss';
 
@@ -38,6 +39,7 @@ const Favorites = () => {
 		<>
 			<Head>
 				<title>Избранные</title>
+				<meta name='description' content='Избранные товары'></meta>
 			</Head>
 			<Container>
 				<WhiteBox className={styles.favorites}>
@@ -125,18 +127,19 @@ const Favorites = () => {
 														</Link>
 													</NextLink>
 												</Typography>
-												<Typography
-													lineClamp={2}
-													color='text.secondary'
-													className={
-														styles.description
-													}>
-													{
-														(
-															item.product as SparePart
-														).description
-													}
-												</Typography>
+												{isSparePart(item.product) && (
+													<Typography
+														lineClamp={2}
+														color='text.secondary'
+														className={
+															styles.description
+														}>
+														{
+															item.product
+																.description
+														}
+													</Typography>
+												)}
 											</Box>
 											<Box
 												display={

@@ -63,6 +63,7 @@ const Wheels: NextPage = () => {
 		<>
 			<Head>
 				<title>Диски</title>
+				<meta name='description' content='Диски'></meta>
 			</Head>
 			<Container>
 				<Catalog

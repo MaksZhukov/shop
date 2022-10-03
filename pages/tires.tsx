@@ -126,6 +126,7 @@ const Tires: NextPage = () => {
 		<>
 			<Head>
 				<title>Шины</title>
+				<meta name='description' content='Шины'></meta>
 			</Head>
 			<Container>
 				<Catalog
