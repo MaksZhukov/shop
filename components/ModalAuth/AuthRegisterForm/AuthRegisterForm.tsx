@@ -53,26 +53,14 @@ const AuthRegisterForm = ({
           store.favorites.loadFavorites(),
         ]);
         onChangeModalOpened(false);
-        store.notification.showMessage({
-          content: (
-            <Alert severity="success" variant="filled">
-              Вы вошли в свой аккаунт
-            </Alert>
-          ),
-        });
+        store.notification.showSuccessMessage("Вы вошли в свой аккаунт");
       } catch (err) {
         if (axios.isAxiosError(err)) {
           if (
             err.response?.data.error.name === ErrorTypes.ValidationError ||
             err.response?.status === 500
           ) {
-            store.notification.showMessage({
-              content: (
-                <Alert severity="warning" variant="filled">
-                  Неверные данные
-                </Alert>
-              ),
-            });
+            store.notification.showErrorMessage("Неверные данные");
           }
         }
       }
@@ -80,13 +68,7 @@ const AuthRegisterForm = ({
     if (type === "register") {
       try {
         await register(email, password);
-        store.notification.showMessage({
-          content: (
-            <Alert severity="success" variant="filled">
-              Вы успешно зарегистрировались
-            </Alert>
-          ),
-        });
+        store.notification.showSuccessMessage("Вы успешно зарегистрировались");
         onChangeType("login");
         setEmail("");
         setPassword("");
@@ -94,13 +76,9 @@ const AuthRegisterForm = ({
         if (axios.isAxiosError(err)) {
           if (err.response?.data.error.status === 400) {
             if (err.response.data.error.message === "Email is already taken") {
-              store.notification.showMessage({
-                content: (
-                  <Alert severity="warning" variant="filled">
-                    Такой пользователь уже существует
-                  </Alert>
-                ),
-              });
+              store.notification.showErrorMessage(
+                "Такой пользователь уже существует"
+              );
             }
           }
         }

@@ -45,24 +45,12 @@ const ResetForm = ({ onChangeType, onChangeIsLoading, isLoading }: Props) => {
     onChangeIsLoading(true);
     try {
       await resetPassword(code, password, passwordConfirmation);
-      store.notification.showMessage({
-        content: (
-          <Alert severity="success" variant="filled">
-            Пароль успешно изменён
-          </Alert>
-        ),
-      });
+      store.notification.showSuccessMessage("Пароль успешно изменён");
       router.push("/");
       onChangeType("login");
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        store.notification.showMessage({
-          content: (
-            <Alert severity="warning" variant="filled">
-              Неверные данные
-            </Alert>
-          ),
-        });
+        store.notification.showErrorMessage("Неверные данные");
       }
     }
     onChangeIsLoading(false);
