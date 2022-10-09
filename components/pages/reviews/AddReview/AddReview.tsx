@@ -54,7 +54,7 @@ const AddReview = () => {
         description,
         rating: rating as number,
       });
-      store.notification.showSuccessMessage("Ваш отзыв отправлен на модерацию");
+	  enqueueSnackbar("Ваш отзыв отправлен на модерацию", { variant: 'success' });
       store.user.setReviewStatus("draft");
       setValidation({ email: "" });
     } catch (err) {

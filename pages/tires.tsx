@@ -5,18 +5,19 @@ import { SEASONS } from 'components/Filters/constants';
 import { ApiResponse, Filters } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
 import { Brand } from 'api/brands/types';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchTires } from 'api/tires/tires';
 import { useStore } from 'store';
+import { useSnackbar } from 'notistack';
 
 const Tires: NextPage = () => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const store = useStore();
+	const { enqueueSnackbar } = useSnackbar();
 
 	const handleOpenAutocomplete =
 		<T extends any>(
@@ -33,8 +34,9 @@ const Tires: NextPage = () => {
 					} = await fetchFunc();
 					setState(data);
 				} catch (err) {
-					store.notification.showErrorMessage(
-						'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку'
+					enqueueSnackbar(
+						'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
+						{ variant: 'error' }
 					);
 				}
 				setIsLoading(false);

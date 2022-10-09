@@ -30,6 +30,7 @@ import WhiteBox from 'components/WhiteBox';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useStore } from '../store';
 import styles from './awaiting-cars.module.scss';
@@ -47,6 +48,7 @@ const AwaitingCars = () => {
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const router = useRouter();
 	const store = useStore();
+	const { enqueueSnackbar } = useSnackbar();
 
 	const isTablet = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('md')
@@ -102,8 +104,9 @@ const AwaitingCars = () => {
 					} = await fetchFunc();
 					setState(data);
 				} catch (err) {
-					store.notification.showErrorMessage(
-						'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку'
+					enqueueSnackbar(
+						'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
+						{ variant: 'error' }
 					);
 				}
 				setIsLoading(false);
@@ -240,8 +243,9 @@ const AwaitingCars = () => {
 			}
 			setIsFirstDataLoaded(true);
 		} catch (err) {
-			store.notification.showErrorMessage(
-				'Произошла какая-то ошибка с загрузкой автомобилей, обратитесь в поддержку'
+			enqueueSnackbar(
+				'Произошла какая-то ошибка с загрузкой автомобилей, обратитесь в поддержку',
+				{ variant: 'error' }
 			);
 		}
 		setIsLoading(false);

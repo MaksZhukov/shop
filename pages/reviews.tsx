@@ -17,6 +17,7 @@ import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react-lite';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, Fragment, useEffect, useState } from 'react';
 import { saveReviewEmail } from 'services/LocalStorageService';
 import { useStore } from 'store';
@@ -30,6 +31,7 @@ const Reviews = () => {
 
 	const router = useRouter();
 	const store = useStore();
+	const { enqueueSnackbar } = useSnackbar();
 
 	const { page = '1' } = router.query as {
 		page: string;
@@ -51,8 +53,9 @@ const Reviews = () => {
 			}
 			setReviews(data);
 		} catch (err) {
-			store.notification.showErrorMessage(
-				'Произошла какая-то ошибка при загрузке отзывов, обратитесь в поддержку'
+			enqueueSnackbar(
+				'Произошла какая-то ошибка при загрузке отзывов, обратитесь в поддержку',
+				{ variant: 'error' }
 			);
 		}
 	};

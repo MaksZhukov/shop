@@ -20,9 +20,11 @@ import {
 import { useStore } from '../store';
 import styles from './profile.module.scss';
 import Head from 'next/head';
+import { useSnackbar } from 'notistack';
 
 const Profile = observer(() => {
 	const store = useStore();
+	const { enqueueSnackbar } = useSnackbar();
 	const handleChangeUsername = (e: ChangeEvent<HTMLInputElement>) => {
 		store.user.setUsername(e.target.value);
 	};
@@ -38,10 +40,13 @@ const Profile = observer(() => {
 		e.preventDefault();
 		try {
 			await store.user.saveUserInfo();
-			store.notification.showSuccessMessage('Данные успешно обновлены');
+			enqueueSnackbar('Данные успешно обновлены', {
+				variant: 'success',
+			});
 		} catch (err) {
-			store.notification.showErrorMessage(
-				'Произошла какая-то ошибка с обновлением данных, обратитесь в поддержку'
+			enqueueSnackbar(
+				'Произошла какая-то ошибка с обновлением данных, обратитесь в поддержку',
+				{ variant: 'error' }
 			);
 		}
 	};

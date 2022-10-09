@@ -1,8 +1,8 @@
 import axios from 'axios';
 import getConfig from 'next/config';
 import { store } from '../store';
-import qs from 'qs';
 import { setupCache } from 'axios-cache-adapter';
+import NotistackService from 'services/NotistackService';
 const { publicRuntimeConfig } = getConfig();
 
 const cache = setupCache({
@@ -14,10 +14,7 @@ const cache = setupCache({
 
 export const api = axios.create({
 	adapter: cache.adapter,
-	baseURL: publicRuntimeConfig.backendUrl + '/api',
-	paramsSerializer(params) {
-		return qs.stringify(params, { encodeValuesOnly: true });
-	},
+	baseURL: publicRuntimeConfig.backendUrl + '/api'
 });
 
 api.interceptors.request.use((config) => {
@@ -36,9 +33,9 @@ api.interceptors.response.use(
 			}
 		}
 		if (error.response.status === 429) {
-			store.notification.showMessage({
-				message: 'Слишком много запросов, попробуйте позже',
-			});
+			NotistackService.ref?.enqueueSnackbar(
+				'Слишком много запросов, попробуйте позже'
+			);
 		}
 		return Promise.reject(error);
 	}

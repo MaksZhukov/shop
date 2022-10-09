@@ -21,6 +21,7 @@ import { fetchModels } from 'api/models/models';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import Head from 'next/head';
 import { useStore } from 'store';
+import { useSnackbar } from 'notistack';
 
 const Home: NextPage = () => {
 	const [brands, setBrands] = useState<Brand[]>([]);
@@ -29,6 +30,7 @@ const Home: NextPage = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const store = useStore();
+	const { enqueueSnackbar } = useSnackbar();
 
 	const {
 		brandId = '',
@@ -54,8 +56,9 @@ const Home: NextPage = () => {
 					} = await fetchFunc();
 					setState(data);
 				} catch (err) {
-					store.notification.showErrorMessage(
-						'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку'
+					enqueueSnackbar(
+						'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
+						{ variant: 'error' }
 					);
 				}
 				setIsLoading(false);
