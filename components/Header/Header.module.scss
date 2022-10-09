@@ -20,11 +20,8 @@
 	background-color: #4caf50;
 	color: #fff;
 	&-wrapper {
-		box-shadow: none;
-		border-radius: 0 0 4px 4px;
-	}
-	&__link {
-		padding: 6px 16px;
+		box-shadow: none !important;
+		border-radius: 0 0 4px 4px !important;
 	}
 }
 

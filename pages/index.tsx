@@ -133,7 +133,7 @@ const Home: NextPage = () => {
 				name: 'modelName',
 				placeholder: 'Модель',
 				type: 'autocomplete',
-				disabled: true,
+				disabled: !brands.length,
 				options: models.map((item) => ({ label: item.name, ...item })),
 				onOpen: handleOpenAutocomplete<Model>(
 					!!models.length,
@@ -240,6 +240,9 @@ const Home: NextPage = () => {
 		brandId,
 		modelId,
 		sparePartId,
+		brandName,
+		modelName,
+		sparePartName,
 		...others
 	}: {
 		[key: string]: string;

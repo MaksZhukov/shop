@@ -121,6 +121,7 @@ const Tires: NextPage = () => {
 		min,
 		max,
 		brandId,
+		brandName,
 		...others
 	}: {
 		[key: string]: string;

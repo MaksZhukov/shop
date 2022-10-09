@@ -13,7 +13,6 @@ interface Props {
 const ShoppingCartButton = ({ product }: Props) => {
 	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();
-	console.log(store.cart.items);
 	const cartItem = store.cart.items.find(
 		(item) => item.product.id === product.id
 	);
