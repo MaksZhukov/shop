@@ -231,3 +231,7 @@ const ShoppingCart = () => {
 };
 
 export default observer(ShoppingCart);
+
+export async function getStaticProps() {
+	return { props: {} };
+}

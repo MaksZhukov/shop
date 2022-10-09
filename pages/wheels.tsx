@@ -95,3 +95,7 @@ const Wheels: NextPage = () => {
 };
 
 export default Wheels;
+
+export async function getStaticProps() {
+	return { props: {} };
+}

@@ -206,3 +206,7 @@ const Favorites = () => {
 };
 
 export default observer(Favorites);
+
+export async function getStaticProps() {
+	return { props: {} };
+}
