@@ -87,12 +87,14 @@ const Filters = ({ fetchData, total, config }: Props) => {
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
 				disabled={item.disabled}
 				value={
-					router.query[item.id] && router.query[item.name || '']
-						? {
-								id: router.query[item.id],
-								label: router.query[item.name || ''],
-						  }
-						: router.query[item.id]
+					router.isReady
+						? router.query[item.id] && router.query[item.name || '']
+							? {
+									id: router.query[item.id],
+									label: router.query[item.name || ''],
+							  }
+							: router.query[item.id]
+						: null
 				}
 				renderInput={(params) => (
 					<TextField
