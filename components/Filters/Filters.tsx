@@ -73,7 +73,7 @@ const Filters = ({ fetchData, total, config }: Props) => {
 		return (
 			<Autocomplete
 				key={item.id}
-				options={[{ label: 'honda', id: '1' }]}
+				options={item.options}
 				noOptionsText={item.noOptionsText || 'Совпадений нет'}
 				onOpen={item.onOpen}
 				onChange={
@@ -87,10 +87,10 @@ const Filters = ({ fetchData, total, config }: Props) => {
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
 				disabled={item.disabled}
 				value={
-					router.query[item.id] && router.query[item.name]
+					router.query[item.id] && router.query[item.name || '']
 						? {
 								id: router.query[item.id],
-								label: router.query[item.name],
+								label: router.query[item.name || ''],
 						  }
 						: router.query[item.id]
 				}
@@ -106,24 +106,25 @@ const Filters = ({ fetchData, total, config }: Props) => {
 
 	return (
 		<WhiteBox>
-			{config.map((items) => {
-				return (
-					<Box
-						key={items.map((item) => item.id).toString()}
-						display='flex'>
-						{items.map((item) => {
-							if (item.type === 'autocomplete') {
-								return renderAutocomplete(
-									item as AutocompleteType
-								);
-							}
-							if (item.type === 'number') {
-								return renderInput(item as NumberType);
-							}
-						})}
-					</Box>
-				);
-			})}
+			{router.isReady &&
+				config.map((items) => {
+					return (
+						<Box
+							key={items.map((item) => item.id).toString()}
+							display='flex'>
+							{items.map((item) => {
+								if (item.type === 'autocomplete') {
+									return renderAutocomplete(
+										item as AutocompleteType
+									);
+								}
+								if (item.type === 'number') {
+									return renderInput(item as NumberType);
+								}
+							})}
+						</Box>
+					);
+				})}
 			<Box marginY='1em' textAlign='center'>
 				<Button onClick={handleClickFind} fullWidth variant='contained'>
 					Найти
