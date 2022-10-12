@@ -82,7 +82,7 @@ const CheckoutForm = () => {
 					products: store.cart.items.map((item) => item.product),
 					...(store.user.email ? { email: store.user.email } : {}),
 				}),
-				removeAllItemsFromShoppingCart(),
+				...(store.user.id ? [removeAllItemsFromShoppingCart()] : []),
 			]);
 			enqueueSnackbar('Ваш заказ принят в обработку', {
 				variant: 'success',
