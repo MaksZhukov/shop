@@ -77,10 +77,10 @@ const CheckoutForm = () => {
 			await Promise.all([
 				createOrder({
 					address,
-					email: store.user.email,
 					phone,
 					username,
 					products: store.cart.items.map((item) => item.product),
+					...(store.user.email ? { email: store.user.email } : {}),
 				}),
 				removeAllItemsFromShoppingCart(),
 			]);
@@ -116,13 +116,15 @@ const CheckoutForm = () => {
 						variant='standard'
 						onChange={handleChangeUsername}
 						label='ФИО'></TextField>{' '}
-					<FormControlLabel
-						label='Использовать из профиля'
-						control={
-							<Checkbox
-								onChange={handleChangeUsernameCheckbox}
-								checked={isUseUsernameProfile}></Checkbox>
-						}></FormControlLabel>
+					{store.user.id && (
+						<FormControlLabel
+							label='Использовать из профиля'
+							control={
+								<Checkbox
+									onChange={handleChangeUsernameCheckbox}
+									checked={isUseUsernameProfile}></Checkbox>
+							}></FormControlLabel>
+					)}
 				</FormControl>
 				<FormControl fullWidth>
 					<TextField
