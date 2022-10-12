@@ -73,7 +73,7 @@ const Filters = ({ fetchData, total, config }: Props) => {
 		return (
 			<Autocomplete
 				key={item.id}
-				options={[{ label: 'honda', id: '1' }]}
+				options={item.options}
 				noOptionsText={item.noOptionsText || 'Совпадений нет'}
 				onOpen={item.onOpen}
 				onChange={
@@ -87,12 +87,14 @@ const Filters = ({ fetchData, total, config }: Props) => {
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
 				disabled={item.disabled}
 				value={
-					router.query[item.id] && router.query[item.name]
-						? {
-								id: router.query[item.id],
-								label: router.query[item.name],
-						  }
-						: router.query[item.id]
+					router.isReady
+						? router.query[item.id] && router.query[item.name || '']
+							? {
+									id: router.query[item.id],
+									label: router.query[item.name || ''],
+							  }
+							: router.query[item.id]
+						: null
 				}
 				renderInput={(params) => (
 					<TextField
