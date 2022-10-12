@@ -125,10 +125,14 @@ export default class CartStore implements Cart {
 			);
 		});
 	}
-	clearShoppingCart() {
+	clearShoppingCartOnLogout() {
 		let cartProducts = getCartProducts();
 		this.items = this.items.filter((item) =>
 			cartProducts.some((product) => product.id === item.product.id)
 		);
+	}
+
+	clearShoppingCart() {
+		this.items = [];
 	}
 }
