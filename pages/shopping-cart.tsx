@@ -218,10 +218,12 @@ const ShoppingCart = () => {
 							variant='subtitle1'
 							marginY='1em'
 							textAlign='center'>
-							У вас нет товаров в корзине, добавьте их из
-							<Link href='/'>
-								<Button>каталога</Button>
-							</Link>
+							У вас нет товаров в корзине, добавьте их из{' '}
+							<NextLink href={'/'} passHref>
+								<Link textTransform={'uppercase'}>
+									Каталога
+								</Link>
+							</NextLink>
 						</Typography>
 					)}
 				</WhiteBox>

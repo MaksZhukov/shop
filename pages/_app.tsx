@@ -1,5 +1,4 @@
 import '../styles/globals.css';
-import TawkTo from 'tawkto-react';
 import type { AppProps } from 'next/app';
 import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
 import { Provider } from 'mobx-react';
@@ -64,10 +63,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 			store.setIsInitialRequestDone();
 		};
 		tryFetchData();
-		// Timeout needs to resolve prod cors error
-		setTimeout(() => {
-			new TawkTo(propertyId, tawkId);
-		}, 1000);
 	}, []);
 
 	return (
