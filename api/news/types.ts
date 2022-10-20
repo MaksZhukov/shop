@@ -1,8 +1,4 @@
-export interface OneNews {
-  author: string;
-  categories: string[];
-  title: string;
-  pubDate: string;
-  link: string;
-  guid: string;
-}
+import { OneNews as OneNewsApi } from '../../pages/api/news';
+export type OneNews = Omit<OneNewsApi, 'author' | 'categories' | 'content'> & {
+	imageUrl: string;
+};

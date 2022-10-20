@@ -4,7 +4,7 @@ import { OneNews } from './types';
 
 export const fetchNews = () =>
 	!cache.apiNews
-		? api<{ items: OneNews[] }>('/api/news', { baseURL: '/' }).then(
+		? api<{ data: OneNews[] }>('/api/news', { baseURL: '/' }).then(
 				(res) => {
 					cache.apiNews = res;
 					return res;

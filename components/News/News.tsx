@@ -9,8 +9,8 @@ import WhiteBox from 'components/WhiteBox';
 import { useEffect, useState } from 'react';
 import { useStore } from 'store';
 import { useSnackbar } from 'notistack';
+import Image from 'next/image';
 
-const TWO_HOURS = 3600000 * 2;
 const COUNT_SKELETON_ITEMS = 5;
 
 const News = () => {
@@ -20,20 +20,15 @@ const News = () => {
 	const isTablet = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('md')
 	);
-	const store = useStore();
+
 	const { enqueueSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				let {
-					data: { items },
+					data: { data },
 				} = await fetchNews();
-				let data = items.filter(
-					(item) =>
-						new Date(item.pubDate).getTime() <
-						new Date().getTime() - TWO_HOURS
-				);
 				setNews(data);
 				setIsNewsLoaded(true);
 			} catch (err) {
@@ -54,8 +49,15 @@ const News = () => {
 		? news.map((item) => (
 				<WhiteBox key={item.guid}>
 					<Link href={item.link}>
-						<Typography lineClamp={3}>{item.title}</Typography>
+						<Typography marginBottom='0.5em' lineClamp={3}>
+							{item.title}
+						</Typography>
 					</Link>
+					<Image
+						alt={item.title}
+						width={isTablet ? 600 : 214}
+						height={isTablet ? 280 : 100}
+						src={item.imageUrl}></Image>
 					<Typography textAlign='right' color='text.secondary'>
 						{new Date(item.pubDate).toLocaleDateString('ru-RU')}{' '}
 						{new Date(item.pubDate).toLocaleTimeString('ru-RU', {

@@ -2,9 +2,7 @@ import { OneNews } from 'api/news/types';
 import { AxiosResponse } from 'axios';
 
 const cache: {
-	apiNews: AxiosResponse<{
-		items: OneNews[];
-	}> | null;
+	apiNews: AxiosResponse<{ data: OneNews[] }> | null;
 } = {
 	apiNews: null,
 };
