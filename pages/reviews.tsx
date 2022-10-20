@@ -45,7 +45,6 @@ const Reviews = () => {
 				},
 			} = await fetchReviews({
 				pagination: { pageSize: COUNT_REVIEWS, page: +page },
-				publicationState: 'preview',
 				sort: 'publishedAt:desc',
 			});
 			if (pagination?.pageCount) {
