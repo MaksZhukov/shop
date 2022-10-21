@@ -260,7 +260,7 @@ const Header = observer(() => {
 						</IconButton>
 					</Box>
 					{renderLogo('mobile')}
-					{renderMenu('desktop')}
+					{!isTablet && renderMenu('desktop')}
 					<Profile onClickSignIn={handleClick}></Profile>
 					{isOpenedModal && (
 						<ModalAuth
@@ -268,11 +268,13 @@ const Header = observer(() => {
 							onChangeModalOpened={setIsOpenedModal}></ModalAuth>
 					)}
 				</Toolbar>
-				<Collapse in={isOpenedMobileMenu}>
-					<Toolbar className={styles.toolbar}>
-						{renderMenu('mobile')}
-					</Toolbar>
-				</Collapse>
+				{isTablet && (
+					<Collapse in={isOpenedMobileMenu}>
+						<Toolbar className={styles.toolbar}>
+							{renderMenu('mobile')}
+						</Toolbar>
+					</Collapse>
+				)}
 			</Container>
 		</AppBar>
 	);

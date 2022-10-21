@@ -1,20 +1,11 @@
 import axios from 'axios';
 import getConfig from 'next/config';
 import { store } from '../store';
-import { setupCache } from 'axios-cache-adapter';
 import NotistackService from 'services/NotistackService';
 const { publicRuntimeConfig } = getConfig();
 
-const cache = setupCache({
-	maxAge: 15 * 60 * 1000,
-	exclude: {
-		paths: [publicRuntimeConfig.backendUrl],
-	},
-});
-
 export const api = axios.create({
-	adapter: cache.adapter,
-	baseURL: publicRuntimeConfig.backendUrl + '/api'
+	baseURL: publicRuntimeConfig.backendUrl + '/api',
 });
 
 api.interceptors.request.use((config) => {

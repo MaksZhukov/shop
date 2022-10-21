@@ -194,9 +194,11 @@ const Favorites = () => {
 							marginY='1em'
 							textAlign='center'>
 							У вас нет товаров в избранном, добавьте их из
-							<Link href='/'>
-								<Button>каталога</Button>
-							</Link>
+							<NextLink href={'/'} passHref>
+								<Link textTransform={'uppercase'}>
+									Каталога
+								</Link>
+							</NextLink>
 						</Typography>
 					)}
 				</WhiteBox>
