@@ -1,4 +1,5 @@
 import { Brand } from 'api/brands/types';
+import { Generation } from 'api/generations/types';
 import { Model } from 'api/models/types';
 import { Image } from 'api/types';
 
@@ -12,7 +13,7 @@ export interface Car {
 	manufactureDate: Date;
 	bodyStyle: string;
 	engine: string;
-	generation: string;
+	generation?: Generation;
 	model?: Model;
 	brand?: Brand;
 	images?: Image[];

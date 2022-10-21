@@ -12,6 +12,8 @@ import { Brand } from 'api/brands/types';
 import { fetchCars } from 'api/cars/cars';
 import { Car } from 'api/cars/types';
 import { MAX_LIMIT } from 'api/constants';
+import { fetchGenerations } from 'api/generations/generations';
+import { Generation } from 'api/generations/types';
 import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
 
@@ -20,7 +22,6 @@ import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
 import CarItem from 'components/CarItem';
 import Filters from 'components/Filters';
-import { arrayOfYears } from 'components/Filters/config';
 import {
 	BODY_STYLES,
 	FUELS,
@@ -32,7 +33,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useStore } from '../store';
 import styles from './awaiting-cars.module.scss';
 
 const DynamicNews = dynamic(() => import('components/News'));
@@ -41,13 +41,13 @@ const DynamicReviews = dynamic(() => import('components/Reviews'));
 const AwaitingCars = () => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
+	const [generations, setGenerations] = useState<Generation[]>([])
 	const [cars, setCars] = useState<Car[]>([]);
 	const [total, setTotal] = useState<null | number>(null);
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const router = useRouter();
-	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();
 
 	const isTablet = useMediaQuery((theme: any) =>
@@ -57,17 +57,15 @@ const AwaitingCars = () => {
 	const {
 		brandId = '',
 		modelId = '',
+		generationId = '',
 		fuel = '',
 		bodyStyle = '',
 		transmission = '',
-		yearFrom = '',
-		yearTo = '',
 		page = '1',
 	} = router.query as {
-		yearFrom: string;
-		yearTo: string;
 		brandId: string;
 		modelId: string;
+		generationId: string;
 		sparePartId: string;
 		fuel: string;
 		bodyStyle: string;
@@ -75,13 +73,6 @@ const AwaitingCars = () => {
 		sort: string;
 		page: string;
 	};
-
-	const arrayOfYearsFrom = yearTo
-		? arrayOfYears.filter((value) => +value <= +yearTo)
-		: arrayOfYears;
-	const arrayOfYearsTo = yearFrom
-		? arrayOfYears.filter((value) => +value >= +yearFrom)
-		: arrayOfYears;
 
 	const noOptionsText = isLoading ? (
 		<CircularProgress size={20} />
@@ -139,7 +130,7 @@ const AwaitingCars = () => {
 				name: 'modelName',
 				placeholder: 'Модель',
 				type: 'autocomplete',
-				disabled: true,
+				disabled: !brandId,
 				options: models.map((item) => ({ label: item.name, ...item })),
 				onOpen: handleOpenAutocomplete<Model>(
 					!!models.length,
@@ -155,20 +146,24 @@ const AwaitingCars = () => {
 		],
 		[
 			{
-				id: 'yearFrom',
-				placeholder: 'Год от',
-				type: 'autocomplete',
-				disabled: false,
-				options: arrayOfYearsFrom,
+			  id: "generationId",
+			  name: "generationName",
+			  placeholder: "Поколение",
+			  type: "autocomplete",
+			  disabled: !modelId,
+			  options: generations.map((item) => ({ label: item.name, ...item })),
+			  onOpen: handleOpenAutocomplete<Generation>(
+				!!generations.length,
+				setGenerations,
+				() =>
+				  fetchGenerations({
+					filters: { model: modelId as string },
+					pagination: { limit: MAX_LIMIT },
+				  })
+			  ),
+			  noOptionsText: noOptionsText,
 			},
-			{
-				id: 'yearTo',
-				placeholder: 'Год до',
-				type: 'autocomplete',
-				disabled: false,
-				options: arrayOfYearsTo,
-			},
-		],
+		  ],
 		[
 			{
 				id: 'volume',
@@ -218,10 +213,7 @@ const AwaitingCars = () => {
 				filters: {
 					brand: brandId || undefined,
 					model: modelId || undefined,
-					year: {
-						$gte: yearFrom || undefined,
-						$lte: yearTo || undefined,
-					},
+					generation: generationId || undefined,
 					transmission: transmission || undefined,
 					fuel: fuel || undefined,
 					bodyStyle: bodyStyle || undefined,

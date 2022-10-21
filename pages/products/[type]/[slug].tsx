@@ -38,9 +38,9 @@ const ProductPage = ({ data }: Props) => {
 		{ text: 'Артикул', value: item.id },
 		{ text: 'Марка', value: item.brand?.name },
 		{ text: 'Модель', value: item.model?.name },
+		{ text: 'Поколение', value: item.generation?.name },
 		{ text: 'Запчасть', value: item.kindSparePart?.name },
 		{ text: 'Коробка', value: item.transmission },
-		{ text: 'Поколение', value: item.generation },
 		{ text: 'Обьем', value: item.volume },
 	];
 

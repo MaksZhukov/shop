@@ -1,4 +1,5 @@
 import { Brand } from "api/brands/types";
+import { Generation } from "api/generations/types";
 import { Model } from "api/models/types";
 import { Image } from "api/types";
 
@@ -18,8 +19,8 @@ export interface SparePart {
   priceUSD?: number;
   model?: Model;
   brand?: Brand;
+  generation?: Generation;
   kindSparePart?: SparePart;
   images?: Image[];
   transmission: string;
-  generation: string;
 }
