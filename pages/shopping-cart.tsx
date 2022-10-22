@@ -92,12 +92,10 @@ const ShoppingCart = () => {
 																			isMobile
 																				? image
 																						.formats
-																						?.small
-																						.url
+																						?.small?.url || image.url
 																				: image
 																						.formats
-																						?.thumbnail
-																						.url
+																						?.thumbnail?.url || image.url
 																		}`
 																	}
 																	alt={

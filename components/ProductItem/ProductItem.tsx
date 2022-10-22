@@ -60,8 +60,10 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 										publicRuntimeConfig.backendLocalUrl +
 										`${
 											isMobile
-												? item.formats?.small.url
-												: item.formats?.thumbnail.url
+												? item.formats?.small?.url ||
+												  item.url
+												: item.formats?.thumbnail.url ||
+												  item.url
 										}`
 									}
 									width={isMobile ? 500 : 200}
