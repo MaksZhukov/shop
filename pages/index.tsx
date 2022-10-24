@@ -86,20 +86,6 @@ const Home: NextPage = () => {
   const filtersConfig = [
     [
       {
-        id: "min",
-        disabled: false,
-        placeholder: "Цена от руб",
-        type: "number",
-      },
-      {
-        id: "max",
-        disabled: false,
-        placeholder: "Цена до руб",
-        type: "number",
-      },
-    ],
-    [
-      {
         id: "brandId",
         name: "brandName",
         placeholder: "Марка",
@@ -233,7 +219,6 @@ const Home: NextPage = () => {
     [key: string]: string;
   }): Filters => {
     let filters: Filters = {
-      price: { $gte: min || undefined, $lte: max || undefined },
       brand: brandId || undefined,
       model: modelId || undefined,
       generation: generationId || undefined,
