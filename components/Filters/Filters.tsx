@@ -71,9 +71,18 @@ const Filters = ({ fetchData, total, config }: Props) => {
   };
 
   const renderAutocomplete = (item: AutocompleteType) => {
+    const value = router.isReady
+      ? router.query[item.id] && router.query[item.name || ""]
+        ? {
+            id: router.query[item.id],
+            label: router.query[item.name || ""],
+          }
+        : router.query[item.id]
+      : null;
+
     return (
       <Autocomplete
-        key={item.id}
+        key={item.id + value}
         options={item.options}
         noOptionsText={item.noOptionsText || "Совпадений нет"}
         onOpen={item.onOpen}
@@ -97,13 +106,15 @@ const Filters = ({ fetchData, total, config }: Props) => {
               : router.query[item.id]
             : null
         }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="standard"
-            placeholder={item.placeholder}
-          />
-        )}
+        renderInput={(params) => {
+          return (
+            <TextField
+              {...params}
+              variant="standard"
+              placeholder={item.placeholder}
+            />
+          );
+        }}
       ></Autocomplete>
     );
   };
