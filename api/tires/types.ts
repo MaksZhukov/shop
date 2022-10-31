@@ -1,18 +1,19 @@
-import { Image } from "api/types";
+import { TireBrand } from 'api/tireBrands/types';
+import { Image } from 'api/types';
 
-export type Season = "зимние" | "летние" | "всесезонные";
+export type Season = 'зимние' | 'летние' | 'всесезонные';
 
 export interface Tire {
-  id: number;
-  type: "tire";
-  name: string;
-  slug: string;
-  diameter: string;
-  width: number;
-  height: number;
-  season: Season;
-  brand: string;
-  price: number;
-  priceUSD: number;
-  images: Image[];
+	id: number;
+	type: 'tire';
+	name: string;
+	slug: string;
+	diameter: string;
+	width: number;
+	height: number;
+	season: Season;
+	brand: TireBrand;
+	price: number;
+	priceUSD: number;
+	images: Image[];
 }

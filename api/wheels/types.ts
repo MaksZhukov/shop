@@ -1,3 +1,5 @@
+import { Brand } from 'api/brands/types';
+import { Model } from 'api/models/types';
 import { Image, ProductType } from 'api/types';
 
 export interface Wheel {
@@ -6,9 +8,15 @@ export interface Wheel {
 	name: string;
 	slug: string;
 	diameter: string;
+	numberHoles: number;
+	kind: 'литой' | 'штампованный';
+	diameterCenterHole: number;
+	diskOffset: number;
+	distanceBetweenCenters: number;
 	width: number;
 	height: number;
-	brand: string;
+	brand: Brand;
+	model: Model;
 	price: number;
 	priceUSD: number;
 	images: Image[];

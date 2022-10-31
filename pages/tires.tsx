@@ -8,10 +8,10 @@ import Head from 'next/head';
 import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
 import { Brand } from 'api/brands/types';
-import { fetchBrands } from 'api/brands/brands';
 import { fetchTires } from 'api/tires/tires';
 import { useStore } from 'store';
 import { useSnackbar } from 'notistack';
+import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 
 const Tires: NextPage = () => {
 	const [brands, setBrands] = useState<Brand[]>([]);
@@ -76,7 +76,7 @@ const Tires: NextPage = () => {
 					!!brands.length,
 					setBrands,
 					() =>
-						fetchBrands({
+						fetchTireBrands({
 							pagination: { limit: MAX_LIMIT },
 						})
 				),
