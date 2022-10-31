@@ -15,7 +15,7 @@ import getConfig from 'next/config';
 import Head from 'next/head';
 import Image from 'next/image';
 import Slider from 'react-slick';
-import { isSparePart } from 'services/ProductService';
+import { isSparePart, isWheel } from 'services/ProductService';
 import { fetchSparePart } from '../../../api/spareParts/spareParts';
 import { SparePart } from '../../../api/spareParts/types';
 import styles from './product.module.scss';
@@ -46,7 +46,7 @@ const ProductPage = ({ data }: Props) => {
 
 	const getTirePrintOptions = (item: Tire) => [
 		{ text: 'Артикул', value: item.id },
-		{ text: 'Марка', value: item.brand },
+		{ text: 'Марка', value: item.brand.name },
 		{ text: 'Диаметр', value: item.diameter },
 		{ text: 'Высота', value: item.height },
 		{ text: 'Ширина', value: item.width },
@@ -54,9 +54,21 @@ const ProductPage = ({ data }: Props) => {
 	];
 	const getWheelPrintOptions = (item: Wheel) => [
 		{ text: 'Артикул', value: item.id },
-		{ text: 'Диаметр', value: item.diameter },
-		{ text: 'Высота', value: item.height },
-		{ text: 'Ширина', value: item.width },
+		{ text: 'Тип', value: item.kind },
+		{ text: 'Марка', value: item.brand?.name },
+		{ text: 'Модель', value: item.model?.name },
+		{ text: 'R Диаметр', value: item.diameter },
+		{ text: 'J Ширина', value: item.width },
+		{ text: 'Количество отверстий', value: item.numberHoles },
+		{ text: 'PCD расстояние между отверстиями', value: item.numberHoles },
+		{
+			text: 'DIA диаметр центрального отверстия',
+			value: item.diameterCenterHole,
+		},
+		{
+			text: 'ET вылет',
+			value: item.diskOffset,
+		},
 	];
 
 	let printOptions = {
@@ -146,7 +158,9 @@ const ProductPage = ({ data }: Props) => {
 									<Box display='flex' key={item.value}>
 										<Typography
 											mr='1em'
-											width='80px'
+											width={
+												isWheel(data) ? '110px' : '80px'
+											}
 											fontWeight='500'
 											variant='subtitle1'
 											component='span'>
