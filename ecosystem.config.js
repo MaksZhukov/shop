@@ -21,8 +21,7 @@ module.exports = {
       name: "client",
       env: {
         PORT: 3000,
-        NODE_ENV: "production",
-        NODE_TLS_REJECT_UNAUTHORIZED: 0,
+        NODE_ENV: "production"
       },
       // instances: "max",
       // exec_mode: "cluster",
