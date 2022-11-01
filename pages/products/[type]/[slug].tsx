@@ -46,6 +46,7 @@ const ProductPage = ({ data }: Props) => {
 
 	const getTirePrintOptions = (item: Tire) => [
 		{ text: 'Артикул', value: item.id },
+		{ text: 'Количество', value: item.count },
 		{ text: 'Марка', value: item.brand.name },
 		{ text: 'Диаметр', value: item.diameter },
 		{ text: 'Высота', value: item.height },
@@ -55,6 +56,7 @@ const ProductPage = ({ data }: Props) => {
 	const getWheelPrintOptions = (item: Wheel) => [
 		{ text: 'Артикул', value: item.id },
 		{ text: 'Тип', value: item.kind },
+		{ text: 'Количество', value: item.count },
 		{ text: 'Марка', value: item.brand?.name },
 		{ text: 'Модель', value: item.model?.name },
 		{ text: 'R Диаметр', value: item.diameter },
@@ -159,7 +161,7 @@ const ProductPage = ({ data }: Props) => {
 										<Typography
 											mr='1em'
 											width={
-												isWheel(data) ? '110px' : '80px'
+												isWheel(data) ? '110px' : '90px'
 											}
 											fontWeight='500'
 											variant='subtitle1'
