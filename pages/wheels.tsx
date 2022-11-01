@@ -74,25 +74,11 @@ const Wheels: NextPage = () => {
 	const filtersConfig = [
 		[
 			{
-				id: 'min',
-				disabled: false,
-				placeholder: 'Цена от',
-				type: 'number',
-			},
-			{
-				id: 'max',
-				disabled: false,
-				placeholder: 'Цена до',
-				type: 'number',
-			},
-		],
-		[
-			{
 				id: 'kind',
 				placeholder: 'Тип диска',
 				disabled: false,
 				type: 'autocomplete',
-				options: ['литой', 'штамповоный'],
+				options: ['литой', 'штампованный'],
 			},
 		],
 		[
@@ -198,8 +184,7 @@ const Wheels: NextPage = () => {
 	}): Filters => {
 		let filters: Filters = {
 			brand: brandId || undefined,
-			model: modelId || undefined,
-			price: { $gte: min || undefined, $lte: max || undefined },
+			model: modelId || undefined
 		};
 		return { ...filters, ...others };
 	};
