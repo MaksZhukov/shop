@@ -15,5 +15,6 @@ export interface Tire {
 	brand: TireBrand;
 	price: number;
 	priceUSD: number;
+	count: number;
 	images: Image[];
 }
