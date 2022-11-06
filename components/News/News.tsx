@@ -48,7 +48,7 @@ const News = () => {
 	const renderNews = isNewsLoaded
 		? news.map((item) => (
 				<WhiteBox key={item.guid}>
-					<Link href={item.link}>
+					<Link target='_blank' href={item.link}>
 						<Typography marginBottom='0.5em' lineClamp={3}>
 							{item.title}
 						</Typography>
