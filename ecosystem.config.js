@@ -23,8 +23,8 @@ module.exports = {
         PORT: 3000,
         NODE_ENV: "production"
       },
-      // instances: "max",
-      // exec_mode: "cluster",
+      instances: "max",
+      exec_mode: "cluster",
       max_memort_restart: "500m",
     },
   ],
