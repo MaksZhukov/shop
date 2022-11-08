@@ -184,7 +184,7 @@ const Wheels: NextPage = () => {
 	}): Filters => {
 		let filters: Filters = {
 			brand: brandId || undefined,
-			model: modelId || undefined
+			model: modelId || undefined,
 		};
 		return { ...filters, ...others };
 	};
@@ -215,8 +215,8 @@ const Wheels: NextPage = () => {
 							name: 'R диаметр',
 						},
 						{
-							id: 'width',
-							name: 'J ширина',
+							id: 'count',
+							name: 'Количество',
 						},
 					]}
 					filtersConfig={filtersConfig}
