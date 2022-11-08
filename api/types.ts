@@ -53,3 +53,9 @@ export type CollectionParams = {
 	};
 	publicationState?: 'live' | 'preview';
 };
+
+export type SEO = {
+	title: string;
+	description: string;
+	keywords: string;
+};

@@ -1,20 +1,31 @@
 import { Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
+import { fetchContact } from 'api/contact/contact';
+import { Contact } from 'api/contact/types';
 import { addReview } from 'api/reviews/reviews';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react-lite';
 import Head from 'next/head';
 import Image from 'next/image';
 
-const Contacts = () => {
+interface Props {
+	data: Contact;
+}
+
+const Contacts = ({ data }: Props) => {
 	return (
 		<>
 			<Head>
-				<title>Контакты</title>
-				<meta name='description' content='Наши контакты'></meta>
+				<title>{data.seo.title || 'Контакты'}</title>{' '}
+				<meta
+					name='description'
+					content={data.seo.description || 'Наши контакты'}></meta>
 				<meta
 					name='keywords'
-					content='контакты, контакты разбор авто, разбор авто'
+					content={
+						data.seo.keywords ||
+						'контакты, контакты разбор авто, разбор авто'
+					}
 				/>
 			</Head>
 			<Container>
@@ -53,5 +64,14 @@ const Contacts = () => {
 export default Contacts;
 
 export async function getStaticProps() {
-	return { props: {} };
+	let notFound = false;
+	let data = { seo: {} };
+	try {
+		const response = await fetchContact();
+		data = response.data.data;
+	} catch (err) {
+		console.log(err);
+		notFound = true;
+	}
+	return { props: { data }, notFound };
 }
