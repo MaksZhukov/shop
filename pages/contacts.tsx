@@ -65,7 +65,7 @@ export default Contacts;
 
 export async function getStaticProps() {
 	let notFound = false;
-	let data = { seo: {} };
+	let data = null;
 	try {
 		const response = await fetchContact();
 		data = response.data.data;
