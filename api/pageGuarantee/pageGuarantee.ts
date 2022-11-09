@@ -4,7 +4,7 @@ import getConfig from 'next/config';
 import { Guarantee } from './types';
 const { publicRuntimeConfig } = getConfig();
 
-export const fetchGuarantee = () =>
-	api.get<ApiResponse<Guarantee>>(`/guarantee`, {
+export const fetchPageGuarantee = () =>
+	api.get<ApiResponse<Guarantee>>(`/page-guarantee`, {
 		baseURL: publicRuntimeConfig.backendLocalUrl + '/api',
 	});

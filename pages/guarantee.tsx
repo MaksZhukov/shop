@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { Container } from '@mui/system';
-import { fetchGuarantee } from 'api/guarantee/guarantee';
-import { Guarantee as IGuarantee } from 'api/guarantee/types';
+import { fetchPageGuarantee } from 'api/pageGuarantee/pageGuarantee';
+import { Guarantee as IGuarantee } from 'api/pageGuarantee/types';
 import WhiteBox from 'components/WhiteBox';
 import Head from 'next/head';
 
@@ -13,16 +13,16 @@ const Guarantee = ({ data }: Props) => {
 	return (
 		<>
 			<Head>
-				<title>{data.seo.title || 'Гарантия'}</title>
+				<title>{data.seo?.title || 'Гарантия'}</title>
 				<meta
 					name='description'
 					content={
-						data.seo.description || 'Гарантия на товары'
+						data.seo?.description || 'Гарантия на товары'
 					}></meta>
 				<meta
 					name='keywords'
 					content={
-						data.seo.keywords ||
+						data.seo?.keywords ||
 						'гарантия, гарантия на запчасти, запчасти, гарантия на товары, условия гарантии'
 					}
 				/>
@@ -134,14 +134,12 @@ const Guarantee = ({ data }: Props) => {
 export default Guarantee;
 
 export async function getStaticProps() {
-	let notFound = false;
-	let data = null;
+	let data = { seo: {} } as IGuarantee;
 	try {
-		const response = await fetchGuarantee();
+		const response = await fetchPageGuarantee();
 		data = response.data.data;
 	} catch (err) {
 		console.log(err);
-		notFound = true;
 	}
-	return { props: { data }, notFound };
+	return { props: { data } };
 }
