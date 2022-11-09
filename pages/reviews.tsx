@@ -9,6 +9,8 @@ import {
 	Typography,
 } from '@mui/material';
 import { Box, Container } from '@mui/system';
+import { fetchPageReview } from 'api/pageReview/pageReview';
+import { Review as IReview } from 'api/pageReview/types';
 import { addReview, fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
 import Loader from 'components/Loader';
@@ -25,7 +27,11 @@ import styles from './reviews.module.scss';
 
 let COUNT_REVIEWS = 10;
 
-const Reviews = () => {
+interface Props {
+	data: IReview;
+}
+
+const Reviews = ({ data }: Props) => {
 	const [reviews, setReviews] = useState<Review[]>([]);
 	const [pageCount, setPageCount] = useState<number>(1);
 
@@ -70,11 +76,18 @@ const Reviews = () => {
 	return (
 		<>
 			<Head>
-				<title>Отзывы</title>
-				<meta name='description' content='Отзывы покупателей'></meta>
+				<title>{data.seo?.title || 'Отзывы'}</title>
+				<meta
+					name='description'
+					content={
+						data.seo?.description || 'Отзывы покупателей'
+					}></meta>
 				<meta
 					name='keywords'
-					content='отзывы от покупателей, отзывы, рейтинг магазина'
+					content={
+						data.seo?.keywords ||
+						'отзывы от покупателей, отзывы, рейтинг магазина'
+					}
 				/>
 			</Head>
 			<Container>
@@ -132,5 +145,12 @@ const Reviews = () => {
 export default observer(Reviews);
 
 export async function getStaticProps() {
-	return { props: {} };
+	let data = { seo: {} } as IReview;
+	try {
+		const response = await fetchPageReview();
+		data = response.data.data;
+	} catch (err) {
+		console.log(err);
+	}
+	return { props: { data } };
 }
