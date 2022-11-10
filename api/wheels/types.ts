@@ -1,6 +1,6 @@
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
-import { Image } from 'api/types';
+import { Image, SEO } from 'api/types';
 
 export interface Wheel {
 	id: number;
@@ -22,4 +22,5 @@ export interface Wheel {
 	count: number;
 	description: string;
 	images: Image[];
+	seo?: SEO;
 }

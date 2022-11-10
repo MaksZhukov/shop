@@ -4,6 +4,7 @@ import { fetchCar } from 'api/cars/cars';
 import { Car } from 'api/cars/types';
 import axios from 'axios';
 import EmptyImageIcon from 'components/EmptyImageIcon';
+import HeadSEO from 'components/HeadSEO';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
@@ -51,14 +52,13 @@ const CarPage = ({ data }: Props) => {
 		data.brand?.name + ' ' + data.model?.name + ' ' + manufactureYear;
 	return (
 		<>
-			<Head>
-				<title>{name}</title>
-				<meta name='description' content={`Описание ${name}`}></meta>
-				<meta
-					name='keywords'
-					content='авто, ожидаемое авто, автомобиль, ожидаемый автомобиль, авто в пути'
-				/>
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || name}
+				description={data.seo?.description || `Описание ${name}`}
+				keywords={
+					data.seo?.keywords ||
+					'авто, ожидаемое авто, автомобиль, ожидаемый автомобиль, авто в пути'
+				}></HeadSEO>
 			<Container>
 				<WhiteBox padding='2em'>
 					<Typography

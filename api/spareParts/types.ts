@@ -1,7 +1,7 @@
 import { Brand } from "api/brands/types";
 import { Generation } from "api/generations/types";
 import { Model } from "api/models/types";
-import { Image } from "api/types";
+import { Image, SEO } from "api/types";
 
 export interface KindSparePart {
   id: number;
@@ -23,4 +23,5 @@ export interface SparePart {
   kindSparePart?: SparePart;
   images?: Image[];
   transmission: string;
+  seo?: SEO;
 }

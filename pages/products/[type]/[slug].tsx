@@ -8,6 +8,7 @@ import { fetchWheel } from 'api/wheels/wheels';
 import axios from 'axios';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
+import HeadSEO from 'components/HeadSEO';
 import ShoppingCartButton from 'components/ShoppingCartButton';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
@@ -15,7 +16,7 @@ import getConfig from 'next/config';
 import Head from 'next/head';
 import Image from 'next/image';
 import Slider from 'react-slick';
-import {  isWheel } from 'services/ProductService';
+import { isWheel } from 'services/ProductService';
 import { fetchSparePart } from '../../../api/spareParts/spareParts';
 import { SparePart } from '../../../api/spareParts/types';
 import styles from './product.module.scss';
@@ -87,13 +88,10 @@ const ProductPage = ({ data }: Props) => {
 
 	return (
 		<>
-			<Head>
-				<title>{data.name}</title>
-				<meta
-					name='description'
-					content={`Описание ${data.name}`}></meta>
-				<meta name='keywords' content={keywordsContent} />
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || data.name}
+				description={data.seo?.description || `Описание ${data.name}`}
+				keywords={data.seo?.keywords || keywordsContent}></HeadSEO>
 			<Container>
 				<WhiteBox padding='2em'>
 					<Box

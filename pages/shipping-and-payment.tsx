@@ -2,13 +2,13 @@ import { FC } from 'react';
 import { Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchPageShippingAndPayment } from 'api/pageShippingAndPayment/pageShippingAndPayment';
-import { ShippingAndPayment as IShippingAndPayment } from 'api/pageShippingAndPayment/types';
+import { PageShippingAndPayment } from 'api/pageShippingAndPayment/types';
 import WhiteBox from 'components/WhiteBox';
 import { getStaticSeoProps } from 'services/StaticPropsService';
 import HeadSEO from 'components/HeadSEO';
 
 interface Props {
-	data: IShippingAndPayment;
+	data: PageShippingAndPayment;
 }
 
 const ShippingAndPayment: FC<Props> = ({ data }) => {

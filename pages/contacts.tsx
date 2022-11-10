@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
-import { fetchPageContact } from 'api/pageContact/pageContact';
-import { Contact } from 'api/pageContact/types';
+import { fetchPageContacts } from 'api/pageContacts/pageContacts';
+import { PageContacts } from 'api/pageContacts/types';
 import HeadSEO from 'components/HeadSEO';
 import WhiteBox from 'components/WhiteBox';
 import Head from 'next/head';
@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { getStaticSeoProps } from 'services/StaticPropsService';
 
 interface Props {
-	data: Contact;
+	data: PageContacts;
 }
 
 const Contacts = ({ data }: Props) => {
@@ -57,4 +57,4 @@ const Contacts = ({ data }: Props) => {
 
 export default Contacts;
 
-export const getStaticProps = getStaticSeoProps(fetchPageContact);
+export const getStaticProps = getStaticSeoProps(fetchPageContacts);

@@ -16,6 +16,8 @@ import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
+import { fetchPageAwaitingCars } from 'api/pageAwaitingCars/pageAwaitingCars';
+import { PageAwaitingCars } from 'api/pageAwaitingCars/types';
 
 import { ApiResponse } from 'api/types';
 import { AxiosResponse } from 'axios';
@@ -27,21 +29,28 @@ import {
 	FUELS,
 	TRANSMISSIONS,
 } from 'components/Filters/constants';
+import HeadSEO from 'components/HeadSEO';
 import WhiteBox from 'components/WhiteBox';
+import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { getStaticSeoProps } from 'services/StaticPropsService';
 import styles from './awaiting-cars.module.scss';
 
 const DynamicNews = dynamic(() => import('components/News'));
 const DynamicReviews = dynamic(() => import('components/Reviews'));
 
-const AwaitingCars = () => {
+interface Props {
+	data: PageAwaitingCars;
+}
+
+const AwaitingCars: NextPage<Props> = ({ data }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
-	const [generations, setGenerations] = useState<Generation[]>([])
+	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [cars, setCars] = useState<Car[]>([]);
 	const [total, setTotal] = useState<null | number>(null);
 	const [pageCount, setPageCount] = useState<number>(0);
@@ -146,24 +155,27 @@ const AwaitingCars = () => {
 		],
 		[
 			{
-			  id: "generationId",
-			  name: "generationName",
-			  placeholder: "Поколение",
-			  type: "autocomplete",
-			  disabled: !modelId,
-			  options: generations.map((item) => ({ label: item.name, ...item })),
-			  onOpen: handleOpenAutocomplete<Generation>(
-				!!generations.length,
-				setGenerations,
-				() =>
-				  fetchGenerations({
-					filters: { model: modelId as string },
-					pagination: { limit: MAX_LIMIT },
-				  })
-			  ),
-			  noOptionsText: noOptionsText,
+				id: 'generationId',
+				name: 'generationName',
+				placeholder: 'Поколение',
+				type: 'autocomplete',
+				disabled: !modelId,
+				options: generations.map((item) => ({
+					label: item.name,
+					...item,
+				})),
+				onOpen: handleOpenAutocomplete<Generation>(
+					!!generations.length,
+					setGenerations,
+					() =>
+						fetchGenerations({
+							filters: { model: modelId as string },
+							pagination: { limit: MAX_LIMIT },
+						})
+				),
+				noOptionsText: noOptionsText,
 			},
-		  ],
+		],
 		[
 			{
 				id: 'volume',
@@ -253,14 +265,13 @@ const AwaitingCars = () => {
 
 	return (
 		<>
-			<Head>
-				<title>Ожидаемые авто</title>
-				<meta name='description' content='Ожидаемые авто'></meta>
-				<meta
-					name='keywords'
-					content='авто, ожидаемые авто, автомобили, ожидаемые автомобили'
-				/>
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || 'Ожидаемые авто'}
+				description={data.seo?.description || 'Ожидаемые авто'}
+				keywords={
+					data.seo?.keywords ||
+					'авто, ожидаемые авто, автомобили, ожидаемые автомобили'
+				}></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
@@ -340,6 +351,4 @@ const AwaitingCars = () => {
 
 export default AwaitingCars;
 
-export async function getStaticProps() {
-	return { props: {} };
-}
+export const getStaticProps = getStaticSeoProps(fetchPageAwaitingCars);

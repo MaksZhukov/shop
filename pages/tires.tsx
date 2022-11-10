@@ -12,11 +12,19 @@ import { fetchTires } from 'api/tires/tires';
 import { useStore } from 'store';
 import { useSnackbar } from 'notistack';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
+import { getStaticSeoProps } from 'services/StaticPropsService';
+import { fetchPageTires } from 'api/pageTires/pageTires';
+import { PageTires } from 'api/pageTires/types';
+import HeadSEO from 'components/HeadSEO';
 
-const Tires: NextPage = () => {
+interface Props {
+	data: PageTires;
+}
+
+const Tires: NextPage<Props> = ({ data }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const store = useStore();
+
 	const { enqueueSnackbar } = useSnackbar();
 
 	const handleOpenAutocomplete =
@@ -118,14 +126,13 @@ const Tires: NextPage = () => {
 
 	return (
 		<>
-			<Head>
-				<title>Шины</title>
-				<meta name='description' content='Шины'></meta>
-				<meta
-					name='keywords'
-					content='шины, шины для автомобилей, купить шины, колеса'
-				/>
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || 'Шины'}
+				description={data.seo?.description || 'Шины'}
+				keywords={
+					data.seo?.keywords ||
+					'шины, шины для автомобилей, купить шины, колеса'
+				}></HeadSEO>
 			<Container>
 				<Catalog
 					dataFieldsToShow={[
@@ -157,6 +164,4 @@ const Tires: NextPage = () => {
 
 export default Tires;
 
-export async function getStaticProps() {
-	return { props: {} };
-}
+export const getStaticProps = getStaticSeoProps(fetchPageTires);

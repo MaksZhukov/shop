@@ -1,5 +1,5 @@
 import { SEO } from 'api/types';
 
-export interface PageShippingAndPayment {
+export interface PageAwaitingCars {
 	seo: SEO | null;
 }

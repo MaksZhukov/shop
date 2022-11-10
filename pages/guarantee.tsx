@@ -1,14 +1,14 @@
 import { Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchPageGuarantee } from 'api/pageGuarantee/pageGuarantee';
-import { Guarantee as IGuarantee } from 'api/pageGuarantee/types';
+import { PageGuarantee } from 'api/pageGuarantee/types';
 import HeadSEO from 'components/HeadSEO';
 import WhiteBox from 'components/WhiteBox';
 import Head from 'next/head';
 import { getStaticSeoProps } from 'services/StaticPropsService';
 
 interface Props {
-	data: IGuarantee;
+	data: PageGuarantee;
 }
 
 const Guarantee = ({ data }: Props) => {

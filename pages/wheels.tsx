@@ -13,8 +13,16 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
+import { getStaticSeoProps } from 'services/StaticPropsService';
+import { fetchPageWheels } from 'api/pageWheels/pageWheels';
+import { PageWheels } from 'api/pageWheels/types';
+import HeadSEO from 'components/HeadSEO';
 
-const Wheels: NextPage = () => {
+interface Props {
+	data: PageWheels;
+}
+
+const Wheels: NextPage<Props> = ({ data }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -191,14 +199,13 @@ const Wheels: NextPage = () => {
 
 	return (
 		<>
-			<Head>
-				<title>Диски</title>
-				<meta name='description' content='Диски'></meta>
-				<meta
-					name='keywords'
-					content='диски, диски для автомобилей, купить диски, купить диски для авто'
-				/>
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || 'Диски'}
+				description={data.seo?.description || 'Диски'}
+				keywords={
+					data.seo?.keywords ||
+					'диски, диски для автомобилей, купить диски, купить диски для авто'
+				}></HeadSEO>
 			<Container>
 				<Catalog
 					dataFieldsToShow={[
@@ -230,6 +237,4 @@ const Wheels: NextPage = () => {
 
 export default Wheels;
 
-export async function getStaticProps() {
-	return { props: {} };
-}
+export const getStaticProps = getStaticSeoProps(fetchPageWheels);

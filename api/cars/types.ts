@@ -1,7 +1,7 @@
 import { Brand } from 'api/brands/types';
 import { Generation } from 'api/generations/types';
 import { Model } from 'api/models/types';
-import { Image } from 'api/types';
+import { Image, SEO } from 'api/types';
 
 export interface Car {
 	id: string;
@@ -17,4 +17,5 @@ export interface Car {
 	model?: Model;
 	brand?: Brand;
 	images?: Image[];
+	seo?: SEO;
 }

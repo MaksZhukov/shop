@@ -1,21 +1,29 @@
 import { Typography } from '@mui/material';
 import { Container } from '@mui/system';
+import { fetchPageBuyingCar } from 'api/pageBuyingCar/pageBuyingCar';
+import { PageBuyingCar } from 'api/pageBuyingCar/types';
+import HeadSEO from 'components/HeadSEO';
 import WhiteBox from 'components/WhiteBox';
-import Head from 'next/head';
+import { NextPage } from 'next';
+import { getStaticSeoProps } from 'services/StaticPropsService';
 
-const BuyingCar = () => {
+interface Props {
+	data: PageBuyingCar;
+}
+
+const BuyingCar: NextPage<Props> = ({ data }) => {
 	return (
 		<>
-			<Head>
-				<title>Покупка автмобилей на запчасти</title>
-				<meta
-					name='description'
-					content='Описание покупки автмобилей на запчасти'></meta>
-				<meta
-					name='keywords'
-					content='покупка на запчасти, покупка авто на запчасти, покупка автомобилей на запчасти, автозапчасти, авто в пути'
-				/>
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || 'Покупка автмобилей на запчасти'}
+				description={
+					data.seo?.description ||
+					'Описание покупки автмобилей на запчасти'
+				}
+				keywords={
+					data.seo?.keywords ||
+					'покупка на запчасти, покупка авто на запчасти, покупка автомобилей на запчасти, автозапчасти, авто в пути'
+				}></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography
@@ -108,6 +116,4 @@ const BuyingCar = () => {
 
 export default BuyingCar;
 
-export async function getStaticProps() {
-	return { props: {} };
-}
+export const getStaticProps = getStaticSeoProps(fetchPageBuyingCar);

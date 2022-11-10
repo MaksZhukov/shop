@@ -1,5 +1,5 @@
 import { TireBrand } from 'api/tireBrands/types';
-import { Image } from 'api/types';
+import { Image, SEO } from 'api/types';
 
 export type Season = 'зимние' | 'летние' | 'всесезонные';
 
@@ -18,4 +18,5 @@ export interface Tire {
 	count: number;
 	description: string;
 	images: Image[];
+	seo?: SEO;
 }

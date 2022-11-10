@@ -1,5 +1,5 @@
 import { SEO } from 'api/types';
 
-export interface Review {
+export interface PageReview {
 	seo: SEO | null;
 }
