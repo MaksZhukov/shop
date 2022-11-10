@@ -19,7 +19,6 @@ import Image from 'next/image';
 import Slider from 'react-slick';
 import classNames from 'classnames';
 import { Image as IImage } from 'api/types';
-import { isSparePart } from 'services/ProductService';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -108,7 +107,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 							</Grid>
 						))}
 					</Grid>
-					{isSparePart(data) && (
+					{data.description && (
 						<Typography mt='0.5em' lineClamp={2} variant='body1'>
 							<Typography
 								fontWeight='500'

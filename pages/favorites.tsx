@@ -22,7 +22,6 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 import { Fragment } from 'react';
 import Slider from 'react-slick';
-import { isSparePart } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './favorites.module.scss';
 
@@ -129,7 +128,7 @@ const Favorites = () => {
 														</Link>
 													</NextLink>
 												</Typography>
-												{isSparePart(item.product) && (
+												{item.product.description && (
 													<Typography
 														lineClamp={2}
 														color='text.secondary'
