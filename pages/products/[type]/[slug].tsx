@@ -15,7 +15,7 @@ import getConfig from 'next/config';
 import Head from 'next/head';
 import Image from 'next/image';
 import Slider from 'react-slick';
-import { isSparePart, isWheel } from 'services/ProductService';
+import {  isWheel } from 'services/ProductService';
 import { fetchSparePart } from '../../../api/spareParts/spareParts';
 import { SparePart } from '../../../api/spareParts/types';
 import styles from './product.module.scss';
@@ -47,7 +47,7 @@ const ProductPage = ({ data }: Props) => {
 	const getTirePrintOptions = (item: Tire) => [
 		{ text: 'Артикул', value: item.id },
 		{ text: 'Количество', value: item.count },
-		{ text: 'Марка', value: item.brand.name },
+		{ text: 'Марка', value: item.brand?.name },
 		{ text: 'Диаметр', value: item.diameter },
 		{ text: 'Высота', value: item.height },
 		{ text: 'Ширина', value: item.width },
@@ -192,7 +192,7 @@ const ProductPage = ({ data }: Props) => {
 							</Box>
 						</Box>
 					</Box>
-					{isSparePart(data) && (
+					{data.description && (
 						<Box>
 							<Typography
 								mr='1em'
