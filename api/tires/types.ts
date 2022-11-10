@@ -16,5 +16,6 @@ export interface Tire {
 	price: number;
 	priceUSD: number;
 	count: number;
+	description: string;
 	images: Image[];
 }

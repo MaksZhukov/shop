@@ -23,7 +23,6 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 import { Fragment, useState } from 'react';
 import Slider from 'react-slick';
-import { isSparePart } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './shopping-cart.module.scss';
 
@@ -139,9 +138,7 @@ const ShoppingCart = () => {
 														</NextLink>
 													</Typography>
 
-													{isSparePart(
-														item.product
-													) && (
+													{item.product.description && (
 														<Typography
 															lineClamp={2}
 															color='text.secondary'
