@@ -2,8 +2,10 @@ import { Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchPageGuarantee } from 'api/pageGuarantee/pageGuarantee';
 import { Guarantee as IGuarantee } from 'api/pageGuarantee/types';
+import HeadSEO from 'components/HeadSEO';
 import WhiteBox from 'components/WhiteBox';
 import Head from 'next/head';
+import { getStaticSeoProps } from 'services/StaticPropsService';
 
 interface Props {
 	data: IGuarantee;
@@ -12,21 +14,13 @@ interface Props {
 const Guarantee = ({ data }: Props) => {
 	return (
 		<>
-			<Head>
-				<title>{data.seo?.title || 'Гарантия'}</title>
-				<meta
-					name='description'
-					content={
-						data.seo?.description || 'Гарантия на товары'
-					}></meta>
-				<meta
-					name='keywords'
-					content={
-						data.seo?.keywords ||
-						'гарантия, гарантия на запчасти, запчасти, гарантия на товары, условия гарантии'
-					}
-				/>
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || 'Гарантия'}
+				description={data.seo?.description || 'Гарантия на товары'}
+				keywords={
+					data.seo?.keywords ||
+					'гарантия, гарантия на запчасти, запчасти, гарантия на товары, условия гарантии'
+				}></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
@@ -133,13 +127,4 @@ const Guarantee = ({ data }: Props) => {
 
 export default Guarantee;
 
-export async function getStaticProps() {
-	let data = { seo: {} } as IGuarantee;
-	try {
-		const response = await fetchPageGuarantee();
-		data = response.data.data;
-	} catch (err) {
-		console.log(err);
-	}
-	return { props: { data } };
-}
+export const getStaticProps = getStaticSeoProps(fetchPageGuarantee);
