@@ -1,7 +1,7 @@
 import { Divider, Pagination, Rating, Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import { fetchPageReview } from 'api/pageReview/pageReview';
-import { Review as IReview } from 'api/pageReview/types';
+import { PageReview } from 'api/pageReview/types';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
 import HeadSEO from 'components/HeadSEO';
@@ -17,7 +17,7 @@ import { useStore } from 'store';
 let COUNT_REVIEWS = 10;
 
 interface Props {
-	data: IReview;
+	data: PageReview;
 }
 
 const Reviews = ({ data }: Props) => {
