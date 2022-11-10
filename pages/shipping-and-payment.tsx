@@ -1,21 +1,28 @@
+import { FC } from 'react';
 import { Typography } from '@mui/material';
 import { Container } from '@mui/system';
+import { fetchPageShippingAndPayment } from 'api/pageShippingAndPayment/pageShippingAndPayment';
+import { ShippingAndPayment as IShippingAndPayment } from 'api/pageShippingAndPayment/types';
 import WhiteBox from 'components/WhiteBox';
-import Head from 'next/head';
+import { getStaticSeoProps } from 'services/StaticPropsService';
+import HeadSEO from 'components/HeadSEO';
 
-const ShippingAndPayment = () => {
+interface Props {
+	data: IShippingAndPayment;
+}
+
+const ShippingAndPayment: FC<Props> = ({ data }) => {
 	return (
 		<>
-			<Head>
-				<title>Доставка и оплата</title>
-				<meta
-					name='description'
-					content='Доставка и оплата товаров'></meta>
-				<meta
-					name='keywords'
-					content='оплата, доставка, способы оплаты, расчет, доставка запчастей'
-				/>
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || 'Доставка и оплата'}
+				description={
+					data.seo?.description || 'Доставка и оплата товаров'
+				}
+				keywords={
+					data.seo?.keywords ||
+					'оплата, доставка, способы оплаты, расчет, доставка запчастей'
+				}></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography
@@ -54,6 +61,4 @@ const ShippingAndPayment = () => {
 
 export default ShippingAndPayment;
 
-export async function getStaticProps() {
-	return { props: {} };
-}
+export const getStaticProps = getStaticSeoProps(fetchPageShippingAndPayment);

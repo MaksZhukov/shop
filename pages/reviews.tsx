@@ -1,29 +1,18 @@
-import {
-	Alert,
-	Button,
-	Divider,
-	FormControl,
-	Pagination,
-	Rating,
-	TextField,
-	Typography,
-} from '@mui/material';
+import { Divider, Pagination, Rating, Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import { fetchPageReview } from 'api/pageReview/pageReview';
 import { Review as IReview } from 'api/pageReview/types';
-import { addReview, fetchReviews } from 'api/reviews/reviews';
+import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
-import Loader from 'components/Loader';
+import HeadSEO from 'components/HeadSEO';
 import AddReview from 'components/pages/reviews/AddReview';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react-lite';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { ChangeEvent, FormEvent, Fragment, useEffect, useState } from 'react';
-import { saveReviewEmail } from 'services/LocalStorageService';
+import { Fragment, useEffect, useState } from 'react';
+import { getStaticSeoProps } from 'services/StaticPropsService';
 import { useStore } from 'store';
-import styles from './reviews.module.scss';
 
 let COUNT_REVIEWS = 10;
 
@@ -75,21 +64,13 @@ const Reviews = ({ data }: Props) => {
 
 	return (
 		<>
-			<Head>
-				<title>{data.seo?.title || 'Отзывы'}</title>
-				<meta
-					name='description'
-					content={
-						data.seo?.description || 'Отзывы покупателей'
-					}></meta>
-				<meta
-					name='keywords'
-					content={
-						data.seo?.keywords ||
-						'отзывы от покупателей, отзывы, рейтинг магазина'
-					}
-				/>
-			</Head>
+			<HeadSEO
+				title={data.seo?.title || 'Отзывы'}
+				description={data.seo?.description || 'Отзывы покупателей'}
+				keywords={
+					data.seo?.keywords ||
+					'отзывы от покупателей, отзывы, рейтинг магазина'
+				}></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
@@ -144,13 +125,4 @@ const Reviews = ({ data }: Props) => {
 
 export default observer(Reviews);
 
-export async function getStaticProps() {
-	let data = { seo: {} } as IReview;
-	try {
-		const response = await fetchPageReview();
-		data = response.data.data;
-	} catch (err) {
-		console.log(err);
-	}
-	return { props: { data } };
-}
+export const getStaticProps = getStaticSeoProps(fetchPageReview);
