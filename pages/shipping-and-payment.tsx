@@ -30,7 +30,7 @@ const ShippingAndPayment: FC<Props> = ({ data }) => {
 						component='h1'
 						variant='h4'
 						textAlign='center'>
-						Доставка/Оплата
+						{data.seo?.h1 || 'Доставка/Оплата'}
 					</Typography>
 					<Typography gutterBottom variant='subtitle1'>
 						Доставка б/у запчастей может быть в осуществлена в

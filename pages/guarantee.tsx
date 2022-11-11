@@ -24,7 +24,7 @@ const Guarantee = ({ data }: Props) => {
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-						Гарантия
+						{data.seo?.h1 || "Гарантия"}
 					</Typography>
 					<Typography gutterBottom variant='h6'>
 						{' '}

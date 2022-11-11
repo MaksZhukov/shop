@@ -74,7 +74,7 @@ const Reviews = ({ data }: Props) => {
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-						Отзывы
+						{data.seo?.h1 || "Отзывы"}
 					</Typography>
 					{reviews.map((item, index) => (
 						<Fragment key={item.id}>

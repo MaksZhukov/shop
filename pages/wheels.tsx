@@ -227,7 +227,7 @@ const Wheels: NextPage<Props> = ({ data }) => {
 						},
 					]}
 					filtersConfig={filtersConfig}
-					title='диски'
+					title={data.seo?.h1 || 'диски'}
 					fetchData={fetchWheels}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 			</Container>

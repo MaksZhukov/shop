@@ -270,7 +270,7 @@ const Home: NextPage<Props> = ({ data }) => {
 						},
 					]}
 					filtersConfig={filtersConfig}
-					title='запчасти'
+					title={data.seo?.h1 || 'запчасти'}
 					fetchData={fetchSpareParts}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 			</Container>
