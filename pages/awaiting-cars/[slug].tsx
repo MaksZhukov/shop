@@ -70,7 +70,7 @@ const CarPage = ({ data }: Props) => {
 						textOverflow='ellipsis'
 						whiteSpace='nowrap'
 						component='h1'>
-						{name}
+						{data.seo?.h1 || name}
 					</Typography>
 					<Box
 						display='flex'

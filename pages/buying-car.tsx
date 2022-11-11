@@ -31,7 +31,7 @@ const BuyingCar: NextPage<Props> = ({ data }) => {
 						component='h1'
 						variant='h4'
 						textAlign='center'>
-						Покупка автмобилей на запчасти
+							{data.seo?.h1 || "Покупка автмобилей на запчасти"}
 					</Typography>
 					<Typography gutterBottom variant='subtitle1'>
 						У автолюбителей зачастую возникает необходимость продать
