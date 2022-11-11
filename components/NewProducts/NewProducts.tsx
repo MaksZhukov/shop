@@ -117,7 +117,7 @@ const NewProducts: FC<Props> = ({ title, fetchData }) => {
 										.map((image) => (
 											<Image
 												key={image.id}
-												alt={item.name}
+												alt={image.alternativeText}
 												src={
 													publicRuntimeConfig.backendLocalUrl +
 													image.formats?.thumbnail.url

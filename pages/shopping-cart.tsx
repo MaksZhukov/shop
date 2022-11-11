@@ -98,9 +98,7 @@ const ShoppingCart = () => {
 																		}`
 																	}
 																	alt={
-																		item
-																			.product
-																			.name
+																		image.alternativeText
 																	}
 																	width={
 																		isMobile

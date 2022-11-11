@@ -70,7 +70,7 @@ const CarItem = ({ data }: Props) => {
 									}
 									width={isMobile ? 500 : 200}
 									height={isMobile ? 375 : 150}
-									alt={name}></Image>
+									alt={item.alternativeText}></Image>
 							))}
 					</Slider>
 				) : (
