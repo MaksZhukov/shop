@@ -25,7 +25,7 @@ const Contacts = ({ data }: Props) => {
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-						О нас
+					{data.seo?.h1 || "О нас"}
 					</Typography>
 					<Typography textAlign='center' variant='h6'>
 						Время работы:

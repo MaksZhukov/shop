@@ -107,7 +107,7 @@ const ProductPage = ({ data }: Props) => {
 							textOverflow='ellipsis'
 							whiteSpace='nowrap'
 							component='h1'>
-							{data.name}
+							{data.seo?.h1 || data.name}
 						</Typography>
 						<ShoppingCartButton product={data}></ShoppingCartButton>
 						<FavoriteButton product={data}></FavoriteButton>

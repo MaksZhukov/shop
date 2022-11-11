@@ -154,7 +154,7 @@ const Tires: NextPage<Props> = ({ data }) => {
 						},
 					]}
 					filtersConfig={filtersConfig}
-					title='шины'
+					title={data.seo?.h1 || 'шины'}
 					fetchData={fetchTires}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 			</Container>

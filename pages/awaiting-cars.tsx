@@ -275,7 +275,7 @@ const AwaitingCars: NextPage<Props> = ({ data }) => {
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-						Ожидаемые авто
+					{data.seo?.h1 || "Ожидаемые авто"}
 					</Typography>
 				</WhiteBox>
 				<Box
