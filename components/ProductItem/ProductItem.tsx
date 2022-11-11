@@ -67,7 +67,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 									}
 									width={isMobile ? 500 : 200}
 									height={isMobile ? 375 : 150}
-									alt={data.name}></Image>
+									alt={item.alternativeText}></Image>
 							))}
 					</Slider>
 				) : (

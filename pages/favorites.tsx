@@ -94,8 +94,7 @@ const Favorites = () => {
 																	}`
 																}
 																alt={
-																	item.product
-																		.name
+																	image.alternativeText
 																}
 																key={image.id}
 																width={

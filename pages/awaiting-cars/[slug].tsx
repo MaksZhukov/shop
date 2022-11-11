@@ -85,7 +85,7 @@ const CarPage = ({ data }: Props) => {
 								{data.images.map((item) => (
 									<Image
 										key={item.id}
-										alt={data.bodyStyle}
+										alt={item.alternativeText}
 										width={640}
 										height={480}
 										src={

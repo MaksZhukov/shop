@@ -13,6 +13,8 @@ export type ProductType = 'sparePart' | 'tire' | 'wheel';
 export type Image = {
 	id: number;
 	url: string;
+	alternativeText: string;
+	caption: string;
 	formats?: {
 		thumbnail: { url: string };
 		small: { url: string };
