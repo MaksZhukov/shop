@@ -9,6 +9,7 @@ import axios from 'axios';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 import ShoppingCartButton from 'components/ShoppingCartButton';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
@@ -205,6 +206,7 @@ const ProductPage = ({ data }: Props) => {
 						</Box>
 					)}
 				</WhiteBox>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);
