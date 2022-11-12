@@ -68,6 +68,7 @@ const CarItem = ({ data }: Props) => {
 														?.url || item.url
 										}`
 									}
+									
 									width={isMobile ? 500 : 200}
 									height={isMobile ? 375 : 150}
 									alt={item.alternativeText}></Image>
