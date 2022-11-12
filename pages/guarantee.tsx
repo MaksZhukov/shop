@@ -3,6 +3,7 @@ import { Container } from '@mui/system';
 import { fetchPageGuarantee } from 'api/pageGuarantee/pageGuarantee';
 import { PageGuarantee } from 'api/pageGuarantee/types';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import Head from 'next/head';
 import { getStaticSeoProps } from 'services/StaticPropsService';
@@ -24,7 +25,7 @@ const Guarantee = ({ data }: Props) => {
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-						{data.seo?.h1 || "Гарантия"}
+						{data.seo?.h1 || 'Гарантия'}
 					</Typography>
 					<Typography gutterBottom variant='h6'>
 						{' '}
@@ -120,6 +121,7 @@ const Guarantee = ({ data }: Props) => {
 						авторазборка Полотково в Гродно не компенсирует.
 					</Typography>
 				</WhiteBox>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);

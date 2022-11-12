@@ -6,6 +6,7 @@ import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
 import HeadSEO from 'components/HeadSEO';
 import AddReview from 'components/pages/reviews/AddReview';
+import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -74,7 +75,7 @@ const Reviews = ({ data }: Props) => {
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-						{data.seo?.h1 || "Отзывы"}
+						{data.seo?.h1 || 'Отзывы'}
 					</Typography>
 					{reviews.map((item, index) => (
 						<Fragment key={item.id}>
@@ -118,6 +119,7 @@ const Reviews = ({ data }: Props) => {
 					)}
 					<AddReview></AddReview>
 				</WhiteBox>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);
