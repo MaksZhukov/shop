@@ -3,6 +3,7 @@ import { Container } from '@mui/system';
 import { fetchPageBuyingCar } from 'api/pageBuyingCar/pageBuyingCar';
 import { PageBuyingCar } from 'api/pageBuyingCar/types';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
 import { getStaticSeoProps } from 'services/StaticPropsService';
@@ -31,7 +32,7 @@ const BuyingCar: NextPage<Props> = ({ data }) => {
 						component='h1'
 						variant='h4'
 						textAlign='center'>
-							{data.seo?.h1 || "Покупка автмобилей на запчасти"}
+						{data.seo?.h1 || 'Покупка автмобилей на запчасти'}
 					</Typography>
 					<Typography gutterBottom variant='subtitle1'>
 						У автолюбителей зачастую возникает необходимость продать
@@ -109,6 +110,7 @@ const BuyingCar: NextPage<Props> = ({ data }) => {
 						быстро и по выгодной цене.
 					</Typography>
 				</WhiteBox>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);

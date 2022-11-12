@@ -6,6 +6,7 @@ import { PageShippingAndPayment } from 'api/pageShippingAndPayment/types';
 import WhiteBox from 'components/WhiteBox';
 import { getStaticSeoProps } from 'services/StaticPropsService';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 
 interface Props {
 	data: PageShippingAndPayment;
@@ -54,6 +55,7 @@ const ShippingAndPayment: FC<Props> = ({ data }) => {
 						Безналичный расчет (для юридических лиц)
 					</Typography>
 				</WhiteBox>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);

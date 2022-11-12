@@ -61,4 +61,5 @@ export type SEO = {
 	description: string;
 	keywords: string;
 	h1: string;
+	images?: Image[];
 };
