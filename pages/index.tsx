@@ -27,6 +27,7 @@ import { getStaticSeoProps } from 'services/StaticPropsService';
 import { fetchPageSpareParts } from 'api/pageSpareParts/pageSpareParts';
 import { PageSpareParts } from 'api/pageSpareParts/types';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 
 interface Props {
 	data: PageSpareParts;
@@ -273,6 +274,7 @@ const Home: NextPage<Props> = ({ data }) => {
 					title={data.seo?.h1 || 'запчасти'}
 					fetchData={fetchSpareParts}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);
