@@ -5,6 +5,7 @@ import { Car } from 'api/cars/types';
 import axios from 'axios';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
@@ -129,6 +130,7 @@ const CarPage = ({ data }: Props) => {
 						</Box>
 					</Box>
 				</WhiteBox>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);
