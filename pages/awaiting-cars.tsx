@@ -30,6 +30,7 @@ import {
 	TRANSMISSIONS,
 } from 'components/Filters/constants';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
@@ -275,7 +276,7 @@ const AwaitingCars: NextPage<Props> = ({ data }) => {
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-					{data.seo?.h1 || "Ожидаемые авто"}
+						{data.seo?.h1 || 'Ожидаемые авто'}
 					</Typography>
 				</WhiteBox>
 				<Box
@@ -344,6 +345,7 @@ const AwaitingCars: NextPage<Props> = ({ data }) => {
 						<DynamicNews></DynamicNews>
 					</Box>
 				</Box>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);

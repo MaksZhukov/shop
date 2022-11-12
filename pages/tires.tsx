@@ -16,6 +16,7 @@ import { getStaticSeoProps } from 'services/StaticPropsService';
 import { fetchPageTires } from 'api/pageTires/pageTires';
 import { PageTires } from 'api/pageTires/types';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 
 interface Props {
 	data: PageTires;
@@ -157,6 +158,7 @@ const Tires: NextPage<Props> = ({ data }) => {
 					title={data.seo?.h1 || 'шины'}
 					fetchData={fetchTires}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);
