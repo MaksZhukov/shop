@@ -17,6 +17,7 @@ import { getStaticSeoProps } from 'services/StaticPropsService';
 import { fetchPageWheels } from 'api/pageWheels/pageWheels';
 import { PageWheels } from 'api/pageWheels/types';
 import HeadSEO from 'components/HeadSEO';
+import SEOBox from 'components/SEOBox';
 
 interface Props {
 	data: PageWheels;
@@ -230,6 +231,7 @@ const Wheels: NextPage<Props> = ({ data }) => {
 					title={data.seo?.h1 || 'диски'}
 					fetchData={fetchWheels}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);
