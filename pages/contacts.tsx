@@ -4,9 +4,9 @@ import { fetchPageContacts } from 'api/pageContacts/pageContacts';
 import { PageContacts } from 'api/pageContacts/types';
 import HeadSEO from 'components/HeadSEO';
 import WhiteBox from 'components/WhiteBox';
-import Head from 'next/head';
 import Image from 'next/image';
 import { getStaticSeoProps } from 'services/StaticPropsService';
+import SEOBox from 'components/SEOBox';
 
 interface Props {
 	data: PageContacts;
@@ -25,7 +25,7 @@ const Contacts = ({ data }: Props) => {
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-					{data.seo?.h1 || "О нас"}
+						{data.seo?.h1 || 'О нас'}
 					</Typography>
 					<Typography textAlign='center' variant='h6'>
 						Время работы:
@@ -50,6 +50,7 @@ const Contacts = ({ data }: Props) => {
 							src={'/route.png'}></Image>
 					</Box>
 				</WhiteBox>
+				<SEOBox images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);
