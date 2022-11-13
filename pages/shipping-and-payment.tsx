@@ -55,7 +55,9 @@ const ShippingAndPayment: FC<Props> = ({ data }) => {
 						Безналичный расчет (для юридических лиц)
 					</Typography>
 				</WhiteBox>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);

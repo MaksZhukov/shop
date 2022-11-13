@@ -121,7 +121,9 @@ const Guarantee = ({ data }: Props) => {
 						авторазборка Полотково в Гродно не компенсирует.
 					</Typography>
 				</WhiteBox>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);

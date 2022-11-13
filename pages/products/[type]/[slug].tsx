@@ -206,7 +206,9 @@ const ProductPage = ({ data }: Props) => {
 						</Box>
 					)}
 				</WhiteBox>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
