@@ -274,7 +274,9 @@ const Home: NextPage<Props> = ({ data }) => {
 					title={data.seo?.h1 || 'запчасти'}
 					fetchData={fetchSpareParts}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
