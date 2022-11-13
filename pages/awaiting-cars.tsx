@@ -345,7 +345,9 @@ const AwaitingCars: NextPage<Props> = ({ data }) => {
 						<DynamicNews></DynamicNews>
 					</Box>
 				</Box>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
