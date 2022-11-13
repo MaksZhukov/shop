@@ -110,7 +110,9 @@ const BuyingCar: NextPage<Props> = ({ data }) => {
 						быстро и по выгодной цене.
 					</Typography>
 				</WhiteBox>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
