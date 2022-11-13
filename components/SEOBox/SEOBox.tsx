@@ -4,14 +4,18 @@ import WhiteBox from 'components/WhiteBox';
 import getConfig from 'next/config';
 import NextImage from 'next/image';
 import { FC } from 'react';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	images?: Image[];
+	content?: string;
 }
 
-const SEOBox: FC<Props> = ({ images }) => {
+const SEOBox: FC<Props> = ({ images, content }) => {
+	console.log(content);
 	return (
 		<>
 			{images && (
@@ -33,6 +37,28 @@ const SEOBox: FC<Props> = ({ images }) => {
 							</Box>
 						))}
 					</Box>
+				</WhiteBox>
+			)}
+			{content && (
+				<WhiteBox>
+					<ReactMarkdown
+						rehypePlugins={[rehypeRaw]}
+						components={{
+							img: ({ src, alt }) => {
+								return (
+									<NextImage
+										alt={alt}
+										width={640}
+										height={480}
+										src={
+											publicRuntimeConfig.backendLocalUrl +
+											src
+										}></NextImage>
+								);
+							},
+						}}>
+						{content}
+					</ReactMarkdown>
 				</WhiteBox>
 			)}
 		</>
