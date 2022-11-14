@@ -37,6 +37,7 @@ const selectSortItems = [
 ];
 interface Props {
 	title: string;
+	searchPlaceholder:string;
 	dataFieldsToShow: { id: string; name: string }[];
 	filtersConfig: (AutocompleteType | NumberType)[][];
 	generateFiltersByQuery: (filter: { [key: string]: string }) => any;
@@ -48,6 +49,7 @@ interface Props {
 const Catalog = ({
 	fetchData,
 	title,
+	searchPlaceholder,
 	dataFieldsToShow,
 	filtersConfig,
 	generateFiltersByQuery,
@@ -62,7 +64,6 @@ const Catalog = ({
 	const isTablet = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('md')
 	);
-	const store = useStore();
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -88,7 +89,7 @@ const Catalog = ({
 				},
 			} = await fetchData({
 				filters: {
-					// name: { $contains: searchValue },
+					name: { $contains: searchValue },
 					...generateFiltersByQuery(othersQuery),
 				},
 				pagination: searchValue ? {} : { page: +page },
@@ -188,7 +189,7 @@ const Catalog = ({
 							className={styles['search']}
 							onChange={handleChangeSearch}
 							value={searchValue}
-							placeholder='Поиск детали ...'
+							placeholder={searchPlaceholder}
 							fullWidth></Input>
 						<Select
 							variant='standard'
