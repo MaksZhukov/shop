@@ -154,6 +154,7 @@ const Tires: NextPage<Props> = ({ data }) => {
 							name: 'Количество',
 						},
 					]}
+					searchPlaceholder="Поиск шин ..."
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'шины'}
 					fetchData={fetchTires}
