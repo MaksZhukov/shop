@@ -270,6 +270,7 @@ const Home: NextPage<Props> = ({ data }) => {
 							name: 'Запчасть',
 						},
 					]}
+					searchPlaceholder="Поиск детали ..."
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'запчасти'}
 					fetchData={fetchSpareParts}

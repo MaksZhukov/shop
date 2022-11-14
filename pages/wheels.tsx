@@ -227,6 +227,7 @@ const Wheels: NextPage<Props> = ({ data }) => {
 							name: 'Количество',
 						},
 					]}
+					searchPlaceholder="Поиск дисков ..."
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'диски'}
 					fetchData={fetchWheels}
