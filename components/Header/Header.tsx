@@ -24,7 +24,7 @@ import Profile from './Profile';
 import classNames from 'classnames';
 import Image from 'next/image';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import useOutsideClick from '@rooks/use-outside-click';
+import { useOutsideClick } from 'rooks';
 
 const navigation = [
 	{
