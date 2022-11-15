@@ -9,7 +9,7 @@ import {
 	useMediaQuery,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import useThrottle from '@rooks/use-throttle';
+import { useThrottle, useDebounce} from 'rooks';
 import { Product } from 'api/types';
 import { ApiResponse, CollectionParams, Image } from 'api/types';
 import { AxiosResponse } from 'axios';
@@ -21,8 +21,7 @@ import WhiteBox from 'components/WhiteBox';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { ChangeEvent, FC, useEffect, useState, Suspense } from 'react';
-import { useStore } from 'store';
+import { ChangeEvent, useEffect, useState, useRef } from 'react';
 import styles from './Catalog.module.scss';
 
 const DynamicNews = dynamic(() => import('components/News'));
@@ -35,6 +34,7 @@ const selectSortItems = [
 	{ name: 'Дешевые', value: 'price:asc' },
 	{ name: 'Дорогие', value: 'price:desc' },
 ];
+
 interface Props {
 	title: string;
 	searchPlaceholder:string;
@@ -118,12 +118,13 @@ const Catalog = ({
 		setIsLoading(false);
 	}, 300);
 
-	const [throttledChangeRouterQuery] = useThrottle(
-		(field: string, value: string) => {
-			router.query[field] = value;
-			router.replace({ pathname: router.pathname, query: router.query });
-		},
-		100
+	const changeRouterQuery = useRef((field: string, value: string) => {
+		router.query[field] = value;
+		router.replace({ pathname: router.pathname, query: router.query });
+	});
+
+	const debouncedChangeRouterQuery = useDebounce(changeRouterQuery.current,
+		300
 	);
 
 	useEffect(() => {
@@ -135,7 +136,7 @@ const Catalog = ({
 
 	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		setSearchValue(e.target.value);
-		throttledChangeRouterQuery('searchValue', e.target.value);
+		debouncedChangeRouterQuery('searchValue', e.target.value);
 	};
 
 	const handleChangeSort = (e: SelectChangeEvent<HTMLInputElement>) => {
