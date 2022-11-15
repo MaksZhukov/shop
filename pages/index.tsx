@@ -18,8 +18,6 @@ import { MAX_LIMIT } from 'api/constants';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import Head from 'next/head';
-import { useStore } from 'store';
 import { useSnackbar } from 'notistack';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
