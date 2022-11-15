@@ -39,3 +39,5 @@ yarn-error.log*
 # bash
 check_git_updates.sh
 
+package-lock.json
+
