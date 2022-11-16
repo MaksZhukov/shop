@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {
 	Box,
 	Button,
@@ -10,10 +11,10 @@ import {
 import { Container } from '@mui/system';
 import { SparePart } from 'api/spareParts/types';
 import classNames from 'classnames';
-import CheckoutForm from 'components/CheckoutForm';
+// import CheckoutForm from 'components/CheckoutForm';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react';
@@ -184,10 +185,10 @@ const ShoppingCart = () => {
 														)}
 													</Typography>
 													<Box textAlign='right'>
-														<ShoppingCartButton
+														{/* <ShoppingCartButton
 															product={
 																item.product
-															}></ShoppingCartButton>
+															}></ShoppingCartButton> */}
 														<FavoriteButton
 															product={
 																item.product
@@ -208,9 +209,8 @@ const ShoppingCart = () => {
 									variant='contained'>
 									Перейти к оформлению заказа
 								</Button>
-							) : (
-								<CheckoutForm></CheckoutForm>
-							)}
+							) : // <CheckoutForm></CheckoutForm>
+							null}
 						</>
 					) : (
 						<Typography
@@ -236,5 +236,5 @@ const ShoppingCart = () => {
 export default observer(ShoppingCart);
 
 export async function getStaticProps() {
-	return { props: {} };
+	return { props: {}, notFound: true };
 }

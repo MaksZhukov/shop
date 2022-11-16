@@ -12,7 +12,7 @@ import { SparePart } from 'api/spareParts/types';
 import classNames from 'classnames';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react';
@@ -171,10 +171,10 @@ const Favorites = () => {
 													)}
 												</Typography>
 												<Box textAlign='right'>
-													<ShoppingCartButton
+													{/* <ShoppingCartButton
 														product={
 															item.product
-														}></ShoppingCartButton>
+														}></ShoppingCartButton> */}
 													<FavoriteButton
 														product={
 															item.product

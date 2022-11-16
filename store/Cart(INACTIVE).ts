@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { ShoppingCartItem } from 'api/cart/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchTires } from 'api/tires/tires';
