@@ -91,10 +91,14 @@ const ShoppingCart = () => {
 																			isMobile
 																				? image
 																						.formats
-																						?.small?.url || image.url
+																						?.small
+																						?.url ||
+																				  image.url
 																				: image
 																						.formats
-																						?.thumbnail?.url || image.url
+																						?.thumbnail
+																						?.url ||
+																				  image.url
 																		}`
 																	}
 																	alt={
@@ -125,9 +129,10 @@ const ShoppingCart = () => {
 														variant='h5'
 														component='h2'>
 														<NextLink
-															href={`/products/${item.product.type}/${item.product.slug}`}
-															passHref>
-															<Link underline='hover'>
+															href={`/products/${item.product.type}/${item.product.slug}`}>
+															<Link
+																component='span'
+																underline='hover'>
 																{
 																	item.product
 																		.name
@@ -136,7 +141,8 @@ const ShoppingCart = () => {
 														</NextLink>
 													</Typography>
 
-													{item.product.description && (
+													{item.product
+														.description && (
 														<Typography
 															lineClamp={2}
 															color='text.secondary'
@@ -213,7 +219,9 @@ const ShoppingCart = () => {
 							textAlign='center'>
 							У вас нет товаров в корзине, добавьте их из{' '}
 							<NextLink href={'/'} passHref>
-								<Link textTransform={'uppercase'}>
+								<Link
+									component='span'
+									textTransform={'uppercase'}>
 									Каталога
 								</Link>
 							</NextLink>
