@@ -15,7 +15,6 @@ interface Props {
 }
 
 const SEOBox: FC<Props> = ({ images, content }) => {
-	console.log(content);
 	return (
 		<>
 			{images && (
@@ -44,7 +43,7 @@ const SEOBox: FC<Props> = ({ images, content }) => {
 					<ReactMarkdown
 						rehypePlugins={[rehypeRaw]}
 						components={{
-							img: ({ src, alt }) => {
+							img: ({ src, alt = '' }) => {
 								return (
 									<NextImage
 										alt={alt}

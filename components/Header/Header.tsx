@@ -106,16 +106,14 @@ const Header = observer(() => {
 						: { xs: 'flex', md: 'none' },
 			}}
 			{...(type === 'mobile' ? {} : {})}>
-			<Link href='/' passHref>
-				<Typography component='a'>
-					<Image
-						style={{ cursor: 'pointer' }}
-						alt='Picture of the author'
-						width={150}
-						height={42}
-						src='/logo.jpg'
-					/>
-				</Typography>
+			<Link href='/'>
+				<Image
+					style={{ cursor: 'pointer' }}
+					alt='Picture of the author'
+					width={150}
+					height={42}
+					src='/logo.jpg'
+				/>
 			</Link>
 		</Box>
 	);

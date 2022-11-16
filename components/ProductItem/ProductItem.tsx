@@ -83,10 +83,10 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 						title={data.name}
 						component='div'
 						variant='h5'>
-						<NextLink
-							passHref
-							href={`/products/${data.type}/` + data.slug}>
-							<Link underline='hover'>{data.name}</Link>
+						<NextLink href={`/products/${data.type}/` + data.slug}>
+							<Link component='span' underline='hover'>
+								{data.name}
+							</Link>
 						</NextLink>
 					</Typography>
 					<Grid columnSpacing={2} container>
