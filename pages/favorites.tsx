@@ -87,10 +87,14 @@ const Favorites = () => {
 																		isMobile
 																			? image
 																					.formats
-																					?.small?.url || image.url 
+																					?.small
+																					?.url ||
+																			  image.url
 																			: image
 																					.formats
-																					?.thumbnail?.url || image.url
+																					?.thumbnail
+																					?.url ||
+																			  image.url
 																	}`
 																}
 																alt={
@@ -120,9 +124,10 @@ const Favorites = () => {
 													variant='h5'
 													component='h2'>
 													<NextLink
-														href={`/products/${item.product.type}/${item.product.slug}`}
-														passHref>
-														<Link underline='hover'>
+														href={`/products/${item.product.type}/${item.product.slug}`}>
+														<Link
+															component='span'
+															underline='hover'>
 															{item.product.name}
 														</Link>
 													</NextLink>
@@ -190,8 +195,10 @@ const Favorites = () => {
 							marginY='1em'
 							textAlign='center'>
 							У вас нет товаров в избранном, добавьте их из
-							<NextLink href={'/'} passHref>
-								<Link textTransform={'uppercase'}>
+							<NextLink href={'/'}>
+								<Link
+									component='span'
+									textTransform={'uppercase'}>
 									Каталога
 								</Link>
 							</NextLink>
