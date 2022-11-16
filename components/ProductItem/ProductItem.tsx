@@ -10,7 +10,7 @@ import { Box } from '@mui/system';
 import { Product } from '../../api/types';
 import styles from './ProductItem.module.scss';
 import getConfig from 'next/config';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import FavoriteButton from 'components/FavoriteButton';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import Typography from 'components/Typography';
@@ -140,7 +140,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 					</NextLink>
 				</Button>
 				<FavoriteButton product={data}></FavoriteButton>
-				<ShoppingCartButton product={data}></ShoppingCartButton>
+				{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
 			</CardContent>
 		</Card>
 	);

@@ -51,7 +51,7 @@ const AuthRegisterForm = ({
 			try {
 				await store.user.login(email, password);
 				await Promise.all([
-					store.cart.loadShoppingCart(),
+					// store.cart.loadShoppingCart(),
 					store.favorites.loadFavorites(),
 				]);
 				onChangeModalOpened(false);

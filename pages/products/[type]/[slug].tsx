@@ -10,7 +10,7 @@ import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
@@ -110,7 +110,7 @@ const ProductPage = ({ data }: Props) => {
 							component='h1'>
 							{data.seo?.h1 || data.name}
 						</Typography>
-						<ShoppingCartButton product={data}></ShoppingCartButton>
+						{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
 						<FavoriteButton product={data}></FavoriteButton>
 					</Box>
 					<Box
