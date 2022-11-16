@@ -138,9 +138,12 @@ const NewProducts: FC<Props> = ({ title, fetchData }) => {
 								title={item.name}
 								lineClamp={1}>
 								<NextLink
-									href={`/products/${item.type}/` + item.slug}
-									passHref>
-									<Link underline='hover'>{item.name}</Link>
+									href={
+										`/products/${item.type}/` + item.slug
+									}>
+									<Link component='span' underline='hover'>
+										{item.name}
+									</Link>
 								</NextLink>
 							</Typography>
 							<Typography
