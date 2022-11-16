@@ -230,7 +230,6 @@ const Home: NextPage<Props> = ({ data }) => {
 		brandName,
 		modelName,
 		generationName,
-		sparePartName,
 		...others
 	}: {
 		[key: string]: string;
