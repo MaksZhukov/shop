@@ -45,7 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				try {
 					await Promise.all([
 						store.user.loadInfo(),
-						store.cart.loadShoppingCart(),
+						// store.cart.loadShoppingCart(),
 						store.favorites.loadFavorites(),
 					]);
 				} catch (err) {
@@ -55,7 +55,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				const email = getReviewEmail();
 
 				await Promise.all([
-					store.cart.loadShoppingCart(),
+					// store.cart.loadShoppingCart(),
 					store.favorites.loadFavorites(),
 					...(email ? [store.user.loadReviewStatus(email)] : []),
 				]);

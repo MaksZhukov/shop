@@ -38,26 +38,26 @@ export const removeFavoriteProduct = (id: number, type: ProductType) => {
 	);
 };
 
-export const getCartProducts = (): ProductLocalStorage[] => {
-	let result = localStorage.getItem('cartProducts');
-	return result ? JSON.parse(result) : [];
-};
+// export const getCartProducts = (): ProductLocalStorage[] => {
+// 	let result = localStorage.getItem('cartProducts');
+// 	return result ? JSON.parse(result) : [];
+// };
 
-export const saveCartProduct = (id: number, type: ProductType) => {
-	let cartProducts = getCartProducts();
-	cartProducts.push({ id, type, createdAt: new Date().getTime() });
-	localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
-};
+// export const saveCartProduct = (id: number, type: ProductType) => {
+// 	let cartProducts = getCartProducts();
+// 	cartProducts.push({ id, type, createdAt: new Date().getTime() });
+// 	localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+// };
 
-export const removeCartProduct = (id: number, type: ProductType) => {
-	let cartProducts = getCartProducts();
-	localStorage.setItem(
-		'cartProducts',
-		JSON.stringify(
-			cartProducts.filter((item) => item.id !== id && item.type === type)
-		)
-	);
-};
+// export const removeCartProduct = (id: number, type: ProductType) => {
+// 	let cartProducts = getCartProducts();
+// 	localStorage.setItem(
+// 		'cartProducts',
+// 		JSON.stringify(
+// 			cartProducts.filter((item) => item.id !== id && item.type === type)
+// 		)
+// 	);
+// };
 
 export const saveIsReviewAdded = (value: boolean) => {
 	localStorage.setItem('isReviewAdded', `${value}`);
