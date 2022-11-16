@@ -225,7 +225,8 @@ const Home: NextPage<Props> = ({ data }) => {
 		brandId,
 		modelId,
 		generationId,
-		sparePartId,
+		kindSparePartId,
+		kindSparePartName,
 		brandName,
 		modelName,
 		generationName,
@@ -238,7 +239,7 @@ const Home: NextPage<Props> = ({ data }) => {
 			brand: brandId || undefined,
 			model: modelId || undefined,
 			generation: generationId || undefined,
-			sparePart: sparePartId || undefined,
+			kindSparePart: kindSparePartId || undefined,
 		};
 		return { ...filters, ...others };
 	};
