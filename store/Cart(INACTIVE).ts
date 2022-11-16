@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { ShoppingCartItem } from 'api/cart/types';
+import { ShoppingCartItem } from 'api/cart(INACTIVE)/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchTires } from 'api/tires/tires';
 import { ApiResponse, CollectionParams, Product } from 'api/types';
@@ -16,7 +16,7 @@ import {
 	addToShoppingCart,
 	getShoppingCart,
 	removeItemFromShoppingCart,
-} from '../api/cart/cart';
+} from '../api/cart(INACTIVE)/cart';
 
 export interface Cart {
 	items: ShoppingCartItem[];
