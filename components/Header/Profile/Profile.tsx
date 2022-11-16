@@ -42,7 +42,10 @@ const Profile = ({ onClickSignIn }: Props) => {
 		if (isMountedAndLoadedData.current) {
 			setIsInvisibleBadge(false);
 		}
-	}, [store.cart.items.length, store.favorites.items.length]);
+	}, [
+		// store.cart.items.length
+		store.favorites.items.length,
+	]);
 
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -128,7 +131,7 @@ const Profile = ({ onClickSignIn }: Props) => {
 						({store.favorites.items.length})
 					</Typography>
 				</MenuItem>
-				<MenuItem
+				{/* <MenuItem
 					className={classNames({
 						[styles['account-menu__item_active']]:
 							router.pathname === '/shopping-cart',
@@ -141,7 +144,7 @@ const Profile = ({ onClickSignIn }: Props) => {
 						paddingLeft='5px'>
 						({store.cart.items.length})
 					</Typography>
-				</MenuItem>
+				</MenuItem> */}
 				{store.user.id && <Divider />}
 				{store.user.id && (
 					<MenuItem onClick={handleClickLogout}>Выход</MenuItem>

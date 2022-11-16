@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Alert, IconButton } from '@mui/material';
 import { useStore } from 'store';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
