@@ -6,6 +6,7 @@ import { Product, ProductType } from 'api/types';
 import { Wheel } from 'api/wheels/types';
 import { fetchWheel } from 'api/wheels/wheels';
 import axios from 'axios';
+import classNames from 'classnames';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
@@ -16,6 +17,7 @@ import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { isWheel } from 'services/ProductService';
 import { fetchSparePart } from '../../../api/spareParts/spareParts';
@@ -29,6 +31,8 @@ interface Props {
 }
 
 const ProductPage = ({ data }: Props) => {
+	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
+	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isTablet = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('md')
 	);
@@ -117,23 +121,53 @@ const ProductPage = ({ data }: Props) => {
 						display='flex'
 						sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
 						{data.images ? (
-							<Slider
-								autoplay
-								autoplaySpeed={3000}
-								dots
-								className={styles.slider}>
-								{data.images.map((item) => (
-									<Image
-										key={item.id}
-										alt={item.alternativeText}
-										width={640}
-										height={480}
-										src={
-											publicRuntimeConfig.backendLocalUrl +
-											item.url
-										}></Image>
-								))}
-							</Slider>
+							<>
+								<Box width={500}>
+									<Slider
+										ref={(ref) => {
+											setSliderBig(ref);
+										}}
+										asNavFor={sliderSmall || undefined}
+										arrows={false}
+										className={styles.slider}>
+										{data.images.map((item) => (
+											<Image
+												key={item.id}
+												alt={item.alternativeText}
+												width={640}
+												height={480}
+												src={
+													publicRuntimeConfig.backendLocalUrl +
+													item.url
+												}></Image>
+										))}
+									</Slider>
+									<Slider
+										ref={(ref) => {
+											setSliderSmall(ref);
+										}}
+										swipeToSlide
+										slidesToShow={4}
+										focusOnSelect
+										className={classNames(
+											styles.slider,
+											styles.slider_small
+										)}
+										asNavFor={sliderBig || undefined}>
+										{data.images.map((item) => (
+											<Image
+												key={item.id}
+												alt={item.alternativeText}
+												width={104}
+												height={78}
+												src={
+													publicRuntimeConfig.backendLocalUrl +
+													item.formats?.thumbnail.url
+												}></Image>
+										))}
+									</Slider>
+								</Box>
+							</>
 						) : (
 							<EmptyImageIcon
 								size={isMobile ? 300 : isTablet ? 500 : 700}
