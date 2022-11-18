@@ -39,6 +39,7 @@ export type Filters = {
 				[operator: string]: number | string | undefined;
 		  }
 		| string
+		| number
 		| number[]
 		| undefined;
 };

@@ -9,7 +9,7 @@ import {
 	useMediaQuery,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useThrottle, useDebounce} from 'rooks';
+import { useThrottle, useDebounce } from 'rooks';
 import { Product } from 'api/types';
 import { ApiResponse, CollectionParams, Image } from 'api/types';
 import { AxiosResponse } from 'axios';
@@ -26,7 +26,10 @@ import styles from './Catalog.module.scss';
 
 const DynamicNews = dynamic(() => import('components/News'));
 const DynamicReviews = dynamic(() => import('components/Reviews'));
-const DynamicNewProducts = dynamic(() => import('components/NewProducts'));
+const DynamicCarouselProducts = dynamic(
+	() => import('components/CarouselProducts')
+);
+const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
 const selectSortItems = [
 	{ name: 'Новые', value: 'createdAt:desc' },
@@ -37,7 +40,7 @@ const selectSortItems = [
 
 interface Props {
 	title: string;
-	searchPlaceholder:string;
+	searchPlaceholder: string;
 	dataFieldsToShow: { id: string; name: string }[];
 	filtersConfig: (AutocompleteType | NumberType)[][];
 	generateFiltersByQuery: (filter: { [key: string]: string }) => any;
@@ -45,6 +48,8 @@ interface Props {
 		params: CollectionParams
 	) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
 }
+
+let date = new Date();
 
 const Catalog = ({
 	fetchData,
@@ -54,6 +59,7 @@ const Catalog = ({
 	filtersConfig,
 	generateFiltersByQuery,
 }: Props) => {
+	const [newProducts, setNewProducts] = useState<Product[]>([]);
 	const [data, setData] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -118,12 +124,38 @@ const Catalog = ({
 		setIsLoading(false);
 	}, 300);
 
+	useEffect(() => {
+		const fetchNewProducts = async () => {
+			try {
+				const response = await fetchData({
+					sort: 'createdAt:desc',
+					populate: ['images'],
+					filters: {
+						createdAt: {
+							$gte: date.setDate(
+								date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT
+							),
+						},
+					},
+				});
+				setNewProducts(response.data.data);
+			} catch (err) {
+				enqueueSnackbar(
+					'Произошла какая-то ошибка при загрузке новых продуктов, обратитесь в поддержку',
+					{ variant: 'error' }
+				);
+			}
+		};
+		fetchNewProducts();
+	}, []);
+
 	const changeRouterQuery = useRef((field: string, value: string) => {
 		router.query[field] = value;
 		router.replace({ pathname: router.pathname, query: router.query });
 	});
 
-	const debouncedChangeRouterQuery = useDebounce(changeRouterQuery.current,
+	const debouncedChangeRouterQuery = useDebounce(
+		changeRouterQuery.current,
 		300
 	);
 
@@ -248,9 +280,17 @@ const Catalog = ({
 					<DynamicNews></DynamicNews>
 				</Box>
 			</Box>
-			<DynamicNewProducts
-				fetchData={fetchData}
-				title={title}></DynamicNewProducts>
+			<DynamicCarouselProducts
+				data={newProducts}
+				title={
+					<Typography
+						marginBottom='1em'
+						marginTop='1em'
+						textAlign='center'
+						variant='h5'>
+						Новые {title}
+					</Typography>
+				}></DynamicCarouselProducts>
 		</>
 	);
 };
