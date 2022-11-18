@@ -1,11 +1,15 @@
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { RestorePageOutlined } from '@mui/icons-material';
+import { Box, Button, Link, Typography, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
-import { fetchTire } from 'api/tires/tires';
+import { fetchTireBrands } from 'api/tireBrands/tireBrands';
+import { fetchTire, fetchTires } from 'api/tires/tires';
 import { Tire } from 'api/tires/types';
 import { Product, ProductType } from 'api/types';
 import { Wheel } from 'api/wheels/types';
-import { fetchWheel } from 'api/wheels/wheels';
+import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import axios from 'axios';
+import classNames from 'classnames';
+import CarouselProducts from 'components/CarouselProducts';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
@@ -16,9 +20,13 @@ import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
-import { isWheel } from 'services/ProductService';
-import { fetchSparePart } from '../../../api/spareParts/spareParts';
+import { isTire, isWheel } from 'services/ProductService';
+import {
+	fetchSparePart,
+	fetchSpareParts,
+} from '../../../api/spareParts/spareParts';
 import { SparePart } from '../../../api/spareParts/types';
 import styles from './product.module.scss';
 
@@ -26,9 +34,12 @@ const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	data: Product;
+	relatedProducts: Product[];
 }
 
-const ProductPage = ({ data }: Props) => {
+const ProductPage = ({ data, relatedProducts }: Props) => {
+	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
+	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isTablet = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('md')
 	);
@@ -110,30 +121,71 @@ const ProductPage = ({ data }: Props) => {
 							component='h1'>
 							{data.seo?.h1 || data.name}
 						</Typography>
+						<Link variant='h5' href='tel:+375299999999'>
+							+375 29 999 99 99
+						</Link>
 						{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
-						<FavoriteButton product={data}></FavoriteButton>
 					</Box>
 					<Box
 						display='flex'
 						sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
 						{data.images ? (
-							<Slider
-								autoplay
-								autoplaySpeed={3000}
-								dots
-								className={styles.slider}>
-								{data.images.map((item) => (
-									<Image
-										key={item.id}
-										alt={item.alternativeText}
-										width={640}
-										height={480}
-										src={
-											publicRuntimeConfig.backendLocalUrl +
-											item.url
-										}></Image>
-								))}
-							</Slider>
+							<>
+								<Box maxWidth='640px'>
+									<Slider
+										ref={(ref) => {
+											setSliderBig(ref);
+										}}
+										asNavFor={sliderSmall || undefined}
+										arrows={false}
+										autoplay
+										autoplaySpeed={5000}
+										className={styles.slider}>
+										{data.images.map((item) => (
+											<Image
+												key={item.id}
+												alt={item.alternativeText}
+												width={640}
+												height={480}
+												src={
+													publicRuntimeConfig.backendLocalUrl +
+													item.url
+												}></Image>
+										))}
+									</Slider>
+									<Slider
+										ref={(ref) => {
+											setSliderSmall(ref);
+										}}
+										swipeToSlide
+										slidesToShow={
+											data.images.length >= 5
+												? 5
+												: data.images.length
+										}
+										focusOnSelect
+										className={classNames(
+											styles.slider,
+											styles.slider_small
+										)}
+										asNavFor={sliderBig || undefined}>
+										{data.images.map((item) => (
+											<Box key={item.id}>
+												<Image
+													style={{ margin: 'auto' }}
+													alt={item.alternativeText}
+													width={104}
+													height={78}
+													src={
+														publicRuntimeConfig.backendLocalUrl +
+														item.formats?.thumbnail
+															.url
+													}></Image>
+											</Box>
+										))}
+									</Slider>
+								</Box>
+							</>
 						) : (
 							<EmptyImageIcon
 								size={isMobile ? 300 : isTablet ? 500 : 700}
@@ -172,22 +224,29 @@ const ProductPage = ({ data }: Props) => {
 										</Typography>
 									</Box>
 								))}
-							</Box>
-							<Box>
+
 								<Typography
-									textAlign='right'
-									variant='h5'
-									width='100%'
+									flex='1'
+									marginTop='1em'
+									marginBottom='1em'
+									fontWeight='bold'
+									variant='body1'
 									color='primary'>
-									{data.price} р.
+									Цена: {data.price} руб{' '}
+									{!!data.priceUSD && (
+										<Typography
+											color='text.secondary'
+											component='sup'>
+											(~{data.priceUSD.toFixed()}$)
+										</Typography>
+									)}
 								</Typography>
-								<Typography
-									textAlign='right'
-									variant='h5'
-									width='100%'
-									color='text.secondary'>
-									~ {data.priceUSD?.toFixed()} $
-								</Typography>
+								<Button
+									variant='contained'
+									component='a'
+									href='tel:+375299999999'>
+									Заказать
+								</Button>
 							</Box>
 						</Box>
 					</Box>
@@ -209,6 +268,18 @@ const ProductPage = ({ data }: Props) => {
 				<SEOBox
 					images={data.seo?.images}
 					content={data.seo?.content}></SEOBox>
+				<CarouselProducts
+					title={
+						<Typography
+							component='h2'
+							marginBottom='1em'
+							marginTop='1em'
+							textAlign='center'
+							variant='h4'>
+							А ещё у нас есть для этого авто
+						</Typography>
+					}
+					data={relatedProducts}></CarouselProducts>
 			</Container>
 		</>
 	);
@@ -219,15 +290,37 @@ export const getServerSideProps: GetServerSideProps<
 	{ slug: string; type: ProductType }
 > = async (context) => {
 	let data = null;
+	let date = new Date();
+	let relatedProducts: Product[] = [];
 	let notFound = false;
 	try {
-		let fetchFunc = {
+		let fetchFuncData = {
 			sparePart: fetchSparePart,
 			tire: fetchTire,
 			wheel: fetchWheel,
 		}[context.params?.type || 'sparePart'];
-		const response = await fetchFunc(context.params?.slug || '', true);
+		let fetchRelationalProducts = {
+			sparePart: fetchSpareParts,
+			tire: fetchTires,
+			wheel: fetchWheels,
+		}[context.params?.type || 'sparePart'];
+		const response = await fetchFuncData(context.params?.slug || '', true);
 		data = response.data.data;
+		const responseRelated = await fetchRelationalProducts(
+			{
+				filters: {
+					id: {
+						$ne: data.id,
+					},
+					...(isTire(data)
+						? { brand: data.brand.id }
+						: { model: data.model?.id || '' }),
+				},
+				populate: ['images'],
+			},
+			true
+		);
+		relatedProducts = responseRelated.data.data;
 	} catch (err) {
 		if (axios.isAxiosError(err)) {
 			notFound = true;
@@ -236,7 +329,7 @@ export const getServerSideProps: GetServerSideProps<
 
 	return {
 		notFound,
-		props: { data },
+		props: { data, relatedProducts },
 	};
 };
 

@@ -12,6 +12,10 @@ api.interceptors.request.use((config) => {
 	if (store.user.jwt && config.headers) {
 		config.headers.Authorization = 'Bearer ' + store.user.jwt;
 	}
+	if (config.headers && config.headers.isServerRequest) {
+		delete config.headers.isServerRequest;
+		config.baseURL = publicRuntimeConfig.backendLocalUrl + '/api';
+	}
 	return config;
 });
 
