@@ -256,7 +256,7 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 							</Box>
 						</Box>
 					</Box>
-					{page.linksWithImages?.length && (
+					{!!page.linksWithImages?.length && (
 						<Box
 							marginTop='2em'
 							display='flex'
@@ -372,6 +372,7 @@ export const getServerSideProps: GetServerSideProps<
 		relatedProducts = responseRelated.data.data;
 	} catch (err) {
 		if (axios.isAxiosError(err)) {
+			console.error(err);
 			notFound = true;
 		}
 	}
