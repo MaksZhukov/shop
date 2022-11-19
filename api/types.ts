@@ -57,6 +57,12 @@ export type CollectionParams = {
 	publicationState?: 'live' | 'preview';
 };
 
+export type ProductSnippets = {
+	textAfterDescription: string;
+	textAfterBenefits: string;
+	benefits: Image[];
+};
+
 export type SEO = {
 	title: string;
 	description: string;

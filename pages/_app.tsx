@@ -21,9 +21,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import './app.scss';
 import NotistackService from 'services/NotistackService';
 
-const propertyId = '62e2456354f06e12d88bbae4';
-const tawkId = '1g91tu3hb';
-
 let theme = createTheme({
 	typography: {
 		fontFamily: 'Roboto',
