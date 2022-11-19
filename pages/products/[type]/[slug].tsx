@@ -1,6 +1,8 @@
 import { RestorePageOutlined } from '@mui/icons-material';
 import { Box, Button, Link, Typography, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
+import { fetchPageProduct } from 'api/pageProduct/pageProduct';
+import { PageProduct } from 'api/pageProduct/types';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { fetchTire, fetchTires } from 'api/tires/tires';
 import { Tire } from 'api/tires/types';
@@ -13,13 +15,16 @@ import CarouselProducts from 'components/CarouselProducts';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
+import ReactMarkdown from 'components/ReactMarkdown';
 import SEOBox from 'components/SEOBox';
+
 // import ShoppingCartButton from 'components/ShoppingCartButton';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Image from 'next/image';
+import NextLink from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { isTire, isWheel } from 'services/ProductService';
@@ -34,10 +39,11 @@ const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	data: Product;
+	page: PageProduct;
 	relatedProducts: Product[];
 }
 
-const ProductPage = ({ data, relatedProducts }: Props) => {
+const ProductPage = ({ data, page, relatedProducts }: Props) => {
 	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
 	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isTablet = useMediaQuery((theme: any) =>
@@ -250,24 +256,63 @@ const ProductPage = ({ data, relatedProducts }: Props) => {
 							</Box>
 						</Box>
 					</Box>
-					{data.description && (
-						<Box>
-							<Typography
-								mr='1em'
-								fontWeight='500'
-								variant='subtitle1'
-								component='span'>
-								Описание:
-							</Typography>
-							<Typography color='text.secondary'>
-								{data.description}
-							</Typography>
+					{page.linksWithImages?.length && (
+						<Box
+							marginTop='2em'
+							display='flex'
+							justifyContent={'space-around'}>
+							{page.linksWithImages.map((item) => (
+								<NextLink key={item.id} href={item.link}>
+									<Image
+										alt={item.image.alternativeText}
+										width={208}
+										height={156}
+										src={
+											publicRuntimeConfig.backendLocalUrl +
+											item.image.formats?.thumbnail.url
+										}></Image>
+								</NextLink>
+							))}
 						</Box>
+					)}
+					<Typography marginTop='1em' component='h2' variant='h5'>
+						{data.seo?.h1 || data.name} {data.description}
+					</Typography>
+					{data.snippets && (
+						<>
+							<ReactMarkdown
+								content={
+									data.snippets.textAfterDescription
+								}></ReactMarkdown>
+							<Typography component='h3' variant='h5'>
+								Почему мы лучшие в своем деле?
+							</Typography>
+							<Box
+								marginTop='2em'
+								display='flex'
+								justifyContent={'space-around'}>
+								{data.snippets.benefits.map((item) => (
+									<Image
+										key={item.id}
+										alt={item.alternativeText}
+										width={208}
+										height={156}
+										src={
+											publicRuntimeConfig.backendLocalUrl +
+											item.formats?.thumbnail.url
+										}></Image>
+								))}
+							</Box>
+							<ReactMarkdown
+								content={
+									data.snippets.textAfterBenefits
+								}></ReactMarkdown>
+						</>
 					)}
 				</WhiteBox>
 				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
+					content={data.seo?.content}
+					images={data.seo?.images}></SEOBox>
 				<CarouselProducts
 					title={
 						<Typography
@@ -290,7 +335,7 @@ export const getServerSideProps: GetServerSideProps<
 	{ slug: string; type: ProductType }
 > = async (context) => {
 	let data = null;
-	let date = new Date();
+	let page = null;
 	let relatedProducts: Product[] = [];
 	let notFound = false;
 	try {
@@ -304,8 +349,12 @@ export const getServerSideProps: GetServerSideProps<
 			tire: fetchTires,
 			wheel: fetchWheels,
 		}[context.params?.type || 'sparePart'];
-		const response = await fetchFuncData(context.params?.slug || '', true);
+		const [response, responsePageProduct] = await Promise.all([
+			fetchFuncData(context.params?.slug || '', true),
+			fetchPageProduct(),
+		]);
 		data = response.data.data;
+		page = responsePageProduct.data.data;
 		const responseRelated = await fetchRelationalProducts(
 			{
 				filters: {
@@ -329,7 +378,7 @@ export const getServerSideProps: GetServerSideProps<
 
 	return {
 		notFound,
-		props: { data, relatedProducts },
+		props: { data, page, relatedProducts },
 	};
 };
 
