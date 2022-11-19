@@ -19,6 +19,7 @@ const RouteShield = ({ children }: Props) => {
 		) {
 			router.push('/');
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [store.user.id, store.isInitialRequestDone]);
 
 	if (PRIVATE_PATHS.includes(router.pathname)) {
