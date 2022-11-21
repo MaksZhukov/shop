@@ -96,14 +96,14 @@ const CarouselProducts: FC<Props> = ({ title, data }) => {
 							<Typography
 								marginTop='1em'
 								variant='h6'
-								title={item.name}
+								title={item.h1 || item.name}
 								lineClamp={1}>
 								<NextLink
 									href={
 										`/products/${item.type}/` + item.slug
 									}>
 									<Link component='span' underline='hover'>
-										{item.name}
+										{item.h1 || item.name}
 									</Link>
 								</NextLink>
 							</Typography>

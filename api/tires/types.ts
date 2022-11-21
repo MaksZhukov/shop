@@ -6,6 +6,7 @@ export type Season = 'зимние' | 'летние' | 'всесезонные';
 export interface Tire {
 	id: number;
 	type: 'tire';
+	h1: string;
 	name: string;
 	slug: string;
 	diameter: string;

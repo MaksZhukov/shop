@@ -119,7 +119,10 @@ const Favorites = () => {
 											<Box flex='1' padding='1em'>
 												<Typography
 													lineClamp={1}
-													title={item.product.name}
+													title={
+														item.product.h1 ||
+														item.product.name
+													}
 													marginBottom='0.5em'
 													variant='h5'
 													component='h2'>
@@ -128,7 +131,9 @@ const Favorites = () => {
 														<Link
 															component='span'
 															underline='hover'>
-															{item.product.name}
+															{item.product.h1 ||
+																item.product
+																	.name}
 														</Link>
 													</NextLink>
 												</Typography>
