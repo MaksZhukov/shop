@@ -292,8 +292,8 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 								display='flex'
 								justifyContent={'space-around'}>
 								{data.snippets.benefits.map((item) => (
-									<Image
-										key={item.id}
+									<Box maxWidth={208} key={item.id}>
+										<Image
 										alt={item.alternativeText}
 										width={208}
 										height={156}
@@ -301,6 +301,8 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 											publicRuntimeConfig.backendLocalUrl +
 											item.formats?.thumbnail.url
 										}></Image>
+										<Typography component="p" variant='body1'>{item.caption}</Typography>
+									</Box>
 								))}
 							</Box>
 							<ReactMarkdown
