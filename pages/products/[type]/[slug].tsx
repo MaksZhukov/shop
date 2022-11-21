@@ -115,18 +115,26 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 					<Box
 						marginBottom='1em'
 						display='flex'
-						alignItems='center'
-						justifyContent='center'>
-						<Typography
-							variant='h4'
-							flex='1'
-							overflow='hidden'
-							title={data.name}
-							textOverflow='ellipsis'
-							whiteSpace='nowrap'
-							component='h1'>
-							{data.seo?.h1 || data.name}
-						</Typography>
+						alignItems='baseline'
+						justifyContent='space-between'>
+						<Box>
+							<Typography
+								variant='h4'
+								flex='1'
+								overflow='hidden'
+								title={data.name}
+								textOverflow='ellipsis'
+								whiteSpace='nowrap'
+								component='h1'>
+								{data.h1 || data.name}
+							</Typography>
+							{data.snippets?.textAfterH1 && (
+								<ReactMarkdown
+									content={
+										data.snippets.textAfterH1
+									}></ReactMarkdown>
+							)}
+						</Box>
 						<Link variant='h5' href='tel:+375297804780'>
 							+375 29 780 4 780
 						</Link>
@@ -276,39 +284,52 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 						</Box>
 					)}
 					<Typography marginTop='1em' component='h2' variant='h5'>
-						{data.seo?.h1 || data.name} {data.description}
+						{data.seo?.h1 || data.name} характеристики
 					</Typography>
 					{data.snippets && (
 						<>
-							<ReactMarkdown
-								content={
-									data.snippets.textAfterDescription
-								}></ReactMarkdown>
-							<Typography component='h3' variant='h5'>
-								Почему мы лучшие в своем деле?
-							</Typography>
-							<Box
-								marginTop='2em'
-								display='flex'
-								justifyContent={'space-around'}>
-								{data.snippets.benefits.map((item) => (
-									<Box maxWidth={208} key={item.id}>
-										<Image
-										alt={item.alternativeText}
-										width={208}
-										height={156}
-										src={
-											publicRuntimeConfig.backendLocalUrl +
-											item.formats?.thumbnail.url
-										}></Image>
-										<Typography component="p" variant='body1'>{item.caption}</Typography>
+							{data.snippets.textAfterDescription && (
+								<ReactMarkdown
+									content={
+										data.snippets.textAfterDescription
+									}></ReactMarkdown>
+							)}
+							{data.snippets.benefits && (
+								<>
+									<Typography component='h3' variant='h5'>
+										Почему мы лучшие в своем деле?
+									</Typography>
+									<Box
+										marginTop='2em'
+										display='flex'
+										justifyContent={'space-around'}>
+										{data.snippets.benefits.map((item) => (
+											<Box maxWidth={208} key={item.id}>
+												<Image
+													alt={item.alternativeText}
+													width={208}
+													height={156}
+													src={
+														publicRuntimeConfig.backendLocalUrl +
+														item.formats?.thumbnail
+															.url
+													}></Image>
+												<Typography
+													component='p'
+													variant='body1'>
+													{item.caption}
+												</Typography>
+											</Box>
+										))}
 									</Box>
-								))}
-							</Box>
-							<ReactMarkdown
-								content={
-									data.snippets.textAfterBenefits
-								}></ReactMarkdown>
+								</>
+							)}
+							{data.snippets.textAfterBenefits && (
+								<ReactMarkdown
+									content={
+										data.snippets.textAfterBenefits
+									}></ReactMarkdown>
+							)}
 						</>
 					)}
 				</WhiteBox>

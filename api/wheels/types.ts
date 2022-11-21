@@ -5,6 +5,7 @@ import { Image, ProductSnippets, SEO } from 'api/types';
 export interface Wheel {
 	id: number;
 	type: 'wheel';
+	h1: string;
 	name: string;
 	slug: string;
 	diameter: string;

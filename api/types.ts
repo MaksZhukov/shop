@@ -58,6 +58,7 @@ export type CollectionParams = {
 };
 
 export type ProductSnippets = {
+	textAfterH1: string;
 	textAfterDescription: string;
 	textAfterBenefits: string;
 	benefits: Image[];
