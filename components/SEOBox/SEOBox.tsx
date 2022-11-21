@@ -30,7 +30,7 @@ const SEOBox: FC<Props> = ({ images, content }) => {
 									height={156}
 									src={
 										publicRuntimeConfig.backendLocalUrl +
-											item.formats?.small.url || item.url
+										(item.formats?.small?.url || item.url)
 									}></NextImage>
 							</Box>
 						))}
