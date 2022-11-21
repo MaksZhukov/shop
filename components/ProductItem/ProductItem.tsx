@@ -85,7 +85,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 						variant='h5'>
 						<NextLink href={`/products/${data.type}/` + data.slug}>
 							<Link component='span' underline='hover'>
-								{data.name}
+								{data.h1 || data.name}
 							</Link>
 						</NextLink>
 					</Typography>

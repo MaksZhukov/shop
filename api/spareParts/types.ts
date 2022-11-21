@@ -12,6 +12,7 @@ export interface SparePart {
 	id: number;
 	type: 'sparePart';
 	slug: string;
+	h1: string;
 	name: string;
 	volume: number;
 	description: string;
