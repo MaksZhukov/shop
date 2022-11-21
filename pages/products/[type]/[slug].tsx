@@ -127,8 +127,8 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 							component='h1'>
 							{data.seo?.h1 || data.name}
 						</Typography>
-						<Link variant='h5' href='tel:+375299999999'>
-							+375 29 999 99 99
+						<Link variant='h5' href='tel:+375297804780'>
+							+375 29 780 4 780
 						</Link>
 						{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
 					</Box>
@@ -250,7 +250,7 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 								<Button
 									variant='contained'
 									component='a'
-									href='tel:+375299999999'>
+									href='tel:+375297804780'>
 									Заказать
 								</Button>
 							</Box>
