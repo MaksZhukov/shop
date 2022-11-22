@@ -13,12 +13,22 @@ import styles from "./Filters.module.scss";
 import { AutocompleteType, NumberType } from "./types";
 
 interface Props {
-  fetchData: () => void;
+  fetchData?: () => void;
+  onClickFind?: () => void;
   total: null | number;
+  totalText?: string;
+  btnText?: string;
   config: (AutocompleteType | NumberType)[][];
 }
 
-const Filters = ({ fetchData, total, config }: Props) => {
+const Filters = ({
+  fetchData,
+  onClickFind,
+  total,
+  config,
+  btnText = "Найти",
+  totalText = "Найдено",
+}: Props) => {
   const router = useRouter();
 
   const changeParam = (params: {
@@ -54,7 +64,12 @@ const Filters = ({ fetchData, total, config }: Props) => {
     };
 
   const handleClickFind = () => {
-    fetchData();
+    if (onClickFind) {
+      onClickFind();
+    }
+    if (fetchData) {
+      fetchData();
+    }
   };
   const renderInput = (item: NumberType) => {
     return (
@@ -137,12 +152,12 @@ const Filters = ({ fetchData, total, config }: Props) => {
       })}
       <Box marginY="1em" textAlign="center">
         <Button onClick={handleClickFind} fullWidth variant="contained">
-          Найти
+          {btnText}
         </Button>
       </Box>
       {total !== null && (
         <Typography textAlign="center" variant="subtitle1" color="primary">
-          Найдено: {total}
+          {totalText} : {total}
         </Typography>
       )}
     </WhiteBox>

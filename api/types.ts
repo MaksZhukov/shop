@@ -72,3 +72,8 @@ export type SEO = {
 	images?: Image[];
 	content?: string;
 };
+
+export type LinkWithImage = {
+	image: Image;
+	link: string;
+}
