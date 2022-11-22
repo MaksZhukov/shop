@@ -15,6 +15,7 @@ import CarouselProducts from 'components/CarouselProducts';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
+import LinkWithImage from 'components/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import SEOBox from 'components/SEOBox';
 
@@ -270,16 +271,10 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 							display='flex'
 							justifyContent={'space-around'}>
 							{page.linksWithImages.map((item) => (
-								<NextLink key={item.id} href={item.link}>
-									<Image
-										alt={item.image.alternativeText}
-										width={208}
-										height={156}
-										src={
-											publicRuntimeConfig.backendLocalUrl +
-											item.image.formats?.thumbnail.url
-										}></Image>
-								</NextLink>
+								<LinkWithImage
+									key={item.id}
+									image={item.image}
+									link={item.link}></LinkWithImage>
 							))}
 						</Box>
 					)}
