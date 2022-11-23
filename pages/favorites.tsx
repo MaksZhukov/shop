@@ -12,7 +12,7 @@ import { SparePart } from 'api/spareParts/types';
 import classNames from 'classnames';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react';
@@ -87,10 +87,14 @@ const Favorites = () => {
 																		isMobile
 																			? image
 																					.formats
-																					?.small?.url || image.url 
+																					?.small
+																					?.url ||
+																			  image.url
 																			: image
 																					.formats
-																					?.thumbnail?.url || image.url
+																					?.thumbnail
+																					?.url ||
+																			  image.url
 																	}`
 																}
 																alt={
@@ -115,15 +119,21 @@ const Favorites = () => {
 											<Box flex='1' padding='1em'>
 												<Typography
 													lineClamp={1}
-													title={item.product.name}
+													title={
+														item.product.h1 ||
+														item.product.name
+													}
 													marginBottom='0.5em'
 													variant='h5'
 													component='h2'>
 													<NextLink
-														href={`/products/${item.product.type}/${item.product.slug}`}
-														passHref>
-														<Link underline='hover'>
-															{item.product.name}
+														href={`/products/${item.product.type}/${item.product.slug}`}>
+														<Link
+															component='span'
+															underline='hover'>
+															{item.product.h1 ||
+																item.product
+																	.name}
 														</Link>
 													</NextLink>
 												</Typography>
@@ -166,10 +176,10 @@ const Favorites = () => {
 													)}
 												</Typography>
 												<Box textAlign='right'>
-													<ShoppingCartButton
+													{/* <ShoppingCartButton
 														product={
 															item.product
-														}></ShoppingCartButton>
+														}></ShoppingCartButton> */}
 													<FavoriteButton
 														product={
 															item.product
@@ -190,8 +200,10 @@ const Favorites = () => {
 							marginY='1em'
 							textAlign='center'>
 							У вас нет товаров в избранном, добавьте их из
-							<NextLink href={'/'} passHref>
-								<Link textTransform={'uppercase'}>
+							<NextLink href={'/'}>
+								<Link
+									component='span'
+									textTransform={'uppercase'}>
 									Каталога
 								</Link>
 							</NextLink>

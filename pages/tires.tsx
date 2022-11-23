@@ -154,11 +154,14 @@ const Tires: NextPage<Props> = ({ data }) => {
 							name: 'Количество',
 						},
 					]}
+					searchPlaceholder="Поиск шин ..."
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'шины'}
 					fetchData={fetchTires}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);

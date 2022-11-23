@@ -1,23 +1,37 @@
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { RestorePageOutlined } from '@mui/icons-material';
+import { Box, Button, Link, Typography, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
-import { fetchTire } from 'api/tires/tires';
+import { fetchPageProduct } from 'api/pageProduct/pageProduct';
+import { PageProduct } from 'api/pageProduct/types';
+import { fetchTireBrands } from 'api/tireBrands/tireBrands';
+import { fetchTire, fetchTires } from 'api/tires/tires';
 import { Tire } from 'api/tires/types';
 import { Product, ProductType } from 'api/types';
 import { Wheel } from 'api/wheels/types';
-import { fetchWheel } from 'api/wheels/wheels';
+import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import axios from 'axios';
+import classNames from 'classnames';
+import CarouselProducts from 'components/CarouselProducts';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+import ReactMarkdown from 'components/ReactMarkdown';
+import SEOBox from 'components/SEOBox';
+
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Image from 'next/image';
+import NextLink from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
-import { isWheel } from 'services/ProductService';
-import { fetchSparePart } from '../../../api/spareParts/spareParts';
+import { isTire, isWheel } from 'services/ProductService';
+import {
+	fetchSparePart,
+	fetchSpareParts,
+} from '../../../api/spareParts/spareParts';
 import { SparePart } from '../../../api/spareParts/types';
 import styles from './product.module.scss';
 
@@ -25,9 +39,13 @@ const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	data: Product;
+	page: PageProduct;
+	relatedProducts: Product[];
 }
 
-const ProductPage = ({ data }: Props) => {
+const ProductPage = ({ data, page, relatedProducts }: Props) => {
+	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
+	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isTablet = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('md')
 	);
@@ -97,42 +115,91 @@ const ProductPage = ({ data }: Props) => {
 					<Box
 						marginBottom='1em'
 						display='flex'
-						alignItems='center'
-						justifyContent='center'>
-						<Typography
-							variant='h4'
-							flex='1'
-							overflow='hidden'
-							title={data.name}
-							textOverflow='ellipsis'
-							whiteSpace='nowrap'
-							component='h1'>
-							{data.seo?.h1 || data.name}
-						</Typography>
-						<ShoppingCartButton product={data}></ShoppingCartButton>
-						<FavoriteButton product={data}></FavoriteButton>
+						alignItems='baseline'
+						justifyContent='space-between'>
+						<Box>
+							<Typography
+								variant='h4'
+								flex='1'
+								overflow='hidden'
+								title={data.name}
+								textOverflow='ellipsis'
+								whiteSpace='nowrap'
+								component='h1'>
+								{data.h1 || data.name}
+							</Typography>
+							{data.snippets?.textAfterH1 && (
+								<ReactMarkdown
+									content={
+										data.snippets.textAfterH1
+									}></ReactMarkdown>
+							)}
+						</Box>
+						<Link variant='h5' href='tel:+375297804780'>
+							+375 29 780 4 780
+						</Link>
+						{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
 					</Box>
 					<Box
 						display='flex'
 						sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
 						{data.images ? (
-							<Slider
-								autoplay
-								autoplaySpeed={3000}
-								dots
-								className={styles.slider}>
-								{data.images.map((item) => (
-									<Image
-										key={item.id}
-										alt={item.alternativeText}
-										width={640}
-										height={480}
-										src={
-											publicRuntimeConfig.backendLocalUrl +
-											item.url
-										}></Image>
-								))}
-							</Slider>
+							<>
+								<Box maxWidth='640px'>
+									<Slider
+										ref={(ref) => {
+											setSliderBig(ref);
+										}}
+										asNavFor={sliderSmall || undefined}
+										arrows={false}
+										autoplay
+										autoplaySpeed={5000}
+										className={styles.slider}>
+										{data.images.map((item) => (
+											<Image
+												key={item.id}
+												alt={item.alternativeText}
+												width={640}
+												height={480}
+												src={
+													publicRuntimeConfig.backendLocalUrl +
+													item.url
+												}></Image>
+										))}
+									</Slider>
+									<Slider
+										ref={(ref) => {
+											setSliderSmall(ref);
+										}}
+										swipeToSlide
+										slidesToShow={
+											data.images.length >= 5
+												? 5
+												: data.images.length
+										}
+										focusOnSelect
+										className={classNames(
+											styles.slider,
+											styles.slider_small
+										)}
+										asNavFor={sliderBig || undefined}>
+										{data.images.map((item) => (
+											<Box key={item.id}>
+												<Image
+													style={{ margin: 'auto' }}
+													alt={item.alternativeText}
+													width={104}
+													height={78}
+													src={
+														publicRuntimeConfig.backendLocalUrl +
+														item.formats?.thumbnail
+															.url
+													}></Image>
+											</Box>
+										))}
+									</Slider>
+								</Box>
+							</>
 						) : (
 							<EmptyImageIcon
 								size={isMobile ? 300 : isTablet ? 500 : 700}
@@ -171,40 +238,116 @@ const ProductPage = ({ data }: Props) => {
 										</Typography>
 									</Box>
 								))}
-							</Box>
-							<Box>
+
 								<Typography
-									textAlign='right'
-									variant='h5'
-									width='100%'
+									flex='1'
+									marginTop='1em'
+									marginBottom='1em'
+									fontWeight='bold'
+									variant='body1'
 									color='primary'>
-									{data.price} р.
+									Цена: {data.price} руб{' '}
+									{!!data.priceUSD && (
+										<Typography
+											color='text.secondary'
+											component='sup'>
+											(~{data.priceUSD.toFixed()}$)
+										</Typography>
+									)}
 								</Typography>
-								<Typography
-									textAlign='right'
-									variant='h5'
-									width='100%'
-									color='text.secondary'>
-									~ {data.priceUSD?.toFixed()} $
-								</Typography>
+								<Button
+									variant='contained'
+									component='a'
+									href='tel:+375297804780'>
+									Заказать
+								</Button>
 							</Box>
 						</Box>
 					</Box>
-					{data.description && (
-						<Box>
-							<Typography
-								mr='1em'
-								fontWeight='500'
-								variant='subtitle1'
-								component='span'>
-								Описание:
-							</Typography>
-							<Typography color='text.secondary'>
-								{data.description}
-							</Typography>
+					{!!page.linksWithImages?.length && (
+						<Box
+							marginTop='2em'
+							display='flex'
+							justifyContent={'space-around'}>
+							{page.linksWithImages.map((item) => (
+								<NextLink key={item.id} href={item.link}>
+									<Image
+										alt={item.image.alternativeText}
+										width={208}
+										height={156}
+										src={
+											publicRuntimeConfig.backendLocalUrl +
+											item.image.formats?.thumbnail.url
+										}></Image>
+								</NextLink>
+							))}
 						</Box>
 					)}
+					<Typography marginTop='1em' component='h2' variant='h5'>
+						{data.seo?.h1 || data.name} характеристики
+					</Typography>
+					{data.snippets && (
+						<>
+							{data.snippets.textAfterDescription && (
+								<ReactMarkdown
+									content={
+										data.snippets.textAfterDescription
+									}></ReactMarkdown>
+							)}
+							{data.snippets.benefits && (
+								<>
+									<Typography component='h3' variant='h5'>
+										Почему мы лучшие в своем деле?
+									</Typography>
+									<Box
+										marginTop='2em'
+										display='flex'
+										justifyContent={'space-around'}>
+										{data.snippets.benefits.map((item) => (
+											<Box maxWidth={208} key={item.id}>
+												<Image
+													alt={item.alternativeText}
+													width={208}
+													height={156}
+													src={
+														publicRuntimeConfig.backendLocalUrl +
+														item.formats?.thumbnail
+															.url
+													}></Image>
+												<Typography
+													component='p'
+													variant='body1'>
+													{item.caption}
+												</Typography>
+											</Box>
+										))}
+									</Box>
+								</>
+							)}
+							{data.snippets.textAfterBenefits && (
+								<ReactMarkdown
+									content={
+										data.snippets.textAfterBenefits
+									}></ReactMarkdown>
+							)}
+						</>
+					)}
 				</WhiteBox>
+				<SEOBox
+					content={data.seo?.content}
+					images={data.seo?.images}></SEOBox>
+				<CarouselProducts
+					title={
+						<Typography
+							component='h2'
+							marginBottom='1em'
+							marginTop='1em'
+							textAlign='center'
+							variant='h4'>
+							А ещё у нас есть для этого авто
+						</Typography>
+					}
+					data={relatedProducts}></CarouselProducts>
 			</Container>
 		</>
 	);
@@ -215,24 +358,51 @@ export const getServerSideProps: GetServerSideProps<
 	{ slug: string; type: ProductType }
 > = async (context) => {
 	let data = null;
+	let page = null;
+	let relatedProducts: Product[] = [];
 	let notFound = false;
 	try {
-		let fetchFunc = {
+		let fetchFuncData = {
 			sparePart: fetchSparePart,
 			tire: fetchTire,
 			wheel: fetchWheel,
 		}[context.params?.type || 'sparePart'];
-		const response = await fetchFunc(context.params?.slug || '', true);
+		let fetchRelationalProducts = {
+			sparePart: fetchSpareParts,
+			tire: fetchTires,
+			wheel: fetchWheels,
+		}[context.params?.type || 'sparePart'];
+		const [response, responsePageProduct] = await Promise.all([
+			fetchFuncData(context.params?.slug || '', true),
+			fetchPageProduct(),
+		]);
 		data = response.data.data;
+		page = responsePageProduct.data.data;
+		const responseRelated = await fetchRelationalProducts(
+			{
+				filters: {
+					id: {
+						$ne: data.id,
+					},
+					...(isTire(data)
+						? { brand: data.brand.id }
+						: { model: data.model?.id || '' }),
+				},
+				populate: ['images'],
+			},
+			true
+		);
+		relatedProducts = responseRelated.data.data;
 	} catch (err) {
 		if (axios.isAxiosError(err)) {
+			console.error(err);
 			notFound = true;
 		}
 	}
 
 	return {
 		notFound,
-		props: { data },
+		props: { data, page, relatedProducts },
 	};
 };
 

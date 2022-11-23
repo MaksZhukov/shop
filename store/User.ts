@@ -74,10 +74,10 @@ export default class UserStore implements User {
 	}
 	async logout() {
 		this.clearUser();
-		this.root.cart.clearShoppingCartOnLogout();
+		// this.root.cart.clearShoppingCartOnLogout();
 		this.root.favorites.clearFavorites();
 		saveJwt('');
-		this.root.cart.loadShoppingCart();
+		// this.root.cart.loadShoppingCart();
 		this.root.favorites.loadFavorites();
 		const email = getReviewEmail();
 		if (email) {
