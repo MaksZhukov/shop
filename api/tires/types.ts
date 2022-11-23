@@ -1,11 +1,12 @@
 import { TireBrand } from 'api/tireBrands/types';
-import { Image, SEO } from 'api/types';
+import { Image, ProductSnippets, SEO } from 'api/types';
 
 export type Season = 'зимние' | 'летние' | 'всесезонные';
 
 export interface Tire {
 	id: number;
 	type: 'tire';
+	h1: string;
 	name: string;
 	slug: string;
 	diameter: string;
@@ -19,4 +20,5 @@ export interface Tire {
 	description: string;
 	images: Image[];
 	seo?: SEO;
+	snippets?: ProductSnippets;
 }

@@ -1,16 +1,12 @@
-import getConfig from "next/config";
-import { api } from "..";
-import { ApiResponse, CollectionParams } from "../types";
-import { Tire } from "./types";
-const { publicRuntimeConfig } = getConfig();
+import { api } from '..';
+import { ApiResponse, CollectionParams } from '../types';
+import { Tire } from './types';
 
 export const fetchTires = (params?: CollectionParams) =>
-  api.get<ApiResponse<Tire[]>>("/tires", { params });
+	api.get<ApiResponse<Tire[]>>('/tires', { params });
 
 export const fetchTire = (idOrSlug: string, isServerRequest = false) =>
-  api.get<ApiResponse<Tire>>(`/tires/${idOrSlug}`, {
-    params: { populate: "images" },
-    ...(isServerRequest
-      ? { baseURL: publicRuntimeConfig.backendLocalUrl + "/api" }
-      : {}),
-  });
+	api.get<ApiResponse<Tire>>(`/tires/${idOrSlug}`, {
+		params: { populate: 'images' },
+		headers: { isServerRequest },
+	});

@@ -50,7 +50,7 @@ const Contacts = ({ data }: Props) => {
 							src={'/route.png'}></Image>
 					</Box>
 				</WhiteBox>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox images={data.seo?.images} content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);

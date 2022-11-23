@@ -18,8 +18,6 @@ import { MAX_LIMIT } from 'api/constants';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import Head from 'next/head';
-import { useStore } from 'store';
 import { useSnackbar } from 'notistack';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
@@ -227,11 +225,11 @@ const Home: NextPage<Props> = ({ data }) => {
 		brandId,
 		modelId,
 		generationId,
-		sparePartId,
+		kindSparePartId,
+		kindSparePartName,
 		brandName,
 		modelName,
 		generationName,
-		sparePartName,
 		...others
 	}: {
 		[key: string]: string;
@@ -240,7 +238,7 @@ const Home: NextPage<Props> = ({ data }) => {
 			brand: brandId || undefined,
 			model: modelId || undefined,
 			generation: generationId || undefined,
-			sparePart: sparePartId || undefined,
+			kindSparePart: kindSparePartId || undefined,
 		};
 		return { ...filters, ...others };
 	};
@@ -270,11 +268,14 @@ const Home: NextPage<Props> = ({ data }) => {
 							name: 'Запчасть',
 						},
 					]}
+					searchPlaceholder="Поиск детали ..."
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'запчасти'}
 					fetchData={fetchSpareParts}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);

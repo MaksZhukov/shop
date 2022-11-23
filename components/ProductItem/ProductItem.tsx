@@ -10,7 +10,7 @@ import { Box } from '@mui/system';
 import { Product } from '../../api/types';
 import styles from './ProductItem.module.scss';
 import getConfig from 'next/config';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import FavoriteButton from 'components/FavoriteButton';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import Typography from 'components/Typography';
@@ -83,10 +83,10 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 						title={data.name}
 						component='div'
 						variant='h5'>
-						<NextLink
-							passHref
-							href={`/products/${data.type}/` + data.slug}>
-							<Link underline='hover'>{data.name}</Link>
+						<NextLink href={`/products/${data.type}/` + data.slug}>
+							<Link component='span' underline='hover'>
+								{data.h1 || data.name}
+							</Link>
 						</NextLink>
 					</Typography>
 					<Grid columnSpacing={2} container>
@@ -140,7 +140,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 					</NextLink>
 				</Button>
 				<FavoriteButton product={data}></FavoriteButton>
-				<ShoppingCartButton product={data}></ShoppingCartButton>
+				{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
 			</CardContent>
 		</Card>
 	);

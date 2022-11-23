@@ -1,6 +1,5 @@
 import { Box, Link, useTheme } from '@mui/material';
-import { ApiResponse, CollectionParams, Product } from 'api/types';
-import { AxiosResponse } from 'axios';
+import { Product } from 'api/types';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
@@ -8,63 +7,25 @@ import getConfig from 'next/config';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useSnackbar } from 'notistack';
-import { FC, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import { store } from 'store';
-import styles from './NewProducts.module.scss';
+import styles from './CarouselProducts.module.scss';
 const { publicRuntimeConfig } = getConfig();
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
 interface Props {
-	title: string;
-	fetchData: (
-		params: CollectionParams
-	) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
+	title: ReactNode;
+	data: Product[];
 }
 
-const NewProducts: FC<Props> = ({ title, fetchData }) => {
-	const [data, setData] = useState<Product[]>([]);
-
+const CarouselProducts: FC<Props> = ({ title, data }) => {
 	const { breakpoints } = useTheme();
 	const { enqueueSnackbar } = useSnackbar();
 
-	useEffect(() => {
-		let date = new Date();
-		const fetchNewProducts = async () => {
-			try {
-				const {
-					data: { data },
-				} = await fetchData({
-					sort: 'createdAt:desc',
-					populate: ['images'],
-					filters: {
-						createdAt: {
-							$gte: date.setDate(
-								date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT
-							),
-						},
-					},
-				});
-				setData(data);
-			} catch (err) {
-				enqueueSnackbar(
-					'Произошла какая-то ошибка при загрузке новых товаров, обратитесь в поддержку',
-					{ variant: 'error' }
-				);
-			}
-		};
-		fetchNewProducts();
-	}, []);
-
 	return data.length ? (
 		<Box paddingX='1em'>
-			<Typography
-				marginBottom='1em'
-				marginTop='1em'
-				textAlign='center'
-				variant='h5'>
-				Новые {title}
-			</Typography>
+			{title}
 			<Slider
 				autoplay
 				autoplaySpeed={5000}
@@ -135,12 +96,15 @@ const NewProducts: FC<Props> = ({ title, fetchData }) => {
 							<Typography
 								marginTop='1em'
 								variant='h6'
-								title={item.name}
+								title={item.h1 || item.name}
 								lineClamp={1}>
 								<NextLink
-									href={`/products/${item.type}/` + item.slug}
-									passHref>
-									<Link underline='hover'>{item.name}</Link>
+									href={
+										`/products/${item.type}/` + item.slug
+									}>
+									<Link component='span' underline='hover'>
+										{item.h1 || item.name}
+									</Link>
 								</NextLink>
 							</Typography>
 							<Typography
@@ -167,4 +131,4 @@ const NewProducts: FC<Props> = ({ title, fetchData }) => {
 	);
 };
 
-export default NewProducts;
+export default CarouselProducts;

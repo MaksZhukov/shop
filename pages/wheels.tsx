@@ -227,11 +227,14 @@ const Wheels: NextPage<Props> = ({ data }) => {
 							name: 'Количество',
 						},
 					]}
+					searchPlaceholder="Поиск дисков ..."
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'диски'}
 					fetchData={fetchWheels}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-				<SEOBox images={data.seo?.images}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
