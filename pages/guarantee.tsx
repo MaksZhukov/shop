@@ -6,7 +6,7 @@ import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import Head from 'next/head';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getStaticPageProps } from 'services/StaticPropsService';
 
 interface Props {
 	data: PageGuarantee;
@@ -131,4 +131,4 @@ const Guarantee = ({ data }: Props) => {
 
 export default Guarantee;
 
-export const getStaticProps = getStaticSeoProps(fetchPageGuarantee);
+export const getStaticProps = getStaticPageProps(fetchPageGuarantee);

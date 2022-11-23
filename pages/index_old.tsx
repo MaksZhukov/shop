@@ -21,7 +21,7 @@ import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { useSnackbar } from 'notistack';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getStaticPageProps } from 'services/StaticPropsService';
 import { fetchPageSpareParts } from 'api/pageSpareParts/pageSpareParts';
 import { PageSpareParts } from 'api/pageSpareParts/types';
 import HeadSEO from 'components/HeadSEO';
@@ -268,7 +268,7 @@ const Home: NextPage<Props> = ({ data }) => {
 							name: 'Запчасть',
 						},
 					]}
-					searchPlaceholder="Поиск детали ..."
+					searchPlaceholder='Поиск детали ...'
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'запчасти'}
 					fetchData={fetchSpareParts}
@@ -283,4 +283,4 @@ const Home: NextPage<Props> = ({ data }) => {
 
 export default Home;
 
-export const getStaticProps = getStaticSeoProps(fetchPageSpareParts);
+export const getStaticProps = getStaticPageProps(fetchPageSpareParts);

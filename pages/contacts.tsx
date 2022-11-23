@@ -5,7 +5,7 @@ import { PageContacts } from 'api/pageContacts/types';
 import HeadSEO from 'components/HeadSEO';
 import WhiteBox from 'components/WhiteBox';
 import Image from 'next/image';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getStaticPageProps } from 'services/StaticPropsService';
 import SEOBox from 'components/SEOBox';
 
 interface Props {
@@ -50,7 +50,9 @@ const Contacts = ({ data }: Props) => {
 							src={'/route.png'}></Image>
 					</Box>
 				</WhiteBox>
-				<SEOBox images={data.seo?.images} content={data.seo?.content}></SEOBox>
+				<SEOBox
+					images={data.seo?.images}
+					content={data.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
@@ -58,4 +60,4 @@ const Contacts = ({ data }: Props) => {
 
 export default Contacts;
 
-export const getStaticProps = getStaticSeoProps(fetchPageContacts);
+export const getStaticProps = getStaticPageProps(fetchPageContacts);
