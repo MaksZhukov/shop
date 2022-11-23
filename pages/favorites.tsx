@@ -33,7 +33,7 @@ const Favorites = () => {
 		theme.breakpoints.down('sm')
 	);
 	let items = store.favorites.items;
-
+	console.log(items);
 	return (
 		<>
 			<Head>
@@ -158,23 +158,61 @@ const Favorites = () => {
 												{...(isMobile && {
 													justifyContent: 'end',
 												})}>
-												<Typography
-													textAlign='center'
-													marginBottom='0.5em'
-													color='primary'
-													variant='h5'>
-													{item.product.price} руб.
-													{!!item.product
-														.priceUSD && (
+												<Box display='flex'>
+													<Typography
+														fontWeight='bold'
+														variant='body1'
+														component={
+															item.product
+																.discountPrice
+																? 's'
+																: 'p'
+														}
+														sx={{
+															opacity: item
+																.product
+																.discountPrice
+																? '0.8'
+																: '1',
+														}}
+														color='primary'>
+														{item.product.price} руб{' '}
+														{!!item.product
+															.priceUSD && (
+															<Typography
+																color='text.secondary'
+																component='sup'>
+																(~
+																{item.product.priceUSD.toFixed()}
+																$)
+															</Typography>
+														)}
+													</Typography>
+													{item.product
+														.discountPrice && (
 														<Typography
-															color='text.secondary'
-															component='sup'>
-															(~
-															{item.product.priceUSD.toFixed()}
-															$)
+															paddingLeft='0.5em'
+															fontWeight='bold'
+															variant='body1'
+															color='primary'>
+															{
+																item.product
+																	.discountPrice
+															}{' '}
+															руб{' '}
+															{!!item.product
+																.discountPriceUSD && (
+																<Typography
+																	color='text.primary'
+																	component='sup'>
+																	(~
+																	{item.product.discountPriceUSD.toFixed()}
+																	$)
+																</Typography>
+															)}
 														</Typography>
 													)}
-												</Typography>
+												</Box>
 												<Box textAlign='right'>
 													{/* <ShoppingCartButton
 														product={
