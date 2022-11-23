@@ -87,6 +87,7 @@ export default class FavoritesStore implements Favorites {
 				data: { data },
 			} = await fetchFunc({
 				filters: { id: ids },
+				populate: ['images'],
 			});
 			result = data;
 		}
