@@ -31,6 +31,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 	const isMobile = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('sm')
 	);
+	console.log(data);
 
 	return (
 		<Card className={styles.product}>
@@ -121,26 +122,52 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 				</CardContent>
 			</Box>
 
-			<CardContent sx={{ display: 'flex', alignItems: 'center' }}>
-				<Typography
-					flex='1'
-					fontWeight='bold'
-					variant='body1'
-					color='primary'>
-					Цена: {data.price} руб{' '}
-					{!!data.priceUSD && (
-						<Typography color='text.secondary' component='sup'>
-							(~{data.priceUSD.toFixed()}$)
+			<CardContent
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'space-between',
+				}}>
+				<Box display='flex'>
+					<Typography
+						fontWeight='bold'
+						variant='body1'
+						component={data.discountPrice ? 's' : 'p'}
+						sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+						color='primary'>
+						{data.price} руб{' '}
+						{!!data.priceUSD && (
+							<Typography color='text.secondary' component='sup'>
+								(~{data.priceUSD.toFixed()}$)
+							</Typography>
+						)}
+					</Typography>
+					{data.discountPrice && (
+						<Typography
+							paddingLeft='0.5em'
+							fontWeight='bold'
+							variant='body1'
+							color='primary'>
+							{data.discountPrice} руб{' '}
+							{!!data.discountPriceUSD && (
+								<Typography
+									color='text.primary'
+									component='sup'>
+									(~{data.discountPriceUSD.toFixed()}$)
+								</Typography>
+							)}
 						</Typography>
 					)}
-				</Typography>
-				<Button variant='outlined'>
-					<NextLink href={`/products/${data.type}/` + data.slug}>
-						Подробнее
-					</NextLink>
-				</Button>
-				<FavoriteButton product={data}></FavoriteButton>
-				{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
+				</Box>
+				<Box>
+					<Button variant='outlined'>
+						<NextLink href={`/products/${data.type}/` + data.slug}>
+							Подробнее
+						</NextLink>
+					</Button>
+					<FavoriteButton product={data}></FavoriteButton>
+					{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
+				</Box>
 			</CardContent>
 		</Card>
 	);
