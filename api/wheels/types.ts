@@ -20,6 +20,8 @@ export interface Wheel {
 	model: Model;
 	price: number;
 	priceUSD: number;
+	discountPrice: number;
+	discountPriceUSD: number;
 	count: number;
 	description: string;
 	images: Image[];

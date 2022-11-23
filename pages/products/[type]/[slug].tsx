@@ -117,7 +117,7 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 						display='flex'
 						alignItems='baseline'
 						justifyContent='space-between'>
-						<Box>
+						<Box flex='1'>
 							<Typography
 								variant='h4'
 								flex='1'
@@ -135,10 +135,15 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 									}></ReactMarkdown>
 							)}
 						</Box>
-						<Link variant='h5' href='tel:+375297804780'>
-							+375 29 780 4 780
-						</Link>
-						{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
+						<Box alignItems='center' display='flex'>
+							<Link
+								marginRight='0.5em'
+								variant='h5'
+								href='tel:+375297804780'>
+								+375 29 780 4 780
+							</Link>
+							<FavoriteButton product={data}></FavoriteButton>
+						</Box>
 					</Box>
 					<Box
 						display='flex'
@@ -238,23 +243,50 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 										</Typography>
 									</Box>
 								))}
-
-								<Typography
-									flex='1'
-									marginTop='1em'
-									marginBottom='1em'
-									fontWeight='bold'
-									variant='body1'
-									color='primary'>
-									Цена: {data.price} руб{' '}
-									{!!data.priceUSD && (
+								<Box
+									marginBottom='0.5em'
+									display='flex'
+									alignItems='center'>
+									<Typography
+										fontWeight='bold'
+										variant='body1'
+										component={
+											data.discountPrice ? 's' : 'p'
+										}
+										sx={{
+											opacity: data.discountPrice
+												? '0.8'
+												: '1',
+										}}
+										color='primary'>
+										{data.price} руб{' '}
+										{!!data.priceUSD && (
+											<Typography
+												color='text.secondary'
+												component='sup'>
+												(~{data.priceUSD.toFixed()}$)
+											</Typography>
+										)}
+									</Typography>
+									{data.discountPrice && (
 										<Typography
-											color='text.secondary'
-											component='sup'>
-											(~{data.priceUSD.toFixed()}$)
+											paddingLeft='0.5em'
+											fontWeight='bold'
+											variant='body1'
+											color='primary'>
+											{data.discountPrice} руб{' '}
+											{!!data.discountPriceUSD && (
+												<Typography
+													color='text.primary'
+													component='sup'>
+													(~
+													{data.discountPriceUSD.toFixed()}
+													$)
+												</Typography>
+											)}
 										</Typography>
 									)}
-								</Typography>
+								</Box>
 								<Button
 									variant='contained'
 									component='a'

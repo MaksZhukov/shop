@@ -18,6 +18,8 @@ export interface SparePart {
 	description: string;
 	price: number;
 	priceUSD?: number;
+	discountPrice: number;
+	discountPriceUSD: number;
 	model?: Model;
 	brand?: Brand;
 	generation?: Generation;
