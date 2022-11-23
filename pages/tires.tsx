@@ -12,7 +12,7 @@ import { fetchTires } from 'api/tires/tires';
 import { useStore } from 'store';
 import { useSnackbar } from 'notistack';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getStaticPageProps } from 'services/StaticPropsService';
 import { fetchPageTires } from 'api/pageTires/pageTires';
 import { PageTires } from 'api/pageTires/types';
 import HeadSEO from 'components/HeadSEO';
@@ -154,7 +154,7 @@ const Tires: NextPage<Props> = ({ data }) => {
 							name: 'Количество',
 						},
 					]}
-					searchPlaceholder="Поиск шин ..."
+					searchPlaceholder='Поиск шин ...'
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'шины'}
 					fetchData={fetchTires}
@@ -169,4 +169,4 @@ const Tires: NextPage<Props> = ({ data }) => {
 
 export default Tires;
 
-export const getStaticProps = getStaticSeoProps(fetchPageTires);
+export const getStaticProps = getStaticPageProps(fetchPageTires);

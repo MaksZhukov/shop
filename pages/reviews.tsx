@@ -12,7 +12,7 @@ import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Fragment, useEffect, useState } from 'react';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getStaticPageProps } from 'services/StaticPropsService';
 import { useStore } from 'store';
 
 let COUNT_REVIEWS = 10;
@@ -129,4 +129,4 @@ const Reviews = ({ data }: Props) => {
 
 export default observer(Reviews);
 
-export const getStaticProps = getStaticSeoProps(fetchPageReview);
+export const getStaticProps = getStaticPageProps(fetchPageReview);

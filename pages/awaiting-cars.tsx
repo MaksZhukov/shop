@@ -38,7 +38,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getStaticPageProps } from 'services/StaticPropsService';
 import styles from './awaiting-cars.module.scss';
 
 const DynamicNews = dynamic(() => import('components/News'));
@@ -355,4 +355,4 @@ const AwaitingCars: NextPage<Props> = ({ data }) => {
 
 export default AwaitingCars;
 
-export const getStaticProps = getStaticSeoProps(fetchPageAwaitingCars);
+export const getStaticProps = getStaticPageProps(fetchPageAwaitingCars);

@@ -12,7 +12,11 @@ import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
-import { ApiResponse, Filters as IFilters } from 'api/types';
+import {
+	ApiResponse,
+	Filters as IFilters,
+	LinkWithImage as ILinkWithImage,
+} from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
@@ -20,7 +24,7 @@ import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { useSnackbar } from 'notistack';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getStaticPageProps } from 'services/StaticPropsService';
 import { fetchPageMain } from 'api/pageSpareParts/pageSpareParts';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
@@ -33,14 +37,17 @@ import Image from 'next/image';
 import getConfig from 'next/config';
 import LinkWithImage from 'components/LinkWithImage';
 import { getSparePartsFiltersConfig } from 'components/Filters/config';
+import { Car } from 'api/cars/types';
+import { fetchCars } from 'api/cars/cars';
 
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	data: PageMain;
+	cars: Car[];
 }
 
-const Home: NextPage<Props> = ({ data }) => {
+const Home: NextPage<Props> = ({ data, cars }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
@@ -166,6 +173,18 @@ const Home: NextPage<Props> = ({ data }) => {
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
 	});
 
+	const renderLinkWithImage = (item: ILinkWithImage) => (
+		<WhiteBox key={item.id} textAlign='center'>
+			<LinkWithImage
+				targetLink='_blank'
+				image={item.image}
+				link={item.link}></LinkWithImage>
+		</WhiteBox>
+	);
+
+	const renderLinksWithImages = (items?: ILinkWithImage[]) =>
+		items?.map((item) => renderLinkWithImage(item));
+
 	return (
 		<>
 			<HeadSEO
@@ -183,43 +202,26 @@ const Home: NextPage<Props> = ({ data }) => {
 							'Магазин запчастей б/у для автомобилей'}
 					</Typography>
 				</WhiteBox>
-				<Box display='flex' flexDirection='column'>
+				<Box display='flex'>
 					<Box
 						marginRight='1em'
 						component='aside'
-						className={styles.sider}>
+						className={styles['sider-left']}>
 						<Filters
 							config={filtersConfig}
 							total={total}
 							totalText={`Найдено запчастей`}
 							btnText='Перейти в каталог'
 							onClickFind={handleClickFind}></Filters>
-						{data.serviceStations?.map((item) => (
-							<WhiteBox textAlign='center' key={item.id}>
-								<LinkWithImage
-									targetLink='_blank'
-									image={item.image}
-									link={item.link}></LinkWithImage>
-							</WhiteBox>
-						))}
-						{data.autocomises?.map((item) => (
-							<WhiteBox textAlign='center' key={item.id}>
-								<LinkWithImage
-									targetLink='_blank'
-									image={item.image}
-									link={item.link}></LinkWithImage>
-							</WhiteBox>
-						))}
-						{data.deliveryAuto && (
-							<WhiteBox textAlign='center'>
-								<LinkWithImage
-									targetLink='_blank'
-									image={data.deliveryAuto.image}
-									link={
-										data.deliveryAuto.link
-									}></LinkWithImage>
-							</WhiteBox>
-						)}
+						{renderLinksWithImages(data.serviceStations)}
+						{renderLinksWithImages(data.autocomises)}
+						{data.deliveryAuto &&
+							renderLinkWithImage(data.deliveryAuto)}
+					</Box>
+					<Box flex='1'></Box>
+					<Box className={styles['sider-right']}>
+						{renderLinksWithImages(data.discounts)}
+						{renderLinksWithImages(data.advertising)}
 					</Box>
 				</Box>
 				<SEOBox
@@ -232,4 +234,7 @@ const Home: NextPage<Props> = ({ data }) => {
 
 export default Home;
 
-export const getStaticProps = getStaticSeoProps(fetchPageMain);
+export const getStaticProps = getStaticPageProps(fetchPageMain, async () => {
+	const { data } = await fetchCars({ populate: ['images'] }, true);
+	return { cars: data.data };
+});

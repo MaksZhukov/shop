@@ -1,22 +1,25 @@
 .wrapper {
-  display: flex;
-  &_tablet {
-    flex-direction: column;
-  }
+	display: flex;
+	&_tablet {
+		flex-direction: column;
+	}
 }
 
-.sider {
-  width: 250px;
-  &_left {
-    order: 1;
-  }
-  &_right {
-    order: 3;
-  }
-  &_tablet {
-    width: 100%;
-    &.sider_right {
-      order: 2;
-    }
-  }
+.sider-left {
+	width: 250px;
+	&_left {
+		order: 1;
+	}
+	&_right {
+		order: 3;
+	}
+	&_tablet {
+		width: 100%;
+		&.sider_right {
+			order: 2;
+		}
+	}
+}
+
+.sider-right {
 }

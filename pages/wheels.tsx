@@ -13,7 +13,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getStaticPageProps } from 'services/StaticPropsService';
 import { fetchPageWheels } from 'api/pageWheels/pageWheels';
 import { PageWheels } from 'api/pageWheels/types';
 import HeadSEO from 'components/HeadSEO';
@@ -227,7 +227,7 @@ const Wheels: NextPage<Props> = ({ data }) => {
 							name: 'Количество',
 						},
 					]}
-					searchPlaceholder="Поиск дисков ..."
+					searchPlaceholder='Поиск дисков ...'
 					filtersConfig={filtersConfig}
 					title={data.seo?.h1 || 'диски'}
 					fetchData={fetchWheels}
@@ -242,4 +242,4 @@ const Wheels: NextPage<Props> = ({ data }) => {
 
 export default Wheels;
 
-export const getStaticProps = getStaticSeoProps(fetchPageWheels);
+export const getStaticProps = getStaticPageProps(fetchPageWheels);
