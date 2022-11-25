@@ -24,6 +24,17 @@ const Footer = () => {
 			<Container>
 
 				<Grid container spacing={2} columns={{ xs: 1, sm: 1, md: 12 }}>
+					<Grid item xs={3}>
+						<Box className={styles.footer__item}>
+							<Typography margin='0.5em 0' component='p'>
+								© {date.getFullYear()} - Авторазборка Полотково
+							</Typography>
+							<Typography margin='0.5em 0' component='p'>
+								ООО &quot;Дриблинг&quot;, 2009-2017. УНП 590740644 . Дата
+								регистрации 03.11.2008.
+							</Typography>
+						</Box>
+					</Grid>
 
 					<Grid item xs={3}>
 						<Box className={styles.footer__item}>
@@ -54,18 +65,6 @@ const Footer = () => {
 								+375-29-780-47-80
 							</Link>
 
-						</Box>
-					</Grid>
-
-					<Grid item xs={3}>
-						<Box className={styles.footer__item}>
-							<Typography margin='0.5em 0' component='p'>
-								© {date.getFullYear()} - Авторазборка Полотково
-							</Typography>
-							<Typography margin='0.5em 0' component='p'>
-								ООО &quot;Дриблинг&quot;, 2009-2017. УНП 590740644 . Дата
-								регистрации 03.11.2008.
-							</Typography>
 						</Box>
 					</Grid>
 
