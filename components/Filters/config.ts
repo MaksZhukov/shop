@@ -13,7 +13,7 @@ interface Params {
 	noOptionsText: ReactNode;
 	modelId: string;
 	brandId: string;
-	onOpenAutoCompleteBrand: () => void;
+	onOpenAutoCompleteBrand?: () => void;
 	onChangeBrandAutocomplete: (_: any, selected: Brand | null) => void;
 	onOpenAutocompleteModel: () => void;
 	onOpenAutocompleteGeneration: () => void;
