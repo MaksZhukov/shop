@@ -1,41 +1,49 @@
 import type { NextPage } from 'next';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
 import Catalog from 'components/Catalog';
 import { CircularProgress, Container } from '@mui/material';
-import { ApiResponse, Filters } from 'api/types';
-import Head from 'next/head';
-import { fetchWheels } from 'api/wheels/wheels';
-import { fetchBrands } from 'api/brands/brands';
-import { fetchModels } from 'api/models/models';
+import {
+	BODY_STYLES,
+	FUELS,
+	TRANSMISSIONS,
+} from 'components/Filters/constants';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
-import { MAX_LIMIT } from 'api/constants';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useSnackbar } from 'notistack';
-import { AxiosResponse } from 'axios';
+import { KindSparePart } from 'api/kindSpareParts/types';
 import { useRouter } from 'next/router';
+import { AxiosResponse } from 'axios';
+import { ApiResponse, Filters } from 'api/types';
+import { MAX_LIMIT } from 'api/constants';
+import { fetchBrands } from 'api/brands/brands';
+import { fetchModels } from 'api/models/models';
+import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
+import { useSnackbar } from 'notistack';
+import { fetchGenerations } from 'api/generations/generations';
+import { Generation } from 'api/generations/types';
 import { getPageProps } from 'services/PagePropsService';
-import { fetchPageWheels } from 'api/pageWheels/pageWheels';
-import { PageWheels } from 'api/pageWheels/types';
+import { fetchPageSpareParts } from 'api/pageSpareParts/pageSpareParts';
+import { PageSpareParts } from 'api/pageSpareParts/types';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
 
 interface Props {
-	data: PageWheels;
+	data: PageSpareParts;
 }
 
-const Wheels: NextPage<Props> = ({ data }) => {
+const Home: NextPage<Props> = ({ data }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
+	const [generations, setGenerations] = useState<Generation[]>([]);
+	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
+	const { enqueueSnackbar } = useSnackbar();
 
 	const { brandId = '', modelId = '' } = router.query as {
 		brandId: string;
 		modelId: string;
 	};
-
-	const { enqueueSnackbar } = useSnackbar();
-
 	const handleOpenAutocomplete =
 		<T extends any>(
 			hasData: boolean,
@@ -69,6 +77,8 @@ const Wheels: NextPage<Props> = ({ data }) => {
 			delete router.query.brandId;
 			delete router.query.modelName;
 			delete router.query.modelId;
+			delete router.query.generationId;
+			delete router.query.generationName;
 		}
 		router.push({ pathname: router.pathname, query: router.query });
 		setModels([]);
@@ -81,15 +91,6 @@ const Wheels: NextPage<Props> = ({ data }) => {
 	);
 
 	const filtersConfig = [
-		[
-			{
-				id: 'kind',
-				placeholder: 'Тип диска',
-				disabled: false,
-				type: 'autocomplete',
-				options: ['литой', 'штампованный'],
-			},
-		],
 		[
 			{
 				id: 'brandId',
@@ -132,50 +133,88 @@ const Wheels: NextPage<Props> = ({ data }) => {
 		],
 		[
 			{
-				id: 'width',
-				placeholder: 'J ширина, мм',
-				disabled: false,
-				type: 'number',
+				id: 'generationId',
+				name: 'generationName',
+				placeholder: 'Поколение',
+				type: 'autocomplete',
+				disabled: !modelId,
+				options: generations.map((item) => ({
+					label: item.name,
+					...item,
+				})),
+				onOpen: handleOpenAutocomplete<Generation>(
+					!!generations.length,
+					setGenerations,
+					() =>
+						fetchGenerations({
+							filters: { model: modelId as string },
+							pagination: { limit: MAX_LIMIT },
+						})
+				),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
-				id: 'diameter',
-				placeholder: 'R диаметр, дюйм',
+				id: 'kindSparePartId',
+				name: 'kindSparePartName',
+				placeholder: 'Запчасть',
+				type: 'autocomplete',
 				disabled: false,
-				type: 'number',
+				options: kindSpareParts.map((item) => ({
+					label: item.name,
+					...item,
+				})),
+				onOpen: handleOpenAutocomplete<KindSparePart>(
+					!!kindSpareParts.length,
+					setKindSpareParts,
+					() =>
+						fetchKindSpareParts({
+							pagination: { limit: MAX_LIMIT },
+						})
+				),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
-				id: 'numberHoles',
-				placeholder: 'Количество отверстий',
-				disabled: false,
+				id: 'volume',
+				placeholder: 'Обьем 2.0',
 				type: 'number',
+				disabled: false,
 			},
 		],
 		[
 			{
-				id: 'diameterCenterHole',
-				placeholder: 'DIA диаметр центрального отверстия, мм',
+				id: 'bodyStyle',
+				placeholder: 'Кузов',
+				type: 'autocomplete',
 				disabled: false,
-				type: 'number',
+				options: BODY_STYLES,
+				onOpen: () => {},
+				noOptionsText: '',
 			},
 		],
 		[
 			{
-				id: 'distanceBetweenCenters',
-				placeholder: 'PCD расстояние между отверстиями, мм',
+				id: 'transmission',
+				placeholder: 'Коробка',
+				type: 'autocomplete',
 				disabled: false,
-				type: 'number',
+				options: TRANSMISSIONS,
+				onOpen: () => {},
+				noOptionsText: '',
 			},
 		],
 		[
 			{
-				id: 'diskOffset',
-				placeholder: 'ET вылет, мм',
+				id: 'fuel',
+				placeholder: 'Тип топлива',
+				type: 'autocomplete',
 				disabled: false,
-				type: 'number',
+				options: FUELS,
+				onOpen: () => {},
+				noOptionsText: '',
 			},
 		],
 	];
@@ -183,10 +222,14 @@ const Wheels: NextPage<Props> = ({ data }) => {
 	const generateFiltersByQuery = ({
 		min,
 		max,
+		brandId,
+		modelId,
+		generationId,
+		kindSparePartId,
+		kindSparePartName,
 		brandName,
 		modelName,
-		modelId,
-		brandId,
+		generationName,
 		...others
 	}: {
 		[key: string]: string;
@@ -194,6 +237,8 @@ const Wheels: NextPage<Props> = ({ data }) => {
 		let filters: Filters = {
 			brand: brandId || undefined,
 			model: modelId || undefined,
+			generation: generationId || undefined,
+			kindSparePart: kindSparePartId || undefined,
 		};
 		return { ...filters, ...others };
 	};
@@ -201,11 +246,11 @@ const Wheels: NextPage<Props> = ({ data }) => {
 	return (
 		<>
 			<HeadSEO
-				title={data.seo?.title || 'Диски'}
-				description={data.seo?.description || 'Диски'}
+				title={data.seo?.title || 'Запчасти'}
+				description={data.seo?.description || 'Запчасти от автомобилей'}
 				keywords={
 					data.seo?.keywords ||
-					'диски, диски для автомобилей, купить диски, купить диски для авто'
+					'запчасти, запчасти от авто, запчасти на продажу, купить запчасти'
 				}></HeadSEO>
 			<Container>
 				<Catalog
@@ -219,18 +264,14 @@ const Wheels: NextPage<Props> = ({ data }) => {
 							name: 'Модель',
 						},
 						{
-							id: 'diameter',
-							name: 'R диаметр',
-						},
-						{
-							id: 'count',
-							name: 'Количество',
+							id: 'kindSparePart',
+							name: 'Запчасть',
 						},
 					]}
-					searchPlaceholder='Поиск дисков ...'
+					searchPlaceholder='Поиск детали ...'
 					filtersConfig={filtersConfig}
-					title={data.seo?.h1 || 'диски'}
-					fetchData={fetchWheels}
+					title={data.seo?.h1 || 'запчасти'}
+					fetchData={fetchSpareParts}
 					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 				<SEOBox
 					images={data.seo?.images}
@@ -240,6 +281,6 @@ const Wheels: NextPage<Props> = ({ data }) => {
 	);
 };
 
-export default Wheels;
+export default Home;
 
-export const getStaticProps = getPageProps(fetchPageWheels);
+export const getStaticProps = getPageProps(fetchPageSpareParts);

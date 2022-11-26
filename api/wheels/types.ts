@@ -1,10 +1,11 @@
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
-import { Image, SEO } from 'api/types';
+import { Image, ProductSnippets, SEO } from 'api/types';
 
 export interface Wheel {
 	id: number;
 	type: 'wheel';
+	h1: string;
 	name: string;
 	slug: string;
 	diameter: string;
@@ -19,8 +20,11 @@ export interface Wheel {
 	model: Model;
 	price: number;
 	priceUSD: number;
+	discountPrice: number;
+	discountPriceUSD: number;
 	count: number;
 	description: string;
 	images: Image[];
 	seo?: SEO;
+	snippets?: ProductSnippets;
 }

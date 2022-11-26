@@ -87,6 +87,7 @@ export default class FavoritesStore implements Favorites {
 				data: { data },
 			} = await fetchFunc({
 				filters: { id: ids },
+				populate: ['images'],
 			});
 			result = data;
 		}
@@ -105,7 +106,7 @@ export default class FavoritesStore implements Favorites {
 					this.items.push(data);
 				});
 			} catch (err) {
-				console.log(err);
+				console.error(err);
 			}
 		} else {
 			saveFavoriteProduct(favorite.product.id, favorite.product.type);

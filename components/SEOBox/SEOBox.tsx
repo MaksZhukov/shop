@@ -1,11 +1,10 @@
 import { Box } from '@mui/material';
 import { Image } from 'api/types';
+import ReactMarkdown from 'components/ReactMarkdown';
 import WhiteBox from 'components/WhiteBox';
 import getConfig from 'next/config';
 import NextImage from 'next/image';
 import { FC } from 'react';
-import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -15,7 +14,6 @@ interface Props {
 }
 
 const SEOBox: FC<Props> = ({ images, content }) => {
-	console.log(content);
 	return (
 		<>
 			{images && (
@@ -32,7 +30,7 @@ const SEOBox: FC<Props> = ({ images, content }) => {
 									height={156}
 									src={
 										publicRuntimeConfig.backendLocalUrl +
-											item.formats?.small.url || item.url
+										(item.formats?.small?.url || item.url)
 									}></NextImage>
 							</Box>
 						))}
@@ -41,24 +39,7 @@ const SEOBox: FC<Props> = ({ images, content }) => {
 			)}
 			{content && (
 				<WhiteBox>
-					<ReactMarkdown
-						rehypePlugins={[rehypeRaw]}
-						components={{
-							img: ({ src, alt }) => {
-								return (
-									<NextImage
-										alt={alt}
-										width={640}
-										height={480}
-										src={
-											publicRuntimeConfig.backendLocalUrl +
-											src
-										}></NextImage>
-								);
-							},
-						}}>
-						{content}
-					</ReactMarkdown>
+					<ReactMarkdown content={content}></ReactMarkdown>
 				</WhiteBox>
 			)}
 		</>

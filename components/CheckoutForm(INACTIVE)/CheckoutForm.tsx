@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {
 	Alert,
 	Button,
@@ -18,9 +19,9 @@ import {
 	useState,
 } from 'react';
 import { useStore } from 'store';
-import { createOrder } from 'api/orders/orders';
+import { createOrder } from 'api/orders(INACTIVE)/orders';
 import { observer } from 'mobx-react-lite';
-import { removeAllItemsFromShoppingCart } from 'api/cart/cart';
+import { removeAllItemsFromShoppingCart } from 'api/cart(INACTIVE)/cart';
 import { useSnackbar } from 'notistack';
 
 const CheckoutForm = () => {

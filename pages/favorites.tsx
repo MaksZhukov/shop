@@ -12,7 +12,7 @@ import { SparePart } from 'api/spareParts/types';
 import classNames from 'classnames';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react';
@@ -33,7 +33,7 @@ const Favorites = () => {
 		theme.breakpoints.down('sm')
 	);
 	let items = store.favorites.items;
-
+	console.log(items);
 	return (
 		<>
 			<Head>
@@ -87,10 +87,14 @@ const Favorites = () => {
 																		isMobile
 																			? image
 																					.formats
-																					?.small?.url || image.url 
+																					?.small
+																					?.url ||
+																			  image.url
 																			: image
 																					.formats
-																					?.thumbnail?.url || image.url
+																					?.thumbnail
+																					?.url ||
+																			  image.url
 																	}`
 																}
 																alt={
@@ -115,15 +119,21 @@ const Favorites = () => {
 											<Box flex='1' padding='1em'>
 												<Typography
 													lineClamp={1}
-													title={item.product.name}
+													title={
+														item.product.h1 ||
+														item.product.name
+													}
 													marginBottom='0.5em'
 													variant='h5'
 													component='h2'>
 													<NextLink
-														href={`/products/${item.product.type}/${item.product.slug}`}
-														passHref>
-														<Link underline='hover'>
-															{item.product.name}
+														href={`/products/${item.product.type}/${item.product.slug}`}>
+														<Link
+															component='span'
+															underline='hover'>
+															{item.product.h1 ||
+																item.product
+																	.name}
 														</Link>
 													</NextLink>
 												</Typography>
@@ -148,28 +158,66 @@ const Favorites = () => {
 												{...(isMobile && {
 													justifyContent: 'end',
 												})}>
-												<Typography
-													textAlign='center'
-													marginBottom='0.5em'
-													color='primary'
-													variant='h5'>
-													{item.product.price} руб.
-													{!!item.product
-														.priceUSD && (
+												<Box display='flex'>
+													<Typography
+														fontWeight='bold'
+														variant='body1'
+														component={
+															item.product
+																.discountPrice
+																? 's'
+																: 'p'
+														}
+														sx={{
+															opacity: item
+																.product
+																.discountPrice
+																? '0.8'
+																: '1',
+														}}
+														color='primary'>
+														{item.product.price} руб{' '}
+														{!!item.product
+															.priceUSD && (
+															<Typography
+																color='text.secondary'
+																component='sup'>
+																(~
+																{item.product.priceUSD.toFixed()}
+																$)
+															</Typography>
+														)}
+													</Typography>
+													{item.product
+														.discountPrice && (
 														<Typography
-															color='text.secondary'
-															component='sup'>
-															(~
-															{item.product.priceUSD.toFixed()}
-															$)
+															paddingLeft='0.5em'
+															fontWeight='bold'
+															variant='body1'
+															color='primary'>
+															{
+																item.product
+																	.discountPrice
+															}{' '}
+															руб{' '}
+															{!!item.product
+																.discountPriceUSD && (
+																<Typography
+																	color='text.primary'
+																	component='sup'>
+																	(~
+																	{item.product.discountPriceUSD.toFixed()}
+																	$)
+																</Typography>
+															)}
 														</Typography>
 													)}
-												</Typography>
+												</Box>
 												<Box textAlign='right'>
-													<ShoppingCartButton
+													{/* <ShoppingCartButton
 														product={
 															item.product
-														}></ShoppingCartButton>
+														}></ShoppingCartButton> */}
 													<FavoriteButton
 														product={
 															item.product
@@ -190,8 +238,10 @@ const Favorites = () => {
 							marginY='1em'
 							textAlign='center'>
 							У вас нет товаров в избранном, добавьте их из
-							<NextLink href={'/'} passHref>
-								<Link textTransform={'uppercase'}>
+							<NextLink href={'/'}>
+								<Link
+									component='span'
+									textTransform={'uppercase'}>
 									Каталога
 								</Link>
 							</NextLink>

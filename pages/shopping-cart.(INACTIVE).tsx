@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {
 	Box,
 	Button,
@@ -10,10 +11,10 @@ import {
 import { Container } from '@mui/system';
 import { SparePart } from 'api/spareParts/types';
 import classNames from 'classnames';
-import CheckoutForm from 'components/CheckoutForm';
+// import CheckoutForm from 'components/CheckoutForm';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
-import ShoppingCartButton from 'components/ShoppingCartButton';
+// import ShoppingCartButton from 'components/ShoppingCartButton';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react';
@@ -91,10 +92,14 @@ const ShoppingCart = () => {
 																			isMobile
 																				? image
 																						.formats
-																						?.small?.url || image.url
+																						?.small
+																						?.url ||
+																				  image.url
 																				: image
 																						.formats
-																						?.thumbnail?.url || image.url
+																						?.thumbnail
+																						?.url ||
+																				  image.url
 																		}`
 																	}
 																	alt={
@@ -125,9 +130,10 @@ const ShoppingCart = () => {
 														variant='h5'
 														component='h2'>
 														<NextLink
-															href={`/products/${item.product.type}/${item.product.slug}`}
-															passHref>
-															<Link underline='hover'>
+															href={`/products/${item.product.type}/${item.product.slug}`}>
+															<Link
+																component='span'
+																underline='hover'>
 																{
 																	item.product
 																		.name
@@ -136,7 +142,8 @@ const ShoppingCart = () => {
 														</NextLink>
 													</Typography>
 
-													{item.product.description && (
+													{item.product
+														.description && (
 														<Typography
 															lineClamp={2}
 															color='text.secondary'
@@ -178,10 +185,10 @@ const ShoppingCart = () => {
 														)}
 													</Typography>
 													<Box textAlign='right'>
-														<ShoppingCartButton
+														{/* <ShoppingCartButton
 															product={
 																item.product
-															}></ShoppingCartButton>
+															}></ShoppingCartButton> */}
 														<FavoriteButton
 															product={
 																item.product
@@ -202,9 +209,8 @@ const ShoppingCart = () => {
 									variant='contained'>
 									Перейти к оформлению заказа
 								</Button>
-							) : (
-								<CheckoutForm></CheckoutForm>
-							)}
+							) : // <CheckoutForm></CheckoutForm>
+							null}
 						</>
 					) : (
 						<Typography
@@ -213,7 +219,9 @@ const ShoppingCart = () => {
 							textAlign='center'>
 							У вас нет товаров в корзине, добавьте их из{' '}
 							<NextLink href={'/'} passHref>
-								<Link textTransform={'uppercase'}>
+								<Link
+									component='span'
+									textTransform={'uppercase'}>
 									Каталога
 								</Link>
 							</NextLink>
@@ -228,5 +236,5 @@ const ShoppingCart = () => {
 export default observer(ShoppingCart);
 
 export async function getStaticProps() {
-	return { props: {} };
+	return { props: {}, notFound: true };
 }
