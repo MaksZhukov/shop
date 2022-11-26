@@ -1,8 +1,8 @@
-import { Typography } from '@mui/material';
+import { Link, Typography } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import getConfig from 'next/config';
 import Image from 'next/image';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { FC, HTMLAttributeAnchorTarget } from 'react';
 
 const { publicRuntimeConfig } = getConfig();
@@ -10,21 +10,34 @@ const { publicRuntimeConfig } = getConfig();
 interface Props {
 	link: string;
 	targetLink?: HTMLAttributeAnchorTarget;
+	width?: number;
+	height?: number;
 	image: IImage;
 }
-const LinkWithImage: FC<Props> = ({ link, image, targetLink = '_self' }) => {
+const LinkWithImage: FC<Props> = ({
+	width = 208,
+	height = 156,
+	link,
+	image,
+	targetLink = '_self',
+}) => {
 	return (
-		<Link href={link} target={targetLink}>
+		<NextLink href={link} target={targetLink}>
 			<Image
+				style={{ objectFit: 'contain' }}
 				alt={image.alternativeText}
-				width={208}
-				height={156}
+				width={width}
+				height={height}
 				src={
 					publicRuntimeConfig.backendLocalUrl +
 					image.formats?.thumbnail.url
 				}></Image>
-			{image.caption && <Typography>{image.caption}</Typography>}
-		</Link>
+			{image.caption && (
+				<Link component='div' textAlign='center' marginTop='1em'>
+					{image.caption}
+				</Link>
+			)}
+		</NextLink>
 	);
 };
 
