@@ -21,9 +21,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import './app.scss';
 import NotistackService from 'services/NotistackService';
 
-const propertyId = '62e2456354f06e12d88bbae4';
-const tawkId = '1g91tu3hb';
-
 let theme = createTheme({
 	typography: {
 		fontFamily: 'Roboto',
@@ -45,7 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				try {
 					await Promise.all([
 						store.user.loadInfo(),
-						store.cart.loadShoppingCart(),
+						// store.cart.loadShoppingCart(),
 						store.favorites.loadFavorites(),
 					]);
 				} catch (err) {
@@ -55,7 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				const email = getReviewEmail();
 
 				await Promise.all([
-					store.cart.loadShoppingCart(),
+					// store.cart.loadShoppingCart(),
 					store.favorites.loadFavorites(),
 					...(email ? [store.user.loadReviewStatus(email)] : []),
 				]);

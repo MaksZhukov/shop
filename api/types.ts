@@ -39,6 +39,7 @@ export type Filters = {
 				[operator: string]: number | string | undefined;
 		  }
 		| string
+		| number
 		| number[]
 		| undefined;
 };
@@ -56,6 +57,13 @@ export type CollectionParams = {
 	publicationState?: 'live' | 'preview';
 };
 
+export type ProductSnippets = {
+	textAfterH1: string;
+	textAfterDescription: string;
+	textAfterBenefits: string;
+	benefits: Image[];
+};
+
 export type SEO = {
 	title: string;
 	description: string;
@@ -63,4 +71,10 @@ export type SEO = {
 	h1: string;
 	images?: Image[];
 	content?: string;
+};
+
+export type LinkWithImage = {
+	id: number;
+	image: Image;
+	link: string;
 };
