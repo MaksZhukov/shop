@@ -1,4 +1,3 @@
-import { RestorePageOutlined } from '@mui/icons-material';
 import { Box, Button, Link, Typography, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchPageProduct } from 'api/pageProduct/pageProduct';
@@ -15,16 +14,15 @@ import CarouselProducts from 'components/CarouselProducts';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
+import Image from 'components/Image';
 import LinkWithImage from 'components/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import SEOBox from 'components/SEOBox';
-
 // import ShoppingCartButton from 'components/ShoppingCartButton';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';
-import Image from 'next/image';
 import NextLink from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
@@ -45,11 +43,13 @@ interface Props {
 }
 
 const ProductPage = ({ data, page, relatedProducts }: Props) => {
+	console.log(data);
 	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
 	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isTablet = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('md')
 	);
+
 	const isMobile = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('sm')
 	);
@@ -104,7 +104,7 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 		wheel: 'диск, купить диск, продажа диска, диск авто',
 		tire: 'шина, купить шину, продажа шины, шина авто',
 	}[data.type];
-
+	console.log(page);
 	return (
 		<>
 			<HeadSEO
@@ -122,10 +122,7 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 							<Typography
 								variant='h4'
 								flex='1'
-								overflow='hidden'
 								title={data.name}
-								textOverflow='ellipsis'
-								whiteSpace='nowrap'
 								component='h1'>
 								{data.h1 || data.name}
 							</Typography>
@@ -192,7 +189,9 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 										{data.images.map((item) => (
 											<Box key={item.id}>
 												<Image
-													style={{ margin: 'auto' }}
+													style={{
+														margin: 'auto',
+													}}
 													alt={item.alternativeText}
 													width={104}
 													height={78}
@@ -304,6 +303,8 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 							justifyContent={'space-around'}>
 							{page.linksWithImages.map((item) => (
 								<LinkWithImage
+									width={150}
+									height={150}
 									key={item.id}
 									image={item.image}
 									link={item.link}></LinkWithImage>
@@ -313,66 +314,79 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 					<Typography marginTop='1em' component='h2' variant='h5'>
 						{data.seo?.h1 || data.name} характеристики
 					</Typography>
-					{data.snippets && (
+					{page.textAfterDescription && (
+						<ReactMarkdown
+							content={page.textAfterDescription}></ReactMarkdown>
+					)}
+					{page.benefits && (
 						<>
-							{data.snippets.textAfterDescription && (
-								<ReactMarkdown
-									content={
-										data.snippets.textAfterDescription
-									}></ReactMarkdown>
-							)}
-							{data.snippets.benefits && (
-								<>
-									<Typography component='h3' variant='h5'>
-										Почему мы лучшие в своем деле?
-									</Typography>
-									<Box
-										marginTop='2em'
-										display='flex'
-										justifyContent={'space-around'}>
-										{data.snippets.benefits.map((item) => (
-											<Box maxWidth={208} key={item.id}>
-												<Image
-													alt={item.alternativeText}
-													width={208}
-													height={156}
-													src={
-														publicRuntimeConfig.backendLocalUrl +
-														item.formats?.thumbnail
-															.url
-													}></Image>
-												<Typography
-													component='p'
-													variant='body1'>
-													{item.caption}
-												</Typography>
-											</Box>
-										))}
+							<Typography component='h3' variant='h5'>
+								Почему мы лучшие в своем деле?
+							</Typography>
+							<Box
+								marginTop='2em'
+								display='flex'
+								justifyContent={'space-around'}>
+								{page.benefits.map((item) => (
+									<Box maxWidth={208} key={item.id}>
+										<Image
+											alt={item.alternativeText}
+											width={150}
+											height={150}
+											src={
+												publicRuntimeConfig.backendLocalUrl +
+												(item.formats?.thumbnail.url ||
+													item.url)
+											}></Image>
+										<Typography
+											component='p'
+											marginY='1em'
+											textAlign='center'
+											variant='body1'>
+											{item.caption}
+										</Typography>
 									</Box>
-								</>
-							)}
-							{data.snippets.textAfterBenefits && (
-								<ReactMarkdown
-									content={
-										data.snippets.textAfterBenefits
-									}></ReactMarkdown>
-							)}
+								))}
+							</Box>
 						</>
 					)}
+					<Typography variant='h5' component='h2'>
+						Мы осуществляем доставку во все населенные пункты
+						Беларуси
+					</Typography>
+					<Typography padding='1em 0' variant='body1'>
+						Наши Запчасти б/у вы можете заказать с доставкой.
+						Идеальна наша доставка отлажена в следующих городах
+						Беларуси - Гродно, Минск, Брест, Гомель, Могилев,
+						Витебск. Так же мы сообщаем что работаем во всех городах
+						и деревнях, просто доставка займет немного больше
+						времени. Будьте уверены, мы приложим все силы, что бы
+						ваш товар - {data.h1 || data.name} был доставлен
+						максимально быстро.
+					</Typography>
 				</WhiteBox>
 				<SEOBox
 					content={data.seo?.content}
 					images={data.seo?.images}></SEOBox>
 				<CarouselProducts
 					title={
-						<Typography
-							component='h2'
-							marginBottom='1em'
-							marginTop='1em'
-							textAlign='center'
-							variant='h4'>
-							А ещё у нас есть для этого авто
-						</Typography>
+						<>
+							<Typography
+								component='h2'
+								marginBottom='1em'
+								marginTop='1em'
+								textAlign='center'
+								variant='h5'>
+								А ещё у нас есть для этого авто
+							</Typography>
+							<Typography
+								textAlign='center'
+								variant='body1'
+								marginBottom='1em'>
+								Предлагаем дополнительные запасные части для
+								данной марки авто
+							</Typography>
+						</>
 					}
 					data={relatedProducts}></CarouselProducts>
 			</Container>
@@ -427,9 +441,22 @@ export const getServerSideProps: GetServerSideProps<
 		}
 	}
 
+	const autoSynonyms = page?.autoSynonyms.split(',') || [];
+	let randomAutoSynonym =
+		autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
 	return {
 		notFound,
-		props: { data, page, relatedProducts },
+		props: {
+			data,
+			page: {
+				...page,
+				textAfterDescription: page?.textAfterDescription.replace(
+					'{}',
+					randomAutoSynonym
+				),
+			},
+			relatedProducts,
+		},
 	};
 };
 
