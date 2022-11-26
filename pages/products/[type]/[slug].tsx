@@ -1,4 +1,3 @@
-import { RestorePageOutlined } from '@mui/icons-material';
 import { Box, Button, Link, Typography, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchPageProduct } from 'api/pageProduct/pageProduct';
@@ -15,16 +14,15 @@ import CarouselProducts from 'components/CarouselProducts';
 import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
+import Image from 'components/Image';
 import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import SEOBox from 'components/SEOBox';
-
 // import ShoppingCartButton from 'components/ShoppingCartButton';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';
-import Image from 'next/image';
 import NextLink from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
@@ -45,6 +43,7 @@ interface Props {
 }
 
 const ProductPage = ({ data, page, relatedProducts }: Props) => {
+	console.log(data);
 	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
 	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isTablet = useMediaQuery((theme: any) =>
@@ -190,7 +189,9 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 										{data.images.map((item) => (
 											<Box key={item.id}>
 												<Image
-													style={{ margin: 'auto' }}
+													style={{
+														margin: 'auto',
+													}}
 													alt={item.alternativeText}
 													width={104}
 													height={78}

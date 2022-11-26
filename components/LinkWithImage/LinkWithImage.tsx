@@ -24,6 +24,7 @@ const LinkWithImage: FC<Props> = ({
 	return (
 		<NextLink href={link} target={targetLink}>
 			<Image
+				style={{ objectFit: 'contain' }}
 				alt={image.alternativeText}
 				width={width}
 				height={height}
