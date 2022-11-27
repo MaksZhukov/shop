@@ -4,7 +4,7 @@ import getConfig from 'next/config';
 import { PageSpareParts } from './types';
 const { publicRuntimeConfig } = getConfig();
 
-export const fetchPageMain = () =>
-	api.get<ApiResponse<PageSpareParts>>(`/page-main`, {
+export const fetchPageSpareParts = () =>
+	api.get<ApiResponse<PageSpareParts>>(`/page-spare-parts`, {
 		baseURL: publicRuntimeConfig.backendLocalUrl + '/api',
 	});

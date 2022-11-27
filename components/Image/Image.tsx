@@ -4,7 +4,11 @@ const Image = (props: ImageProps) => {
 	return (
 		<NextImage
 			{...props}
-			style={{ ...props.style, objectFit: 'contain' }}></NextImage>
+			style={{
+				...props.style,
+				objectFit: 'contain',
+				maxWidth: '100%',
+			}}></NextImage>
 	);
 };
 

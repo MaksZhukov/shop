@@ -31,7 +31,6 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 	const isMobile = useMediaQuery((theme: any) =>
 		theme.breakpoints.down('sm')
 	);
-	console.log(data);
 
 	return (
 		<Card className={styles.product}>

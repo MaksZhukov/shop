@@ -25,7 +25,7 @@ import { ChangeEvent, useEffect, useState, useRef } from 'react';
 import styles from './Catalog.module.scss';
 
 const DynamicNews = dynamic(() => import('components/News'));
-const DynamicReviews = dynamic(() => import('components/Reviews'));
+// const DynamicReviews = dynamic(() => import('components/Reviews'));
 const DynamicCarouselProducts = dynamic(
 	() => import('components/CarouselProducts')
 );
@@ -216,7 +216,6 @@ const Catalog = ({
 						config={filtersConfig}
 						total={total}
 						fetchData={throttledFetchProducts}></Filters>
-					<DynamicReviews></DynamicReviews>
 				</Box>
 				<Box
 					marginRight='1em'
