@@ -9,7 +9,7 @@ import Content from '../components/Content';
 import Layout from '../components/Layout';
 import { createTheme, Snackbar, Stack, ThemeProvider } from '@mui/material';
 import { green } from '@mui/material/colors';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
 	getJwt,
 	getReviewEmail,
@@ -20,6 +20,9 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './app.scss';
 import NotistackService from 'services/NotistackService';
+import { fetchBrands } from 'api/brands/brands';
+import { MAX_LIMIT } from 'api/constants';
+import { Brand } from 'api/brands/types';
 
 let theme = createTheme({
 	typography: {
@@ -34,6 +37,7 @@ let theme = createTheme({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
+	const [brands, setBrands] = useState<Brand[]>(pageProps.brands ?? []);
 	useEffect(() => {
 		const tryFetchData = async () => {
 			let token = getJwt();
@@ -59,9 +63,17 @@ function MyApp({ Component, pageProps }: AppProps) {
 			}
 			store.setIsInitialRequestDone();
 		};
+		const fetchBrandsData = async () => {
+			if (!brands.length) {
+				const { data } = await fetchBrands({
+					pagination: { limit: MAX_LIMIT },
+				});
+				setBrands(data.data);
+			}
+		};
 		tryFetchData();
+		fetchBrandsData();
 	}, []);
-
 	return (
 		<ThemeProvider theme={theme}>
 			<Provider store={store}>
@@ -74,10 +86,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 					}}
 					maxSnack={3}>
 					<Layout>
-						<Header></Header>
+						<Header brands={brands}></Header>
 						<Content>
 							<RouteShield>
-								<Component {...pageProps} />
+								<Component {...pageProps} test={[]} />
 							</RouteShield>
 						</Content>
 						<Footer></Footer>

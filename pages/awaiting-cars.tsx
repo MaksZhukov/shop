@@ -42,7 +42,7 @@ import { getPageProps } from 'services/PagePropsService';
 import styles from './awaiting-cars.module.scss';
 
 const DynamicNews = dynamic(() => import('components/News'));
-const DynamicReviews = dynamic(() => import('components/Reviews'));
+const DynamicReviews = dynamic(() => import('components/Reviews(INACTIVE)'));
 
 interface Props {
 	data: PageAwaitingCars;
