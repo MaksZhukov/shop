@@ -260,8 +260,7 @@ const Home: NextPage<Props> = ({ data, cars = [], news = [], brands = [] }) => {
 						<Box padding='1em'>
 							<CarouselProducts
 								data={spareParts}
-								slidesToShow={2}
-								title='Запчасти'></CarouselProducts>
+								slidesToShow={2}></CarouselProducts>
 						</Box>
 					</Box>
 					<Box className={styles['sider-right']}>

@@ -15,7 +15,7 @@ const { publicRuntimeConfig } = getConfig();
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
 interface Props {
-  title: ReactNode;
+  title?: ReactNode;
   slidesToShow?: number;
   data: Product[];
 }
