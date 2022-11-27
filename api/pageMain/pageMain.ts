@@ -4,7 +4,7 @@ import getConfig from 'next/config';
 import { PageMain } from './types';
 const { publicRuntimeConfig } = getConfig();
 
-export const fetchPageProduct = () =>
-	api.get<ApiResponse<PageMain>>(`/page-product`, {
+export const fetchPageMain = () =>
+	api.get<ApiResponse<PageMain>>(`/page-main`, {
 		baseURL: publicRuntimeConfig.backendLocalUrl + '/api',
 	});
