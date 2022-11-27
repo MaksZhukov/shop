@@ -4,12 +4,9 @@ import { CircularProgress, Container } from '@mui/material';
 import { SEASONS } from 'components/Filters/constants';
 import { ApiResponse, Filters } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
-import Head from 'next/head';
 import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
-import { Brand } from 'api/brands/types';
 import { fetchTires } from 'api/tires/tires';
-import { useStore } from 'store';
 import { useSnackbar } from 'notistack';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { getPageProps } from 'services/PagePropsService';
@@ -17,13 +14,14 @@ import { fetchPageTires } from 'api/pageTires/pageTires';
 import { PageTires } from 'api/pageTires/types';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
+import { TireBrand } from 'api/tireBrands/types';
 
 interface Props {
 	data: PageTires;
 }
 
 const Tires: NextPage<Props> = ({ data }) => {
-	const [brands, setBrands] = useState<Brand[]>([]);
+	const [brands, setBrands] = useState<TireBrand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -67,9 +65,10 @@ const Tires: NextPage<Props> = ({ data }) => {
 				disabled: false,
 				type: 'autocomplete',
 				options: brands.map((item) => ({ label: item.name, ...item })),
-				onOpen: handleOpenAutocomplete<Brand>(
+				onOpen: handleOpenAutocomplete<TireBrand>(
 					!!brands.length,
 					setBrands,
+
 					() =>
 						fetchTireBrands({
 							pagination: { limit: MAX_LIMIT },
