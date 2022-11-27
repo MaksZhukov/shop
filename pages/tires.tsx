@@ -68,6 +68,7 @@ const Tires: NextPage<Props> = ({ data }) => {
 				onOpen: handleOpenAutocomplete<TireBrand>(
 					!!brands.length,
 					setBrands,
+
 					() =>
 						fetchTireBrands({
 							pagination: { limit: MAX_LIMIT },
