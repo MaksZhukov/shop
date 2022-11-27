@@ -1,37 +1,26 @@
 .wrapper {
 	display: flex;
 	&_tablet {
-		display: initial;
+		flex-direction: column;
 	}
 }
 
-.sider {
+.sider-left {
 	width: 250px;
+	&_left {
+		order: 1;
+	}
+	&_right {
+		order: 3;
+	}
 	&_tablet {
 		width: 100%;
+		&.sider_right {
+			order: 2;
+		}
 	}
 }
-.loading {
-	opacity: 0.5;
-}
 
-.content-items_no-data {
-	min-height: calc(100% - 64px - 2em);
-}
-.content {
-	width: calc(100% - 250px - 250px - 1em);
-	&_tablet {
-		width: 100%;
-	}
-}
-.search {
-	margin-right: 1em;
-	flex: 3;
-}
-.sort-select {
-	flex: 1;
-}
-
-.product {
-	display: flex;
+.sider-right {
+	width: 250px;
 }

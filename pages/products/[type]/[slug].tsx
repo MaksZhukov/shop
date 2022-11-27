@@ -15,7 +15,7 @@ import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
 import Image from 'components/Image';
-import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
+import LinkWithImage from 'components/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import SEOBox from 'components/SEOBox';
 // import ShoppingCartButton from 'components/ShoppingCartButton';
@@ -43,7 +43,6 @@ interface Props {
 }
 
 const ProductPage = ({ data, page, relatedProducts }: Props) => {
-	console.log(data);
 	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
 	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isTablet = useMediaQuery((theme: any) =>
@@ -104,7 +103,6 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 		wheel: 'диск, купить диск, продажа диска, диск авто',
 		tire: 'шина, купить шину, продажа шины, шина авто',
 	}[data.type];
-	console.log(page);
 	return (
 		<>
 			<HeadSEO
