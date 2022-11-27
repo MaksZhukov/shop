@@ -6,7 +6,7 @@ import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
 	data: PageBuyingCar;
@@ -120,4 +120,4 @@ const BuyingCar: NextPage<Props> = ({ data }) => {
 
 export default BuyingCar;
 
-export const getStaticProps = getStaticSeoProps(fetchPageBuyingCar);
+export const getStaticProps = getPageProps(fetchPageBuyingCar);

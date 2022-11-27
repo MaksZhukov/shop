@@ -11,7 +11,7 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import { Fragment, MutableRefObject, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -25,25 +25,57 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useOutsideClick } from 'rooks';
+import { Brand } from 'api/brands/types';
 
-const navigation = [
+const getNavigation = (brands: Brand[]) => [
 	{
-		name: 'Товары',
+		name: 'Магазин',
 		children: [
-			{ name: 'Запчасти', path: '/' },
+			{ name: 'Запчасти', path: '/spare-parts' },
 			{ name: 'Шины', path: '/tires' },
+			{ name: 'Салоны', path: '/' },
 			{ name: 'Диски', path: '/wheels' },
 		],
 	},
-	{ name: 'Ожидаемые авто', path: '/awaiting-cars' },
-	{ name: 'Покупка авто на запчасти', path: '/buying-car' },
-	{ name: 'Доставка/Оплата', path: '/shipping-and-payment' },
-	{ name: 'Гарантия', path: '/guarantee' },
-	{ name: 'Отзывы', path: '/reviews' },
+	{
+		name: 'О нас',
+		children: [
+			{ name: 'Как добраться', path: '/1' },
+			{ name: 'Фото разборки', path: '/1' },
+			{ name: 'Отзывы', path: '/1' },
+			{ name: 'Вакансии', path: '/1' },
+			{ name: 'Эвакуатор', path: '/1' },
+		],
+	},
+	{
+		name: 'Оплата',
+		children: [
+			{ name: 'Гарантия', path: '/1' },
+			{ name: 'Доставка', path: '/1' },
+			{ name: 'Рассрочка', path: '/1' },
+			{ name: 'Вакансии', path: '/1' },
+			{ name: 'Эвакуатор', path: '/1' },
+		],
+	},
 	{ name: 'Контакты', path: '/contacts' },
+	{ name: 'Блог', path: '/blog' },
+	{
+		name: 'Марки авто',
+		children: brands.map((item) => ({ name: item.name, path: '/path' })),
+	},
+	{ name: 'Ожидаемые авто', path: '/awaiting-cars' },
+	{ name: 'Авто на запчасти', children: [{ name: 'фото/вид', path: '/1' }] },
+	// { name: 'Покупка авто на запчасти', path: '/buying-car' },
+	// { name: 'Доставка/Оплата', path: '/shipping-and-payment' },
+	// { name: 'Гарантия', path: '/guarantee' },
+	// { name: 'Отзывы', path: '/reviews' },
 ];
 
-const Header = observer(() => {
+interface Props {
+	brands: Brand[];
+}
+
+const Header = observer(({ brands }: Props) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const router = useRouter();
 	const { code } = router.query;
@@ -97,6 +129,8 @@ const Header = observer(() => {
 		handleSubMenuClose();
 	};
 
+	const navigation = getNavigation(brands);
+
 	const renderLogo = (type: 'mobile' | 'desktop') => (
 		<Box
 			sx={{
@@ -131,7 +165,7 @@ const Header = observer(() => {
 						flex: '1',
 						justifyContent: 'center',
 				  })}>
-			{navigation.map((page) => {
+			{navigation.map((page, index) => {
 				return (
 					<Fragment key={page.name}>
 						{page.path ? (
@@ -179,53 +213,84 @@ const Header = observer(() => {
 											),
 										[styles[`menu__item_${type}`]]: type,
 									})}
-									endIcon={<KeyboardArrowDownIcon />}>
+									endIcon={
+										<KeyboardArrowDownIcon
+										// onClick={(
+										// 	event: React.MouseEvent<SVGElement>
+										// ) => {
+										// 	event.stopPropagation();
+										// 	if (anchorEl) {
+										// 		setAnchorEl(null);
+										// 	} else {
+										// 		console.log(event);
+										// 		setAnchorEl(
+										// 			event.currentTarget
+										// 				.parentElement
+										// 				?.parentElement as HTMLElement
+										// 		);
+										// 	}
+										// }}
+										/>
+									}>
 									{page.name}
 								</Button>
-								{isTablet && anchorEl && (
-									<MenuList sx={{ padding: 0 }}>
-										{page.children?.map((item) => (
-											<MenuItem
-												sx={{ minHeight: 'initial' }}
-												key={item.name}
-												onClick={handleSubMenuClick(
-													item.path
-												)}>
-												<Link href={item.path}>
-													{item.name}
-												</Link>
-											</MenuItem>
-										))}
-									</MenuList>
-								)}
-								{!isTablet && (
-									<Menu
-										classes={{
-											list: styles.submenu,
-											paper: styles['submenu-wrapper'],
-										}}
-										id='products-menu'
-										MenuListProps={{
-											'aria-labelledby':
-												'products-button',
-										}}
-										anchorEl={anchorEl}
-										open={!!anchorEl}
-										onClose={handleSubMenuClose}>
-										{page.children?.map((item) => (
-											<MenuItem
-												href={item.path}
-												key={item.name}
-												onClick={handleSubMenuClick(
-													item.path
-												)}>
-												<Link href={item.path}>
-													{item.name}
-												</Link>
-											</MenuItem>
-										))}
-									</Menu>
-								)}
+								{isTablet &&
+									anchorEl?.textContent === page.name && (
+										<MenuList
+											sx={{
+												padding: 0,
+											}}>
+											{page.children?.map((item) => (
+												<MenuItem
+													sx={{
+														minHeight: 'initial',
+													}}
+													key={item.name}
+													onClick={handleSubMenuClick(
+														item.path
+													)}>
+													<Link href={item.path}>
+														{item.name}
+													</Link>
+												</MenuItem>
+											))}
+										</MenuList>
+									)}
+								{!isTablet &&
+									anchorEl?.textContent === page.name && (
+										<Menu
+											classes={{
+												list: styles.submenu,
+												paper: styles[
+													'submenu-wrapper'
+												],
+											}}
+											id='products-menu'
+											MenuListProps={{
+												'aria-labelledby':
+													'products-button',
+											}}
+											anchorEl={anchorEl}
+											open={!!anchorEl}
+											onClose={handleSubMenuClose}>
+											{page.children?.map((item) => (
+												<MenuItem
+													sx={{
+														minWidth:
+															anchorEl.clientWidth,
+													}}
+													href={item.path}
+													key={item.name}
+													onClick={handleSubMenuClick(
+														item.path
+													)}>
+													<Link href={item.path}>
+														{item.name}
+													</Link>
+												</MenuItem>
+											))}
+										</Menu>
+									)}
 							</>
 						)}
 					</Fragment>

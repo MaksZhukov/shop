@@ -38,11 +38,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getPageProps } from 'services/PagePropsService';
 import styles from './awaiting-cars.module.scss';
 
 const DynamicNews = dynamic(() => import('components/News'));
-const DynamicReviews = dynamic(() => import('components/Reviews'));
+const DynamicReviews = dynamic(() => import('components/Reviews(INACTIVE)'));
 
 interface Props {
 	data: PageAwaitingCars;
@@ -355,4 +355,4 @@ const AwaitingCars: NextPage<Props> = ({ data }) => {
 
 export default AwaitingCars;
 
-export const getStaticProps = getStaticSeoProps(fetchPageAwaitingCars);
+export const getStaticProps = getPageProps(fetchPageAwaitingCars);

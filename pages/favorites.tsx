@@ -33,7 +33,6 @@ const Favorites = () => {
 		theme.breakpoints.down('sm')
 	);
 	let items = store.favorites.items;
-	console.log(items);
 	return (
 		<>
 			<Head>

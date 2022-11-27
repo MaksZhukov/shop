@@ -4,7 +4,7 @@ import { Container } from '@mui/system';
 import { fetchPageShippingAndPayment } from 'api/pageShippingAndPayment/pageShippingAndPayment';
 import { PageShippingAndPayment } from 'api/pageShippingAndPayment/types';
 import WhiteBox from 'components/WhiteBox';
-import { getStaticSeoProps } from 'services/StaticPropsService';
+import { getPageProps } from 'services/PagePropsService';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
 
@@ -65,4 +65,4 @@ const ShippingAndPayment: FC<Props> = ({ data }) => {
 
 export default ShippingAndPayment;
 
-export const getStaticProps = getStaticSeoProps(fetchPageShippingAndPayment);
+export const getStaticProps = getPageProps(fetchPageShippingAndPayment);
