@@ -22,16 +22,17 @@ import { useSnackbar } from 'notistack';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { getPageProps } from 'services/PagePropsService';
-import { fetchPageSpareParts } from 'api/pageSpareParts/pageSpareParts';
 import { PageSpareParts } from 'api/pageSpareParts/types';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
+import { fetchPageSpareParts } from 'api/pageSpareParts/pageSpareParts';
+import { getSparePartsFiltersConfig } from 'components/Filters/config';
 
 interface Props {
 	data: PageSpareParts;
 }
 
-const Home: NextPage<Props> = ({ data }) => {
+const SpareParts: NextPage<Props> = ({ data }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
@@ -84,140 +85,55 @@ const Home: NextPage<Props> = ({ data }) => {
 		setModels([]);
 	};
 
+	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(
+		!!models.length,
+		setModels,
+		() =>
+			fetchModels({
+				filters: { brand: brandId as string },
+				pagination: { limit: MAX_LIMIT },
+			})
+	);
+
+	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
+		!!generations.length,
+		setGenerations,
+		() =>
+			fetchGenerations({
+				filters: { model: modelId as string },
+				pagination: { limit: MAX_LIMIT },
+			})
+	);
+
+	const handleOpenAutocompleteKindSparePart =
+		handleOpenAutocomplete<KindSparePart>(
+			!!kindSpareParts.length,
+			setKindSpareParts,
+			() =>
+				fetchKindSpareParts({
+					pagination: { limit: MAX_LIMIT },
+				})
+		);
+
 	const noOptionsText = isLoading ? (
 		<CircularProgress size={20} />
 	) : (
 		<>Совпадений нет</>
 	);
 
-	const filtersConfig = [
-		[
-			{
-				id: 'brandId',
-				name: 'brandName',
-				placeholder: 'Марка',
-				disabled: false,
-				type: 'autocomplete',
-				options: brands.map((item) => ({ label: item.name, ...item })),
-				onOpen: handleOpenAutocomplete<Brand>(
-					!!brands.length,
-					setBrands,
-					() =>
-						fetchBrands({
-							pagination: { limit: MAX_LIMIT },
-						})
-				),
-				onChange: handleChangeBrandAutocomplete,
-				noOptionsText: noOptionsText,
-			},
-		],
-		[
-			{
-				id: 'modelId',
-				name: 'modelName',
-				placeholder: 'Модель',
-				type: 'autocomplete',
-				disabled: !brandId,
-				options: models.map((item) => ({ label: item.name, ...item })),
-				onOpen: handleOpenAutocomplete<Model>(
-					!!models.length,
-					setModels,
-					() =>
-						fetchModels({
-							filters: { brand: brandId as string },
-							pagination: { limit: MAX_LIMIT },
-						})
-				),
-				noOptionsText: noOptionsText,
-			},
-		],
-		[
-			{
-				id: 'generationId',
-				name: 'generationName',
-				placeholder: 'Поколение',
-				type: 'autocomplete',
-				disabled: !modelId,
-				options: generations.map((item) => ({
-					label: item.name,
-					...item,
-				})),
-				onOpen: handleOpenAutocomplete<Generation>(
-					!!generations.length,
-					setGenerations,
-					() =>
-						fetchGenerations({
-							filters: { model: modelId as string },
-							pagination: { limit: MAX_LIMIT },
-						})
-				),
-				noOptionsText: noOptionsText,
-			},
-		],
-		[
-			{
-				id: 'kindSparePartId',
-				name: 'kindSparePartName',
-				placeholder: 'Запчасть',
-				type: 'autocomplete',
-				disabled: false,
-				options: kindSpareParts.map((item) => ({
-					label: item.name,
-					...item,
-				})),
-				onOpen: handleOpenAutocomplete<KindSparePart>(
-					!!kindSpareParts.length,
-					setKindSpareParts,
-					() =>
-						fetchKindSpareParts({
-							pagination: { limit: MAX_LIMIT },
-						})
-				),
-				noOptionsText: noOptionsText,
-			},
-		],
-		[
-			{
-				id: 'volume',
-				placeholder: 'Обьем 2.0',
-				type: 'number',
-				disabled: false,
-			},
-		],
-		[
-			{
-				id: 'bodyStyle',
-				placeholder: 'Кузов',
-				type: 'autocomplete',
-				disabled: false,
-				options: BODY_STYLES,
-				onOpen: () => {},
-				noOptionsText: '',
-			},
-		],
-		[
-			{
-				id: 'transmission',
-				placeholder: 'Коробка',
-				type: 'autocomplete',
-				disabled: false,
-				options: TRANSMISSIONS,
-				onOpen: () => {},
-				noOptionsText: '',
-			},
-		],
-		[
-			{
-				id: 'fuel',
-				placeholder: 'Тип топлива',
-				type: 'autocomplete',
-				disabled: false,
-				options: FUELS,
-				onOpen: () => {},
-				noOptionsText: '',
-			},
-		],
-	];
+	const filtersConfig = getSparePartsFiltersConfig({
+		brands,
+		models,
+		kindSpareParts,
+		generations,
+		modelId,
+		brandId,
+		noOptionsText,
+		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
+		onOpenAutocompleteModel: handleOpenAutocompleteModel,
+		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
+		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
+	});
 
 	const generateFiltersByQuery = ({
 		min,
@@ -281,6 +197,6 @@ const Home: NextPage<Props> = ({ data }) => {
 	);
 };
 
-export default Home;
+export default SpareParts;
 
 export const getStaticProps = getPageProps(fetchPageSpareParts);
