@@ -60,7 +60,7 @@ const getNavigation = (brands: Brand[]) => [
     ],
   },
   { name: "Контакты", path: "/contacts" },
-  { name: "Блог", path: "/blog" },
+  { name: "Блог", path: "/articles" },
   {
     name: "Марки авто",
     children: brands.map((item) => ({ name: item.name, path: "/path" })),
@@ -76,7 +76,6 @@ const getNavigation = (brands: Brand[]) => [
 interface Props {
   brands: Brand[];
 }
-let isMenuActive = false;
 
 const Header = observer(({ brands }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
