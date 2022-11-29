@@ -161,6 +161,7 @@ const Catalog = ({
     router.replace(
       { pathname: router.pathname, query: router.query },
       undefined,
+
       { shallow: true }
     );
   });
