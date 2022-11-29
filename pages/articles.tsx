@@ -1,7 +1,7 @@
 import { Box, Pagination, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { fetchArticles } from "api/articles/articles";
-import { Article as IArticle } from "api/articles/types";
+import { Article, Article as IArticle } from "api/articles/types";
 import { fetchPageArticles } from "api/pageArticles/pageArticles";
 import { PageArticles } from "api/pageArticles/types";
 import { MetaResponse } from "api/types";
@@ -22,12 +22,10 @@ interface Props {
   articlesData: { articles: IArticle[]; meta: MetaResponse };
 }
 
-const Articles: NextPage<Props> = ({
-  data,
-  articlesData: { articles, meta },
-}) => {
+const Articles: NextPage<Props> = ({ data, articlesData }) => {
+  const [articles, setArticles] = useState<Article[]>(articlesData.articles);
   const [pageCount, setPageCount] = useState<number>(
-    meta.pagination?.pageCount ?? 0
+    articlesData.meta.pagination?.pageCount ?? 0
   );
   const router = useRouter();
 
@@ -35,9 +33,18 @@ const Articles: NextPage<Props> = ({
     page: string;
   };
 
-  const handleChangePage = (_: any, newPage: number) => {
+  const handleChangePage = async (_: any, newPage: number) => {
     router.query.page = newPage.toString();
-    router.push({ pathname: router.pathname, query: router.query });
+    router.push({ pathname: router.pathname, query: router.query }, undefined, {
+      shallow: true,
+    });
+    const {
+      data: { data },
+    } = await fetchArticles({
+      pagination: { page: +newPage },
+      populate: "image",
+    });
+    setArticles(data);
   };
   return (
     <Container>
@@ -46,30 +53,41 @@ const Articles: NextPage<Props> = ({
         description={data.seo?.description || "Статью"}
         keywords={data.seo?.keywords || "статья"}
       ></HeadSEO>
-      <Typography component="h1" variant="h3">
-        {data.seo.h1}
-      </Typography>
+
       <WhiteBox>
+        <Typography
+          textAlign="center"
+          component="h1"
+          variant="h4"
+          marginBottom="1em"
+        >
+          {data.seo?.h1 || "Статьи"}
+        </Typography>
         {articles.map((item) => (
-          <Box key={item.id}>
+          <Box marginBottom="1em" key={item.id}>
             <Image
               alt={item.image.alternativeText}
               width={640}
               height={480}
-              src={publicRuntimeConfig + item.image.formats?.small.url}
+              src={
+                publicRuntimeConfig.backendLocalUrl +
+                item.image.formats?.small.url
+              }
             ></Image>
             <Typography>{item.name}</Typography>
             <Typography>{item.type}</Typography>
           </Box>
         ))}
-        <Pagination
-          page={+page}
-          siblingCount={2}
-          color="primary"
-          count={pageCount}
-          onChange={handleChangePage}
-          variant="outlined"
-        />
+        <Box display="flex" justifyContent="center">
+          <Pagination
+            page={+page}
+            siblingCount={2}
+            color="primary"
+            count={3}
+            onChange={handleChangePage}
+            variant="outlined"
+          />
+        </Box>
       </WhiteBox>
       <SEOBox images={data.seo?.images} content={data.seo?.content}></SEOBox>
     </Container>
@@ -79,6 +97,10 @@ const Articles: NextPage<Props> = ({
 export default Articles;
 
 export const getServerSideProps = getPageProps(fetchPageArticles, async () => {
-  const { data } = await fetchArticles({ pagination: { limit: 10 } }, true);
+  const { data } = await fetchArticles(
+    { pagination: { limit: 10 }, populate: "image" },
+    true
+  );
+  console.log("hello");
   return { articlesData: { articles: data.data, meta: data.meta } };
 });

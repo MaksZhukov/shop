@@ -6,7 +6,7 @@ export const fetchArticles = (
   params: CollectionParams,
   isServerRequest: boolean = false
 ) =>
-  api.get<ApiResponse<Article[]>>("/brands", {
+  api.get<ApiResponse<Article[]>>("/articles", {
     params,
     headers: { isServerRequest },
   });
