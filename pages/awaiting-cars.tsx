@@ -242,7 +242,7 @@ const AwaitingCars: NextPage<Props> = ({ data }) => {
 					router.push({
 						pathname: router.pathname,
 						query: router.query,
-					});
+					}, undefined, {shallow: true});
 				}
 				setTotal(pagination.total);
 			}
@@ -261,7 +261,7 @@ const AwaitingCars: NextPage<Props> = ({ data }) => {
 
 	const handleChangePage = (_: any, newPage: number) => {
 		router.query.page = newPage.toString();
-		router.push({ pathname: router.pathname, query: router.query });
+		router.push({ pathname: router.pathname, query: router.query }, undefined, {shallow: true});
 	};
 
 	return (

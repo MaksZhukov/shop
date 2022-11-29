@@ -67,7 +67,7 @@ const Profile = ({ onClickSignIn }: Props) => {
 				{ variant: 'error' }
 			);
 		}
-		router.push('/');
+		router.push('/', undefined, { shallow: true });
 	};
 
 	const handleClickLink = (path: string) => () => {

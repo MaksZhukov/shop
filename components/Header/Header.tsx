@@ -125,7 +125,7 @@ const Header = observer(({ brands }: Props) => {
   };
 
   const handleSubMenuClick = (path: string) => () => {
-    router.push(path);
+    router.push(path, undefined, {shallow: true});
     handleSubMenuClose();
   };
 
