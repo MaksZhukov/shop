@@ -41,7 +41,7 @@ const Filters = ({
         delete router.query[key];
       }
     });
-    router.push({ pathname: router.pathname, query: router.query });
+    router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
   };
 
   const handleChangeNumberInput =

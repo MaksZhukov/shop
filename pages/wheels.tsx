@@ -70,7 +70,7 @@ const Wheels: NextPage<Props> = ({ data }) => {
 			delete router.query.modelName;
 			delete router.query.modelId;
 		}
-		router.push({ pathname: router.pathname, query: router.query });
+		router.push({ pathname: router.pathname, query: router.query }, undefined, {shallow: true});
 		setModels([]);
 	};
 
