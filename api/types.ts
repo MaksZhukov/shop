@@ -21,16 +21,18 @@ export type Image = {
 	};
 };
 
+export type MetaResponse = {
+	pagination?: {
+		page: number;
+		pageCount: number;
+		pageSize: number;
+		total: number;
+	};
+}
+
 export type ApiResponse<T = any> = {
 	data: T;
-	meta: {
-		pagination?: {
-			page: number;
-			pageCount: number;
-			pageSize: number;
-			total: number;
-		};
-	};
+	meta: MetaResponse;
 };
 
 export type Filters = {
