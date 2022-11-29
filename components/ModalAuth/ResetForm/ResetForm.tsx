@@ -48,7 +48,7 @@ const ResetForm = ({ onChangeType, onChangeIsLoading, isLoading }: Props) => {
 		try {
 			await resetPassword(code, password, passwordConfirmation);
 			enqueueSnackbar('Пароль успешно изменён', { variant: 'success' });
-			router.push('/');
+			router.push('/', undefined, { shallow: true });
 			onChangeType('login');
 		} catch (err) {
 			if (axios.isAxiosError(err)) {

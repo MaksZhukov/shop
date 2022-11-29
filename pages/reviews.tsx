@@ -60,7 +60,7 @@ const Reviews = ({ data }: Props) => {
 
 	const handleChangePage = (_: any, newPage: number) => {
 		router.query.page = newPage.toString();
-		router.push({ pathname: router.pathname, query: router.query });
+		router.push({ pathname: router.pathname, query: router.query }, undefined, {shallow: true});
 	};
 
 	return (
