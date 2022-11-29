@@ -1,9 +1,6 @@
 import { api } from '..';
 import { ApiResponse, CollectionParams } from 'api/types';
 import { Car } from './types';
-import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
 
 export const fetchCars = (
 	params?: CollectionParams,

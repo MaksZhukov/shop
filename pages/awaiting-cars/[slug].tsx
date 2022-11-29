@@ -10,7 +10,7 @@ import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps } from 'next';
 import getConfig from 'next/config';
-import Head from 'next/head';
+import ReactPlayer from 'react-player';
 import Image from 'next/image';
 import Slider from 'react-slick';
 import styles from './awaiting-car.module.scss';
@@ -129,6 +129,9 @@ const CarPage = ({ data }: Props) => {
 							</Box>
 						</Box>
 					</Box>
+					{data.videoLink && (
+						<ReactPlayer url={data.videoLink}></ReactPlayer>
+					)}
 				</WhiteBox>
 				<SEOBox
 					images={data.seo?.images}
