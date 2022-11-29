@@ -13,6 +13,7 @@ export interface Car {
 	manufactureDate: Date;
 	bodyStyle: string;
 	engine: string;
+	videoLink: string;
 	generation?: Generation;
 	model?: Model;
 	brand?: Brand;

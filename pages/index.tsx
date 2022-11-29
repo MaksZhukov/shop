@@ -116,7 +116,7 @@ const Home: NextPage<Props> = ({ data, cars = [], news = [], brands = [] }) => {
 			delete router.query.generationId;
 			delete router.query.generationName;
 		}
-		router.push({ pathname: router.pathname, query: router.query });
+		router.push({ pathname: router.pathname, query: router.query }, undefined, {shallow: true});
 		setModels([]);
 	};
 
