@@ -1,6 +1,6 @@
 import { Image, SEO } from 'api/types';
 
 export interface PageCarDismantlingPhotos {
-	images: Image[];
+	images?: Image[];
 	seo: SEO;
 }
