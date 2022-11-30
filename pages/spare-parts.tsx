@@ -2,18 +2,13 @@ import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import Catalog from 'components/Catalog';
 import { CircularProgress, Container } from '@mui/material';
-import {
-	BODY_STYLES,
-	FUELS,
-	TRANSMISSIONS,
-} from 'components/Filters/constants';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
-import { ApiResponse, Filters } from 'api/types';
+import { ApiResponse, Filters, LinkWithImage } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
@@ -23,16 +18,35 @@ import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { getPageProps } from 'services/PagePropsService';
 import { PageSpareParts } from 'api/pageSpareParts/types';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
 import { fetchPageSpareParts } from 'api/pageSpareParts/pageSpareParts';
 import { getSparePartsFiltersConfig } from 'components/Filters/config';
+import { fetchPageMain } from 'api/pageMain/pageMain';
+import { fetchCars } from 'api/cars/cars';
+import { fetchNews } from 'api/news/news';
+import { Car } from 'api/cars/types';
+import { OneNews } from './api/news';
 
 interface Props {
 	data: PageSpareParts;
+	cars: Car[];
+	news: OneNews[];
+	advertising: LinkWithImage[];
+	autocomises: LinkWithImage[];
+	deliveryAuto: LinkWithImage;
+	discounts: LinkWithImage[];
+	serviceStations: LinkWithImage[];
 }
 
-const SpareParts: NextPage<Props> = ({ data }) => {
+const SpareParts: NextPage<Props> = ({
+	data,
+	advertising,
+	autocomises,
+	deliveryAuto,
+	discounts,
+	serviceStations,
+	cars,
+	news,
+}) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
@@ -81,7 +95,11 @@ const SpareParts: NextPage<Props> = ({ data }) => {
 			delete router.query.generationId;
 			delete router.query.generationName;
 		}
-		router.push({ pathname: router.pathname, query: router.query }, undefined, {shallow: true});
+		router.push(
+			{ pathname: router.pathname, query: router.query },
+			undefined,
+			{ shallow: true }
+		);
 		setModels([]);
 	};
 
@@ -160,43 +178,70 @@ const SpareParts: NextPage<Props> = ({ data }) => {
 	};
 
 	return (
-		<>
-			<HeadSEO
-				title={data.seo?.title || 'Запчасти'}
-				description={data.seo?.description || 'Запчасти от автомобилей'}
-				keywords={
-					data.seo?.keywords ||
-					'запчасти, запчасти от авто, запчасти на продажу, купить запчасти'
-				}></HeadSEO>
-			<Container>
-				<Catalog
-					dataFieldsToShow={[
-						{
-							id: 'brand',
-							name: 'Марка',
-						},
-						{
-							id: 'model',
-							name: 'Модель',
-						},
-						{
-							id: 'kindSparePart',
-							name: 'Запчасть',
-						},
-					]}
-					searchPlaceholder='Поиск детали ...'
-					filtersConfig={filtersConfig}
-					title={data.seo?.h1 || 'запчасти'}
-					fetchData={fetchSpareParts}
-					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
-			</Container>
-		</>
+		<Catalog
+			newProductsTitle='Запчасти'
+			advertising={advertising}
+			autocomises={autocomises}
+			deliveryAuto={deliveryAuto}
+			discounts={discounts}
+			serviceStations={serviceStations}
+			cars={cars}
+			news={news}
+			dataFieldsToShow={[
+				{
+					id: 'brand',
+					name: 'Марка',
+				},
+				{
+					id: 'model',
+					name: 'Модель',
+				},
+				{
+					id: 'kindSparePart',
+					name: 'Запчасть',
+				},
+			]}
+			searchPlaceholder='Поиск детали ...'
+			filtersConfig={filtersConfig}
+			seo={data.seo}
+			fetchData={fetchSpareParts}
+			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 	);
 };
 
 export default SpareParts;
 
-export const getStaticProps = getPageProps(fetchPageSpareParts);
+export const getStaticProps = getPageProps(
+	fetchPageSpareParts,
+	async () => {
+		const {
+			data: {
+				data: {
+					advertising,
+					autocomises,
+					deliveryAuto,
+					discounts,
+					serviceStations,
+				},
+			},
+		} = await fetchPageMain();
+		return {
+			advertising,
+			autocomises,
+			deliveryAuto,
+			discounts,
+			serviceStations,
+		};
+	},
+	async () => {
+		const { data } = await fetchCars(
+			{ populate: ['images'], pagination: { limit: 10 } },
+			true
+		);
+		return { cars: data.data };
+	},
+	async () => {
+		const { data } = await fetchNews();
+		return { news: data.data };
+	}
+);
