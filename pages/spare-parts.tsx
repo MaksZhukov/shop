@@ -211,7 +211,7 @@ const SpareParts: NextPage<Props> = ({
 
 export default SpareParts;
 
-export const getStaticProps = getPageProps(
+export const getServerSideProps = getPageProps(
 	fetchPageSpareParts,
 	async () => {
 		const {
