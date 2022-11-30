@@ -19,6 +19,7 @@ interface Props {
 	data: PageCarDismantlingPhotos;
 }
 
+
 const CarDismantlingPhotos: NextPage<Props> = ({ data }) => {
 	const [index, setIndex] = useState<number | null>(null);
 	const handleClickImage = (i: number) => () => {
