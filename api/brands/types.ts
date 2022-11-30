@@ -1,7 +1,7 @@
 import { Image } from "api/types";
 
 export interface Brand {
-	id: string;
+	id: number;
 	name: string;
 	image: Image
 }

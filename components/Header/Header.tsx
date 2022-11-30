@@ -34,38 +34,40 @@ const getNavigation = (brands: Brand[]) => [
 	{
 		name: 'Магазин',
 		children: [
-			{ name: 'Запчасти', path: '/spare-parts', id: 'spareParts', },
-			{ name: 'Шины', path: '/tires', id: 'tires', },
-			{ name: 'Салоны', path: '/', id: 'cabins', },
-			{ name: 'Диски', path: '/wheels', id: 'wheels', },
+			{ name: 'Запчасти', path: '/spare-parts', id: 'spareParts' },
+			{ name: 'Шины', path: '/tires', id: 'tires' },
+			{ name: 'Салоны', path: '/', id: 'cabins' },
+			{ name: 'Диски', path: '/wheels', id: 'wheels' },
 		],
 		id: 'shop',
 	},
 
-
 	{
-
 		name: 'О нас',
 		children: [
-			{ name: 'Как добраться', path: '/1', id: 'pathway', },
-			{ name: 'Фото разборки', path: '/1', id: 'photo', },
-			{ name: 'Отзывы', path: '/1', id: 'reviews', },
-			{ name: 'Вакансии', path: '/1', id: 'vacancy', },
-			{ name: 'Эвакуатор', path: '/1', id: 'towTruck', },
+			{ name: 'Как добраться', path: '/1', id: 'pathway' },
+			{
+				name: 'Фото разборки',
+				path: '/car-dismantling-photos',
+				id: 'photo',
+			},
+			{ name: 'Отзывы', path: '/1', id: 'reviews' },
+			{ name: 'Вакансии', path: '/1', id: 'vacancy' },
+			{ name: 'Эвакуатор', path: '/1', id: 'towTruck' },
 		],
 		id: 'aboutUs',
 	},
 	{
 		name: 'Оплата',
 		children: [
-			{ name: 'Гарантия', path: '/1', id: 'guarantee', },
-			{ name: 'Доставка', path: '/1', id: 'delivery', },
-			{ name: 'Рассрочка', path: '/1', id: 'installmentPlan', },
+			{ name: 'Гарантия', path: '/1', id: 'guarantee' },
+			{ name: 'Доставка', path: '/1', id: 'delivery' },
+			{ name: 'Рассрочка', path: '/1', id: 'installmentPlan' },
 		],
 		id: 'payment',
 	},
-	{ name: 'Контакты', path: '/contacts', id: 'contacts', },
-	{ name: 'Блог', path: '/articles', id: 'blog', },
+	{ name: 'Контакты', path: '/contacts', id: 'contacts' },
+	{ name: 'Блог', path: '/articles', id: 'blog' },
 	{
 		id: 'CarBrands',
 		name: 'Марки авто',
@@ -78,8 +80,12 @@ const getNavigation = (brands: Brand[]) => [
 			})}`,
 		})),
 	},
-	{ name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'expectedCars', },
-	{ name: 'Авто на запчасти', id: 'AutoParts', children: [{ name: 'фото/вид', path: '/1', id: 'photoParts', }] },
+	{ name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'expectedCars' },
+	{
+		name: 'Авто на запчасти',
+		id: 'AutoParts',
+		children: [{ name: 'фото/вид', path: '/1', id: 'photoParts' }],
+	},
 	// { name: 'Покупка авто на запчасти', path: '/buying-car' },
 	// { name: 'Доставка/Оплата', path: '/shipping-and-payment' },
 	// { name: 'Гарантия', path: '/guarantee' },
@@ -173,29 +179,29 @@ const Header = observer(({ brands }: Props) => {
 	const renderMenuList = (
 		page:
 			| {
-				name: string;
-				children: {
+					name: string;
+					children: {
+						name: string;
+						path: string;
+						id: string | number;
+					}[];
+					path?: undefined;
+					id: string | number;
+			  }
+			| {
 					name: string;
 					path: string;
-					id: string;
-				}[];
-				path?: undefined;
-				id: string;
-			}
-			| {
-				name: string;
-				path: string;
-				id: string;
-				children?: undefined;
-			}
+					id: string | number;
+					children?: undefined;
+			  }
 	) => (
 		<MenuList
 			{...(!isTablet
 				? {
-					onMouseLeave: handleMouseLeave,
-					onMouseEnter: handleMouseEnter,
-					className: styles.submenu,
-				}
+						onMouseLeave: handleMouseLeave,
+						onMouseEnter: handleMouseEnter,
+						className: styles.submenu,
+				  }
 				: {})}
 			sx={{
 				padding: 0,
@@ -241,14 +247,14 @@ const Header = observer(({ brands }: Props) => {
 			padding='0 10px'
 			{...(type === 'mobile'
 				? {
-					flexDirection: 'column',
-					sx: { display: { md: 'none', xs: 'flex' } },
-				}
+						flexDirection: 'column',
+						sx: { display: { md: 'none', xs: 'flex' } },
+				  }
 				: {
-					sx: { display: { md: 'flex', xs: 'none' } },
-					flex: '1',
-					justifyContent: 'center',
-				})}>
+						sx: { display: { md: 'flex', xs: 'none' } },
+						flex: '1',
+						justifyContent: 'center',
+				  })}>
 			{navigation.map((page, index) => {
 				return (
 					<Fragment key={page.id}>
@@ -269,13 +275,13 @@ const Header = observer(({ brands }: Props) => {
 								<Button
 									{...(!isTablet
 										? {
-											onMouseOver: handleMouseOver,
-											onMouseLeave: handleMouseLeave,
-											'aria-haspopup': 'true',
-											'aria-expanded': anchorEl
-												? 'true'
-												: undefined,
-										}
+												onMouseOver: handleMouseOver,
+												onMouseLeave: handleMouseLeave,
+												'aria-haspopup': 'true',
+												'aria-expanded': anchorEl
+													? 'true'
+													: undefined,
+										  }
 										: { onClick: handleClickButton })}
 									className={classNames(styles.menu__item, {
 										[styles['menu__item_active']]:
@@ -332,7 +338,7 @@ const Header = observer(({ brands }: Props) => {
 															anchorEl.clientWidth,
 														transformOrigin:
 															placement ===
-																'bottom-start'
+															'bottom-start'
 																? 'left top'
 																: 'left bottom',
 													}}
