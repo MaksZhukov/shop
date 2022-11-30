@@ -259,7 +259,7 @@ const Wheels: NextPage<Props> = ({
 
 export default Wheels;
 
-export const getStaticProps = getPageProps(
+export const getServerSideProps = getPageProps(
 	fetchPageWheels,
 	async () => {
 		const {
