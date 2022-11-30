@@ -5,6 +5,6 @@ import { PageSpareParts } from './types';
 const { publicRuntimeConfig } = getConfig();
 
 export const fetchPageSpareParts = () =>
-	api.get<ApiResponse<PageSpareParts>>(`/page-spare-parts`, {
+	api.get<ApiResponse<PageSpareParts>>(`/page-spare-part`, {
 		baseURL: publicRuntimeConfig.backendLocalUrl + '/api',
 	});
