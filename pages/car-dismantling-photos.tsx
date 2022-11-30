@@ -13,7 +13,7 @@ import { getPageProps } from 'services/PagePropsService';
 import Slider from 'react-slick';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react';
-import styles from './car-dismantling-photos.dev.module.scss';
+import styles from './car-dismantling-photos.module.scss';
 const { publicRuntimeConfig } = getConfig();
 interface Props {
 	data: PageCarDismantlingPhotos;
