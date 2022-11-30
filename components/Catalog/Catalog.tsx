@@ -282,7 +282,11 @@ const Catalog = ({
 							isTablet && styles.sider_tablet
 						)}>
 						<Filters
-							textTotal={textTotal ?? `Найдено: ${total}`}
+							textTotal={
+								textTotal ?? total
+									? `Найдено: ${total}`
+									: undefined
+							}
 							btn={filtersBtn}
 							config={filtersConfig}
 							total={total}
