@@ -181,7 +181,7 @@ const Tires: NextPage<Props> = ({
 
 export default Tires;
 
-export const getStaticProps = getPageProps(
+export const getServerSideProps = getPageProps(
 	fetchPageTires,
 	async () => {
 		const {
