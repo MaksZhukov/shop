@@ -45,7 +45,7 @@ const CarDismantlingPhotos: NextPage<Props> = ({ data }) => {
 						display='flex'
 						justifyContent='space-around'
 						flexWrap='wrap'>
-						{data.images.map((item, i) => (
+						{data.images?.map((item, i) => (
 							<Box
 								onClick={handleClickImage(i)}
 								sx={{ cursor: 'pointer' }}
@@ -88,7 +88,7 @@ const CarDismantlingPhotos: NextPage<Props> = ({ data }) => {
 							className={styles.slider}
 							slidesToShow={1}
 							initialSlide={index as number}>
-							{data.images.map((item) => (
+							{data.images?.map((item) => (
 								<Image
 									key={item.id}
 									width={640}
