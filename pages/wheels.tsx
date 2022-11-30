@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress, Container } from '@mui/material';
-import { ApiResponse, Filters } from 'api/types';
+import { ApiResponse, Filters, LinkWithImage } from 'api/types';
 import Head from 'next/head';
 import { fetchWheels } from 'api/wheels/wheels';
 import { fetchBrands } from 'api/brands/brands';
@@ -16,14 +16,33 @@ import { useRouter } from 'next/router';
 import { getPageProps } from 'services/PagePropsService';
 import { fetchPageWheels } from 'api/pageWheels/pageWheels';
 import { PageWheels } from 'api/pageWheels/types';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
+import { Car } from 'api/cars/types';
+import { OneNews } from 'api/news/types';
+import { fetchPageMain } from 'api/pageMain/pageMain';
+import { fetchCars } from 'api/cars/cars';
+import { fetchNews } from 'api/news/news';
 
 interface Props {
 	data: PageWheels;
+	cars: Car[];
+	news: OneNews[];
+	advertising: LinkWithImage[];
+	autocomises: LinkWithImage[];
+	deliveryAuto: LinkWithImage;
+	discounts: LinkWithImage[];
+	serviceStations: LinkWithImage[];
 }
 
-const Wheels: NextPage<Props> = ({ data }) => {
+const Wheels: NextPage<Props> = ({
+	data,
+	advertising,
+	autocomises,
+	deliveryAuto,
+	discounts,
+	serviceStations,
+	cars,
+	news,
+}) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -70,7 +89,11 @@ const Wheels: NextPage<Props> = ({ data }) => {
 			delete router.query.modelName;
 			delete router.query.modelId;
 		}
-		router.push({ pathname: router.pathname, query: router.query }, undefined, {shallow: true});
+		router.push(
+			{ pathname: router.pathname, query: router.query },
+			undefined,
+			{ shallow: true }
+		);
 		setModels([]);
 	};
 
@@ -199,47 +222,74 @@ const Wheels: NextPage<Props> = ({ data }) => {
 	};
 
 	return (
-		<>
-			<HeadSEO
-				title={data.seo?.title || 'Диски'}
-				description={data.seo?.description || 'Диски'}
-				keywords={
-					data.seo?.keywords ||
-					'диски, диски для автомобилей, купить диски, купить диски для авто'
-				}></HeadSEO>
-			<Container>
-				<Catalog
-					dataFieldsToShow={[
-						{
-							id: 'brand',
-							name: 'Марка',
-						},
-						{
-							id: 'model',
-							name: 'Модель',
-						},
-						{
-							id: 'diameter',
-							name: 'R диаметр',
-						},
-						{
-							id: 'count',
-							name: 'Количество',
-						},
-					]}
-					searchPlaceholder='Поиск дисков ...'
-					filtersConfig={filtersConfig}
-					title={data.seo?.h1 || 'диски'}
-					fetchData={fetchWheels}
-					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
-			</Container>
-		</>
+		<Catalog
+			seo={data.seo}
+			newProductsTitle='Диски'
+			advertising={advertising}
+			autocomises={autocomises}
+			deliveryAuto={deliveryAuto}
+			discounts={discounts}
+			serviceStations={serviceStations}
+			cars={cars}
+			news={news}
+			dataFieldsToShow={[
+				{
+					id: 'brand',
+					name: 'Марка',
+				},
+				{
+					id: 'model',
+					name: 'Модель',
+				},
+				{
+					id: 'diameter',
+					name: 'R диаметр',
+				},
+				{
+					id: 'count',
+					name: 'Количество',
+				},
+			]}
+			searchPlaceholder='Поиск дисков ...'
+			filtersConfig={filtersConfig}
+			fetchData={fetchWheels}
+			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 	);
 };
 
 export default Wheels;
 
-export const getStaticProps = getPageProps(fetchPageWheels);
+export const getStaticProps = getPageProps(
+	fetchPageWheels,
+	async () => {
+		const {
+			data: {
+				data: {
+					advertising,
+					autocomises,
+					deliveryAuto,
+					discounts,
+					serviceStations,
+				},
+			},
+		} = await fetchPageMain();
+		return {
+			advertising,
+			autocomises,
+			deliveryAuto,
+			discounts,
+			serviceStations,
+		};
+	},
+	async () => {
+		const { data } = await fetchCars(
+			{ populate: ['images'], pagination: { limit: 10 } },
+			true
+		);
+		return { cars: data.data };
+	},
+	async () => {
+		const { data } = await fetchNews();
+		return { news: data.data };
+	}
+);
