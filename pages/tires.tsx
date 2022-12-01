@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress, Container } from '@mui/material';
 import { SEASONS } from 'components/Filters/constants';
-import { ApiResponse, Filters } from 'api/types';
+import { ApiResponse, Filters, LinkWithImage } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
@@ -12,15 +12,34 @@ import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { getPageProps } from 'services/PagePropsService';
 import { fetchPageTires } from 'api/pageTires/pageTires';
 import { PageTires } from 'api/pageTires/types';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
 import { TireBrand } from 'api/tireBrands/types';
+import { fetchCars } from 'api/cars/cars';
+import { fetchPageMain } from 'api/pageMain/pageMain';
+import { fetchNews } from 'api/news/news';
+import { OneNews } from 'api/news/types';
+import { Car } from 'api/cars/types';
 
 interface Props {
 	data: PageTires;
+	cars: Car[];
+	news: OneNews[];
+	advertising: LinkWithImage[];
+	autocomises: LinkWithImage[];
+	deliveryAuto: LinkWithImage;
+	discounts: LinkWithImage[];
+	serviceStations: LinkWithImage[];
 }
 
-const Tires: NextPage<Props> = ({ data }) => {
+const Tires: NextPage<Props> = ({
+	data,
+	advertising,
+	autocomises,
+	deliveryAuto,
+	discounts,
+	serviceStations,
+	cars,
+	news,
+}) => {
 	const [brands, setBrands] = useState<TireBrand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -125,47 +144,74 @@ const Tires: NextPage<Props> = ({ data }) => {
 	};
 
 	return (
-		<>
-			<HeadSEO
-				title={data.seo?.title || 'Шины'}
-				description={data.seo?.description || 'Шины'}
-				keywords={
-					data.seo?.keywords ||
-					'шины, шины для автомобилей, купить шины, колеса'
-				}></HeadSEO>
-			<Container>
-				<Catalog
-					dataFieldsToShow={[
-						{
-							id: 'brand',
-							name: 'Марка',
-						},
-						{
-							id: 'diameter',
-							name: 'Диаметр',
-						},
-						{
-							id: 'width',
-							name: 'Ширина',
-						},
-						{
-							id: 'count',
-							name: 'Количество',
-						},
-					]}
-					searchPlaceholder='Поиск шин ...'
-					filtersConfig={filtersConfig}
-					title={data.seo?.h1 || 'шины'}
-					fetchData={fetchTires}
-					generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
-			</Container>
-		</>
+		<Catalog
+			seo={data.seo}
+			newProductsTitle='Шины'
+			advertising={advertising}
+			autocomises={autocomises}
+			deliveryAuto={deliveryAuto}
+			discounts={discounts}
+			serviceStations={serviceStations}
+			cars={cars}
+			news={news}
+			dataFieldsToShow={[
+				{
+					id: 'brand',
+					name: 'Марка',
+				},
+				{
+					id: 'diameter',
+					name: 'Диаметр',
+				},
+				{
+					id: 'width',
+					name: 'Ширина',
+				},
+				{
+					id: 'count',
+					name: 'Количество',
+				},
+			]}
+			searchPlaceholder='Поиск шин ...'
+			filtersConfig={filtersConfig}
+			fetchData={fetchTires}
+			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 	);
 };
 
 export default Tires;
 
-export const getStaticProps = getPageProps(fetchPageTires);
+export const getServerSideProps = getPageProps(
+	fetchPageTires,
+	async () => {
+		const {
+			data: {
+				data: {
+					advertising,
+					autocomises,
+					deliveryAuto,
+					discounts,
+					serviceStations,
+				},
+			},
+		} = await fetchPageMain();
+		return {
+			advertising,
+			autocomises,
+			deliveryAuto,
+			discounts,
+			serviceStations,
+		};
+	},
+	async () => {
+		const { data } = await fetchCars(
+			{ populate: ['images'], pagination: { limit: 10 } },
+			true
+		);
+		return { cars: data.data };
+	},
+	async () => {
+		const { data } = await fetchNews();
+		return { news: data.data };
+	}
+);

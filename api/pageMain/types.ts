@@ -4,7 +4,7 @@ export interface PageMain {
 	autocomises?: LinkWithImage[];
 	banner?: Image;
 	textAfterBrands: string;
-	seo?: SEO;
+	seo: SEO | null;
 	discounts?: LinkWithImage[];
 	advertising?: LinkWithImage[];
 	serviceStations?: LinkWithImage[];
