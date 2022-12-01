@@ -95,7 +95,7 @@ const SpareParts: NextPage<Props> = ({
 			delete router.query.generationId;
 			delete router.query.generationName;
 		}
-		router.push(\
+		router.push(
 			{ pathname: router.pathname, query: router.query },
 			undefined,
 			{ shallow: true }

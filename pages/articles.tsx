@@ -1,4 +1,4 @@
-import { Box, Pagination, Typography } from "@mui/material";
+import { Box, Link, Pagination, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { fetchArticles } from "api/articles/articles";
 import { Article, Article as IArticle } from "api/articles/types";
@@ -14,8 +14,11 @@ import getConfig from "next/config";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { getPageProps } from "services/PagePropsService";
+import NextLink from "next/link";
 
 const { publicRuntimeConfig } = getConfig();
+
+const LIMIT = 10;
 
 interface Props {
   data: PageArticles;
@@ -24,9 +27,7 @@ interface Props {
 
 const Articles: NextPage<Props> = ({ data, articlesData }) => {
   const [articles, setArticles] = useState<Article[]>(articlesData.articles);
-  const [pageCount, setPageCount] = useState<number>(
-    articlesData.meta.pagination?.pageCount ?? 0
-  );
+  const pageCount = articlesData.meta.pagination?.pageCount ?? 0;
   const router = useRouter();
 
   const { page = "1" } = router.query as {
@@ -41,7 +42,7 @@ const Articles: NextPage<Props> = ({ data, articlesData }) => {
     const {
       data: { data },
     } = await fetchArticles({
-      pagination: { page: +newPage },
+      pagination: { page: +newPage, pageSize: LIMIT },
       populate: "image",
     });
     setArticles(data);
@@ -64,30 +65,51 @@ const Articles: NextPage<Props> = ({ data, articlesData }) => {
           {data.seo?.h1 || "Статьи"}
         </Typography>
         {articles.map((item) => (
-          <Box marginBottom="1em" key={item.id}>
+          <Box display="flex" marginBottom="2em" key={item.id}>
             <Image
               alt={item.image.alternativeText}
-              width={640}
-              height={480}
+              width={208}
+              height={156}
               src={
                 publicRuntimeConfig.backendLocalUrl +
-                item.image.formats?.small.url
+                item.image.formats?.thumbnail.url
               }
             ></Image>
-            <Typography>{item.name}</Typography>
-            <Typography>{item.type}</Typography>
+
+            <Box marginLeft="1em">
+              <Typography component="h2" variant="h5">
+                <NextLink href={`/articles/${item.slug}`}>
+                  <Link component="span" underline="hover">
+                    {item.name}
+                  </Link>
+                </NextLink>
+              </Typography>
+              <Typography color="text.secondary">
+                Категория: {item.type}
+              </Typography>
+              <Typography>
+                {item.description.substring(0, 500)}...{" "}
+                <NextLink href={`/articles/${item.slug}`}>
+                  <Link component="span" underline="hover">
+                    читать далее
+                  </Link>
+                </NextLink>
+              </Typography>
+            </Box>
           </Box>
         ))}
-        <Box display="flex" justifyContent="center">
-          <Pagination
-            page={+page}
-            siblingCount={2}
-            color="primary"
-            count={3}
-            onChange={handleChangePage}
-            variant="outlined"
-          />
-        </Box>
+        {pageCount !== 1 && (
+          <Box display="flex" justifyContent="center">
+            <Pagination
+              page={+page}
+              siblingCount={2}
+              color="primary"
+              count={pageCount}
+              onChange={handleChangePage}
+              variant="outlined"
+            />
+          </Box>
+        )}
       </WhiteBox>
       <SEOBox images={data.seo?.images} content={data.seo?.content}></SEOBox>
     </Container>
@@ -96,11 +118,16 @@ const Articles: NextPage<Props> = ({ data, articlesData }) => {
 
 export default Articles;
 
-export const getServerSideProps = getPageProps(fetchPageArticles, async () => {
-  const { data } = await fetchArticles(
-    { pagination: { limit: 10 }, populate: "image" },
-    true
-  );
-  console.log("hello");
-  return { articlesData: { articles: data.data, meta: data.meta } };
-});
+export const getServerSideProps = getPageProps(
+  fetchPageArticles,
+  async (context) => {
+    const { data } = await fetchArticles(
+      {
+        pagination: { pageSize: LIMIT, page: context.query?.page ?? 1 },
+        populate: "image",
+      },
+      true
+    );
+    return { articlesData: { articles: data.data, meta: data.meta } };
+  }
+);
