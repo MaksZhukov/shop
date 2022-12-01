@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import Catalog from 'components/Catalog';
-import { CircularProgress, Container } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
 import { ApiResponse, Filters, LinkWithImage } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
-import { fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { useSnackbar } from 'notistack';
@@ -25,16 +24,22 @@ import { fetchCars } from 'api/cars/cars';
 import { fetchNews } from 'api/news/news';
 import { Car } from 'api/cars/types';
 import { OneNews } from './api/news';
+import { fetchAutocomises } from 'api/autocomises/autocomises';
+import { fetchServiceStations } from 'api/serviceStations/serviceStations';
+import { Autocomis } from 'api/autocomises/types';
+import { ServiceStation } from 'api/serviceStations/types';
+import { fetchArticles } from 'api/articles/articles';
+import { Article } from 'api/articles/types';
 
 interface Props {
 	data: PageSpareParts;
 	cars: Car[];
-	news: OneNews[];
+	articles: Article[];
 	advertising: LinkWithImage[];
-	autocomises: LinkWithImage[];
+	autocomises: Autocomis[];
 	deliveryAuto: LinkWithImage;
 	discounts: LinkWithImage[];
-	serviceStations: LinkWithImage[];
+	serviceStations: ServiceStation[];
 }
 
 const SpareParts: NextPage<Props> = ({
@@ -45,7 +50,7 @@ const SpareParts: NextPage<Props> = ({
 	discounts,
 	serviceStations,
 	cars,
-	news,
+	articles,
 }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
@@ -55,33 +60,33 @@ const SpareParts: NextPage<Props> = ({
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
 
-  const { brandId = "", modelId = "" } = router.query as {
-    brandId: string;
-    modelId: string;
-  };
-  const handleOpenAutocomplete =
-    <T extends any>(
-      hasData: boolean,
-      setState: Dispatch<SetStateAction<T[]>>,
-      fetchFunc: () => Promise<AxiosResponse<ApiResponse<T[]>>>
-    ) =>
-    async () => {
-      if (!hasData) {
-        setIsLoading(true);
-        try {
-          const {
-            data: { data },
-          } = await fetchFunc();
-          setState(data);
-        } catch (err) {
-          enqueueSnackbar(
-            "Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку",
-            { variant: "error" }
-          );
-        }
-        setIsLoading(false);
-      }
-    };
+	const { brandId = '', modelId = '' } = router.query as {
+		brandId: string;
+		modelId: string;
+	};
+	const handleOpenAutocomplete =
+		<T extends any>(
+			hasData: boolean,
+			setState: Dispatch<SetStateAction<T[]>>,
+			fetchFunc: () => Promise<AxiosResponse<ApiResponse<T[]>>>
+		) =>
+		async () => {
+			if (!hasData) {
+				setIsLoading(true);
+				try {
+					const {
+						data: { data },
+					} = await fetchFunc();
+					setState(data);
+				} catch (err) {
+					enqueueSnackbar(
+						'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
+						{ variant: 'error' }
+					);
+				}
+				setIsLoading(false);
+			}
+		};
 
 	const handleChangeBrandAutocomplete = (_: any, selected: Brand | null) => {
 		if (selected) {
@@ -103,79 +108,79 @@ const SpareParts: NextPage<Props> = ({
 		setModels([]);
 	};
 
-  const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(
-    !!models.length,
-    setModels,
-    () =>
-      fetchModels({
-        filters: { brand: brandId as string },
-        pagination: { limit: MAX_LIMIT },
-      })
-  );
+	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(
+		!!models.length,
+		setModels,
+		() =>
+			fetchModels({
+				filters: { brand: brandId as string },
+				pagination: { limit: MAX_LIMIT },
+			})
+	);
 
-  const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
-    !!generations.length,
-    setGenerations,
-    () =>
-      fetchGenerations({
-        filters: { model: modelId as string },
-        pagination: { limit: MAX_LIMIT },
-      })
-  );
+	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
+		!!generations.length,
+		setGenerations,
+		() =>
+			fetchGenerations({
+				filters: { model: modelId as string },
+				pagination: { limit: MAX_LIMIT },
+			})
+	);
 
-  const handleOpenAutocompleteKindSparePart =
-    handleOpenAutocomplete<KindSparePart>(
-      !!kindSpareParts.length,
-      setKindSpareParts,
-      () =>
-        fetchKindSpareParts({
-          pagination: { limit: MAX_LIMIT },
-        })
-    );
+	const handleOpenAutocompleteKindSparePart =
+		handleOpenAutocomplete<KindSparePart>(
+			!!kindSpareParts.length,
+			setKindSpareParts,
+			() =>
+				fetchKindSpareParts({
+					pagination: { limit: MAX_LIMIT },
+				})
+		);
 
-  const noOptionsText = isLoading ? (
-    <CircularProgress size={20} />
-  ) : (
-    <>Совпадений нет</>
-  );
+	const noOptionsText = isLoading ? (
+		<CircularProgress size={20} />
+	) : (
+		<>Совпадений нет</>
+	);
 
-  const filtersConfig = getSparePartsFiltersConfig({
-    brands,
-    models,
-    kindSpareParts,
-    generations,
-    modelId,
-    brandId,
-    noOptionsText,
-    onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
-    onOpenAutocompleteModel: handleOpenAutocompleteModel,
-    onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
-    onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
-  });
+	const filtersConfig = getSparePartsFiltersConfig({
+		brands,
+		models,
+		kindSpareParts,
+		generations,
+		modelId,
+		brandId,
+		noOptionsText,
+		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
+		onOpenAutocompleteModel: handleOpenAutocompleteModel,
+		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
+		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
+	});
 
-  const generateFiltersByQuery = ({
-    min,
-    max,
-    brandId,
-    modelId,
-    generationId,
-    kindSparePartId,
-    kindSparePartName,
-    brandName,
-    modelName,
-    generationName,
-    ...others
-  }: {
-    [key: string]: string;
-  }): Filters => {
-    let filters: Filters = {
-      brand: brandId || undefined,
-      model: modelId || undefined,
-      generation: generationId || undefined,
-      kindSparePart: kindSparePartId || undefined,
-    };
-    return { ...filters, ...others };
-  };
+	const generateFiltersByQuery = ({
+		min,
+		max,
+		brandId,
+		modelId,
+		generationId,
+		kindSparePartId,
+		kindSparePartName,
+		brandName,
+		modelName,
+		generationName,
+		...others
+	}: {
+		[key: string]: string;
+	}): Filters => {
+		let filters: Filters = {
+			brand: brandId || undefined,
+			model: modelId || undefined,
+			generation: generationId || undefined,
+			kindSparePart: kindSparePartId || undefined,
+		};
+		return { ...filters, ...others };
+	};
 
 	return (
 		<Catalog
@@ -186,7 +191,7 @@ const SpareParts: NextPage<Props> = ({
 			discounts={discounts}
 			serviceStations={serviceStations}
 			cars={cars}
-			news={news}
+			articles={articles}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
@@ -213,24 +218,25 @@ export default SpareParts;
 
 export const getServerSideProps = getPageProps(
 	fetchPageSpareParts,
+	async () => ({
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data
+			.data,
+	}),
+	async () => ({
+		serviceStations: (
+			await fetchServiceStations({ populate: 'image' }, true)
+		).data.data,
+	}),
 	async () => {
 		const {
 			data: {
-				data: {
-					advertising,
-					autocomises,
-					deliveryAuto,
-					discounts,
-					serviceStations,
-				},
+				data: { advertising, deliveryAuto, discounts },
 			},
 		} = await fetchPageMain();
 		return {
 			advertising,
-			autocomises,
 			deliveryAuto,
 			discounts,
-			serviceStations,
 		};
 	},
 	async () => {
@@ -240,8 +246,7 @@ export const getServerSideProps = getPageProps(
 		);
 		return { cars: data.data };
 	},
-	async () => {
-		const { data } = await fetchNews();
-		return { news: data.data };
-	}
+	async () => ({
+		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+	})
 );
