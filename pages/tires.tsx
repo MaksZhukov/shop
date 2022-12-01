@@ -18,16 +18,22 @@ import { fetchPageMain } from 'api/pageMain/pageMain';
 import { fetchNews } from 'api/news/news';
 import { OneNews } from 'api/news/types';
 import { Car } from 'api/cars/types';
+import { fetchAutocomises } from 'api/autocomises/autocomises';
+import { fetchServiceStations } from 'api/serviceStations/serviceStations';
+import { Autocomis } from 'api/autocomises/types';
+import { ServiceStation } from 'api/serviceStations/types';
+import { fetchArticles } from 'api/articles/articles';
+import { Article } from 'api/articles/types';
 
 interface Props {
 	data: PageTires;
 	cars: Car[];
-	news: OneNews[];
+	articles: Article[];
 	advertising: LinkWithImage[];
-	autocomises: LinkWithImage[];
+	autocomises: Autocomis[];
 	deliveryAuto: LinkWithImage;
 	discounts: LinkWithImage[];
-	serviceStations: LinkWithImage[];
+	serviceStations: ServiceStation[];
 }
 
 const Tires: NextPage<Props> = ({
@@ -38,7 +44,7 @@ const Tires: NextPage<Props> = ({
 	discounts,
 	serviceStations,
 	cars,
-	news,
+	articles,
 }) => {
 	const [brands, setBrands] = useState<TireBrand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -153,7 +159,7 @@ const Tires: NextPage<Props> = ({
 			discounts={discounts}
 			serviceStations={serviceStations}
 			cars={cars}
-			news={news}
+			articles={articles}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
@@ -183,24 +189,25 @@ export default Tires;
 
 export const getServerSideProps = getPageProps(
 	fetchPageTires,
+	async () => ({
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data
+			.data,
+	}),
+	async () => ({
+		serviceStations: (
+			await fetchServiceStations({ populate: 'image' }, true)
+		).data.data,
+	}),
 	async () => {
 		const {
 			data: {
-				data: {
-					advertising,
-					autocomises,
-					deliveryAuto,
-					discounts,
-					serviceStations,
-				},
+				data: { advertising, deliveryAuto, discounts },
 			},
 		} = await fetchPageMain();
 		return {
 			advertising,
-			autocomises,
 			deliveryAuto,
 			discounts,
-			serviceStations,
 		};
 	},
 	async () => {
@@ -210,8 +217,7 @@ export const getServerSideProps = getPageProps(
 		);
 		return { cars: data.data };
 	},
-	async () => {
-		const { data } = await fetchNews();
-		return { news: data.data };
-	}
+	async () => ({
+		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+	})
 );

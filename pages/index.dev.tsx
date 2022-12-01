@@ -40,17 +40,32 @@ import Catalog from 'components/Catalog';
 import { OneNews } from 'api/news/types';
 import ReactMarkdown from 'components/ReactMarkdown';
 import CarouselProducts from 'components/CarouselProducts';
+import { fetchAutocomises } from 'api/autocomises/autocomises';
+import { fetchServiceStations } from 'api/serviceStations/serviceStations';
+import { Autocomis } from 'api/autocomises/types';
+import { ServiceStation } from 'api/serviceStations/types';
+import { fetchArticles } from 'api/articles/articles';
+import { Article } from 'api/articles/types';
 
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	data: PageMain;
 	cars: Car[];
-	news: OneNews[];
+	autocomises: Autocomis[];
+	serviceStations: ServiceStation[];
+	articles: Article[];
 	brands: Brand[];
 }
 
-const Home: NextPage<Props> = ({ data, cars = [], news = [], brands = [] }) => {
+const Home: NextPage<Props> = ({
+	data,
+	cars = [],
+	articles = [],
+	brands = [],
+	autocomises = [],
+	serviceStations = [],
+}) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
@@ -224,13 +239,13 @@ const Home: NextPage<Props> = ({ data, cars = [], news = [], brands = [] }) => {
 	return (
 		<Catalog
 			seo={data.seo}
-			serviceStations={data.serviceStations}
+			serviceStations={serviceStations}
 			advertising={data.advertising}
-			autocomises={data.autocomises}
+			autocomises={autocomises}
 			cars={cars}
 			deliveryAuto={data.deliveryAuto}
 			discounts={data.discounts}
-			news={news}
+			articles={articles}
 			filtersBtn={filtersBtn}
 			filtersConfig={filtersConfig}
 			middleContent={middleContent}
@@ -244,6 +259,15 @@ export default Home;
 
 export const getServerSideProps = getPageProps(
 	fetchPageMain,
+	async () => ({
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data
+			.data,
+	}),
+	async () => ({
+		serviceStations: (
+			await fetchServiceStations({ populate: 'image' }, true)
+		).data.data,
+	}),
 	async () => {
 		const { data } = await fetchCars(
 			{ populate: ['images'], pagination: { limit: 10 } },
@@ -251,10 +275,9 @@ export const getServerSideProps = getPageProps(
 		);
 		return { cars: data.data };
 	},
-	async () => {
-		const { data } = await fetchNews();
-		return { news: data.data };
-	},
+	async () => ({
+		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+	}),
 	async () => {
 		const { data } = await fetchBrands(
 			{
