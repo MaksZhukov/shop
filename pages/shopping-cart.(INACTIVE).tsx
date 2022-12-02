@@ -1,13 +1,5 @@
 //@ts-nocheck
-import {
-	Box,
-	Button,
-	Divider,
-	ListItem,
-	List,
-	Link,
-	useMediaQuery,
-} from '@mui/material';
+import { Box, Button, Divider, ListItem, List, Link, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { SparePart } from 'api/spareParts/types';
 import classNames from 'classnames';
@@ -30,211 +22,157 @@ import styles from './shopping-cart.module.scss';
 const { publicRuntimeConfig } = getConfig();
 
 const ShoppingCart = () => {
-	const [isCheckoutFormOpened, setIsCheckoutFormOpened] =
-		useState<boolean>(false);
-	const isMobile = useMediaQuery((theme: any) =>
-		theme.breakpoints.down('sm')
-	);
-	const store = useStore();
-	let items = store.cart.items;
+    const [isCheckoutFormOpened, setIsCheckoutFormOpened] = useState<boolean>(false);
+    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+    const store = useStore();
+    let items = store.cart.items;
 
-	const handleClick = () => {
-		setIsCheckoutFormOpened(true);
-	};
+    const handleClick = () => {
+        setIsCheckoutFormOpened(true);
+    };
 
-	return (
-		<>
-			<Head>
-				<title>Корзина</title>
-				<meta name='description' content='Корзина товаров'></meta>
-			</Head>
-			<Container>
-				<WhiteBox>
-					<Typography variant='h4' component='h1' textAlign='center'>
-						Корзина
-					</Typography>
-					{items.length ? (
-						<>
-							<List>
-								{items.map((item, index) => {
-									return (
-										<Fragment key={item.id}>
-											<ListItem
-												className={classNames(
-													isMobile &&
-														styles.list__item_mobile
-												)}
-												key={item.id}>
-												{item.product.images &&
-												item.product.images.some(
-													(image) => image.formats
-												) ? (
-													<Slider
-														className={classNames(
-															styles.slider,
-															isMobile &&
-																styles.slider_mobile
-														)}
-														autoplay
-														autoplaySpeed={3000}
-														arrows={false}
-														pauseOnHover>
-														{item.product.images
-															.filter(
-																(item) =>
-																	item.formats
-															)
-															.map((image) => (
-																<Image
-																	src={
-																		publicRuntimeConfig.backendLocalUrl +
-																		`${
-																			isMobile
-																				? image
-																						.formats
-																						?.small
-																						?.url ||
-																				  image.url
-																				: image
-																						.formats
-																						?.thumbnail
-																						?.url ||
-																				  image.url
-																		}`
-																	}
-																	alt={
-																		image.alternativeText
-																	}
-																	width={
-																		isMobile
-																			? 500
-																			: 150
-																	}
-																	height={
-																		isMobile
-																			? 375
-																			: 100
-																	}
-																	key={
-																		image.id
-																	}></Image>
-															))}
-													</Slider>
-												) : (
-													<EmptyImageIcon></EmptyImageIcon>
-												)}
-												<Box flex='1' padding='1em'>
-													<Typography
-														lineClamp={1}
-														marginBottom='0.5em'
-														variant='h5'
-														component='h2'>
-														<NextLink
-															href={`/products/${item.product.type}/${item.product.slug}`}>
-															<Link
-																component='span'
-																underline='hover'>
-																{
-																	item.product
-																		.name
-																}
-															</Link>
-														</NextLink>
-													</Typography>
+    return (
+        <>
+            <Head>
+                <title>Корзина</title>
+                <meta name="description" content="Корзина товаров"></meta>
+            </Head>
+            <Container>
+                <WhiteBox>
+                    <Typography variant="h4" component="h1" textAlign="center">
+                        Корзина
+                    </Typography>
+                    {items.length ? (
+                        <>
+                            <List>
+                                {items.map((item, index) => {
+                                    return (
+                                        <Fragment key={item.id}>
+                                            <ListItem
+                                                className={classNames(isMobile && styles.list__item_mobile)}
+                                                key={item.id}
+                                            >
+                                                {item.product.images &&
+                                                item.product.images.some((image) => image.formats) ? (
+                                                    <Slider
+                                                        className={classNames(
+                                                            styles.slider,
+                                                            isMobile && styles.slider_mobile
+                                                        )}
+                                                        autoplay
+                                                        autoplaySpeed={3000}
+                                                        arrows={false}
+                                                        pauseOnHover
+                                                    >
+                                                        {item.product.images
+                                                            .filter((item) => item.formats)
+                                                            .map((image) => (
+                                                                <Image
+                                                                    src={
+                                                                        publicRuntimeConfig.backendLocalUrl +
+                                                                        `${
+                                                                            isMobile
+                                                                                ? image.formats?.small?.url || image.url
+                                                                                : image.formats?.thumbnail?.url ||
+                                                                                  image.url
+                                                                        }`
+                                                                    }
+                                                                    alt={image.alternativeText}
+                                                                    width={isMobile ? 500 : 150}
+                                                                    height={isMobile ? 375 : 100}
+                                                                    key={image.id}
+                                                                ></Image>
+                                                            ))}
+                                                    </Slider>
+                                                ) : (
+                                                    <EmptyImageIcon></EmptyImageIcon>
+                                                )}
+                                                <Box flex="1" padding="1em">
+                                                    <Typography
+                                                        lineClamp={1}
+                                                        marginBottom="0.5em"
+                                                        variant="h5"
+                                                        component="h2"
+                                                    >
+                                                        <NextLink
+                                                            href={`/products/${item.product.type}/${item.product.slug}`}
+                                                        >
+                                                            <Link component="span" underline="hover">
+                                                                {item.product.name}
+                                                            </Link>
+                                                        </NextLink>
+                                                    </Typography>
 
-													{item.product
-														.description && (
-														<Typography
-															lineClamp={2}
-															color='text.secondary'
-															className={
-																styles.description
-															}>
-															{
-																item.product
-																	.description
-															}
-														</Typography>
-													)}
-												</Box>
-												<Box
-													display={
-														isMobile
-															? 'flex'
-															: 'block'
-													}
-													{...(isMobile && {
-														justifyContent: 'end',
-													})}>
-													<Typography
-														textAlign='center'
-														marginBottom='0.5em'
-														color='primary'
-														variant='h5'>
-														{item.product.price}{' '}
-														руб.
-														{!!item.product
-															.priceUSD && (
-															<Typography
-																color='text.secondary'
-																component='sup'>
-																(~
-																{item.product.priceUSD.toFixed()}
-																$)
-															</Typography>
-														)}
-													</Typography>
-													<Box textAlign='right'>
-														{/* <ShoppingCartButton
+                                                    {item.product.description && (
+                                                        <Typography
+                                                            lineClamp={2}
+                                                            color="text.secondary"
+                                                            className={styles.description}
+                                                        >
+                                                            {item.product.description}
+                                                        </Typography>
+                                                    )}
+                                                </Box>
+                                                <Box
+                                                    display={isMobile ? 'flex' : 'block'}
+                                                    {...(isMobile && {
+                                                        justifyContent: 'end',
+                                                    })}
+                                                >
+                                                    <Typography
+                                                        textAlign="center"
+                                                        marginBottom="0.5em"
+                                                        color="primary"
+                                                        variant="h5"
+                                                    >
+                                                        {item.product.price} руб.
+                                                        {!!item.product.priceUSD && (
+                                                            <Typography color="text.secondary" component="sup">
+                                                                (~
+                                                                {item.product.priceUSD.toFixed()}
+                                                                $)
+                                                            </Typography>
+                                                        )}
+                                                    </Typography>
+                                                    <Box textAlign="right">
+                                                        {/* <ShoppingCartButton
 															product={
 																item.product
 															}></ShoppingCartButton> */}
-														<FavoriteButton
-															product={
-																item.product
-															}></FavoriteButton>
-													</Box>
-												</Box>
-											</ListItem>
-											{index !== items.length - 1 && (
-												<Divider light></Divider>
-											)}
-										</Fragment>
-									);
-								})}
-							</List>
-							{!isCheckoutFormOpened ? (
-								<Button
-									onClick={handleClick}
-									variant='contained'>
-									Перейти к оформлению заказа
-								</Button>
-							) : // <CheckoutForm></CheckoutForm>
-							null}
-						</>
-					) : (
-						<Typography
-							variant='subtitle1'
-							marginY='1em'
-							textAlign='center'>
-							У вас нет товаров в корзине, добавьте их из{' '}
-							<NextLink href={'/'} passHref>
-								<Link
-									component='span'
-									textTransform={'uppercase'}>
-									Каталога
-								</Link>
-							</NextLink>
-						</Typography>
-					)}
-				</WhiteBox>
-			</Container>
-		</>
-	);
+                                                        <FavoriteButton product={item.product}></FavoriteButton>
+                                                    </Box>
+                                                </Box>
+                                            </ListItem>
+                                            {index !== items.length - 1 && <Divider light></Divider>}
+                                        </Fragment>
+                                    );
+                                })}
+                            </List>
+                            {!isCheckoutFormOpened ? (
+                                <Button onClick={handleClick} variant="contained">
+                                    Перейти к оформлению заказа
+                                </Button>
+                            ) : // <CheckoutForm></CheckoutForm>
+                            null}
+                        </>
+                    ) : (
+                        <Typography variant="subtitle1" marginY="1em" textAlign="center">
+                            У вас нет товаров в корзине, добавьте их из{' '}
+                            <NextLink href={'/'} passHref>
+                                <Link component="span" textTransform={'uppercase'}>
+                                    Каталога
+                                </Link>
+                            </NextLink>
+                        </Typography>
+                    )}
+                </WhiteBox>
+            </Container>
+        </>
+    );
 };
 
 export default observer(ShoppingCart);
 
 export async function getStaticProps() {
-	return { props: {}, notFound: true };
+    return { props: {}, notFound: true };
 }
