@@ -32,7 +32,7 @@ import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 
 interface Props {
-	data: PageSpareParts;
+	page: PageSpareParts;
 	cars: Car[];
 	articles: Article[];
 	advertising: LinkWithImage[];
@@ -43,7 +43,7 @@ interface Props {
 }
 
 const SpareParts: NextPage<Props> = ({
-	data,
+	page,
 	advertising,
 	autocomises,
 	deliveryAuto,
@@ -208,7 +208,7 @@ const SpareParts: NextPage<Props> = ({
 			]}
 			searchPlaceholder='Поиск детали ...'
 			filtersConfig={filtersConfig}
-			seo={data.seo}
+			seo={page.seo}
 			fetchData={fetchSpareParts}
 			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
 	);

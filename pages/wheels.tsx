@@ -28,7 +28,7 @@ import { Article } from 'api/articles/types';
 import { fetchArticles } from 'api/articles/articles';
 
 interface Props {
-	data: PageWheels;
+	page: PageWheels;
 	cars: Car[];
 	articles: Article[];
 	advertising: LinkWithImage[];
@@ -39,7 +39,7 @@ interface Props {
 }
 
 const Wheels: NextPage<Props> = ({
-	data,
+	page,
 	advertising,
 	autocomises,
 	deliveryAuto,
@@ -228,7 +228,7 @@ const Wheels: NextPage<Props> = ({
 
 	return (
 		<Catalog
-			seo={data.seo}
+			seo={page.seo}
 			newProductsTitle='Диски'
 			advertising={advertising}
 			autocomises={autocomises}
