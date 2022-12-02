@@ -10,3 +10,8 @@ export const fetchArticles = (
     params,
     headers: { isServerRequest },
   });
+
+export const fetchArtcle = (slug: string, isServerRequest = false) =>
+  api.get<ApiResponse<Article>>(`/articles/${slug}`, {
+    headers: { isServerRequest },
+  });

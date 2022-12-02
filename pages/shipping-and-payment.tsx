@@ -9,19 +9,19 @@ import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
 
 interface Props {
-	data: PageShippingAndPayment;
+	page: PageShippingAndPayment;
 }
 
-const ShippingAndPayment: FC<Props> = ({ data }) => {
+const ShippingAndPayment: FC<Props> = ({ page }) => {
 	return (
 		<>
 			<HeadSEO
-				title={data.seo?.title || 'Доставка и оплата'}
+				title={page.seo?.title || 'Доставка и оплата'}
 				description={
-					data.seo?.description || 'Доставка и оплата товаров'
+					page.seo?.description || 'Доставка и оплата товаров'
 				}
 				keywords={
-					data.seo?.keywords ||
+					page.seo?.keywords ||
 					'оплата, доставка, способы оплаты, расчет, доставка запчастей'
 				}></HeadSEO>
 			<Container>
@@ -31,7 +31,7 @@ const ShippingAndPayment: FC<Props> = ({ data }) => {
 						component='h1'
 						variant='h4'
 						textAlign='center'>
-						{data.seo?.h1 || 'Доставка/Оплата'}
+						{page.seo?.h1 || 'Доставка/Оплата'}
 					</Typography>
 					<Typography gutterBottom variant='subtitle1'>
 						Доставка б/у запчастей может быть в осуществлена в
@@ -56,8 +56,8 @@ const ShippingAndPayment: FC<Props> = ({ data }) => {
 					</Typography>
 				</WhiteBox>
 				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
+					images={page.seo?.images}
+					content={page.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);

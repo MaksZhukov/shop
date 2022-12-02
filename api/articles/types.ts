@@ -1,4 +1,4 @@
-import { Image } from "api/types";
+import { Image, SEO } from "api/types";
 
 export interface Article {
   id: number;
@@ -6,4 +6,7 @@ export interface Article {
   image: Image;
   description: string;
   type: string;
+  slug: string;
+  createdAt: string;
+  seo: SEO;
 }

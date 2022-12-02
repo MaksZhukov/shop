@@ -2,7 +2,6 @@ import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress, Container } from '@mui/material';
 import { ApiResponse, Filters, LinkWithImage } from 'api/types';
-import Head from 'next/head';
 import { fetchWheels } from 'api/wheels/wheels';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
@@ -21,27 +20,33 @@ import { OneNews } from 'api/news/types';
 import { fetchPageMain } from 'api/pageMain/pageMain';
 import { fetchCars } from 'api/cars/cars';
 import { fetchNews } from 'api/news/news';
+import { fetchAutocomises } from 'api/autocomises/autocomises';
+import { fetchServiceStations } from 'api/serviceStations/serviceStations';
+import { Autocomis } from 'api/autocomises/types';
+import { ServiceStation } from 'api/serviceStations/types';
+import { Article } from 'api/articles/types';
+import { fetchArticles } from 'api/articles/articles';
 
 interface Props {
-	data: PageWheels;
+	page: PageWheels;
 	cars: Car[];
-	news: OneNews[];
+	articles: Article[];
 	advertising: LinkWithImage[];
-	autocomises: LinkWithImage[];
+	autocomises: Autocomis[];
 	deliveryAuto: LinkWithImage;
 	discounts: LinkWithImage[];
-	serviceStations: LinkWithImage[];
+	serviceStations: ServiceStation[];
 }
 
 const Wheels: NextPage<Props> = ({
-	data,
+	page,
 	advertising,
 	autocomises,
 	deliveryAuto,
 	discounts,
 	serviceStations,
 	cars,
-	news,
+	articles,
 }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
@@ -223,7 +228,7 @@ const Wheels: NextPage<Props> = ({
 
 	return (
 		<Catalog
-			seo={data.seo}
+			seo={page.seo}
 			newProductsTitle='Диски'
 			advertising={advertising}
 			autocomises={autocomises}
@@ -231,7 +236,7 @@ const Wheels: NextPage<Props> = ({
 			discounts={discounts}
 			serviceStations={serviceStations}
 			cars={cars}
-			news={news}
+			articles={articles}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
@@ -261,24 +266,25 @@ export default Wheels;
 
 export const getServerSideProps = getPageProps(
 	fetchPageWheels,
+	async () => ({
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data
+			.data,
+	}),
+	async () => ({
+		serviceStations: (
+			await fetchServiceStations({ populate: 'image' }, true)
+		).data.data,
+	}),
 	async () => {
 		const {
 			data: {
-				data: {
-					advertising,
-					autocomises,
-					deliveryAuto,
-					discounts,
-					serviceStations,
-				},
+				data: { advertising, deliveryAuto, discounts },
 			},
 		} = await fetchPageMain();
 		return {
 			advertising,
-			autocomises,
 			deliveryAuto,
 			discounts,
-			serviceStations,
 		};
 	},
 	async () => {
@@ -288,8 +294,7 @@ export const getServerSideProps = getPageProps(
 		);
 		return { cars: data.data };
 	},
-	async () => {
-		const { data } = await fetchNews();
-		return { news: data.data };
-	}
+	async () => ({
+		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+	})
 );

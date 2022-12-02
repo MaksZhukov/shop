@@ -9,23 +9,23 @@ import Head from 'next/head';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	data: PageGuarantee;
+	page: PageGuarantee;
 }
 
-const Guarantee = ({ data }: Props) => {
+const Guarantee = ({ page }: Props) => {
 	return (
 		<>
 			<HeadSEO
-				title={data.seo?.title || 'Гарантия'}
-				description={data.seo?.description || 'Гарантия на товары'}
+				title={page.seo?.title || 'Гарантия'}
+				description={page.seo?.description || 'Гарантия на товары'}
 				keywords={
-					data.seo?.keywords ||
+					page.seo?.keywords ||
 					'гарантия, гарантия на запчасти, запчасти, гарантия на товары, условия гарантии'
 				}></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-						{data.seo?.h1 || 'Гарантия'}
+						{page.seo?.h1 || 'Гарантия'}
 					</Typography>
 					<Typography gutterBottom variant='h6'>
 						{' '}
@@ -122,8 +122,8 @@ const Guarantee = ({ data }: Props) => {
 					</Typography>
 				</WhiteBox>
 				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
+					images={page.seo?.images}
+					content={page.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
