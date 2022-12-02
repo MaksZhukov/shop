@@ -37,13 +37,9 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 
 	const handleChangePage = async (_: any, newPage: number) => {
 		router.query.page = newPage.toString();
-		router.push(
-			{ pathname: router.pathname, query: router.query },
-			undefined,
-			{
-				shallow: true,
-			}
-		);
+		router.push({ pathname: router.pathname, query: router.query }, undefined, {
+			shallow: true,
+		});
 		const {
 			data: { data },
 		} = await fetchArticles({
@@ -57,14 +53,11 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 			<HeadSEO
 				title={page.seo?.title || 'Статьи'}
 				description={page.seo?.description || 'Статью'}
-				keywords={page.seo?.keywords || 'статья'}></HeadSEO>
+				keywords={page.seo?.keywords || 'статья'}
+			></HeadSEO>
 
 			<WhiteBox>
-				<Typography
-					textAlign='center'
-					component='h1'
-					variant='h4'
-					marginBottom='1em'>
+				<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
 					{page.seo?.h1 || 'Статьи'}
 				</Typography>
 				{data.map((item) => (
@@ -73,7 +66,8 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 						description={item.description}
 						name={item.name}
 						image={item.image}
-						link={`/articles/${item.slug}`}></Card>
+						link={`/articles/${item.slug}`}
+					></Card>
 				))}
 				{pageCount > 1 && (
 					<Box display='flex' justifyContent='center'>
@@ -88,29 +82,24 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 					</Box>
 				)}
 			</WhiteBox>
-			<SEOBox
-				images={page.seo?.images}
-				content={page.seo?.content}></SEOBox>
+			<SEOBox images={page.seo?.images} content={page.seo?.content}></SEOBox>
 		</Container>
 	);
 };
 
 export default Articles;
 
-export const getServerSideProps = getPageProps(
-	fetchPageArticles,
-	async (context) => ({
-		articles: (
-			await fetchArticles(
-				{
-					pagination: {
-						pageSize: LIMIT,
-						page: context.query?.page ?? 1,
-					},
-					populate: 'image',
+export const getServerSideProps = getPageProps(fetchPageArticles, async (context) => ({
+	articles: (
+		await fetchArticles(
+			{
+				pagination: {
+					pageSize: LIMIT,
+					page: context.query?.page ?? 1,
 				},
-				true
-			)
-		).data,
-	})
-);
+				populate: 'image',
+			},
+			true
+		)
+	).data,
+}));
