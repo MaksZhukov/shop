@@ -234,6 +234,7 @@ const AwaitingCars: NextPage<Props> = ({ page }) => {
     };
     useEffect(() => {
         fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChangePage = (_: any, newPage: number) => {
