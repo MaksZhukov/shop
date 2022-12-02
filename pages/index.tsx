@@ -9,11 +9,7 @@ import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
-import {
-	ApiResponse,
-	Filters as IFilters,
-	LinkWithImage as ILinkWithImage,
-} from 'api/types';
+import { ApiResponse, Filters as IFilters, LinkWithImage as ILinkWithImage } from 'api/types';
 import NextLink from 'next/link';
 import { MAX_LIMIT } from 'api/constants';
 import { fetchBrands } from 'api/brands/brands';
@@ -66,7 +62,6 @@ const Home: NextPage<Props> = ({
 	autocomises = [],
 	serviceStations = [],
 }) => {
-	console.log(brands);
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
@@ -129,28 +124,17 @@ const Home: NextPage<Props> = ({
 			delete router.query.generationId;
 			delete router.query.generationName;
 		}
-		router.push(
-			{ pathname: router.pathname, query: router.query },
-			undefined,
-			{ shallow: true }
-		);
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 		setModels([]);
 	};
 
-	const noOptionsText = isLoading ? (
-		<CircularProgress size={20} />
-	) : (
-		<>Совпадений нет</>
-	);
+	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
-	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(
-		!!models.length,
-		setModels,
-		() =>
-			fetchModels({
-				filters: { brand: brandId as string },
-				pagination: { limit: MAX_LIMIT },
-			})
+	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+		fetchModels({
+			filters: { brand: brandId as string },
+			pagination: { limit: MAX_LIMIT },
+		})
 	);
 
 	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
@@ -163,15 +147,14 @@ const Home: NextPage<Props> = ({
 			})
 	);
 
-	const handleOpenAutocompleteKindSparePart =
-		handleOpenAutocomplete<KindSparePart>(
-			!!kindSpareParts.length,
-			setKindSpareParts,
-			() =>
-				fetchKindSpareParts({
-					pagination: { limit: MAX_LIMIT },
-				})
-		);
+	const handleOpenAutocompleteKindSparePart = handleOpenAutocomplete<KindSparePart>(
+		!!kindSpareParts.length,
+		setKindSpareParts,
+		() =>
+			fetchKindSpareParts({
+				pagination: { limit: MAX_LIMIT },
+			})
+	);
 
 	const filtersConfig = getSparePartsFiltersConfig({
 		brands,
@@ -198,11 +181,7 @@ const Home: NextPage<Props> = ({
 	const middleContent = (
 		<>
 			{page.banner && (
-				<Image
-					src={page.banner.url}
-					alt={page.banner.alternativeText}
-					width={640}
-					height={640}></Image>
+				<Image src={page.banner.url} alt={page.banner.alternativeText} width={640} height={640}></Image>
 			)}
 			<Box padding='1em 1.5em'>
 				<Slider slidesToShow={3}>
@@ -213,10 +192,7 @@ const Home: NextPage<Props> = ({
 								<Image
 									width={156}
 									height={156}
-									src={
-										item.image.formats?.thumbnail?.url ||
-										item.image.url
-									}
+									src={item.image.formats?.thumbnail?.url || item.image.url}
 									alt={item.image.alternativeText}></Image>
 							</WhiteBox>
 						))}
@@ -224,14 +200,11 @@ const Home: NextPage<Props> = ({
 			</Box>
 			{page.textAfterBrands && (
 				<WhiteBox>
-					<ReactMarkdown
-						content={page.textAfterBrands}></ReactMarkdown>
+					<ReactMarkdown content={page.textAfterBrands}></ReactMarkdown>
 				</WhiteBox>
 			)}
 			<Box padding='1em'>
-				<CarouselProducts
-					data={spareParts}
-					slidesToShow={2}></CarouselProducts>
+				<CarouselProducts data={spareParts} slidesToShow={2}></CarouselProducts>
 			</Box>
 		</>
 	);
@@ -249,9 +222,7 @@ const Home: NextPage<Props> = ({
 			filtersBtn={filtersBtn}
 			filtersConfig={filtersConfig}
 			middleContent={middleContent}
-			{...(total
-				? { textTotal: `Найдено запчастей: ${total}` }
-				: {})}></Catalog>
+			{...(total ? { textTotal: `Найдено запчастей: ${total}` } : {})}></Catalog>
 	);
 };
 
@@ -260,19 +231,13 @@ export default Home;
 export const getServerSideProps = getPageProps(
 	fetchPageMain,
 	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data
-			.data,
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
 	}),
 	async () => ({
-		serviceStations: (
-			await fetchServiceStations({ populate: 'image' }, true)
-		).data.data,
+		serviceStations: (await fetchServiceStations({ populate: 'image' }, true)).data.data,
 	}),
 	async () => {
-		const { data } = await fetchCars(
-			{ populate: ['images'], pagination: { limit: 10 } },
-			true
-		);
+		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } }, true);
 		return { cars: data.data };
 	},
 	async () => ({
