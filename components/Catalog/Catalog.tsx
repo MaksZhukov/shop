@@ -188,6 +188,7 @@ const Catalog = ({
             }
         };
         fetchNewProducts();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const changeRouterQuery = useRef((field: string, value: string) => {
@@ -207,6 +208,7 @@ const Catalog = ({
             throttledFetchProducts();
             setSearchValue(querySearchValue);
         }
+		// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sort, page, router.isReady]);
 
     const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
