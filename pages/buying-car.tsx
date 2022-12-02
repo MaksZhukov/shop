@@ -9,20 +9,20 @@ import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	data: PageBuyingCar;
+	page: PageBuyingCar;
 }
 
-const BuyingCar: NextPage<Props> = ({ data }) => {
+const BuyingCar: NextPage<Props> = ({ page }) => {
 	return (
 		<>
 			<HeadSEO
-				title={data.seo?.title || 'Покупка автмобилей на запчасти'}
+				title={page.seo?.title || 'Покупка автмобилей на запчасти'}
 				description={
-					data.seo?.description ||
+					page.seo?.description ||
 					'Описание покупки автмобилей на запчасти'
 				}
 				keywords={
-					data.seo?.keywords ||
+					page.seo?.keywords ||
 					'покупка на запчасти, покупка авто на запчасти, покупка автомобилей на запчасти, автозапчасти, авто в пути'
 				}></HeadSEO>
 			<Container>
@@ -32,7 +32,7 @@ const BuyingCar: NextPage<Props> = ({ data }) => {
 						component='h1'
 						variant='h4'
 						textAlign='center'>
-						{data.seo?.h1 || 'Покупка автмобилей на запчасти'}
+						{page.seo?.h1 || 'Покупка автмобилей на запчасти'}
 					</Typography>
 					<Typography gutterBottom variant='subtitle1'>
 						У автолюбителей зачастую возникает необходимость продать
@@ -111,8 +111,8 @@ const BuyingCar: NextPage<Props> = ({ data }) => {
 					</Typography>
 				</WhiteBox>
 				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
+					images={page.seo?.images}
+					content={page.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);

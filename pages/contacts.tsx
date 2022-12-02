@@ -9,23 +9,23 @@ import { getPageProps } from 'services/PagePropsService';
 import SEOBox from 'components/SEOBox';
 
 interface Props {
-	data: PageContacts;
+	page: PageContacts;
 }
 
-const Contacts = ({ data }: Props) => {
+const Contacts = ({ page }: Props) => {
 	return (
 		<>
 			<HeadSEO
-				title={data.seo?.title || 'Контакты'}
-				description={data.seo?.description || 'Наши контакты'}
+				title={page.seo?.title || 'Контакты'}
+				description={page.seo?.description || 'Наши контакты'}
 				keywords={
-					data.seo?.keywords ||
+					page.seo?.keywords ||
 					'контакты, контакты разбор авто, разбор авто'
 				}></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
-						{data.seo?.h1 || 'О нас'}
+						{page.seo?.h1 || 'О нас'}
 					</Typography>
 					<Typography textAlign='center' variant='h6'>
 						Время работы:
@@ -51,8 +51,8 @@ const Contacts = ({ data }: Props) => {
 					</Box>
 				</WhiteBox>
 				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
+					images={page.seo?.images}
+					content={page.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
