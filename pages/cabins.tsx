@@ -34,10 +34,12 @@ import { Brand } from 'api/brands/types';
 import { useRouter } from 'next/router';
 import { fetchModels } from 'api/models/models';
 import { DefaultPage } from 'api/pages/types';
+import { fetchCabins } from 'api/cabins/cabins';
 
 interface Props {
     page: DefaultPage;
     cars: Car[];
+    brands: Brand[];
     articles: Article[];
     advertising: LinkWithImage[];
     autocomises: Autocomis[];
@@ -54,9 +56,9 @@ const Tires: NextPage<Props> = ({
     discounts,
     serviceStations,
     cars,
+    brands,
     articles,
 }) => {
-    const [brands, setBrands] = useState<Brand[]>([]);
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
@@ -130,25 +132,69 @@ const Tires: NextPage<Props> = ({
         setKindSpareParts,
         () =>
             fetchKindSpareParts({
+                filters: { type: 'cabin' },
                 pagination: { limit: MAX_LIMIT },
             })
     );
 
     const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
-    const filtersConfig = getSparePartsFiltersConfig({
-        brands,
-        models,
-        kindSpareParts,
-        generations,
-        modelId,
-        brandId,
-        noOptionsText,
-        onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
-        onOpenAutocompleteModel: handleOpenAutocompleteModel,
-        onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
-        onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
-    });
+    const filtersConfig = [
+        [
+            {
+                id: 'brandId',
+                name: 'brandName',
+                placeholder: 'Марка',
+                disabled: false,
+                type: 'autocomplete',
+                options: brands.map((item) => ({ label: item.name, ...item })),
+                onChange: handleChangeBrandAutocomplete,
+                noOptionsText: noOptionsText,
+            },
+        ],
+        [
+            {
+                id: 'modelId',
+                name: 'modelName',
+                placeholder: 'Модель',
+                type: 'autocomplete',
+                disabled: !brandId,
+                options: models.map((item) => ({ label: item.name, ...item })),
+                onOpen: handleOpenAutocompleteModel,
+                noOptionsText: noOptionsText,
+            },
+        ],
+        [
+            {
+                id: 'generationId',
+                name: 'generationName',
+                placeholder: 'Поколение',
+                type: 'autocomplete',
+                disabled: !modelId,
+                options: generations.map((item) => ({
+                    label: item.name,
+                    ...item,
+                })),
+                onOpen: handleOpenAutocompleteGeneration,
+                noOptionsText: noOptionsText,
+            },
+        ],
+        [
+            {
+                id: 'kindSparePartId',
+                name: 'kindSparePartName',
+                placeholder: 'Запчасть',
+                type: 'autocomplete',
+                disabled: false,
+                options: kindSpareParts.map((item) => ({
+                    label: item.name,
+                    ...item,
+                })),
+                onOpen: handleOpenAutocompleteKindSparePart,
+                noOptionsText: noOptionsText,
+            },
+        ],
+    ];
 
     const generateFiltersByQuery = ({
         min,
@@ -201,7 +247,7 @@ const Tires: NextPage<Props> = ({
             searchPlaceholder="Поиск детали ..."
             filtersConfig={filtersConfig}
             seo={page.seo}
-            fetchData={fetchSpareParts}
+            fetchData={fetchCabins}
             generateFiltersByQuery={generateFiltersByQuery}
         ></Catalog>
     );

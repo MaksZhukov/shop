@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import { Provider } from 'mobx-react';
 import { store } from '../store';
 import Header from '../components/Header';
@@ -86,7 +86,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <Header brands={brands}></Header>
                         <Content>
                             <RouteShield>
-                                <Component {...pageProps} test={[]} />
+                                <Component {...pageProps} brands={brands} />
                             </RouteShield>
                         </Content>
                         <Footer></Footer>
