@@ -1,5 +1,7 @@
 import { Box, Button, Link, Typography, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
+import { fetchCabin, fetchCabins } from 'api/cabins/cabins';
+import { Cabin } from 'api/cabins/types';
 import { fetchPageProduct } from 'api/pageProduct/pageProduct';
 import { PageProduct } from 'api/pageProduct/types';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
@@ -85,16 +87,27 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
         },
     ];
 
+    const getCabinPrintOptions = (item: Cabin) => [
+        { text: 'Артикул', value: item.id },
+        { text: 'Марка', value: item.brand?.name },
+        { text: 'Модель', value: item.model?.name },
+        { text: 'Поколение', value: item.generation?.name },
+        { text: 'Запчасть', value: item.kindSparePart?.name },
+        ...(item.seatUpholstery ? [{ text: 'Обивка сидений', value: item.seatUpholstery }] : []),
+    ];
+
     let printOptions = {
         tire: getTirePrintOptions(data as Tire),
         sparePart: getSparePartPrintOptions(data as SparePart),
         wheel: getWheelPrintOptions(data as Wheel),
+        cabin: getCabinPrintOptions(data as Cabin),
     }[data.type];
 
     const keywordsContent = {
         sparePart: 'запчасть, купить запчасть, продажа запчасти, запчасть авто',
         wheel: 'диск, купить диск, продажа диска, диск авто',
         tire: 'шина, купить шину, продажа шины, шина авто',
+        cabin: 'салоны',
     }[data.type];
     return (
         <>
@@ -338,11 +351,13 @@ export const getServerSideProps: GetServerSideProps<{}, { slug: string; type: Pr
             sparePart: fetchSparePart,
             tire: fetchTire,
             wheel: fetchWheel,
+            cabin: fetchCabin,
         }[context.params?.type || 'sparePart'];
         let fetchRelationalProducts = {
             sparePart: fetchSpareParts,
             tire: fetchTires,
             wheel: fetchWheels,
+            cabin: fetchCabins,
         }[context.params?.type || 'sparePart'];
         const [response, responsePageProduct] = await Promise.all([
             fetchFuncData(context.params?.slug || '', true),

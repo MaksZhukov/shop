@@ -6,15 +6,13 @@ import Image from 'components/Image';
 import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
-import getConfig from 'next/config';
 import { getPageProps } from 'services/PagePropsService';
 import NextLink from 'next/link';
 import { fetchVacancies } from 'api/vacancies/vacancies';
 import { Vacancy } from 'api/vacancies/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-
-const { publicRuntimeConfig } = getConfig();
+import Card from 'components/Card';
 
 interface Props {
     page: DefaultPage;
@@ -35,32 +33,13 @@ const Vacancies: NextPage<Props> = ({ page, vacancies }) => {
                     {page.seo?.h1}
                 </Typography>
                 {vacancies.data.map((item) => (
-                    <Box display="flex" marginBottom="2em" key={item.id}>
-                        <Image
-                            alt={item.image.alternativeText}
-                            width={208}
-                            height={156}
-                            src={item.image.formats?.thumbnail.url || item.image.url}
-                        ></Image>
-
-                        <Box marginLeft="1em">
-                            <Typography component="h2" variant="h5">
-                                <NextLink href={`/vacancies/${item.slug}`}>
-                                    <Link component="span" underline="hover">
-                                        {item.name}
-                                    </Link>
-                                </NextLink>
-                            </Typography>
-                            <Typography>
-                                {item.description.substring(0, 500)}...{' '}
-                                <NextLink href={`/vacancies/${item.slug}`}>
-                                    <Link component="span" underline="hover">
-                                        читать далее
-                                    </Link>
-                                </NextLink>
-                            </Typography>
-                        </Box>
-                    </Box>
+                    <Card
+                        name={item.name}
+                        key={item.id}
+                        image={item.image}
+                        link={`/vacancies/${item.slug}`}
+                        description={item.description}
+                    ></Card>
                 ))}
             </WhiteBox>
             <SEOBox images={page.seo?.images} content={page.seo?.content}></SEOBox>
