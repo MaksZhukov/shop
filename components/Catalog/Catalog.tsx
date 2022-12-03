@@ -128,10 +128,10 @@ const Catalog = ({
 					},
 				} = await fetchData({
 					filters: {
-						...(searchValue ? { h1: { $contains: searchValue } } : {}),
+						...(querySearchValue ? { h1: { $contains: querySearchValue } } : {}),
 						...(generateFiltersByQuery ? generateFiltersByQuery(othersQuery) : {}),
 					},
-					pagination: searchValue ? {} : { page: +page },
+					pagination: querySearchValue ? {} : { page: +page },
 					populate: '*',
 					sort,
 				});
