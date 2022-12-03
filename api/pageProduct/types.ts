@@ -5,4 +5,6 @@ export interface PageProduct {
 	textAfterDescription: string;
 	autoSynonyms: string;
 	benefits: Image[];
+	title: string;
+	description: string;
 }
