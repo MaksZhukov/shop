@@ -120,8 +120,8 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 				<WhiteBox padding='2em'>
 					<Box marginBottom='1em' display='flex' alignItems='baseline' justifyContent='space-between'>
 						<Box flex='1'>
-							<Typography variant='h4' flex='1' title={data.name} component='h1'>
-								{data.h1 || data.name}
+							<Typography variant='h4' flex='1' title={data.h1} component='h1'>
+								{data.h1}
 							</Typography>
 							{data.snippets?.textAfterH1 && (
 								<ReactMarkdown content={data.snippets.textAfterH1}></ReactMarkdown>
@@ -277,7 +277,7 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 						</Box>
 					)}
 					<Typography marginTop='1em' component='h2' variant='h5'>
-						{data.seo?.h1 || data.name} характеристики
+						{data.h1} характеристики
 					</Typography>
 					{page.textAfterDescription && <ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>}
 					{page.benefits && (

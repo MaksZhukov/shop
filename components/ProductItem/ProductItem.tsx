@@ -1,11 +1,4 @@
-import {
-	Card,
-	CardContent,
-	Button,
-	Link,
-	Grid,
-	useMediaQuery,
-} from '@mui/material';
+import { Card, CardContent, Button, Link, Grid, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import { Product } from '../../api/types';
 import styles from './ProductItem.module.scss';
@@ -28,9 +21,7 @@ interface Props {
 }
 
 const ProductItem = ({ data, dataFieldsToShow }: Props) => {
-	const isMobile = useMediaQuery((theme: any) =>
-		theme.breakpoints.down('sm')
-	);
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
 	return (
 		<Card className={styles.product}>
@@ -39,17 +30,16 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 					display: 'flex',
 					alignItems: 'flex-start',
 					flexDirection: isMobile ? 'column' : 'row',
-				}}>
+				}}
+			>
 				{data.images && data.images.some((image) => image.formats) ? (
 					<Slider
-						className={classNames(
-							styles.slider,
-							isMobile && styles.slider_mobile
-						)}
+						className={classNames(styles.slider, isMobile && styles.slider_mobile)}
 						arrows={false}
 						pauseOnHover
 						autoplay
-						autoplaySpeed={3000}>
+						autoplaySpeed={3000}
+					>
 						{data.images
 							.filter((item) => item.formats)
 							.map((item) => (
@@ -59,47 +49,37 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 										publicRuntimeConfig.backendLocalUrl +
 										`${
 											isMobile
-												? item.formats?.small?.url ||
-												  item.url
-												: item.formats?.thumbnail.url ||
-												  item.url
+												? item.formats?.small?.url || item.url
+												: item.formats?.thumbnail.url || item.url
 										}`
 									}
 									width={isMobile ? 500 : 200}
 									height={isMobile ? 375 : 150}
-									alt={item.alternativeText}></Image>
+									alt={item.alternativeText}
+								></Image>
 							))}
 					</Slider>
 				) : (
 					<EmptyImageIcon
 						size={isMobile ? 300 : 250}
-						margin={
-							isMobile ? '-30px auto' : '-25px'
-						}></EmptyImageIcon>
+						margin={isMobile ? '-30px auto' : '-25px'}
+					></EmptyImageIcon>
 				)}
 				<CardContent sx={{ flex: 1, paddingY: '0!important' }}>
-					<Typography
-						lineClamp={1}
-						title={data.name}
-						component='div'
-						variant='h5'>
+					<Typography lineClamp={1} title={data.h1} component='div' variant='h5'>
 						<NextLink href={`/products/${data.type}/` + data.slug}>
 							<Link component='span' underline='hover'>
-								{data.h1 || data.name}
+								{data.h1 || data.h1}
 							</Link>
 						</NextLink>
 					</Typography>
 					<Grid columnSpacing={2} container>
 						{dataFieldsToShow.map((item) => (
 							<Grid key={item.id} item>
-								<Typography
-									fontWeight='500'
-									component='div'
-									variant='subtitle1'>
-									{item.name}
+								<Typography fontWeight='500' component='div' variant='subtitle1'>
+									{item.h1}
 								</Typography>
-								{typeof data[item.id as keyof Product] ===
-									'object' &&
+								{typeof data[item.id as keyof Product] === 'object' &&
 								data[item.id as keyof Product] !== null
 									? //@ts-ignore
 									  data[item.id as keyof Product]['name']
@@ -109,10 +89,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 					</Grid>
 					{data.description && (
 						<Typography mt='0.5em' lineClamp={2} variant='body1'>
-							<Typography
-								fontWeight='500'
-								component='span'
-								variant='subtitle1'>
+							<Typography fontWeight='500' component='span' variant='subtitle1'>
 								Описание:
 							</Typography>{' '}
 							{data.description}
@@ -126,14 +103,16 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 					display: 'flex',
 					alignItems: 'center',
 					justifyContent: 'space-between',
-				}}>
+				}}
+			>
 				<Box display='flex'>
 					<Typography
 						fontWeight='bold'
 						variant='body1'
 						component={data.discountPrice ? 's' : 'p'}
 						sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-						color='primary'>
+						color='primary'
+					>
 						{data.price} руб{' '}
 						{!!data.priceUSD && (
 							<Typography color='text.secondary' component='sup'>
@@ -142,16 +121,10 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 						)}
 					</Typography>
 					{data.discountPrice && (
-						<Typography
-							paddingLeft='0.5em'
-							fontWeight='bold'
-							variant='body1'
-							color='primary'>
+						<Typography paddingLeft='0.5em' fontWeight='bold' variant='body1' color='primary'>
 							{data.discountPrice} руб{' '}
 							{!!data.discountPriceUSD && (
-								<Typography
-									color='text.primary'
-									component='sup'>
+								<Typography color='text.primary' component='sup'>
 									(~{data.discountPriceUSD.toFixed()}$)
 								</Typography>
 							)}
@@ -160,9 +133,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 				</Box>
 				<Box>
 					<Button variant='outlined'>
-						<NextLink href={`/products/${data.type}/` + data.slug}>
-							Подробнее
-						</NextLink>
+						<NextLink href={`/products/${data.type}/` + data.slug}>Подробнее</NextLink>
 					</Button>
 					<FavoriteButton product={data}></FavoriteButton>
 					{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
