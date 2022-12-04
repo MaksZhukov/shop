@@ -5,6 +5,7 @@ import NextImage from 'next/image';
 import getConfig from 'next/config';
 import ReactPlayer from 'react-player';
 import rehypeVideo from './plugins/rehypeVideo';
+import Typography from 'components/Typography';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -30,6 +31,9 @@ const ReactMarkdown: FC<Props> = ({ content, withVideo = false }) => {
 				},
 				video: ({ src }) => {
 					return <ReactPlayer controls url={publicRuntimeConfig.backendLocalUrl + src}></ReactPlayer>;
+				},
+				p: (data) => {
+					return <Typography gutterBottom>{data.children}</Typography>;
 				},
 			}}
 		>
