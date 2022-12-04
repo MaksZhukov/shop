@@ -18,10 +18,8 @@ const Contacts = ({ page }: Props) => {
 			<HeadSEO
 				title={page.seo?.title || 'Контакты'}
 				description={page.seo?.description || 'Наши контакты'}
-				keywords={
-					page.seo?.keywords ||
-					'контакты, контакты разбор авто, разбор авто'
-				}></HeadSEO>
+				keywords={page.seo?.keywords || 'контакты, контакты разбор авто, разбор авто'}
+			></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' textAlign='center'>
@@ -30,29 +28,17 @@ const Contacts = ({ page }: Props) => {
 					<Typography textAlign='center' variant='h6'>
 						Время работы:
 					</Typography>
-					<Typography
-						textAlign='center'
-						marginLeft='2em'
-						variant='subtitle1'>
+					<Typography textAlign='center' marginLeft='2em' variant='subtitle1'>
 						Понедельник - Пятница: 10:00-18:00
 					</Typography>
-					<Typography
-						textAlign='center'
-						marginLeft='2em'
-						variant='subtitle1'>
+					<Typography textAlign='center' marginLeft='2em' variant='subtitle1'>
 						Суббота - Воскресенье: 10:00-14:00
 					</Typography>
 					<Box textAlign='center'>
-						<Image
-							alt='Путь'
-							width={390}
-							height={685}
-							src={'/route.png'}></Image>
+						<Image alt='Путь' width={390} height={685} src={'/route.png'}></Image>
 					</Box>
 				</WhiteBox>
-				<SEOBox
-					images={page.seo?.images}
-					content={page.seo?.content}></SEOBox>
+				<SEOBox images={page.seo?.images} content={page.seo?.content}></SEOBox>
 			</Container>
 		</>
 	);
