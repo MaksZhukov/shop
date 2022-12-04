@@ -77,7 +77,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 						{dataFieldsToShow.map((item) => (
 							<Grid key={item.id} item>
 								<Typography fontWeight='500' component='div' variant='subtitle1'>
-									{item.h1}
+									{item.name}
 								</Typography>
 								{typeof data[item.id as keyof Product] === 'object' &&
 								data[item.id as keyof Product] !== null
