@@ -32,8 +32,14 @@ let theme = createTheme({
 	},
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
-	const [brands, setBrands] = useState<Brand[]>(pageProps.brands ?? []);
+function MyApp({
+	Component,
+	pageProps: {
+		layout: { footer },
+		...restPageProps
+	},
+}: AppProps) {
+	const [brands, setBrands] = useState<Brand[]>(restPageProps.brands ?? []);
 	useEffect(() => {
 		const tryFetchData = async () => {
 			let token = getJwt();
@@ -87,10 +93,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 						<Header brands={brands}></Header>
 						<Content>
 							<RouteShield>
-								<Component {...pageProps} brands={brands} />
+								<Component {...restPageProps} brands={brands} />
 							</RouteShield>
 						</Content>
-						<Footer footer={pageProps.layout.footer}></Footer>
+						<Footer footer={footer}></Footer>
 					</Layout>
 				</SnackbarProvider>
 			</Provider>
