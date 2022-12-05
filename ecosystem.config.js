@@ -26,6 +26,7 @@ module.exports = {
 			instances: 'max',
 			exec_mode: 'cluster',
 			max_memory_restart: '500M',
+			restart_delay: 5000,
 			max_restarts: 2,
 		},
 	],

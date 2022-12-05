@@ -13,6 +13,7 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 import { Fragment } from 'react';
 import Slider from 'react-slick';
+import { getPageProps } from 'services/PagePropsService';
 import { useStore } from 'store';
 import styles from './favorites.module.scss';
 
@@ -178,6 +179,4 @@ const Favorites = () => {
 
 export default observer(Favorites);
 
-export async function getStaticProps() {
-	return { props: {} };
-}
+export async function getStaticProps = getPageProps();

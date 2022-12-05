@@ -21,6 +21,7 @@ import { useStore } from '../store';
 import styles from './profile.module.scss';
 import Head from 'next/head';
 import { useSnackbar } from 'notistack';
+import { getPageProps } from 'services/PagePropsService';
 
 const Profile = observer(() => {
 	const store = useStore();
@@ -114,6 +115,4 @@ const Profile = observer(() => {
 
 export default Profile;
 
-export async function getStaticProps() {
-	return { props: {} };
-}
+export async function getStaticProps = getPageProps();
