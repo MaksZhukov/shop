@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
@@ -31,6 +31,7 @@ import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchBrands } from 'api/brands/brands';
+import { useDebounce } from 'rooks';
 
 interface Props {
 	page: PageSpareParts;
@@ -61,6 +62,15 @@ const SpareParts: NextPage<Props> = ({
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
+
+	const fetchKindSparePartsRef = useRef(async (value: string) => {
+		const {
+			data: { data },
+		} = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
+		setKindSpareParts(data);
+	});
+
+	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
 
 	const { brandId = '', modelId = '' } = router.query as {
 		brandId: string;
@@ -135,6 +145,10 @@ const SpareParts: NextPage<Props> = ({
 			})
 	);
 
+	const hangleInputChangeKindSparePart = (_: any, value: string) => {
+		debouncedFetchKindSparePartsRef(value);
+	};
+
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const filtersConfig = getSparePartsFiltersConfig({
@@ -149,6 +163,7 @@ const SpareParts: NextPage<Props> = ({
 		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
+		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
 	});
 
 	const generateFiltersByQuery = ({
