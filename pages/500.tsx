@@ -7,7 +7,7 @@ const PageNotFound = () => {
 		<Container>
 			<WhiteBox>
 				<Typography component='h1' variant='h4' textAlign='center'>
-					Страница не найдена
+					Ошибка сервера
 				</Typography>
 			</WhiteBox>
 		</Container>
