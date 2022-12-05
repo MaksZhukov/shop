@@ -179,4 +179,4 @@ const Favorites = () => {
 
 export default observer(Favorites);
 
-export async function getStaticProps = getPageProps();
+export const getStaticProps = getPageProps();
