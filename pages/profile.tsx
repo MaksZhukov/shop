@@ -1,22 +1,8 @@
-import {
-	Alert,
-	Box,
-	Button,
-	FormControl,
-	Input,
-	TextField,
-	Typography,
-} from '@mui/material';
+import { Alert, Box, Button, FormControl, Input, TextField, Typography } from '@mui/material';
 import InputMask from 'react-input-mask';
 import { Container } from '@mui/system';
 import { observer } from 'mobx-react';
-import {
-	ChangeEvent,
-	FormEvent,
-	FormEventHandler,
-	ReactElement,
-	ReactNode,
-} from 'react';
+import { ChangeEvent, FormEvent, FormEventHandler, ReactElement, ReactNode } from 'react';
 import { useStore } from '../store';
 import styles from './profile.module.scss';
 import Head from 'next/head';
@@ -45,10 +31,9 @@ const Profile = observer(() => {
 				variant: 'success',
 			});
 		} catch (err) {
-			enqueueSnackbar(
-				'Произошла какая-то ошибка с обновлением данных, обратитесь в поддержку',
-				{ variant: 'error' }
-			);
+			enqueueSnackbar('Произошла какая-то ошибка с обновлением данных, обратитесь в поддержку', {
+				variant: 'error',
+			});
 		}
 	};
 
@@ -62,39 +47,32 @@ const Profile = observer(() => {
 				<Typography textAlign='center' variant='h4' component='h1'>
 					Профиль
 				</Typography>
-				<Box
-					component='form'
-					marginBottom='2em'
-					onSubmit={handleSubmit}
-					className={styles.content}>
+				<Box component='form' marginBottom='2em' onSubmit={handleSubmit} className={styles.content}>
 					<TextField
 						value={store.user.email}
 						label='Почта'
 						disabled
 						variant='standard'
 						margin='normal'
-						fullWidth></TextField>
+						fullWidth
+					></TextField>
 					<TextField
 						value={store.user.username}
 						onChange={handleChangeUsername}
 						label='ФИО'
 						margin='normal'
 						variant='standard'
-						fullWidth></TextField>
+						fullWidth
+					></TextField>
 					<InputMask
 						mask='+375 99 999 99 99'
 						value={store.user.phone}
 						maskChar=' '
-						onChange={handleChangePhone}>
+						onChange={handleChangePhone}
+					>
 						{
 							//@ts-ignore
-							() => (
-								<TextField
-									label='Телефон'
-									margin='normal'
-									variant='standard'
-									fullWidth></TextField>
-							)
+							() => <TextField label='Телефон' margin='normal' variant='standard' fullWidth></TextField>
 						}
 					</InputMask>
 					<TextField
@@ -103,7 +81,8 @@ const Profile = observer(() => {
 						label='Адрес'
 						margin='normal'
 						variant='standard'
-						fullWidth></TextField>
+						fullWidth
+					></TextField>
 					<Button fullWidth type='submit'>
 						Сохранить
 					</Button>
@@ -115,4 +94,4 @@ const Profile = observer(() => {
 
 export default Profile;
 
-export async function getStaticProps = getPageProps();
+export const getStaticProps = getPageProps();
