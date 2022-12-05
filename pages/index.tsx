@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { Box, Button, CircularProgress, Container, Link } from '@mui/material';
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
@@ -11,7 +11,6 @@ import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
 import { ApiResponse, Filters as IFilters, LinkWithImage as ILinkWithImage } from 'api/types';
 import NextLink from 'next/link';
-import { MAX_LIMIT } from 'api/constants';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
@@ -21,19 +20,13 @@ import { Generation } from 'api/generations/types';
 import { getPageProps } from 'services/PagePropsService';
 import { PageMain } from 'api/pageMain/types';
 import WhiteBox from 'components/WhiteBox';
-import getConfig from 'next/config';
-import LinkWithImage from 'components/LinkWithImage';
 import { getSparePartsFiltersConfig } from 'components/Filters/config';
 import { Car } from 'api/cars/types';
 import { fetchCars } from 'api/cars/cars';
-import { fetchNews } from 'api/news/news';
-import Typography from 'components/Typography';
 import { SparePart } from 'api/spareParts/types';
-import EmptyImageIcon from 'components/EmptyImageIcon';
 import Image from 'components/Image';
 import { fetchPageMain } from 'api/pageMain/pageMain';
 import Catalog from 'components/Catalog';
-import { OneNews } from 'api/news/types';
 import ReactMarkdown from 'components/ReactMarkdown';
 import CarouselProducts from 'components/CarouselProducts';
 import { fetchAutocomises } from 'api/autocomises/autocomises';
@@ -42,8 +35,8 @@ import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
-
-const { publicRuntimeConfig } = getConfig();
+import { MAX_LIMIT } from 'api/constants';
+import { useDebounce } from 'rooks';
 
 interface Props {
 	page: PageMain;
@@ -70,6 +63,15 @@ const Home: NextPage<Props> = ({
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
+
+	const fetchKindSparePartsRef = useRef(async (value: string) => {
+		const {
+			data: { data },
+		} = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
+		setKindSpareParts(data);
+	});
+	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			const {
@@ -156,6 +158,10 @@ const Home: NextPage<Props> = ({
 			})
 	);
 
+	const hangleInputChangeKindSparePart = (_: any, value: string) => {
+		debouncedFetchKindSparePartsRef(value);
+	};
+
 	const filtersConfig = getSparePartsFiltersConfig({
 		brands,
 		models,
@@ -165,6 +171,7 @@ const Home: NextPage<Props> = ({
 		brandId,
 		noOptionsText,
 		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
+		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
 		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
@@ -193,7 +200,8 @@ const Home: NextPage<Props> = ({
 									width={156}
 									height={156}
 									src={item.image.formats?.thumbnail?.url || item.image.url}
-									alt={item.image.alternativeText}></Image>
+									alt={item.image.alternativeText}
+								></Image>
 							</WhiteBox>
 						))}
 				</Slider>
@@ -222,7 +230,8 @@ const Home: NextPage<Props> = ({
 			filtersBtn={filtersBtn}
 			filtersConfig={filtersConfig}
 			middleContent={middleContent}
-			{...(total ? { textTotal: `Найдено запчастей: ${total}` } : {})}></Catalog>
+			{...(total ? { textTotal: `Найдено запчастей: ${total}` } : {})}
+		></Catalog>
 	);
 };
 

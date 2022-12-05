@@ -14,6 +14,7 @@ interface Props {
 }
 
 const HowToGetTo: FC<Props> = ({ page }) => {
+	console.log(page);
 	return (
 		<>
 			<HeadSEO

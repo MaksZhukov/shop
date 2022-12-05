@@ -4,8 +4,8 @@ import rehypeRaw from 'rehype-raw';
 import NextImage from 'next/image';
 import getConfig from 'next/config';
 import ReactPlayer from 'react-player';
-import rehypeVideo from './plugins/rehypeVideo';
 import Typography from 'components/Typography';
+import { Link } from '@mui/material';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -14,10 +14,10 @@ interface Props {
 	withVideo?: boolean;
 }
 
-const ReactMarkdown: FC<Props> = ({ content, withVideo = false }) => {
+const ReactMarkdown: FC<Props> = ({ content }) => {
 	return (
 		<ReactMarkdownLib
-			rehypePlugins={[rehypeRaw, ...(withVideo ? [rehypeVideo] : [])]}
+			rehypePlugins={[rehypeRaw]}
 			components={{
 				img: ({ src, alt = '' }) => {
 					return (
@@ -34,6 +34,13 @@ const ReactMarkdown: FC<Props> = ({ content, withVideo = false }) => {
 				},
 				p: (data) => {
 					return <Typography gutterBottom>{data.children}</Typography>;
+				},
+				a: (data) => {
+					return (
+						<Link color='inherit' underline='hover' href={data.href}>
+							{data.children}
+						</Link>
+					);
 				},
 			}}
 		>
