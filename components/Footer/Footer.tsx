@@ -47,10 +47,10 @@ const Footer: FC<Props> = ({ footer }) => {
 									color='inherit'
 								>
 									<Image
-										alt={item.image.alternativeText}
+										alt={item.image?.alternativeText}
 										width={20}
 										height={20}
-										src={item.image.url}
+										src={item.image?.url}
 									></Image>
 									<Typography marginLeft='0.5em'>{item.image.caption}</Typography>
 								</ListItemButton>

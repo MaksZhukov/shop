@@ -199,8 +199,8 @@ const Home: NextPage<Props> = ({
 								<Image
 									width={156}
 									height={156}
-									src={item.image.formats?.thumbnail?.url || item.image.url}
-									alt={item.image.alternativeText}
+									src={item.image?.formats?.thumbnail?.url || item.image?.url}
+									alt={item.image?.alternativeText}
 								></Image>
 							</WhiteBox>
 						))}

@@ -1,5 +1,9 @@
 import { Alert, CircularProgress, Container, Pagination, Typography, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
+import { fetchArticles } from 'api/articles/articles';
+import { Article } from 'api/articles/types';
+import { fetchAutocomises } from 'api/autocomises/autocomises';
+import { Autocomis } from 'api/autocomises/types';
 import { fetchBrands } from 'api/brands/brands';
 import { Brand } from 'api/brands/types';
 import { fetchCars } from 'api/cars/cars';
@@ -9,41 +13,50 @@ import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
-import { fetchPageAwaitingCars } from 'api/pageAwaitingCars/pageAwaitingCars';
 import { PageAwaitingCars } from 'api/pageAwaitingCars/types';
-
-import { ApiResponse } from 'api/types';
+import { fetchPageMain } from 'api/pageMain/pageMain';
+import { fetchPage } from 'api/pages';
+import { fetchServiceStations } from 'api/serviceStations/serviceStations';
+import { ServiceStation } from 'api/serviceStations/types';
+import { ApiResponse, LinkWithImage } from 'api/types';
 import { AxiosResponse } from 'axios';
-import classNames from 'classnames';
 import CarItem from 'components/CarItem';
-import Filters from 'components/Filters';
+import Catalog from 'components/Catalog';
 import { BODY_STYLES, FUELS, TRANSMISSIONS } from 'components/Filters/constants';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
-import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
-import styles from './awaiting-cars.module.scss';
-
-const DynamicNews = dynamic(() => import('components/News'));
-const DynamicReviews = dynamic(() => import('components/Reviews(INACTIVE)'));
 
 interface Props {
 	page: PageAwaitingCars;
+	articles: Article[];
+	advertising: LinkWithImage[];
+	autocomises: Autocomis[];
+	deliveryAuto: LinkWithImage;
+	serviceStations: ServiceStation[];
+	discounts: LinkWithImage[];
+	cars: ApiResponse<Car[]>;
+	brands: Brand[];
 }
 
-const AwaitingCars: NextPage<Props> = ({ page }) => {
-	const [brands, setBrands] = useState<Brand[]>([]);
+const AwaitingCars: NextPage<Props> = ({
+	page,
+	articles,
+	autocomises,
+	advertising,
+	deliveryAuto,
+	discounts,
+	brands,
+	serviceStations,
+	cars: pCars,
+}) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
-	const [cars, setCars] = useState<Car[]>([]);
-	const [total, setTotal] = useState<null | number>(null);
-	const [pageCount, setPageCount] = useState<number>(0);
+	const [cars, setCars] = useState<Car[]>(pCars.data);
+	const [pageCount, setPageCount] = useState<number>(pCars.meta.pagination?.pageCount ?? 0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const router = useRouter();
@@ -106,11 +119,6 @@ const AwaitingCars: NextPage<Props> = ({ page }) => {
 				disabled: false,
 				type: 'autocomplete',
 				options: brands.map((item) => ({ label: item.name, ...item })),
-				onOpen: handleOpenAutocomplete<Brand>(!!brands.length, setBrands, () =>
-					fetchBrands({
-						pagination: { limit: MAX_LIMIT },
-					})
-				),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -188,6 +196,13 @@ const AwaitingCars: NextPage<Props> = ({ page }) => {
 		],
 	];
 
+	const handleChangePage = (_: any, newPage: number) => {
+		router.query.page = newPage.toString();
+		router.push({ pathname: router.pathname, query: router.query }, undefined, {
+			shallow: true,
+		});
+	};
+
 	const fetchData = async () => {
 		setIsLoading(true);
 		try {
@@ -222,7 +237,6 @@ const AwaitingCars: NextPage<Props> = ({ page }) => {
 						{ shallow: true }
 					);
 				}
-				setTotal(pagination.total);
 			}
 			setIsFirstDataLoaded(true);
 		} catch (err) {
@@ -232,76 +246,84 @@ const AwaitingCars: NextPage<Props> = ({ page }) => {
 		}
 		setIsLoading(false);
 	};
-	useEffect(() => {
-		fetchData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	const handleChangePage = (_: any, newPage: number) => {
-		router.query.page = newPage.toString();
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
-	};
 
 	return (
-		<>
-			<HeadSEO
-				title={page.seo?.title || 'Ожидаемые авто'}
-				description={page.seo?.description || 'Ожидаемые авто'}
-				keywords={page.seo?.keywords || 'авто, ожидаемые авто, автомобили, ожидаемые автомобили'}></HeadSEO>
-			<Container>
+		<Catalog
+			filtersConfig={filtersConfig}
+			articles={articles}
+			autocomises={autocomises}
+			seo={page.seo}
+			advertising={advertising}
+			deliveryAuto={deliveryAuto}
+			discounts={discounts}
+			serviceStations={serviceStations}
+			onClickFind={fetchData}
+			middleContent={
 				<WhiteBox>
-					<Typography component='h1' variant='h4' textAlign='center'>
-						{page.seo?.h1 || 'Ожидаемые авто'}
-					</Typography>
-				</WhiteBox>
-				<Box className={classNames(styles.wrapper, isTablet && styles.wrapper_tablet)}>
-					<Box
-						marginRight='1em'
-						className={classNames(styles.sider, styles.sider_left, isTablet && styles.sider_tablet)}>
-						<Filters config={filtersConfig} total={total} fetchData={fetchData}></Filters>
-						<DynamicReviews></DynamicReviews>
-					</Box>
-					<Box marginRight='1em' className={classNames(styles.content, isTablet && styles.content_tablet)}>
-						<WhiteBox
-							className={classNames(
-								isLoading && styles.loading,
-								!cars.length && styles['content-items_no-data']
-							)}>
-							{!!cars.length ? (
-								cars.map((item) => <CarItem key={item.id} data={item}></CarItem>)
-							) : isFirstDataLoaded && !isLoading ? (
-								<Typography textAlign='center' variant='h5'>
-									Данных не найдено
-								</Typography>
-							) : (
-								<></>
-							)}
+					{!!cars.length ? (
+						cars.map((item) => <CarItem key={item.id} data={item}></CarItem>)
+					) : isFirstDataLoaded && !isLoading ? (
+						<Typography textAlign='center' variant='h5'>
+							Данных не найдено
+						</Typography>
+					) : (
+						<></>
+					)}
+					{pageCount > 1 && (
+						<WhiteBox display='flex' justifyContent='center'>
+							<Pagination
+								page={+page}
+								siblingCount={2}
+								color='primary'
+								count={pageCount}
+								onChange={handleChangePage}
+								variant='outlined'
+							/>
 						</WhiteBox>
-						{!!cars.length && (
-							<WhiteBox display='flex' justifyContent='center'>
-								<Pagination
-									page={+qPage}
-									siblingCount={2}
-									color='primary'
-									count={pageCount}
-									onChange={handleChangePage}
-									variant='outlined'
-								/>
-							</WhiteBox>
-						)}
-					</Box>
-					<Box
-						component='aside'
-						className={classNames(styles.sider, styles.sider_right, isTablet && styles.sider_tablet)}>
-						<DynamicNews></DynamicNews>
-					</Box>
-				</Box>
-				<SEOBox images={page.seo?.images} content={page.seo?.content}></SEOBox>
-			</Container>
-		</>
+					)}
+				</WhiteBox>
+			}
+		></Catalog>
 	);
 };
 
 export default AwaitingCars;
 
-export const getStaticProps = getPageProps(fetchPageAwaitingCars);
+export const getStaticProps = getPageProps(
+	fetchPage('awaiting-car'),
+	async () => {
+		const {
+			data: {
+				data: { advertising, deliveryAuto, discounts },
+			},
+		} = await fetchPageMain();
+		return {
+			advertising,
+			deliveryAuto,
+			discounts,
+		};
+	},
+	async () => ({
+		cars: (await fetchCars({ populate: ['images'], pagination: { limit: 10 } }, true)).data,
+	}),
+	async () => ({
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
+	}),
+	async () => ({
+		serviceStations: (await fetchServiceStations({ populate: 'image' }, true)).data.data,
+	}),
+	async () => ({
+		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+	}),
+	async () => ({
+		brands: (
+			await fetchBrands(
+				{
+					populate: 'image',
+					pagination: { limit: MAX_LIMIT },
+				},
+				true
+			)
+		).data.data,
+	})
+);

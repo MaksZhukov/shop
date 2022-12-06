@@ -6,7 +6,7 @@ import NextLink from 'next/link';
 import { FC } from 'react';
 import Typography from 'components/Typography';
 interface Props {
-	image: IImage;
+	image?: IImage;
 	description: string;
 	name: string;
 	link: string;
@@ -16,10 +16,11 @@ const Card: FC<Props> = ({ image, description, name, link }) => {
 	return (
 		<Box display='flex' marginBottom='2em'>
 			<Image
-				alt={image.alternativeText}
+				alt={image?.alternativeText || name}
 				width={208}
 				height={156}
-				src={image.formats?.thumbnail.url || image.url}></Image>
+				src={image?.formats?.thumbnail.url || image?.url || ''}
+			></Image>
 
 			<Box marginLeft='1em'>
 				<Typography component='h2' variant='h5'>

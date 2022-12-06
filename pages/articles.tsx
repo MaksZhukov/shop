@@ -6,7 +6,6 @@ import { fetchPageArticles } from 'api/pageArticles/pageArticles';
 import { PageArticles } from 'api/pageArticles/types';
 import { ApiResponse, MetaResponse } from 'api/types';
 import HeadSEO from 'components/HeadSEO';
-import Image from 'components/Image';
 import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
@@ -14,7 +13,6 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
-import NextLink from 'next/link';
 import Card from 'components/Card';
 
 const { publicRuntimeConfig } = getConfig();

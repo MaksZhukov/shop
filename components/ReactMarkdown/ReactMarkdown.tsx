@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import ReactMarkdownLib from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import NextImage from 'next/image';
 import getConfig from 'next/config';
 import ReactPlayer from 'react-player';
 import Typography from 'components/Typography';
 import { Link } from '@mui/material';
+import Image from 'components/Image';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -20,14 +20,7 @@ const ReactMarkdown: FC<Props> = ({ content }) => {
 			rehypePlugins={[rehypeRaw]}
 			components={{
 				img: ({ src, alt = '' }) => {
-					return (
-						<NextImage
-							alt={alt}
-							width={640}
-							height={480}
-							src={publicRuntimeConfig.backendLocalUrl + src}
-						></NextImage>
-					);
+					return <Image alt={alt} width={640} height={480} src={src || ''}></Image>;
 				},
 				video: ({ src }) => {
 					return <ReactPlayer controls url={publicRuntimeConfig.backendLocalUrl + src}></ReactPlayer>;
