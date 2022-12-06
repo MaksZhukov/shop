@@ -2,27 +2,22 @@ import { Box, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchCar } from 'api/cars/cars';
 import { Car } from 'api/cars/types';
-import axios from 'axios';
 import HeadSEO from 'components/HeadSEO';
 import Image from 'components/Image';
 import SEOBox from 'components/SEOBox';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import { GetServerSideProps } from 'next';
-import getConfig from 'next/config';
 import ReactPlayer from 'react-player';
 import Slider from 'react-slick';
+import { getPageProps } from 'services/PagePropsService';
 import styles from './awaiting-car.module.scss';
-
-const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	data: Car;
 }
 
 const CarPage = ({ data }: Props) => {
-	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
-	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	console.log(data);
 	let printOptions = [
 		{ text: 'Артикул', value: data.id },
 		{ text: 'Марка', value: data.brand?.name },
@@ -117,23 +112,8 @@ const CarPage = ({ data }: Props) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{}, { slug: string }> = async (context) => {
-	let data = null;
-	let notFound = false;
-	try {
-		const response = await fetchCar(context.params?.slug || '', true);
-
-		data = response.data.data;
-	} catch (err) {
-		if (axios.isAxiosError(err)) {
-			notFound = true;
-		}
-	}
-
-	return {
-		notFound,
-		props: { data },
-	};
-};
+export const getServerSideProps = getPageProps(undefined, async (context) => ({
+	data: (await fetchCar(context.params?.slug as string, true)).data.data,
+}));
 
 export default CarPage;

@@ -12,7 +12,7 @@ export const getPageProps =
 				...(fetchPage ? [fetchPage()] : []),
 				...functions.map((func) => func(context)),
 			]);
-			restResponses.forEach((item) => {
+			[...(fetchPage ? restResponses : [response, ...restResponses])].forEach((item) => {
 				Object.keys(item).forEach((key) => {
 					props[key] = item[key];
 				});
