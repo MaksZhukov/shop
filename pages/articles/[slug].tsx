@@ -8,6 +8,7 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps, NextPage } from 'next';
+import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
 	data: IArticle;
@@ -53,14 +54,6 @@ const Article: NextPage<Props> = ({ data }) => {
 
 export default Article;
 
-export const getServerSideProps: GetServerSideProps<{}, { slug: string }> = async (context) => {
-	let data = null;
-	let notFound = false;
-	try {
-		const result = await fetchArtcle(context.params?.slug as string, true);
-		data = result.data.data;
-	} catch (err) {
-		notFound = true;
-	}
-	return { props: { data }, notFound };
-};
+export const getServerSideProps = getPageProps(undefined, async (context) => ({
+	data: (await fetchArtcle(context.params?.slug as string, true)).data.data,
+}));

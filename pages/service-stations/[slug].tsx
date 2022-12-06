@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { Autocomis as IAutocomis } from 'api/autocomises/types';
+import { Layout } from 'api/layout/types';
 import { fetchServiceStation } from 'api/serviceStations/serviceStations';
 import HeadSEO from 'components/HeadSEO';
 import Image from 'components/Image';
@@ -8,9 +9,11 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { GetServerSideProps, NextPage } from 'next';
+import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
 	data: IAutocomis;
+	layout: Layout;
 }
 
 const Autocomis: NextPage<Props> = ({ data }) => {
@@ -45,15 +48,6 @@ const Autocomis: NextPage<Props> = ({ data }) => {
 
 export default Autocomis;
 
-export const getServerSideProps: GetServerSideProps<{}, { slug: string }> = async (context) => {
-	let data = null;
-	let notFound = false;
-	try {
-		const result = await fetchServiceStation(context.params?.slug as string, true);
-		data = result.data.data;
-	} catch (err) {
-		console.log(err);
-		notFound = true;
-	}
-	return { props: { data }, notFound };
-};
+export const getServerSideProps = getPageProps(undefined, async (context) => ({
+	data: (await fetchServiceStation(context.params?.slug as string, true)).data.data,
+}));

@@ -25,7 +25,7 @@ const LinkWithImage: FC<Props> = ({ width = 208, height = 156, link, image, targ
 				isOnSSR={!!image}
 				src={image?.formats?.thumbnail.url || image?.url}
 			></Image>
-			{image.caption && (
+			{image?.caption && (
 				<Link component='div' textAlign='center' marginTop='1em'>
 					{image.caption}
 				</Link>

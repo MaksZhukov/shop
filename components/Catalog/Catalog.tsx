@@ -1,14 +1,4 @@
-import {
-	Alert,
-	Container,
-	Input,
-	Link,
-	MenuItem,
-	Pagination,
-	Select,
-	SelectChangeEvent,
-	useMediaQuery,
-} from '@mui/material';
+import { Container, Input, Link, MenuItem, Pagination, Select, SelectChangeEvent, useMediaQuery } from '@mui/material';
 
 import { Box } from '@mui/system';
 import { useThrottle, useDebounce } from 'rooks';
@@ -31,7 +21,6 @@ import NextLink from 'next/link';
 import LinkWithImage from 'components/LinkWithImage';
 import { Filters as IFilters } from 'api/types';
 import { OneNews } from 'api/news/types';
-import getConfig from 'next/config';
 import Typography from 'components/Typography';
 import SEOBox from 'components/SEOBox';
 import HeadSEO from 'components/HeadSEO';
@@ -39,7 +28,6 @@ import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { AxiosResponse } from 'axios';
 import { Article } from 'api/articles/types';
-const { publicRuntimeConfig } = getConfig();
 
 // const DynamicNews = dynamic(() => import('components/News'));
 // const DynamicReviews = dynamic(() => import('components/Reviews'));
@@ -70,7 +58,7 @@ interface Props {
 	filtersConfig: (AutocompleteType | NumberType)[][];
 	generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
-	onClickFind: () => void;
+	onClickFind?: () => void;
 	middleContent?: ReactNode;
 }
 
@@ -227,7 +215,7 @@ const Catalog = ({
 	};
 
 	const renderLinkWithImage = (image: IImage, link: string) => (
-		<WhiteBox key={image.id} textAlign='center'>
+		<WhiteBox key={image?.id || link} textAlign='center'>
 			<LinkWithImage image={image} link={link}></LinkWithImage>
 		</WhiteBox>
 	);
