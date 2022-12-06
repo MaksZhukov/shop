@@ -25,11 +25,11 @@ import { observer } from 'mobx-react';
 import Profile from './Profile';
 import classNames from 'classnames';
 import NextLink from 'next/link';
-import Image from 'next/image';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useOutsideClick } from 'rooks';
 import { Brand } from 'api/brands/types';
 import qs from 'qs';
+import Image from 'components/Image';
 
 interface NavigationChild {
 	name: string;
@@ -233,9 +233,10 @@ const Header = observer(({ brands }: Props) => {
 			<NextLink href='/'>
 				<Image
 					style={{ cursor: 'pointer' }}
-					alt='Picture of the author'
+					alt='Logo'
 					width={150}
 					height={42}
+					isOnSSR={false}
 					src='/logo.jpg'
 				/>
 			</NextLink>
