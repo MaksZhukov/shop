@@ -13,7 +13,6 @@ import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import axios from 'axios';
 import classNames from 'classnames';
 import CarouselProducts from 'components/CarouselProducts';
-import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
 import Image from 'components/Image';
@@ -185,10 +184,7 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 								</Box>
 							</>
 						) : (
-							<EmptyImageIcon
-								size={isMobile ? 300 : isTablet ? 500 : 700}
-								margin={'-8%'}
-							></EmptyImageIcon>
+							<Image alt={data.name} width={104} height={78} src=''></Image>
 						)}
 						<Box
 							flex='1'

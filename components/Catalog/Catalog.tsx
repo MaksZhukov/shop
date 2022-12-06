@@ -58,7 +58,7 @@ interface Props {
 	textTotal?: string;
 	newProductsTitle?: string;
 	searchPlaceholder?: string;
-	cars: Car[];
+	cars?: Car[];
 	discounts?: ILinkWithImage[];
 	advertising?: ILinkWithImage[];
 	articles: Article[];
@@ -70,6 +70,7 @@ interface Props {
 	filtersConfig: (AutocompleteType | NumberType)[][];
 	generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
+	onClickFind: () => void;
 	middleContent?: ReactNode;
 }
 
@@ -81,6 +82,7 @@ const Catalog = ({
 	dataFieldsToShow,
 	filtersConfig,
 	generateFiltersByQuery,
+	onClickFind,
 	cars = [],
 	articles = [],
 	discounts = [],
@@ -254,6 +256,7 @@ const Catalog = ({
 							config={filtersConfig}
 							total={total}
 							fetchData={throttledFetchProducts}
+							onClickFind={onClickFind}
 						></Filters>
 						{renderLinksWithImages(
 							serviceStations.map((item) => ({
@@ -378,10 +381,10 @@ const Catalog = ({
 												</Link>
 											</NextLink>
 											<Image
-												alt={item.image.alternativeText}
+												alt={item.image?.alternativeText || item.name}
 												width={208}
 												height={156}
-												src={item.image?.formats?.thumbnail.url || item.image.url}
+												src={item.image?.formats?.thumbnail.url || item.image?.url}
 											></Image>
 											<Typography textAlign='right' color='text.secondary'>
 												{new Date(item.createdAt).toLocaleDateString('ru-RU')}{' '}

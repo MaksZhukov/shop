@@ -5,13 +5,12 @@ import styles from './ProductItem.module.scss';
 import getConfig from 'next/config';
 // import ShoppingCartButton from 'components/ShoppingCartButton';
 import FavoriteButton from 'components/FavoriteButton';
-import EmptyImageIcon from 'components/EmptyImageIcon';
 import Typography from 'components/Typography';
 import NextLink from 'next/link';
-import Image from 'next/image';
 import Slider from 'react-slick';
 import classNames from 'classnames';
 import { Image as IImage } from 'api/types';
+import Image from 'components/Image';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -45,14 +44,11 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 							.map((item) => (
 								<Image
 									key={item.id}
-									src={
-										publicRuntimeConfig.backendLocalUrl +
-										`${
-											isMobile
-												? item.formats?.small?.url || item.url
-												: item.formats?.thumbnail.url || item.url
-										}`
-									}
+									src={`${
+										isMobile
+											? item.formats?.small?.url || item.url
+											: item.formats?.thumbnail.url || item.url
+									}`}
 									width={isMobile ? 500 : 200}
 									height={isMobile ? 375 : 150}
 									alt={item.alternativeText}
@@ -60,10 +56,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 							))}
 					</Slider>
 				) : (
-					<EmptyImageIcon
-						size={isMobile ? 300 : 250}
-						margin={isMobile ? '-30px auto' : '-25px'}
-					></EmptyImageIcon>
+					<Image src='' alt='photo' width={isMobile ? 500 : 200} height={isMobile ? 375 : 150}></Image>
 				)}
 				<CardContent sx={{ flex: 1, paddingY: '0!important' }}>
 					<Typography lineClamp={1} title={data.h1} component='div' variant='h5'>

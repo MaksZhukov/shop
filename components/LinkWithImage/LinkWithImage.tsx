@@ -1,7 +1,7 @@
 import { Link, Typography } from '@mui/material';
 import { Image as IImage } from 'api/types';
+import Image from 'components/Image';
 import getConfig from 'next/config';
-import Image from 'next/image';
 import NextLink from 'next/link';
 import { FC, HTMLAttributeAnchorTarget } from 'react';
 
@@ -14,24 +14,17 @@ interface Props {
 	height?: number;
 	image: IImage;
 }
-const LinkWithImage: FC<Props> = ({
-	width = 208,
-	height = 156,
-	link,
-	image,
-	targetLink = '_self',
-}) => {
+const LinkWithImage: FC<Props> = ({ width = 208, height = 156, link, image, targetLink = '_self' }) => {
 	return (
 		<NextLink href={link} target={targetLink}>
 			<Image
 				style={{ objectFit: 'contain' }}
-				alt={image.alternativeText}
+				alt={image?.alternativeText}
 				width={width}
 				height={height}
-				src={
-					publicRuntimeConfig.backendLocalUrl +
-					image.formats?.thumbnail.url
-				}></Image>
+				isOnSSR={!!image}
+				src={image?.formats?.thumbnail.url || image?.url}
+			></Image>
 			{image.caption && (
 				<Link component='div' textAlign='center' marginTop='1em'>
 					{image.caption}
