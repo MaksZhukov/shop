@@ -256,7 +256,7 @@ const AwaitingCars: NextPage<Props> = ({
 			onClickFind={fetchData}
 			middleContent={
 				<WhiteBox>
-					{!!cars.length ? (
+					{cars.length ? (
 						cars.map((item) => <CarItem key={item.id} data={item}></CarItem>)
 					) : (
 						<Typography textAlign='center' variant='h5'>

@@ -59,7 +59,7 @@ const CarItem = ({ data }: Props) => {
 				<CardContent sx={{ flex: 1, paddingY: '0!important', width: '100%' }}>
 					<Typography lineClamp={1} title={name} component='div' variant='h5'>
 						<NextLink href={'/awaiting-cars/' + data.slug} passHref>
-							<Link component='a' underline='hover'>
+							<Link component='span' underline='hover'>
 								{name}
 							</Link>
 						</NextLink>
