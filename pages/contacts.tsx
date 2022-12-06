@@ -4,7 +4,6 @@ import { fetchPageContacts } from 'api/pageContacts/pageContacts';
 import { PageContacts } from 'api/pageContacts/types';
 import HeadSEO from 'components/HeadSEO';
 import WhiteBox from 'components/WhiteBox';
-import Image from 'next/image';
 import { getPageProps } from 'services/PagePropsService';
 import SEOBox from 'components/SEOBox';
 import { fetchPage } from 'api/pages';
