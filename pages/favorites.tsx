@@ -1,23 +1,19 @@
 import { Container, List, ListItem, Divider, Button, Link, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import classNames from 'classnames';
-import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
+import Image from 'components/Image';
 // import ShoppingCartButton from 'components/ShoppingCartButton';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react';
-import getConfig from 'next/config';
 import Head from 'next/head';
-import Image from 'next/image';
 import NextLink from 'next/link';
 import { Fragment } from 'react';
 import Slider from 'react-slick';
 import { getPageProps } from 'services/PagePropsService';
 import { useStore } from 'store';
 import styles from './favorites.module.scss';
-
-const { publicRuntimeConfig } = getConfig();
 
 const Favorites = () => {
 	const store = useStore();
@@ -60,14 +56,11 @@ const Favorites = () => {
 														.filter((item) => item.formats)
 														.map((image) => (
 															<Image
-																src={
-																	publicRuntimeConfig.backendLocalUrl +
-																	`${
-																		isMobile
-																			? image.formats?.small?.url || image.url
-																			: image.formats?.thumbnail?.url || image.url
-																	}`
-																}
+																src={`${
+																	isMobile
+																		? image.formats?.small?.url || image.url
+																		: image.formats?.thumbnail?.url || image.url
+																}`}
 																alt={image.alternativeText}
 																key={image.id}
 																width={isMobile ? 500 : 150}
@@ -76,7 +69,12 @@ const Favorites = () => {
 														))}
 												</Slider>
 											) : (
-												<EmptyImageIcon></EmptyImageIcon>
+												<Image
+													src={''}
+													alt={item.product.name}
+													width={isMobile ? 500 : 150}
+													height={isMobile ? 375 : 100}
+												></Image>
 											)}
 											<Box flex='1' padding='1em'>
 												<Typography

@@ -13,7 +13,6 @@ import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import axios from 'axios';
 import classNames from 'classnames';
 import CarouselProducts from 'components/CarouselProducts';
-import EmptyImageIcon from 'components/EmptyImageIcon';
 import FavoriteButton from 'components/FavoriteButton';
 import HeadSEO from 'components/HeadSEO';
 import Image from 'components/Image';
@@ -28,6 +27,7 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
+import { getPageProps } from 'services/PagePropsService';
 import { isTire, isWheel } from 'services/ProductService';
 import { fetchSparePart, fetchSpareParts } from '../../../api/spareParts/spareParts';
 import { SparePart } from '../../../api/spareParts/types';
@@ -185,10 +185,7 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 								</Box>
 							</>
 						) : (
-							<EmptyImageIcon
-								size={isMobile ? 300 : isTablet ? 500 : 700}
-								margin={'-8%'}
-							></EmptyImageIcon>
+							<Image alt={data.name} width={104} height={78} src=''></Image>
 						)}
 						<Box
 							flex='1'
@@ -338,62 +335,53 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{}, { slug: string; type: ProductType }> = async (context) => {
-	try {
-		let fetchFuncData = {
-			sparePart: fetchSparePart,
-			tire: fetchTire,
-			wheel: fetchWheel,
-			cabin: fetchCabin,
-		}[(context.params as { slug: string; type: ProductType }).type];
-		let fetchRelationalProducts = {
-			sparePart: fetchSpareParts,
-			tire: fetchTires,
-			wheel: fetchWheels,
-			cabin: fetchCabins,
-		}[(context.params as { slug: string; type: ProductType }).type];
-		const [
-			{
-				data: { data },
-			},
-			{
-				data: { data: page },
-			},
-		] = await Promise.all([fetchFuncData(context.params?.slug || '', true), fetchPageProduct()]);
-		const {
-			data: { data: relatedProducts },
-		} = await fetchRelationalProducts(
-			{
-				filters: {
-					id: {
-						$ne: data.id,
-					},
-					...(isTire(data) ? { brand: data.brand.id } : { model: data.model?.id || '' }),
+export const getServerSideProps = getPageProps(undefined, async (context) => {
+	let fetchFuncData = {
+		sparePart: fetchSparePart,
+		tire: fetchTire,
+		wheel: fetchWheel,
+		cabin: fetchCabin,
+	}[(context.params as { slug: string; type: ProductType }).type];
+	let fetchRelationalProducts = {
+		sparePart: fetchSpareParts,
+		tire: fetchTires,
+		wheel: fetchWheels,
+		cabin: fetchCabins,
+	}[(context.params as { slug: string; type: ProductType }).type];
+	const [
+		{
+			data: { data },
+		},
+		{
+			data: { data: page },
+		},
+	] = await Promise.all([fetchFuncData(context.params?.slug || '', true), fetchPageProduct()]);
+	const {
+		data: { data: relatedProducts },
+	} = await fetchRelationalProducts(
+		{
+			filters: {
+				id: {
+					$ne: data.id,
 				},
-				populate: ['images'],
+				...(isTire(data) ? { brand: data.brand.id } : { model: data.model?.id || '' }),
 			},
-			true
-		);
-		const autoSynonyms = page?.autoSynonyms.split(',') || [];
-		let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
-		return {
-			props: {
-				data,
-				page: {
-					...page,
-					textAfterDescription: page?.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-					title: page.title.replace('{h1}', data.h1),
-					description: page.description.replace('{h1}', data.h1),
-				},
-				relatedProducts,
-			},
-		};
-	} catch (err) {
-		if (axios.isAxiosError(err)) {
-			console.error(err.response);
-		}
-		return { props: {}, notFound: true };
-	}
-};
+			populate: ['images'],
+		},
+		true
+	);
+	const autoSynonyms = page?.autoSynonyms.split(',') || [];
+	let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
+	return {
+		data,
+		page: {
+			...page,
+			textAfterDescription: page?.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
+			title: page.title.replace('{h1}', data.h1),
+			description: page.description.replace('{h1}', data.h1),
+		},
+		relatedProducts,
+	};
+});
 
 export default ProductPage;

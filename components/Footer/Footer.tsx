@@ -13,6 +13,7 @@ interface Props {
 }
 
 const Footer: FC<Props> = ({ footer }) => {
+	// console.log(footer);
 	const Map = () => {
 		return (
 			<div className={styles.map}>
@@ -38,7 +39,7 @@ const Footer: FC<Props> = ({ footer }) => {
 
 					<Grid item xs={3}>
 						<Box className={styles.footer__item} textAlign='left'>
-							{footer.socials.map((item) => (
+							{/* {footer.socials.map((item) => (
 								<ListItemButton
 									component='a'
 									key={item.id}
@@ -47,14 +48,14 @@ const Footer: FC<Props> = ({ footer }) => {
 									color='inherit'
 								>
 									<Image
-										alt={item.image.alternativeText}
+										alt={item.image?.alternativeText}
 										width={20}
 										height={20}
-										src={item.image.url}
+										src={item.image?.url}
 									></Image>
 									<Typography marginLeft='0.5em'>{item.image.caption}</Typography>
 								</ListItemButton>
-							))}
+							))} */}
 						</Box>
 					</Grid>
 
