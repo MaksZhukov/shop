@@ -17,7 +17,6 @@ interface Props {
 }
 
 const CarPage = ({ data }: Props) => {
-	console.log(data);
 	let printOptions = [
 		{ text: 'Артикул', value: data.id },
 		{ text: 'Марка', value: data.brand?.name },
