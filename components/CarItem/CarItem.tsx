@@ -1,6 +1,5 @@
 import { Card, CardContent, Button, Link, Grid, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
-import { useRouter } from 'next/router';
 import styles from './CarItem.module.scss';
 import Typography from 'components/Typography';
 import NextLink from 'next/link';
