@@ -7,7 +7,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { createTheme, Snackbar, Stack, ThemeProvider } from '@mui/material';
+import { createTheme, Link, Snackbar, Stack, ThemeProvider } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { useEffect, useRef, useState } from 'react';
 import { getJwt, getReviewEmail, saveJwt } from '../services/LocalStorageService';
@@ -19,6 +19,11 @@ import NotistackService from 'services/NotistackService';
 import { fetchBrands } from 'api/brands/brands';
 import { MAX_LIMIT } from 'api/constants';
 import { Brand } from 'api/brands/types';
+import Typography from 'components/Typography';
+import Breadcrumbs from 'components/Breadcrumbs';
+import HeadSEO from 'components/HeadSEO';
+import { Container } from '@mui/system';
+import SEOBox from 'components/SEOBox';
 
 let theme = createTheme({
 	typography: {
@@ -90,12 +95,24 @@ function MyApp({
 					maxSnack={3}
 				>
 					<Layout>
+						<HeadSEO
+							title={restPageProps.page?.seo?.title}
+							description={restPageProps.page?.seo?.description}
+							keywords={restPageProps.page?.seo?.description}
+						></HeadSEO>
 						<Header brands={brands}></Header>
-						<Content>
-							<RouteShield>
-								<Component {...restPageProps} brands={brands} />
-							</RouteShield>
-						</Content>
+						<RouteShield>
+							<Content>
+								<Container>
+									<Breadcrumbs h1={restPageProps.data?.h1}></Breadcrumbs>
+									<Component {...restPageProps} brands={brands} />
+									<SEOBox
+										images={restPageProps.page?.seo?.images}
+										content={restPageProps.page?.seo?.content}
+									></SEOBox>
+								</Container>
+							</Content>
+						</RouteShield>
 						<Footer footer={footer}></Footer>
 					</Layout>
 				</SnackbarProvider>

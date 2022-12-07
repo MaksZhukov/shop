@@ -19,47 +19,38 @@ import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
-    page: DefaultPage;
-    serviceStations: ApiResponse<ServiceStation[]>;
+	page: DefaultPage;
+	serviceStations: ApiResponse<ServiceStation[]>;
 }
 
 const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
-    return (
-        <Container>
-            <HeadSEO
-                title={page.seo?.title}
-                description={page.seo?.description}
-                keywords={page.seo?.keywords}
-            ></HeadSEO>
-
-            <WhiteBox>
-                <Typography textAlign="center" component="h1" variant="h4" marginBottom="1em">
-                    {page.seo?.h1 || 'СТО'}
-                </Typography>
-                {serviceStations.data.map((item) => (
-                    <Card
-                        key={item.id}
-                        name={item.name}
-                        description={item.description}
-                        image={item.image}
-                        link={`/service-stations/${item.slug}`}
-                    ></Card>
-                ))}
-            </WhiteBox>
-            <SEOBox images={page.seo?.images} content={page.seo?.content}></SEOBox>
-        </Container>
-    );
+	return (
+		<WhiteBox>
+			<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
+				{page.seo?.h1 || 'СТО'}
+			</Typography>
+			{serviceStations.data.map((item) => (
+				<Card
+					key={item.id}
+					name={item.name}
+					description={item.description}
+					image={item.image}
+					link={`/service-stations/${item.slug}`}
+				></Card>
+			))}
+		</WhiteBox>
+	);
 };
 
 export default Vacancies;
 
 export const getStaticProps = getPageProps(fetchPage('service-station'), async () => ({
-    serviceStations: (
-        await fetchServiceStations(
-            {
-                populate: 'image',
-            },
-            true
-        )
-    ).data,
+	serviceStations: (
+		await fetchServiceStations(
+			{
+				populate: 'image',
+			},
+			true
+		)
+	).data,
 }));

@@ -225,181 +225,177 @@ const Catalog = ({
 
 	return (
 		<>
-			<HeadSEO title={seo?.title} description={seo?.description} keywords={seo?.keywords}></HeadSEO>
-			<Container>
-				<WhiteBox>
-					<Typography textTransform='capitalize' component='h1' variant='h4' textAlign='center'>
-						{seo?.h1}
-					</Typography>
-				</WhiteBox>
-				<Box className={classNames(styles.wrapper, isTablet && styles.wrapper_tablet)}>
-					<Box
-						marginRight='1em'
-						component='aside'
-						className={classNames(styles.sider, styles.sider_left, isTablet && styles.sider_tablet)}
-					>
-						<Filters
-							textTotal={textTotal ? textTotal : total ? `Найдено: ${total}` : undefined}
-							btn={filtersBtn}
-							config={filtersConfig}
-							total={total}
-							fetchData={throttledFetchProducts}
-							onClickFind={onClickFind}
-						></Filters>
-						{renderLinksWithImages(
-							serviceStations.map((item) => ({
-								image: item.image,
-								link: `/service-stations/${item.slug}`,
-							}))
-						)}
-						{renderLinksWithImages(
-							autocomises.map((item) => ({
-								image: item.image,
-								link: `/autocomises/${item.slug}`,
-							}))
-						)}
-						{deliveryAuto && renderLinkWithImage(deliveryAuto.image, deliveryAuto.link)}
-					</Box>
-					<Box
-						marginRight='1em'
-						width='calc(100% - 500px - 2em)'
-						// className={classNames(
-						// 	styles.content,
-						// 	isTablet && styles.content_tablet
-						// )}
-					>
-						{middleContent ? (
-							middleContent
-						) : (
-							<>
-								<WhiteBox display='flex'>
-									<Input
-										className={styles['search']}
-										onChange={handleChangeSearch}
-										value={searchValue}
-										placeholder={searchPlaceholder}
-										fullWidth
-									></Input>
-									<Select
-										variant='standard'
-										value={sort as any}
-										fullWidth
-										className={styles['sort-select']}
-										onChange={handleChangeSort}
-									>
-										{selectSortItems.map((item) => (
-											<MenuItem key={item.name} value={item.value}>
-												{item.name}
-											</MenuItem>
-										))}
-									</Select>
-								</WhiteBox>
-								<WhiteBox
-									className={classNames({
-										[styles['loading']]: isLoading,
-										[styles['content-items_no-data']]: !data.length,
-									})}
-								>
-									{data.length ? (
-										data.map((item) => (
-											<ProductItem
-												dataFieldsToShow={dataFieldsToShow || []}
-												key={item.id}
-												data={item}
-											></ProductItem>
-										))
-									) : isFirstDataLoaded && !isLoading ? (
-										<Typography textAlign='center' variant='h5'>
-											Данных не найдено
-										</Typography>
-									) : (
-										<></>
-									)}
-								</WhiteBox>
-								{pageCount > 1 && (
-									<WhiteBox display='flex' justifyContent='center'>
-										<Pagination
-											page={+page}
-											siblingCount={2}
-											color='primary'
-											count={pageCount}
-											onChange={handleChangePage}
-											variant='outlined'
-										/>
-									</WhiteBox>
-								)}
-							</>
-						)}
-					</Box>
-
-					<Box className={styles['sider-right']}>
-						{!!cars.length && (
-							<WhiteBox padding='1em 1.5em'>
-								<Slider swipe={false}>
-									{cars
-										.filter((item) => item.images)
-										.map((item) => (
-											<Slider arrows={false} key={item.id} autoplay autoplaySpeed={3000}>
-												{item.images?.map((image) => (
-													<Image
-														alt={image.alternativeText}
-														key={image.id}
-														width={208}
-														height={156}
-														src={image.formats?.thumbnail.url || image.url}
-													></Image>
-												))}
-											</Slider>
-										))}
-								</Slider>
-							</WhiteBox>
-						)}
-						{renderLinksWithImages(discounts)}
-						{renderLinksWithImages(advertising)}
-						{!!articles.length && (
-							<WhiteBox padding='1em 1.5em'>
-								<Slider autoplay autoplaySpeed={3000}>
-									{articles.map((item) => (
-										<Box key={item.id}>
-											<NextLink href={`/articles/${item.slug}`}>
-												<Link component='span' underline='hover'>
-													<Typography marginBottom='0.5em' lineClamp={2}>
-														{item.name}
-													</Typography>
-												</Link>
-											</NextLink>
-											<Image
-												alt={item.image?.alternativeText || item.name}
-												width={208}
-												height={156}
-												src={item.image?.formats?.thumbnail.url || item.image?.url}
-											></Image>
-											<Typography textAlign='right' color='text.secondary'>
-												{new Date(item.createdAt).toLocaleDateString('ru-RU')}{' '}
-												{new Date(item.createdAt).toLocaleTimeString('ru-RU', {
-													hour: '2-digit',
-													minute: '2-digit',
-												})}
-											</Typography>
-										</Box>
-									))}
-								</Slider>
-							</WhiteBox>
-						)}
-					</Box>
+			<WhiteBox>
+				<Typography textTransform='capitalize' component='h1' variant='h4' textAlign='center'>
+					{seo?.h1}
+				</Typography>
+			</WhiteBox>
+			<Box className={classNames(styles.wrapper, isTablet && styles.wrapper_tablet)}>
+				<Box
+					marginRight='1em'
+					component='aside'
+					className={classNames(styles.sider, styles.sider_left, isTablet && styles.sider_tablet)}
+				>
+					<Filters
+						textTotal={textTotal ? textTotal : total ? `Найдено: ${total}` : undefined}
+						btn={filtersBtn}
+						config={filtersConfig}
+						total={total}
+						fetchData={throttledFetchProducts}
+						onClickFind={onClickFind}
+					></Filters>
+					{renderLinksWithImages(
+						serviceStations.map((item) => ({
+							image: item.image,
+							link: `/service-stations/${item.slug}`,
+						}))
+					)}
+					{renderLinksWithImages(
+						autocomises.map((item) => ({
+							image: item.image,
+							link: `/autocomises/${item.slug}`,
+						}))
+					)}
+					{deliveryAuto && renderLinkWithImage(deliveryAuto.image, deliveryAuto.link)}
 				</Box>
-				{!!newProducts.length && (
-					<DynamicCarouselProducts
-						data={newProducts}
-						title={
-							<Typography marginBottom='1em' marginTop='1em' textAlign='center' variant='h5'>
-								Новые {newProductsTitle}
-							</Typography>
-						}
-					></DynamicCarouselProducts>
-				)}
-				<SEOBox images={seo?.images} content={seo?.content}></SEOBox>
-			</Container>
+				<Box
+					marginRight='1em'
+					width='calc(100% - 500px - 2em)'
+					// className={classNames(
+					// 	styles.content,
+					// 	isTablet && styles.content_tablet
+					// )}
+				>
+					{middleContent ? (
+						middleContent
+					) : (
+						<>
+							<WhiteBox display='flex'>
+								<Input
+									className={styles['search']}
+									onChange={handleChangeSearch}
+									value={searchValue}
+									placeholder={searchPlaceholder}
+									fullWidth
+								></Input>
+								<Select
+									variant='standard'
+									value={sort as any}
+									fullWidth
+									className={styles['sort-select']}
+									onChange={handleChangeSort}
+								>
+									{selectSortItems.map((item) => (
+										<MenuItem key={item.name} value={item.value}>
+											{item.name}
+										</MenuItem>
+									))}
+								</Select>
+							</WhiteBox>
+							<WhiteBox
+								className={classNames({
+									[styles['loading']]: isLoading,
+									[styles['content-items_no-data']]: !data.length,
+								})}
+							>
+								{data.length ? (
+									data.map((item) => (
+										<ProductItem
+											dataFieldsToShow={dataFieldsToShow || []}
+											key={item.id}
+											data={item}
+										></ProductItem>
+									))
+								) : isFirstDataLoaded && !isLoading ? (
+									<Typography textAlign='center' variant='h5'>
+										Данных не найдено
+									</Typography>
+								) : (
+									<></>
+								)}
+							</WhiteBox>
+							{pageCount > 1 && (
+								<WhiteBox display='flex' justifyContent='center'>
+									<Pagination
+										page={+page}
+										siblingCount={2}
+										color='primary'
+										count={pageCount}
+										onChange={handleChangePage}
+										variant='outlined'
+									/>
+								</WhiteBox>
+							)}
+						</>
+					)}
+				</Box>
+
+				<Box className={styles['sider-right']}>
+					{!!cars.length && (
+						<WhiteBox padding='1em 1.5em'>
+							<Slider swipe={false}>
+								{cars
+									.filter((item) => item.images)
+									.map((item) => (
+										<Slider arrows={false} key={item.id} autoplay autoplaySpeed={3000}>
+											{item.images?.map((image) => (
+												<Image
+													alt={image.alternativeText}
+													key={image.id}
+													width={208}
+													height={156}
+													src={image.formats?.thumbnail.url || image.url}
+												></Image>
+											))}
+										</Slider>
+									))}
+							</Slider>
+						</WhiteBox>
+					)}
+					{renderLinksWithImages(discounts)}
+					{renderLinksWithImages(advertising)}
+					{!!articles.length && (
+						<WhiteBox padding='1em 1.5em'>
+							<Slider autoplay autoplaySpeed={3000}>
+								{articles.map((item) => (
+									<Box key={item.id}>
+										<NextLink href={`/articles/${item.slug}`}>
+											<Link component='span' underline='hover'>
+												<Typography marginBottom='0.5em' lineClamp={2}>
+													{item.name}
+												</Typography>
+											</Link>
+										</NextLink>
+										<Image
+											alt={item.image?.alternativeText || item.name}
+											width={208}
+											height={156}
+											src={item.image?.formats?.thumbnail.url || item.image?.url}
+										></Image>
+										<Typography textAlign='right' color='text.secondary'>
+											{new Date(item.createdAt).toLocaleDateString('ru-RU')}{' '}
+											{new Date(item.createdAt).toLocaleTimeString('ru-RU', {
+												hour: '2-digit',
+												minute: '2-digit',
+											})}
+										</Typography>
+									</Box>
+								))}
+							</Slider>
+						</WhiteBox>
+					)}
+				</Box>
+			</Box>
+			{!!newProducts.length && (
+				<DynamicCarouselProducts
+					data={newProducts}
+					title={
+						<Typography marginBottom='1em' marginTop='1em' textAlign='center' variant='h5'>
+							Новые {newProductsTitle}
+						</Typography>
+					}
+				></DynamicCarouselProducts>
+			)}
 		</>
 	);
 };

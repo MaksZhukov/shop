@@ -44,7 +44,7 @@ interface Navigation {
 	children: NavigationChild[];
 }
 
-const getNavigation = (brands: Brand[]): Navigation[] => [
+export const getNavigation = (brands: Brand[]): Navigation[] => [
 	{
 		name: 'Магазин',
 		children: [
