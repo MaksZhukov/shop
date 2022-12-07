@@ -48,10 +48,9 @@ const Reviews = ({ data }: Props) => {
 			}
 			setReviews(data);
 		} catch (err) {
-			enqueueSnackbar(
-				'Произошла какая-то ошибка при загрузке отзывов, обратитесь в поддержку',
-				{ variant: 'error' }
-			);
+			enqueueSnackbar('Произошла какая-то ошибка при загрузке отзывов, обратитесь в поддержку', {
+				variant: 'error',
+			});
 		}
 	};
 	useEffect(() => {
@@ -60,70 +59,45 @@ const Reviews = ({ data }: Props) => {
 
 	const handleChangePage = (_: any, newPage: number) => {
 		router.query.page = newPage.toString();
-		router.push({ pathname: router.pathname, query: router.query }, undefined, {shallow: true});
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 	};
 
 	return (
-		<>
-			<HeadSEO
-				title={data.seo?.title || 'Отзывы'}
-				description={data.seo?.description || 'Отзывы покупателей'}
-				keywords={
-					data.seo?.keywords ||
-					'отзывы от покупателей, отзывы, рейтинг магазина'
-				}></HeadSEO>
-			<Container>
-				<WhiteBox>
-					<Typography component='h1' variant='h4' textAlign='center'>
-						{data.seo?.h1 || 'Отзывы'}
-					</Typography>
-					{reviews.map((item, index) => (
-						<Fragment key={item.id}>
-							<Box paddingY='1em' key={item.id}>
-								<Typography color='text.secondary'>
-									{item.authorName}
-								</Typography>
-								<Rating readOnly value={item.rating}></Rating>
-								<Typography color='text.secondary'>
-									{new Date(
-										item.publishedAt
-									).toLocaleDateString()}
-								</Typography>
-								{item.description && (
-									<Typography
-										marginTop='0.5em'
-										color='text.secondary'>
-										{item.description}
-									</Typography>
-								)}
-							</Box>
-							{reviews.length - 1 !== index && (
-								<Divider></Divider>
-							)}
-						</Fragment>
-					))}
-					{pageCount !== 1 && (
-						<Box
-							display='flex'
-							marginY='1.5em'
-							justifyContent='center'>
-							<Pagination
-								page={+page}
-								siblingCount={2}
-								color='primary'
-								count={pageCount}
-								onChange={handleChangePage}
-								variant='outlined'
-							/>
-						</Box>
-					)}
-					<AddReview></AddReview>
-				</WhiteBox>
-				<SEOBox
-					images={data.seo?.images}
-					content={data.seo?.content}></SEOBox>
-			</Container>
-		</>
+		<WhiteBox>
+			<Typography component='h1' variant='h4' textAlign='center'>
+				{data.seo?.h1 || 'Отзывы'}
+			</Typography>
+			{reviews.map((item, index) => (
+				<Fragment key={item.id}>
+					<Box paddingY='1em' key={item.id}>
+						<Typography color='text.secondary'>{item.authorName}</Typography>
+						<Rating readOnly value={item.rating}></Rating>
+						<Typography color='text.secondary'>
+							{new Date(item.publishedAt).toLocaleDateString()}
+						</Typography>
+						{item.description && (
+							<Typography marginTop='0.5em' color='text.secondary'>
+								{item.description}
+							</Typography>
+						)}
+					</Box>
+					{reviews.length - 1 !== index && <Divider></Divider>}
+				</Fragment>
+			))}
+			{pageCount !== 1 && (
+				<Box display='flex' marginY='1.5em' justifyContent='center'>
+					<Pagination
+						page={+page}
+						siblingCount={2}
+						color='primary'
+						count={pageCount}
+						onChange={handleChangePage}
+						variant='outlined'
+					/>
+				</Box>
+			)}
+			<AddReview></AddReview>
+		</WhiteBox>
 	);
 };
 

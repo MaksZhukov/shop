@@ -19,29 +19,20 @@ interface Props {
 
 const Vacancies: NextPage<Props> = ({ page, autocomises }) => {
 	return (
-		<Container>
-			<HeadSEO
-				title={page.seo?.title}
-				description={page.seo?.description}
-				keywords={page.seo?.keywords}
-			></HeadSEO>
-
-			<WhiteBox>
-				<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
-					{page.seo?.h1 || 'Автокомисы'}
-				</Typography>
-				{autocomises.data.map((item) => (
-					<Card
-						key={item.id}
-						description={item.description}
-						name={item.name}
-						image={item.image}
-						link={`/autocomises/${item.slug}`}
-					></Card>
-				))}
-			</WhiteBox>
-			<SEOBox images={page.seo?.images} content={page.seo?.content}></SEOBox>
-		</Container>
+		<WhiteBox>
+			<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
+				{page.seo?.h1 || 'Автокомисы'}
+			</Typography>
+			{autocomises.data.map((item) => (
+				<Card
+					key={item.id}
+					description={item.description}
+					name={item.name}
+					image={item.image}
+					link={`/autocomises/${item.slug}`}
+				></Card>
+			))}
+		</WhiteBox>
 	);
 };
 

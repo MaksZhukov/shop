@@ -47,41 +47,32 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 		setData(data);
 	};
 	return (
-		<Container>
-			<HeadSEO
-				title={page.seo?.title || 'Статьи'}
-				description={page.seo?.description || 'Статью'}
-				keywords={page.seo?.keywords || 'статья'}
-			></HeadSEO>
-
-			<WhiteBox>
-				<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
-					{page.seo?.h1 || 'Статьи'}
-				</Typography>
-				{data.map((item) => (
-					<Card
-						key={item.id}
-						description={item.description}
-						name={item.name}
-						image={item.image}
-						link={`/articles/${item.slug}`}
-					></Card>
-				))}
-				{pageCount > 1 && (
-					<Box display='flex' justifyContent='center'>
-						<Pagination
-							page={+qPage}
-							siblingCount={2}
-							color='primary'
-							count={pageCount}
-							onChange={handleChangePage}
-							variant='outlined'
-						/>
-					</Box>
-				)}
-			</WhiteBox>
-			<SEOBox images={page.seo?.images} content={page.seo?.content}></SEOBox>
-		</Container>
+		<WhiteBox>
+			<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
+				{page.seo?.h1 || 'Статьи'}
+			</Typography>
+			{data.map((item) => (
+				<Card
+					key={item.id}
+					description={item.description}
+					name={item.name}
+					image={item.image}
+					link={`/articles/${item.slug}`}
+				></Card>
+			))}
+			{pageCount > 1 && (
+				<Box display='flex' justifyContent='center'>
+					<Pagination
+						page={+qPage}
+						siblingCount={2}
+						color='primary'
+						count={pageCount}
+						onChange={handleChangePage}
+						variant='outlined'
+					/>
+				</Box>
+			)}
+		</WhiteBox>
 	);
 };
 

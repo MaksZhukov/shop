@@ -16,39 +16,28 @@ interface Props {
 
 const Article: NextPage<Props> = ({ data }) => {
 	return (
-		<>
-			<HeadSEO title={data.seo?.title} description={data.seo?.content} keywords={data.seo?.keywords}></HeadSEO>
-			<Container>
-				<WhiteBox>
-					<Typography component='h1' variant='h4' gutterBottom>
-						{data.name}
-					</Typography>
-					<Typography variant='body1' color='text.secondary' gutterBottom>
-						Категория: {data.type}
-					</Typography>
-					<Typography variant='body1' color='text.secondary' gutterBottom>
-						Дата публиации: {new Date(data.createdAt).toLocaleDateString('ru-RU')}{' '}
-						{new Date(data.createdAt).toLocaleTimeString('ru-RU', {
-							hour: '2-digit',
-							minute: '2-digit',
-						})}
-					</Typography>
-					<Box>
-						<Box marginRight='1em' sx={{ float: 'left' }}>
-							<Image
-								alt={data.image.alternativeText}
-								width={640}
-								height={480}
-								src={data.image?.url}
-							></Image>
-						</Box>
-						<ReactMarkdown content={data.description}></ReactMarkdown>
-						<Box sx={{ clear: 'both' }}></Box>
-					</Box>
-				</WhiteBox>
-				<SEOBox content={data.seo?.content} images={data.seo?.images}></SEOBox>
-			</Container>
-		</>
+		<WhiteBox>
+			<Typography component='h1' variant='h4' gutterBottom>
+				{data.name}
+			</Typography>
+			<Typography variant='body1' color='text.secondary' gutterBottom>
+				Категория: {data.type}
+			</Typography>
+			<Typography variant='body1' color='text.secondary' gutterBottom>
+				Дата публиации: {new Date(data.createdAt).toLocaleDateString('ru-RU')}{' '}
+				{new Date(data.createdAt).toLocaleTimeString('ru-RU', {
+					hour: '2-digit',
+					minute: '2-digit',
+				})}
+			</Typography>
+			<Box>
+				<Box marginRight='1em' sx={{ float: 'left' }}>
+					<Image alt={data.image.alternativeText} width={640} height={480} src={data.image?.url}></Image>
+				</Box>
+				<ReactMarkdown content={data.description}></ReactMarkdown>
+				<Box sx={{ clear: 'both' }}></Box>
+			</Box>
+		</WhiteBox>
 	);
 };
 

@@ -16,19 +16,9 @@ interface Props {
 
 const Contacts = ({ page }: Props) => {
 	return (
-		<>
-			<HeadSEO
-				title={page.seo?.title}
-				description={page.seo?.description}
-				keywords={page.seo?.keywords}
-			></HeadSEO>
-			<Container>
-				<WhiteBox>
-					<ReactMarkdown content={page.content}></ReactMarkdown>
-				</WhiteBox>
-				<SEOBox images={page.seo?.images} content={page.seo?.content}></SEOBox>
-			</Container>
-		</>
+		<WhiteBox>
+			<ReactMarkdown content={page.content}></ReactMarkdown>
+		</WhiteBox>
 	);
 };
 
