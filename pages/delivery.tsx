@@ -1,10 +1,7 @@
 import { FC } from 'react';
 import { Typography } from '@mui/material';
-import { Container } from '@mui/system';
 import WhiteBox from 'components/WhiteBox';
 import { getPageProps } from 'services/PagePropsService';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import ReactMarkdown from 'components/ReactMarkdown';

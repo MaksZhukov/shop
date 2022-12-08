@@ -1,6 +1,6 @@
 import { Box, Button, Link, Typography } from '@mui/material';
-import { PageProduct } from 'api/pageProduct/types';
-import { Product as IProduct, ProductType } from 'api/types';
+import { PageProduct } from 'api/pages/types';
+import { Image as IImage, LinkWithImage as ILinkWithImage, Product as IProduct, ProductType } from 'api/types';
 import classNames from 'classnames';
 import CarouselProducts from 'components/CarouselProducts';
 import FavoriteButton from 'components/FavoriteButton';

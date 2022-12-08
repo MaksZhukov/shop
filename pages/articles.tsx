@@ -1,12 +1,7 @@
-import { Box, Link, Pagination, Typography } from '@mui/material';
-import { Container } from '@mui/system';
+import { Box, Pagination, Typography } from '@mui/material';
 import { fetchArticles } from 'api/articles/articles';
 import { Article, Article as IArticle } from 'api/articles/types';
-import { fetchPageArticles } from 'api/pageArticles/pageArticles';
-import { PageArticles } from 'api/pageArticles/types';
-import { ApiResponse, MetaResponse } from 'api/types';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
+import { ApiResponse } from 'api/types';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
 import getConfig from 'next/config';
@@ -14,13 +9,15 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import Card from 'components/Card';
+import { fetchPage } from 'api/pages';
+import { DefaultPage } from 'api/pages/types';
 
 const { publicRuntimeConfig } = getConfig();
 
 const LIMIT = 10;
 
 interface Props {
-	page: PageArticles;
+	page: DefaultPage;
 	articles: ApiResponse<Article[]>;
 }
 
@@ -78,7 +75,7 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 
 export default Articles;
 
-export const getServerSideProps = getPageProps(fetchPageArticles, async (context) => ({
+export const getServerSideProps = getPageProps(fetchPage('article'), async (context) => ({
 	articles: (
 		await fetchArticles(
 			{

@@ -9,8 +9,8 @@ import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import Slider from 'react-slick';
 import classNames from 'classnames';
-import { Image as IImage } from 'api/types';
 import Image from 'components/Image';
+import { getProductTypeSlug } from 'services/ProductService';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -60,7 +60,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 				)}
 				<CardContent sx={{ flex: 1, paddingY: '0!important' }}>
 					<Typography lineClamp={1} title={data.h1} component='div' variant='h5'>
-						<NextLink href={`/products/${data.type}/` + data.slug}>
+						<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
 							<Link component='span' underline='hover'>
 								{data.h1 || data.h1}
 							</Link>
@@ -126,7 +126,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 				</Box>
 				<Box>
 					<Button variant='outlined'>
-						<NextLink href={`/products/${data.type}/` + data.slug}>Подробнее</NextLink>
+						<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>Подробнее</NextLink>
 					</Button>
 					<FavoriteButton product={data}></FavoriteButton>
 					{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}

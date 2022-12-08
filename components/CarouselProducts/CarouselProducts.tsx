@@ -6,6 +6,7 @@ import WhiteBox from 'components/WhiteBox';
 import NextLink from 'next/link';
 import { FC, ReactNode } from 'react';
 import Slider from 'react-slick';
+import { getProductTypeSlug } from 'services/ProductService';
 import styles from './CarouselProducts.module.scss';
 
 interface Props {
@@ -82,7 +83,7 @@ const CarouselProducts: FC<Props> = ({ title, data, slidesToShow = 4 }) => {
 								<Image style={{ margin: 'auto' }} alt={item.name} src={''} width={200} height={150} />
 							)}
 							<Typography marginTop='1em' variant='h6' title={item.h1 || item.name} lineClamp={1}>
-								<NextLink href={`/products/${item.type}/` + item.slug}>
+								<NextLink href={`/${getProductTypeSlug(item)}/` + item.slug}>
 									<Link component='span' underline='hover'>
 										{item.h1 || item.name}
 									</Link>

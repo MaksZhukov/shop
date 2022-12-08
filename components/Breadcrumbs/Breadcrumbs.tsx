@@ -22,7 +22,8 @@ let PATH_NAMES = {
 	favorites: 'Избранные',
 	delivery: 'Доставка',
 	contacts: 'Контакты',
-	'car-dismantling-photos': 'Фото разборки',
+	'company-photo': 'Фото разборки',
+	'car-dismantling-photos': 'Фото/вид разборки',
 	'awaiting-cars': 'Ожидаемые авто',
 	autocomises: 'Автокомисы',
 };

@@ -1,5 +1,4 @@
-import { Alert, CircularProgress, Container, Pagination, Typography, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { CircularProgress, Pagination, Typography } from '@mui/material';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchAutocomises } from 'api/autocomises/autocomises';
@@ -13,9 +12,8 @@ import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
-import { PageAwaitingCars } from 'api/pageAwaitingCars/types';
-import { fetchPageMain } from 'api/pageMain/pageMain';
 import { fetchPage } from 'api/pages';
+import { DefaultPage, PageMain } from 'api/pages/types';
 import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { ServiceStation } from 'api/serviceStations/types';
 import { ApiResponse, LinkWithImage } from 'api/types';
@@ -31,7 +29,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	page: PageAwaitingCars;
+	page: DefaultPage;
 	articles: Article[];
 	advertising: LinkWithImage[];
 	autocomises: Autocomis[];
@@ -290,7 +288,7 @@ export const getServerSideProps = getPageProps(
 			data: {
 				data: { advertising, deliveryAuto, discounts },
 			},
-		} = await fetchPageMain();
+		} = await fetchPage<PageMain>('main')();
 		return {
 			advertising,
 			deliveryAuto,

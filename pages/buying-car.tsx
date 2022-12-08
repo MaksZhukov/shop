@@ -1,15 +1,12 @@
 import { Typography } from '@mui/material';
-import { Container } from '@mui/system';
-import { fetchPageBuyingCar } from 'api/pageBuyingCar/pageBuyingCar';
-import { PageBuyingCar } from 'api/pageBuyingCar/types';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
+import { fetchPage } from 'api/pages';
+import { DefaultPage } from 'api/pages/types';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	page: PageBuyingCar;
+	page: DefaultPage;
 }
 
 const BuyingCar: NextPage<Props> = ({ page }) => {
@@ -76,4 +73,4 @@ const BuyingCar: NextPage<Props> = ({ page }) => {
 
 export default BuyingCar;
 
-export const getStaticProps = getPageProps(fetchPageBuyingCar);
+export const getStaticProps = getPageProps(fetchPage('buying-car'));

@@ -1,14 +1,15 @@
 import { fetchPage } from 'api/pages';
 import { PageProduct } from 'api/pages/types';
+import { fetchTire, fetchTires } from 'api/tires/tires';
+import { Tire } from 'api/tires/types';
 import { Wheel } from 'api/wheels/types';
-import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import Product from 'components/Product';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	data: Wheel;
+	data: Tire;
 	page: PageProduct;
-	relatedProducts: Wheel[];
+	relatedProducts: Tire[];
 }
 
 const ProductPage = ({ data, page, relatedProducts }: Props) => {
@@ -17,22 +18,12 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 			data={data}
 			printOptions={[
 				{ text: 'Артикул', value: data.id },
-				{ text: 'Тип', value: data.kind },
 				{ text: 'Количество', value: data.count },
 				{ text: 'Марка', value: data.brand?.name },
-				{ text: 'Модель', value: data.model?.name },
-				{ text: 'R Диаметр', value: data.diameter },
-				{ text: 'J Ширина', value: data.width },
-				{ text: 'Количество отверстий', value: data.numberHoles },
-				{ text: 'PCD расстояние между отверстиями', value: data.numberHoles },
-				{
-					text: 'DIA диаметр центрального отверстия',
-					value: data.diameterCenterHole,
-				},
-				{
-					text: 'ET вылет',
-					value: data.diskOffset,
-				},
+				{ text: 'Диаметр', value: data.diameter },
+				{ text: 'Высота', value: data.height },
+				{ text: 'Ширина', value: data.width },
+				{ text: 'Сезон', value: data.season },
 			]}
 			page={page}
 			relatedProducts={relatedProducts}
@@ -48,16 +39,16 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
-	] = await Promise.all([fetchWheel(context.params?.slug || '', true), fetchPage<PageProduct>('product')()]);
+	] = await Promise.all([fetchTire(context.params?.slug || '', true), fetchPage<PageProduct>('product')()]);
 	const {
 		data: { data: relatedProducts },
-	} = await fetchWheels(
+	} = await fetchTires(
 		{
 			filters: {
 				id: {
 					$ne: data.id,
 				},
-				model: data.model?.id || '',
+				brand: data.brand.id,
 			},
 			populate: ['images'],
 		},

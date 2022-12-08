@@ -2,11 +2,8 @@ import { Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-import HeadSEO from 'components/HeadSEO';
 import ReactMarkdown from 'components/ReactMarkdown';
-import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
-import Head from 'next/head';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {

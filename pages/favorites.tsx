@@ -1,4 +1,4 @@
-import { Container, List, ListItem, Divider, Button, Link, useMediaQuery } from '@mui/material';
+import { Container, List, ListItem, Divider, Link, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import classNames from 'classnames';
 import FavoriteButton from 'components/FavoriteButton';
@@ -12,6 +12,7 @@ import NextLink from 'next/link';
 import { Fragment } from 'react';
 import Slider from 'react-slick';
 import { getPageProps } from 'services/PagePropsService';
+import { getProductTypeSlug } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './favorites.module.scss';
 
@@ -85,7 +86,9 @@ const Favorites = () => {
 													component='h2'
 												>
 													<NextLink
-														href={`/products/${item.product.type}/${item.product.slug}`}
+														href={`/${getProductTypeSlug(item.product)}/${
+															item.product.slug
+														}`}
 													>
 														<Link component='span' underline='hover'>
 															{item.product.h1}
