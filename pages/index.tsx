@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { Box, Button, CircularProgress } from '@mui/material';
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
@@ -45,6 +45,7 @@ interface Props {
 	serviceStations: ServiceStation[];
 	articles: Article[];
 	brands: Brand[];
+	spareParts: ApiResponse<SparePart[]>;
 }
 
 const Home: NextPage<Props> = ({
@@ -54,12 +55,11 @@ const Home: NextPage<Props> = ({
 	brands = [],
 	autocomises = [],
 	serviceStations = [],
+	spareParts,
 }) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
-	const [total, setTotal] = useState<number | null>(null);
-	const [spareParts, setSpareParts] = useState<SparePart[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
@@ -71,20 +71,6 @@ const Home: NextPage<Props> = ({
 		setKindSpareParts(data);
 	});
 	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			const {
-				data: { meta, data },
-			} = await fetchSpareParts({
-				sort: 'createdAt:desc',
-				populate: ['images'],
-			});
-			setSpareParts(data);
-			setTotal(meta.pagination?.total || null);
-		};
-		fetchData();
-	}, []);
 
 	const { brandId = '', modelId = '' } = router.query as {
 		brandId: string;
@@ -212,7 +198,7 @@ const Home: NextPage<Props> = ({
 				</WhiteBox>
 			)}
 			<Box padding='1em'>
-				<CarouselProducts data={spareParts} slidesToShow={2}></CarouselProducts>
+				<CarouselProducts data={spareParts.data} slidesToShow={2}></CarouselProducts>
 			</Box>
 		</>
 	);
@@ -230,7 +216,9 @@ const Home: NextPage<Props> = ({
 			filtersBtn={filtersBtn}
 			filtersConfig={filtersConfig}
 			middleContent={middleContent}
-			{...(total ? { textTotal: `Найдено запчастей: ${total}` } : {})}
+			{...(spareParts.meta?.pagination?.total
+				? { textTotal: `Найдено запчастей: ${spareParts.meta?.pagination?.total}` }
+				: {})}
 		></Catalog>
 	);
 };
@@ -240,26 +228,36 @@ export default Home;
 export const getServerSideProps = getPageProps(
 	fetchPage('main'),
 	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
+		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
 	}),
 	async () => ({
-		serviceStations: (await fetchServiceStations({ populate: 'image' }, true)).data.data,
+		serviceStations: (await fetchServiceStations({ populate: 'image' })).data.data,
 	}),
 	async () => {
-		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } }, true);
+		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } });
 		return { cars: data.data };
 	},
 	async () => ({
-		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+		articles: (await fetchArticles({ populate: 'image' })).data.data,
 	}),
-	async () => {
-		const { data } = await fetchBrands(
-			{
-				populate: 'image',
-				pagination: { limit: MAX_LIMIT },
-			},
-			true
-		);
-		return { brands: data.data };
-	}
+	async () => ({
+		brands: (
+			await fetchBrands(
+				{
+					populate: 'image',
+					pagination: { limit: MAX_LIMIT },
+				}
+			)
+		).data.data,
+	}),
+	async () => ({
+		spareParts: (
+			await fetchSpareParts(
+				{
+					sort: 'createdAt:desc',
+					populate: ['images'],
+				},
+			)
+		).data,
+	})
 );

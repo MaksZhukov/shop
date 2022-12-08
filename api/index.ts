@@ -12,8 +12,7 @@ api.interceptors.request.use((config) => {
 	if (store.user.jwt && config.headers) {
 		config.headers.Authorization = 'Bearer ' + store.user.jwt;
 	}
-	if (config.headers && config.headers.isServerRequest) {
-		delete config.headers.isServerRequest;
+	if (typeof window === 'undefined') {
 		config.baseURL = publicRuntimeConfig.backendLocalUrl + '/api';
 	}
 	return config;
@@ -28,9 +27,7 @@ api.interceptors.response.use(
 			}
 		}
 		if (error.response.status === 429) {
-			NotistackService.ref?.enqueueSnackbar(
-				'Слишком много запросов, попробуйте позже'
-			);
+			NotistackService.ref?.enqueueSnackbar('Слишком много запросов, попробуйте позже');
 		}
 		return Promise.reject(error);
 	}

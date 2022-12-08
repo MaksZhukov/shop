@@ -297,33 +297,27 @@ export const getServerSideProps = getPageProps(
 	},
 	async (context) => ({
 		cars: (
-			await fetchCars(
-				{
-					populate: ['images', 'model', 'brand'],
-					pagination: { pageSize: 25, page: context.query?.page ?? 1 },
-				},
-				true
-			)
+			await fetchCars({
+				populate: ['images', 'model', 'brand'],
+				pagination: { pageSize: 25, page: context.query?.page ?? 1 },
+			})
 		).data,
 	}),
 	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
+		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
 	}),
 	async () => ({
-		serviceStations: (await fetchServiceStations({ populate: 'image' }, true)).data.data,
+		serviceStations: (await fetchServiceStations({ populate: 'image' })).data.data,
 	}),
 	async () => ({
-		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+		articles: (await fetchArticles({ populate: 'image' })).data.data,
 	}),
 	async () => ({
 		brands: (
-			await fetchBrands(
-				{
-					populate: 'image',
-					pagination: { limit: MAX_LIMIT },
-				},
-				true
-			)
+			await fetchBrands({
+				populate: 'image',
+				pagination: { limit: MAX_LIMIT },
+			})
 		).data.data,
 	})
 );
