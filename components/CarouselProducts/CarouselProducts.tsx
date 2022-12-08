@@ -104,7 +104,7 @@ const CarouselProducts: FC<Props> = ({ title, data, slidesToShow = 4 }) => {
 										</Typography>
 									)}
 								</Typography>
-								{item.discountPrice && (
+								{!!item.discountPrice && (
 									<Typography paddingLeft='0.5em' fontWeight='bold' variant='body1' color='primary'>
 										{item.discountPrice} руб{' '}
 										{!!item.discountPriceUSD && (
