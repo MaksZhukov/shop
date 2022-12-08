@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
-import { CircularProgress, Container } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { ApiResponse, Filters, LinkWithImage } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
 import { fetchBrands } from 'api/brands/brands';
@@ -13,22 +13,19 @@ import { useSnackbar } from 'notistack';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
 import { getPageProps } from 'services/PagePropsService';
-import { fetchPageWheels } from 'api/pageWheels/pageWheels';
-import { PageWheels } from 'api/pageWheels/types';
 import { Car } from 'api/cars/types';
-import { OneNews } from 'api/news/types';
-import { fetchPageMain } from 'api/pageMain/pageMain';
 import { fetchCars } from 'api/cars/cars';
-import { fetchNews } from 'api/news/news';
 import { fetchAutocomises } from 'api/autocomises/autocomises';
 import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { Article } from 'api/articles/types';
 import { fetchArticles } from 'api/articles/articles';
+import { fetchPage } from 'api/pages';
+import { DefaultPage, PageMain } from 'api/pages/types';
 
 interface Props {
-	page: PageWheels;
+	page: DefaultPage;
 	cars: Car[];
 	articles: Article[];
 	advertising: LinkWithImage[];
@@ -94,19 +91,11 @@ const Wheels: NextPage<Props> = ({
 			delete router.query.modelName;
 			delete router.query.modelId;
 		}
-		router.push(
-			{ pathname: router.pathname, query: router.query },
-			undefined,
-			{ shallow: true }
-		);
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 		setModels([]);
 	};
 
-	const noOptionsText = isLoading ? (
-		<CircularProgress size={20} />
-	) : (
-		<>Совпадений нет</>
-	);
+	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const filtersConfig = [
 		[
@@ -126,13 +115,10 @@ const Wheels: NextPage<Props> = ({
 				disabled: false,
 				type: 'autocomplete',
 				options: brands.map((item) => ({ label: item.name, ...item })),
-				onOpen: handleOpenAutocomplete<Brand>(
-					!!brands.length,
-					setBrands,
-					() =>
-						fetchBrands({
-							pagination: { limit: MAX_LIMIT },
-						})
+				onOpen: handleOpenAutocomplete<Brand>(!!brands.length, setBrands, () =>
+					fetchBrands({
+						pagination: { limit: MAX_LIMIT },
+					})
 				),
 				onChange: handleChangeBrandAutocomplete,
 				noOptionsText: noOptionsText,
@@ -146,14 +132,11 @@ const Wheels: NextPage<Props> = ({
 				type: 'autocomplete',
 				disabled: !brandId,
 				options: models.map((item) => ({ label: item.name, ...item })),
-				onOpen: handleOpenAutocomplete<Model>(
-					!!models.length,
-					setModels,
-					() =>
-						fetchModels({
-							filters: { brand: brandId as string },
-							pagination: { limit: MAX_LIMIT },
-						})
+				onOpen: handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+					fetchModels({
+						filters: { brand: brandId as string },
+						pagination: { limit: MAX_LIMIT },
+					})
 				),
 				noOptionsText: noOptionsText,
 			},
@@ -258,29 +241,27 @@ const Wheels: NextPage<Props> = ({
 			searchPlaceholder='Поиск дисков ...'
 			filtersConfig={filtersConfig}
 			fetchData={fetchWheels}
-			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+			generateFiltersByQuery={generateFiltersByQuery}
+		></Catalog>
 	);
 };
 
 export default Wheels;
 
 export const getServerSideProps = getPageProps(
-	fetchPageWheels,
+	fetchPage('wheel'),
 	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data
-			.data,
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
 	}),
 	async () => ({
-		serviceStations: (
-			await fetchServiceStations({ populate: 'image' }, true)
-		).data.data,
+		serviceStations: (await fetchServiceStations({ populate: 'image' }, true)).data.data,
 	}),
 	async () => {
 		const {
 			data: {
 				data: { advertising, deliveryAuto, discounts },
 			},
-		} = await fetchPageMain();
+		} = await fetchPage<PageMain>('main')();
 		return {
 			advertising,
 			deliveryAuto,
@@ -288,10 +269,7 @@ export const getServerSideProps = getPageProps(
 		};
 	},
 	async () => {
-		const { data } = await fetchCars(
-			{ populate: ['images'], pagination: { limit: 10 } },
-			true
-		);
+		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } }, true);
 		return { cars: data.data };
 	},
 	async () => ({

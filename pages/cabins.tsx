@@ -1,20 +1,13 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
-import { CircularProgress, Container } from '@mui/material';
-import { SEASONS } from 'components/Filters/constants';
+import { CircularProgress } from '@mui/material';
 import { ApiResponse, Filters, LinkWithImage } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
-import { fetchTires } from 'api/tires/tires';
 import { useSnackbar } from 'notistack';
-import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { getPageProps } from 'services/PagePropsService';
-import { fetchPageTires } from 'api/pageTires/pageTires';
-import { PageTires } from 'api/pageTires/types';
-import { TireBrand } from 'api/tireBrands/types';
 import { fetchCars } from 'api/cars/cars';
-import { fetchPageMain } from 'api/pageMain/pageMain';
 import { Car } from 'api/cars/types';
 import { fetchAutocomises } from 'api/autocomises/autocomises';
 import { fetchServiceStations } from 'api/serviceStations/serviceStations';
@@ -23,9 +16,7 @@ import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { getSparePartsFiltersConfig } from 'components/Filters/config';
 import { fetchGenerations } from 'api/generations/generations';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { Generation } from 'api/generations/types';
@@ -33,7 +24,7 @@ import { Model } from 'api/models/types';
 import { Brand } from 'api/brands/types';
 import { useRouter } from 'next/router';
 import { fetchModels } from 'api/models/models';
-import { DefaultPage } from 'api/pages/types';
+import { DefaultPage, PageMain } from 'api/pages/types';
 import { fetchCabins } from 'api/cabins/cabins';
 
 interface Props {
@@ -106,22 +97,15 @@ const Tires: NextPage<Props> = ({
 			delete router.query.generationId;
 			delete router.query.generationName;
 		}
-		router.push(
-			{ pathname: router.pathname, query: router.query },
-			undefined,
-			{ shallow: true }
-		);
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 		setModels([]);
 	};
 
-	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(
-		!!models.length,
-		setModels,
-		() =>
-			fetchModels({
-				filters: { brand: brandId as string },
-				pagination: { limit: MAX_LIMIT },
-			})
+	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+		fetchModels({
+			filters: { brand: brandId as string },
+			pagination: { limit: MAX_LIMIT },
+		})
 	);
 
 	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
@@ -134,22 +118,17 @@ const Tires: NextPage<Props> = ({
 			})
 	);
 
-	const handleOpenAutocompleteKindSparePart =
-		handleOpenAutocomplete<KindSparePart>(
-			!!kindSpareParts.length,
-			setKindSpareParts,
-			() =>
-				fetchKindSpareParts({
-					filters: { type: 'cabin' },
-					pagination: { limit: MAX_LIMIT },
-				})
-		);
-
-	const noOptionsText = isLoading ? (
-		<CircularProgress size={20} />
-	) : (
-		<>Совпадений нет</>
+	const handleOpenAutocompleteKindSparePart = handleOpenAutocomplete<KindSparePart>(
+		!!kindSpareParts.length,
+		setKindSpareParts,
+		() =>
+			fetchKindSpareParts({
+				filters: { type: 'cabin' },
+				pagination: { limit: MAX_LIMIT },
+			})
 	);
+
+	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const filtersConfig = [
 		[
@@ -260,7 +239,8 @@ const Tires: NextPage<Props> = ({
 			filtersConfig={filtersConfig}
 			seo={page.seo}
 			fetchData={fetchCabins}
-			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+			generateFiltersByQuery={generateFiltersByQuery}
+		></Catalog>
 	);
 };
 
@@ -269,20 +249,17 @@ export default Tires;
 export const getServerSideProps = getPageProps(
 	fetchPage('cabin'),
 	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data
-			.data,
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
 	}),
 	async () => ({
-		serviceStations: (
-			await fetchServiceStations({ populate: 'image' }, true)
-		).data.data,
+		serviceStations: (await fetchServiceStations({ populate: 'image' }, true)).data.data,
 	}),
 	async () => {
 		const {
 			data: {
 				data: { advertising, deliveryAuto, discounts },
 			},
-		} = await fetchPageMain();
+		} = await fetchPage<PageMain>('main')();
 		return {
 			advertising,
 			deliveryAuto,
@@ -290,10 +267,7 @@ export const getServerSideProps = getPageProps(
 		};
 	},
 	async () => {
-		const { data } = await fetchCars(
-			{ populate: ['images'], pagination: { limit: 10 } },
-			true
-		);
+		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } }, true);
 		return { cars: data.data };
 	},
 	async () => ({

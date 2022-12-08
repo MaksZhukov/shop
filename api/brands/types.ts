@@ -1,7 +1,8 @@
-import { Image } from "api/types";
+import { Image, SEO } from 'api/types';
 
 export interface Brand {
 	id: number;
 	name: string;
-	image: Image
+	image: Image;
+	seo: SEO;
 }
