@@ -19,7 +19,6 @@ interface Props {
 const Autocomis: NextPage<Props> = ({ data }) => {
 	return (
 		<>
-			<HeadSEO title={data.seo?.title} description={data.seo?.content} keywords={data.seo?.keywords}></HeadSEO>
 			<Container>
 				<WhiteBox>
 					<Typography component='h1' variant='h4' gutterBottom>
@@ -40,7 +39,6 @@ const Autocomis: NextPage<Props> = ({ data }) => {
 						<Box sx={{ clear: 'both' }}></Box>
 					</Box>
 				</WhiteBox>
-				<SEOBox content={data.seo?.content} images={data.seo?.images}></SEOBox>
 			</Container>
 		</>
 	);

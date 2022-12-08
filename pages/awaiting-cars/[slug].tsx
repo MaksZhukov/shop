@@ -40,74 +40,64 @@ const CarPage = ({ data }: Props) => {
 	let manufactureYear = new Date(data.manufactureDate).getFullYear();
 	let name = data.brand?.name + ' ' + data.model?.name + ' ' + manufactureYear;
 	return (
-		<>
-			<HeadSEO
-				title={data.seo?.title || name}
-				description={data.seo?.description || `Описание ${name}`}
-				keywords={data.seo?.keywords || 'авто, ожидаемое авто, автомобиль, ожидаемый автомобиль, авто в пути'}
-			></HeadSEO>
-			<Container>
-				<WhiteBox padding='2em'>
-					<Typography
-						marginBottom='0.5em'
-						variant='h4'
+		<WhiteBox padding='2em'>
+			<Typography
+				marginBottom='0.5em'
+				variant='h4'
+				flex='1'
+				overflow='hidden'
+				title={name}
+				textOverflow='ellipsis'
+				whiteSpace='nowrap'
+				component='h1'
+			>
+				{data.seo?.h1 || name}
+			</Typography>
+			<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
+				{data.images && data.images.some((item) => item.formats) ? (
+					<Slider autoplay autoplaySpeed={3000} dots className={styles.slider}>
+						{data.images.map((item) => (
+							<Image
+								key={item.id}
+								alt={item.alternativeText}
+								width={640}
+								height={480}
+								src={item.url}
+							></Image>
+						))}
+					</Slider>
+				) : (
+					<Image alt={name} width={640} height={480} src=''></Image>
+				)}
+				<Box flex='1' display='flex'>
+					<Box
 						flex='1'
-						overflow='hidden'
-						title={name}
-						textOverflow='ellipsis'
-						whiteSpace='nowrap'
-						component='h1'
+						sx={{
+							padding: {
+								xs: '0',
+								md: '0 1em 0 5em',
+							},
+						}}
 					>
-						{data.seo?.h1 || name}
-					</Typography>
-					<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
-						{data.images && data.images.some((item) => item.formats) ? (
-							<Slider autoplay autoplaySpeed={3000} dots className={styles.slider}>
-								{data.images.map((item) => (
-									<Image
-										key={item.id}
-										alt={item.alternativeText}
-										width={640}
-										height={480}
-										src={item.url}
-									></Image>
-								))}
-							</Slider>
-						) : (
-							<Image alt={name} width={640} height={480} src=''></Image>
-						)}
-						<Box flex='1' display='flex'>
-							<Box
-								flex='1'
-								sx={{
-									padding: {
-										xs: '0',
-										md: '0 1em 0 5em',
-									},
-								}}
-							>
-								{printOptions.map((item) => (
-									<Box display='flex' key={item.value?.toString()}>
-										<Typography
-											mr='1em'
-											width='100px'
-											fontWeight='500'
-											variant='subtitle1'
-											component='span'
-										>
-											{item.text}:
-										</Typography>
-										<Typography component='span'>{item.value?.toString()}</Typography>
-									</Box>
-								))}
+						{printOptions.map((item) => (
+							<Box display='flex' key={item.value?.toString()}>
+								<Typography
+									mr='1em'
+									width='100px'
+									fontWeight='500'
+									variant='subtitle1'
+									component='span'
+								>
+									{item.text}:
+								</Typography>
+								<Typography component='span'>{item.value?.toString()}</Typography>
 							</Box>
-						</Box>
+						))}
 					</Box>
-					{data.videoLink && <ReactPlayer url={data.videoLink}></ReactPlayer>}
-				</WhiteBox>
-				<SEOBox images={data.seo?.images} content={data.seo?.content}></SEOBox>
-			</Container>
-		</>
+				</Box>
+			</Box>
+			{data.videoLink && <ReactPlayer url={data.videoLink}></ReactPlayer>}
+		</WhiteBox>
 	);
 };
 

@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { Box, Button, CircularProgress, Container, Link } from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
@@ -9,7 +9,7 @@ import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
-import { ApiResponse, Filters as IFilters, LinkWithImage as ILinkWithImage } from 'api/types';
+import { ApiResponse } from 'api/types';
 import NextLink from 'next/link';
 import { fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
@@ -18,14 +18,12 @@ import { useSnackbar } from 'notistack';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { getPageProps } from 'services/PagePropsService';
-import { PageMain } from 'api/pageMain/types';
 import WhiteBox from 'components/WhiteBox';
 import { getSparePartsFiltersConfig } from 'components/Filters/config';
 import { Car } from 'api/cars/types';
 import { fetchCars } from 'api/cars/cars';
 import { SparePart } from 'api/spareParts/types';
 import Image from 'components/Image';
-import { fetchPageMain } from 'api/pageMain/pageMain';
 import Catalog from 'components/Catalog';
 import ReactMarkdown from 'components/ReactMarkdown';
 import CarouselProducts from 'components/CarouselProducts';
@@ -37,6 +35,8 @@ import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { MAX_LIMIT } from 'api/constants';
 import { useDebounce } from 'rooks';
+import { fetchPage } from 'api/pages';
+import { PageMain } from 'api/pages/types';
 
 interface Props {
 	page: PageMain;
@@ -238,7 +238,7 @@ const Home: NextPage<Props> = ({
 export default Home;
 
 export const getServerSideProps = getPageProps(
-	fetchPageMain,
+	fetchPage('main'),
 	async () => ({
 		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
 	}),

@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
-import { CircularProgress, Container } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { SEASONS } from 'components/Filters/constants';
 import { ApiResponse, Filters, LinkWithImage } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
@@ -10,13 +10,8 @@ import { fetchTires } from 'api/tires/tires';
 import { useSnackbar } from 'notistack';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { getPageProps } from 'services/PagePropsService';
-import { fetchPageTires } from 'api/pageTires/pageTires';
-import { PageTires } from 'api/pageTires/types';
 import { TireBrand } from 'api/tireBrands/types';
 import { fetchCars } from 'api/cars/cars';
-import { fetchPageMain } from 'api/pageMain/pageMain';
-import { fetchNews } from 'api/news/news';
-import { OneNews } from 'api/news/types';
 import { Car } from 'api/cars/types';
 import { fetchAutocomises } from 'api/autocomises/autocomises';
 import { fetchServiceStations } from 'api/serviceStations/serviceStations';
@@ -24,9 +19,11 @@ import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
+import { fetchPage } from 'api/pages';
+import { DefaultPage, PageMain } from 'api/pages/types';
 
 interface Props {
-	page: PageTires;
+	page: DefaultPage;
 	cars: Car[];
 	articles: Article[];
 	advertising: LinkWithImage[];
@@ -75,11 +72,7 @@ const Tires: NextPage<Props> = ({
 			}
 		};
 
-	const noOptionsText = isLoading ? (
-		<CircularProgress size={20} />
-	) : (
-		<>Совпадений нет</>
-	);
+	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const filtersConfig = [
 		[
@@ -136,13 +129,7 @@ const Tires: NextPage<Props> = ({
 		],
 	];
 
-	const generateFiltersByQuery = ({
-		brandId,
-		brandName,
-		...others
-	}: {
-		[key: string]: string;
-	}): Filters => {
+	const generateFiltersByQuery = ({ brandId, brandName, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
 			brand: brandId || undefined,
 		};
@@ -181,29 +168,27 @@ const Tires: NextPage<Props> = ({
 			searchPlaceholder='Поиск шин ...'
 			filtersConfig={filtersConfig}
 			fetchData={fetchTires}
-			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+			generateFiltersByQuery={generateFiltersByQuery}
+		></Catalog>
 	);
 };
 
 export default Tires;
 
 export const getServerSideProps = getPageProps(
-	fetchPageTires,
+	fetchPage('tire'),
 	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data
-			.data,
+		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
 	}),
 	async () => ({
-		serviceStations: (
-			await fetchServiceStations({ populate: 'image' }, true)
-		).data.data,
+		serviceStations: (await fetchServiceStations({ populate: 'image' }, true)).data.data,
 	}),
 	async () => {
 		const {
 			data: {
 				data: { advertising, deliveryAuto, discounts },
 			},
-		} = await fetchPageMain();
+		} = await fetchPage<PageMain>('main')();
 		return {
 			advertising,
 			deliveryAuto,
@@ -211,10 +196,7 @@ export const getServerSideProps = getPageProps(
 		};
 	},
 	async () => {
-		const { data } = await fetchCars(
-			{ populate: ['images'], pagination: { limit: 10 } },
-			true
-		);
+		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } }, true);
 		return { cars: data.data };
 	},
 	async () => ({

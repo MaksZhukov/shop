@@ -10,8 +10,7 @@ interface Props {
 const HeadSEO: FC<Props> = ({ title, description, keywords }) => {
 	return (
 		<Head>
-			<title>{title}</title>{' '}
-			<meta name='description' content={description}></meta>
+			<title>{title}</title> <meta name='description' content={description}></meta>
 			<meta name='keywords' content={keywords} />
 		</Head>
 	);
