@@ -26,6 +26,7 @@ let PATH_NAMES = {
 	'car-dismantling-photos': 'Фото/вид разборки',
 	'awaiting-cars': 'Ожидаемые авто',
 	autocomises: 'Автокомисы',
+	vacancies: 'Вакансии',
 };
 
 interface Props {
@@ -37,7 +38,6 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 
 	const breadcrumbs = useMemo(
 		function generateBreadcrumbs() {
-			console.log(router.asPath);
 			const asPathNestedRoutes = generatePathParts(router.asPath);
 			const pathnameNestedRoutes = generatePathParts(router.pathname);
 
@@ -52,6 +52,7 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 
 			return [{ href: '/', text: 'Главная' }, ...crumblist];
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[router.asPath, router.pathname, router.query]
 	);
 

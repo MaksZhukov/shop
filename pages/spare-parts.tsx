@@ -28,6 +28,7 @@ import { Article } from 'api/articles/types';
 import { useDebounce } from 'rooks';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
+import { fetchBrands } from 'api/brands/brands';
 
 interface Props {
 	page: DefaultPage;
@@ -247,5 +248,16 @@ export const getServerSideProps = getPageProps(
 	},
 	async () => ({
 		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+	}),
+	async () => ({
+		brands: (
+			await fetchBrands(
+				{
+					populate: ['image', 'seo.image'],
+					pagination: { limit: MAX_LIMIT },
+				},
+				true
+			)
+		).data.data,
 	})
 );

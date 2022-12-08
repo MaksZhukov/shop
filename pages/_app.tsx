@@ -19,11 +19,11 @@ import NotistackService from 'services/NotistackService';
 import { fetchBrands } from 'api/brands/brands';
 import { MAX_LIMIT } from 'api/constants';
 import { Brand } from 'api/brands/types';
-import Typography from 'components/Typography';
 import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
 import { Container } from '@mui/system';
 import SEOBox from 'components/SEOBox';
+import { useRouter } from 'next/router';
 
 let theme = createTheme({
 	typography: {
@@ -45,6 +45,9 @@ function MyApp({
 	},
 }: AppProps) {
 	const [brands, setBrands] = useState<Brand[]>(restPageProps.brands ?? []);
+	const router = useRouter();
+	const { brandId } = router.query as { brandId?: string };
+	const selectedBrand = brandId ? brands.find((item) => item.id === +brandId) : undefined;
 	useEffect(() => {
 		const tryFetchData = async () => {
 			let token = getJwt();
@@ -74,6 +77,7 @@ function MyApp({
 			if (!brands.length) {
 				const { data } = await fetchBrands({
 					pagination: { limit: MAX_LIMIT },
+					populate: ['image', 'seo.images'],
 				});
 				setBrands(data.data);
 			}
@@ -82,6 +86,10 @@ function MyApp({
 		fetchBrandsData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	let modifiedPage = selectedBrand
+		? { ...restPageProps.page, seo: { ...restPageProps.page.seo, ...selectedBrand.seo } }
+		: restPageProps.page;
 	return (
 		<ThemeProvider theme={theme}>
 			<Provider store={store}>
@@ -96,19 +104,19 @@ function MyApp({
 				>
 					<Layout>
 						<HeadSEO
-							title={restPageProps.page?.seo?.title}
-							description={restPageProps.page?.seo?.description}
-							keywords={restPageProps.page?.seo?.description}
+							title={selectedBrand?.seo?.title ?? restPageProps.page?.seo?.title}
+							description={selectedBrand?.seo?.description ?? restPageProps.page?.seo?.description}
+							keywords={selectedBrand?.seo?.keywords ?? restPageProps.page?.seo?.keywords}
 						></HeadSEO>
 						<Header brands={brands}></Header>
 						<RouteShield>
 							<Content>
 								<Container>
 									<Breadcrumbs h1={restPageProps.data?.h1}></Breadcrumbs>
-									<Component {...restPageProps} brands={brands} />
+									<Component {...restPageProps} page={modifiedPage} brands={brands} />
 									<SEOBox
-										images={restPageProps.page?.seo?.images}
-										content={restPageProps.page?.seo?.content}
+										images={selectedBrand?.seo?.images ?? restPageProps.page?.seo?.images}
+										content={selectedBrand?.seo?.content ?? restPageProps.page?.seo?.content}
 									></SEOBox>
 								</Container>
 							</Content>
