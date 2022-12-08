@@ -16,6 +16,7 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { Fragment, useState } from 'react';
 import Slider from 'react-slick';
+import { getProductTypeSlug } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './shopping-cart.module.scss';
 
@@ -96,7 +97,9 @@ const ShoppingCart = () => {
 														component='h2'
 													>
 														<NextLink
-															href={`/products/${item.product.type}/${item.product.slug}`}
+															href={`/${getProductTypeSlug(item.product)}/${
+																item.product.slug
+															}`}
 														>
 															<Link component='span' underline='hover'>
 																{item.product.name}

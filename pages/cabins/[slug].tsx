@@ -1,14 +1,14 @@
+import { fetchCabin, fetchCabins } from 'api/cabins/cabins';
+import { Cabin } from 'api/cabins/types';
 import { fetchPage } from 'api/pages';
 import { PageProduct } from 'api/pages/types';
-import { Wheel } from 'api/wheels/types';
-import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import Product from 'components/Product';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	data: Wheel;
+	data: Cabin;
 	page: PageProduct;
-	relatedProducts: Wheel[];
+	relatedProducts: Cabin[];
 }
 
 const ProductPage = ({ data, page, relatedProducts }: Props) => {
@@ -17,22 +17,11 @@ const ProductPage = ({ data, page, relatedProducts }: Props) => {
 			data={data}
 			printOptions={[
 				{ text: 'Артикул', value: data.id },
-				{ text: 'Тип', value: data.kind },
-				{ text: 'Количество', value: data.count },
 				{ text: 'Марка', value: data.brand?.name },
 				{ text: 'Модель', value: data.model?.name },
-				{ text: 'R Диаметр', value: data.diameter },
-				{ text: 'J Ширина', value: data.width },
-				{ text: 'Количество отверстий', value: data.numberHoles },
-				{ text: 'PCD расстояние между отверстиями', value: data.numberHoles },
-				{
-					text: 'DIA диаметр центрального отверстия',
-					value: data.diameterCenterHole,
-				},
-				{
-					text: 'ET вылет',
-					value: data.diskOffset,
-				},
+				{ text: 'Поколение', value: data.generation?.name },
+				{ text: 'Запчасть', value: data.kindSparePart?.name },
+				...(data.seatUpholstery ? [{ text: 'Обивка сидений', value: data.seatUpholstery }] : []),
 			]}
 			page={page}
 			relatedProducts={relatedProducts}
@@ -48,10 +37,10 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
-	] = await Promise.all([fetchWheel(context.params?.slug || '', true), fetchPage<PageProduct>('product')()]);
+	] = await Promise.all([fetchCabin(context.params?.slug || '', true), fetchPage<PageProduct>('product')()]);
 	const {
 		data: { data: relatedProducts },
-	} = await fetchWheels(
+	} = await fetchCabins(
 		{
 			filters: {
 				id: {

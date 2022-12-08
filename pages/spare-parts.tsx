@@ -16,25 +16,21 @@ import { useSnackbar } from 'notistack';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { getPageProps } from 'services/PagePropsService';
-import { PageSpareParts } from 'api/pageSpareParts/types';
-import { fetchPageSpareParts } from 'api/pageSpareParts/pageSpareParts';
 import { getSparePartsFiltersConfig } from 'components/Filters/config';
-import { fetchPageMain } from 'api/pageMain/pageMain';
 import { fetchCars } from 'api/cars/cars';
-import { fetchNews } from 'api/news/news';
 import { Car } from 'api/cars/types';
-import { OneNews } from './api/news';
 import { fetchAutocomises } from 'api/autocomises/autocomises';
 import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
-import { fetchBrands } from 'api/brands/brands';
 import { useDebounce } from 'rooks';
+import { fetchPage } from 'api/pages';
+import { DefaultPage, PageMain } from 'api/pages/types';
 
 interface Props {
-	page: PageSpareParts;
+	page: DefaultPage;
 	brands: Brand[];
 	cars: Car[];
 	articles: Article[];
@@ -226,7 +222,7 @@ const SpareParts: NextPage<Props> = ({
 export default SpareParts;
 
 export const getServerSideProps = getPageProps(
-	fetchPageSpareParts,
+	fetchPage('spare-part'),
 	async () => ({
 		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
 	}),
@@ -238,7 +234,7 @@ export const getServerSideProps = getPageProps(
 			data: {
 				data: { advertising, deliveryAuto, discounts },
 			},
-		} = await fetchPageMain();
+		} = await fetchPage<PageMain>('main')();
 		return {
 			advertising,
 			deliveryAuto,

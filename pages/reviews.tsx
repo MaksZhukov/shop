@@ -1,12 +1,10 @@
 import { Divider, Pagination, Rating, Typography } from '@mui/material';
-import { Box, Container } from '@mui/system';
-import { fetchPageReview } from 'api/pageReview/pageReview';
-import { PageReview } from 'api/pageReview/types';
+import { Box } from '@mui/system';
+import { fetchPage } from 'api/pages';
+import { DefaultPage } from 'api/pages/types';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
-import HeadSEO from 'components/HeadSEO';
 import AddReview from 'components/pages/reviews/AddReview';
-import SEOBox from 'components/SEOBox';
 import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -18,7 +16,7 @@ import { useStore } from 'store';
 let COUNT_REVIEWS = 10;
 
 interface Props {
-	data: PageReview;
+	data: DefaultPage;
 }
 
 const Reviews = ({ data }: Props) => {
@@ -103,4 +101,4 @@ const Reviews = ({ data }: Props) => {
 
 export default observer(Reviews);
 
-export const getStaticProps = getPageProps(fetchPageReview);
+export const getStaticProps = getPageProps(fetchPage('review'));

@@ -1,5 +1,5 @@
-import { fetchPageProduct } from 'api/pageProduct/pageProduct';
-import { PageProduct } from 'api/pageProduct/types';
+import { fetchPage } from 'api/pages';
+import { PageProduct } from 'api/pages/types';
 import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
 import Product from 'components/Product';
@@ -38,7 +38,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
-	] = await Promise.all([fetchSparePart(context.params?.slug || '', true), fetchPageProduct()]);
+	] = await Promise.all([fetchSparePart(context.params?.slug || '', true), fetchPage<PageProduct>('product')()]);
 	const {
 		data: { data: relatedProducts },
 	} = await fetchSpareParts(

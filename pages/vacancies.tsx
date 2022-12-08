@@ -1,13 +1,8 @@
-import { Box, Link, Typography } from '@mui/material';
-import { Container } from '@mui/system';
-import { ApiResponse, MetaResponse } from 'api/types';
-import HeadSEO from 'components/HeadSEO';
-import Image from 'components/Image';
-import SEOBox from 'components/SEOBox';
+import { Typography } from '@mui/material';
+import { ApiResponse } from 'api/types';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
-import NextLink from 'next/link';
 import { fetchVacancies } from 'api/vacancies/vacancies';
 import { Vacancy } from 'api/vacancies/types';
 import { fetchPage } from 'api/pages';

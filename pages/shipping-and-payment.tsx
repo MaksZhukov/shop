@@ -1,15 +1,12 @@
 import { FC } from 'react';
 import { Typography } from '@mui/material';
-import { Container } from '@mui/system';
-import { fetchPageShippingAndPayment } from 'api/pageShippingAndPayment/pageShippingAndPayment';
-import { PageShippingAndPayment } from 'api/pageShippingAndPayment/types';
 import WhiteBox from 'components/WhiteBox';
 import { getPageProps } from 'services/PagePropsService';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
+import { fetchPage } from 'api/pages';
+import { DefaultPage } from 'api/pages/types';
 
 interface Props {
-	page: PageShippingAndPayment;
+	page: DefaultPage;
 }
 
 const ShippingAndPayment: FC<Props> = ({ page }) => {
@@ -39,4 +36,4 @@ const ShippingAndPayment: FC<Props> = ({ page }) => {
 
 export default ShippingAndPayment;
 
-export const getStaticProps = getPageProps(fetchPageShippingAndPayment);
+export const getStaticProps = getPageProps(fetchPage('shipping-and-payment'));

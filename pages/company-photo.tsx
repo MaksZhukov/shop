@@ -8,8 +8,8 @@ interface Props {
 	page: DefaultPage & { images: IImage[] };
 }
 
-const CarDismantlingPhotos: NextPage<Props> = ({ page }) => <Gallery page={page}></Gallery>;
+const CompanyPhotos: NextPage<Props> = ({ page }) => <Gallery page={page}></Gallery>;
 
-export default CarDismantlingPhotos;
+export default CompanyPhotos;
 
-export const getStaticProps = getPageProps(fetchPage('car-dismantling-photo'));
+export const getStaticProps = getPageProps(fetchPage('company-photo'));

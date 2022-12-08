@@ -61,7 +61,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 			{ name: 'Как добраться', path: '/how-to-get-to', id: 'how-to-get-to' },
 			{
 				name: 'Фото разборки',
-				path: '/car-dismantling-photos',
+				path: '/company-photo',
 				id: 'photo',
 			},
 			{ name: 'Отзывы', path: '/1', id: 'reviews' },
@@ -97,7 +97,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 	{
 		name: 'Авто на запчасти',
 		id: 'AutoParts',
-		children: [{ name: 'фото/вид', path: '/1', id: 'photo-view' }],
+		children: [{ name: 'фото/вид', path: '/car-dismantling-photos', id: 'photo-view' }],
 	},
 	// { name: 'Покупка авто на запчасти', path: '/buying-car' },
 	// { name: 'Доставка/Оплата', path: '/shipping-and-payment' },
