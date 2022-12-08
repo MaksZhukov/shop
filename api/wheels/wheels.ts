@@ -2,11 +2,9 @@ import { api } from '..';
 import { ApiResponse, CollectionParams } from '../types';
 import { Wheel } from './types';
 
-export const fetchWheels = (params?: CollectionParams, isServerRequest = false) =>
-	api.get<ApiResponse<Wheel[]>>('/wheels', { params, headers: { isServerRequest } });
+export const fetchWheels = (params?: CollectionParams) => api.get<ApiResponse<Wheel[]>>('/wheels', { params });
 
-export const fetchWheel = (idOrSlug: string, isServerRequest = false) =>
+export const fetchWheel = (idOrSlug: string) =>
 	api.get<ApiResponse<Wheel>>(`/wheels/${idOrSlug}`, {
 		params: { populate: 'images' },
-		headers: { isServerRequest },
 	});
