@@ -4,14 +4,12 @@ import { ApiResponse, CollectionParams } from '../types';
 import { Cabin } from './types';
 const { publicRuntimeConfig } = getConfig();
 
-export const fetchCabins = (params?: CollectionParams, isServerRequest = false) =>
-    api.get<ApiResponse<Cabin[]>>('/cabins', {
-        params,
-        headers: { isServerRequest },
-    });
+export const fetchCabins = (params?: CollectionParams) =>
+	api.get<ApiResponse<Cabin[]>>('/cabins', {
+		params,
+	});
 
-export const fetchCabin = (idOrSlug: string, isServerRequest = false) =>
-    api.get<ApiResponse<Cabin>>(`/cabins/${idOrSlug}`, {
-        params: { populate: 'images' },
-        headers: { isServerRequest },
-    });
+export const fetchCabin = (idOrSlug: string) =>
+	api.get<ApiResponse<Cabin>>(`/cabins/${idOrSlug}`, {
+		params: { populate: 'images' },
+	});

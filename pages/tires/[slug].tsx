@@ -39,21 +39,18 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
-	] = await Promise.all([fetchTire(context.params?.slug || '', true), fetchPage<PageProduct>('product')()]);
+	] = await Promise.all([fetchTire(context.params?.slug || ''), fetchPage<PageProduct>('product')()]);
 	const {
 		data: { data: relatedProducts },
-	} = await fetchTires(
-		{
-			filters: {
-				id: {
-					$ne: data.id,
-				},
-				brand: data.brand.id,
+	} = await fetchTires({
+		filters: {
+			id: {
+				$ne: data.id,
 			},
-			populate: ['images'],
+			brand: data.brand.id,
 		},
-		true
-	);
+		populate: ['images'],
+	});
 	const autoSynonyms = page?.autoSynonyms.split(',') || [];
 	let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
 	return {

@@ -251,10 +251,10 @@ export default Wheels;
 export const getServerSideProps = getPageProps(
 	fetchPage('wheel'),
 	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' }, true)).data.data,
+		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
 	}),
 	async () => ({
-		serviceStations: (await fetchServiceStations({ populate: 'image' }, true)).data.data,
+		serviceStations: (await fetchServiceStations({ populate: 'image' })).data.data,
 	}),
 	async () => {
 		const {
@@ -269,10 +269,10 @@ export const getServerSideProps = getPageProps(
 		};
 	},
 	async () => {
-		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } }, true);
+		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } });
 		return { cars: data.data };
 	},
 	async () => ({
-		articles: (await fetchArticles({ populate: 'image' }, true)).data.data,
+		articles: (await fetchArticles({ populate: 'image' })).data.data,
 	})
 );

@@ -40,8 +40,7 @@ export const getStaticProps = getPageProps(fetchPage('vacancy'), async () => ({
 		await fetchVacancies(
 			{
 				populate: 'image',
-			},
-			true
+			}
 		)
 	).data,
 }));
