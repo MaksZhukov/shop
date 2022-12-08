@@ -37,5 +37,5 @@ const Autocomis: NextPage<Props> = ({ data }) => {
 export default Autocomis;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	data: (await fetchAutocomis(context.params?.slug as string, true)).data.data,
+	data: (await fetchAutocomis(context.params?.slug as string)).data.data,
 }));

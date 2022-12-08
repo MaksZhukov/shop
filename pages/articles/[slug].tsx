@@ -44,5 +44,5 @@ const Article: NextPage<Props> = ({ data }) => {
 export default Article;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	data: (await fetchArtcle(context.params?.slug as string, true)).data.data,
+	data: (await fetchArtcle(context.params?.slug as string)).data.data,
 }));
