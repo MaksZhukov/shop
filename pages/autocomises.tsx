@@ -40,11 +40,8 @@ export default Vacancies;
 
 export const getStaticProps = getPageProps(fetchPage('autocomis'), async () => ({
 	autocomises: (
-		await fetchAutocomises(
-			{
-				populate: 'image',
-			},
-			true
-		)
+		await fetchAutocomises({
+			populate: 'image',
+		})
 	).data,
 }));

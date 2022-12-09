@@ -77,15 +77,12 @@ export default Articles;
 
 export const getServerSideProps = getPageProps(fetchPage('article'), async (context) => ({
 	articles: (
-		await fetchArticles(
-			{
-				pagination: {
-					pageSize: LIMIT,
-					page: context.query?.page ?? 1,
-				},
-				populate: 'image',
+		await fetchArticles({
+			pagination: {
+				pageSize: LIMIT,
+				page: context.query?.page ?? 1,
 			},
-			true
-		)
+			populate: 'image',
+		})
 	).data,
 }));
