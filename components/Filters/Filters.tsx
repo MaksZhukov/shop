@@ -1,14 +1,13 @@
 import { Autocomplete, Box, Button, Input, TextField, Typography } from '@mui/material';
 import WhiteBox from 'components/WhiteBox';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { ChangeEvent, ReactNode } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
 
 interface Props {
-	fetchData?: () => void;
-	onClickFind?: () => void;
+	fetchData?: (values: any) => void;
+	onClickFind?: (values: any) => void;
 	total: null | number;
 	textTotal?: string;
 	btn?: ReactNode;
@@ -16,50 +15,62 @@ interface Props {
 }
 
 const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
+	const [values, setValues] = useState<any>({});
 	const router = useRouter();
-
-	const changeParam = (params: { [field: string]: string | null | undefined }) => {
-		Object.keys(params).forEach((key) => {
-			if (params[key]) {
-				router.query[key] = params[key] as string;
-			} else {
-				delete router.query[key];
-			}
-		});
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
-	};
-
-	const handleChangeNumberInput = (param: string) => (e: ChangeEvent<HTMLInputElement>) => {
-		changeParam({ [param]: e.target.value });
-	};
-
-	const handleChangeObjAutocomplete =
-		(id: string, name: string) => (_: any, selected: { name: string; id: number } | null) => {
-			changeParam({
-				[name]: selected?.name,
-				[id]: selected?.id.toString(),
+	useEffect(() => {
+		let newValues: any = {};
+		config.forEach((item) => {
+			item.forEach((child) => {
+				if (router.query[child.id]) {
+					newValues[child.id] = Array.isArray(router.query[child.id])
+						? (router.query as any)[child.id][0]
+						: router.query[child.id];
+				}
 			});
-		};
+		});
+		setValues(newValues);
+	}, [router.query.brand]);
 
-	const handleChangeAutocomplete = (param: string) => (_: any, selected: string | null) => {
-		changeParam({ [param]: selected });
+	const handleChangeNumberInput = (item: NumberType) => (e: ChangeEvent<HTMLInputElement>) => {
+		setValues({ ...values, [item.id]: e.target.value });
+		if (item.storeInUrl) {
+			router.query[item.id] = e.target.value;
+			router.push({ pathname: router.pathname, query: router.query }, undefined, {
+				shallow: true,
+			});
+		}
+		if (item.onChange) {
+			item.onChange(e);
+		}
+	};
+
+	const handleChangeAutocomplete = (item: AutocompleteType) => (_: any, selected: string | null) => {
+		setValues({ ...values, [item.id]: selected });
+		if (item.storeInUrl) {
+			(router.query as any)[item.id] = selected;
+			router.push({ pathname: router.pathname, query: router.query }, undefined, {
+				shallow: true,
+			});
+		}
+		if (item.onChange) {
+			item.onChange(_, selected);
+		}
 	};
 
 	const handleClickFind = () => {
 		if (onClickFind) {
-			onClickFind();
+			onClickFind(values);
 		}
 		if (fetchData) {
-			fetchData();
+			fetchData(values);
 		}
 	};
 	const renderInput = (item: NumberType) => {
 		return (
 			<Input
 				key={item.id}
-				disabled={item.disabled}
 				fullWidth
-				onChange={item.onChange || handleChangeNumberInput(item.id)}
+				onChange={handleChangeNumberInput(item)}
 				value={router.query[item.id] ?? ''}
 				placeholder={item.placeholder}
 				type='number'
@@ -68,42 +79,18 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	};
 
 	const renderAutocomplete = (item: AutocompleteType) => {
-		const value = router.isReady
-			? router.query[item.id] && router.query[item.name || '']
-				? {
-						id: router.query[item.id],
-						label: router.query[item.name || ''],
-				  }
-				: router.query[item.id]
-			: null;
-
 		return (
 			<Autocomplete
-				key={item.id + value}
+				key={item.id + values[item.id]}
 				options={item.options}
 				noOptionsText={item.noOptionsText || 'Совпадений нет'}
 				onOpen={item.onOpen}
-				onChange={
-					item.onChange
-						? item.onChange
-						: item.id && item.name
-						? handleChangeObjAutocomplete(item.id, item.name)
-						: handleChangeAutocomplete(item.id)
-				}
+				onChange={handleChangeAutocomplete(item)}
 				fullWidth
 				onInputChange={item.onInputChange}
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
-				disabled={item.disabled}
-				value={
-					router.isReady
-						? router.query[item.id] && router.query[item.name || '']
-							? {
-									id: router.query[item.id],
-									label: router.query[item.name || ''],
-							  }
-							: router.query[item.id]
-						: null
-				}
+				disabled={item.disabledDependencyId === undefined ? false : !values[item.disabledDependencyId]}
+				value={values[item.id]}
 				renderInput={(params) => {
 					return <TextField {...params} variant='standard' placeholder={item.placeholder} />;
 				}}

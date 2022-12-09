@@ -7,9 +7,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { createTheme, Link, Snackbar, Stack, ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { green } from '@mui/material/colors';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getJwt, getReviewEmail, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
 import 'slick-carousel/slick/slick.css';
@@ -45,9 +45,6 @@ function MyApp({
 	},
 }: AppProps) {
 	const [brands, setBrands] = useState<Brand[]>(restPageProps.brands ?? []);
-	const router = useRouter();
-	const { brandId } = router.query as { brandId?: string };
-	const selectedBrand = brandId ? brands.find((item) => item.id === +brandId) : undefined;
 	useEffect(() => {
 		const tryFetchData = async () => {
 			let token = getJwt();
@@ -87,9 +84,6 @@ function MyApp({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	let modifiedPage = selectedBrand
-		? { ...restPageProps.page, seo: { ...restPageProps.page.seo, ...selectedBrand.seo } }
-		: restPageProps.page;
 	return (
 		<ThemeProvider theme={theme}>
 			<Provider store={store}>
@@ -104,19 +98,19 @@ function MyApp({
 				>
 					<Layout>
 						<HeadSEO
-							title={selectedBrand?.seo?.title ?? restPageProps.page?.seo?.title}
-							description={selectedBrand?.seo?.description ?? restPageProps.page?.seo?.description}
-							keywords={selectedBrand?.seo?.keywords ?? restPageProps.page?.seo?.keywords}
+							title={restPageProps.page?.seo?.title}
+							description={restPageProps.page?.seo?.description}
+							keywords={restPageProps.page?.seo?.keywords}
 						></HeadSEO>
 						<Header brands={brands}></Header>
 						<RouteShield>
 							<Content>
 								<Container>
 									<Breadcrumbs h1={restPageProps.data?.h1}></Breadcrumbs>
-									<Component {...restPageProps} page={modifiedPage} brands={brands} />
+									<Component {...restPageProps} brands={brands} />
 									<SEOBox
-										images={selectedBrand?.seo?.images ?? restPageProps.page?.seo?.images}
-										content={selectedBrand?.seo?.content ?? restPageProps.page?.seo?.content}
+										images={restPageProps.page?.seo?.images}
+										content={restPageProps.page?.seo?.content}
 									></SEOBox>
 								</Container>
 							</Content>
