@@ -46,11 +46,8 @@ export default Vacancies;
 
 export const getStaticProps = getPageProps(fetchPage('service-station'), async () => ({
 	serviceStations: (
-		await fetchServiceStations(
-			{
-				populate: 'image',
-			},
-			true
-		)
+		await fetchServiceStations({
+			populate: 'image',
+		})
 	).data,
 }));
