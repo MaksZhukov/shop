@@ -17,18 +17,19 @@ interface Props {
 const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	const [values, setValues] = useState<any>({});
 	const router = useRouter();
-
 	useEffect(() => {
 		let newValues: any = {};
 		config.forEach((item) => {
 			item.forEach((child) => {
 				if (router.query[child.id]) {
-					newValues[child.id] = router.query[child.id];
+					newValues[child.id] = Array.isArray(router.query[child.id])
+						? (router.query as any)[child.id][0]
+						: router.query[child.id];
 				}
 			});
 		});
 		setValues(newValues);
-	}, []);
+	}, [router.query.brand]);
 
 	const handleChangeNumberInput = (item: NumberType) => (e: ChangeEvent<HTMLInputElement>) => {
 		setValues({ ...values, [item.id]: e.target.value });
@@ -46,7 +47,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	const handleChangeAutocomplete = (item: AutocompleteType) => (_: any, selected: string | null) => {
 		setValues({ ...values, [item.id]: selected });
 		if (item.storeInUrl) {
-			router.query[item.id] = selected;
+			(router.query as any)[item.id] = selected;
 			router.push({ pathname: router.pathname, query: router.query }, undefined, {
 				shallow: true,
 			});
@@ -68,7 +69,6 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 		return (
 			<Input
 				key={item.id}
-				disabled={item.disabled}
 				fullWidth
 				onChange={handleChangeNumberInput(item)}
 				value={router.query[item.id] ?? ''}
@@ -89,7 +89,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 				fullWidth
 				onInputChange={item.onInputChange}
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
-				disabled={item.disabled}
+				disabled={item.disabledDependencyId === undefined ? false : !values[item.disabledDependencyId]}
 				value={values[item.id]}
 				renderInput={(params) => {
 					return <TextField {...params} variant='standard' placeholder={item.placeholder} />;

@@ -85,20 +85,28 @@ const Tires: NextPage<Props> = ({
 			}
 		};
 
-	const handleChangeBrandAutocomplete = (_: any, selected: Brand | null) => {
+	const handleChangeBrandAutocomplete = (_: any, selected: string) => {
 		if (selected) {
-			router.query.brandName = selected.name.toString();
-			router.query.brandId = selected.id.toString();
+			router.query.brand = selected;
 		} else {
-			delete router.query.brandName;
-			delete router.query.brandId;
-			delete router.query.modelName;
-			delete router.query.modelId;
-			delete router.query.generationId;
-			delete router.query.generationName;
+			delete router.query.brand;
+			delete router.query.model;
+			delete router.query.generation;
 		}
 		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 		setModels([]);
+		setGenerations([]);
+	};
+
+	const handleChangeModelAutocomplete = (_: any, selected: string) => {
+		if (selected) {
+			router.query.model = selected;
+		} else {
+			delete router.query.model;
+			delete router.query.generation;
+		}
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+		setGenerations([]);
 	};
 
 	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
@@ -133,86 +141,81 @@ const Tires: NextPage<Props> = ({
 	const filtersConfig = [
 		[
 			{
-				id: 'brandId',
-				name: 'brandName',
+				id: 'brand',
 				placeholder: 'Марка',
-				disabled: false,
 				type: 'autocomplete',
-				options: brands.map((item) => ({ label: item.name, ...item })),
+				options: brands.map((item) => item.name),
 				onChange: handleChangeBrandAutocomplete,
 				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
-				id: 'modelId',
-				name: 'modelName',
+				id: 'model',
 				placeholder: 'Модель',
 				type: 'autocomplete',
-				disabled: !brandId,
-				options: models.map((item) => ({ label: item.name, ...item })),
+				disabledDependencyId: 'brand',
+				options: models.map((item) => item.name),
+				onChange: handleChangeModelAutocomplete,
 				onOpen: handleOpenAutocompleteModel,
 				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
-				id: 'generationId',
-				name: 'generationName',
+				id: 'generation',
 				placeholder: 'Поколение',
 				type: 'autocomplete',
-				disabled: !modelId,
-				options: generations.map((item) => ({
-					label: item.name,
-					...item,
-				})),
+				disabledDependencyId: 'model',
+				options: generations.map((item) => item.name),
 				onOpen: handleOpenAutocompleteGeneration,
 				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
-				id: 'kindSparePartId',
-				name: 'kindSparePartName',
+				id: 'kindSparePart',
 				placeholder: 'Запчасть',
 				type: 'autocomplete',
-				disabled: false,
-				options: kindSpareParts.map((item) => ({
-					label: item.name,
-					...item,
-				})),
+				options: kindSpareParts.map((item) => item.name),
 				onOpen: handleOpenAutocompleteKindSparePart,
 				noOptionsText: noOptionsText,
 			},
 		],
 	];
 
+	const handleClickFind = (values: any) => {
+		Object.keys(values).forEach((key) => {
+			if (!values[key]) {
+				delete router.query[key];
+			} else {
+				router.query[key] = values[key];
+			}
+		});
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+	};
+
 	const generateFiltersByQuery = ({
-		min,
-		max,
-		brandId,
-		modelId,
-		generationId,
-		kindSparePartId,
-		kindSparePartName,
-		brandName,
-		modelName,
-		generationName,
+		brand,
+		model,
+		generation,
+		kindSparePart,
 		...others
 	}: {
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			brand: brandId || undefined,
-			model: modelId || undefined,
-			generation: generationId || undefined,
-			kindSparePart: kindSparePartId || undefined,
+			brand: { name: brand },
+			model: { name: model },
+			generation: { name: generation },
+			kindSparePart: { name: kindSparePart },
 		};
 		return { ...filters, ...others };
 	};
 
 	return (
 		<Catalog
+			onClickFind={handleClickFind}
 			newProductsTitle='Салоны'
 			advertising={advertising}
 			autocomises={autocomises}

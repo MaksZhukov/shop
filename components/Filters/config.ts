@@ -12,8 +12,6 @@ interface Params {
 	kindSpareParts: KindSparePart[];
 	generations: Generation[];
 	noOptionsText: ReactNode;
-	model: string;
-	brand?: string;
 	onChangeGenerationAutocomplete?: (_: any, value: string | null) => void;
 	onChangeBrandAutocomplete?: (_: any, value: string | null) => void;
 	onChangeModelAutocomplete?: (_: any, value: string | null) => void;
@@ -30,8 +28,6 @@ export const getSparePartsFiltersConfig = ({
 	models,
 	kindSpareParts,
 	generations,
-	model,
-	brand,
 	onChangeBrandAutocomplete,
 	onOpenAutoCompleteBrand,
 	onOpenAutocompleteModel,
@@ -46,8 +42,6 @@ export const getSparePartsFiltersConfig = ({
 		{
 			id: 'brand',
 			placeholder: 'Марка',
-			disabled: false,
-			value: brand,
 			storeInUrl: storeInUrlIds.includes('brand'),
 			type: 'autocomplete',
 			options: brands.map((item) => item.name),
@@ -62,7 +56,7 @@ export const getSparePartsFiltersConfig = ({
 			storeInUrl: storeInUrlIds.includes('model'),
 			placeholder: 'Модель',
 			type: 'autocomplete',
-			disabled: !brand,
+			disabledDependencyId: 'brand',
 			options: models.map((item) => item.name),
 			onChange: onChangeModelAutocomplete,
 			onOpen: onOpenAutocompleteModel,
@@ -75,7 +69,7 @@ export const getSparePartsFiltersConfig = ({
 			storeInUrl: storeInUrlIds.includes('generation'),
 			placeholder: 'Поколение',
 			type: 'autocomplete',
-			disabled: !model,
+			disabledDependencyId: 'model',
 			options: generations.map((item) => item.name),
 			onChange: onChangeGenerationAutocomplete,
 			onOpen: onOpenAutocompleteGeneration,
@@ -88,7 +82,6 @@ export const getSparePartsFiltersConfig = ({
 			storeInUrl: storeInUrlIds.includes('kindSparePart'),
 			placeholder: 'Запчасть',
 			type: 'autocomplete',
-			disabled: false,
 			options: kindSpareParts.map((item) => item.name),
 			onOpen: onOpenAutoCompleteKindSparePart,
 			onInputChange: onInputChangeKindSparePart,
@@ -101,7 +94,6 @@ export const getSparePartsFiltersConfig = ({
 			storeInUrl: storeInUrlIds.includes('volume'),
 			placeholder: 'Обьем 2.0',
 			type: 'number',
-			disabled: false,
 		},
 	],
 	[
@@ -110,7 +102,6 @@ export const getSparePartsFiltersConfig = ({
 			storeInUrl: storeInUrlIds.includes('bodyStyle'),
 			placeholder: 'Кузов',
 			type: 'autocomplete',
-			disabled: false,
 			options: BODY_STYLES,
 			onOpen: () => {},
 			noOptionsText: '',
@@ -122,7 +113,6 @@ export const getSparePartsFiltersConfig = ({
 			storeInUrl: storeInUrlIds.includes('transmission'),
 			placeholder: 'Коробка',
 			type: 'autocomplete',
-			disabled: false,
 			options: TRANSMISSIONS,
 			onOpen: () => {},
 			noOptionsText: '',
@@ -134,7 +124,6 @@ export const getSparePartsFiltersConfig = ({
 			storeInUrl: storeInUrlIds.includes('fuel'),
 			placeholder: 'Тип топлива',
 			type: 'autocomplete',
-			disabled: false,
 			options: FUELS,
 			onOpen: () => {},
 			noOptionsText: '',

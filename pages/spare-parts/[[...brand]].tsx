@@ -137,8 +137,6 @@ const SpareParts: NextPage<Props> = ({
 		models,
 		kindSpareParts,
 		generations,
-		model,
-		brand: brand[0] as string,
 		noOptionsText,
 		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
@@ -147,16 +145,20 @@ const SpareParts: NextPage<Props> = ({
 	});
 
 	const handleClickFind = (values: any) => {
-		let additionalQuery = Object.keys(values).reduce(
-			(prev, key) => (values[key] === null ? { ...prev } : { ...prev, [key]: values[key] }),
-			{}
-		);
-		router.push({ pathname: router.pathname, query: additionalQuery }, undefined);
+		Object.keys(values).forEach((key) => {
+			if (!values[key]) {
+				delete router.query[key];
+			} else {
+				router.query[key] = key === 'brand' ? [values[key]] : values.key;
+			}
+		});
+		// It needs because of wrong behaviour
+		setTimeout(() => {
+			router.push({ pathname: router.pathname, query: router.query }, undefined);
+		}, 100);
 	};
 
 	const generateFiltersByQuery = ({
-		min,
-		max,
 		brand,
 		model,
 		generation,

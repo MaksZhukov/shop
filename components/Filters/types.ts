@@ -4,7 +4,6 @@ export type NumberType = {
 	id: string;
 	placeholder: string;
 	type: string;
-	disabled: boolean;
 	storeInUrl?: boolean;
 	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
@@ -16,10 +15,10 @@ export type AutocompleteType = {
 	value?: string;
 	type: string;
 	kind?: 'complex';
-	disabled: boolean;
+	disabledDependencyId?: string;
 	options: any[];
 	storeInUrl?: boolean;
-	onChange: (_: any, selected: any) => void;
+	onChange?: (_: any, selected: any) => void;
 	onOpen?: () => void;
 	onInputChange?: (_: any, value: string) => void;
 	noOptionsText?: ReactNode;
