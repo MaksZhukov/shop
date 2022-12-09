@@ -12,18 +12,18 @@ interface Props {
 	targetLink?: HTMLAttributeAnchorTarget;
 	width?: number;
 	height?: number;
-	image: IImage;
+	image?: IImage;
 }
 const LinkWithImage: FC<Props> = ({ width = 208, height = 156, link, image, targetLink = '_self' }) => {
 	return (
 		<NextLink href={link} target={targetLink}>
 			<Image
 				style={{ objectFit: 'contain' }}
-				alt={image?.alternativeText}
+				alt={image?.alternativeText || ''}
 				width={width}
 				height={height}
 				isOnSSR={!!image}
-				src={image?.formats?.thumbnail.url || image?.url}
+				src={image?.formats?.thumbnail.url || image?.url || ''}
 			></Image>
 			{image?.caption && (
 				<Link component='div' textAlign='center' marginTop='1em'>

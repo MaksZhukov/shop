@@ -4,6 +4,12 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
 	reactStrictMode: false,
+	rewrites: () => [
+		{
+			source: '/test',
+			destination: '/test/[...test]',
+		},
+	],
 	// pageExtensions: ['dev.tsx'],
 	publicRuntimeConfig: {
 		backendUrl: process.env.BACKEND_URL,

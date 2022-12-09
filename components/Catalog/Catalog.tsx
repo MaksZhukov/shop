@@ -53,7 +53,7 @@ interface Props {
 	filtersConfig: (AutocompleteType | NumberType)[][];
 	generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
-	onClickFind?: () => void;
+	onClickFind?: (values: any) => void;
 	middleContent?: ReactNode;
 }
 
@@ -102,7 +102,7 @@ const Catalog = ({
 		[key: string]: string;
 	};
 
-	const [throttledFetchProducts] = useThrottle(async () => {
+	const [throttledFetchProducts] = useThrottle(async (values: any) => {
 		setIsLoading(true);
 		if (fetchData) {
 			try {
@@ -114,7 +114,7 @@ const Catalog = ({
 				} = await fetchData({
 					filters: {
 						...(querySearchValue ? { h1: { $contains: querySearchValue } } : {}),
-						...(generateFiltersByQuery ? generateFiltersByQuery(othersQuery) : {}),
+						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
 					pagination: querySearchValue ? {} : { page: +page },
 					populate: '*',
@@ -186,7 +186,15 @@ const Catalog = ({
 
 	useEffect(() => {
 		if (router.isReady) {
-			throttledFetchProducts();
+			throttledFetchProducts(
+				Object.keys(othersQuery).reduce(
+					(prev, key) => ({
+						...prev,
+						[key]: Array.isArray(othersQuery[key]) ? othersQuery[key][0] : othersQuery[key],
+					}),
+					{}
+				)
+			);
 			setSearchValue(querySearchValue);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
