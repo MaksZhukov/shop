@@ -87,10 +87,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 		children: brands.map((item) => ({
 			id: item.id,
 			name: item.name,
-			path: `/spare-parts?${qs.stringify({
-				brandId: item.id,
-				brandName: item.name,
-			})}`,
+			path: `/spare-parts/${item.name}`,
 		})),
 	},
 	{ name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'awaiting-cars', children: [] },

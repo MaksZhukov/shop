@@ -72,9 +72,9 @@ const Home: NextPage<Props> = ({
 	});
 	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
 
-	const { brandId = '', modelId = '' } = router.query as {
-		brandId: string;
-		modelId: string;
+	const { brand = '', model = '' } = router.query as {
+		brand: string;
+		model: string;
 	};
 	const handleOpenAutocomplete =
 		<T extends any>(
@@ -100,27 +100,35 @@ const Home: NextPage<Props> = ({
 			}
 		};
 
-	const handleChangeBrandAutocomplete = (_: any, selected: Brand | null) => {
+	const handleChangeBrandAutocomplete = (_: any, selected: string | null) => {
 		if (selected) {
-			router.query.brandName = selected.name.toString();
-			router.query.brandId = selected.id.toString();
+			router.query.brand = selected;
 		} else {
-			delete router.query.brandName;
-			delete router.query.brandId;
-			delete router.query.modelName;
-			delete router.query.modelId;
-			delete router.query.generationId;
-			delete router.query.generationName;
+			delete router.query.brand;
+			delete router.query.model;
+			delete router.query.generation;
 		}
 		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 		setModels([]);
+		setGenerations([]);
+	};
+
+	const handleChangeModelAutocomplete = (_: any, selected: string | null) => {
+		if (selected) {
+			router.query.model = selected;
+		} else {
+			delete router.query.model;
+			delete router.query.generation;
+		}
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+		setGenerations([]);
 	};
 
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 		fetchModels({
-			filters: { brand: brandId as string },
+			filters: { brand: { name: brand } },
 			pagination: { limit: MAX_LIMIT },
 		})
 	);
@@ -130,7 +138,7 @@ const Home: NextPage<Props> = ({
 		setGenerations,
 		() =>
 			fetchGenerations({
-				filters: { model: modelId as string },
+				filters: { model: { name: model } },
 				pagination: { limit: MAX_LIMIT },
 			})
 	);
@@ -147,24 +155,28 @@ const Home: NextPage<Props> = ({
 	const hangleInputChangeKindSparePart = (_: any, value: string) => {
 		debouncedFetchKindSparePartsRef(value);
 	};
+	console.log(model);
 
 	const filtersConfig = getSparePartsFiltersConfig({
+		storeInUrlIds: ['volume', 'bodyStyle', 'kindSparePart', 'transmission', 'fuel'],
 		brands,
 		models,
 		kindSpareParts,
 		generations,
-		modelId,
-		brandId,
+		model,
+		brand,
 		noOptionsText,
 		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
+		onChangeModelAutocomplete: handleChangeModelAutocomplete,
 		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
 		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
 	});
-
 	const filtersBtn = (
-		<NextLink href={`/spare-parts${router.asPath}`}>
+		<NextLink
+			href={`/spare-parts${brand ? `/${brand}${router.asPath.replace(`brand=${brand}`, '')}` : router.asPath}`}
+		>
 			<Button fullWidth variant='contained'>
 				Перейти в каталог
 			</Button>
@@ -214,7 +226,7 @@ const Home: NextPage<Props> = ({
 			discounts={page.discounts}
 			articles={articles}
 			filtersBtn={filtersBtn}
-			filtersConfig={filtersConfig}
+			filtersConfig={filtersConfig as any}
 			middleContent={middleContent}
 			{...(spareParts.meta?.pagination?.total
 				? { textTotal: `Найдено запчастей: ${spareParts.meta?.pagination?.total}` }
@@ -242,22 +254,18 @@ export const getServerSideProps = getPageProps(
 	}),
 	async () => ({
 		brands: (
-			await fetchBrands(
-				{
-					populate: 'image',
-					pagination: { limit: MAX_LIMIT },
-				}
-			)
+			await fetchBrands({
+				populate: 'image',
+				pagination: { limit: MAX_LIMIT },
+			})
 		).data.data,
 	}),
 	async () => ({
 		spareParts: (
-			await fetchSpareParts(
-				{
-					sort: 'createdAt:desc',
-					populate: ['images'],
-				},
-			)
+			await fetchSpareParts({
+				sort: 'createdAt:desc',
+				populate: ['images'],
+			})
 		).data,
 	})
 );

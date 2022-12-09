@@ -11,7 +11,7 @@ interface Props {
 	relatedProducts: Wheel[];
 }
 
-const ProductPage = ({ data, page, relatedProducts }: Props) => {
+const WheelPage = ({ data, page, relatedProducts }: Props) => {
 	return (
 		<Product
 			data={data}
@@ -74,4 +74,4 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 	};
 });
 
-export default ProductPage;
+export default WheelPage;
