@@ -50,9 +50,9 @@ const Wheels: NextPage<Props> = ({
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 
-	const { brandId = '', modelId = '' } = router.query as {
-		brandId: string;
-		modelId: string;
+	const { brand = '', model = '' } = router.query as {
+		brand: string;
+		model: string;
 	};
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -81,15 +81,12 @@ const Wheels: NextPage<Props> = ({
 			}
 		};
 
-	const handleChangeBrandAutocomplete = (_: any, selected: Brand | null) => {
+	const handleChangeBrandAutocomplete = (_: any, selected: string) => {
 		if (selected) {
-			router.query.brandName = selected.name.toString();
-			router.query.brandId = selected.id.toString();
+			router.query.brand = selected;
 		} else {
-			delete router.query.brandName;
-			delete router.query.brandId;
-			delete router.query.modelName;
-			delete router.query.modelId;
+			delete router.query.brand;
+			delete router.query.model;
 		}
 		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 		setModels([]);
@@ -97,24 +94,32 @@ const Wheels: NextPage<Props> = ({
 
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
+	const handleClickFind = (values: any) => {
+		Object.keys(values).forEach((key) => {
+			if (!values[key]) {
+				delete router.query[key];
+			} else {
+				router.query[key] = values[key];
+			}
+		});
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+	};
+
 	const filtersConfig = [
 		[
 			{
 				id: 'kind',
 				placeholder: 'Тип диска',
-				disabled: false,
 				type: 'autocomplete',
 				options: ['литой', 'штампованный'],
 			},
 		],
 		[
 			{
-				id: 'brandId',
-				name: 'brandName',
+				id: 'brand',
 				placeholder: 'Марка',
-				disabled: false,
 				type: 'autocomplete',
-				options: brands.map((item) => ({ label: item.name, ...item })),
+				options: brands.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<Brand>(!!brands.length, setBrands, () =>
 					fetchBrands({
 						pagination: { limit: MAX_LIMIT },
@@ -126,15 +131,14 @@ const Wheels: NextPage<Props> = ({
 		],
 		[
 			{
-				id: 'modelId',
-				name: 'modelName',
+				id: 'model',
 				placeholder: 'Модель',
 				type: 'autocomplete',
-				disabled: !brandId,
-				options: models.map((item) => ({ label: item.name, ...item })),
+				disabledDependencyId: 'brand',
+				options: models.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 					fetchModels({
-						filters: { brand: brandId as string },
+						filters: { brand: { name: brand } },
 						pagination: { limit: MAX_LIMIT },
 					})
 				),
@@ -145,7 +149,6 @@ const Wheels: NextPage<Props> = ({
 			{
 				id: 'width',
 				placeholder: 'J ширина, мм',
-				disabled: false,
 				type: 'number',
 			},
 		],
@@ -153,7 +156,6 @@ const Wheels: NextPage<Props> = ({
 			{
 				id: 'diameter',
 				placeholder: 'R диаметр, дюйм',
-				disabled: false,
 				type: 'number',
 			},
 		],
@@ -161,7 +163,6 @@ const Wheels: NextPage<Props> = ({
 			{
 				id: 'numberHoles',
 				placeholder: 'Количество отверстий',
-				disabled: false,
 				type: 'number',
 			},
 		],
@@ -169,7 +170,6 @@ const Wheels: NextPage<Props> = ({
 			{
 				id: 'diameterCenterHole',
 				placeholder: 'DIA диаметр центрального отверстия, мм',
-				disabled: false,
 				type: 'number',
 			},
 		],
@@ -177,7 +177,6 @@ const Wheels: NextPage<Props> = ({
 			{
 				id: 'distanceBetweenCenters',
 				placeholder: 'PCD расстояние между отверстиями, мм',
-				disabled: false,
 				type: 'number',
 			},
 		],
@@ -185,32 +184,22 @@ const Wheels: NextPage<Props> = ({
 			{
 				id: 'diskOffset',
 				placeholder: 'ET вылет, мм',
-				disabled: false,
 				type: 'number',
 			},
 		],
 	];
 
-	const generateFiltersByQuery = ({
-		min,
-		max,
-		brandName,
-		modelName,
-		modelId,
-		brandId,
-		...others
-	}: {
-		[key: string]: string;
-	}): Filters => {
+	const generateFiltersByQuery = ({ brand, model, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
-			brand: brandId || undefined,
-			model: modelId || undefined,
+			brand: brand ? { name: brand } : undefined,
+			model: model ? { name: model } : undefined,
 		};
 		return { ...filters, ...others };
 	};
 
 	return (
 		<Catalog
+			onClickFind={handleClickFind}
 			seo={page.seo}
 			newProductsTitle='Диски'
 			advertising={advertising}

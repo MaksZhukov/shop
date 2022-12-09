@@ -155,7 +155,6 @@ const Home: NextPage<Props> = ({
 	const hangleInputChangeKindSparePart = (_: any, value: string) => {
 		debouncedFetchKindSparePartsRef(value);
 	};
-	console.log(model);
 
 	const filtersConfig = getSparePartsFiltersConfig({
 		storeInUrlIds: ['volume', 'bodyStyle', 'kindSparePart', 'transmission', 'fuel'],
@@ -163,8 +162,6 @@ const Home: NextPage<Props> = ({
 		models,
 		kindSpareParts,
 		generations,
-		model,
-		brand,
 		noOptionsText,
 		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
 		onChangeModelAutocomplete: handleChangeModelAutocomplete,
