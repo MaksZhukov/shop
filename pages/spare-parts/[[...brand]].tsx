@@ -28,7 +28,7 @@ import { Article } from 'api/articles/types';
 import { useDebounce } from 'rooks';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
-import { fetchBrands } from 'api/brands/brands';
+import { fetchBrandByName, fetchBrands } from 'api/brands/brands';
 
 interface Props {
 	page: DefaultPage;
@@ -69,9 +69,9 @@ const SpareParts: NextPage<Props> = ({
 
 	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
 
-	const { brandId = '', modelId = '' } = router.query as {
-		brandId: string;
-		modelId: string;
+	const { brand = [], model = '' } = router.query as {
+		brand: [string];
+		model: string;
 	};
 	const handleOpenAutocomplete =
 		<T extends any>(
@@ -97,25 +97,9 @@ const SpareParts: NextPage<Props> = ({
 			}
 		};
 
-	const handleChangeBrandAutocomplete = (_: any, selected: Brand | null) => {
-		if (selected) {
-			router.query.brandName = selected.name.toString();
-			router.query.brandId = selected.id.toString();
-		} else {
-			delete router.query.brandName;
-			delete router.query.brandId;
-			delete router.query.modelName;
-			delete router.query.modelId;
-			delete router.query.generationId;
-			delete router.query.generationName;
-		}
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: false });
-		setModels([]);
-	};
-
 	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 		fetchModels({
-			filters: { brand: brandId as string },
+			filters: { brand: { name: brand[0] } },
 			pagination: { limit: MAX_LIMIT },
 		})
 	);
@@ -125,7 +109,7 @@ const SpareParts: NextPage<Props> = ({
 		setGenerations,
 		() =>
 			fetchGenerations({
-				filters: { model: modelId as string },
+				filters: { model: { name: model } },
 				pagination: { limit: MAX_LIMIT },
 			})
 	);
@@ -153,24 +137,32 @@ const SpareParts: NextPage<Props> = ({
 		models,
 		kindSpareParts,
 		generations,
-		modelId,
-		brandId,
 		noOptionsText,
-		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
 		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
 		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
 	});
 
+	const handleClickFind = (values: any) => {
+		Object.keys(values).forEach((key) => {
+			if (!values[key]) {
+				delete router.query[key];
+			} else {
+				router.query[key] = key === 'brand' ? [values[key]] : values.key;
+			}
+		});
+		// It needs because of wrong behaviour
+		setTimeout(() => {
+			router.push({ pathname: router.pathname, query: router.query }, undefined);
+		}, 100);
+	};
+
 	const generateFiltersByQuery = ({
-		min,
-		max,
-		brandId,
-		modelId,
-		generationId,
-		kindSparePartId,
-		kindSparePartName,
+		brand,
+		model,
+		generation,
+		kindSparePart,
 		brandName,
 		modelName,
 		generationName,
@@ -179,10 +171,10 @@ const SpareParts: NextPage<Props> = ({
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			brand: brandId || undefined,
-			model: modelId || undefined,
-			generation: generationId || undefined,
-			kindSparePart: kindSparePartId || undefined,
+			brand: brand ? { name: brand } : undefined,
+			model: model ? { name: model } : undefined,
+			generation: generation ? { name: generation } : undefined,
+			kindSparePart: kindSparePart ? { name: kindSparePart } : undefined,
 		};
 		return { ...filters, ...others };
 	};
@@ -197,6 +189,7 @@ const SpareParts: NextPage<Props> = ({
 			serviceStations={serviceStations}
 			cars={cars}
 			articles={articles}
+			onClickFind={handleClickFind}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
@@ -223,7 +216,17 @@ const SpareParts: NextPage<Props> = ({
 export default SpareParts;
 
 export const getServerSideProps = getPageProps(
-	fetchPage('spare-part'),
+	undefined,
+	async (context) => {
+		const { brand } = context.query;
+		const brandParam = brand ? brand[0] : undefined;
+		const {
+			data: { data },
+		} = brandParam ? await fetchBrandByName(brand) : await fetchPage('spare-part')();
+		return {
+			page: { seo: data.seo },
+		};
+	},
 	async () => ({
 		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
 	}),

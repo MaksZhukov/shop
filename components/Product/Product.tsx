@@ -94,7 +94,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 							</Box>
 						</>
 					) : (
-						<Image alt={data.name} width={104} height={78} src=''></Image>
+						<Image alt={data.name} width={640} height={480} src=''></Image>
 					)}
 					<Box
 						flex='1'

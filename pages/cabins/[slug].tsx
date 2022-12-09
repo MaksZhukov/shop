@@ -11,7 +11,7 @@ interface Props {
 	relatedProducts: Cabin[];
 }
 
-const ProductPage = ({ data, page, relatedProducts }: Props) => {
+const CabinPage = ({ data, page, relatedProducts }: Props) => {
 	return (
 		<Product
 			data={data}
@@ -63,4 +63,4 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 	};
 });
 
-export default ProductPage;
+export default CabinPage;

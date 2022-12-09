@@ -12,7 +12,7 @@ interface Props {
 	relatedProducts: Tire[];
 }
 
-const ProductPage = ({ data, page, relatedProducts }: Props) => {
+const TirePage = ({ data, page, relatedProducts }: Props) => {
 	return (
 		<Product
 			data={data}
@@ -47,10 +47,11 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 			id: {
 				$ne: data.id,
 			},
-			brand: data.brand.id,
+			brand: data.brand?.id,
 		},
 		populate: ['images'],
 	});
+
 	const autoSynonyms = page?.autoSynonyms.split(',') || [];
 	let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
 	return {
@@ -65,4 +66,4 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 	};
 });
 
-export default ProductPage;
+export default TirePage;

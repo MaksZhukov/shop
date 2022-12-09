@@ -28,7 +28,7 @@ export const getPageProps =
 			}
 			props.layout = layoutResponse.data.data;
 		} catch (err: any) {
-			console.log(err.response);
+			console.log(err);
 		}
 		return { props };
 	};

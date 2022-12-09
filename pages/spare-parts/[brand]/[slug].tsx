@@ -11,7 +11,7 @@ interface Props {
 	relatedProducts: SparePart[];
 }
 
-const ProductPage = ({ data, page, relatedProducts }: Props) => {
+const SparePartPage = ({ data, page, relatedProducts }: Props) => {
 	return (
 		<Product
 			data={data}
@@ -64,4 +64,4 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 	};
 });
 
-export default ProductPage;
+export default SparePartPage;

@@ -21,6 +21,7 @@ import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
+import { useRouter } from 'next/router';
 
 interface Props {
 	page: DefaultPage;
@@ -45,6 +46,7 @@ const Tires: NextPage<Props> = ({
 }) => {
 	const [brands, setBrands] = useState<TireBrand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const router = useRouter();
 
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -77,12 +79,10 @@ const Tires: NextPage<Props> = ({
 	const filtersConfig = [
 		[
 			{
-				id: 'brandId',
-				name: 'brandName',
+				id: 'brand',
 				placeholder: 'Марка',
-				disabled: false,
 				type: 'autocomplete',
-				options: brands.map((item) => ({ label: item.name, ...item })),
+				options: brands.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<TireBrand>(
 					!!brands.length,
 					setBrands,
@@ -98,13 +98,11 @@ const Tires: NextPage<Props> = ({
 		[
 			{
 				id: 'width',
-				disabled: false,
 				placeholder: 'Ширина',
 				type: 'number',
 			},
 			{
 				id: 'height',
-				disabled: false,
 				placeholder: 'Высота',
 				type: 'number',
 			},
@@ -114,7 +112,6 @@ const Tires: NextPage<Props> = ({
 				id: 'diameter',
 				placeholder: 'Диаметр',
 				type: 'number',
-				disabled: false,
 			},
 		],
 		[
@@ -122,18 +119,28 @@ const Tires: NextPage<Props> = ({
 				id: 'season',
 				placeholder: 'Сезон',
 				type: 'autocomplete',
-				disabled: false,
 				options: SEASONS,
 				noOptionsText: '',
 			},
 		],
 	];
 
-	const generateFiltersByQuery = ({ brandId, brandName, ...others }: { [key: string]: string }): Filters => {
+	const generateFiltersByQuery = ({ brand, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
-			brand: brandId || undefined,
+			brand: brand ? { name: brand } : undefined,
 		};
 		return { ...filters, ...others };
+	};
+
+	const handleClickFind = (values: any) => {
+		Object.keys(values).forEach((key) => {
+			if (!values[key]) {
+				delete router.query[key];
+			} else {
+				router.query[key] = values[key];
+			}
+		});
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 	};
 
 	return (
@@ -168,6 +175,7 @@ const Tires: NextPage<Props> = ({
 			searchPlaceholder='Поиск шин ...'
 			filtersConfig={filtersConfig}
 			fetchData={fetchTires}
+			onClickFind={handleClickFind}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>
 	);
