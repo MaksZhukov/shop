@@ -223,7 +223,7 @@ const Home: NextPage<Props> = ({
 			discounts={page.discounts}
 			articles={articles}
 			filtersBtn={filtersBtn}
-			filtersConfig={filtersConfig as any}
+			filtersConfig={filtersConfig}
 			middleContent={middleContent}
 			{...(spareParts.meta?.pagination?.total
 				? { textTotal: `Найдено запчастей: ${spareParts.meta?.pagination?.total}` }

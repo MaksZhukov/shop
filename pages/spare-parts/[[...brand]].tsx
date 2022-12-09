@@ -205,7 +205,7 @@ const SpareParts: NextPage<Props> = ({
 				},
 			]}
 			searchPlaceholder='Поиск детали ...'
-			filtersConfig={filtersConfig as any}
+			filtersConfig={filtersConfig}
 			seo={page?.seo}
 			fetchData={fetchSpareParts}
 			generateFiltersByQuery={generateFiltersByQuery}
