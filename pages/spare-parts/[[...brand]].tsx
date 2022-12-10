@@ -144,17 +144,23 @@ const SpareParts: NextPage<Props> = ({
 		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
 	});
 
-	const handleClickFind = (values: any) => {
+	const handleClickFind = (values: { [key: string]: string }) => {
+		let shallow =
+			(values.brand && router.query.brand && values.brand === router.query.brand[0]) ||
+			(!values.brand && !router.query.brand)
+				? true
+				: false;
+
 		Object.keys(values).forEach((key) => {
 			if (!values[key]) {
 				delete router.query[key];
 			} else {
-				router.query[key] = key === 'brand' ? [values[key]] : values.key;
+				router.query[key] = key === 'brand' ? [values[key]] : values[key];
 			}
 		});
-		// It needs because of wrong behaviour
+		// It needs to avoid the same seo data for the page
 		setTimeout(() => {
-			router.push({ pathname: router.pathname, query: router.query }, undefined);
+			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow });
 		}, 100);
 	};
 
