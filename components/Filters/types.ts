@@ -3,6 +3,7 @@ import { ChangeEvent, ReactNode } from 'react';
 export type NumberType = {
 	id: string;
 	placeholder: string;
+	disabledDependencyId?: string;
 	type: string;
 	storeInUrl?: boolean;
 	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;

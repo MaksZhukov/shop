@@ -184,17 +184,6 @@ const Tires: NextPage<Props> = ({
 		],
 	];
 
-	const handleClickFind = (values: any) => {
-		Object.keys(values).forEach((key) => {
-			if (!values[key]) {
-				delete router.query[key];
-			} else {
-				router.query[key] = values[key];
-			}
-		});
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
-	};
-
 	const generateFiltersByQuery = ({
 		brand,
 		model,
@@ -215,7 +204,6 @@ const Tires: NextPage<Props> = ({
 
 	return (
 		<Catalog
-			onClickFind={handleClickFind}
 			newProductsTitle='Салоны'
 			advertising={advertising}
 			autocomises={autocomises}
