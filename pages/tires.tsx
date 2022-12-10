@@ -132,17 +132,6 @@ const Tires: NextPage<Props> = ({
 		return { ...filters, ...others };
 	};
 
-	const handleClickFind = (values: any) => {
-		Object.keys(values).forEach((key) => {
-			if (!values[key]) {
-				delete router.query[key];
-			} else {
-				router.query[key] = values[key];
-			}
-		});
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
-	};
-
 	return (
 		<Catalog
 			seo={page.seo}
@@ -175,7 +164,6 @@ const Tires: NextPage<Props> = ({
 			searchPlaceholder='Поиск шин ...'
 			filtersConfig={filtersConfig}
 			fetchData={fetchTires}
-			onClickFind={handleClickFind}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>
 	);
