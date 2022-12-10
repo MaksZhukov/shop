@@ -102,7 +102,7 @@ const Catalog = ({
 		[key: string]: string;
 	};
 
-	const [throttledFetchProducts] = useThrottle(async (values: any) => {
+	const [throttledFetchProducts] = useThrottle(async ({ searchValue, ...values }: any) => {
 		setIsLoading(true);
 		if (fetchData) {
 			try {
@@ -113,7 +113,7 @@ const Catalog = ({
 					},
 				} = await fetchData({
 					filters: {
-						...(querySearchValue ? { h1: { $contains: querySearchValue } } : {}),
+						...(searchValue ? { h1: { $contains: searchValue } } : {}),
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
 					pagination: querySearchValue ? {} : { page: +page },
@@ -219,6 +219,10 @@ const Catalog = ({
 		}
 	};
 
+	const handleFetchData = (values: { [key: string]: string | null }) => {
+		throttledFetchProducts({ ...values, searchValue });
+	};
+
 	const renderLinkWithImage = (image: IImage, link: string) => (
 		<WhiteBox key={image?.id || link} textAlign='center'>
 			<LinkWithImage image={image} link={link}></LinkWithImage>
@@ -246,7 +250,7 @@ const Catalog = ({
 						btn={filtersBtn}
 						config={filtersConfig}
 						total={total}
-						fetchData={throttledFetchProducts}
+						fetchData={handleFetchData}
 						onClickFind={handleClickFind}
 					></Filters>
 					{renderLinksWithImages(
