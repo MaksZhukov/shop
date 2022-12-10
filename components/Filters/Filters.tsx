@@ -7,15 +7,26 @@ import { AutocompleteType, NumberType } from './types';
 
 interface Props {
 	fetchData?: (values: any) => void;
-	onClickFind?: (values: any) => void;
+	onClickFind?: (values: { [key: string]: string | null }) => void;
 	total: null | number;
 	textTotal?: string;
 	btn?: ReactNode;
 	config: (AutocompleteType | NumberType)[][];
 }
 
+const getDependencyItemIds = (
+	config: (AutocompleteType | NumberType)[][],
+	item: AutocompleteType | NumberType
+): string[] => {
+	let dependencyItem = config.find((el) => el.find((child) => child.disabledDependencyId === item.id));
+	if (dependencyItem) {
+		return [dependencyItem[0].id, ...getDependencyItemIds(config, dependencyItem[0])];
+	}
+	return [];
+};
+
 const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
-	const [values, setValues] = useState<any>({});
+	const [values, setValues] = useState<{ [key: string]: string | null }>({});
 	const router = useRouter();
 	useEffect(() => {
 		let newValues: any = {};
@@ -45,7 +56,9 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	};
 
 	const handleChangeAutocomplete = (item: AutocompleteType) => (_: any, selected: string | null) => {
-		setValues({ ...values, [item.id]: selected });
+		let dependencyItemIds = getDependencyItemIds(config, item);
+		let depValues = dependencyItemIds.reduce((prev, key) => ({ ...prev, [key]: null }), {});
+		setValues({ ...values, ...depValues, [item.id]: selected });
 		if (item.storeInUrl) {
 			(router.query as any)[item.id] = selected;
 			router.push({ pathname: router.pathname, query: router.query }, undefined, {

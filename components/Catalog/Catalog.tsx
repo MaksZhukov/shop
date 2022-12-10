@@ -53,7 +53,7 @@ interface Props {
 	filtersConfig: (AutocompleteType | NumberType)[][];
 	generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
-	onClickFind?: (values: any) => void;
+	onClickFind?: (values: { [key: string]: string }) => void;
 	middleContent?: ReactNode;
 }
 
@@ -172,18 +172,6 @@ const Catalog = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const changeRouterQuery = useRef((field: string, value: string) => {
-		router.query[field] = value;
-		router.replace(
-			{ pathname: router.pathname, query: router.query },
-			undefined,
-
-			{ shallow: true }
-		);
-	});
-
-	const debouncedChangeRouterQuery = useDebounce(changeRouterQuery.current, 300);
-
 	useEffect(() => {
 		if (router.isReady) {
 			throttledFetchProducts(
@@ -202,7 +190,6 @@ const Catalog = ({
 
 	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		setSearchValue(e.target.value);
-		debouncedChangeRouterQuery('searchValue', e.target.value);
 	};
 
 	const handleChangeSort = (e: SelectChangeEvent<HTMLInputElement>) => {
@@ -215,6 +202,21 @@ const Catalog = ({
 		router.push({ pathname: router.pathname, query: router.query }, undefined, {
 			shallow: true,
 		});
+	};
+	const handleClickFind = (values: { [key: string]: string | null }) => {
+		let newValues: { [key: string]: string } = { ...values, searchValue };
+		if (onClickFind) {
+			onClickFind(newValues);
+		} else {
+			Object.keys(newValues).forEach((key) => {
+				if (!newValues[key]) {
+					delete router.query[key];
+				} else {
+					router.query[key] = newValues[key];
+				}
+			});
+			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+		}
 	};
 
 	const renderLinkWithImage = (image: IImage, link: string) => (
@@ -245,7 +247,7 @@ const Catalog = ({
 						config={filtersConfig}
 						total={total}
 						fetchData={throttledFetchProducts}
-						onClickFind={onClickFind}
+						onClickFind={handleClickFind}
 					></Filters>
 					{renderLinksWithImages(
 						serviceStations.map((item) => ({
