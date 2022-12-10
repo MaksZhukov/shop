@@ -1,12 +1,12 @@
 import { Autocomplete, Box, Button, Input, TextField, Typography } from '@mui/material';
 import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
-import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
 
 interface Props {
-	fetchData?: (values: any) => void;
+	fetchData?: (values: { [key: string]: string | null }) => void;
 	onClickFind?: (values: { [key: string]: string | null }) => void;
 	total: null | number;
 	textTotal?: string;

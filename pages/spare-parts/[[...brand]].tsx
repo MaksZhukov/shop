@@ -160,7 +160,7 @@ const SpareParts: NextPage<Props> = ({
 		});
 		// It needs to avoid the same seo data for the page
 		setTimeout(() => {
-			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow });
+			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
 		}, 100);
 	};
 
