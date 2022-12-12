@@ -13,10 +13,10 @@ interface Props {
 const HowToGetTo: FC<Props> = ({ page }) => {
 	return (
 		<WhiteBox>
-			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
+			<Typography  gutterBottom component='h1' variant='h4' textAlign='center'>
 				{page.seo?.h1}
 			</Typography>
-			<ReactMarkdown withVideo content={page.content}></ReactMarkdown>
+			<ReactMarkdown content={page.content}></ReactMarkdown>
 		</WhiteBox>
 	);
 };
