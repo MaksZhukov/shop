@@ -223,14 +223,14 @@ const Catalog = ({
 		throttledFetchProducts({ ...values, searchValue });
 	};
 
-	const renderLinkWithImage = (image: IImage, link: string) => (
+	const renderLinkWithImage = (image: IImage, link: string, caption?: string) => (
 		<WhiteBox key={image?.id || link} textAlign='center'>
-			<LinkWithImage image={image} link={link}></LinkWithImage>
+			<LinkWithImage image={image} link={link} caption={caption}></LinkWithImage>
 		</WhiteBox>
 	);
 
-	const renderLinksWithImages = (items?: { image: IImage; link: string }[]) =>
-		items?.map((item) => renderLinkWithImage(item.image, item.link));
+	const renderLinksWithImages = (items?: { image: IImage; link: string; caption?: string }[]) =>
+		items?.map((item) => renderLinkWithImage(item.image, item.link, item.caption));
 
 	return (
 		<>
@@ -257,12 +257,14 @@ const Catalog = ({
 						serviceStations.map((item) => ({
 							image: item.image,
 							link: `/service-stations/${item.slug}`,
+							caption: item.name,
 						}))
 					)}
 					{renderLinksWithImages(
 						autocomises.map((item) => ({
 							image: item.image,
 							link: `/autocomises/${item.slug}`,
+							caption: item.name,
 						}))
 					)}
 					{deliveryAuto && renderLinkWithImage(deliveryAuto.image, deliveryAuto.link)}

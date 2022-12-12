@@ -13,8 +13,10 @@ interface Props {
 	width?: number;
 	height?: number;
 	image?: IImage;
+	caption?: string;
 }
-const LinkWithImage: FC<Props> = ({ width = 208, height = 156, link, image, targetLink = '_self' }) => {
+const LinkWithImage: FC<Props> = ({ width = 208, height = 156, link, image, caption, targetLink = '_self' }) => {
+	let title = caption || image?.caption;
 	return (
 		<NextLink href={link} target={targetLink}>
 			<Image
@@ -25,9 +27,9 @@ const LinkWithImage: FC<Props> = ({ width = 208, height = 156, link, image, targ
 				isOnSSR={!!image}
 				src={image?.formats?.thumbnail.url || image?.url || ''}
 			></Image>
-			{image?.caption && (
+			{title && (
 				<Link component='div' textAlign='center' marginTop='1em'>
-					{image.caption}
+					{title}
 				</Link>
 			)}
 		</NextLink>
