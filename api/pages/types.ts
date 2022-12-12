@@ -1,3 +1,5 @@
+import { Autocomis } from 'api/autocomises/types';
+import { ServiceStation } from 'api/serviceStations/types';
 import { Image, LinkWithImage, SEO } from 'api/types';
 
 export type DefaultPage = {
@@ -11,6 +13,8 @@ export type PageMain = {
 	discounts?: LinkWithImage[];
 	advertising?: LinkWithImage[];
 	deliveryAuto?: LinkWithImage;
+	autocomises?: Autocomis[];
+	serviceStations?: ServiceStation[];
 };
 
 export type PageProduct = {
