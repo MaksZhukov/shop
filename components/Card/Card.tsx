@@ -5,6 +5,7 @@ import Link from '@mui/material/Link';
 import NextLink from 'next/link';
 import { FC } from 'react';
 import Typography from 'components/Typography';
+import ReactMarkdown from 'components/ReactMarkdown';
 interface Props {
 	image?: IImage;
 	description: string;
@@ -31,7 +32,7 @@ const Card: FC<Props> = ({ image, description, name, link }) => {
 					</NextLink>
 				</Typography>
 				<Typography>
-					{description?.substring(0, 500)}...{' '}
+					<ReactMarkdown content={`${description?.substring(0, 500)}...`}></ReactMarkdown>
 					<NextLink href={link}>
 						<Link component='span' underline='hover'>
 							читать далее

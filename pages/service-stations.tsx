@@ -48,6 +48,7 @@ export const getStaticProps = getPageProps(fetchPage('service-station'), async (
 	serviceStations: (
 		await fetchServiceStations({
 			populate: 'image',
+			sort: 'updatedAt:desc',
 		})
 	).data,
 }));

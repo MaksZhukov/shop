@@ -42,6 +42,7 @@ export const getStaticProps = getPageProps(fetchPage('autocomis'), async () => (
 	autocomises: (
 		await fetchAutocomises({
 			populate: 'image',
+			sort: 'updatedAt:desc',
 		})
 	).data,
 }));

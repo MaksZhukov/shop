@@ -27,8 +27,6 @@ import Image from 'components/Image';
 import Catalog from 'components/Catalog';
 import ReactMarkdown from 'components/ReactMarkdown';
 import CarouselProducts from 'components/CarouselProducts';
-import { fetchAutocomises } from 'api/autocomises/autocomises';
-import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
@@ -57,6 +55,7 @@ const Home: NextPage<Props> = ({
 	serviceStations = [],
 	spareParts,
 }) => {
+	console.log(page);
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
@@ -215,9 +214,9 @@ const Home: NextPage<Props> = ({
 	return (
 		<Catalog
 			seo={page.seo}
-			serviceStations={serviceStations}
+			serviceStations={page.serviceStations}
 			advertising={page.advertising}
-			autocomises={autocomises}
+			autocomises={page.autocomises}
 			cars={cars}
 			deliveryAuto={page.deliveryAuto}
 			discounts={page.discounts}
@@ -236,12 +235,6 @@ export default Home;
 
 export const getServerSideProps = getPageProps(
 	fetchPage('main'),
-	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
-	}),
-	async () => ({
-		serviceStations: (await fetchServiceStations({ populate: 'image' })).data.data,
-	}),
 	async () => {
 		const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } });
 		return { cars: data.data };

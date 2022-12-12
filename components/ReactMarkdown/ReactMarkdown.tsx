@@ -11,10 +11,10 @@ const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	content: string;
-	withVideo?: boolean;
+	inline?: boolean;
 }
 
-const ReactMarkdown: FC<Props> = ({ content }) => {
+const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 	return (
 		<ReactMarkdownLib
 			rehypePlugins={[rehypeRaw]}
@@ -26,7 +26,11 @@ const ReactMarkdown: FC<Props> = ({ content }) => {
 					return <ReactPlayer controls url={publicRuntimeConfig.backendLocalUrl + src}></ReactPlayer>;
 				},
 				p: (data) => {
-					return <Typography gutterBottom>{data.children}</Typography>;
+					return (
+						<Typography display={inline ? 'inline' : 'initial'} gutterBottom>
+							{data.children}
+						</Typography>
+					);
 				},
 				a: (data) => {
 					return (
