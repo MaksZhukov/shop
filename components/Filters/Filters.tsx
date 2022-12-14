@@ -40,6 +40,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 			});
 		});
 		setValues(newValues);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.query.brand]);
 
 	const handleChangeNumberInput = (item: NumberType) => (e: ChangeEvent<HTMLInputElement>) => {

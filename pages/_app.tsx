@@ -24,6 +24,8 @@ import HeadSEO from 'components/HeadSEO';
 import { Container } from '@mui/system';
 import SEOBox from 'components/SEOBox';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Metrics from 'components/Metrics';
 
 let theme = createTheme({
 	typography: {
@@ -97,6 +99,7 @@ function MyApp({
 					maxSnack={3}
 				>
 					<Layout>
+						<Metrics></Metrics>
 						<HeadSEO
 							title={restPageProps.page?.seo?.title}
 							description={restPageProps.page?.seo?.description}
