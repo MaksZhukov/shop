@@ -153,11 +153,6 @@ const Header = observer(({ brands }: Props) => {
 		setAnchorEl(null);
 	};
 
-	const handleSubMenuClick = (path: string) => () => {
-		router.push(path, undefined, { shallow: true });
-		handleSubMenuClose();
-	};
-
 	const handleMouseLeave = () => {
 		timeoutRef.current = window.setTimeout(() => {
 			handleSubMenuClose();
@@ -249,9 +244,9 @@ const Header = observer(({ brands }: Props) => {
 						sx: { display: { md: 'none', xs: 'flex' } },
 				  }
 				: {
-						sx: { display: { md: 'flex', xs: 'none' } },
+						sx: { display: { md: 'flex', xs: 'none' }, justifyContent: { md: 'start', lg: 'center' } },
 						flex: '1',
-						justifyContent: 'center',
+						flexWrap: 'wrap',
 				  })}
 		>
 			{navigation.map((page, index) => {
@@ -316,6 +311,7 @@ const Header = observer(({ brands }: Props) => {
 										role={undefined}
 										placement='bottom-start'
 										transition
+										sx={{ zIndex: 1, top: { sm: '-3px !important' } }}
 										disablePortal
 									>
 										{({ TransitionProps, placement }) => (
