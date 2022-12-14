@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { Box, Button, CircularProgress } from '@mui/material';
+import { Box, Button, CircularProgress, useMediaQuery } from '@mui/material';
 
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import Slider from 'react-slick';
@@ -46,21 +46,13 @@ interface Props {
 	spareParts: ApiResponse<SparePart[]>;
 }
 
-const Home: NextPage<Props> = ({
-	page,
-	cars = [],
-	articles = [],
-	brands = [],
-	autocomises = [],
-	serviceStations = [],
-	spareParts,
-}) => {
-	console.log(page);
+const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], spareParts }) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
+	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const { enqueueSnackbar } = useSnackbar();
 
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
@@ -185,7 +177,7 @@ const Home: NextPage<Props> = ({
 				<Image src={page.banner.url} alt={page.banner.alternativeText} width={640} height={640}></Image>
 			)}
 			<Box padding='1em 1.5em'>
-				<Slider slidesToShow={3}>
+				<Slider slidesToShow={isTablet ? 1 : 3}>
 					{brands
 						.filter((item) => item.image)
 						.map((item) => (
