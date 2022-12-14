@@ -270,8 +270,7 @@ const Catalog = ({
 					{deliveryAuto && renderLinkWithImage(deliveryAuto.image, deliveryAuto.link)}
 				</Box>
 				<Box
-					marginRight='1em'
-					width='calc(100% - 500px - 2em)'
+					sx={{ width: { md: 'calc(100% - 500px - 2em)' }, marginRight: { md: '1em' } }}
 					// className={classNames(
 					// 	styles.content,
 					// 	isTablet && styles.content_tablet
@@ -328,10 +327,11 @@ const Catalog = ({
 							{pageCount > 1 && (
 								<WhiteBox display='flex' justifyContent='center'>
 									<Pagination
+										boundaryCount={isTablet ? 1 : 2}
 										page={+page}
-										siblingCount={2}
+										siblingCount={isTablet ? 0 : 2}
 										color='primary'
-										count={pageCount}
+										count={100}
 										onChange={handleChangePage}
 										variant='outlined'
 									/>
@@ -341,7 +341,7 @@ const Catalog = ({
 					)}
 				</Box>
 
-				<Box className={styles['sider-right']}>
+				<Box sx={{ width: { md: '250px' } }}>
 					{!!cars.length && (
 						<WhiteBox padding='1em 1.5em'>
 							<Slider swipe={false}>
@@ -372,12 +372,17 @@ const Catalog = ({
 									<Box key={item.id}>
 										<NextLink href={`/articles/${item.slug}`}>
 											<Link component='span' underline='hover'>
-												<Typography marginBottom='0.5em' lineClamp={2}>
+												<Typography
+													textAlign={isTablet ? 'center' : 'left'}
+													marginBottom='0.5em'
+													lineClamp={2}
+												>
 													{item.name}
 												</Typography>
 											</Link>
 										</NextLink>
 										<Image
+											style={{ margin: 'auto' }}
 											alt={item.image?.alternativeText || item.name}
 											width={208}
 											height={156}
