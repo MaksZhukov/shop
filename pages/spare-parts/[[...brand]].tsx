@@ -8,7 +8,7 @@ import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
-import { ApiResponse, Filters, LinkWithImage } from 'api/types';
+import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { fetchModels } from 'api/models/models';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
@@ -226,11 +226,20 @@ export const getServerSideProps = getPageProps(
 	async (context) => {
 		const { brand } = context.query;
 		const brandParam = brand ? brand[0] : undefined;
-		const {
-			data: { data },
-		} = brandParam ? await fetchBrandByName(brand) : await fetchPage('spare-part')();
+		let seo: SEO | null = null;
+		if (brandParam) {
+			const {
+				data: { data },
+			} = await fetchBrandByName(brand, { populate: ['seoSpareParts.images', 'image'] });
+			seo = data.seoSpareParts;
+		} else {
+			const {
+				data: { data },
+			} = await fetchPage('spare-part')();
+			seo = data.seo;
+		}
 		return {
-			page: { seo: data.seo },
+			page: { seo },
 		};
 	},
 	async () => ({
