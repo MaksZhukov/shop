@@ -193,22 +193,18 @@ export const getServerSideProps = getPageProps(
 			page: { seo },
 		};
 	},
-	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
-	}),
-	async () => ({
-		serviceStations: (await fetchServiceStations({ populate: 'image' })).data.data,
-	}),
 	async () => {
 		const {
 			data: {
-				data: { advertising, deliveryAuto, discounts },
+				data: { advertising, deliveryAuto, discounts, autocomises, serviceStations },
 			},
 		} = await fetchPage<PageMain>('main')();
 		return {
 			advertising,
 			deliveryAuto,
 			discounts,
+			autocomises,
+			serviceStations,
 		};
 	},
 	async () => {

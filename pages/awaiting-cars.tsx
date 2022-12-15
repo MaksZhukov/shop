@@ -286,12 +286,14 @@ export const getServerSideProps = getPageProps(
 	async () => {
 		const {
 			data: {
-				data: { advertising, deliveryAuto, discounts },
+				data: { advertising, deliveryAuto, discounts, autocomises, serviceStations },
 			},
 		} = await fetchPage<PageMain>('main')();
 		return {
 			advertising,
 			deliveryAuto,
+			autocomises,
+			serviceStations,
 			discounts,
 		};
 	},
@@ -302,12 +304,6 @@ export const getServerSideProps = getPageProps(
 				pagination: { pageSize: 25, page: context.query?.page ?? 1 },
 			})
 		).data,
-	}),
-	async () => ({
-		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
-	}),
-	async () => ({
-		serviceStations: (await fetchServiceStations({ populate: 'image' })).data.data,
 	}),
 	async () => ({
 		articles: (await fetchArticles({ populate: 'image' })).data.data,
