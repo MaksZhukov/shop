@@ -5,6 +5,7 @@ const PAGES = [
 	'/500',
 	'/autocomises',
 	'/car-dismantling-photos',
+	'/company-photo',
 	'/vacancies',
 	'/service-stations',
 	'/profile',
