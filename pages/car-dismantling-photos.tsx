@@ -12,4 +12,4 @@ const CarDismantlingPhotos: NextPage<Props> = ({ page }) => <Gallery page={page}
 
 export default CarDismantlingPhotos;
 
-export const getStaticProps = getPageProps(fetchPage('car-dismantling-photo'));
+export const getStaticProps = getPageProps(fetchPage('car-dismantling-photo', { populate: ['images', 'seo.images'] }));

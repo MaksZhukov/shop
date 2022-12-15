@@ -12,4 +12,4 @@ const CompanyPhotos: NextPage<Props> = ({ page }) => <Gallery page={page}></Gall
 
 export default CompanyPhotos;
 
-export const getStaticProps = getPageProps(fetchPage('company-photo'));
+export const getStaticProps = getPageProps(fetchPage('company-photo', { populate: ['images', 'seo.images'] }));

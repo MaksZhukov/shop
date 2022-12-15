@@ -39,17 +39,20 @@ const CarItem = ({ data }: Props) => {
 						{data.images
 							.filter((item) => item.formats)
 							.map((item) => (
-								<Image
-									key={item.id}
-									src={`${
-										isMobile
-											? item.formats?.small?.url || item.url
-											: item.formats?.thumbnail?.url || item.url
-									}`}
-									width={isMobile ? 500 : 200}
-									height={isMobile ? 375 : 150}
-									alt={item.alternativeText}
-								></Image>
+								<Box key={item.id}>
+									<Image
+										key={item.id}
+										src={`${
+											isMobile
+												? item.formats?.small?.url || item.url
+												: item.formats?.thumbnail?.url || item.url
+										}`}
+										width={isMobile ? 500 : 200}
+										height={isMobile ? 375 : 150}
+										alt={item.alternativeText}
+										style={isMobile ? { height: 'auto', maxHeight: '375px' } : {}}
+									></Image>
+								</Box>
 							))}
 					</Slider>
 				) : (
