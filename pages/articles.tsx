@@ -4,15 +4,12 @@ import { Article, Article as IArticle } from 'api/articles/types';
 import { ApiResponse } from 'api/types';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
-import Card from 'components/Card';
+import CardItem from 'components/CardItem';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-
-const { publicRuntimeConfig } = getConfig();
 
 const LIMIT = 10;
 
@@ -49,13 +46,13 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 				{page.seo?.h1 || 'Статьи'}
 			</Typography>
 			{data.map((item) => (
-				<Card
+				<CardItem
 					key={item.id}
 					description={item.description}
 					name={item.name}
 					image={item.image}
 					link={`/articles/${item.slug}`}
-				></Card>
+				></CardItem>
 			))}
 			{pageCount > 1 && (
 				<Box display='flex' justifyContent='center'>
