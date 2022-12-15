@@ -99,7 +99,7 @@ function MyApp({
 					maxSnack={3}
 				>
 					<Layout>
-						<Metrics></Metrics>
+						{process.env.NODE_ENV === 'production' && <Metrics></Metrics>}
 						<HeadSEO
 							title={restPageProps.page?.seo?.title}
 							description={restPageProps.page?.seo?.description}

@@ -2,13 +2,13 @@ import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
 import { SEASONS } from 'components/Filters/constants';
-import { ApiResponse, Filters, LinkWithImage } from 'api/types';
+import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
 import { fetchTires } from 'api/tires/tires';
 import { useSnackbar } from 'notistack';
-import { fetchTireBrands } from 'api/tireBrands/tireBrands';
+import { fetchTireBrandByName, fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { getPageProps } from 'services/PagePropsService';
 import { TireBrand } from 'api/tireBrands/types';
 import { fetchCars } from 'api/cars/cars';
@@ -22,6 +22,7 @@ import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { useRouter } from 'next/router';
+import { fetchBrandByName } from 'api/brands/brands';
 
 interface Props {
 	page: DefaultPage;
@@ -46,7 +47,6 @@ const Tires: NextPage<Props> = ({
 }) => {
 	const [brands, setBrands] = useState<TireBrand[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const router = useRouter();
 
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -172,7 +172,27 @@ const Tires: NextPage<Props> = ({
 export default Tires;
 
 export const getServerSideProps = getPageProps(
-	fetchPage('tire'),
+	undefined,
+	async (context) => {
+		const { brand } = context.query;
+		const brandParam = brand ? brand[0] : undefined;
+		let seo: SEO | null = null;
+		if (brandParam) {
+			const {
+				data: { data },
+			} = await fetchTireBrandByName(brand, { populate: ['seo.images', 'image'] });
+			seo = data.seo;
+		} else {
+			const {
+				data: { data },
+			} = await fetchPage('tire')();
+			seo = data.seo;
+		}
+		console.log(seo);
+		return {
+			page: { seo },
+		};
+	},
 	async () => ({
 		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
 	}),

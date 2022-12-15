@@ -144,26 +144,6 @@ const SpareParts: NextPage<Props> = ({
 		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
 	});
 
-	const handleClickFind = (values: { [key: string]: string }) => {
-		let shallow =
-			(values.brand && router.query.brand && values.brand === router.query.brand[0]) ||
-			(!values.brand && !router.query.brand)
-				? true
-				: false;
-
-		Object.keys(values).forEach((key) => {
-			if (!values[key]) {
-				delete router.query[key];
-			} else {
-				router.query[key] = key === 'brand' ? [values[key]] : values[key];
-			}
-		});
-		// It needs to avoid the same seo data for the page
-		setTimeout(() => {
-			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
-		}, 100);
-	};
-
 	const generateFiltersByQuery = ({
 		brand,
 		model,
@@ -195,7 +175,6 @@ const SpareParts: NextPage<Props> = ({
 			serviceStations={serviceStations}
 			cars={cars}
 			articles={articles}
-			onClickFind={handleClickFind}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
