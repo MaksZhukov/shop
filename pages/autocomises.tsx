@@ -10,7 +10,7 @@ import { fetchAutocomises } from 'api/autocomises/autocomises';
 import { Autocomis } from 'api/autocomises/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-import Card from 'components/Card';
+import CardItem from 'components/CardItem';
 
 interface Props {
 	page: DefaultPage;
@@ -24,13 +24,13 @@ const Vacancies: NextPage<Props> = ({ page, autocomises }) => {
 				{page.seo?.h1 || 'Автокомисы'}
 			</Typography>
 			{autocomises.data.map((item) => (
-				<Card
+				<CardItem
 					key={item.id}
 					description={item.description}
 					name={item.name}
 					image={item.image}
 					link={`/autocomises/${item.slug}`}
-				></Card>
+				></CardItem>
 			))}
 		</WhiteBox>
 	);

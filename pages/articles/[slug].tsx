@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchArtcle } from 'api/articles/articles';
 import { Article as IArticle } from 'api/articles/types';
@@ -15,6 +15,7 @@ interface Props {
 }
 
 const Article: NextPage<Props> = ({ data }) => {
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<WhiteBox>
 			<Typography component='h1' variant='h4' gutterBottom>
@@ -31,8 +32,20 @@ const Article: NextPage<Props> = ({ data }) => {
 				})}
 			</Typography>
 			<Box>
-				<Box marginRight='1em' sx={{ float: 'left' }}>
-					<Image alt={data.image.alternativeText} width={640} height={480} src={data.image?.url}></Image>
+				<Box
+					sx={{
+						marginRight: { xs: 0, sm: '1em' },
+						marginBottom: { xs: '1em', sm: 0 },
+						float: 'left',
+					}}
+				>
+					<Image
+						alt={data.image?.alternativeText}
+						width={isMobile ? 500 : 640}
+						height={isMobile ? 375 : 480}
+						src={isMobile ? data.image?.formats?.small.url || '' : data.image?.url || ''}
+						style={isMobile ? { height: 'auto' } : {}}
+					></Image>
 				</Box>
 				<ReactMarkdown content={data.description}></ReactMarkdown>
 				<Box sx={{ clear: 'both' }}></Box>

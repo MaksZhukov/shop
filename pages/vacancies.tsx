@@ -7,7 +7,7 @@ import { fetchVacancies } from 'api/vacancies/vacancies';
 import { Vacancy } from 'api/vacancies/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-import Card from 'components/Card';
+import CardItem from 'components/CardItem';
 
 interface Props {
 	page: DefaultPage;
@@ -21,13 +21,13 @@ const Vacancies: NextPage<Props> = ({ page, vacancies }) => {
 				{page.seo?.h1}
 			</Typography>
 			{vacancies.data.map((item) => (
-				<Card
+				<CardItem
 					name={item.name}
 					key={item.id}
 					image={item.image}
 					link={`/vacancies/${item.slug}`}
 					description={item.description}
-				></Card>
+				></CardItem>
 			))}
 		</WhiteBox>
 	);
@@ -37,10 +37,8 @@ export default Vacancies;
 
 export const getStaticProps = getPageProps(fetchPage('vacancy'), async () => ({
 	vacancies: (
-		await fetchVacancies(
-			{
-				populate: 'image',
-			}
-		)
+		await fetchVacancies({
+			populate: 'image',
+		})
 	).data,
 }));

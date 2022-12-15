@@ -1,4 +1,4 @@
-import { IconButton, Modal } from '@mui/material';
+import { IconButton, Modal, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 import WhiteBox from 'components/WhiteBox';
@@ -16,6 +16,7 @@ interface Props {
 
 const Gallery: FC<Props> = ({ page }) => {
 	const [index, setIndex] = useState<number | null>(null);
+	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const handleClickImage = (i: number) => () => {
 		setIndex(i);
 	};
@@ -42,7 +43,7 @@ const Gallery: FC<Props> = ({ page }) => {
 				</Box>
 			</WhiteBox>
 			<Modal open={index !== null} onClose={handleClose}>
-				<Box padding='0 50px' marginTop='25%' sx={{ transform: 'translateY(-50%)' }}>
+				<Box padding='0 50px' sx={{ transform: 'translateY(50%)' }}>
 					<IconButton
 						size='large'
 						color='primary'
@@ -61,8 +62,8 @@ const Gallery: FC<Props> = ({ page }) => {
 						{page.images?.map((item) => (
 							<Image
 								key={item.id}
-								width={640}
-								height={480}
+								width={isTablet ? 500 : 640}
+								height={isTablet ? 375 : 480}
 								src={item.formats?.small.url || item.url}
 								alt={item.alternativeText}
 							></Image>
