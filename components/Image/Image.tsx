@@ -19,7 +19,6 @@ const Image = ({ src, isOnSSR = true, ...props }: ImageProps & { isOnSSR?: boole
 			style={{
 				...props.style,
 				objectFit: 'contain',
-				height: 'auto',
 				maxWidth: '100%',
 			}}
 		></NextImage>
