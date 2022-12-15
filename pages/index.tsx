@@ -246,7 +246,7 @@ export const getServerSideProps = getPageProps(
 		spareParts: (
 			await fetchSpareParts({
 				sort: 'createdAt:desc',
-				populate: ['images'],
+				populate: ['images', 'brand'],
 			})
 		).data,
 	})
