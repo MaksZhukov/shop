@@ -153,7 +153,7 @@ const Catalog = ({
 				try {
 					const response = await fetchData({
 						sort: 'createdAt:desc',
-						populate: ['images'],
+						populate: ['images', 'brand'],
 						filters: {
 							createdAt: {
 								$gte: date.setDate(date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT),
