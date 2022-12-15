@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
-import { ApiResponse, Filters, LinkWithImage } from 'api/types';
+import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
-import { fetchBrands } from 'api/brands/brands';
+import { fetchBrandByName, fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
@@ -50,9 +50,8 @@ const Wheels: NextPage<Props> = ({
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 
-	const { brand = '', model = '' } = router.query as {
+	const { brand = '' } = router.query as {
 		brand: string;
-		model: string;
 	};
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -81,17 +80,6 @@ const Wheels: NextPage<Props> = ({
 			}
 		};
 
-	const handleChangeBrandAutocomplete = (_: any, selected: string) => {
-		if (selected) {
-			router.query.brand = selected;
-		} else {
-			delete router.query.brand;
-			delete router.query.model;
-		}
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
-		setModels([]);
-	};
-
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const filtersConfig = [
@@ -114,7 +102,6 @@ const Wheels: NextPage<Props> = ({
 						pagination: { limit: MAX_LIMIT },
 					})
 				),
-				onChange: handleChangeBrandAutocomplete,
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -226,7 +213,27 @@ const Wheels: NextPage<Props> = ({
 export default Wheels;
 
 export const getServerSideProps = getPageProps(
-	fetchPage('wheel'),
+	undefined,
+	async (context) => {
+		const { brand } = context.query;
+		const brandParam = brand ? brand[0] : undefined;
+		let seo: SEO | null = null;
+		if (brandParam) {
+			const {
+				data: { data },
+			} = await fetchBrandByName(brand, { populate: ['seoWheels.images', 'image'] });
+			seo = data.seoWheels;
+		} else {
+			const {
+				data: { data },
+			} = await fetchPage('wheel')();
+			seo = data.seo;
+		}
+		console.log(seo);
+		return {
+			page: { seo },
+		};
+	},
 	async () => ({
 		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
 	}),

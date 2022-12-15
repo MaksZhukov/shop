@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
-import { ApiResponse, Filters, LinkWithImage } from 'api/types';
+import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
@@ -26,6 +26,7 @@ import { useRouter } from 'next/router';
 import { fetchModels } from 'api/models/models';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { fetchCabins } from 'api/cabins/cabins';
+import { fetchBrandByName } from 'api/brands/brands';
 
 interface Props {
 	page: DefaultPage;
@@ -39,7 +40,7 @@ interface Props {
 	serviceStations: ServiceStation[];
 }
 
-const Tires: NextPage<Props> = ({
+const Cabins: NextPage<Props> = ({
 	page,
 	advertising,
 	autocomises,
@@ -57,9 +58,9 @@ const Tires: NextPage<Props> = ({
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
 
-	const { brandId = '', modelId = '' } = router.query as {
-		brandId: string;
-		modelId: string;
+	const { brand = '', model = '' } = router.query as {
+		brand: string;
+		model: string;
 	};
 	const handleOpenAutocomplete =
 		<T extends any>(
@@ -85,33 +86,9 @@ const Tires: NextPage<Props> = ({
 			}
 		};
 
-	const handleChangeBrandAutocomplete = (_: any, selected: string) => {
-		if (selected) {
-			router.query.brand = selected;
-		} else {
-			delete router.query.brand;
-			delete router.query.model;
-			delete router.query.generation;
-		}
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
-		setModels([]);
-		setGenerations([]);
-	};
-
-	const handleChangeModelAutocomplete = (_: any, selected: string) => {
-		if (selected) {
-			router.query.model = selected;
-		} else {
-			delete router.query.model;
-			delete router.query.generation;
-		}
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
-		setGenerations([]);
-	};
-
 	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 		fetchModels({
-			filters: { brand: brandId as string },
+			filters: { brand: { name: brand } },
 			pagination: { limit: MAX_LIMIT },
 		})
 	);
@@ -121,7 +98,7 @@ const Tires: NextPage<Props> = ({
 		setGenerations,
 		() =>
 			fetchGenerations({
-				filters: { model: modelId as string },
+				filters: { model: { name: model } },
 				pagination: { limit: MAX_LIMIT },
 			})
 	);
@@ -145,7 +122,6 @@ const Tires: NextPage<Props> = ({
 				placeholder: 'Марка',
 				type: 'autocomplete',
 				options: brands.map((item) => item.name),
-				onChange: handleChangeBrandAutocomplete,
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -156,7 +132,6 @@ const Tires: NextPage<Props> = ({
 				type: 'autocomplete',
 				disabledDependencyId: 'brand',
 				options: models.map((item) => item.name),
-				onChange: handleChangeModelAutocomplete,
 				onOpen: handleOpenAutocompleteModel,
 				noOptionsText: noOptionsText,
 			},
@@ -235,10 +210,29 @@ const Tires: NextPage<Props> = ({
 	);
 };
 
-export default Tires;
+export default Cabins;
 
 export const getServerSideProps = getPageProps(
-	fetchPage('cabin'),
+	undefined,
+	async (context) => {
+		const { brand } = context.query;
+		const brandParam = brand ? brand[0] : undefined;
+		let seo: SEO | null = null;
+		if (brandParam) {
+			const {
+				data: { data },
+			} = await fetchBrandByName(brand, { populate: ['seoCabins.images', 'image'] });
+			seo = data.seoCabins;
+		} else {
+			const {
+				data: { data },
+			} = await fetchPage('cabin')();
+			seo = data.seo;
+		}
+		return {
+			page: { seo },
+		};
+	},
 	async () => ({
 		autocomises: (await fetchAutocomises({ populate: 'image' })).data.data,
 	}),
