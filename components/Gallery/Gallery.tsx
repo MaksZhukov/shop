@@ -43,7 +43,7 @@ const Gallery: FC<Props> = ({ page }) => {
 				</Box>
 			</WhiteBox>
 			<Modal open={index !== null} onClose={handleClose}>
-				<Box padding='0 50px' sx={{ transform: 'translateY(50%)' }}>
+				<Box padding='0 50px' sx={{ outline: 'none', transform: 'translateY(50%)' }}>
 					<IconButton
 						size='large'
 						color='primary'
