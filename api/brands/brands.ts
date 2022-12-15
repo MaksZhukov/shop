@@ -7,4 +7,5 @@ export const fetchBrands = (params: CollectionParams) =>
 		params,
 	});
 
-export const fetchBrandByName = (brandName: string) => api.get<ApiResponse<Brand>>(`/brands/${brandName}`);
+export const fetchBrandByName = (brandName: string, params: CollectionParams) =>
+	api.get<ApiResponse<Brand>>(`/brands/${brandName}`, { params });
