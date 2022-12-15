@@ -8,6 +8,7 @@ import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
+import { SEO } from 'api/types';
 import { ApiResponse, Filters, LinkWithImage } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { fetchModels } from 'api/models/models';
@@ -144,26 +145,6 @@ const SpareParts: NextPage<Props> = ({
 		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
 	});
 
-	const handleClickFind = (values: { [key: string]: string }) => {
-		let shallow =
-			(values.brand && router.query.brand && values.brand === router.query.brand[0]) ||
-			(!values.brand && !router.query.brand)
-				? true
-				: false;
-
-		Object.keys(values).forEach((key) => {
-			if (!values[key]) {
-				delete router.query[key];
-			} else {
-				router.query[key] = key === 'brand' ? [values[key]] : values[key];
-			}
-		});
-		// It needs to avoid the same seo data for the page
-		setTimeout(() => {
-			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
-		}, 100);
-	};
-
 	const generateFiltersByQuery = ({
 		brand,
 		model,
@@ -195,7 +176,6 @@ const SpareParts: NextPage<Props> = ({
 			serviceStations={serviceStations}
 			cars={cars}
 			articles={articles}
-			onClickFind={handleClickFind}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
@@ -226,11 +206,20 @@ export const getServerSideProps = getPageProps(
 	async (context) => {
 		const { brand } = context.query;
 		const brandParam = brand ? brand[0] : undefined;
-		const {
-			data: { data },
-		} = brandParam ? await fetchBrandByName(brand) : await fetchPage('spare-part')();
+		let seo: SEO | null = null;
+		if (brandParam) {
+			const {
+				data: { data },
+			} = await fetchBrandByName(brand, { populate: ['seoSpareParts.images', 'image'] });
+			seo = data.seoSpareParts;
+		} else {
+			const {
+				data: { data },
+			} = await fetchPage('spare-part')();
+			seo = data.seo;
+		}
 		return {
-			page: { seo: data.seo },
+			page: { seo },
 		};
 	},
 	async () => ({

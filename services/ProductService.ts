@@ -12,5 +12,4 @@ let SLUG_PRODUCT_TYPE = {
 
 export const isTire = (data: Product): data is Tire => data.type === 'tire';
 export const isWheel = (data: Product): data is Wheel => data.type === 'wheel';
-export const getProductTypeSlug = (data: Product) =>
-	`${SLUG_PRODUCT_TYPE[data.type]}/${data.type === 'sparePart' ? data.brand?.name : ''}`;
+export const getProductTypeSlug = (data: Product) => `${SLUG_PRODUCT_TYPE[data.type]}/${data.brand?.name}`;

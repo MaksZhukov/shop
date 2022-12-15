@@ -208,14 +208,23 @@ const Catalog = ({
 		if (onClickFind) {
 			onClickFind(newValues);
 		} else {
-			Object.keys(newValues).forEach((key) => {
-				if (!newValues[key]) {
+			let shallow =
+				(values.brand && router.query.brand && values.brand === router.query.brand[0]) ||
+				(!values.brand && !router.query.brand)
+					? true
+					: false;
+			Object.keys(values).forEach((key) => {
+				if (!values[key]) {
 					delete router.query[key];
 				} else {
-					router.query[key] = newValues[key];
+					//@ts-expect-error error
+					router.query[key] = key === 'brand' ? [values[key]] : values[key];
 				}
 			});
-			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+			// It needs to avoid the same seo data for the page
+			setTimeout(() => {
+				router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
+			}, 100);
 		}
 	};
 
