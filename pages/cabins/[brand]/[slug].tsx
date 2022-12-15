@@ -47,7 +47,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 			},
 			model: data.model?.id || '',
 		},
-		populate: ['images'],
+		populate: ['images', 'brand'],
 	});
 	const autoSynonyms = page?.autoSynonyms.split(',') || [];
 	let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
