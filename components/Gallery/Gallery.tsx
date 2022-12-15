@@ -35,7 +35,7 @@ const Gallery: FC<Props> = ({ page }) => {
 							<Image
 								width={300}
 								height={225}
-								src={item.formats?.small.url || item.url}
+								src={item.formats?.small?.url || item.url}
 								alt={item.alternativeText}
 							></Image>
 						</Box>
@@ -64,7 +64,7 @@ const Gallery: FC<Props> = ({ page }) => {
 								key={item.id}
 								width={isTablet ? 500 : 640}
 								height={isTablet ? 375 : 480}
-								src={item.formats?.small.url || item.url}
+								src={item.formats?.small?.url || item.url}
 								alt={item.alternativeText}
 							></Image>
 						))}
