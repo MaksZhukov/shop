@@ -49,7 +49,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 			},
 			brand: data.brand?.id,
 		},
-		populate: ['images'],
+		populate: ['images', 'brand'],
 	});
 
 	const autoSynonyms = page?.autoSynonyms.split(',') || [];
