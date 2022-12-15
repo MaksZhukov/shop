@@ -12,14 +12,15 @@ const Image = ({ src, isOnSSR = true, ...props }: ImageProps & { isOnSSR?: boole
 		}
 		return src;
 	};
+
 	return (
 		<NextImage
 			{...props}
 			src={getSrc()}
 			style={{
-				...props.style,
 				objectFit: 'contain',
 				maxWidth: '100%',
+				...props.style,
 			}}
 		></NextImage>
 	);

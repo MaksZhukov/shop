@@ -174,7 +174,13 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 	const middleContent = (
 		<>
 			{page.banner && (
-				<Image src={page.banner.url} alt={page.banner.alternativeText} width={640} height={640}></Image>
+				<Image
+					src={page.banner.url}
+					alt={page.banner.alternativeText}
+					width={640}
+					height={640}
+					style={{ height: 'auto' }}
+				></Image>
 			)}
 			<Box padding='1em 1.5em'>
 				<Slider slidesToShow={isTablet ? 1 : 3}>
@@ -187,6 +193,7 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 									height={156}
 									src={item.image?.formats?.thumbnail?.url || item.image?.url}
 									alt={item.image?.alternativeText}
+									style={isTablet ? { margin: 'auto' } : {}}
 								></Image>
 							</WhiteBox>
 						))}

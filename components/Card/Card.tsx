@@ -1,46 +1,47 @@
-import { Box } from '@mui/material';
-import { Image as IImage } from 'api/types';
+import { useMediaQuery } from '@mui/material';
+import { Box } from '@mui/system';
+import { Autocomis } from 'api/autocomises/types';
+import { ServiceStation } from 'api/serviceStations/types';
+import { Vacancy } from 'api/vacancies/types';
 import Image from 'components/Image';
-import Link from '@mui/material/Link';
-import NextLink from 'next/link';
-import { FC } from 'react';
-import Typography from 'components/Typography';
 import ReactMarkdown from 'components/ReactMarkdown';
+import Typography from 'components/Typography';
+import WhiteBox from 'components/WhiteBox';
+import { FC } from 'react';
+
 interface Props {
-	image?: IImage;
-	description: string;
-	name: string;
-	link: string;
+	data: Vacancy | ServiceStation | Autocomis;
 }
 
-const Card: FC<Props> = ({ image, description, name, link }) => {
+const Card: FC<Props> = ({ data }) => {
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
-		<Box display='flex' marginBottom='2em'>
-			<Image
-				alt={image?.alternativeText || name}
-				width={208}
-				height={156}
-				src={image?.formats?.thumbnail.url || image?.url || ''}
-			></Image>
-
-			<Box marginLeft='1em'>
-				<Typography component='h2' variant='h5'>
-					<NextLink href={link}>
-						<Link component='span' underline='hover'>
-							{name}
-						</Link>
-					</NextLink>
-				</Typography>
-				<Typography>
-					<ReactMarkdown content={`${description?.substring(0, 500)}...`}></ReactMarkdown>
-					<NextLink href={link}>
-						<Link component='span' underline='hover'>
-							читать далее
-						</Link>
-					</NextLink>
-				</Typography>
+		<WhiteBox>
+			<Typography component='h1' variant='h4' gutterBottom>
+				{data.name}
+			</Typography>
+			<Box>
+				{data.image && (
+					<Box
+						sx={{
+							marginRight: { xs: 0, sm: '1em' },
+							marginBottom: { xs: '1em', sm: 0 },
+							float: 'left',
+						}}
+					>
+						<Image
+							alt={data.image.alternativeText}
+							width={isMobile ? 500 : 640}
+							height={isMobile ? 375 : 480}
+							src={isMobile ? data.image?.formats?.small.url || '' : data.image?.url || ''}
+							style={isMobile ? { height: 'auto' } : {}}
+						></Image>
+					</Box>
+				)}
+				<ReactMarkdown content={data.description}></ReactMarkdown>
+				<Box sx={{ clear: 'both' }}></Box>
 			</Box>
-		</Box>
+		</WhiteBox>
 	);
 };
 

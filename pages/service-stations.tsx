@@ -13,7 +13,7 @@ import { fetchAutocomises } from 'api/autocomises/autocomises';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { ServiceStation } from 'api/serviceStations/types';
-import Card from 'components/Card';
+import CardItem from 'components/CardItem';
 import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 
 const { publicRuntimeConfig } = getConfig();
@@ -30,13 +30,13 @@ const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
 				{page.seo?.h1 || 'СТО'}
 			</Typography>
 			{serviceStations.data.map((item) => (
-				<Card
+				<CardItem
 					key={item.id}
 					name={item.name}
 					description={item.description}
 					image={item.image}
 					link={`/service-stations/${item.slug}`}
-				></Card>
+				></CardItem>
 			))}
 		</WhiteBox>
 	);

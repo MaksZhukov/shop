@@ -109,7 +109,7 @@ function MyApp({
 						<RouteShield>
 							<Content>
 								<Container>
-									<Breadcrumbs h1={restPageProps.data?.h1}></Breadcrumbs>
+									{/* <Breadcrumbs h1={restPageProps.data?.h1}></Breadcrumbs> */}
 									<Component {...restPageProps} brands={brands} />
 									<SEOBox
 										images={restPageProps.page?.seo?.images}

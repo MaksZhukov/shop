@@ -2,7 +2,6 @@ import { Card, CardContent, Button, Link, Grid, useMediaQuery } from '@mui/mater
 import { Box } from '@mui/system';
 import { Product } from '../../api/types';
 import styles from './ProductItem.module.scss';
-import getConfig from 'next/config';
 // import ShoppingCartButton from 'components/ShoppingCartButton';
 import FavoriteButton from 'components/FavoriteButton';
 import Typography from 'components/Typography';
@@ -12,8 +11,6 @@ import classNames from 'classnames';
 import Image from 'components/Image';
 import { getProductTypeSlug } from 'services/ProductService';
 
-const { publicRuntimeConfig } = getConfig();
-
 interface Props {
 	dataFieldsToShow: { id: string; name: string }[];
 	data: Product;
@@ -21,7 +18,6 @@ interface Props {
 
 const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-
 	return (
 		<Card className={styles.product}>
 			<Box
@@ -42,17 +38,19 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 						{data.images
 							.filter((item) => item.formats)
 							.map((item) => (
-								<Image
-									key={item.id}
-									src={`${
-										isMobile
-											? item.formats?.small?.url || item.url
-											: item.formats?.thumbnail.url || item.url
-									}`}
-									width={isMobile ? 500 : 200}
-									height={isMobile ? 375 : 150}
-									alt={item.alternativeText}
-								></Image>
+								<Box key={item.id}>
+									<Image
+										src={`${
+											isMobile
+												? item.formats?.small?.url || item.url
+												: item.formats?.thumbnail.url || item.url
+										}`}
+										width={isMobile ? 500 : 200}
+										height={isMobile ? 375 : 150}
+										alt={item.alternativeText}
+										style={isMobile ? { height: 'auto', maxHeight: '375px' } : {}}
+									></Image>
+								</Box>
 							))}
 					</Slider>
 				) : (
@@ -113,7 +111,7 @@ const ProductItem = ({ data, dataFieldsToShow }: Props) => {
 							</Typography>
 						)}
 					</Typography>
-					{data.discountPrice && (
+					{!!data.discountPrice && (
 						<Typography paddingLeft='0.5em' fontWeight='bold' variant='body1' color='primary'>
 							{data.discountPrice} руб{' '}
 							{!!data.discountPriceUSD && (
