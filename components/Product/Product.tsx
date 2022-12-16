@@ -145,7 +145,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 										</Typography>
 									)}
 								</Typography>
-								{data.discountPrice && (
+								{!!data.discountPrice && (
 									<Typography paddingLeft='0.5em' fontWeight='bold' variant='body1' color='primary'>
 										{data.discountPrice} руб{' '}
 										{!!data.discountPriceUSD && (
