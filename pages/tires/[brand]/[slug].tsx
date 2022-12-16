@@ -5,6 +5,7 @@ import { Tire } from 'api/tires/types';
 import { Wheel } from 'api/wheels/types';
 import Product from 'components/Product';
 import { getPageProps } from 'services/PagePropsService';
+import { getProductPageSeo } from 'services/ProductService';
 
 interface Props {
 	data: Tire;
@@ -39,7 +40,10 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
-	] = await Promise.all([fetchTire(context.params?.slug || ''), fetchPage<PageProduct>('product')()]);
+	] = await Promise.all([
+		fetchTire(context.params?.slug || ''),
+		fetchPage<PageProduct>('product', { populate: ['defaultTireSeo', 'linksWithImages.image', 'benefits'] })(),
+	]);
 	const {
 		data: { data: relatedProducts },
 	} = await fetchTires({
@@ -59,8 +63,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		page: {
 			...page,
 			textAfterDescription: page?.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-			title: page.title.replace('{h1}', data.h1),
-			description: page.description.replace('{h1}', data.h1),
+			seo: getProductPageSeo(page.defaultTireSeo, data),
 		},
 		relatedProducts,
 	};

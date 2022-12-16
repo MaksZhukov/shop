@@ -5,7 +5,7 @@ import { DefaultPage } from './types';
 const { publicRuntimeConfig } = getConfig();
 
 export const fetchPage =
-	<T = DefaultPage>(pageUrl: string, params: CollectionParams = { populate: 'seo.images' }) =>
+	<T = DefaultPage>(pageUrl: string, params: CollectionParams<T> = { populate: 'seo.images' }) =>
 	() =>
 		api.get<ApiResponse<T>>(`/page-${pageUrl}`, {
 			params,
