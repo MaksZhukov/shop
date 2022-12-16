@@ -4,6 +4,7 @@ import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
 import Product from 'components/Product';
 import { getPageProps } from 'services/PagePropsService';
+import { getProductPageSeo } from 'services/ProductService';
 
 interface Props {
 	data: SparePart;
@@ -38,7 +39,10 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
-	] = await Promise.all([fetchSparePart(context.params?.slug || ''), fetchPage<PageProduct>('product')()]);
+	] = await Promise.all([
+		fetchSparePart(context.params?.slug || ''),
+		fetchPage<PageProduct>('product', { populate: ['defaultSparePartSeo', 'linksWithImages.image', 'benefits'] })(),
+	]);
 	const {
 		data: { data: relatedProducts },
 	} = await fetchSpareParts({
@@ -57,8 +61,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		page: {
 			...page,
 			textAfterDescription: page?.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-			title: page.title.replace('{h1}', data.h1),
-			description: page.description.replace('{h1}', data.h1),
+			seo: getProductPageSeo(page.defaultSparePartSeo, data),
 		},
 		relatedProducts,
 	};

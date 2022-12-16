@@ -4,6 +4,7 @@ import { fetchPage } from 'api/pages';
 import { PageProduct } from 'api/pages/types';
 import Product from 'components/Product';
 import { getPageProps } from 'services/PagePropsService';
+import { getProductPageSeo } from 'services/ProductService';
 
 interface Props {
 	data: Cabin;
@@ -37,7 +38,10 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
-	] = await Promise.all([fetchCabin(context.params?.slug || ''), fetchPage<PageProduct>('product')()]);
+	] = await Promise.all([
+		fetchCabin(context.params?.slug || ''),
+		fetchPage<PageProduct>('product', { populate: ['defaultCabinSeo', 'linksWithImages.image', 'benefits'] })(),
+	]);
 	const {
 		data: { data: relatedProducts },
 	} = await fetchCabins({
@@ -56,8 +60,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		page: {
 			...page,
 			textAfterDescription: page?.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-			title: page.title.replace('{h1}', data.h1),
-			description: page.description.replace('{h1}', data.h1),
+			seo: getProductPageSeo(page.defaultCabinSeo, data),
 		},
 		relatedProducts,
 	};
