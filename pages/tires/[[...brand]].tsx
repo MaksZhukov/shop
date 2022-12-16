@@ -188,7 +188,6 @@ export const getServerSideProps = getPageProps(
 			} = await fetchPage('tire')();
 			seo = data.seo;
 		}
-		console.log(seo);
 		return {
 			page: { seo },
 		};
