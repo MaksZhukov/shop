@@ -1,4 +1,4 @@
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, Link, Typography, useMediaQuery } from '@mui/material';
 import { PageProduct } from 'api/pages/types';
 import { Image as IImage, LinkWithImage as ILinkWithImage, Product as IProduct, ProductType } from 'api/types';
 import classNames from 'classnames';
@@ -24,11 +24,12 @@ interface Props {
 const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
 	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<>
 			<WhiteBox padding='2em'>
 				<Box marginBottom='1em' display='flex' alignItems='baseline' justifyContent='space-between'>
-					<Box flex='1'>
+					<Box sx={{ flexWrap: { xs: 'wrap', md: 'initial' } }} flex='1'>
 						<Typography variant='h4' flex='1' title={data.h1} component='h1'>
 							{data.h1}
 						</Typography>
@@ -72,7 +73,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 										setSliderSmall(ref);
 									}}
 									swipeToSlide
-									slidesToShow={data.images.length >= 5 ? 5 : data.images.length}
+									slidesToShow={isMobile ? 2 : data.images.length >= 5 ? 5 : data.images.length}
 									focusOnSelect
 									className={classNames(styles.slider, styles.slider_small)}
 									asNavFor={sliderBig || undefined}
@@ -165,7 +166,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					</Box>
 				</Box>
 				{!!page.linksWithImages?.length && (
-					<Box marginTop='2em' display='flex' justifyContent={'space-around'}>
+					<Box marginTop='2em' display='flex' flexWrap='wrap' justifyContent={'space-around'}>
 						{page.linksWithImages.map((item) => (
 							<LinkWithImage
 								width={150}
@@ -186,7 +187,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 						<Typography component='h3' variant='h5'>
 							Почему мы лучшие в своем деле?
 						</Typography>
-						<Box marginTop='2em' display='flex' justifyContent={'space-around'}>
+						<Box marginTop='2em' display='flex' flexWrap='wrap' justifyContent={'space-around'}>
 							{page.benefits.map((item) => (
 								<Box maxWidth={208} key={item.id}>
 									<Image
