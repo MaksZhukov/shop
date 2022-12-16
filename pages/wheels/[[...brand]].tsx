@@ -229,7 +229,6 @@ export const getServerSideProps = getPageProps(
 			} = await fetchPage('wheel')();
 			seo = data.seo;
 		}
-		console.log(seo);
 		return {
 			page: { seo },
 		};

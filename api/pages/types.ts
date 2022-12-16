@@ -24,4 +24,8 @@ export type PageProduct = {
 	benefits: Image[];
 	title: string;
 	description: string;
+	defaultSparePartSeo: SEO;
+	defaultWheelSeo: SEO;
+	defaultCabinSeo: SEO;
+	defaultTireSeo: SEO;
 };
