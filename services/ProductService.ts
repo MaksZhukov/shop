@@ -12,7 +12,7 @@ let SLUG_PRODUCT_TYPE = {
 
 export const isTire = (data: Product): data is Tire => data.type === 'tire';
 export const isWheel = (data: Product): data is Wheel => data.type === 'wheel';
-export const getProductTypeSlug = (data: Product) => `${SLUG_PRODUCT_TYPE[data.type]}/${data.brand?.name}`;
+export const getProductTypeSlug = (data: Product) => `${SLUG_PRODUCT_TYPE[data.type]}/${data.brand?.slug}`;
 export const getProductPageSeo = (pageSeo: SEO, product: Product) => {
 	return {
 		title: product.seo?.title || pageSeo.title.replace('{h1}', product.h1),

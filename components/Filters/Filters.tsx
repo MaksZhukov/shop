@@ -27,15 +27,17 @@ const getDependencyItemIds = (
 
 const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
+	console.log(values);
 	const router = useRouter();
 	useEffect(() => {
 		let newValues: any = {};
 		config.forEach((item) => {
 			item.forEach((child) => {
 				if (router.query[child.id]) {
-					newValues[child.id] = Array.isArray(router.query[child.id])
-						? (router.query as any)[child.id][0]
-						: router.query[child.id];
+					newValues[child.id] =
+						child.id === 'brand' && Array.isArray((router.query as any)[child.id])
+							? (router.query as any)[child.id][0]
+							: router.query[child.id];
 				}
 			});
 		});
@@ -56,20 +58,23 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 		}
 	};
 
-	const handleChangeAutocomplete = (item: AutocompleteType) => (_: any, selected: string | null) => {
-		let dependencyItemIds = getDependencyItemIds(config, item);
-		let depValues = dependencyItemIds.reduce((prev, key) => ({ ...prev, [key]: null }), {});
-		setValues({ ...values, ...depValues, [item.id]: selected });
-		if (item.storeInUrl) {
-			(router.query as any)[item.id] = selected;
-			router.push({ pathname: router.pathname, query: router.query }, undefined, {
-				shallow: true,
-			});
-		}
-		if (item.onChange) {
-			item.onChange(_, selected);
-		}
-	};
+	const handleChangeAutocomplete =
+		(item: AutocompleteType) => (_: any, selected: { value: string } | string | null) => {
+			let selectedValue = typeof selected === 'string' ? selected : selected?.value || null;
+			console.log(selectedValue);
+			let dependencyItemIds = getDependencyItemIds(config, item);
+			let depValues = dependencyItemIds.reduce((prev, key) => ({ ...prev, [key]: null }), {});
+			setValues({ ...values, ...depValues, [item.id]: selectedValue });
+			if (item.storeInUrl) {
+				(router.query as any)[item.id] = selectedValue;
+				router.push({ pathname: router.pathname, query: router.query }, undefined, {
+					shallow: true,
+				});
+			}
+			if (item.onChange) {
+				item.onChange(_, selectedValue);
+			}
+		};
 
 	const handleClickFind = () => {
 		if (onClickFind) {
@@ -93,6 +98,9 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	};
 
 	const renderAutocomplete = (item: AutocompleteType) => {
+		let value = item.options.every((option) => typeof option === 'string')
+			? values[item.id]
+			: item.options.find((option) => option.value === values[item.id]);
 		return (
 			<Autocomplete
 				key={item.id + values[item.id]}
@@ -104,7 +112,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 				onInputChange={item.onInputChange}
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
 				disabled={item.disabledDependencyId === undefined ? false : !values[item.disabledDependencyId]}
-				value={values[item.id]}
+				value={value}
 				renderInput={(params) => {
 					return <TextField {...params} variant='standard' placeholder={item.placeholder} />;
 				}}

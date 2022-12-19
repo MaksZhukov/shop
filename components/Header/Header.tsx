@@ -26,9 +26,9 @@ import Profile from './Profile';
 import classNames from 'classnames';
 import NextLink from 'next/link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useOutsideClick } from 'rooks';
 import { Brand } from 'api/brands/types';
-import qs from 'qs';
 import Image from 'components/Image';
 
 interface NavigationChild {
@@ -47,6 +47,7 @@ interface Navigation {
 export const getNavigation = (brands: Brand[]): Navigation[] => [
 	{
 		name: 'Магазин',
+		path: '/',
 		children: [
 			{ name: 'Запчасти', path: '/spare-parts', id: 'spareParts' },
 			{ name: 'Шины', path: '/tires', id: 'tires' },
@@ -57,6 +58,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 	},
 	{
 		name: 'О нас',
+		path: '/about',
 		children: [
 			{ name: 'Как добраться', path: '/how-to-get-to', id: 'how-to-get-to' },
 			{
@@ -72,6 +74,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 	},
 	{
 		name: 'Оплата',
+		path: '/payment',
 		children: [
 			{ name: 'Гарантия', path: '/guarantee', id: 'guarantee' },
 			{ name: 'Доставка', path: '/delivery', id: 'delivery' },
@@ -87,19 +90,16 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 		children: brands.map((item) => ({
 			id: item.id,
 			name: item.name,
-			path: `/spare-parts/${item.name}`,
+			path: `/spare-parts/${(item.slug)}`,
 		})),
 	},
 	{ name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'awaiting-cars', children: [] },
 	{
 		name: 'Авто на запчасти',
+		path: '/cars-on-parts',
 		id: 'AutoParts',
 		children: [{ name: 'фото/вид', path: '/car-dismantling-photos', id: 'photo-view' }],
 	},
-	// { name: 'Покупка авто на запчасти', path: '/buying-car' },
-	// { name: 'Доставка/Оплата', path: '/shipping-and-payment' },
-	// { name: 'Гарантия', path: '/guarantee' },
-	// { name: 'Отзывы', path: '/reviews' },
 ];
 
 interface Props {
@@ -170,9 +170,9 @@ const Header = observer(({ brands }: Props) => {
 		clearTimeout(timeoutRef.current);
 	};
 
-	const handleClickButton = (event: React.MouseEvent<HTMLElement>) => {
+	const handleClickButton = (event: React.MouseEvent<SVGSVGElement>) => {
 		if (!anchorEl) {
-			setAnchorEl(event.currentTarget);
+			setAnchorEl(event.currentTarget.parentElement?.parentElement as HTMLElement);
 		} else {
 			setAnchorEl(null);
 		}
@@ -181,7 +181,7 @@ const Header = observer(({ brands }: Props) => {
 	const renderLink = (item: NavigationChild) => {
 		let LinkComp = item.target ? Link : NextLink;
 		return (
-			<LinkComp underline='none' color='#fff' target={item.target} href={item.path}>
+			<LinkComp className={styles.link} underline='none' color='#fff' target={item.target} href={item.path}>
 				{item.name}
 			</LinkComp>
 		);
@@ -204,6 +204,7 @@ const Header = observer(({ brands }: Props) => {
 				<MenuItem
 					sx={{
 						minHeight: 'initial',
+						padding: '0',
 					}}
 					key={item.id}
 				>
@@ -235,12 +236,41 @@ const Header = observer(({ brands }: Props) => {
 		</Box>
 	);
 
+	const renterRootMenuBtn = (page: Navigation, type: 'mobile' | 'desktop', isOpened: boolean) => {
+		let ArrowIcon =
+			type === 'desktop' ? KeyboardArrowDownIcon : isOpened ? KeyboardArrowUpIcon : KeyboardArrowDownIcon;
+		return (
+			<Button
+				{...(!isTablet
+					? {
+							onMouseOver: handleMouseOver,
+							onMouseLeave: handleMouseLeave,
+							'aria-haspopup': 'true',
+							'aria-expanded': anchorEl ? 'true' : undefined,
+					  }
+					: {})}
+				className={classNames(styles.menu__item, {
+					[styles['menu__item_active']]: page.children?.some((item) => item.path === router.pathname),
+					[styles[`menu__item_${type}`]]: type,
+				})}
+				{...(page.children.length
+					? {
+							endIcon: <ArrowIcon onClick={handleClickButton}></ArrowIcon>,
+					  }
+					: {})}
+			>
+				{page.path && isTablet ? <NextLink href={page.path}>{page.name}</NextLink> : page.name}
+			</Button>
+		);
+	};
+
 	const renderMenu = (type: 'mobile' | 'desktop') => (
 		<Box
 			padding='0 10px'
 			{...(type === 'mobile'
 				? {
 						flexDirection: 'column',
+						width: '100%',
 						sx: { display: { md: 'none', xs: 'flex' } },
 				  }
 				: {
@@ -252,87 +282,43 @@ const Header = observer(({ brands }: Props) => {
 			{navigation.map((page, index) => {
 				return (
 					<Fragment key={page.id}>
-						{page.path ? (
-							<NextLink href={page.path} passHref>
-								<Button
-									onClick={handleClickMenuItem}
-									className={classNames(styles.menu__item, {
-										[styles['menu__item_active']]: router.pathname === page.path,
-										[styles[`menu__item_${type}`]]: type,
-									})}
+						<>
+							{page.path && !isTablet ? (
+								<NextLink href={page.path} passHref>
+									{renterRootMenuBtn(page, type, anchorEl?.textContent === page.name)}
+								</NextLink>
+							) : (
+								renterRootMenuBtn(page, type, anchorEl?.textContent === page.name)
+							)}
+							{isTablet && anchorEl?.textContent === page.name && renderMenuList(page)}
+							{!isTablet && anchorEl?.textContent === page.name && (
+								<Popper
+									open={!!anchorEl}
+									anchorEl={anchorEl}
+									role={undefined}
+									placement='bottom-start'
+									transition
+									sx={{ zIndex: 1, top: { sm: '-3px !important' } }}
+									disablePortal
 								>
-									{page.name}
-								</Button>
-							</NextLink>
-						) : (
-							<>
-								<Button
-									{...(!isTablet
-										? {
-												onMouseOver: handleMouseOver,
-												onMouseLeave: handleMouseLeave,
-												'aria-haspopup': 'true',
-												'aria-expanded': anchorEl ? 'true' : undefined,
-										  }
-										: { onClick: handleClickButton })}
-									className={classNames(styles.menu__item, {
-										[styles['menu__item_active']]: page.children?.some(
-											(item) => item.path === router.pathname
-										),
-										[styles[`menu__item_${type}`]]: type,
-									})}
-									endIcon={
-										<KeyboardArrowDownIcon
-										// onClick={(
-										// 	event: React.MouseEvent<SVGElement>
-										// ) => {
-										// 	event.stopPropagation();
-										// 	if (anchorEl) {
-										// 		setAnchorEl(null);
-										// 	} else {
-										// 		console.log(event);
-										// 		setAnchorEl(
-										// 			event.currentTarget
-										// 				.parentElement
-										// 				?.parentElement as HTMLElement
-										// 		);
-										// 	}
-										// }}
-										/>
-									}
-								>
-									{page.name}
-								</Button>
-								{isTablet && anchorEl?.textContent === page.name && renderMenuList(page)}
-								{!isTablet && anchorEl?.textContent === page.name && (
-									<Popper
-										open={!!anchorEl}
-										anchorEl={anchorEl}
-										role={undefined}
-										placement='bottom-start'
-										transition
-										sx={{ zIndex: 1, top: { sm: '-3px !important' } }}
-										disablePortal
-									>
-										{({ TransitionProps, placement }) => (
-											<Grow
-												{...TransitionProps}
-												style={{
-													maxHeight: 300,
-													overflow: 'auto',
-													minWidth: anchorEl.clientWidth,
-													transformOrigin:
-														placement === 'bottom-start' ? 'left top' : 'left bottom',
-												}}
-												timeout={300}
-											>
-												{renderMenuList(page)}
-											</Grow>
-										)}
-									</Popper>
-								)}
-							</>
-						)}
+									{({ TransitionProps, placement }) => (
+										<Grow
+											{...TransitionProps}
+											style={{
+												maxHeight: 300,
+												overflow: 'auto',
+												minWidth: anchorEl.clientWidth,
+												transformOrigin:
+													placement === 'bottom-start' ? 'left top' : 'left bottom',
+											}}
+											timeout={300}
+										>
+											{renderMenuList(page)}
+										</Grow>
+									)}
+								</Popper>
+							)}
+						</>
 					</Fragment>
 				);
 			})}
