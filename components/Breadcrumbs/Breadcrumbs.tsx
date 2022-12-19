@@ -43,13 +43,16 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 		function generateBreadcrumbs() {
 			const asPathNestedRoutes = generatePathParts(router.asPath);
 			const pathnameNestedRoutes = generatePathParts(router.pathname);
-
 			const crumblist = asPathNestedRoutes.map((subpath, idx) => {
 				const param = pathnameNestedRoutes[idx].replace('[', '').replace(']', '');
 				const href = '/' + asPathNestedRoutes.slice(0, idx + 1).join('/');
 				return {
 					href,
-					text: param === 'slug' ? h1 ?? subpath : PATH_NAMES[subpath as keyof typeof PATH_NAMES] ?? subpath,
+					text: param.includes('brand')
+						? subpath.replaceAll('-', ' ')
+						: param === 'slug'
+						? h1 ?? subpath
+						: PATH_NAMES[subpath as keyof typeof PATH_NAMES] ?? subpath,
 				};
 			});
 

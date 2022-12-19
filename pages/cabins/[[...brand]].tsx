@@ -9,8 +9,6 @@ import { useSnackbar } from 'notistack';
 import { getPageProps } from 'services/PagePropsService';
 import { fetchCars } from 'api/cars/cars';
 import { Car } from 'api/cars/types';
-import { fetchAutocomises } from 'api/autocomises/autocomises';
-import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
@@ -169,7 +167,7 @@ const Cabins: NextPage<Props> = ({
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			brand: { name: brand },
+			brand: { name: brand.replaceAll('-', ' ') },
 			model: { name: model },
 			generation: { name: generation },
 			kindSparePart: { name: kindSparePart },
@@ -221,7 +219,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchBrandByName(brand, { populate: ['seoCabins.images', 'image'] });
+			} = await fetchBrandByName(brandParam.replaceAll('-', ' '), { populate: ['seoCabins.images', 'image'] });
 			seo = data.seoCabins;
 		} else {
 			const {

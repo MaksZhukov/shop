@@ -167,7 +167,7 @@ const Wheels: NextPage<Props> = ({
 
 	const generateFiltersByQuery = ({ brand, model, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
-			brand: brand ? { name: brand } : undefined,
+			brand: brand ? { name: brand.replaceAll('-', ' ') } : undefined,
 			model: model ? { name: model } : undefined,
 		};
 		return { ...filters, ...others };
@@ -221,7 +221,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchBrandByName(brand, { populate: ['seoWheels.images', 'image'] });
+			} = await fetchBrandByName(brandParam.replaceAll('-', ' '), { populate: ['seoWheels.images', 'image'] });
 			seo = data.seoWheels;
 		} else {
 			const {

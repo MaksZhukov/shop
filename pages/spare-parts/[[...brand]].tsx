@@ -157,7 +157,7 @@ const SpareParts: NextPage<Props> = ({
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			brand: brand ? { name: brand } : undefined,
+			brand: brand ? { name: brand.replaceAll('-', ' ') } : undefined,
 			model: model ? { name: model } : undefined,
 			generation: generation ? { name: generation } : undefined,
 			kindSparePart: kindSparePart ? { name: kindSparePart } : undefined,
@@ -209,7 +209,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchBrandByName(brand, { populate: ['seoSpareParts.images', 'image'] });
+			} = await fetchBrandByName(brandParam.replaceAll('-', ' '), { populate: ['seoSpareParts.images', 'image'] });
 			seo = data.seoSpareParts;
 		} else {
 			const {
@@ -232,7 +232,7 @@ export const getServerSideProps = getPageProps(
 			deliveryAuto,
 			discounts,
 			autocomises,
-			serviceStations
+			serviceStations,
 		};
 	},
 	async () => {
