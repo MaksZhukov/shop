@@ -26,6 +26,7 @@ import Profile from './Profile';
 import classNames from 'classnames';
 import NextLink from 'next/link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useOutsideClick } from 'rooks';
 import { Brand } from 'api/brands/types';
 import Image from 'components/Image';
@@ -169,9 +170,9 @@ const Header = observer(({ brands }: Props) => {
 		clearTimeout(timeoutRef.current);
 	};
 
-	const handleClickButton = (event: React.MouseEvent<HTMLElement>) => {
+	const handleClickButton = (event: React.MouseEvent<SVGSVGElement>) => {
 		if (!anchorEl) {
-			setAnchorEl(event.currentTarget);
+			setAnchorEl(event.currentTarget.parentElement?.parentElement as HTMLElement);
 		} else {
 			setAnchorEl(null);
 		}
@@ -180,7 +181,7 @@ const Header = observer(({ brands }: Props) => {
 	const renderLink = (item: NavigationChild) => {
 		let LinkComp = item.target ? Link : NextLink;
 		return (
-			<LinkComp underline='none' color='#fff' target={item.target} href={item.path}>
+			<LinkComp className={styles.link} underline='none' color='#fff' target={item.target} href={item.path}>
 				{item.name}
 			</LinkComp>
 		);
@@ -203,6 +204,7 @@ const Header = observer(({ brands }: Props) => {
 				<MenuItem
 					sx={{
 						minHeight: 'initial',
+						padding: '0',
 					}}
 					key={item.id}
 				>
@@ -234,7 +236,9 @@ const Header = observer(({ brands }: Props) => {
 		</Box>
 	);
 
-	const renterRootMenuBtn = (page: Navigation, type: 'mobile' | 'desktop') => {
+	const renterRootMenuBtn = (page: Navigation, type: 'mobile' | 'desktop', isOpened: boolean) => {
+		let ArrowIcon =
+			type === 'desktop' ? KeyboardArrowDownIcon : isOpened ? KeyboardArrowUpIcon : KeyboardArrowDownIcon;
 		return (
 			<Button
 				{...(!isTablet
@@ -244,33 +248,18 @@ const Header = observer(({ brands }: Props) => {
 							'aria-haspopup': 'true',
 							'aria-expanded': anchorEl ? 'true' : undefined,
 					  }
-					: { onClick: handleClickButton })}
+					: {})}
 				className={classNames(styles.menu__item, {
 					[styles['menu__item_active']]: page.children?.some((item) => item.path === router.pathname),
 					[styles[`menu__item_${type}`]]: type,
 				})}
-				{...(page.children.length ? { endIcon: <KeyboardArrowDownIcon></KeyboardArrowDownIcon> } : {})}
-				// endIcon={
-				// 	<KeyboardArrowDownIcon
-				// 	// onClick={(
-				// 	// 	event: React.MouseEvent<SVGElement>
-				// 	// ) => {
-				// 	// 	event.stopPropagation();
-				// 	// 	if (anchorEl) {
-				// 	// 		setAnchorEl(null);
-				// 	// 	} else {
-				// 	// 		console.log(event);
-				// 	// 		setAnchorEl(
-				// 	// 			event.currentTarget
-				// 	// 				.parentElement
-				// 	// 				?.parentElement as HTMLElement
-				// 	// 		);
-				// 	// 	}
-				// 	// }}
-				// 	/>
-				// }
+				{...(page.children.length
+					? {
+							endIcon: <ArrowIcon onClick={handleClickButton}></ArrowIcon>,
+					  }
+					: {})}
 			>
-				{page.name}
+				{page.path && isTablet ? <NextLink href={page.path}>{page.name}</NextLink> : page.name}
 			</Button>
 		);
 	};
@@ -281,6 +270,7 @@ const Header = observer(({ brands }: Props) => {
 			{...(type === 'mobile'
 				? {
 						flexDirection: 'column',
+						width: '100%',
 						sx: { display: { md: 'none', xs: 'flex' } },
 				  }
 				: {
@@ -293,12 +283,12 @@ const Header = observer(({ brands }: Props) => {
 				return (
 					<Fragment key={page.id}>
 						<>
-							{page.path ? (
+							{page.path && !isTablet ? (
 								<NextLink href={page.path} passHref>
-									{renterRootMenuBtn(page, type)}
+									{renterRootMenuBtn(page, type, anchorEl?.textContent === page.name)}
 								</NextLink>
 							) : (
-								renterRootMenuBtn(page, type)
+								renterRootMenuBtn(page, type, anchorEl?.textContent === page.name)
 							)}
 							{isTablet && anchorEl?.textContent === page.name && renderMenuList(page)}
 							{!isTablet && anchorEl?.textContent === page.name && (
