@@ -2,6 +2,7 @@ import { Breadcrumbs as MUIBreadcrumbs, Link, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { FC, useEffect, useMemo, useState } from 'react';
+import { getSlugByBrand } from 'services/ProductService';
 
 const generatePathParts = (pathStr: string) => {
 	const pathWithoutQuery = pathStr.split('?')[0];
@@ -49,7 +50,7 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 				return {
 					href,
 					text: param.includes('brand')
-						? subpath.replaceAll('-', ' ')
+						? getSlugByBrand(subpath)
 						: param === 'slug'
 						? h1 ?? subpath
 						: PATH_NAMES[subpath as keyof typeof PATH_NAMES] ?? subpath,

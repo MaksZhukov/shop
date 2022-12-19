@@ -23,6 +23,7 @@ import { Article } from 'api/articles/types';
 import { fetchArticles } from 'api/articles/articles';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
+import { getSlugByBrand } from 'services/ProductService';
 
 interface Props {
 	page: DefaultPage;
@@ -167,7 +168,7 @@ const Wheels: NextPage<Props> = ({
 
 	const generateFiltersByQuery = ({ brand, model, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
-			brand: brand ? { name: brand.replaceAll('-', ' ') } : undefined,
+			brand: brand ? { name: getSlugByBrand(brand) } : undefined,
 			model: model ? { name: model } : undefined,
 		};
 		return { ...filters, ...others };
@@ -221,7 +222,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchBrandByName(brandParam.replaceAll('-', ' '), { populate: ['seoWheels.images', 'image'] });
+			} = await fetchBrandByName(getSlugByBrand(brandParam), { populate: ['seoWheels.images', 'image'] });
 			seo = data.seoWheels;
 		} else {
 			const {

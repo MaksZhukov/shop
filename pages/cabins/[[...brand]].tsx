@@ -25,6 +25,7 @@ import { fetchModels } from 'api/models/models';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { fetchCabins } from 'api/cabins/cabins';
 import { fetchBrandByName } from 'api/brands/brands';
+import { getSlugByBrand } from 'services/ProductService';
 
 interface Props {
 	page: DefaultPage;
@@ -167,7 +168,7 @@ const Cabins: NextPage<Props> = ({
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			brand: { name: brand.replaceAll('-', ' ') },
+			brand: { name: getSlugByBrand(brand) },
 			model: { name: model },
 			generation: { name: generation },
 			kindSparePart: { name: kindSparePart },
@@ -219,7 +220,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchBrandByName(brandParam.replaceAll('-', ' '), { populate: ['seoCabins.images', 'image'] });
+			} = await fetchBrandByName(getSlugByBrand(brandParam), { populate: ['seoCabins.images', 'image'] });
 			seo = data.seoCabins;
 		} else {
 			const {
