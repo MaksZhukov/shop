@@ -4,7 +4,7 @@ import { CircularProgress } from '@mui/material';
 import { SEASONS } from 'components/Filters/constants';
 import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
-import { useState, SetStateAction, Dispatch } from 'react';
+import { useState, SetStateAction, Dispatch, useEffect } from 'react';
 import { AxiosResponse } from 'axios';
 import { fetchTires } from 'api/tires/tires';
 import { useSnackbar } from 'notistack';
@@ -19,6 +19,7 @@ import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
+import { useRouter } from 'next/router';
 
 interface Props {
 	page: DefaultPage;
