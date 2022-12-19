@@ -38,7 +38,6 @@ const CarsOnParts: NextPage<Props> = ({
 	serviceStations,
 	cars,
 }) => {
-	console.log(cars);
 	return (
 		<CatalogCars
 			page={page}
