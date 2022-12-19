@@ -99,10 +99,6 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 		id: 'AutoParts',
 		children: [{ name: 'фото/вид', path: '/car-dismantling-photos', id: 'photo-view' }],
 	},
-	// { name: 'Покупка авто на запчасти', path: '/buying-car' },
-	// { name: 'Доставка/Оплата', path: '/shipping-and-payment' },
-	// { name: 'Гарантия', path: '/guarantee' },
-	// { name: 'Отзывы', path: '/reviews' },
 ];
 
 interface Props {
