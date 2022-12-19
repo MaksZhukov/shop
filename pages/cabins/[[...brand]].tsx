@@ -24,8 +24,7 @@ import { useRouter } from 'next/router';
 import { fetchModels } from 'api/models/models';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { fetchCabins } from 'api/cabins/cabins';
-import { fetchBrandByName } from 'api/brands/brands';
-import { getSlugByBrand } from 'services/ProductService';
+import { fetchBrandBySlug } from 'api/brands/brands';
 
 interface Props {
 	page: DefaultPage;
@@ -120,7 +119,7 @@ const Cabins: NextPage<Props> = ({
 				id: 'brand',
 				placeholder: 'Марка',
 				type: 'autocomplete',
-				options: brands.map((item) => item.name),
+				options: brands.map((item) => ({ label: item.name, value: item.slug })),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -168,7 +167,7 @@ const Cabins: NextPage<Props> = ({
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			brand: { name: getSlugByBrand(brand) },
+			brand: { slug: brand },
 			model: { name: model },
 			generation: { name: generation },
 			kindSparePart: { name: kindSparePart },
@@ -220,7 +219,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchBrandByName(getSlugByBrand(brandParam), { populate: ['seoCabins.images', 'image'] });
+			} = await fetchBrandBySlug(brandParam, { populate: ['seoCabins.images', 'image'] });
 			seo = data.seoCabins;
 		} else {
 			const {

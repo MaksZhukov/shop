@@ -8,7 +8,7 @@ import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
 import { fetchTires } from 'api/tires/tires';
 import { useSnackbar } from 'notistack';
-import { fetchTireBrandByName, fetchTireBrands } from 'api/tireBrands/tireBrands';
+import { fetchTireBrandBySlug, fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { getPageProps } from 'services/PagePropsService';
 import { TireBrand } from 'api/tireBrands/types';
 import { fetchCars } from 'api/cars/cars';
@@ -19,7 +19,6 @@ import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
-import { getSlugByBrand } from 'services/ProductService';
 
 interface Props {
 	page: DefaultPage;
@@ -79,7 +78,7 @@ const Tires: NextPage<Props> = ({
 				id: 'brand',
 				placeholder: 'Марка',
 				type: 'autocomplete',
-				options: brands.map((item) => item.name),
+				options: brands.map((item) => ({ label: item.name, value: item.slug })),
 				onOpen: handleOpenAutocomplete<TireBrand>(
 					!!brands.length,
 					setBrands,
@@ -124,7 +123,7 @@ const Tires: NextPage<Props> = ({
 
 	const generateFiltersByQuery = ({ brand, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
-			brand: brand ? { name: getSlugByBrand(brand) } : undefined,
+			brand: brand ? { slug: brand } : undefined,
 		};
 		return { ...filters, ...others };
 	};
@@ -177,7 +176,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchTireBrandByName(getSlugByBrand(brandParam), { populate: ['seo.images', 'image'] });
+			} = await fetchTireBrandBySlug(brandParam, { populate: ['seo.images', 'image'] });
 			seo = data.seo;
 		} else {
 			const {
