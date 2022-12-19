@@ -179,7 +179,7 @@ const Cabins: NextPage<Props> = ({
 
 	return (
 		<Catalog
-			newProductsTitle='Салоны'
+			newProductsTitle='Салонов'
 			advertising={advertising}
 			autocomises={autocomises}
 			deliveryAuto={deliveryAuto}

@@ -176,7 +176,7 @@ const Wheels: NextPage<Props> = ({
 	return (
 		<Catalog
 			seo={page.seo}
-			newProductsTitle='Диски'
+			newProductsTitle='Дисков'
 			advertising={advertising}
 			autocomises={autocomises}
 			deliveryAuto={deliveryAuto}
