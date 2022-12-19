@@ -22,7 +22,7 @@ const CarItem = ({ data }: Props) => {
 	let manufactureYear = new Date(data.manufactureDate).getFullYear();
 
 	let name = data.brand?.name + ' ' + data.model?.name + ' ' + manufactureYear;
-	console.log(data);
+
 	return (
 		<Card className={styles.item}>
 			<Box
