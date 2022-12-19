@@ -109,11 +109,6 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 				onOpen={item.onOpen}
 				onChange={handleChangeAutocomplete(item)}
 				fullWidth
-				isOptionEqualToValue={(option, value) => {
-					console.log(option, value);
-				}}
-				// getOptionLabel={getOptionLabel}
-				// isOptionEqualToValue={isOptionEqualToValue}
 				onInputChange={item.onInputChange}
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
 				disabled={item.disabledDependencyId === undefined ? false : !values[item.disabledDependencyId]}
