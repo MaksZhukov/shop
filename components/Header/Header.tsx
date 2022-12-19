@@ -28,7 +28,6 @@ import NextLink from 'next/link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useOutsideClick } from 'rooks';
 import { Brand } from 'api/brands/types';
-import qs from 'qs';
 import Image from 'components/Image';
 
 interface NavigationChild {
@@ -47,6 +46,7 @@ interface Navigation {
 export const getNavigation = (brands: Brand[]): Navigation[] => [
 	{
 		name: 'Магазин',
+		path: '/',
 		children: [
 			{ name: 'Запчасти', path: '/spare-parts', id: 'spareParts' },
 			{ name: 'Шины', path: '/tires', id: 'tires' },
@@ -57,6 +57,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 	},
 	{
 		name: 'О нас',
+		path: '/about',
 		children: [
 			{ name: 'Как добраться', path: '/how-to-get-to', id: 'how-to-get-to' },
 			{
@@ -72,6 +73,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 	},
 	{
 		name: 'Оплата',
+		path: '/payment',
 		children: [
 			{ name: 'Гарантия', path: '/guarantee', id: 'guarantee' },
 			{ name: 'Доставка', path: '/delivery', id: 'delivery' },
@@ -93,6 +95,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 	{ name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'awaiting-cars', children: [] },
 	{
 		name: 'Авто на запчасти',
+		path: '/cars-on-parts',
 		id: 'AutoParts',
 		children: [{ name: 'фото/вид', path: '/car-dismantling-photos', id: 'photo-view' }],
 	},
@@ -235,6 +238,47 @@ const Header = observer(({ brands }: Props) => {
 		</Box>
 	);
 
+	const renterRootMenuBtn = (page: Navigation, type: 'mobile' | 'desktop') => {
+		return (
+			<Button
+				{...(!isTablet
+					? {
+							onMouseOver: handleMouseOver,
+							onMouseLeave: handleMouseLeave,
+							'aria-haspopup': 'true',
+							'aria-expanded': anchorEl ? 'true' : undefined,
+					  }
+					: { onClick: handleClickButton })}
+				className={classNames(styles.menu__item, {
+					[styles['menu__item_active']]: page.children?.some((item) => item.path === router.pathname),
+					[styles[`menu__item_${type}`]]: type,
+				})}
+				{...(page.children.length ? { endIcon: <KeyboardArrowDownIcon></KeyboardArrowDownIcon> } : {})}
+				// endIcon={
+				// 	<KeyboardArrowDownIcon
+				// 	// onClick={(
+				// 	// 	event: React.MouseEvent<SVGElement>
+				// 	// ) => {
+				// 	// 	event.stopPropagation();
+				// 	// 	if (anchorEl) {
+				// 	// 		setAnchorEl(null);
+				// 	// 	} else {
+				// 	// 		console.log(event);
+				// 	// 		setAnchorEl(
+				// 	// 			event.currentTarget
+				// 	// 				.parentElement
+				// 	// 				?.parentElement as HTMLElement
+				// 	// 		);
+				// 	// 	}
+				// 	// }}
+				// 	/>
+				// }
+			>
+				{page.name}
+			</Button>
+		);
+	};
+
 	const renderMenu = (type: 'mobile' | 'desktop') => (
 		<Box
 			padding='0 10px'
@@ -252,87 +296,43 @@ const Header = observer(({ brands }: Props) => {
 			{navigation.map((page, index) => {
 				return (
 					<Fragment key={page.id}>
-						{page.path ? (
-							<NextLink href={page.path} passHref>
-								<Button
-									onClick={handleClickMenuItem}
-									className={classNames(styles.menu__item, {
-										[styles['menu__item_active']]: router.pathname === page.path,
-										[styles[`menu__item_${type}`]]: type,
-									})}
+						<>
+							{page.path ? (
+								<NextLink href={page.path} passHref>
+									{renterRootMenuBtn(page, type)}
+								</NextLink>
+							) : (
+								renterRootMenuBtn(page, type)
+							)}
+							{isTablet && anchorEl?.textContent === page.name && renderMenuList(page)}
+							{!isTablet && anchorEl?.textContent === page.name && (
+								<Popper
+									open={!!anchorEl}
+									anchorEl={anchorEl}
+									role={undefined}
+									placement='bottom-start'
+									transition
+									sx={{ zIndex: 1, top: { sm: '-3px !important' } }}
+									disablePortal
 								>
-									{page.name}
-								</Button>
-							</NextLink>
-						) : (
-							<>
-								<Button
-									{...(!isTablet
-										? {
-												onMouseOver: handleMouseOver,
-												onMouseLeave: handleMouseLeave,
-												'aria-haspopup': 'true',
-												'aria-expanded': anchorEl ? 'true' : undefined,
-										  }
-										: { onClick: handleClickButton })}
-									className={classNames(styles.menu__item, {
-										[styles['menu__item_active']]: page.children?.some(
-											(item) => item.path === router.pathname
-										),
-										[styles[`menu__item_${type}`]]: type,
-									})}
-									endIcon={
-										<KeyboardArrowDownIcon
-										// onClick={(
-										// 	event: React.MouseEvent<SVGElement>
-										// ) => {
-										// 	event.stopPropagation();
-										// 	if (anchorEl) {
-										// 		setAnchorEl(null);
-										// 	} else {
-										// 		console.log(event);
-										// 		setAnchorEl(
-										// 			event.currentTarget
-										// 				.parentElement
-										// 				?.parentElement as HTMLElement
-										// 		);
-										// 	}
-										// }}
-										/>
-									}
-								>
-									{page.name}
-								</Button>
-								{isTablet && anchorEl?.textContent === page.name && renderMenuList(page)}
-								{!isTablet && anchorEl?.textContent === page.name && (
-									<Popper
-										open={!!anchorEl}
-										anchorEl={anchorEl}
-										role={undefined}
-										placement='bottom-start'
-										transition
-										sx={{ zIndex: 1, top: { sm: '-3px !important' } }}
-										disablePortal
-									>
-										{({ TransitionProps, placement }) => (
-											<Grow
-												{...TransitionProps}
-												style={{
-													maxHeight: 300,
-													overflow: 'auto',
-													minWidth: anchorEl.clientWidth,
-													transformOrigin:
-														placement === 'bottom-start' ? 'left top' : 'left bottom',
-												}}
-												timeout={300}
-											>
-												{renderMenuList(page)}
-											</Grow>
-										)}
-									</Popper>
-								)}
-							</>
-						)}
+									{({ TransitionProps, placement }) => (
+										<Grow
+											{...TransitionProps}
+											style={{
+												maxHeight: 300,
+												overflow: 'auto',
+												minWidth: anchorEl.clientWidth,
+												transformOrigin:
+													placement === 'bottom-start' ? 'left top' : 'left bottom',
+											}}
+											timeout={300}
+										>
+											{renderMenuList(page)}
+										</Grow>
+									)}
+								</Popper>
+							)}
+						</>
 					</Fragment>
 				);
 			})}

@@ -7,18 +7,22 @@ import Slider from 'react-slick';
 import classNames from 'classnames';
 import { Car } from 'api/cars/types';
 import Image from 'components/Image';
+import { useRouter } from 'next/router';
+import { CarOnParts } from 'api/cars-on-parts/types';
+import { isCarOnsPartParts } from 'services/CarsService';
 
 interface Props {
-	data: Car;
+	data: Car | CarOnParts;
 }
 
 const CarItem = ({ data }: Props) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	const router = useRouter();
 
 	let manufactureYear = new Date(data.manufactureDate).getFullYear();
 
 	let name = data.brand?.name + ' ' + data.model?.name + ' ' + manufactureYear;
-
+	console.log(data);
 	return (
 		<Card className={styles.item}>
 			<Box
@@ -60,7 +64,7 @@ const CarItem = ({ data }: Props) => {
 				)}
 				<CardContent sx={{ flex: 1, paddingY: '0!important', width: '100%' }}>
 					<Typography lineClamp={1} title={name} component='div' variant='h5'>
-						<NextLink href={'/awaiting-cars/' + data.slug} passHref>
+						<NextLink href={router.asPath + '/' + data.slug} passHref>
 							<Link component='span' underline='hover'>
 								{name}
 							</Link>
@@ -92,9 +96,24 @@ const CarItem = ({ data }: Props) => {
 							{manufactureYear}
 						</Grid>
 					</Grid>
-					<Box marginBottom='1em' textAlign='right'>
+					<Box
+						marginBottom='1em'
+						display='flex'
+						justifyContent={isCarOnsPartParts(data) ? 'space-between' : 'end'}
+						alignItems='center'
+					>
+						{isCarOnsPartParts(data) && (
+							<Typography fontWeight='bold' variant='body1' color='primary'>
+								{data.price} руб{' '}
+								{!!data.priceUSD && (
+									<Typography color='text.secondary' component='sup'>
+										(~{data.priceUSD.toFixed()}$)
+									</Typography>
+								)}
+							</Typography>
+						)}
 						<Button variant='outlined'>
-							<NextLink href={'/awaiting-cars/' + data.slug}>Подробнее</NextLink>
+							<NextLink href={router.asPath + '/' + data.slug}>Подробнее</NextLink>
 						</Button>
 					</Box>
 				</CardContent>
