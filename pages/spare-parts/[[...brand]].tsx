@@ -167,7 +167,7 @@ const SpareParts: NextPage<Props> = ({
 
 	return (
 		<Catalog
-			newProductsTitle='Запчасти'
+			newProductsTitle='Запчастей'
 			advertising={advertising}
 			autocomises={autocomises}
 			deliveryAuto={deliveryAuto}

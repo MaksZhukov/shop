@@ -416,7 +416,7 @@ const Catalog = ({
 					data={newProducts}
 					title={
 						<Typography marginBottom='1em' marginTop='1em' textAlign='center' variant='h5'>
-							Новые {newProductsTitle}
+							Новые поступления {newProductsTitle}
 						</Typography>
 					}
 				></DynamicCarouselProducts>
