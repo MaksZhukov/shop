@@ -28,6 +28,8 @@ let PATH_NAMES = {
 	autocomises: 'Автокомисы',
 	vacancies: 'Вакансии',
 	'cars-on-parts': 'Авто на запчасти',
+	about: 'О нас',
+	payment: 'Оплата',
 };
 
 interface Props {
