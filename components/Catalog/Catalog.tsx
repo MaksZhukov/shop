@@ -218,7 +218,7 @@ const Catalog = ({
 					delete router.query[key];
 				} else {
 					//@ts-expect-error error
-					router.query[key] = key === 'brand' ? [values[key]] : values[key];
+					router.query[key] = key === 'brand' ? [values[key]?.replaceAll(' ', '-')] : values[key];
 				}
 			});
 			// It needs to avoid the same seo data for the page

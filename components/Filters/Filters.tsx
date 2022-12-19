@@ -34,7 +34,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 			item.forEach((child) => {
 				if (router.query[child.id]) {
 					newValues[child.id] = Array.isArray(router.query[child.id])
-						? (router.query as any)[child.id][0]
+						? (router.query as any)[child.id][0].replaceAll('-', ' ')
 						: router.query[child.id];
 				}
 			});
