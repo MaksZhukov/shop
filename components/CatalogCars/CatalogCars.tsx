@@ -118,7 +118,7 @@ const CatalogCars: FC<Props> = ({
 				id: 'model',
 				placeholder: 'Модель',
 				type: 'autocomplete',
-				disabled: !brand,
+				disabledDependencyId: 'brand',
 				options: models.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 					fetchModels({
@@ -134,7 +134,7 @@ const CatalogCars: FC<Props> = ({
 				id: 'generation',
 				placeholder: 'Поколение',
 				type: 'autocomplete',
-				disabled: !model,
+				disabledDependencyId: 'model',
 				options: generations.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
 					fetchGenerations({
@@ -189,7 +189,7 @@ const CatalogCars: FC<Props> = ({
 		});
 	};
 
-	const fetchData = async () => {
+	const fetchData = async (values: any) => {
 		setIsLoading(true);
 		try {
 			const {
@@ -199,12 +199,12 @@ const CatalogCars: FC<Props> = ({
 				},
 			} = await fetchCarsApi({
 				filters: {
-					brand: brand ? { name: brand } : undefined,
-					model: model ? { name: model } : undefined,
-					generation: generation ? { name: generation } : undefined,
-					transmission: transmission || undefined,
-					fuel: fuel || undefined,
-					bodyStyle: bodyStyle || undefined,
+					brand: values.brand ? { name: values.brand } : undefined,
+					model: values.model ? { name: values.model } : undefined,
+					generation: values.generation ? { name: values.generation } : undefined,
+					transmission: values.transmission || undefined,
+					fuel: values.fuel || undefined,
+					bodyStyle: values.bodyStyle || undefined,
 				},
 				pagination: { page: +qPage },
 				populate: ['images', 'model', 'brand'],

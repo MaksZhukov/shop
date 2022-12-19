@@ -94,7 +94,7 @@ const Wheels: NextPage<Props> = ({
 				id: 'brand',
 				placeholder: 'Марка',
 				type: 'autocomplete',
-				options: brands.map((item) => ({label: item.name, value: item.slug})),
+				options: brands.map((item) => ({ label: item.name, value: item.slug })),
 				onOpen: handleOpenAutocomplete<Brand>(!!brands.length, setBrands, () =>
 					fetchBrands({
 						pagination: { limit: MAX_LIMIT },

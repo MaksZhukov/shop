@@ -92,7 +92,6 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 		};
 
 	const handleChangeBrandAutocomplete = (_: any, selected: string | null) => {
-		console.log(selected);
 		if (selected) {
 			router.query.brand = selected;
 		} else {
