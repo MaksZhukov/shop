@@ -30,7 +30,6 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useOutsideClick } from 'rooks';
 import { Brand } from 'api/brands/types';
 import Image from 'components/Image';
-import { getSlugByBrand } from 'services/ProductService';
 
 interface NavigationChild {
 	name: string;
@@ -91,7 +90,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 		children: brands.map((item) => ({
 			id: item.id,
 			name: item.name,
-			path: `/spare-parts/${getSlugByBrand(item.name)}`,
+			path: `/spare-parts/${(item.slug)}`,
 		})),
 	},
 	{ name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'awaiting-cars', children: [] },

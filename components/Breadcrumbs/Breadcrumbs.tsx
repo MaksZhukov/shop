@@ -1,8 +1,7 @@
 import { Breadcrumbs as MUIBreadcrumbs, Link, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { FC, useEffect, useMemo, useState } from 'react';
-import { getSlugByBrand } from 'services/ProductService';
+import { FC, useMemo } from 'react';
 
 const generatePathParts = (pathStr: string) => {
 	const pathWithoutQuery = pathStr.split('?')[0];
@@ -49,11 +48,7 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 				const href = '/' + asPathNestedRoutes.slice(0, idx + 1).join('/');
 				return {
 					href,
-					text: param.includes('brand')
-						? getSlugByBrand(subpath)
-						: param === 'slug'
-						? h1 ?? subpath
-						: PATH_NAMES[subpath as keyof typeof PATH_NAMES] ?? subpath,
+					text: param === 'slug' ? h1 ?? subpath : PATH_NAMES[subpath as keyof typeof PATH_NAMES] ?? subpath,
 				};
 			});
 
@@ -68,13 +63,13 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 			{breadcrumbs.length > 1 &&
 				breadcrumbs.map((crumb, idx) =>
 					idx === breadcrumbs.length - 1 ? (
-						<Typography key={crumb.text} color='text.secondary'>
+						<Typography textTransform='capitalize' key={crumb.text} color='text.secondary'>
 							{crumb.text}
 						</Typography>
 					) : (
 						<NextLink key={crumb.text} href={crumb.href}>
 							<Link component='span' underline='hover' color='primary.main'>
-								{crumb.text}
+								<Typography textTransform='capitalize'>{crumb.text}</Typography>
 							</Link>
 						</NextLink>
 					)

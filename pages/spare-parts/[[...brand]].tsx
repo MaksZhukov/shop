@@ -28,8 +28,7 @@ import { Article } from 'api/articles/types';
 import { useDebounce } from 'rooks';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
-import { fetchBrandByName, fetchBrands } from 'api/brands/brands';
-import { getSlugByBrand } from 'services/ProductService';
+import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
 
 interface Props {
 	page: DefaultPage;
@@ -158,7 +157,7 @@ const SpareParts: NextPage<Props> = ({
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			brand: brand ? { name: getSlugByBrand(brand) } : undefined,
+			brand: brand ? { slug: brand } : undefined,
 			model: model ? { name: model } : undefined,
 			generation: generation ? { name: generation } : undefined,
 			kindSparePart: kindSparePart ? { name: kindSparePart } : undefined,
@@ -210,7 +209,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchBrandByName(getSlugByBrand(brand), {
+			} = await fetchBrandBySlug(brand, {
 				populate: ['seoSpareParts.images', 'image'],
 			});
 			seo = data.seoSpareParts;

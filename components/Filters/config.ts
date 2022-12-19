@@ -44,7 +44,7 @@ export const getSparePartsFiltersConfig = ({
 			placeholder: 'Марка',
 			storeInUrl: storeInUrlIds.includes('brand'),
 			type: 'autocomplete',
-			options: brands.map((item) => item.name),
+			options: brands.map((item) => ({ label: item.name, value: item.slug })),
 			onChange: onChangeBrandAutocomplete,
 			onOpen: onOpenAutoCompleteBrand,
 			noOptionsText: noOptionsText,
