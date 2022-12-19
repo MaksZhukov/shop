@@ -182,6 +182,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					{data.h1} характеристики
 				</Typography>
 				{page.textAfterDescription && <ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>}
+				<Typography marginY='1em'>{data.description}</Typography>
 				{page.benefits && (
 					<>
 						<Typography component='h3' variant='h5'>
