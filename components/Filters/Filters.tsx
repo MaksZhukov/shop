@@ -2,6 +2,7 @@ import { Autocomplete, Box, Button, Input, TextField, Typography } from '@mui/ma
 import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
 import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
+import { getBrandBySlug, getSlugByBrand } from 'services/ProductService';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
 
@@ -33,9 +34,15 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 		config.forEach((item) => {
 			item.forEach((child) => {
 				if (router.query[child.id]) {
-					newValues[child.id] = Array.isArray(router.query[child.id])
-						? (router.query as any)[child.id][0].replaceAll('-', ' ')
-						: router.query[child.id];
+					if (child.id === 'brand') {
+						if (child.options.includes((router.query as any)[child.id][0])) {
+							newValues[child.id] = (router.query as any)[child.id][0];
+						} else {
+							newValues[child.id] = getBrandBySlug((router.query as any)[child.id][0]);
+						}
+					} else {
+						newValues[child.id] = router.query[child.id];
+					}
 				}
 			});
 		});

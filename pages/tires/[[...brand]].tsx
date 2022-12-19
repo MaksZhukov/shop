@@ -19,6 +19,7 @@ import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
+import { getSlugByBrand } from 'services/ProductService';
 
 interface Props {
 	page: DefaultPage;
@@ -123,7 +124,7 @@ const Tires: NextPage<Props> = ({
 
 	const generateFiltersByQuery = ({ brand, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
-			brand: brand ? { name: brand.replaceAll('-', ' ') } : undefined,
+			brand: brand ? { name: getSlugByBrand(brand) } : undefined,
 		};
 		return { ...filters, ...others };
 	};
@@ -176,7 +177,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchTireBrandByName(brandParam.replaceAll('-', ' '), { populate: ['seo.images', 'image'] });
+			} = await fetchTireBrandByName(getSlugByBrand(brandParam), { populate: ['seo.images', 'image'] });
 			seo = data.seo;
 		} else {
 			const {
