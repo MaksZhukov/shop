@@ -1,7 +1,7 @@
 import { Breadcrumbs as MUIBreadcrumbs, Link, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useMemo } from 'react';
 
 const generatePathParts = (pathStr: string) => {
 	const pathWithoutQuery = pathStr.split('?')[0];
@@ -27,6 +27,9 @@ let PATH_NAMES = {
 	'awaiting-cars': 'Ожидаемые авто',
 	autocomises: 'Автокомисы',
 	vacancies: 'Вакансии',
+	'cars-on-parts': 'Авто на запчасти',
+	about: 'О нас',
+	payment: 'Оплата',
 };
 
 interface Props {
@@ -40,7 +43,6 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 		function generateBreadcrumbs() {
 			const asPathNestedRoutes = generatePathParts(router.asPath);
 			const pathnameNestedRoutes = generatePathParts(router.pathname);
-
 			const crumblist = asPathNestedRoutes.map((subpath, idx) => {
 				const param = pathnameNestedRoutes[idx].replace('[', '').replace(']', '');
 				const href = '/' + asPathNestedRoutes.slice(0, idx + 1).join('/');
@@ -61,13 +63,13 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 			{breadcrumbs.length > 1 &&
 				breadcrumbs.map((crumb, idx) =>
 					idx === breadcrumbs.length - 1 ? (
-						<Typography key={crumb.text} color='text.secondary'>
+						<Typography textTransform='capitalize' key={crumb.text} color='text.secondary'>
 							{crumb.text}
 						</Typography>
 					) : (
 						<NextLink key={crumb.text} href={crumb.href}>
 							<Link component='span' underline='hover' color='primary.main'>
-								{crumb.text}
+								<Typography textTransform='capitalize'>{crumb.text}</Typography>
 							</Link>
 						</NextLink>
 					)

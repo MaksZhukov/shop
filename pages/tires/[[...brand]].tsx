@@ -8,21 +8,17 @@ import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
 import { fetchTires } from 'api/tires/tires';
 import { useSnackbar } from 'notistack';
-import { fetchTireBrandByName, fetchTireBrands } from 'api/tireBrands/tireBrands';
+import { fetchTireBrandBySlug, fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { getPageProps } from 'services/PagePropsService';
 import { TireBrand } from 'api/tireBrands/types';
 import { fetchCars } from 'api/cars/cars';
 import { Car } from 'api/cars/types';
-import { fetchAutocomises } from 'api/autocomises/autocomises';
-import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
-import { useRouter } from 'next/router';
-import { fetchBrandByName } from 'api/brands/brands';
 
 interface Props {
 	page: DefaultPage;
@@ -82,7 +78,7 @@ const Tires: NextPage<Props> = ({
 				id: 'brand',
 				placeholder: 'Марка',
 				type: 'autocomplete',
-				options: brands.map((item) => item.name),
+				options: brands.map((item) => ({ label: item.name, value: item.slug })),
 				onOpen: handleOpenAutocomplete<TireBrand>(
 					!!brands.length,
 					setBrands,
@@ -127,7 +123,7 @@ const Tires: NextPage<Props> = ({
 
 	const generateFiltersByQuery = ({ brand, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
-			brand: brand ? { name: brand } : undefined,
+			brand: brand ? { slug: brand } : undefined,
 		};
 		return { ...filters, ...others };
 	};
@@ -180,7 +176,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchTireBrandByName(brand, { populate: ['seo.images', 'image'] });
+			} = await fetchTireBrandBySlug(brandParam, { populate: ['seo.images', 'image'] });
 			seo = data.seo;
 		} else {
 			const {

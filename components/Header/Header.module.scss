@@ -11,7 +11,11 @@
 		}
 		&_mobile {
 			width: 100%;
-			justify-content: start !important;
+			text-align: left;
+			justify-content: space-between;
+			> a {
+				width: 100%;
+			}
 		}
 	}
 }
@@ -28,4 +32,10 @@
 
 .avatar {
 	cursor: pointer;
+}
+
+.link {
+	display: block;
+	width: 100%;
+	padding: 6px 16px;
 }

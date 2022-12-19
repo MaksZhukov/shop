@@ -3,7 +3,7 @@ import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
 import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
-import { fetchBrandByName, fetchBrands } from 'api/brands/brands';
+import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
 import { fetchModels } from 'api/models/models';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
@@ -15,8 +15,6 @@ import { useRouter } from 'next/router';
 import { getPageProps } from 'services/PagePropsService';
 import { Car } from 'api/cars/types';
 import { fetchCars } from 'api/cars/cars';
-import { fetchAutocomises } from 'api/autocomises/autocomises';
-import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { Article } from 'api/articles/types';
@@ -96,7 +94,7 @@ const Wheels: NextPage<Props> = ({
 				id: 'brand',
 				placeholder: 'Марка',
 				type: 'autocomplete',
-				options: brands.map((item) => item.name),
+				options: brands.map((item) => ({label: item.name, value: item.slug})),
 				onOpen: handleOpenAutocomplete<Brand>(!!brands.length, setBrands, () =>
 					fetchBrands({
 						pagination: { limit: MAX_LIMIT },
@@ -167,7 +165,7 @@ const Wheels: NextPage<Props> = ({
 
 	const generateFiltersByQuery = ({ brand, model, ...others }: { [key: string]: string }): Filters => {
 		let filters: Filters = {
-			brand: brand ? { name: brand } : undefined,
+			brand: brand ? { slug: brand } : undefined,
 			model: model ? { name: model } : undefined,
 		};
 		return { ...filters, ...others };
@@ -221,7 +219,7 @@ export const getServerSideProps = getPageProps(
 		if (brandParam) {
 			const {
 				data: { data },
-			} = await fetchBrandByName(brand, { populate: ['seoWheels.images', 'image'] });
+			} = await fetchBrandBySlug(brandParam, { populate: ['seoWheels.images', 'image'] });
 			seo = data.seoWheels;
 		} else {
 			const {

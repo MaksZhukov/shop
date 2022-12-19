@@ -1,10 +1,9 @@
-import { CircularProgress, Pagination, Typography } from '@mui/material';
-import { fetchArticles } from 'api/articles/articles';
+import { CircularProgress, Pagination } from '@mui/material';
 import { Article } from 'api/articles/types';
-import { fetchAutocomises } from 'api/autocomises/autocomises';
 import { Autocomis } from 'api/autocomises/types';
-import { fetchBrands } from 'api/brands/brands';
 import { Brand } from 'api/brands/types';
+import { fetchCarsOnParts } from 'api/cars-on-parts/cars-on-parts';
+import { CarOnParts } from 'api/cars-on-parts/types';
 import { fetchCars } from 'api/cars/cars';
 import { Car } from 'api/cars/types';
 import { MAX_LIMIT } from 'api/constants';
@@ -12,66 +11,64 @@ import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
-import { fetchPage } from 'api/pages';
-import { DefaultPage, PageMain } from 'api/pages/types';
-import { fetchServiceStations } from 'api/serviceStations/serviceStations';
+import { DefaultPage } from 'api/pages/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { ApiResponse, LinkWithImage } from 'api/types';
 import { AxiosResponse } from 'axios';
 import CarItem from 'components/CarItem';
-import Catalog from 'components/Catalog';
+import Catalog from 'components/Catalog/Catalog';
 import { BODY_STYLES, FUELS, TRANSMISSIONS } from 'components/Filters/constants';
+import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { getPageProps } from 'services/PagePropsService';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 
 interface Props {
-	page: DefaultPage;
+	carsData: ApiResponse<(Car | CarOnParts)[]>;
+	brands: Brand[];
 	articles: Article[];
-	advertising: LinkWithImage[];
 	autocomises: Autocomis[];
+	advertising: LinkWithImage[];
+	discounts: LinkWithImage[];
+	page: DefaultPage;
 	deliveryAuto: LinkWithImage;
 	serviceStations: ServiceStation[];
-	discounts: LinkWithImage[];
-	cars: ApiResponse<Car[]>;
-	brands: Brand[];
+	fetchCarsApi: typeof fetchCars | typeof fetchCarsOnParts;
 }
 
-const AwaitingCars: NextPage<Props> = ({
-	page,
+const CatalogCars: FC<Props> = ({
+	carsData,
+	brands,
 	articles,
 	autocomises,
+	fetchCarsApi,
+	page,
 	advertising,
 	deliveryAuto,
 	discounts,
-	brands,
 	serviceStations,
-	cars: pCars,
 }) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
-	const [cars, setCars] = useState<Car[]>(pCars.data);
-	const [pageCount, setPageCount] = useState<number>(pCars.meta.pagination?.pageCount ?? 0);
+	const [cars, setCars] = useState<(Car | CarOnParts)[]>(carsData.data);
+	const [pageCount, setPageCount] = useState<number>(carsData.meta.pagination?.pageCount ?? 0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
 
 	const {
-		brandId = '',
-		modelId = '',
-		generationId = '',
+		brand = '',
+		model = '',
+		generation = '',
 		fuel = '',
 		bodyStyle = '',
 		transmission = '',
 		page: qPage = '1',
 	} = router.query as {
-		brandId: string;
-		modelId: string;
-		generationId: string;
-		sparePartId: string;
+		brand: string;
+		model: string;
+		generation: string;
 		fuel: string;
 		bodyStyle: string;
 		transmission: string;
@@ -108,26 +105,24 @@ const AwaitingCars: NextPage<Props> = ({
 	const filtersConfig = [
 		[
 			{
-				id: 'brandId',
-				name: 'brandName',
+				id: 'brand',
 				placeholder: 'Марка',
 				disabled: false,
 				type: 'autocomplete',
-				options: brands.map((item) => ({ label: item.name, ...item })),
+				options: brands.map((item) => item.name),
 				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
-				id: 'modelId',
-				name: 'modelName',
+				id: 'model',
 				placeholder: 'Модель',
 				type: 'autocomplete',
-				disabled: !brandId,
-				options: models.map((item) => ({ label: item.name, ...item })),
+				disabled: !brand,
+				options: models.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 					fetchModels({
-						filters: { brand: brandId as string },
+						filters: { brand: { name: brand } },
 						pagination: { limit: MAX_LIMIT },
 					})
 				),
@@ -136,18 +131,14 @@ const AwaitingCars: NextPage<Props> = ({
 		],
 		[
 			{
-				id: 'generationId',
-				name: 'generationName',
+				id: 'generation',
 				placeholder: 'Поколение',
 				type: 'autocomplete',
-				disabled: !modelId,
-				options: generations.map((item) => ({
-					label: item.name,
-					...item,
-				})),
+				disabled: !model,
+				options: generations.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
 					fetchGenerations({
-						filters: { model: modelId as string },
+						filters: { model: { name: model } },
 						pagination: { limit: MAX_LIMIT },
 					})
 				),
@@ -206,11 +197,11 @@ const AwaitingCars: NextPage<Props> = ({
 					data,
 					meta: { pagination },
 				},
-			} = await fetchCars({
+			} = await fetchCarsApi({
 				filters: {
-					brand: brandId || undefined,
-					model: modelId || undefined,
-					generation: generationId || undefined,
+					brand: brand ? { name: brand } : undefined,
+					model: model ? { name: model } : undefined,
+					generation: generation ? { name: generation } : undefined,
 					transmission: transmission || undefined,
 					fuel: fuel || undefined,
 					bodyStyle: bodyStyle || undefined,
@@ -279,41 +270,4 @@ const AwaitingCars: NextPage<Props> = ({
 	);
 };
 
-export default AwaitingCars;
-
-export const getServerSideProps = getPageProps(
-	fetchPage('awaiting-car'),
-	async () => {
-		const {
-			data: {
-				data: { advertising, deliveryAuto, discounts, autocomises, serviceStations },
-			},
-		} = await fetchPage<PageMain>('main')();
-		return {
-			advertising,
-			deliveryAuto,
-			autocomises,
-			serviceStations,
-			discounts,
-		};
-	},
-	async (context) => ({
-		cars: (
-			await fetchCars({
-				populate: ['images', 'model', 'brand'],
-				pagination: { pageSize: 25, page: context.query?.page ?? 1 },
-			})
-		).data,
-	}),
-	async () => ({
-		articles: (await fetchArticles({ populate: 'image' })).data.data,
-	}),
-	async () => ({
-		brands: (
-			await fetchBrands({
-				populate: 'image',
-				pagination: { limit: MAX_LIMIT },
-			})
-		).data.data,
-	})
-);
+export default CatalogCars;
