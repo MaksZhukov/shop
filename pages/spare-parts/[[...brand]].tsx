@@ -69,10 +69,6 @@ const SpareParts: NextPage<Props> = ({
 
 	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
 
-	const { brand = [], model = '' } = router.query as {
-		brand: [string];
-		model: string;
-	};
 	const handleOpenAutocomplete =
 		<T extends any>(
 			hasData: boolean,
@@ -97,10 +93,10 @@ const SpareParts: NextPage<Props> = ({
 			}
 		};
 
-	const handleOpenAutocompleteModel = () =>
+	const handleOpenAutocompleteModel = (values: any) =>
 		handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 			fetchModels({
-				filters: { brand: { name: brand[0] } },
+				filters: { brand: { slug: values.brand } },
 				pagination: { limit: MAX_LIMIT },
 			})
 		);

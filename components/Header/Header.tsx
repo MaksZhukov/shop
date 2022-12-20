@@ -223,7 +223,7 @@ const Header = observer(({ brands }: Props) => {
 			sx={{
 				display: type == 'desktop' ? { xs: 'none', md: 'flex' } : { xs: 'flex', md: 'none' },
 			}}
-			{...(type === 'mobile' ? {} : {})}
+			{...(type === 'mobile' ? { order: { xs: '2', md: 'initial' } } : {})}
 		>
 			<NextLink href='/'>
 				<Image
@@ -337,6 +337,7 @@ const Header = observer(({ brands }: Props) => {
 						sx={{
 							display: { xs: 'flex', md: 'none' },
 							flex: { xs: 'initial', md: '1' },
+							order: { xs: '3', md: 'initial' },
 						}}
 						className={styles['mobile-menu']}
 					>
