@@ -20,7 +20,7 @@ export type AutocompleteType = {
 	options: any[];
 	storeInUrl?: boolean;
 	onChange?: (_: any, selected: any) => void;
-	onOpen?: () => void;
+	onOpen?: (values: { [key: string]: string | null }) => () => void;
 	onInputChange?: (_: any, value: string) => void;
 	noOptionsText?: ReactNode;
 };
