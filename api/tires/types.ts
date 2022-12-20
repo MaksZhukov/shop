@@ -1,4 +1,7 @@
 import { TireBrand } from 'api/tireBrands/types';
+import { TireDiameter } from 'api/tireDiameters/types';
+import { TireHeight } from 'api/tireHeights/types';
+import { TireWidth } from 'api/tireWidths/types';
 import { Image, ProductSnippets, SEO } from 'api/types';
 
 export type Season = 'зимние' | 'летние' | 'всесезонные';
@@ -9,9 +12,9 @@ export interface Tire {
 	h1: string;
 	name: string;
 	slug: string;
-	diameter: string;
-	width: number;
-	height: number;
+	diameter: TireDiameter;
+	width: TireWidth;
+	height: TireHeight;
 	season: Season;
 	brand: TireBrand;
 	price: number;
