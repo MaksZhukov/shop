@@ -21,9 +21,9 @@ const TirePage = ({ data, page, relatedProducts }: Props) => {
 				{ text: 'Артикул', value: data.id },
 				{ text: 'Количество', value: data.count },
 				{ text: 'Марка', value: data.brand?.name },
-				{ text: 'Диаметр', value: data.diameter },
-				{ text: 'Высота', value: data.height },
-				{ text: 'Ширина', value: data.width },
+				{ text: 'Диаметр', value: data.diameter?.name },
+				{ text: 'Высота', value: data.height?.name },
+				{ text: 'Ширина', value: data.width?.name },
 				{ text: 'Сезон', value: data.season },
 			]}
 			page={page}
