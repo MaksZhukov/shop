@@ -56,10 +56,6 @@ const Cabins: NextPage<Props> = ({
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
 
-	const { brand = '', model = '' } = router.query as {
-		brand: string;
-		model: string;
-	};
 	const handleOpenAutocomplete =
 		<T extends any>(
 			hasData: boolean,
@@ -84,10 +80,10 @@ const Cabins: NextPage<Props> = ({
 			}
 		};
 
-	const handleOpenAutocompleteModel = () =>
+	const handleOpenAutocompleteModel = (values: any) =>
 		handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 			fetchModels({
-				filters: { brand: { name: brand } },
+				filters: { brand: { slug: values.brand } },
 				pagination: { limit: MAX_LIMIT },
 			})
 		);
