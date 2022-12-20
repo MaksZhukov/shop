@@ -22,10 +22,9 @@ import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 
 interface Props {
-	carsData: ApiResponse<(Car | CarOnParts)[]>;
 	brands: Brand[];
 	articles: Article[];
 	autocomises: Autocomis[];
@@ -38,7 +37,6 @@ interface Props {
 }
 
 const CatalogCars: FC<Props> = ({
-	carsData,
 	brands,
 	articles,
 	autocomises,
@@ -51,30 +49,19 @@ const CatalogCars: FC<Props> = ({
 }) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
-	const [cars, setCars] = useState<(Car | CarOnParts)[]>(carsData.data);
-	const [pageCount, setPageCount] = useState<number>(carsData.meta.pagination?.pageCount ?? 0);
+	const [cars, setCars] = useState<(Car | CarOnParts)[]>([]);
+	const [pageCount, setPageCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
 
-	const {
-		brand = '',
-		model = '',
-		generation = '',
-		fuel = '',
-		bodyStyle = '',
-		transmission = '',
-		page: qPage = '1',
-	} = router.query as {
-		brand: string;
-		model: string;
-		generation: string;
-		fuel: string;
-		bodyStyle: string;
-		transmission: string;
-		sort: string;
+	const { page: qPage = '1', ...restQuery } = router.query as {
 		page: string;
 	};
+
+	useEffect(() => {
+		fetchData(restQuery);
+	}, []);
 
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
@@ -109,7 +96,7 @@ const CatalogCars: FC<Props> = ({
 				placeholder: 'Марка',
 				disabled: false,
 				type: 'autocomplete',
-				options: brands.map((item) => item.name),
+				options: brands.map((item) => ({ label: item.name, value: item.slug })),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -118,14 +105,15 @@ const CatalogCars: FC<Props> = ({
 				id: 'model',
 				placeholder: 'Модель',
 				type: 'autocomplete',
-				disabled: !brand,
+				disabledDependencyId: 'brand',
 				options: models.map((item) => item.name),
-				onOpen: handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-					fetchModels({
-						filters: { brand: { name: brand } },
-						pagination: { limit: MAX_LIMIT },
-					})
-				),
+				onOpen: (values: { [key: string]: string | null }) =>
+					handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+						fetchModels({
+							filters: { brand: { name: values.brand as string } },
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -134,14 +122,15 @@ const CatalogCars: FC<Props> = ({
 				id: 'generation',
 				placeholder: 'Поколение',
 				type: 'autocomplete',
-				disabled: !model,
+				disabledDependencyId: 'model',
 				options: generations.map((item) => item.name),
-				onOpen: handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
-					fetchGenerations({
-						filters: { model: { name: model } },
-						pagination: { limit: MAX_LIMIT },
-					})
-				),
+				onOpen: (values: { [key: string]: string | null }) =>
+					handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
+						fetchGenerations({
+							filters: { model: { name: values.model as string } },
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -189,7 +178,19 @@ const CatalogCars: FC<Props> = ({
 		});
 	};
 
-	const fetchData = async () => {
+	const handleClickFind = (values: any) => {
+		Object.keys(values).forEach((key) => {
+			if (!values[key]) {
+				delete router.query[key];
+			} else {
+				router.query[key] = values[key];
+			}
+		});
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+		fetchData(values);
+	};
+
+	const fetchData = async (values: any) => {
 		setIsLoading(true);
 		try {
 			const {
@@ -199,12 +200,12 @@ const CatalogCars: FC<Props> = ({
 				},
 			} = await fetchCarsApi({
 				filters: {
-					brand: brand ? { name: brand } : undefined,
-					model: model ? { name: model } : undefined,
-					generation: generation ? { name: generation } : undefined,
-					transmission: transmission || undefined,
-					fuel: fuel || undefined,
-					bodyStyle: bodyStyle || undefined,
+					brand: values.brand ? { slug: values.brand } : undefined,
+					model: values.model ? { name: values.model } : undefined,
+					generation: values.generation ? { name: values.generation } : undefined,
+					transmission: values.transmission || undefined,
+					fuel: values.fuel || undefined,
+					bodyStyle: values.bodyStyle || undefined,
 				},
 				pagination: { page: +qPage },
 				populate: ['images', 'model', 'brand'],
@@ -242,7 +243,7 @@ const CatalogCars: FC<Props> = ({
 			deliveryAuto={deliveryAuto}
 			discounts={discounts}
 			serviceStations={serviceStations}
-			onClickFind={fetchData}
+			onClickFind={handleClickFind}
 			middleContent={
 				<WhiteBox>
 					{cars.length ? (

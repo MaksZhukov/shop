@@ -35,7 +35,6 @@ const AwaitingCars: NextPage<Props> = ({
 	discounts,
 	brands,
 	serviceStations,
-	cars,
 }) => {
 	return (
 		<CatalogCars
@@ -47,7 +46,6 @@ const AwaitingCars: NextPage<Props> = ({
 			discounts={discounts}
 			brands={brands}
 			serviceStations={serviceStations}
-			carsData={cars}
 			fetchCarsApi={fetchCars}
 		></CatalogCars>
 	);
@@ -71,14 +69,6 @@ export const getServerSideProps = getPageProps(
 			discounts,
 		};
 	},
-	async (context) => ({
-		cars: (
-			await fetchCars({
-				populate: ['images', 'model', 'brand'],
-				pagination: { pageSize: 25, page: context.query?.page ?? 1 },
-			})
-		).data,
-	}),
 	async () => ({
 		articles: (await fetchArticles({ populate: 'image' })).data.data,
 	}),

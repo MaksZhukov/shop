@@ -104,6 +104,14 @@ const Car: FC<Props> = ({ data }) => {
 					</Box>
 				</Box>
 			</Box>
+			{isCarOnsPartParts(data) && (
+				<Typography mt='0.5em' variant='body1'>
+					<Typography fontWeight='500' component='span' variant='subtitle1'>
+						Описание:
+					</Typography>{' '}
+					{data.description}
+				</Typography>
+			)}
 			{data.videoLink && <ReactPlayer url={data.videoLink}></ReactPlayer>}
 		</WhiteBox>
 	);

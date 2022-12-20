@@ -64,7 +64,7 @@ const CarItem = ({ data }: Props) => {
 				)}
 				<CardContent sx={{ flex: 1, paddingY: '0!important', width: '100%' }}>
 					<Typography lineClamp={1} title={name} component='div' variant='h5'>
-						<NextLink href={router.asPath + '/' + data.slug} passHref>
+						<NextLink href={router.pathname + '/' + data.slug} passHref>
 							<Link component='span' underline='hover'>
 								{name}
 							</Link>
@@ -96,6 +96,14 @@ const CarItem = ({ data }: Props) => {
 							{manufactureYear}
 						</Grid>
 					</Grid>
+					{isCarOnsPartParts(data) && (
+						<Typography mt='0.5em' lineClamp={2} variant='body1'>
+							<Typography fontWeight='500' component='span' variant='subtitle1'>
+								Описание:
+							</Typography>{' '}
+							{data.description}
+						</Typography>
+					)}
 					<Box
 						marginBottom='1em'
 						display='flex'
@@ -113,7 +121,7 @@ const CarItem = ({ data }: Props) => {
 							</Typography>
 						)}
 						<Button variant='outlined'>
-							<NextLink href={router.asPath + '/' + data.slug}>Подробнее</NextLink>
+							<NextLink href={router.pathname + '/' + data.slug}>Подробнее</NextLink>
 						</Button>
 					</Box>
 				</CardContent>

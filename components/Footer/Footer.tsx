@@ -13,7 +13,6 @@ interface Props {
 }
 
 const Footer: FC<Props> = ({ footer }) => {
-	// console.log(footer);
 	const Map = () => {
 		return (
 			<div className={styles.map}>
