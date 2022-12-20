@@ -113,7 +113,7 @@ const CatalogCars: FC<Props> = ({
 				onOpen: (values: { [key: string]: string | null }) =>
 					handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 						fetchModels({
-							filters: { brand: { name: values.brand as string } },
+							filters: { brand: { slug: values.brand as string } },
 							pagination: { limit: MAX_LIMIT },
 						})
 					),
