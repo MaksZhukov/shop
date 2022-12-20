@@ -15,6 +15,7 @@ import { DefaultPage } from 'api/pages/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { ApiResponse, LinkWithImage } from 'api/types';
 import { AxiosResponse } from 'axios';
+import classNames from 'classnames';
 import CarItem from 'components/CarItem';
 import Catalog from 'components/Catalog/Catalog';
 import { BODY_STYLES, FUELS, TRANSMISSIONS } from 'components/Filters/constants';
@@ -23,6 +24,7 @@ import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import styles from './CatalogCars.module.scss';
 
 interface Props {
 	brands: Brand[];
@@ -52,6 +54,7 @@ const CatalogCars: FC<Props> = ({
 	const [cars, setCars] = useState<(Car | CarOnParts)[]>([]);
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -230,6 +233,7 @@ const CatalogCars: FC<Props> = ({
 				variant: 'error',
 			});
 		}
+		setIsFirstDataLoaded(true);
 		setIsLoading(false);
 	};
 
@@ -245,13 +249,20 @@ const CatalogCars: FC<Props> = ({
 			serviceStations={serviceStations}
 			onClickFind={handleClickFind}
 			middleContent={
-				<WhiteBox>
+				<WhiteBox
+					className={classNames({
+						[styles['loading']]: isLoading,
+						[styles['content-items_no-data']]: !cars.length,
+					})}
+				>
 					{cars.length ? (
 						cars.map((item) => <CarItem key={item.id} data={item}></CarItem>)
-					) : (
+					) : isFirstDataLoaded && !isLoading ? (
 						<Typography textAlign='center' variant='h5'>
 							Данных не найдено
 						</Typography>
+					) : (
+						<></>
 					)}
 					{pageCount > 1 && (
 						<WhiteBox display='flex' justifyContent='center'>
