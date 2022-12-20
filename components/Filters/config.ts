@@ -15,10 +15,10 @@ interface Params {
 	onChangeGenerationAutocomplete?: (_: any, value: string | null) => void;
 	onChangeBrandAutocomplete?: (_: any, value: string | null) => void;
 	onChangeModelAutocomplete?: (_: any, value: string | null) => void;
-	onOpenAutoCompleteBrand?: () => void;
-	onOpenAutocompleteModel: () => void;
-	onOpenAutocompleteGeneration: () => void;
-	onOpenAutoCompleteKindSparePart: () => void;
+	onOpenAutoCompleteBrand?: (values: { [key: string]: string | null }) => () => void;
+	onOpenAutocompleteModel: (values: { [key: string]: string | null }) => () => void;
+	onOpenAutocompleteGeneration: (values: { [key: string]: string | null }) => () => void;
+	onOpenAutoCompleteKindSparePart: (values: { [key: string]: string | null }) => () => void;
 	onInputChangeKindSparePart: (_: any, value: string) => void;
 }
 

@@ -27,7 +27,7 @@ const getDependencyItemIds = (
 
 const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
-	console.log(values);
+
 	const router = useRouter();
 	useEffect(() => {
 		let newValues: any = {};
@@ -61,7 +61,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	const handleChangeAutocomplete =
 		(item: AutocompleteType) => (_: any, selected: { value: string } | string | null) => {
 			let selectedValue = typeof selected === 'string' ? selected : selected?.value || null;
-			console.log(selectedValue);
+
 			let dependencyItemIds = getDependencyItemIds(config, item);
 			let depValues = dependencyItemIds.reduce((prev, key) => ({ ...prev, [key]: null }), {});
 			setValues({ ...values, ...depValues, [item.id]: selectedValue });
@@ -106,7 +106,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 				key={item.id + values[item.id]}
 				options={item.options}
 				noOptionsText={item.noOptionsText || 'Совпадений нет'}
-				onOpen={item.onOpen}
+				onOpen={item.onOpen ? item.onOpen(values) : undefined}
 				onChange={handleChangeAutocomplete(item)}
 				fullWidth
 				onInputChange={item.onInputChange}
