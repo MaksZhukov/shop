@@ -80,15 +80,16 @@ const Tires: NextPage<Props> = ({
 				placeholder: 'Марка',
 				type: 'autocomplete',
 				options: brands.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: handleOpenAutocomplete<TireBrand>(
-					!!brands.length,
-					setBrands,
+				onOpen: () =>
+					handleOpenAutocomplete<TireBrand>(
+						!!brands.length,
+						setBrands,
 
-					() =>
-						fetchTireBrands({
-							pagination: { limit: MAX_LIMIT },
-						})
-				),
+						() =>
+							fetchTireBrands({
+								pagination: { limit: MAX_LIMIT },
+							})
+					),
 				noOptionsText: noOptionsText,
 			},
 		],

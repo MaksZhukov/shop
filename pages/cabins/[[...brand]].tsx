@@ -100,15 +100,13 @@ const Cabins: NextPage<Props> = ({
 			})
 		);
 
-	const handleOpenAutocompleteKindSparePart = handleOpenAutocomplete<KindSparePart>(
-		!!kindSpareParts.length,
-		setKindSpareParts,
-		() =>
+	const handleOpenAutocompleteKindSparePart = () =>
+		handleOpenAutocomplete<KindSparePart>(!!kindSpareParts.length, setKindSpareParts, () =>
 			fetchKindSpareParts({
 				filters: { type: 'cabin' },
 				pagination: { limit: MAX_LIMIT },
 			})
-	);
+		);
 
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
