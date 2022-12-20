@@ -84,22 +84,21 @@ const Cabins: NextPage<Props> = ({
 			}
 		};
 
-	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-		fetchModels({
-			filters: { brand: { name: brand } },
-			pagination: { limit: MAX_LIMIT },
-		})
-	);
-
-	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
-		!!generations.length,
-		setGenerations,
-		() =>
-			fetchGenerations({
-				filters: { model: { name: model } },
+	const handleOpenAutocompleteModel = () =>
+		handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+			fetchModels({
+				filters: { brand: { name: brand } },
 				pagination: { limit: MAX_LIMIT },
 			})
-	);
+		);
+
+	const handleOpenAutocompleteGeneration = (values: { [key: string]: string | null }) =>
+		handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
+			fetchGenerations({
+				filters: { model: { name: values.model as string } },
+				pagination: { limit: MAX_LIMIT },
+			})
+		);
 
 	const handleOpenAutocompleteKindSparePart = handleOpenAutocomplete<KindSparePart>(
 		!!kindSpareParts.length,
