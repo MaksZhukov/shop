@@ -1,13 +1,4 @@
-import {
-	Alert,
-	Avatar,
-	Badge,
-	Divider,
-	IconButton,
-	Menu,
-	MenuItem,
-	Typography,
-} from '@mui/material';
+import { Alert, Avatar, Badge, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useStore } from '../../../store';
@@ -62,10 +53,9 @@ const Profile = ({ onClickSignIn }: Props) => {
 				variant: 'success',
 			});
 		} catch (err) {
-			enqueueSnackbar(
-				'Произошла какая-то ошибка с выходом из аккаунта, обратитесь в поддержку',
-				{ variant: 'error' }
-			);
+			enqueueSnackbar('Произошла какая-то ошибка с выходом из аккаунта, обратитесь в поддержку', {
+				variant: 'error',
+			});
 		}
 		router.push('/', undefined, { shallow: true });
 	};
@@ -77,21 +67,16 @@ const Profile = ({ onClickSignIn }: Props) => {
 	return (
 		<>
 			<IconButton
+				sx={{ order: { xs: '1', md: 'initial' } }}
 				id='account-button'
 				className={styles['button']}
 				aria-controls={isOpened ? 'account-menu' : undefined}
 				aria-haspopup='true'
 				aria-expanded={isOpened ? 'true' : undefined}
-				onClick={handleClick}>
-				<Badge
-					color='warning'
-					variant='dot'
-					invisible={isInvisibleBadge}>
-					{store.user.email ? (
-						<Avatar>{store.user.email.slice(0, 4)}</Avatar>
-					) : (
-						<Avatar></Avatar>
-					)}
+				onClick={handleClick}
+			>
+				<Badge color='warning' variant='dot' invisible={isInvisibleBadge}>
+					{store.user.email ? <Avatar>{store.user.email.slice(0, 4)}</Avatar> : <Avatar></Avatar>}
 				</Badge>
 			</IconButton>
 			<Menu
@@ -104,14 +89,15 @@ const Profile = ({ onClickSignIn }: Props) => {
 				onClose={handleClose}
 				onClick={handleClose}
 				transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-				anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+				anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+			>
 				{store.user.id ? (
 					<MenuItem
 						className={classNames({
-							[styles['account-menu__item_active']]:
-								router.pathname === '/profile',
+							[styles['account-menu__item_active']]: router.pathname === '/profile',
 						})}
-						onClick={handleClickLink('/profile')}>
+						onClick={handleClickLink('/profile')}
+					>
 						Профиль
 					</MenuItem>
 				) : (
@@ -119,15 +105,12 @@ const Profile = ({ onClickSignIn }: Props) => {
 				)}
 				<MenuItem
 					className={classNames({
-						[styles['account-menu__item_active']]:
-							router.pathname === '/favorites',
+						[styles['account-menu__item_active']]: router.pathname === '/favorites',
 					})}
-					onClick={handleClickLink('/favorites')}>
+					onClick={handleClickLink('/favorites')}
+				>
 					Избранные{' '}
-					<Typography
-						component='span'
-						color='primary'
-						paddingLeft='5px'>
+					<Typography component='span' color='primary' paddingLeft='5px'>
 						({store.favorites.items.length})
 					</Typography>
 				</MenuItem>
@@ -146,9 +129,7 @@ const Profile = ({ onClickSignIn }: Props) => {
 					</Typography>
 				</MenuItem> */}
 				{store.user.id && <Divider />}
-				{store.user.id && (
-					<MenuItem onClick={handleClickLogout}>Выход</MenuItem>
-				)}
+				{store.user.id && <MenuItem onClick={handleClickLogout}>Выход</MenuItem>}
 			</Menu>
 		</>
 	);
