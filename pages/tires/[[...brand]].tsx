@@ -20,6 +20,12 @@ import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { useRouter } from 'next/router';
+import { TireWidth } from 'api/tireWidths/types';
+import { TireHeight } from 'api/tireHeights/types';
+import { TireDiameter } from 'api/tireDiameters/types';
+import { fetchTireHeights } from 'api/tireHeights/tireHeights';
+import { fetchTireWidths } from 'api/tireWidths/tireWidths';
+import { fetchTireDiameters } from 'api/tireDiameters/tireDiameters';
 
 interface Props {
 	page: DefaultPage;
@@ -43,6 +49,9 @@ const Tires: NextPage<Props> = ({
 	articles,
 }) => {
 	const [brands, setBrands] = useState<TireBrand[]>([]);
+	const [widths, setWidths] = useState<TireWidth[]>([]);
+	const [heights, setHeights] = useState<TireHeight[]>([]);
+	const [diameters, setDiameters] = useState<TireDiameter[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -80,15 +89,16 @@ const Tires: NextPage<Props> = ({
 				placeholder: 'Марка',
 				type: 'autocomplete',
 				options: brands.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: handleOpenAutocomplete<TireBrand>(
-					!!brands.length,
-					setBrands,
+				onOpen: () =>
+					handleOpenAutocomplete<TireBrand>(
+						!!brands.length,
+						setBrands,
 
-					() =>
-						fetchTireBrands({
-							pagination: { limit: MAX_LIMIT },
-						})
-				),
+						() =>
+							fetchTireBrands({
+								pagination: { limit: MAX_LIMIT },
+							})
+					),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -96,19 +106,55 @@ const Tires: NextPage<Props> = ({
 			{
 				id: 'width',
 				placeholder: 'Ширина',
-				type: 'number',
+				type: 'autocomplete',
+				options: widths.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<TireWidth>(
+						!!widths.length,
+						setWidths,
+
+						() =>
+							fetchTireWidths({
+								pagination: { limit: MAX_LIMIT },
+							})
+					),
+				noOptionsText: noOptionsText,
 			},
 			{
 				id: 'height',
 				placeholder: 'Высота',
-				type: 'number',
+				type: 'autocomplete',
+				options: heights.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<TireHeight>(
+						!!heights.length,
+						setHeights,
+
+						() =>
+							fetchTireHeights({
+								pagination: { limit: MAX_LIMIT },
+							})
+					),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
 				id: 'diameter',
 				placeholder: 'Диаметр',
-				type: 'number',
+				type: 'autocomplete',
+				options: diameters.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<TireDiameter>(
+						!!diameters.length,
+						setDiameters,
+
+						() =>
+							fetchTireDiameters({
+								pagination: { limit: MAX_LIMIT },
+							})
+					),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
@@ -122,9 +168,20 @@ const Tires: NextPage<Props> = ({
 		],
 	];
 
-	const generateFiltersByQuery = ({ brand, ...others }: { [key: string]: string }): Filters => {
+	const generateFiltersByQuery = ({
+		brand,
+		diameter,
+		height,
+		width,
+		...others
+	}: {
+		[key: string]: string;
+	}): Filters => {
 		let filters: Filters = {
 			brand: brand ? { slug: brand } : undefined,
+			width: width ? { name: width } : undefined,
+			height: height ? { name: height } : undefined,
+			diameter: diameter ? { name: diameter } : undefined,
 		};
 		return { ...filters, ...others };
 	};
