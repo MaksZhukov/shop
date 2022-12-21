@@ -1,4 +1,5 @@
 import { Brand } from 'api/brands/types';
+import { EngineVolume } from 'api/engineVolumes/types';
 import { Generation } from 'api/generations/types';
 import { Model } from 'api/models/types';
 import { Image, SEO } from 'api/types';
@@ -8,7 +9,7 @@ export interface CarOnParts {
 	slug: string;
 	fuel: string;
 	mileage: number;
-	volume: number;
+	volume: EngineVolume;
 	deliveryDate: Date;
 	manufactureDate: Date;
 	bodyStyle: string;
@@ -22,4 +23,5 @@ export interface CarOnParts {
 	priceUSD: number;
 	seo?: SEO;
 	description: string;
+	transmission: string;
 }
