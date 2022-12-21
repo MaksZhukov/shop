@@ -69,10 +69,6 @@ const SpareParts: NextPage<Props> = ({
 
 	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
 
-	const { brand = [], model = '' } = router.query as {
-		brand: [string];
-		model: string;
-	};
 	const handleOpenAutocomplete =
 		<T extends any>(
 			hasData: boolean,
@@ -97,34 +93,31 @@ const SpareParts: NextPage<Props> = ({
 			}
 		};
 
-	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-		fetchModels({
-			filters: { brand: { name: brand[0] } },
-			pagination: { limit: MAX_LIMIT },
-		})
-	);
-
-	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
-		!!generations.length,
-		setGenerations,
-		() =>
-			fetchGenerations({
-				filters: { model: { name: model } },
+	const handleOpenAutocompleteModel = (values: any) =>
+		handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+			fetchModels({
+				filters: { brand: { slug: values.brand } },
 				pagination: { limit: MAX_LIMIT },
 			})
-	);
+		);
 
-	const handleOpenAutocompleteKindSparePart = handleOpenAutocomplete<KindSparePart>(
-		!!kindSpareParts.length,
-		setKindSpareParts,
-		() =>
+	const handleOpenAutocompleteGeneration = (values: { [key: string]: string | null }) =>
+		handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
+			fetchGenerations({
+				filters: { model: { name: values.model as string } },
+				pagination: { limit: MAX_LIMIT },
+			})
+		);
+
+	const handleOpenAutocompleteKindSparePart = () =>
+		handleOpenAutocomplete<KindSparePart>(!!kindSpareParts.length, setKindSpareParts, () =>
 			fetchKindSpareParts({
 				filters: {
 					type: 'regular',
 				},
 				pagination: { limit: MAX_LIMIT },
 			})
-	);
+		);
 
 	const hangleInputChangeKindSparePart = (_: any, value: string) => {
 		debouncedFetchKindSparePartsRef(value);

@@ -117,31 +117,28 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
-	const handleOpenAutocompleteModel = handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-		fetchModels({
-			filters: { brand: { name: brand } },
-			pagination: { limit: MAX_LIMIT },
-		})
-	);
+	const handleOpenAutocompleteModel = () =>
+		handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+			fetchModels({
+				filters: { brand: { name: brand } },
+				pagination: { limit: MAX_LIMIT },
+			})
+		);
 
-	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
-		!!generations.length,
-		setGenerations,
-		() =>
+	const handleOpenAutocompleteGeneration = () =>
+		handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
 			fetchGenerations({
 				filters: { model: { name: model } },
 				pagination: { limit: MAX_LIMIT },
 			})
-	);
+		);
 
-	const handleOpenAutocompleteKindSparePart = handleOpenAutocomplete<KindSparePart>(
-		!!kindSpareParts.length,
-		setKindSpareParts,
-		() =>
+	const handleOpenAutocompleteKindSparePart = () =>
+		handleOpenAutocomplete<KindSparePart>(!!kindSpareParts.length, setKindSpareParts, () =>
 			fetchKindSpareParts({
 				pagination: { limit: MAX_LIMIT },
 			})
-	);
+		);
 
 	const hangleInputChangeKindSparePart = (_: any, value: string) => {
 		debouncedFetchKindSparePartsRef(value);

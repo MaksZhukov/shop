@@ -90,7 +90,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 		children: brands.map((item) => ({
 			id: item.id,
 			name: item.name,
-			path: `/spare-parts/${(item.slug)}`,
+			path: `/spare-parts/${item.slug}`,
 		})),
 	},
 	{ name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'awaiting-cars', children: [] },
@@ -198,6 +198,8 @@ const Header = observer(({ brands }: Props) => {
 				: {})}
 			sx={{
 				padding: 0,
+				maxHeight: { xs: '200px', md: 'initial' },
+				overflow: 'auto',
 			}}
 		>
 			{page.children?.map((item) => (
@@ -221,7 +223,7 @@ const Header = observer(({ brands }: Props) => {
 			sx={{
 				display: type == 'desktop' ? { xs: 'none', md: 'flex' } : { xs: 'flex', md: 'none' },
 			}}
-			{...(type === 'mobile' ? {} : {})}
+			{...(type === 'mobile' ? { order: { xs: '2', md: 'initial' } } : {})}
 		>
 			<NextLink href='/'>
 				<Image
@@ -335,6 +337,7 @@ const Header = observer(({ brands }: Props) => {
 						sx={{
 							display: { xs: 'flex', md: 'none' },
 							flex: { xs: 'initial', md: '1' },
+							order: { xs: '3', md: 'initial' },
 						}}
 						className={styles['mobile-menu']}
 					>

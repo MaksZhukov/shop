@@ -46,11 +46,6 @@ const Wheels: NextPage<Props> = ({
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const router = useRouter();
-
-	const { brand = '' } = router.query as {
-		brand: string;
-	};
 
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -95,11 +90,12 @@ const Wheels: NextPage<Props> = ({
 				placeholder: 'Марка',
 				type: 'autocomplete',
 				options: brands.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: handleOpenAutocomplete<Brand>(!!brands.length, setBrands, () =>
-					fetchBrands({
-						pagination: { limit: MAX_LIMIT },
-					})
-				),
+				onOpen: () =>
+					handleOpenAutocomplete<Brand>(!!brands.length, setBrands, () =>
+						fetchBrands({
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -110,12 +106,13 @@ const Wheels: NextPage<Props> = ({
 				type: 'autocomplete',
 				disabledDependencyId: 'brand',
 				options: models.map((item) => item.name),
-				onOpen: handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-					fetchModels({
-						filters: { brand: { name: brand } },
-						pagination: { limit: MAX_LIMIT },
-					})
-				),
+				onOpen: (values: any) =>
+					handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+						fetchModels({
+							filters: { brand: { slug: values.brand } },
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
 				noOptionsText: noOptionsText,
 			},
 		],

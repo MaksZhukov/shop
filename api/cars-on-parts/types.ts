@@ -21,4 +21,5 @@ export interface CarOnParts {
 	price: number;
 	priceUSD: number;
 	seo?: SEO;
+	description: string;
 }
