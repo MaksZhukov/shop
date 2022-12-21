@@ -23,7 +23,7 @@ const SparePartPage = ({ data, page, relatedProducts }: Props) => {
 				{ text: 'Поколение', value: data.generation?.name },
 				{ text: 'Год', value: data.year },
 				{ text: 'Запчасть', value: data.kindSparePart?.name },
-				...(data.typeEngine ? [{ text: 'Тип двигателя', value: data.typeEngine }] : []),
+				...(data.engine ? [{ text: 'Тип двигателя', value: data.engine }] : []),
 				{ text: 'Коробка', value: data.transmission },
 				{ text: 'Обьем', value: data.volume },
 			]}
