@@ -28,7 +28,13 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	return (
 		<>
 			<WhiteBox padding='2em'>
-				<Box sx={{ flexWrap: { xs: 'wrap', md: 'initial' } }} marginBottom='1em' display='flex' alignItems='baseline' justifyContent='space-between'>
+				<Box
+					sx={{ flexWrap: { xs: 'wrap', md: 'initial' } }}
+					marginBottom='1em'
+					display='flex'
+					alignItems='baseline'
+					justifyContent='space-between'
+				>
 					<Box flex='1'>
 						<Typography variant='h4' flex='1' title={data.h1} component='h1'>
 							{data.h1}
@@ -47,7 +53,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
 					{data.images ? (
 						<>
-							<Box maxWidth='640px'>
+							<Box maxWidth='640px' width='100%'>
 								<Slider
 									ref={(ref) => {
 										setSliderBig(ref);
