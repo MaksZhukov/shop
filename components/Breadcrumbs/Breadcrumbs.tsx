@@ -43,6 +43,7 @@ const Breadcrumbs: FC<Props> = ({ h1 }) => {
 		function generateBreadcrumbs() {
 			const asPathNestedRoutes = generatePathParts(router.asPath);
 			const pathnameNestedRoutes = generatePathParts(router.pathname);
+
 			const crumblist = asPathNestedRoutes.map((subpath, idx) => {
 				const param = pathnameNestedRoutes[idx].replace('[', '').replace(']', '');
 				const href = '/' + asPathNestedRoutes.slice(0, idx + 1).join('/');
