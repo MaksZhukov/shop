@@ -28,6 +28,7 @@ export const getPageProps =
 			}
 			props.layout = layoutResponse.data.data;
 		} catch (err: any) {
+			console.error(err);
 			if (err?.response?.status === 404) {
 				return { redirect: { destination: '/404' } };
 			}
