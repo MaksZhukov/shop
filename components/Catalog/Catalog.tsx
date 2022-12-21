@@ -117,7 +117,7 @@ const Catalog = ({
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
 					pagination: querySearchValue ? {} : { page: +page },
-					populate: '*',
+					populate: dataFieldsToShow?.map((item) => item.id),
 					sort,
 				});
 				setData(responseData);
