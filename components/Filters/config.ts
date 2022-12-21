@@ -4,6 +4,7 @@ import { KindSparePart } from 'api/kindSpareParts/types';
 import { Model } from 'api/models/types';
 import { ReactNode } from 'react';
 import { BODY_STYLES, FUELS, TRANSMISSIONS } from './constants';
+import { EngineVolume } from 'api/engineVolumes/types';
 
 interface Params {
 	storeInUrlIds?: string[];
@@ -11,6 +12,7 @@ interface Params {
 	models: Model[];
 	kindSpareParts: KindSparePart[];
 	generations: Generation[];
+	volumes: EngineVolume[];
 	noOptionsText: ReactNode;
 	onChangeGenerationAutocomplete?: (_: any, value: string | null) => void;
 	onChangeBrandAutocomplete?: (_: any, value: string | null) => void;
@@ -19,6 +21,7 @@ interface Params {
 	onOpenAutocompleteModel: (values: { [key: string]: string | null }) => () => void;
 	onOpenAutocompleteGeneration: (values: { [key: string]: string | null }) => () => void;
 	onOpenAutoCompleteKindSparePart: (values: { [key: string]: string | null }) => () => void;
+	onOpenAutoCompleteVolume: (values: { [key: string]: string | null }) => () => void;
 	onInputChangeKindSparePart: (_: any, value: string) => void;
 }
 
@@ -28,11 +31,13 @@ export const getSparePartsFiltersConfig = ({
 	models,
 	kindSpareParts,
 	generations,
+	volumes,
 	onChangeBrandAutocomplete,
 	onOpenAutoCompleteBrand,
 	onOpenAutocompleteModel,
 	onOpenAutocompleteGeneration,
 	onOpenAutoCompleteKindSparePart,
+	onOpenAutoCompleteVolume,
 	onInputChangeKindSparePart,
 	onChangeModelAutocomplete,
 	onChangeGenerationAutocomplete,
@@ -93,7 +98,10 @@ export const getSparePartsFiltersConfig = ({
 			id: 'volume',
 			storeInUrl: storeInUrlIds.includes('volume'),
 			placeholder: 'Обьем 2.0',
-			type: 'number',
+			type: 'autocomplete',
+			options: volumes.map((item) => item.name),
+			onOpen: onOpenAutoCompleteVolume,
+			noOptionsText: noOptionsText,
 		},
 	],
 	[

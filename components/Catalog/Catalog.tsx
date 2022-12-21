@@ -255,7 +255,7 @@ const Catalog = ({
 					className={classNames(styles.sider, styles.sider_left, isTablet && styles.sider_tablet)}
 				>
 					<Filters
-						textTotal={textTotal ? textTotal : total ? `Найдено: ${total}` : undefined}
+						textTotal={textTotal ? textTotal : total !== null ? `Найдено: ${total}` : undefined}
 						btn={filtersBtn}
 						config={filtersConfig}
 						total={total}
