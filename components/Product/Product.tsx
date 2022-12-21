@@ -28,8 +28,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	return (
 		<>
 			<WhiteBox padding='2em'>
-				<Box marginBottom='1em' display='flex' alignItems='baseline' justifyContent='space-between'>
-					<Box sx={{ flexWrap: { xs: 'wrap', md: 'initial' } }} flex='1'>
+				<Box sx={{ flexWrap: { xs: 'wrap', md: 'initial' } }} marginBottom='1em' display='flex' alignItems='baseline' justifyContent='space-between'>
+					<Box flex='1'>
 						<Typography variant='h4' flex='1' title={data.h1} component='h1'>
 							{data.h1}
 						</Typography>
@@ -119,7 +119,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 								<Box display='flex' key={item.value}>
 									<Typography
 										mr='1em'
-										width={isWheel(data) ? '110px' : '90px'}
+										minWidth={isWheel(data) ? '110px' : '90px'}
 										fontWeight='500'
 										variant='subtitle1'
 										component='span'
@@ -129,6 +129,19 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 									<Typography component='span'>{item.value}</Typography>
 								</Box>
 							))}
+							{data.description && (
+								<Typography marginY='1em' variant='body1'>
+									<Typography
+										marginRight='0.5em'
+										fontWeight='500'
+										component='span'
+										variant='subtitle1'
+									>
+										Описание:
+									</Typography>{' '}
+									{data.description}
+								</Typography>
+							)}
 							<Box marginBottom='0.5em' display='flex' alignItems='center'>
 								<Typography
 									fontWeight='bold'
@@ -182,7 +195,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					{data.h1} характеристики
 				</Typography>
 				{page.textAfterDescription && <ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>}
-				<Typography marginY='1em'>{data.description}</Typography>
 				{page.benefits && (
 					<>
 						<Typography component='h3' variant='h5'>

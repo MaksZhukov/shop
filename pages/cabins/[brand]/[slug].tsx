@@ -21,6 +21,7 @@ const CabinPage = ({ data, page, relatedProducts }: Props) => {
 				{ text: 'Марка', value: data.brand?.name },
 				{ text: 'Модель', value: data.model?.name },
 				{ text: 'Поколение', value: data.generation?.name },
+				{ text: 'Год', value: data.year },
 				{ text: 'Запчасть', value: data.kindSparePart?.name },
 				...(data.seatUpholstery ? [{ text: 'Обивка сидений', value: data.seatUpholstery }] : []),
 			]}
