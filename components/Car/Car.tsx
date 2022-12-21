@@ -21,9 +21,10 @@ const Car: FC<Props> = ({ data }) => {
 		{ text: 'Модель', value: data.model?.name },
 		{ text: 'Поколение', value: data.generation?.name },
 		{ text: 'Тип кузова', value: data.bodyStyle },
+		{ text: 'Коробка', value: data.transmission },
 		{ text: 'Двигатель', value: data.engine },
 		{ text: 'Тип топлива', value: data.fuel },
-		{ text: 'Обьем', value: data.volume },
+		{ text: 'Обьем', value: data.volume?.name },
 		{
 			text: 'Год',
 			value: data.manufactureDate,
