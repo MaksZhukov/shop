@@ -201,7 +201,7 @@ const Wheels: NextPage<Props> = ({
 		[
 			{
 				id: 'distanceBetweenCenters',
-				placeholder: 'PCD расстояние между отверстиями, мм',
+				placeholder: 'ET вылет, мм',
 				type: 'autocomplete',
 				options: distanceBetweenCenters.map((item) => item.name),
 				onOpen: () =>
