@@ -169,8 +169,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					<Box marginTop='2em' display='flex' flexWrap='wrap' justifyContent={'space-around'}>
 						{page.linksWithImages.map((item) => (
 							<LinkWithImage
-								width={150}
-								height={150}
+								width={110}
+								height={110}
 								key={item.id}
 								image={item.image}
 								link={item.link}
@@ -193,8 +193,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 								<Box maxWidth={208} key={item.id}>
 									<Image
 										alt={item.alternativeText}
-										width={150}
-										height={150}
+										width={110}
+										height={110}
 										src={item.formats?.thumbnail.url || item.url}
 									></Image>
 									<Typography component='p' marginY='1em' textAlign='center' variant='body1'>
