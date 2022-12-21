@@ -28,7 +28,12 @@ export const getPageProps =
 			}
 			props.layout = layoutResponse.data.data;
 		} catch (err: any) {
-			console.log(err);
+			if (err?.response?.status === 404) {
+				return { redirect: { destination: '/404' } };
+			}
+			if (err?.response?.status === 500) {
+				return { redirect: { destination: '/500' } };
+			}
 		}
 		return { props };
 	};
