@@ -250,6 +250,7 @@ export const getServerSideProps = getPageProps(
 		spareParts: (
 			await fetchSpareParts({
 				sort: 'createdAt:desc',
+				pagination: { limit: 10 },
 				populate: ['images', 'brand'],
 			})
 		).data,
