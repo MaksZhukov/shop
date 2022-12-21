@@ -58,6 +58,7 @@ const CatalogCars: FC<Props> = ({
 	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isAutocompleteLoading, setIsAutocompleteLoading] = useState<boolean>(false);
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
@@ -70,7 +71,7 @@ const CatalogCars: FC<Props> = ({
 		fetchData(restQuery);
 	}, []);
 
-	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
+	const noOptionsText = isAutocompleteLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const handleOpenAutocomplete =
 		<T extends any>(
@@ -80,7 +81,7 @@ const CatalogCars: FC<Props> = ({
 		) =>
 		async () => {
 			if (!hasData) {
-				setIsLoading(true);
+				setIsAutocompleteLoading(true);
 				try {
 					const {
 						data: { data },
@@ -92,7 +93,7 @@ const CatalogCars: FC<Props> = ({
 						{ variant: 'error' }
 					);
 				}
-				setIsLoading(false);
+				setIsAutocompleteLoading(false);
 			}
 		};
 
