@@ -25,5 +25,5 @@ export interface SparePart {
 	seo?: SEO;
 	snippets?: ProductSnippets;
 	year: number;
-	typeEngine?: string;
+	engine?: string;
 }
