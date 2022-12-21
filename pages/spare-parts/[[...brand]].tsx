@@ -29,6 +29,9 @@ import { useDebounce } from 'rooks';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
+import { EngineVolume } from 'api/engineVolumes/types';
+import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
+import { getParamByRelation } from 'services/ParamsService';
 
 interface Props {
 	page: DefaultPage;
@@ -56,6 +59,7 @@ const SpareParts: NextPage<Props> = ({
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
+	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
@@ -119,7 +123,14 @@ const SpareParts: NextPage<Props> = ({
 			})
 		);
 
-	const hangleInputChangeKindSparePart = (_: any, value: string) => {
+	const handleOpenAutocompleteVolume = () =>
+		handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
+			fetchEngineVolumes({
+				pagination: { limit: MAX_LIMIT },
+			})
+		);
+
+	const handleInputChangeKindSparePart = (_: any, value: string) => {
 		debouncedFetchKindSparePartsRef(value);
 	};
 
@@ -131,10 +142,12 @@ const SpareParts: NextPage<Props> = ({
 		kindSpareParts,
 		generations,
 		noOptionsText,
+		volumes,
 		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
-		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
+		onInputChangeKindSparePart: handleInputChangeKindSparePart,
+		onOpenAutoCompleteVolume: handleOpenAutocompleteVolume,
 	});
 
 	const generateFiltersByQuery = ({
@@ -145,15 +158,17 @@ const SpareParts: NextPage<Props> = ({
 		brandName,
 		modelName,
 		generationName,
+		volume,
 		...others
 	}: {
 		[key: string]: string;
 	}): Filters => {
 		let filters: Filters = {
-			brand: brand ? { slug: brand } : undefined,
-			model: model ? { name: model } : undefined,
-			generation: generation ? { name: generation } : undefined,
-			kindSparePart: kindSparePart ? { name: kindSparePart } : undefined,
+			brand: getParamByRelation(brand, 'slug'),
+			model: getParamByRelation(model),
+			generation: getParamByRelation(generation),
+			kindSparePart: getParamByRelation(kindSparePart),
+			volume: getParamByRelation(volume),
 		};
 		return { ...filters, ...others };
 	};
