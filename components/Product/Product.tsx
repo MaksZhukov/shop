@@ -53,7 +53,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
 					{data.images ? (
 						<>
-							<Box maxWidth='640px'>
+							<Box maxWidth='640px' width='100%'>
 								<Slider
 									ref={(ref) => {
 										setSliderBig(ref);
