@@ -188,6 +188,7 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 					alt={page.banner.alternativeText}
 					width={640}
 					height={640}
+					quality={100}
 					style={{ height: 'auto' }}
 				></Image>
 			)}
@@ -197,13 +198,15 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 						.filter((item) => item.image)
 						.map((item) => (
 							<WhiteBox marginX='0.5em' key={item.id}>
-								<Image
-									width={156}
-									height={156}
-									src={item.image?.formats?.thumbnail?.url || item.image?.url}
-									alt={item.image?.alternativeText}
-									style={isTablet ? { margin: 'auto' } : {}}
-								></Image>
+								<NextLink href={`/spare-parts/${item.slug}`}>
+									<Image
+										width={156}
+										height={156}
+										src={item.image?.formats?.thumbnail?.url || item.image?.url}
+										alt={item.image?.alternativeText}
+										style={isTablet ? { margin: 'auto' } : {}}
+									></Image>
+								</NextLink>
 							</WhiteBox>
 						))}
 				</Slider>
