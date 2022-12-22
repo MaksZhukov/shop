@@ -6,5 +6,19 @@ export const fetchWheels = (params?: CollectionParams) => api.get<ApiResponse<Wh
 
 export const fetchWheel = (idOrSlug: string) =>
 	api.get<ApiResponse<Wheel>>(`/wheels/${idOrSlug}`, {
-		params: { populate: 'images' },
+		params: {
+			populate: [
+				'images',
+				'model',
+				'brand',
+				'seo.images',
+				'snippets',
+				'diskOffset',
+				'width',
+				'numberHoles',
+				'diameter',
+				'diameterCenterHole',
+				'distanceBetweenCenters',
+			],
+		},
 	});

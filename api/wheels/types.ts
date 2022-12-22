@@ -1,6 +1,12 @@
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
 import { Image, ProductSnippets, SEO } from 'api/types';
+import { WheelDiameterCenterHole } from 'api/wheelDiameterCenterHoles/types';
+import { WheelDiameter } from 'api/wheelDiameters/types';
+import { WheelDiskOffset } from 'api/wheelDiskOffsets/types';
+import { WheelDistanceBetweenCenter } from 'api/wheelDistanceBetweenCenters/types';
+import { WheelNumberHole } from 'api/wheelNumberHoles/types';
+import { WheelWidth } from 'api/wheelWidths/types';
 
 export interface Wheel {
 	id: number;
@@ -8,13 +14,13 @@ export interface Wheel {
 	h1: string;
 	name: string;
 	slug: string;
-	diameter: string;
-	numberHoles: number;
+	diameter: WheelDiameter;
+	numberHoles: WheelNumberHole;
 	kind: 'литой' | 'штампованный';
-	diameterCenterHole: number;
-	diskOffset: number;
-	distanceBetweenCenters: number;
-	width: number;
+	diameterCenterHole: WheelDiameterCenterHole;
+	diskOffset: WheelDiskOffset;
+	distanceBetweenCenters: WheelDistanceBetweenCenter;
+	width: WheelWidth;
 	height: number;
 	brand: Brand;
 	model: Model;
