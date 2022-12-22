@@ -35,6 +35,8 @@ import { MAX_LIMIT } from 'api/constants';
 import { useDebounce } from 'rooks';
 import { fetchPage } from 'api/pages';
 import { PageMain } from 'api/pages/types';
+import { EngineVolume } from 'api/engineVolumes/types';
+import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
 
 interface Props {
 	page: PageMain;
@@ -50,6 +52,7 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
+	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
@@ -140,7 +143,14 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 			})
 		);
 
-	const hangleInputChangeKindSparePart = (_: any, value: string) => {
+	const handleOpenAutocompleteVolume = () =>
+		handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
+			fetchEngineVolumes({
+				pagination: { limit: MAX_LIMIT },
+			})
+		);
+
+	const handleInputChangeKindSparePart = (_: any, value: string) => {
 		debouncedFetchKindSparePartsRef(value);
 	};
 
@@ -151,12 +161,14 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 		kindSpareParts,
 		generations,
 		noOptionsText,
+		volumes,
 		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
 		onChangeModelAutocomplete: handleChangeModelAutocomplete,
-		onInputChangeKindSparePart: hangleInputChangeKindSparePart,
+		onInputChangeKindSparePart: handleInputChangeKindSparePart,
 		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
+		onOpenAutoCompleteVolume: handleOpenAutocompleteVolume,
 	});
 	const filtersBtn = (
 		<NextLink
@@ -176,6 +188,7 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 					alt={page.banner.alternativeText}
 					width={640}
 					height={640}
+					quality={100}
 					style={{ height: 'auto' }}
 				></Image>
 			)}
@@ -185,13 +198,15 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 						.filter((item) => item.image)
 						.map((item) => (
 							<WhiteBox marginX='0.5em' key={item.id}>
-								<Image
-									width={156}
-									height={156}
-									src={item.image?.formats?.thumbnail?.url || item.image?.url}
-									alt={item.image?.alternativeText}
-									style={isTablet ? { margin: 'auto' } : {}}
-								></Image>
+								<NextLink href={`/spare-parts/${item.slug}`}>
+									<Image
+										width={156}
+										height={156}
+										src={item.image?.formats?.thumbnail?.url || item.image?.url}
+										alt={item.image?.alternativeText}
+										style={isTablet ? { margin: 'auto' } : {}}
+									></Image>
+								</NextLink>
 							</WhiteBox>
 						))}
 				</Slider>
