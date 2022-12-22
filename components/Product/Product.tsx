@@ -28,7 +28,13 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	return (
 		<>
 			<WhiteBox padding='2em'>
-				<Box sx={{ flexWrap: { xs: 'wrap', md: 'initial' } }} marginBottom='1em' display='flex' alignItems='baseline' justifyContent='space-between'>
+				<Box
+					sx={{ flexWrap: { xs: 'wrap', md: 'initial' } }}
+					marginBottom='1em'
+					display='flex'
+					alignItems='baseline'
+					justifyContent='space-between'
+				>
 					<Box flex='1'>
 						<Typography variant='h4' flex='1' title={data.h1} component='h1'>
 							{data.h1}
@@ -95,7 +101,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 							</Box>
 						</>
 					) : (
-						<Image alt={data.name} width={640} height={480} src=''></Image>
+						<Image alt={data.name} quality={100} width={640} height={480} src=''></Image>
 					)}
 					<Box
 						flex='1'
