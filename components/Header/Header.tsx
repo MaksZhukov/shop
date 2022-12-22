@@ -231,6 +231,7 @@ const Header = observer(({ brands }: Props) => {
 					alt='Logo'
 					width={150}
 					height={42}
+					quality={100}
 					isOnSSR={false}
 					src='/logo.jpg'
 				/>
