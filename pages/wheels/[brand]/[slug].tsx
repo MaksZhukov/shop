@@ -22,17 +22,17 @@ const WheelPage = ({ data, page, relatedProducts }: Props) => {
 				{ text: 'Количество', value: data.count },
 				{ text: 'Марка', value: data.brand?.name },
 				{ text: 'Модель', value: data.model?.name },
-				{ text: 'R Диаметр', value: data.diameter },
-				{ text: 'J Ширина', value: data.width },
-				{ text: 'Количество отверстий', value: data.numberHoles },
-				{ text: 'PCD расстояние между отверстиями', value: data.numberHoles },
+				{ text: 'R Диаметр', value: data.diameter?.name },
+				{ text: 'J Ширина', value: data.width?.name },
+				{ text: 'Количество отверстий', value: data.numberHoles?.name },
+				{ text: 'PCD расстояние между отверстиями', value: data.numberHoles?.name },
 				{
 					text: 'DIA диаметр центрального отверстия',
-					value: data.diameterCenterHole,
+					value: data.diameterCenterHole?.name,
 				},
 				{
 					text: 'ET вылет',
-					value: data.diskOffset,
+					value: data.diskOffset?.name,
 				},
 			]}
 			page={page}
