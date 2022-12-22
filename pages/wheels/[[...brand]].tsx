@@ -21,6 +21,19 @@ import { Article } from 'api/articles/types';
 import { fetchArticles } from 'api/articles/articles';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
+import { WheelWidth } from 'api/wheelWidths/types';
+import { WheelDiskOffset } from 'api/wheelDiskOffsets/types';
+import { WheelNumberHole } from 'api/wheelNumberHoles/types';
+import { WheelDiameterCenterHole } from 'api/wheelDiameterCenterHoles/types';
+import { WheelDiameter } from 'api/wheelDiameters/types';
+import { WheelDistanceBetweenCenter } from 'api/wheelDistanceBetweenCenters/types';
+import { fetchWheelWidths } from 'api/wheelWidths/wheelWidths';
+import { fetchWheelDiameters } from 'api/wheelDiameters/wheelDiameters';
+import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
+import { fetchWheelDiameterCenterHoles } from 'api/wheelDiameterCenterHoles/wheelDiameterCenterHoles';
+import { fetchWheelDistanceBetweenCenters } from 'api/wheelDistanceBetweenCenters/wheelDistanceBetweenCenters';
+import { fetchWheelDiskOffsets } from 'api/wheelDiskOffsets/wheelWidths';
+import { getParamByRelation } from 'services/ParamsService';
 
 interface Props {
 	page: DefaultPage;
@@ -45,6 +58,12 @@ const Wheels: NextPage<Props> = ({
 }) => {
 	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
+	const [widths, setWidths] = useState<WheelWidth[]>([]);
+	const [diskOffsets, setDiskOffsets] = useState<WheelDiskOffset[]>([]);
+	const [numberHoles, setNumberHoles] = useState<WheelNumberHole[]>([]);
+	const [diameterCenterHoles, setDiameterCenterHoles] = useState<WheelDiameterCenterHole[]>([]);
+	const [diameters, setDiameters] = useState<WheelDiameter[]>([]);
+	const [distanceBetweenCenters, setDistanceBetweenCenters] = useState<WheelDistanceBetweenCenter[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -120,50 +139,122 @@ const Wheels: NextPage<Props> = ({
 			{
 				id: 'width',
 				placeholder: 'J ширина, мм',
-				type: 'number',
+				type: 'autocomplete',
+				options: widths.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<WheelWidth>(!!widths.length, setWidths, () =>
+						fetchWheelWidths({
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
 				id: 'diameter',
 				placeholder: 'R диаметр, дюйм',
-				type: 'number',
+				type: 'autocomplete',
+				options: diameters.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<WheelDiameter>(!!diameters.length, setDiameters, () =>
+						fetchWheelDiameters({
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
 				id: 'numberHoles',
 				placeholder: 'Количество отверстий',
-				type: 'number',
+				type: 'autocomplete',
+				options: numberHoles.map((item) => item.name),
+				onOpen: (values: any) =>
+					handleOpenAutocomplete<WheelNumberHole>(!!numberHoles.length, setNumberHoles, () =>
+						fetchWheelNumberHoles({
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
 				id: 'diameterCenterHole',
 				placeholder: 'DIA диаметр центрального отверстия, мм',
-				type: 'number',
+				type: 'autocomplete',
+				options: diameterCenterHoles.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<WheelDiameterCenterHole>(
+						!!diameterCenterHoles.length,
+						setDiameterCenterHoles,
+						() =>
+							fetchWheelDiameterCenterHoles({
+								pagination: { limit: MAX_LIMIT },
+							})
+					),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
 				id: 'distanceBetweenCenters',
-				placeholder: 'PCD расстояние между отверстиями, мм',
-				type: 'number',
+				placeholder: 'ET вылет, мм',
+				type: 'autocomplete',
+				options: distanceBetweenCenters.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<WheelDistanceBetweenCenter>(
+						!!distanceBetweenCenters.length,
+						setDistanceBetweenCenters,
+						() =>
+							fetchWheelDistanceBetweenCenters({
+								pagination: { limit: MAX_LIMIT },
+							})
+					),
+				noOptionsText: noOptionsText,
 			},
 		],
 		[
 			{
 				id: 'diskOffset',
-				placeholder: 'ET вылет, мм',
-				type: 'number',
+				placeholder: 'PCD расстояние между отверстиями, мм',
+				type: 'autocomplete',
+				options: diskOffsets.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<WheelDiskOffset>(!!diskOffsets.length, setDiskOffsets, () =>
+						fetchWheelDiskOffsets({
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
+				noOptionsText: noOptionsText,
 			},
 		],
 	];
 
-	const generateFiltersByQuery = ({ brand, model, ...others }: { [key: string]: string }): Filters => {
+	const generateFiltersByQuery = ({
+		brand,
+		model,
+		diskOffset,
+		distanceBetweenCenters,
+		diameterCenterHole,
+		numberHoles,
+		diameter,
+		width,
+		...others
+	}: {
+		[key: string]: string;
+	}): Filters => {
 		let filters: Filters = {
-			brand: brand ? { slug: brand } : undefined,
-			model: model ? { name: model } : undefined,
+			brand: getParamByRelation(brand, 'slug'),
+			model: getParamByRelation(model),
+			diskOffset: getParamByRelation(diskOffset),
+			distanceBetweenCenters: getParamByRelation(distanceBetweenCenters),
+			diameterCenterHole: getParamByRelation(diameterCenterHole),
+			numberHoles: getParamByRelation(numberHoles),
+			diameter: getParamByRelation(diameter),
+			width: getParamByRelation(width),
 		};
 		return { ...filters, ...others };
 	};
