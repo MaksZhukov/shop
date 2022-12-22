@@ -26,7 +26,6 @@ import { WheelDiskOffset } from 'api/wheelDiskOffsets/types';
 import { WheelNumberHole } from 'api/wheelNumberHoles/types';
 import { WheelDiameterCenterHole } from 'api/wheelDiameterCenterHoles/types';
 import { WheelDiameter } from 'api/wheelDiameters/types';
-import { WheelDistanceBetweenCenter } from 'api/wheelDistanceBetweenCenters/types';
 import { fetchWheelWidths } from 'api/wheelWidths/wheelWidths';
 import { fetchWheelDiameters } from 'api/wheelDiameters/wheelDiameters';
 import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
