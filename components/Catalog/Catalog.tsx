@@ -62,7 +62,7 @@ let date = new Date();
 const Catalog = ({
 	fetchData,
 	searchPlaceholder,
-	dataFieldsToShow,
+	dataFieldsToShow = [],
 	filtersConfig,
 	generateFiltersByQuery,
 	onClickFind,
@@ -117,7 +117,7 @@ const Catalog = ({
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
 					pagination: querySearchValue ? {} : { page: +page },
-					populate: '*',
+					populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
 					sort,
 				});
 				setData(responseData);
@@ -255,7 +255,7 @@ const Catalog = ({
 					className={classNames(styles.sider, styles.sider_left, isTablet && styles.sider_tablet)}
 				>
 					<Filters
-						textTotal={textTotal ? textTotal : total ? `Найдено: ${total}` : undefined}
+						textTotal={textTotal ? textTotal : total !== null ? `Найдено: ${total}` : undefined}
 						btn={filtersBtn}
 						config={filtersConfig}
 						total={total}

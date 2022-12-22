@@ -25,6 +25,9 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import styles from './CatalogCars.module.scss';
+import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
+import { EngineVolume } from 'api/engineVolumes/types';
+import { getParamByRelation } from 'services/ParamsService';
 
 interface Props {
 	brands: Brand[];
@@ -52,8 +55,10 @@ const CatalogCars: FC<Props> = ({
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [cars, setCars] = useState<(Car | CarOnParts)[]>([]);
+	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isAutocompleteLoading, setIsAutocompleteLoading] = useState<boolean>(false);
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
@@ -66,7 +71,7 @@ const CatalogCars: FC<Props> = ({
 		fetchData(restQuery);
 	}, []);
 
-	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
+	const noOptionsText = isAutocompleteLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const handleOpenAutocomplete =
 		<T extends any>(
@@ -76,7 +81,7 @@ const CatalogCars: FC<Props> = ({
 		) =>
 		async () => {
 			if (!hasData) {
-				setIsLoading(true);
+				setIsAutocompleteLoading(true);
 				try {
 					const {
 						data: { data },
@@ -88,7 +93,7 @@ const CatalogCars: FC<Props> = ({
 						{ variant: 'error' }
 					);
 				}
-				setIsLoading(false);
+				setIsAutocompleteLoading(false);
 			}
 		};
 
@@ -141,8 +146,14 @@ const CatalogCars: FC<Props> = ({
 			{
 				id: 'volume',
 				placeholder: 'Обьем 2.0',
-				type: 'number',
-				disabled: false,
+				type: 'autocomplete',
+				options: volumes.map((item) => item.name),
+				onOpen: () =>
+					handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
+						fetchEngineVolumes({
+							pagination: { limit: MAX_LIMIT },
+						})
+					),
 			},
 		],
 		[
@@ -203,12 +214,13 @@ const CatalogCars: FC<Props> = ({
 				},
 			} = await fetchCarsApi({
 				filters: {
-					brand: values.brand ? { slug: values.brand } : undefined,
-					model: values.model ? { name: values.model } : undefined,
-					generation: values.generation ? { name: values.generation } : undefined,
-					transmission: values.transmission || undefined,
-					fuel: values.fuel || undefined,
-					bodyStyle: values.bodyStyle || undefined,
+					brand: getParamByRelation(values.brand, 'slug'),
+					model: getParamByRelation(values.Model),
+					generation: getParamByRelation(values.generation),
+					volume: getParamByRelation(values.volume),
+					transmission: values.transmission,
+					fuel: values.fuel,
+					bodyStyle: values.bodyStyle,
 				},
 				pagination: { page: +qPage },
 				populate: ['images', 'model', 'brand'],
