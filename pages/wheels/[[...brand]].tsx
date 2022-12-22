@@ -31,7 +31,6 @@ import { fetchWheelWidths } from 'api/wheelWidths/wheelWidths';
 import { fetchWheelDiameters } from 'api/wheelDiameters/wheelDiameters';
 import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
 import { fetchWheelDiameterCenterHoles } from 'api/wheelDiameterCenterHoles/wheelDiameterCenterHoles';
-import { fetchWheelDistanceBetweenCenters } from 'api/wheelDistanceBetweenCenters/wheelDistanceBetweenCenters';
 import { fetchWheelDiskOffsets } from 'api/wheelDiskOffsets/wheelWidths';
 import { getParamByRelation } from 'services/ParamsService';
 
@@ -63,7 +62,6 @@ const Wheels: NextPage<Props> = ({
 	const [numberHoles, setNumberHoles] = useState<WheelNumberHole[]>([]);
 	const [diameterCenterHoles, setDiameterCenterHoles] = useState<WheelDiameterCenterHole[]>([]);
 	const [diameters, setDiameters] = useState<WheelDiameter[]>([]);
-	const [distanceBetweenCenters, setDistanceBetweenCenters] = useState<WheelDistanceBetweenCenter[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -200,24 +198,6 @@ const Wheels: NextPage<Props> = ({
 		],
 		[
 			{
-				id: 'distanceBetweenCenters',
-				placeholder: 'ET вылет, мм',
-				type: 'autocomplete',
-				options: distanceBetweenCenters.map((item) => item.name),
-				onOpen: () =>
-					handleOpenAutocomplete<WheelDistanceBetweenCenter>(
-						!!distanceBetweenCenters.length,
-						setDistanceBetweenCenters,
-						() =>
-							fetchWheelDistanceBetweenCenters({
-								pagination: { limit: MAX_LIMIT },
-							})
-					),
-				noOptionsText: noOptionsText,
-			},
-		],
-		[
-			{
 				id: 'diskOffset',
 				placeholder: 'PCD расстояние между отверстиями, мм',
 				type: 'autocomplete',
@@ -231,13 +211,19 @@ const Wheels: NextPage<Props> = ({
 				noOptionsText: noOptionsText,
 			},
 		],
+		[
+			{
+				id: 'distanceBetweenCenters',
+				placeholder: 'ET вылет, мм',
+				type: 'number',
+			},
+		],
 	];
 
 	const generateFiltersByQuery = ({
 		brand,
 		model,
 		diskOffset,
-		distanceBetweenCenters,
 		diameterCenterHole,
 		numberHoles,
 		diameter,
@@ -250,7 +236,6 @@ const Wheels: NextPage<Props> = ({
 			brand: getParamByRelation(brand, 'slug'),
 			model: getParamByRelation(model),
 			diskOffset: getParamByRelation(diskOffset),
-			distanceBetweenCenters: getParamByRelation(distanceBetweenCenters),
 			diameterCenterHole: getParamByRelation(diameterCenterHole),
 			numberHoles: getParamByRelation(numberHoles),
 			diameter: getParamByRelation(diameter),
