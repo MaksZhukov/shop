@@ -62,7 +62,7 @@ let date = new Date();
 const Catalog = ({
 	fetchData,
 	searchPlaceholder,
-	dataFieldsToShow,
+	dataFieldsToShow = [],
 	filtersConfig,
 	generateFiltersByQuery,
 	onClickFind,
@@ -117,7 +117,7 @@ const Catalog = ({
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
 					pagination: querySearchValue ? {} : { page: +page },
-					populate: dataFieldsToShow?.map((item) => item.id),
+					populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
 					sort,
 				});
 				setData(responseData);
