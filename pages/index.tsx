@@ -312,7 +312,6 @@ export const getServerSideProps = getPageProps(
 		brands: (
 			await fetchBrands({
 				populate: 'image',
-				pagination: { limit: 10 },
 			})
 		).data,
 	}),
