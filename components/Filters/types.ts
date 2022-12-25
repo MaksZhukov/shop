@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactNode } from 'react';
+import { ChangeEvent, ReactNode, UIEventHandler } from 'react';
 
 export type NumberType = {
 	id: string;
@@ -19,8 +19,10 @@ export type AutocompleteType = {
 	disabledDependencyId?: string;
 	options: any[];
 	storeInUrl?: boolean;
+	loadingMore?: boolean;
 	onChange?: (_: any, selected: any) => void;
 	onOpen?: (values: { [key: string]: string | null }) => () => void;
 	onInputChange?: (_: any, value: string) => void;
+	onScroll?: UIEventHandler<HTMLUListElement>;
 	noOptionsText?: ReactNode;
 };

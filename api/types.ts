@@ -56,6 +56,7 @@ export type CollectionParams = {
 		page?: number;
 		pageSize?: number;
 		limit?: number;
+		start?: number;
 	};
 	publicationState?: 'live' | 'preview';
 };

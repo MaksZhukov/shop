@@ -9,7 +9,7 @@ import Content from '../components/Content';
 import Layout from '../components/Layout';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { green } from '@mui/material/colors';
-import { useEffect, useState } from 'react';
+import { UIEventHandler, useEffect, useState } from 'react';
 import { getJwt, getReviewEmail, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
 import 'slick-carousel/slick/slick.css';
@@ -26,6 +26,9 @@ import SEOBox from 'components/SEOBox';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Metrics from 'components/Metrics';
+import { ApiResponse } from 'api/types';
+import { useThrottle } from 'rooks';
+import { OFFSET_SCROLL_LOAD_MORE } from '../constants';
 
 let theme = createTheme({
 	typography: {
@@ -46,7 +49,11 @@ function MyApp({
 		...restPageProps
 	},
 }: AppProps) {
-	const [brands, setBrands] = useState<Brand[]>(restPageProps.brands ?? []);
+	const [brands, setBrands] = useState<ApiResponse<Brand[]>>(restPageProps.brands ?? { data: [] });
+	const [throttledLoadMoreBrands] = useThrottle(async () => {
+		await handleLoadMoreBrands();
+	});
+
 	useEffect(() => {
 		const tryFetchData = async () => {
 			let token = getJwt();
@@ -73,18 +80,37 @@ function MyApp({
 			store.setIsInitialRequestDone();
 		};
 		const fetchBrandsData = async () => {
-			if (!brands.length) {
+			if (!brands.data.length) {
 				const { data } = await fetchBrands({
 					pagination: { limit: MAX_LIMIT },
 					populate: ['image', 'seo.images'],
 				});
-				setBrands(data.data);
+				setBrands(data);
 			}
 		};
 		tryFetchData();
 		fetchBrandsData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	const handleLoadMoreBrands = async () => {
+		if (brands.meta.pagination?.total && brands.data.length < brands.meta.pagination.total) {
+			const { data } = await fetchBrands({
+				populate: 'image',
+				pagination: { start: brands.data.length },
+			});
+			setBrands({ data: [...brands.data, ...data.data], meta: data.meta });
+		}
+	};
+
+	const handleScrollBrandsList: UIEventHandler<HTMLUListElement> = (event) => {
+		if (
+			event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
+			event.currentTarget.scrollHeight
+		) {
+			throttledLoadMoreBrands();
+		}
+	};
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -105,12 +131,17 @@ function MyApp({
 							description={restPageProps.page?.seo?.description}
 							keywords={restPageProps.page?.seo?.keywords}
 						></HeadSEO>
-						<Header brands={brands}></Header>
+						<Header onScrollBrandsList={handleScrollBrandsList} brands={brands}></Header>
 						<RouteShield>
 							<Content>
 								<Container>
 									<Breadcrumbs h1={restPageProps.data?.h1}></Breadcrumbs>
-									<Component {...restPageProps} brands={brands} />
+									<Component
+										{...restPageProps}
+										brands={brands}
+										loadMoreBrands={handleLoadMoreBrands}
+										onScrollBrandsList={handleScrollBrandsList}
+									/>
 									<SEOBox
 										images={restPageProps.page?.seo?.images}
 										content={restPageProps.page?.seo?.content}
@@ -118,7 +149,7 @@ function MyApp({
 								</Container>
 							</Content>
 						</RouteShield>
-						<Footer footer={footer}></Footer>
+						{/* <Footer footer={footer}></Footer> */}
 					</Layout>
 				</SnackbarProvider>
 			</Provider>

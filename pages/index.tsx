@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { Box, Button, CircularProgress, useMediaQuery } from '@mui/material';
 
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, UIEventHandler, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
@@ -32,11 +32,15 @@ import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { MAX_LIMIT } from 'api/constants';
-import { useDebounce } from 'rooks';
+import { useDebounce, useThrottle } from 'rooks';
 import { fetchPage } from 'api/pages';
 import { PageMain } from 'api/pages/types';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
+import styles from './index.module.scss';
+import { OFFSET_SCROLL_LOAD_MORE } from '../constants';
+
+let OFFSET_LOAD_MORE_SLIDER = 3;
 
 interface Props {
 	page: PageMain;
@@ -44,25 +48,49 @@ interface Props {
 	autocomises: Autocomis[];
 	serviceStations: ServiceStation[];
 	articles: Article[];
-	brands: Brand[];
+	brands: ApiResponse<Brand[]>;
 	spareParts: ApiResponse<SparePart[]>;
+	loadMoreBrands: () => void;
+	onScrollBrandsList: UIEventHandler<HTMLUListElement>;
 }
 
-const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], spareParts }) => {
+const Home: NextPage<Props> = ({
+	page,
+	cars = [],
+	articles = [],
+	brands = { data: [] },
+	spareParts,
+	loadMoreBrands,
+	onScrollBrandsList,
+}) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
-	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
+	const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
 	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 	const router = useRouter();
+
+	const loadKindSpareParts = async () => {
+		const { data } = await fetchKindSpareParts({
+			pagination: { start: kindSpareParts.data.length },
+		});
+		setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
+	};
+
+	const [throttledLoadMoreKindSpareParts] = useThrottle(async () => {
+		setIsLoadingMore(true);
+		await loadKindSpareParts();
+		setIsLoadingMore(false);
+	});
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const { enqueueSnackbar } = useSnackbar();
 
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
-		const {
-			data: { data },
-		} = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
+		setIsLoading(true);
+		const { data } = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
 		setKindSpareParts(data);
+		setIsLoading(false);
 	});
 	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
 
@@ -136,12 +164,13 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 			})
 		);
 
-	const handleOpenAutocompleteKindSparePart = () =>
-		handleOpenAutocomplete<KindSparePart>(!!kindSpareParts.length, setKindSpareParts, () =>
-			fetchKindSpareParts({
-				pagination: { limit: MAX_LIMIT },
-			})
-		);
+	const handleOpenAutocompleteKindSparePart = () => async () => {
+		if (!kindSpareParts.data.length) {
+			setIsLoading(true);
+			await loadKindSpareParts();
+			setIsLoading(false);
+		}
+	};
 
 	const handleOpenAutocompleteVolume = () =>
 		handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
@@ -154,14 +183,26 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 		debouncedFetchKindSparePartsRef(value);
 	};
 
+	const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLUListElement> = (event) => {
+		if (
+			event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
+			event.currentTarget.scrollHeight
+		) {
+			throttledLoadMoreKindSpareParts();
+		}
+	};
+
 	const filtersConfig = getSparePartsFiltersConfig({
 		storeInUrlIds: ['volume', 'bodyStyle', 'kindSparePart', 'transmission', 'fuel'],
-		brands,
+		brands: brands.data,
 		models,
-		kindSpareParts,
+		kindSpareParts: kindSpareParts.data,
 		generations,
 		noOptionsText,
 		volumes,
+		isLoadingMoreKindSpareParts: isLoadingMore,
+		onScrollBrandAutocomplete: onScrollBrandsList,
+		onScrollKindSparePartAutocomplete: handleScrollKindSparePartAutocomplete,
 		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
 		onChangeModelAutocomplete: handleChangeModelAutocomplete,
 		onInputChangeKindSparePart: handleInputChangeKindSparePart,
@@ -180,6 +221,14 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 		</NextLink>
 	);
 
+	const slidesToShow = isTablet ? 1 : 3;
+
+	const beforeChange = async (index: number) => {
+		if (brands.data.length === index + slidesToShow + OFFSET_LOAD_MORE_SLIDER) {
+			await loadMoreBrands();
+		}
+	};
+
 	const middleContent = (
 		<>
 			{page.banner && (
@@ -193,8 +242,14 @@ const Home: NextPage<Props> = ({ page, cars = [], articles = [], brands = [], sp
 				></Image>
 			)}
 			<Box padding='1em 1.5em'>
-				<Slider slidesToShow={isTablet ? 1 : 3}>
-					{brands
+				<Slider
+					className={styles.slider}
+					autoplay
+					autoplaySpeed={3000}
+					beforeChange={beforeChange}
+					slidesToShow={slidesToShow}
+				>
+					{brands.data
 						.filter((item) => item.image)
 						.map((item) => (
 							<WhiteBox marginX='0.5em' key={item.id}>
@@ -257,9 +312,9 @@ export const getServerSideProps = getPageProps(
 		brands: (
 			await fetchBrands({
 				populate: 'image',
-				pagination: { limit: MAX_LIMIT },
+				pagination: { limit: 10 },
 			})
-		).data.data,
+		).data,
 	}),
 	async () => ({
 		spareParts: (

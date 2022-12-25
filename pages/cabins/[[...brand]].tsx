@@ -20,16 +20,15 @@ import { KindSparePart } from 'api/kindSpareParts/types';
 import { Generation } from 'api/generations/types';
 import { Model } from 'api/models/types';
 import { Brand } from 'api/brands/types';
-import { useRouter } from 'next/router';
 import { fetchModels } from 'api/models/models';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { fetchCabins } from 'api/cabins/cabins';
-import { fetchBrandBySlug } from 'api/brands/brands';
+import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
 
 interface Props {
 	page: DefaultPage;
 	cars: Car[];
-	brands: Brand[];
+	brands: ApiResponse<Brand[]>;
 	articles: Article[];
 	advertising: LinkWithImage[];
 	autocomises: Autocomis[];
@@ -53,7 +52,7 @@ const Cabins: NextPage<Props> = ({
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const router = useRouter();
+
 	const { enqueueSnackbar } = useSnackbar();
 
 	const handleOpenAutocomplete =
@@ -112,7 +111,7 @@ const Cabins: NextPage<Props> = ({
 				id: 'brand',
 				placeholder: 'Марка',
 				type: 'autocomplete',
-				options: brands.map((item) => ({ label: item.name, value: item.slug })),
+				options: brands.data.map((item) => ({ label: item.name, value: item.slug })),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -244,5 +243,12 @@ export const getServerSideProps = getPageProps(
 	},
 	async () => ({
 		articles: (await fetchArticles({ populate: 'image' })).data.data,
+	}),
+	async () => ({
+		brands: (
+			await fetchBrands({
+				populate: ['image', 'seo.image'],
+			})
+		).data,
 	})
 );
