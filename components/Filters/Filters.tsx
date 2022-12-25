@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
+import classNames from 'classnames';
 
 interface Props {
 	fetchData?: (values: { [key: string]: string | null }) => void;
@@ -27,7 +28,6 @@ const getDependencyItemIds = (
 
 const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
-
 	const router = useRouter();
 	useEffect(() => {
 		let newValues: any = {};
@@ -108,6 +108,11 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 				noOptionsText={item.noOptionsText || 'Совпадений нет'}
 				onOpen={item.onOpen ? item.onOpen(values) : undefined}
 				onChange={handleChangeAutocomplete(item)}
+				ListboxProps={{
+					role: 'list-box',
+					onScroll: item.onScroll,
+					className: item.loadingMore ? classNames(styles.list, styles['list_loading-more']) : styles.list,
+				}}
 				fullWidth
 				onInputChange={item.onInputChange}
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
