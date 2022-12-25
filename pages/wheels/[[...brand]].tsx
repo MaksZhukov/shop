@@ -36,6 +36,7 @@ import { getParamByRelation } from 'services/ParamsService';
 interface Props {
 	page: DefaultPage;
 	cars: Car[];
+	brands: ApiResponse<Brand[]>;
 	articles: Article[];
 	advertising: LinkWithImage[];
 	autocomises: Autocomis[];
@@ -46,6 +47,7 @@ interface Props {
 
 const Wheels: NextPage<Props> = ({
 	page,
+	brands,
 	advertising,
 	autocomises,
 	deliveryAuto,
@@ -54,7 +56,6 @@ const Wheels: NextPage<Props> = ({
 	cars,
 	articles,
 }) => {
-	const [brands, setBrands] = useState<Brand[]>([]);
 	const [models, setModels] = useState<Model[]>([]);
 	const [widths, setWidths] = useState<WheelWidth[]>([]);
 	const [diskOffsets, setDiskOffsets] = useState<WheelDiskOffset[]>([]);
@@ -105,13 +106,7 @@ const Wheels: NextPage<Props> = ({
 				id: 'brand',
 				placeholder: 'Марка',
 				type: 'autocomplete',
-				options: brands.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: () =>
-					handleOpenAutocomplete<Brand>(!!brands.length, setBrands, () =>
-						fetchBrands({
-							pagination: { limit: MAX_LIMIT },
-						})
-					),
+				options: brands.data.map((item) => ({ label: item.name, value: item.slug })),
 				noOptionsText: noOptionsText,
 			},
 		],
@@ -323,5 +318,12 @@ export const getServerSideProps = getPageProps(
 	},
 	async () => ({
 		articles: (await fetchArticles({ populate: 'image' })).data.data,
+	}),
+	async () => ({
+		brands: (
+			await fetchBrands({
+				populate: ['image', 'seo.image'],
+			})
+		).data,
 	})
 );

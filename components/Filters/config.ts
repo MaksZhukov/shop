@@ -2,7 +2,7 @@ import { Brand } from 'api/brands/types';
 import { Generation } from 'api/generations/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { Model } from 'api/models/types';
-import { ReactNode } from 'react';
+import { ReactNode, UIEventHandler } from 'react';
 import { BODY_STYLES, FUELS, TRANSMISSIONS } from './constants';
 import { EngineVolume } from 'api/engineVolumes/types';
 
@@ -13,6 +13,7 @@ interface Params {
 	kindSpareParts: KindSparePart[];
 	generations: Generation[];
 	volumes: EngineVolume[];
+	isLoadingMoreKindSpareParts: boolean;
 	noOptionsText: ReactNode;
 	onChangeGenerationAutocomplete?: (_: any, value: string | null) => void;
 	onChangeBrandAutocomplete?: (_: any, value: string | null) => void;
@@ -23,6 +24,8 @@ interface Params {
 	onOpenAutoCompleteKindSparePart: (values: { [key: string]: string | null }) => () => void;
 	onOpenAutoCompleteVolume: (values: { [key: string]: string | null }) => () => void;
 	onInputChangeKindSparePart: (_: any, value: string) => void;
+	onScrollBrandAutocomplete: UIEventHandler<HTMLUListElement>;
+	onScrollKindSparePartAutocomplete: UIEventHandler<HTMLUListElement>;
 }
 
 export const getSparePartsFiltersConfig = ({
@@ -32,6 +35,7 @@ export const getSparePartsFiltersConfig = ({
 	kindSpareParts,
 	generations,
 	volumes,
+	isLoadingMoreKindSpareParts,
 	onChangeBrandAutocomplete,
 	onOpenAutoCompleteBrand,
 	onOpenAutocompleteModel,
@@ -40,6 +44,8 @@ export const getSparePartsFiltersConfig = ({
 	onOpenAutoCompleteVolume,
 	onInputChangeKindSparePart,
 	onChangeModelAutocomplete,
+	onScrollBrandAutocomplete,
+	onScrollKindSparePartAutocomplete,
 	onChangeGenerationAutocomplete,
 	noOptionsText,
 }: Params) => [
@@ -52,6 +58,7 @@ export const getSparePartsFiltersConfig = ({
 			options: brands.map((item) => ({ label: item.name, value: item.slug })),
 			onChange: onChangeBrandAutocomplete,
 			onOpen: onOpenAutoCompleteBrand,
+			onScroll: onScrollBrandAutocomplete,
 			noOptionsText: noOptionsText,
 		},
 	],
@@ -88,6 +95,8 @@ export const getSparePartsFiltersConfig = ({
 			placeholder: 'Запчасть',
 			type: 'autocomplete',
 			options: kindSpareParts.map((item) => item.name),
+			loadingMore: isLoadingMoreKindSpareParts,
+			onScroll: onScrollKindSparePartAutocomplete,
 			onOpen: onOpenAutoCompleteKindSparePart,
 			onInputChange: onInputChangeKindSparePart,
 			noOptionsText: noOptionsText,

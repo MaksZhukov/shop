@@ -24,3 +24,11 @@
 .sider-right {
 	width: 250px;
 }
+
+.slider {
+	:global {
+		.slick-list {
+			height: 204px;
+		}
+	}
+}

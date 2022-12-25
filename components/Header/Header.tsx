@@ -14,7 +14,7 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import React, { Fragment, HTMLAttributeAnchorTarget, useEffect, useRef, useState } from 'react';
+import React, { Fragment, HTMLAttributeAnchorTarget, UIEventHandler, useEffect, useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useRouter } from 'next/router';
 import ModalAuth from '../ModalAuth';
@@ -30,6 +30,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useOutsideClick } from 'rooks';
 import { Brand } from 'api/brands/types';
 import Image from 'components/Image';
+import { ApiResponse } from 'api/types';
 
 interface NavigationChild {
 	name: string;
@@ -103,10 +104,11 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 ];
 
 interface Props {
-	brands: Brand[];
+	brands: ApiResponse<Brand[]>;
+	onScrollBrandsList: UIEventHandler<HTMLUListElement>;
 }
 
-const Header = observer(({ brands }: Props) => {
+const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const timeoutRef = useRef<number>();
 	const router = useRouter();
@@ -143,10 +145,6 @@ const Header = observer(({ brands }: Props) => {
 
 	const handleToggleMenu = () => {
 		setIsOpenedMobileMenu(!isOpenedMobileMenu);
-	};
-
-	const handleClickMenuItem = () => {
-		setIsOpenedMobileMenu(false);
 	};
 
 	const handleSubMenuClose = () => {
@@ -201,6 +199,11 @@ const Header = observer(({ brands }: Props) => {
 				maxHeight: { xs: '200px', md: 'initial' },
 				overflow: 'auto',
 			}}
+			{...(page.id === 'CarBrands'
+				? {
+						onScroll: onScrollBrandsList,
+				  }
+				: {})}
 		>
 			{page.children?.map((item) => (
 				<MenuItem
@@ -216,7 +219,7 @@ const Header = observer(({ brands }: Props) => {
 		</MenuList>
 	);
 
-	const navigation = getNavigation(brands);
+	const navigation = getNavigation(brands.data);
 
 	const renderLogo = (type: 'mobile' | 'desktop') => (
 		<Box
