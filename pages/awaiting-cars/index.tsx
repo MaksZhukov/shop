@@ -23,7 +23,7 @@ interface Props {
 	serviceStations: ServiceStation[];
 	discounts: LinkWithImage[];
 	cars: ApiResponse<Car[]>;
-	brands: Brand[];
+	brands: ApiResponse<Brand[]>;
 }
 
 const AwaitingCars: NextPage<Props> = ({
@@ -44,7 +44,7 @@ const AwaitingCars: NextPage<Props> = ({
 			advertising={advertising}
 			deliveryAuto={deliveryAuto}
 			discounts={discounts}
-			brands={brands}
+			brands={brands.data}
 			serviceStations={serviceStations}
 			fetchCarsApi={fetchCars}
 		></CatalogCars>
@@ -78,6 +78,6 @@ export const getServerSideProps = getPageProps(
 				populate: 'image',
 				pagination: { limit: MAX_LIMIT },
 			})
-		).data.data,
+		).data,
 	})
 );
