@@ -13,6 +13,7 @@ import { FC, useState } from 'react';
 import Slider from 'react-slick';
 import { isWheel } from 'services/ProductService';
 import styles from './product.module.scss';
+import { getStringByTemplateStr } from 'services/StringService';
 
 interface Props {
 	page: PageProduct;
@@ -53,7 +54,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
 					{data.images ? (
 						<>
-							<Box maxWidth='640px' width='100%'>
+							<Box maxWidth='576px' width='100%'>
 								<Slider
 									ref={(ref) => {
 										setSliderBig(ref);
@@ -68,8 +69,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 										<Image
 											key={item.id}
 											alt={item.alternativeText}
-											width={640}
-											height={480}
+											width={576}
+											height={432}
 											src={item.url}
 										></Image>
 									))}
@@ -101,7 +102,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 							</Box>
 						</>
 					) : (
-						<Image alt={data.name} quality={100} width={640} height={450} src=''></Image>
+						<Image alt={data.name} quality={100} width={576} height={432} src=''></Image>
 					)}
 					<Box
 						flex='1'
@@ -206,7 +207,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 						<Typography component='h3' variant='h5'>
 							Почему мы лучшие в своем деле?
 						</Typography>
-						<Box marginTop='2em' display='flex' flexWrap='wrap' justifyContent={'space-around'}>
+						<Box marginY='2em 1em' display='flex' flexWrap='wrap' justifyContent={'space-around'}>
 							{page.benefits.map((item) => (
 								<Box maxWidth={208} key={item.id}>
 									<Image
@@ -223,15 +224,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 						</Box>
 					</>
 				)}
-				<Typography variant='h5' component='h2'>
-					Мы осуществляем доставку во все населенные пункты Беларуси
-				</Typography>
-				<Typography padding='1em 0' variant='body1'>
-					Наши Запчасти б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в следующих
-					городах Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем что работаем
-					во всех городах и деревнях, просто доставка займет немного больше времени. Будьте уверены, мы
-					приложим все силы, что бы ваш товар - {data.h1 || data.name} был доставлен максимально быстро.
-				</Typography>
+				{page.textAfterBenefits && (
+					<ReactMarkdown content={getStringByTemplateStr(page.textAfterBenefits, data)}></ReactMarkdown>
+				)}
 			</WhiteBox>
 			<CarouselProducts
 				title={
