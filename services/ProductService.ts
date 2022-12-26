@@ -2,22 +2,13 @@ import { SparePart } from 'api/spareParts/types';
 import { Tire } from 'api/tires/types';
 import { Product, SEO } from 'api/types';
 import { Wheel } from 'api/wheels/types';
+import { getStringByTemplateStr } from './StringService';
 
 let SLUG_PRODUCT_TYPE = {
 	sparePart: 'spare-parts',
 	wheel: 'wheels',
 	cabin: 'cabins',
 	tire: 'tires',
-};
-
-const getStringByTemplateStr = (value: string, data: Product) => {
-	let newValue = value;
-	for (let result of value.matchAll(/{(\w+)}/g)) {
-		let field = result[1] as keyof Product;
-		//@ts-expect-error error
-		newValue = newValue.replace(result[0], typeof data[field] === 'string' ? data[field] : data[field]?.name);
-	}
-	return newValue;
 };
 
 export const isTire = (data: Product): data is Tire => data.type === 'tire';

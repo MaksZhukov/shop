@@ -39,6 +39,11 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 						</Link>
 					);
 				},
+				h2: (data) => (
+					<Typography component='h2' gutterBottom variant='h5'>
+						{data.children}
+					</Typography>
+				),
 			}}
 		>
 			{content}

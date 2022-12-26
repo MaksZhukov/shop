@@ -20,6 +20,7 @@ export type PageMain = {
 export type PageProduct = {
 	linksWithImages: LinkWithImage[];
 	textAfterDescription: string;
+	textAfterBenefits: string;
 	autoSynonyms: string;
 	benefits: Image[];
 	title: string;
