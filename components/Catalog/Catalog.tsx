@@ -113,6 +113,7 @@ const Catalog = ({
 					},
 				} = await fetchData({
 					filters: {
+						price: { $gt: 0 },
 						...(searchValue ? { h1: { $contains: searchValue } } : {}),
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
