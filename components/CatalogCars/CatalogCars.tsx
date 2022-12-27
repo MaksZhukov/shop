@@ -270,7 +270,7 @@ const CatalogCars: FC<Props> = ({
 					) : (
 						<></>
 					)}
-					{true && (
+					{pageCount > 1 && (
 						<WhiteBox display='flex' justifyContent='center'>
 							<Pagination
 								renderItem={(params) => (
@@ -281,7 +281,7 @@ const CatalogCars: FC<Props> = ({
 								page={+qPage}
 								siblingCount={2}
 								color='primary'
-								count={3}
+								count={pageCount}
 								variant='outlined'
 							/>
 						</WhiteBox>
