@@ -1,7 +1,7 @@
 import { fetchCabin, fetchCabins } from 'api/cabins/cabins';
 import { Cabin } from 'api/cabins/types';
 import { fetchPage } from 'api/pages';
-import { PageProduct } from 'api/pages/types';
+import { PageProduct, PageProductCabin } from 'api/pages/types';
 import Product from 'components/Product';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
@@ -39,9 +39,13 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
+		{
+			data: { data: pageCabin },
+		},
 	] = await Promise.all([
 		fetchCabin(context.params?.slug || ''),
-		fetchPage<PageProduct>('product', { populate: ['defaultCabinSeo', 'linksWithImages.image', 'benefits'] })(),
+		fetchPage<PageProduct>('product', { populate: ['linksWithImages.image', 'benefits'] })(),
+		fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'] })(),
 	]);
 	const {
 		data: { data: relatedProducts },
@@ -55,14 +59,12 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		},
 		populate: ['images', 'brand'],
 	});
-	const autoSynonyms = page?.autoSynonyms.split(',') || [];
-	let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
 	return {
 		data,
 		page: {
 			...page,
-			textAfterDescription: page?.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-			seo: getProductPageSeo(page.defaultCabinSeo, data),
+			...pageCabin,
+			seo: getProductPageSeo(pageCabin.seo, data),
 		},
 		relatedProducts,
 	};

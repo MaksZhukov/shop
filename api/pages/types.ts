@@ -19,14 +19,30 @@ export type PageMain = {
 
 export type PageProduct = {
 	linksWithImages: LinkWithImage[];
+	benefits: Image[];
+};
+
+export type PageProductTire = {
 	textAfterDescription: string;
 	textAfterBenefits: string;
+	seo: SEO;
+};
+
+export type PageProductCabin = {
+	textAfterDescription: string;
+	textAfterBenefits: string;
+	seo: SEO;
+};
+
+export type PageProductWheel = {
+	textAfterDescription: string;
+	textAfterBenefits: string;
+	seo: SEO;
+};
+
+export type PageProductSparePart = {
+	textAfterDescription: string;
 	autoSynonyms: string;
-	benefits: Image[];
-	title: string;
-	description: string;
-	defaultSparePartSeo: SEO;
-	defaultWheelSeo: SEO;
-	defaultCabinSeo: SEO;
-	defaultTireSeo: SEO;
+	textAfterBenefits: string;
+	seo: SEO;
 };
