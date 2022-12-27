@@ -1,5 +1,5 @@
 import { fetchPage } from 'api/pages';
-import { PageProduct } from 'api/pages/types';
+import { PageProduct, PageProductSparePart } from 'api/pages/types';
 import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
 import Product from 'components/Product';
@@ -41,9 +41,13 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
+		{
+			data: { data: pageSparePart },
+		},
 	] = await Promise.all([
 		fetchSparePart(context.params?.slug || ''),
-		fetchPage<PageProduct>('product', { populate: ['defaultSparePartSeo', 'linksWithImages.image', 'benefits'] })(),
+		fetchPage<PageProduct>('product', { populate: ['linksWithImages.image', 'benefits'] })(),
+		fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })(),
 	]);
 	const {
 		data: { data: relatedProducts },
@@ -57,14 +61,15 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		},
 		populate: ['images', 'brand'],
 	});
-	const autoSynonyms = page?.autoSynonyms.split(',') || [];
+	const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
 	let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
 	return {
 		data,
 		page: {
 			...page,
-			textAfterDescription: page?.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-			seo: getProductPageSeo(page.defaultSparePartSeo, data),
+			...pageSparePart,
+			textAfterDescription: pageSparePart.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
+			seo: getProductPageSeo(pageSparePart.seo, data),
 		},
 		relatedProducts,
 	};

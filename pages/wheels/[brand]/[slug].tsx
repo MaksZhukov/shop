@@ -1,5 +1,5 @@
 import { fetchPage } from 'api/pages';
-import { PageProduct } from 'api/pages/types';
+import { PageProduct, PageProductWheel } from 'api/pages/types';
 import { Wheel } from 'api/wheels/types';
 import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import Product from 'components/Product';
@@ -49,9 +49,13 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		{
 			data: { data: page },
 		},
+		{
+			data: { data: pageWheel },
+		},
 	] = await Promise.all([
 		fetchWheel(context.params?.slug || ''),
-		fetchPage<PageProduct>('product', { populate: ['defaultWheelSeo', 'linksWithImages.image', 'benefits'] })(),
+		fetchPage<PageProduct>('product', { populate: ['linksWithImages.image', 'benefits'] })(),
+		fetchPage<PageProductWheel>('product-wheel', { populate: ['seo'] })(),
 	]);
 	const {
 		data: { data: relatedProducts },
@@ -65,14 +69,12 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		},
 		populate: ['images', 'brand'],
 	});
-	const autoSynonyms = page?.autoSynonyms.split(',') || [];
-	let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
 	return {
 		data,
 		page: {
 			...page,
-			textAfterDescription: page?.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-			seo: getProductPageSeo(page.defaultWheelSeo, data),
+			...pageWheel,
+			seo: getProductPageSeo(pageWheel.seo, data),
 		},
 		relatedProducts,
 	};
