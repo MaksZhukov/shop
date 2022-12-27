@@ -1,4 +1,4 @@
-import { Divider, Pagination, Rating, Typography } from '@mui/material';
+import { Divider, Pagination, PaginationItem, Rating, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack';
 import { Fragment, useEffect, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { useStore } from 'store';
+import NextLink from 'next/link';
 
 let COUNT_REVIEWS = 10;
 
@@ -55,11 +56,6 @@ const Reviews = ({ data }: Props) => {
 		fetchData();
 	}, [page]);
 
-	const handleChangePage = (_: any, newPage: number) => {
-		router.query.page = newPage.toString();
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
-	};
-
 	return (
 		<WhiteBox>
 			<Typography component='h1' variant='h4' textAlign='center'>
@@ -86,10 +82,14 @@ const Reviews = ({ data }: Props) => {
 				<Box display='flex' marginY='1.5em' justifyContent='center'>
 					<Pagination
 						page={+page}
+						renderItem={(params) => (
+							<NextLink shallow href={`${router.pathname}?page=${params.page}`}>
+								<PaginationItem {...params}>{params.page}</PaginationItem>
+							</NextLink>
+						)}
 						siblingCount={2}
 						color='primary'
 						count={pageCount}
-						onChange={handleChangePage}
 						variant='outlined'
 					/>
 				</Box>

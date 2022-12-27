@@ -149,7 +149,7 @@ function MyApp({
 								</Container>
 							</Content>
 						</RouteShield>
-						{/* <Footer footer={footer}></Footer> */}
+						<Footer footer={footer}></Footer>
 					</Layout>
 				</SnackbarProvider>
 			</Provider>
