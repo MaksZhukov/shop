@@ -1,4 +1,4 @@
-import { CircularProgress, Pagination } from '@mui/material';
+import { CircularProgress, Pagination, PaginationItem } from '@mui/material';
 import { Article } from 'api/articles/types';
 import { Autocomis } from 'api/autocomises/types';
 import { Brand } from 'api/brands/types';
@@ -28,6 +28,7 @@ import styles from './CatalogCars.module.scss';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { getParamByRelation } from 'services/ParamsService';
+import NextLink from 'next/link';
 
 interface Props {
 	brands: Brand[];
@@ -58,7 +59,7 @@ const CatalogCars: FC<Props> = ({
 	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isAutocompleteLoading, setIsAutocompleteLoading] = useState<boolean>(false);
+	const [isAutocompleteLoading, setIsAutocompleteLoading] = useState<boolean>(false);
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
@@ -69,7 +70,7 @@ const CatalogCars: FC<Props> = ({
 
 	useEffect(() => {
 		fetchData(restQuery);
-	}, []);
+	}, [qPage]);
 
 	const noOptionsText = isAutocompleteLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
@@ -185,13 +186,6 @@ const CatalogCars: FC<Props> = ({
 		],
 	];
 
-	const handleChangePage = (_: any, newPage: number) => {
-		router.query.page = newPage.toString();
-		router.push({ pathname: router.pathname, query: router.query }, undefined, {
-			shallow: true,
-		});
-	};
-
 	const handleClickFind = (values: any) => {
 		Object.keys(values).forEach((key) => {
 			if (!values[key]) {
@@ -276,14 +270,18 @@ const CatalogCars: FC<Props> = ({
 					) : (
 						<></>
 					)}
-					{pageCount > 1 && (
+					{true && (
 						<WhiteBox display='flex' justifyContent='center'>
 							<Pagination
-								page={+page}
+								renderItem={(params) => (
+									<NextLink shallow href={`${router.pathname}?page=${params.page}`}>
+										<PaginationItem {...params}>{params.page}</PaginationItem>
+									</NextLink>
+								)}
+								page={+qPage}
 								siblingCount={2}
 								color='primary'
-								count={pageCount}
-								onChange={handleChangePage}
+								count={3}
 								variant='outlined'
 							/>
 						</WhiteBox>

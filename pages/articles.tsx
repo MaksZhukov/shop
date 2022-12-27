@@ -1,15 +1,16 @@
-import { Box, Pagination, Typography } from '@mui/material';
+import { Box, Pagination, PaginationItem, Typography } from '@mui/material';
 import { fetchArticles } from 'api/articles/articles';
 import { Article, Article as IArticle } from 'api/articles/types';
 import { ApiResponse } from 'api/types';
 import WhiteBox from 'components/WhiteBox';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import CardItem from 'components/CardItem';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
+import NextLink from 'next/link';
 
 const LIMIT = 10;
 
@@ -20,6 +21,7 @@ interface Props {
 
 const Articles: NextPage<Props> = ({ page, articles }) => {
 	const [data, setData] = useState<Article[]>(articles.data);
+	const [isMounted, setIsMounted] = useState<boolean>(false);
 	const pageCount = articles.meta.pagination?.pageCount ?? 0;
 	const router = useRouter();
 
@@ -27,19 +29,22 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 		page: string;
 	};
 
-	const handleChangePage = async (_: any, newPage: number) => {
-		router.query.page = newPage.toString();
-		router.push({ pathname: router.pathname, query: router.query }, undefined, {
-			shallow: true,
-		});
-		const {
-			data: { data },
-		} = await fetchArticles({
-			pagination: { page: +newPage, pageSize: LIMIT },
-			populate: 'image',
-		});
-		setData(data);
-	};
+	useEffect(() => {
+		if (isMounted) {
+			const fetchData = async () => {
+				const {
+					data: { data },
+				} = await fetchArticles({
+					pagination: { page: +qPage, pageSize: LIMIT },
+					populate: 'image',
+				});
+				setData(data);
+			};
+			fetchData();
+		}
+		setIsMounted(true);
+	}, [qPage]);
+
 	return (
 		<WhiteBox>
 			<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
@@ -58,10 +63,14 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 				<Box display='flex' justifyContent='center'>
 					<Pagination
 						page={+qPage}
+						renderItem={(params) => (
+							<NextLink shallow href={`${router.pathname}?page=${params.page}`}>
+								<PaginationItem {...params}>{params.page}</PaginationItem>
+							</NextLink>
+						)}
 						siblingCount={2}
 						color='primary'
 						count={pageCount}
-						onChange={handleChangePage}
 						variant='outlined'
 					/>
 				</Box>

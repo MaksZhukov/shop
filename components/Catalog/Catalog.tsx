@@ -1,4 +1,13 @@
-import { Input, Link, MenuItem, Pagination, Select, SelectChangeEvent, useMediaQuery } from '@mui/material';
+import {
+	Input,
+	Link,
+	MenuItem,
+	Pagination,
+	PaginationItem,
+	Select,
+	SelectChangeEvent,
+	useMediaQuery,
+} from '@mui/material';
 import { Box } from '@mui/system';
 import { useThrottle, useDebounce } from 'rooks';
 import { ApiResponse, CollectionParams, LinkWithImage as ILinkWithImage, Product, SEO } from 'api/types';
@@ -198,12 +207,6 @@ const Catalog = ({
 		router.push({ pathname: router.pathname, query: router.query });
 	};
 
-	const handleChangePage = (_: any, newPage: number) => {
-		router.query.page = newPage.toString();
-		router.push({ pathname: router.pathname, query: router.query }, undefined, {
-			shallow: true,
-		});
-	};
 	const handleClickFind = (values: { [key: string]: string | null }) => {
 		let newValues: { [key: string]: string } = { ...values, searchValue };
 		if (onClickFind) {
@@ -337,12 +340,16 @@ const Catalog = ({
 							{pageCount > 1 && (
 								<WhiteBox display='flex' justifyContent='center'>
 									<Pagination
+										renderItem={(params) => (
+											<NextLink shallow href={`${router.pathname}?page=${params.page}`}>
+												<PaginationItem {...params}>{params.page}</PaginationItem>
+											</NextLink>
+										)}
 										boundaryCount={isTablet ? 1 : 2}
 										page={+page}
 										siblingCount={isTablet ? 0 : 2}
 										color='primary'
 										count={100}
-										onChange={handleChangePage}
 										variant='outlined'
 									/>
 								</WhiteBox>
