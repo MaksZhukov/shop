@@ -9,7 +9,7 @@ import { getProductPageSeo } from 'services/ProductService';
 
 interface Props {
 	data: Tire;
-	page: PageProduct;
+	page: PageProduct & PageProductTire;
 	relatedProducts: Tire[];
 }
 
