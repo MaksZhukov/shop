@@ -8,7 +8,7 @@ import { getProductPageSeo } from 'services/ProductService';
 
 interface Props {
 	data: Cabin;
-	page: PageProduct;
+	page: PageProduct & PageProductCabin;
 	relatedProducts: Cabin[];
 }
 

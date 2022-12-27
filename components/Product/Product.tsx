@@ -16,7 +16,7 @@ import styles from './product.module.scss';
 import { getStringByTemplateStr } from 'services/StringService';
 
 interface Props {
-	page: PageProduct;
+	page: PageProduct & { textAfterDescription: string; textAfterBenefits: string };
 	data: IProduct;
 	relatedProducts: IProduct[];
 	printOptions: { text: string; value?: string | number }[];
