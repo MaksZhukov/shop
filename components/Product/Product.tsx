@@ -242,7 +242,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					<ReactMarkdown content={getStringByTemplateStr(page.textAfterBenefits, data)}></ReactMarkdown>
 				)}
 				{brandText && <ReactMarkdown content={brandText}></ReactMarkdown>}
-				<Link>hello</Link>
 			</WhiteBox>
 			<CarouselProducts
 				title={
