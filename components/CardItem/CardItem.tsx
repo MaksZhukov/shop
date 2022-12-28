@@ -39,11 +39,13 @@ const CardItem: FC<Props> = ({ image, description, name, link }) => {
 				</Typography>
 				<Box>
 					<ReactMarkdown inline content={`${description?.substring(0, 500)}...`}></ReactMarkdown>
-					<NextLink href={link}>
-						<Link component='span' underline='hover'>
-							читать далее
-						</Link>
-					</NextLink>
+					<Typography component='span'>
+						<NextLink href={link}>
+							<Link component='span' underline='hover'>
+								читать далее
+							</Link>
+						</NextLink>
+					</Typography>
 				</Box>
 			</Box>
 		</Box>
