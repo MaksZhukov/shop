@@ -30,15 +30,16 @@ interface Props {
 }
 
 const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
-	console.log(data);
 	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
 	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	let brandText = isTireBrand(data.brand)
 		? data.brand?.productBrandText?.content
-		: ((data.brand as Brand).productBrandTexts as ProductBrandTexts)[
+		: data.brand?.productBrandTexts
+		? data.brand?.productBrandTexts[
 				Object.keys((data.brand as Brand).productBrandTexts as BrandTextComponent)[1] as keyof ProductBrandTexts
-		  ]?.content;
+		  ]?.content
+		: '';
 	return (
 		<>
 			<WhiteBox padding='2em'>
