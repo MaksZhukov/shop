@@ -11,5 +11,15 @@ export const fetchSpareParts = (params?: CollectionParams) =>
 
 export const fetchSparePart = (idOrSlug: string) =>
 	api.get<ApiResponse<SparePart>>(`/spare-parts/${idOrSlug}`, {
-		params: { populate: 'images' },
+		params: {
+			populate: [
+				'images',
+				'kindSparePart',
+				'model',
+				'brand.productBrandTexts.sparePartBrandText',
+				'generation',
+				'seo.images',
+				'snippets',
+			],
+		},
 	});

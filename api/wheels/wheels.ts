@@ -10,7 +10,7 @@ export const fetchWheel = (idOrSlug: string) =>
 			populate: [
 				'images',
 				'model',
-				'brand',
+				'brand.productBrandTexts.wheelTextBrand',
 				'seo.images',
 				'snippets',
 				'diskOffset',

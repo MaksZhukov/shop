@@ -33,11 +33,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 					);
 				},
 				a: (data) => {
-					return (
-						<Link color='inherit' underline='hover' href={data.href}>
-							{data.children}
-						</Link>
-					);
+					return <Link href={data.href}>{data.children}</Link>;
 				},
 				h2: (data) => (
 					<Typography component='h2' gutterBottom variant='h5'>
