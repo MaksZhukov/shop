@@ -79,3 +79,7 @@ export type LinkWithImage = {
 	image: Image;
 	link: string;
 };
+
+export interface BrandTextComponent {
+	content: string;
+}
