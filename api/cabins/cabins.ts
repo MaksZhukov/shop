@@ -11,5 +11,15 @@ export const fetchCabins = (params?: CollectionParams) =>
 
 export const fetchCabin = (idOrSlug: string) =>
 	api.get<ApiResponse<Cabin>>(`/cabins/${idOrSlug}`, {
-		params: { populate: 'images' },
+		params: {
+			populate: [
+				'images',
+				'kindSparePart',
+				'model',
+				'brand.productBrandTexts.cabinTextBrand',
+				'generation',
+				'seo.images',
+				'snippets',
+			],
+		},
 	});

@@ -30,21 +30,21 @@ const CardItem: FC<Props> = ({ image, description, name, link }) => {
 			></Image>
 
 			<Box sx={{ marginLeft: { xs: '0', sm: '1em' }, marginTop: { xs: '1em', sm: '0' } }}>
-				<Typography component='h2' variant='h5'>
+				<Typography component='h2' variant='h5' gutterBottom>
 					<NextLink href={link}>
 						<Link component='span' underline='hover'>
 							{name}
 						</Link>
 					</NextLink>
 				</Typography>
-				<Typography>
-					<ReactMarkdown content={`${description?.substring(0, 500)}...`}></ReactMarkdown>
+				<Box>
+					<ReactMarkdown inline content={`${description?.substring(0, 500)}...`}></ReactMarkdown>
 					<NextLink href={link}>
 						<Link component='span' underline='hover'>
 							читать далее
 						</Link>
 					</NextLink>
-				</Typography>
+				</Box>
 			</Box>
 		</Box>
 	);
