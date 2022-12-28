@@ -212,13 +212,13 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 						))}
 					</Box>
 				)}
-				<Typography marginTop='1em' component='h2' variant='h5'>
+				<Typography gutterBottom marginTop='1em' component='h2' variant='h5'>
 					{data.h1} характеристики
 				</Typography>
 				{page.textAfterDescription && <ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>}
 				{page.benefits && (
 					<>
-						<Typography component='h3' variant='h5'>
+						<Typography gutterBottom component='h3' variant='h5'>
 							Почему мы лучшие в своем деле?
 						</Typography>
 						<Box marginY='2em 1em' display='flex' flexWrap='wrap' justifyContent={'space-around'}>
@@ -242,7 +242,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					<ReactMarkdown content={getStringByTemplateStr(page.textAfterBenefits, data)}></ReactMarkdown>
 				)}
 				{brandText && <ReactMarkdown content={brandText}></ReactMarkdown>}
-				<Link>hello</Link>
 			</WhiteBox>
 			<CarouselProducts
 				title={
