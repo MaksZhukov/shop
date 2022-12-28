@@ -1,6 +1,12 @@
 import { Box, Button, Link, Typography, useMediaQuery } from '@mui/material';
 import { PageProduct } from 'api/pages/types';
-import { Image as IImage, LinkWithImage as ILinkWithImage, Product as IProduct, ProductType } from 'api/types';
+import {
+	BrandTextComponent,
+	Image as IImage,
+	LinkWithImage as ILinkWithImage,
+	Product as IProduct,
+	ProductType,
+} from 'api/types';
 import classNames from 'classnames';
 import CarouselProducts from 'components/CarouselProducts';
 import FavoriteButton from 'components/FavoriteButton';
@@ -11,9 +17,10 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import WhiteBox from 'components/WhiteBox';
 import { FC, useState } from 'react';
 import Slider from 'react-slick';
-import { isWheel } from 'services/ProductService';
+import { isTireBrand, isWheel } from 'services/ProductService';
 import styles from './product.module.scss';
 import { getStringByTemplateStr } from 'services/StringService';
+import { Brand, ProductBrandTexts } from 'api/brands/types';
 
 interface Props {
 	page: PageProduct & { textAfterDescription: string; textAfterBenefits: string };
@@ -26,6 +33,13 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	const [sliderBig, setSliderBig] = useState<Slider | null>(null);
 	const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	let brandText = isTireBrand(data.brand)
+		? data.brand?.productBrandText?.content
+		: data.brand?.productBrandTexts
+		? data.brand?.productBrandTexts[
+				Object.keys((data.brand as Brand).productBrandTexts as BrandTextComponent)[1] as keyof ProductBrandTexts
+		  ]?.content
+		: '';
 	return (
 		<>
 			<WhiteBox padding='2em'>
@@ -227,6 +241,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				{page.textAfterBenefits && (
 					<ReactMarkdown content={getStringByTemplateStr(page.textAfterBenefits, data)}></ReactMarkdown>
 				)}
+				{brandText && <ReactMarkdown content={brandText}></ReactMarkdown>}
+				<Link>hello</Link>
 			</WhiteBox>
 			<CarouselProducts
 				title={

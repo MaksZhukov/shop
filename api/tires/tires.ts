@@ -6,5 +6,5 @@ export const fetchTires = (params?: CollectionParams) => api.get<ApiResponse<Tir
 
 export const fetchTire = (idOrSlug: string) =>
 	api.get<ApiResponse<Tire>>(`/tires/${idOrSlug}`, {
-		params: { populate: ['images', 'brand'] },
+		params: { populate: ['images', 'brand.productBrandText', 'seo.images', 'snippets'] },
 	});

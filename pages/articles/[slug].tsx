@@ -44,7 +44,7 @@ const Article: NextPage<Props> = ({ data }) => {
 						width={isMobile ? 500 : 640}
 						height={isMobile ? 375 : 480}
 						src={isMobile ? data.image?.formats?.small.url || '' : data.image?.url || ''}
-						style={isMobile ? { height: 'auto' } : {}}
+						style={{ height: 'auto' }}
 					></Image>
 				</Box>
 				<ReactMarkdown content={data.description}></ReactMarkdown>

@@ -1,4 +1,10 @@
-import { Image, SEO } from 'api/types';
+import { BrandTextComponent, Image, SEO } from 'api/types';
+
+export type ProductBrandTexts = {
+	sparePartBrandText?: BrandTextComponent;
+	cabinTextBrand?: BrandTextComponent;
+	wheelTextBrand?: BrandTextComponent;
+};
 
 export interface Brand {
 	id: number;
@@ -9,4 +15,5 @@ export interface Brand {
 	seoSpareParts: SEO;
 	seoCabins: SEO;
 	seoWheels: SEO;
+	productBrandTexts?: ProductBrandTexts;
 }
