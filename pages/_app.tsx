@@ -135,7 +135,7 @@ function MyApp({
 						<RouteShield>
 							<Content>
 								<Container>
-									<Breadcrumbs h1={restPageProps.data?.h1}></Breadcrumbs>
+									<Breadcrumbs h1={restPageProps.data?.h1 || restPageProps.data?.name}></Breadcrumbs>
 									<Component
 										{...restPageProps}
 										brands={brands}
