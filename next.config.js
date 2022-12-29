@@ -14,8 +14,7 @@ const nextConfig = {
 	},
 	images: {
 		domains: process.env.IMAGES_DOMAINS.split(','),
-	},
-	...(process.env.NODE_ENV === 'production' ? { distDir: 'tmp' } : {}),
+	}
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
