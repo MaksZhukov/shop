@@ -12,9 +12,6 @@ import { green } from '@mui/material/colors';
 import { UIEventHandler, useEffect, useState } from 'react';
 import { getJwt, getReviewEmail, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import './app.scss';
 import NotistackService from 'services/NotistackService';
 import { fetchBrands } from 'api/brands/brands';
 import { MAX_LIMIT } from 'api/constants';
@@ -23,12 +20,13 @@ import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
 import { Container } from '@mui/system';
 import SEOBox from 'components/SEOBox';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
 import Metrics from 'components/Metrics';
 import { ApiResponse } from 'api/types';
 import { useThrottle } from 'rooks';
 import { OFFSET_SCROLL_LOAD_MORE } from '../constants';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import './app.scss';
 
 let theme = createTheme({
 	typography: {
