@@ -23,7 +23,7 @@ import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, UIEventHandler, useEffect, useState } from 'react';
 import styles from './CatalogCars.module.scss';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
 import { EngineVolume } from 'api/engineVolumes/types';
@@ -39,6 +39,7 @@ interface Props {
 	page: DefaultPage;
 	deliveryAuto: LinkWithImage;
 	serviceStations: ServiceStation[];
+	onScrollBrandsList: UIEventHandler<HTMLUListElement>;
 	fetchCarsApi: typeof fetchCars | typeof fetchCarsOnParts;
 }
 
@@ -52,6 +53,7 @@ const CatalogCars: FC<Props> = ({
 	deliveryAuto,
 	discounts,
 	serviceStations,
+	onScrollBrandsList,
 }) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
@@ -106,6 +108,7 @@ const CatalogCars: FC<Props> = ({
 				disabled: false,
 				type: 'autocomplete',
 				options: brands.map((item) => ({ label: item.name, value: item.slug })),
+				onScroll: onScrollBrandsList,
 				noOptionsText: noOptionsText,
 			},
 		],

@@ -13,6 +13,7 @@ import { ServiceStation } from 'api/serviceStations/types';
 import { ApiResponse, LinkWithImage } from 'api/types';
 import CatalogCars from 'components/CatalogCars';
 import { NextPage } from 'next';
+import { UIEventHandler } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
 	serviceStations: ServiceStation[];
 	discounts: LinkWithImage[];
 	brands: ApiResponse<Brand[]>;
+	onScrollBrandsList: UIEventHandler<HTMLUListElement>;
 }
 
 const CarsOnParts: NextPage<Props> = ({
@@ -35,9 +37,11 @@ const CarsOnParts: NextPage<Props> = ({
 	discounts,
 	brands,
 	serviceStations,
+	onScrollBrandsList,
 }) => {
 	return (
 		<CatalogCars
+			onScrollBrandsList={onScrollBrandsList}
 			page={page}
 			articles={articles}
 			autocomises={autocomises}

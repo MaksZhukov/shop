@@ -2,10 +2,12 @@ import { FC } from 'react';
 import ReactMarkdownLib from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import getConfig from 'next/config';
-import ReactPlayer from 'react-player';
+import dynamic from 'next/dynamic';
 import Typography from 'components/Typography';
 import { Link } from '@mui/material';
 import Image from 'components/Image';
+
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 const { publicRuntimeConfig } = getConfig();
 
