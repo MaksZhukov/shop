@@ -115,13 +115,13 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 	const { code } = router.query;
 
 	const [isOpenedModal, setIsOpenedModal] = useState<boolean>(false);
-	const [isOpenedMobileMenu, setIsOpenedMobileMenu] = useState<boolean>(false);
+	const [isOpenedTabletMenu, setIsOpenedTabletMenu] = useState<boolean>(false);
 	const ref = useRef<HTMLDivElement>(null);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	const handleOutsideClick = () => {
 		if (isTablet) {
-			setIsOpenedMobileMenu(false);
+			setIsOpenedTabletMenu(false);
 		}
 	};
 
@@ -135,7 +135,7 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 
 	useEffect(() => {
 		if (!isTablet) {
-			setIsOpenedMobileMenu(false);
+			setIsOpenedTabletMenu(false);
 		}
 	}, [isTablet]);
 
@@ -144,7 +144,7 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 	};
 
 	const handleToggleMenu = () => {
-		setIsOpenedMobileMenu(!isOpenedMobileMenu);
+		setIsOpenedTabletMenu(!isOpenedTabletMenu);
 	};
 
 	const handleSubMenuClose = () => {
@@ -176,10 +176,26 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 		}
 	};
 
+	const handleClickLinkTablet = () => {
+		setIsOpenedTabletMenu(false);
+		setAnchorEl(null);
+	};
+
 	const renderLink = (item: NavigationChild) => {
 		let LinkComp = item.target ? Link : NextLink;
 		return (
-			<LinkComp className={styles.link} underline='none' color='#fff' target={item.target} href={item.path}>
+			<LinkComp
+				className={styles.link}
+				underline='none'
+				color='#fff'
+				target={item.target}
+				href={item.path}
+				{...(isTablet
+					? {
+							onClick: handleClickLinkTablet,
+					  }
+					: {})}
+			>
 				{item.name}
 			</LinkComp>
 		);
@@ -265,7 +281,13 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 					  }
 					: {})}
 			>
-				{page.path && isTablet ? <NextLink href={page.path}>{page.name}</NextLink> : page.name}
+				{page.path && isTablet ? (
+					<NextLink href={page.path} onClick={handleClickLinkTablet}>
+						{page.name}
+					</NextLink>
+				) : (
+					page.name
+				)}
 			</Button>
 		);
 	};
@@ -363,7 +385,7 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 					)}
 				</Toolbar>
 				{isTablet && (
-					<Collapse in={isOpenedMobileMenu}>
+					<Collapse in={isOpenedTabletMenu}>
 						<Toolbar className={styles.toolbar}>{renderMenu('mobile')}</Toolbar>
 					</Collapse>
 				)}

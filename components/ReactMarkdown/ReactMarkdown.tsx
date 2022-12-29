@@ -4,7 +4,7 @@ import rehypeRaw from 'rehype-raw';
 import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import Typography from 'components/Typography';
-import { Link } from '@mui/material';
+import { Link, useMediaQuery } from '@mui/material';
 import Image from 'components/Image';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -17,6 +17,7 @@ interface Props {
 }
 
 const ReactMarkdown: FC<Props> = ({ content, inline }) => {
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<ReactMarkdownLib
 			rehypePlugins={[rehypeRaw]}
@@ -25,7 +26,14 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 					return <Image alt={alt} width={640} height={480} src={src || ''}></Image>;
 				},
 				video: ({ src }) => {
-					return <ReactPlayer controls url={publicRuntimeConfig.backendLocalUrl + src}></ReactPlayer>;
+					return (
+						<ReactPlayer
+							width={isMobile ? '100%' : 640}
+							height={isMobile ? 'auto' : 340}
+							controls
+							url={publicRuntimeConfig.backendLocalUrl + src}
+						></ReactPlayer>
+					);
 				},
 				p: (data) => {
 					return (

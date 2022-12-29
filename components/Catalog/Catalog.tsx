@@ -96,7 +96,9 @@ const Catalog = ({
 	const [searchValue, setSearchValue] = useState<string>('');
 	const [pageCount, setPageCount] = useState<number>(0);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+
 	const router = useRouter();
+
 	const { enqueueSnackbar } = useSnackbar();
 
 	const {
@@ -270,12 +272,8 @@ const Catalog = ({
 					{seo?.h1}
 				</Typography>
 			</WhiteBox>
-			<Box className={classNames(styles.wrapper, isTablet && styles.wrapper_tablet)}>
-				<Box
-					marginRight='1em'
-					component='aside'
-					className={classNames(styles.sider, styles.sider_left, isTablet && styles.sider_tablet)}
-				>
+			<Box display='flex' sx={{ flexDirection: { xs: 'column' }, md: 'initial' }}>
+				<Box marginRight='1em' component='aside' sx={{ width: { xs: '100%', md: '250px' } }}>
 					<Filters
 						textTotal={textTotal ? textTotal : total !== null ? `Найдено: ${total}` : undefined}
 						btn={filtersBtn}
@@ -299,13 +297,7 @@ const Catalog = ({
 					)}
 					{deliveryAuto && renderLinkWithImage(deliveryAuto.image, deliveryAuto.link)}
 				</Box>
-				<Box
-					sx={{ width: { md: 'calc(100% - 500px - 2em)' }, marginRight: { md: '1em' } }}
-					// className={classNames(
-					// 	styles.content,
-					// 	isTablet && styles.content_tablet
-					// )}
-				>
+				<Box sx={{ width: { md: 'calc(100% - 500px - 2em)' }, marginRight: { md: '1em' } }}>
 					{middleContent ? (
 						middleContent
 					) : (
