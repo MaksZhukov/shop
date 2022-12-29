@@ -35,6 +35,7 @@ interface Props {
 	autocomises: Autocomis[];
 	deliveryAuto: LinkWithImage;
 	discounts: LinkWithImage[];
+	tireBrands: TireBrand[];
 	serviceStations: ServiceStation[];
 }
 
@@ -47,8 +48,9 @@ const Tires: NextPage<Props> = ({
 	serviceStations,
 	cars,
 	articles,
+	tireBrands,
 }) => {
-	const [brands, setBrands] = useState<TireBrand[]>([]);
+	const [brands, setBrands] = useState<TireBrand[]>(tireBrands);
 	const [widths, setWidths] = useState<TireWidth[]>([]);
 	const [heights, setHeights] = useState<TireHeight[]>([]);
 	const [diameters, setDiameters] = useState<TireDiameter[]>([]);
@@ -229,13 +231,25 @@ export const getServerSideProps = getPageProps(
 	undefined,
 	async (context) => {
 		const { brand } = context.query;
+		let tireBrands: TireBrand[] = [];
 		const brandParam = brand ? brand[0] : undefined;
 		let seo: SEO | null = null;
 		if (brandParam) {
-			const {
-				data: { data },
-			} = await fetchTireBrandBySlug(brandParam, { populate: ['seo.images', 'image'] });
+			const [
+				{
+					data: { data },
+				},
+				{
+					data: { data: tireBrandsData },
+				},
+			] = await Promise.all([
+				fetchTireBrandBySlug(brandParam, { populate: ['seo.images', 'image'] }),
+				fetchTireBrands({
+					pagination: { limit: MAX_LIMIT },
+				}),
+			]);
 			seo = data.seo;
+			tireBrands = tireBrandsData;
 		} else {
 			const {
 				data: { data },
@@ -244,6 +258,7 @@ export const getServerSideProps = getPageProps(
 		}
 		return {
 			page: { seo },
+			tireBrands,
 		};
 	},
 	async () => {

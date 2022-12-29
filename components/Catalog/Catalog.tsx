@@ -158,29 +158,37 @@ const Catalog = ({
 	}, 300);
 
 	useEffect(() => {
-		const fetchNewProducts = async () => {
-			if (fetchData) {
-				try {
-					const response = await fetchData({
-						sort: 'createdAt:desc',
-						populate: ['images', 'brand'],
-						filters: {
-							createdAt: {
-								$gte: date.setDate(date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT),
+		if (router.isReady) {
+			const fetchNewProducts = async () => {
+				if (fetchData) {
+					try {
+						const response = await fetchData({
+							sort: 'createdAt:desc',
+							populate: ['images', 'brand'],
+							filters: {
+								price: {
+									$gt: 0,
+								},
+								createdAt: {
+									$gte: date.setDate(date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT),
+								},
 							},
-						},
-					});
-					setNewProducts(response.data.data);
-				} catch (err) {
-					enqueueSnackbar('Произошла какая-то ошибка при загрузке новых продуктов, обратитесь в поддержку', {
-						variant: 'error',
-					});
+						});
+						setNewProducts(response.data.data);
+					} catch (err) {
+						enqueueSnackbar(
+							'Произошла какая-то ошибка при загрузке новых продуктов, обратитесь в поддержку',
+							{
+								variant: 'error',
+							}
+						);
+					}
 				}
-			}
-		};
-		fetchNewProducts();
+			};
+			fetchNewProducts();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [router.isReady]);
 
 	useEffect(() => {
 		if (router.isReady) {
@@ -197,6 +205,20 @@ const Catalog = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sort, page, router.isReady]);
+
+	useEffect(() => {
+		if (isFirstDataLoaded) {
+			throttledFetchProducts(
+				Object.keys(othersQuery).reduce(
+					(prev, key) => ({
+						...prev,
+						[key]: Array.isArray(othersQuery[key]) ? othersQuery[key][0] : othersQuery[key],
+					}),
+					{}
+				)
+			);
+		}
+	}, [router.query]);
 
 	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		setSearchValue(e.target.value);
@@ -232,10 +254,6 @@ const Catalog = ({
 		}
 	};
 
-	const handleFetchData = (values: { [key: string]: string | null }) => {
-		throttledFetchProducts({ ...values, searchValue });
-	};
-
 	const renderLinkWithImage = (image: IImage, link: string, caption?: string) => (
 		<WhiteBox key={image?.id || link} textAlign='center'>
 			<LinkWithImage image={image} link={link} caption={caption}></LinkWithImage>
@@ -263,7 +281,6 @@ const Catalog = ({
 						btn={filtersBtn}
 						config={filtersConfig}
 						total={total}
-						fetchData={handleFetchData}
 						onClickFind={handleClickFind}
 					></Filters>
 					{renderLinksWithImages(
