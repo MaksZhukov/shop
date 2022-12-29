@@ -5,13 +5,13 @@ import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	data: IAutocomis;
+	page: IAutocomis;
 }
 
-const Autocomis: NextPage<Props> = ({ data }) => <Card data={data}></Card>;
+const Autocomis: NextPage<Props> = ({ page }) => <Card data={page}></Card>;
 
 export default Autocomis;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	data: (await fetchAutocomis(context.params?.slug as string)).data.data,
+	page: (await fetchAutocomis(context.params?.slug as string)).data.data,
 }));

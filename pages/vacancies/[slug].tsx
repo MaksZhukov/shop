@@ -6,13 +6,13 @@ import { fetchVacancy } from 'api/vacancies/vacancies';
 import Card from 'components/Card';
 
 interface Props {
-	data: IVacancy;
+	page: IVacancy;
 }
 
-const Vacancy: NextPage<Props> = ({ data }) => <Card data={data}></Card>;
+const Vacancy: NextPage<Props> = ({ page }) => <Card data={page}></Card>;
 
 export default Vacancy;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	data: (await fetchVacancy(context.params?.slug as string)).data.data,
+	page: (await fetchVacancy(context.params?.slug as string)).data.data,
 }));
