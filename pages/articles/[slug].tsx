@@ -11,22 +11,22 @@ import { GetServerSideProps, NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	data: IArticle;
+	page: IArticle;
 }
 
-const Article: NextPage<Props> = ({ data }) => {
+const Article: NextPage<Props> = ({ page }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<WhiteBox>
 			<Typography component='h1' variant='h4' gutterBottom>
-				{data.name}
+				{page.name}
 			</Typography>
 			<Typography variant='body1' color='text.secondary' gutterBottom>
-				Категория: {data.type}
+				Категория: {page.type}
 			</Typography>
 			<Typography variant='body1' color='text.secondary' gutterBottom>
-				Дата публиации: {new Date(data.createdAt).toLocaleDateString('ru-RU')}{' '}
-				{new Date(data.createdAt).toLocaleTimeString('ru-RU', {
+				Дата публиации: {new Date(page.createdAt).toLocaleDateString('ru-RU')}{' '}
+				{new Date(page.createdAt).toLocaleTimeString('ru-RU', {
 					hour: '2-digit',
 					minute: '2-digit',
 				})}
@@ -40,14 +40,14 @@ const Article: NextPage<Props> = ({ data }) => {
 					}}
 				>
 					<Image
-						alt={data.image?.alternativeText}
+						alt={page.image?.alternativeText}
 						width={isMobile ? 500 : 640}
 						height={isMobile ? 375 : 480}
-						src={isMobile ? data.image?.formats?.small.url || '' : data.image?.url || ''}
+						src={isMobile ? page.image?.formats?.small.url || '' : page.image?.url || ''}
 						style={{ height: 'auto' }}
 					></Image>
 				</Box>
-				<ReactMarkdown content={data.description}></ReactMarkdown>
+				<ReactMarkdown content={page.description}></ReactMarkdown>
 				<Box sx={{ clear: 'both' }}></Box>
 			</Box>
 		</WhiteBox>
@@ -57,5 +57,5 @@ const Article: NextPage<Props> = ({ data }) => {
 export default Article;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	data: (await fetchArtcle(context.params?.slug as string)).data.data,
+	page: (await fetchArtcle(context.params?.slug as string)).data.data,
 }));
