@@ -272,7 +272,7 @@ const Catalog = ({
 					{seo?.h1}
 				</Typography>
 			</WhiteBox>
-			<Box display='flex' sx={{ flexDirection: { xs: 'column' }, md: 'initial' }}>
+			<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'initial' } }}>
 				<Box marginRight='1em' component='aside' sx={{ width: { xs: '100%', md: '250px' } }}>
 					<Filters
 						textTotal={textTotal ? textTotal : total !== null ? `Найдено: ${total}` : undefined}
