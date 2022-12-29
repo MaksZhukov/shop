@@ -4,13 +4,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
 	reactStrictMode: false,
-	rewrites: () => [
-		{
-			source: '/test',
-			destination: '/test/[...test]',
-		},
-	],
-	// pageExtensions: ['dev.tsx'],
+	pageExtensions: ['dev.tsx'],
 	publicRuntimeConfig: {
 		backendUrl: process.env.BACKEND_URL,
 		backendLocalUrl: process.env.BACKEND_LOCAL_URL,
@@ -21,6 +15,7 @@ const nextConfig = {
 	images: {
 		domains: process.env.IMAGES_DOMAINS.split(','),
 	},
+	...(process.env.NODE_ENV === 'production' ? { distDir: 'tmp' } : {}),
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
