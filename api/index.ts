@@ -18,6 +18,7 @@ api.interceptors.request.use((config) => {
 	if (typeof window === 'undefined') {
 		config.baseURL = publicRuntimeConfig.backendLocalUrl + '/api';
 		config.httpsAgent = httpsAgent;
+		config.timeout = 60000;
 	}
 	return config;
 });
