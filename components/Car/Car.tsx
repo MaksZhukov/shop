@@ -9,12 +9,14 @@ import ReactPlayer from 'react-player';
 import Slider from 'react-slick';
 import { isCarOnsPartParts } from 'services/CarsService';
 import styles from './Car.module.scss';
+import { useMediaQuery } from '@mui/material';
 
 interface Props {
 	data: ICar | CarOnParts;
 }
 
 const Car: FC<Props> = ({ data }) => {
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	let printOptions = [
 		{ text: 'Артикул', value: data.id },
 		{ text: 'Марка', value: data.brand?.name },
@@ -56,17 +58,19 @@ const Car: FC<Props> = ({ data }) => {
 				{data.images && data.images.some((item) => item.formats) ? (
 					<Slider autoplay autoplaySpeed={3000} dots className={styles.slider}>
 						{data.images.map((item) => (
-							<Image
-								key={item.id}
-								alt={item.alternativeText}
-								width={640}
-								height={480}
-								src={item.url}
-							></Image>
+							<Box key={item.id}>
+								<Image
+									alt={item.alternativeText}
+									width={isMobile ? 500 : 640}
+									height={isMobile ? 375 : 480}
+									src={isMobile ? item.formats?.small?.url || item.url : item.url}
+									{...(isMobile ? { style: { height: 'auto' } } : {})}
+								></Image>
+							</Box>
 						))}
 					</Slider>
 				) : (
-					<Image alt={name} width={640} height={480} src=''></Image>
+					<Image alt={name} width={isMobile ? 500 : 640} height={isMobile ? 375 : 480} src=''></Image>
 				)}
 				<Box flex='1' display='flex'>
 					<Box
@@ -113,7 +117,14 @@ const Car: FC<Props> = ({ data }) => {
 					{data.description}
 				</Typography>
 			)}
-			{data.videoLink && <ReactPlayer url={data.videoLink}></ReactPlayer>}
+			{data.videoLink && (
+				<ReactPlayer
+					controls
+					width={isMobile ? '100%' : 640}
+					height={isMobile ? 'auto' : 480}
+					url={data.videoLink}
+				></ReactPlayer>
+			)}
 		</WhiteBox>
 	);
 };
