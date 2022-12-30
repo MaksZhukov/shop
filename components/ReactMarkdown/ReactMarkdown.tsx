@@ -22,14 +22,22 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 		<ReactMarkdownLib
 			rehypePlugins={[rehypeRaw]}
 			components={{
-				img: ({ src, alt = '', ...rest }) => {
-					return <Image alt={alt} width={640} height={480} src={src || ''}></Image>;
+				img: ({ src, alt = '' }) => {
+					return (
+						<Image
+							alt={alt}
+							width={isMobile ? 500 : 640}
+							height={isMobile ? 375 : 480}
+							src={src || ''}
+							{...(isMobile ? { style: { height: 'auto' } } : {})}
+						></Image>
+					);
 				},
 				video: ({ src }) => {
 					return (
 						<ReactPlayer
 							width={isMobile ? '100%' : 640}
-							height={isMobile ? 'auto' : 340}
+							height={isMobile ? 'auto' : 480}
 							controls
 							url={publicRuntimeConfig.backendLocalUrl + src}
 						></ReactPlayer>
