@@ -374,17 +374,19 @@ const Catalog = ({
 								{cars
 									.filter((item) => item.images)
 									.map((item) => (
-										<Slider arrows={false} key={item.id} autoplay autoplaySpeed={3000}>
-											{item.images?.map((image) => (
-												<Image
-													alt={image.alternativeText}
-													key={image.id}
-													width={208}
-													height={156}
-													src={image.formats?.thumbnail.url || image.url}
-												></Image>
-											))}
-										</Slider>
+										<NextLink key={item.id} href={`/awaiting-cars/${item.slug}`}>
+											<Slider arrows={false} key={item.id} autoplay autoplaySpeed={3000}>
+												{item.images?.map((image) => (
+													<Image
+														alt={image.alternativeText}
+														key={image.id}
+														width={208}
+														height={156}
+														src={image.formats?.thumbnail.url || image.url}
+													></Image>
+												))}
+											</Slider>
+										</NextLink>
 									))}
 							</Slider>
 						</WhiteBox>
