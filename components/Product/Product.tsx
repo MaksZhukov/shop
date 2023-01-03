@@ -40,6 +40,13 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				Object.keys((data.brand as Brand).productBrandTexts as BrandTextComponent)[1] as keyof ProductBrandTexts
 		  ]?.content
 		: '';
+
+	const getSlidesToShow = () => {
+		if (isMobile) {
+			return data.images?.length === 1 ? 1 : 2;
+		}
+		return data.images && data.images.length >= 5 ? 5 : data.images?.length;
+	};
 	return (
 		<>
 			<WhiteBox padding='2em'>
@@ -94,7 +101,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 										setSliderSmall(ref);
 									}}
 									swipeToSlide
-									slidesToShow={isMobile ? 2 : data.images.length >= 5 ? 5 : data.images.length}
+									slidesToShow={getSlidesToShow()}
 									focusOnSelect
 									className={classNames(styles.slider, styles.slider_small)}
 									asNavFor={sliderBig || undefined}
