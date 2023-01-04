@@ -25,7 +25,7 @@ const SparePartPage = ({ data, page, relatedProducts }: Props) => {
 				{ text: 'Год', value: data.year },
 				{ text: 'Коробка', value: data.transmission },
 				{ text: 'Обьем', value: data.volume?.name },
-				{ text: 'Тип топлива', value: data.fuel as string },
+				{ text: 'Тип топлива', value: data.fuel as any},
 			]}
 			page={page}
 			relatedProducts={relatedProducts}

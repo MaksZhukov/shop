@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
-import { SEASONS } from 'components/Filters/constants';
+import { SEASONS } from '../../constants';
 import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
 import { MAX_LIMIT } from 'api/constants';
 import { useState, SetStateAction, Dispatch, useEffect } from 'react';
@@ -19,7 +19,6 @@ import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
-import { useRouter } from 'next/router';
 import { TireWidth } from 'api/tireWidths/types';
 import { TireHeight } from 'api/tireHeights/types';
 import { TireDiameter } from 'api/tireDiameters/types';
