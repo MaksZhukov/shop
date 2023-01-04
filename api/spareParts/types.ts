@@ -3,6 +3,8 @@ import { Generation } from 'api/generations/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { Model } from 'api/models/types';
 import { Image, ProductSnippets, SEO } from 'api/types';
+import { FUELS } from '../../constants';
+import { EngineVolume } from 'api/engineVolumes/types';
 
 export interface SparePart {
 	id: number;
@@ -10,7 +12,7 @@ export interface SparePart {
 	slug: string;
 	h1: string;
 	name: string;
-	volume: number;
+	volume: EngineVolume;
 	description: string;
 	price: number;
 	priceUSD?: number;
@@ -26,4 +28,5 @@ export interface SparePart {
 	snippets?: ProductSnippets;
 	year: number;
 	engine?: string;
+	fuel: keyof typeof FUELS;
 }
