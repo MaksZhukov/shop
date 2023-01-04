@@ -200,7 +200,7 @@ const Catalog = ({
 						...prev,
 						[key]: Array.isArray(othersQuery[key]) ? othersQuery[key][0] : othersQuery[key],
 					}),
-					{}
+					{ searchValue: querySearchValue }
 				)
 			);
 			setSearchValue(querySearchValue);
@@ -216,7 +216,7 @@ const Catalog = ({
 						...prev,
 						[key]: Array.isArray(othersQuery[key]) ? othersQuery[key][0] : othersQuery[key],
 					}),
-					{}
+					{ searchValue: querySearchValue }
 				)
 			);
 		}
@@ -233,27 +233,23 @@ const Catalog = ({
 
 	const handleClickFind = (values: { [key: string]: string | null }) => {
 		let newValues: { [key: string]: string } = { ...values, searchValue };
-		if (onClickFind) {
-			onClickFind(newValues);
-		} else {
-			let shallow =
-				(values.brand && router.query.brand && values.brand === router.query.brand[0]) ||
-				(!values.brand && !router.query.brand)
-					? true
-					: false;
-			Object.keys(values).forEach((key) => {
-				if (!values[key]) {
-					delete router.query[key];
-				} else {
-					//@ts-expect-error error
-					router.query[key] = key === 'brand' ? [values[key]] : values[key];
-				}
-			});
-			// It needs to avoid the same seo data for the page
-			setTimeout(() => {
-				router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
-			}, 100);
-		}
+
+		let shallow =
+			(newValues.brand && router.query.brand && newValues.brand === router.query.brand[0]) ||
+			(!newValues.brand && !router.query.brand)
+				? true
+				: false;
+		Object.keys(newValues).forEach((key) => {
+			if (!newValues[key]) {
+				delete router.query[key];
+			} else {
+				router.query[key] = key === 'brand' ? [newValues[key]] : newValues[key];
+			}
+		});
+		// It needs to avoid the same seo data for the page
+		setTimeout(() => {
+			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
+		}, 100);
 	};
 
 	const renderLinkWithImage = (image: IImage, link: string, caption?: string) => (
