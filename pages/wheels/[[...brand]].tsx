@@ -11,7 +11,6 @@ import { MAX_LIMIT } from 'api/constants';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { AxiosResponse } from 'axios';
-import { useRouter } from 'next/router';
 import { getPageProps } from 'services/PagePropsService';
 import { Car } from 'api/cars/types';
 import { fetchCars } from 'api/cars/cars';
