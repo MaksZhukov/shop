@@ -14,7 +14,7 @@ const PAGES = [
 	'/guarantee',
 	'/favorites',
 	'/delivery',
-	'/contacts',
+	'/contacts'
 ];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

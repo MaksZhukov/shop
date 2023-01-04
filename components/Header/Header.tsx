@@ -96,9 +96,9 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 	},
 	{ name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'awaiting-cars', children: [] },
 	{
-		name: 'Авто на запчасти',
-		path: '/cars-on-parts',
-		id: 'AutoParts',
+		name: 'Выкуп авто',
+		path: '/buyback-cars',
+		id: 'buybackCar',
 		children: [{ name: 'фото/вид', path: '/car-dismantling-photos', id: 'photo-view' }],
 	},
 ];
