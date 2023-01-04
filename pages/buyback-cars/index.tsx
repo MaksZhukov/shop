@@ -4,8 +4,6 @@ import { Autocomis } from 'api/autocomises/types';
 import { fetchBrands } from 'api/brands/brands';
 import { Brand } from 'api/brands/types';
 import { fetchCarsOnParts } from 'api/cars-on-parts/cars-on-parts';
-import { fetchCars } from 'api/cars/cars';
-import { Car } from 'api/cars/types';
 import { MAX_LIMIT } from 'api/constants';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';

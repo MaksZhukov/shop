@@ -27,7 +27,7 @@ let PATH_NAMES = {
 	'awaiting-cars': 'Ожидаемые авто',
 	autocomises: 'Автокомисы',
 	vacancies: 'Вакансии',
-	'cars-on-parts': 'Авто на запчасти',
+	'buyback-cars': 'Выкуп авто',
 	about: 'О нас',
 	payment: 'Оплата',
 };
