@@ -18,7 +18,7 @@ import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
 import CarItem from 'components/CarItem';
 import Catalog from 'components/Catalog/Catalog';
-import { BODY_STYLES, FUELS, TRANSMISSIONS } from 'components/Filters/constants';
+import { BODY_STYLES, FUELS, TRANSMISSIONS } from '../../constants';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import { useRouter } from 'next/router';
