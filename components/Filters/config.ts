@@ -3,8 +3,9 @@ import { Generation } from 'api/generations/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { Model } from 'api/models/types';
 import { ReactNode, UIEventHandler } from 'react';
-import { BODY_STYLES, FUELS, TRANSMISSIONS } from './constants';
+
 import { EngineVolume } from 'api/engineVolumes/types';
+import { BODY_STYLES, FUELS, TRANSMISSIONS } from '../../constants';
 
 interface Params {
 	storeInUrlIds?: string[];
