@@ -28,5 +28,5 @@ export interface SparePart {
 	snippets?: ProductSnippets;
 	year: number;
 	engine?: string;
-	fuel: keyof typeof FUELS;
+	fuel: typeof FUELS;
 }
