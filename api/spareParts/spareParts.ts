@@ -20,6 +20,7 @@ export const fetchSparePart = (idOrSlug: string) =>
 				'generation',
 				'seo.images',
 				'snippets',
+				'volume'
 			],
 		},
 	});
