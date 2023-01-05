@@ -74,7 +74,6 @@ const Catalog = ({
 	dataFieldsToShow = [],
 	filtersConfig,
 	generateFiltersByQuery,
-	onClickFind,
 	cars = [],
 	articles = [],
 	discounts = [],
@@ -92,6 +91,7 @@ const Catalog = ({
 	const [data, setData] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isClickedFind, setIsClickedFind] = useState<boolean>(false);
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const [searchValue, setSearchValue] = useState<string>('');
 	const [pageCount, setPageCount] = useState<number>(0);
@@ -128,7 +128,7 @@ const Catalog = ({
 						...(searchValue ? { h1: { $contains: searchValue } } : {}),
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
-					pagination: querySearchValue ? {} : { page: +page },
+					pagination: searchValue ? {} : { page: +page },
 					populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
 					sort,
 				});
@@ -193,7 +193,7 @@ const Catalog = ({
 	}, [router.isReady]);
 
 	useEffect(() => {
-		if (router.isReady) {
+		if (router.isReady && !isClickedFind) {
 			throttledFetchProducts(
 				Object.keys(othersQuery).reduce(
 					(prev, key) => ({
@@ -206,21 +206,7 @@ const Catalog = ({
 			setSearchValue(querySearchValue);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sort, page, router.isReady]);
-
-	useEffect(() => {
-		if (isFirstDataLoaded) {
-			throttledFetchProducts(
-				Object.keys(othersQuery).reduce(
-					(prev, key) => ({
-						...prev,
-						[key]: Array.isArray(othersQuery[key]) ? othersQuery[key][0] : othersQuery[key],
-					}),
-					{ searchValue: querySearchValue }
-				)
-			);
-		}
-	}, [router.query]);
+	}, [sort, page, router.query.brand, router.isReady]);
 
 	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		setSearchValue(e.target.value);
@@ -246,10 +232,13 @@ const Catalog = ({
 				router.query[key] = key === 'brand' ? [newValues[key]] : newValues[key];
 			}
 		});
+		throttledFetchProducts(newValues);
 		// It needs to avoid the same seo data for the page
 		setTimeout(() => {
 			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
+			setIsClickedFind(false);
 		}, 100);
+		setIsClickedFind(true);
 	};
 
 	const renderLinkWithImage = (image: IImage, link: string, caption?: string) => (
