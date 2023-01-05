@@ -39,6 +39,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 							width={isMobile ? '100%' : 640}
 							height={isMobile ? 'auto' : 480}
 							controls
+							style={{margin: '1em'}}
 							url={publicRuntimeConfig.backendLocalUrl + src}
 						></ReactPlayer>
 					);
