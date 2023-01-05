@@ -29,4 +29,5 @@ export interface SparePart {
 	year: number;
 	engine?: string;
 	fuel: typeof FUELS;
+	engineNumber: string;
 }
