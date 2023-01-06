@@ -4,7 +4,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
 	reactStrictMode: false,
-	// pageExtensions: ['dev.tsx'],
+	...(process.env.PAGES ? { pageExtensions: ['dev.tsx'] } : {}),
+	pageExtensions: ['dev.tsx'],
 	publicRuntimeConfig: {
 		backendUrl: process.env.BACKEND_URL,
 		backendLocalUrl: process.env.BACKEND_LOCAL_URL,
@@ -14,7 +15,7 @@ const nextConfig = {
 	},
 	images: {
 		domains: process.env.IMAGES_DOMAINS.split(','),
-	}
+	},
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

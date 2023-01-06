@@ -1,0 +1,8 @@
+.slider {
+	:global {
+		.slick-slide > div {
+			display: flex;
+			justify-content: center;
+		}
+	}
+}
