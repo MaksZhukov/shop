@@ -1,7 +1,5 @@
 import { BoxProps } from '@mui/material';
-import { ResponsivePropertyParams } from '@mui/material/styles/cssUtils';
 import { Box } from '@mui/system';
-import { ReactNode } from 'react';
 
 const WhiteBox = ({
 	children,
@@ -11,6 +9,8 @@ const WhiteBox = ({
 	marginX,
 	textAlign,
 	padding,
+	maxWidth,
+	width,
 	component,
 }: BoxProps) => {
 	return (
@@ -25,7 +25,10 @@ const WhiteBox = ({
 			component={component}
 			sx={{ backgroundColor: '#fff' }}
 			display={display}
-			justifyContent={justifyContent}>
+			width={width}
+			maxWidth={maxWidth}
+			justifyContent={justifyContent}
+		>
 			{children}
 		</Box>
 	);
