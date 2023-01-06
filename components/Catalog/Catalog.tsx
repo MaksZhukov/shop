@@ -192,6 +192,8 @@ const Catalog = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.isReady]);
 
+	let queryBrand = router.query.brand ? router.query.brand[0] : undefined;
+
 	useEffect(() => {
 		if (router.isReady && !isClickedFind) {
 			throttledFetchProducts(
@@ -206,7 +208,7 @@ const Catalog = ({
 			setSearchValue(querySearchValue);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sort, page, router.query.brand, router.isReady]);
+	}, [sort, page, queryBrand, router.isReady]);
 
 	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		setSearchValue(e.target.value);
