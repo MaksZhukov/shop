@@ -7,8 +7,9 @@ const Image = ({ src, isOnSSR = true, ...props }: ImageProps & { isOnSSR?: boole
 		if (!src) {
 			return props.width && props.width < 300 ? '/photo_thumbnail.png' : '/photo.png';
 		}
+		const hasHttps = src.toString().startsWith('https');
 		if (isOnSSR) {
-			return publicRuntimeConfig.backendLocalUrl + src;
+			return hasHttps ? src : publicRuntimeConfig.backendLocalUrl + src;
 		}
 		return src;
 	};
