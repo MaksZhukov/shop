@@ -12,7 +12,7 @@ interface Props {
 const Contacts = ({ page }: Props) => {
 	return (
 		<WhiteBox>
-			<Typography component='h1' variant='h4' textAlign='center'>
+			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
 				{page.seo?.h1 || 'Контакты'}
 			</Typography>
 			<ReactMarkdown content={page.content}></ReactMarkdown>
