@@ -39,7 +39,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 							width={isMobile ? '100%' : 640}
 							height={isMobile ? 'auto' : 480}
 							controls
-							style={{margin: '1em'}}
+							style={{ margin: '1em' }}
 							url={publicRuntimeConfig.backendLocalUrl + src}
 						></ReactPlayer>
 					);
@@ -56,6 +56,11 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 				},
 				h2: (data) => (
 					<Typography component='h2' gutterBottom marginTop='1em' variant='h5'>
+						{data.children}
+					</Typography>
+				),
+				h1: (data) => (
+					<Typography component='h1' textAlign='center' variant='h4'>
 						{data.children}
 					</Typography>
 				),
