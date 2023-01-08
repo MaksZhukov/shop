@@ -13,7 +13,7 @@ const nextConfig = {
 		tawkId: process.env.TAWK_ID,
 	},
 	images: {
-		domains: process.env.IMAGES_DOMAINS.split(','),
+		domains: ['*'],
 	},
 };
 
