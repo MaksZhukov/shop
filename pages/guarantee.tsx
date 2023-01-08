@@ -13,7 +13,7 @@ interface Props {
 const Guarantee = ({ page }: Props) => {
 	return (
 		<WhiteBox>
-			<Typography component='h1' variant='h4' textAlign='center'>
+			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
 				{page.seo?.h1 || 'Гарантия'}
 			</Typography>
 			<ReactMarkdown content={page.content}></ReactMarkdown>
