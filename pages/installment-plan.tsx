@@ -14,7 +14,7 @@ const InstallmentPlan: FC<Props> = ({ page }) => {
 	return (
 		<WhiteBox>
 			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
-				{page.seo?.h1}
+				{page.seo?.h1 || 'Рассрочка'}
 			</Typography>
 			<ReactMarkdown content={page.content}></ReactMarkdown>
 		</WhiteBox>
