@@ -13,12 +13,7 @@ const nextConfig = {
 		tawkId: process.env.TAWK_ID,
 	},
 	images: {
-		remotePatterns: [
-			{
-				protocol: 'https',
-				hostname: '**',
-			},
-		],
+		domains: process.env.IMAGES_DOMAINS.split(','),
 	},
 };
 
