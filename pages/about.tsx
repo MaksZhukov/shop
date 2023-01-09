@@ -16,25 +16,8 @@ interface Props {
 }
 
 const Contacts = ({ page }: Props) => {
-	const [reviews, setReviews] = useState<Review[]>([]);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-	const { enqueueSnackbar } = useSnackbar();
-	const fetchData = async () => {
-		try {
-			const {
-				data: { data },
-			} = await fetchReviews();
-			setReviews(data);
-		} catch (err) {
-			enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
-				variant: 'error',
-			});
-		}
-	};
-	useEffect(() => {
-		fetchData();
-	}, []);
 	return (
 		<>
 			<WhiteBox>
@@ -46,7 +29,7 @@ const Contacts = ({ page }: Props) => {
 			<Typography component='h4' variant='h5' textAlign='center' gutterBottom>
 				Отзывы
 			</Typography>
-			<CarouselReviews reviews={reviews} slidesToShow={isMobile ? 1 : isTablet ? 3 : 5}></CarouselReviews>
+			<CarouselReviews slidesToShow={isMobile ? 1 : isTablet ? 3 : 5}></CarouselReviews>
 		</>
 	);
 };
