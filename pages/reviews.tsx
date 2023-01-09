@@ -1,18 +1,9 @@
-import { Button, Divider, Link, Pagination, PaginationItem, Rating, Typography, useMediaQuery } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-import { fetchReviews } from 'api/reviews/reviews';
-import { Review } from 'api/reviews/types';
-import AddReview from 'components/pages/reviews/AddReview';
-import WhiteBox from 'components/WhiteBox';
 import { observer } from 'mobx-react-lite';
-import { useRouter } from 'next/router';
-import { useSnackbar } from 'notistack';
-import { Fragment, useEffect, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
-import { useStore } from 'store';
-import NextLink from 'next/link';
 import CarouselReviews from 'components/CarouselReviews';
 
 let COUNT_REVIEWS = 10;
@@ -31,8 +22,6 @@ const Reviews = ({ page }: Props) => {
 				{page.seo?.h1 || 'Отзывы'}
 			</Typography>
 			<CarouselReviews slidesToShow={isMobile ? 1 : isTablet ? 3 : 5}></CarouselReviews>
-
-			{/* <AddReview></AddReview> */}
 		</Box>
 	);
 };
