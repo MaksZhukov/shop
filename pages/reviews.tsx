@@ -1,4 +1,4 @@
-import { Divider, Pagination, PaginationItem, Rating, Typography } from '@mui/material';
+import { Button, Divider, Link, Pagination, PaginationItem, Rating, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
@@ -22,39 +22,20 @@ interface Props {
 
 const Reviews = ({ data }: Props) => {
 	const [reviews, setReviews] = useState<Review[]>([]);
-	const [pageCount, setPageCount] = useState<number>(1);
 
 	const router = useRouter();
 	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();
 
-	const { page = '1' } = router.query as {
-		page: string;
-	};
 	const fetchData = async () => {
-		try {
-			const {
-				data: {
-					data,
-					meta: { pagination },
-				},
-			} = await fetchReviews({
-				pagination: { pageSize: COUNT_REVIEWS, page: +page },
-				sort: 'publishedAt:desc',
-			});
-			if (pagination?.pageCount) {
-				setPageCount(pagination.pageCount);
-			}
-			setReviews(data);
-		} catch (err) {
-			enqueueSnackbar('Произошла какая-то ошибка при загрузке отзывов, обратитесь в поддержку', {
-				variant: 'error',
-			});
-		}
+		const {
+			data: { data },
+		} = await fetchReviews();
+		setReviews(data);
 	};
 	useEffect(() => {
 		fetchData();
-	}, [page]);
+	}, []);
 
 	return (
 		<WhiteBox>
@@ -66,9 +47,9 @@ const Reviews = ({ data }: Props) => {
 					<Box paddingY='1em' key={item.id}>
 						<Typography color='text.secondary'>{item.authorName}</Typography>
 						<Rating readOnly value={item.rating}></Rating>
-						<Typography color='text.secondary'>
+						{/* <Typography color='text.secondary'>
 							{new Date(item.publishedAt).toLocaleDateString()}
-						</Typography>
+						</Typography> */}
 						{item.description && (
 							<Typography marginTop='0.5em' color='text.secondary'>
 								{item.description}
@@ -78,23 +59,21 @@ const Reviews = ({ data }: Props) => {
 					{reviews.length - 1 !== index && <Divider></Divider>}
 				</Fragment>
 			))}
-			{pageCount !== 1 && (
-				<Box display='flex' marginY='1.5em' justifyContent='center'>
-					<Pagination
-						page={+page}
-						renderItem={(params) => (
-							<NextLink shallow href={`${router.pathname}?page=${params.page}`}>
-								<PaginationItem {...params}>{params.page}</PaginationItem>
-							</NextLink>
-						)}
-						siblingCount={2}
-						color='primary'
-						count={pageCount}
-						variant='outlined'
-					/>
-				</Box>
-			)}
-			<AddReview></AddReview>
+			<Typography variant='h6'>
+				<Link href='https://g.page/r/CZioQh24913HEB0/review' target='_blank'>
+					Оставить отзыв
+				</Link>
+			</Typography>
+			<Typography variant='h6'>
+				<Link
+					target='_blank'
+					href='https://www.google.com/maps/place/%D0%A0%D0%B0%D0%B7%D0%B1%D0%BE%D1%80%D0%BA%D0%B0+%D0%9F%D0%BE%D0%BB%D0%BE%D1%82%D0%BA%D0%BE%D0%B2%D0%BE+%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD+%D0%B7%D0%B0%D0%BF%D1%87%D0%B0%D1%81%D1%82%D0%B5%D0%B9+%D0%B1%D1%83+%D0%B4%D0%BB%D1%8F+%D0%B0%D0%B2%D1%82%D0%BE/@53.5848407,23.8611008,15z/data=!4m7!3m6!1s0x0:0xc75df7b81d42a898!8m2!3d53.5848407!4d23.8611008!9m1!1b1'
+				>
+					Посмотреть все отзывы
+				</Link>
+			</Typography>
+
+			{/* <AddReview></AddReview> */}
 		</WhiteBox>
 	);
 };
