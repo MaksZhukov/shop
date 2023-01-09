@@ -15,11 +15,10 @@ interface Props {
 
 const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2 }) => {
 	const [reviews, setReviews] = useState<Review[]>(data);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(data.length ? false : true);
 	const { enqueueSnackbar } = useSnackbar();
 
 	const fetchData = async () => {
-		setIsLoading(true);
 		try {
 			const {
 				data: { data },
