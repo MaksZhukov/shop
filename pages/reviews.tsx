@@ -1,4 +1,4 @@
-import { Button, Divider, Link, Pagination, PaginationItem, Rating, useMediaQuery } from '@mui/material';
+import { CircularProgress, Divider, Link, Rating } from '@mui/material';
 import { Box } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
@@ -16,6 +16,7 @@ interface Props {
 
 const Reviews = ({ page }: Props) => {
 	const [reviews, setReviews] = useState<Review[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -30,6 +31,7 @@ const Reviews = ({ page }: Props) => {
 				variant: 'error',
 			});
 		}
+		setIsLoading(false);
 	};
 	useEffect(() => {
 		fetchData();
@@ -55,20 +57,28 @@ const Reviews = ({ page }: Props) => {
 			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
 				{page.seo?.h1 || 'Отзывы'}
 			</Typography>
-			{renderReviews}
-			<Typography marginRight='1em' display='inline' variant='h6'>
-				<Link
-					target='_blank'
-					href='https://www.google.com/maps/place/%D0%A0%D0%B0%D0%B7%D0%B1%D0%BE%D1%80%D0%BA%D0%B0+%D0%9F%D0%BE%D0%BB%D0%BE%D1%82%D0%BA%D0%BE%D0%B2%D0%BE+%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD+%D0%B7%D0%B0%D0%BF%D1%87%D0%B0%D1%81%D1%82%D0%B5%D0%B9+%D0%B1%D1%83+%D0%B4%D0%BB%D1%8F+%D0%B0%D0%B2%D1%82%D0%BE/@53.5848407,23.8611008,15z/data=!4m7!3m6!1s0x0:0xc75df7b81d42a898!8m2!3d53.5848407!4d23.8611008!9m1!1b1'
-				>
-					Посмотреть все отзывы
-				</Link>
-			</Typography>
-			<Typography display='inline' variant='h6'>
-				<Link href='https://g.page/r/CZioQh24913HEB0/review' target='_blank'>
-					Оставить отзыв
-				</Link>
-			</Typography>
+			{isLoading ? (
+				<Box textAlign='center'>
+					<CircularProgress></CircularProgress>
+				</Box>
+			) : (
+				<>
+					{renderReviews}
+					<Typography marginRight='1em' display='inline' variant='h6'>
+						<Link
+							target='_blank'
+							href='https://www.google.com/maps/place/%D0%A0%D0%B0%D0%B7%D0%B1%D0%BE%D1%80%D0%BA%D0%B0+%D0%9F%D0%BE%D0%BB%D0%BE%D1%82%D0%BA%D0%BE%D0%B2%D0%BE+%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD+%D0%B7%D0%B0%D0%BF%D1%87%D0%B0%D1%81%D1%82%D0%B5%D0%B9+%D0%B1%D1%83+%D0%B4%D0%BB%D1%8F+%D0%B0%D0%B2%D1%82%D0%BE/@53.5848407,23.8611008,15z/data=!4m7!3m6!1s0x0:0xc75df7b81d42a898!8m2!3d53.5848407!4d23.8611008!9m1!1b1'
+						>
+							Посмотреть все отзывы
+						</Link>
+					</Typography>
+					<Typography display='inline' variant='h6'>
+						<Link href='https://g.page/r/CZioQh24913HEB0/review' target='_blank'>
+							Оставить отзыв
+						</Link>
+					</Typography>
+				</>
+			)}
 		</WhiteBox>
 	);
 };
