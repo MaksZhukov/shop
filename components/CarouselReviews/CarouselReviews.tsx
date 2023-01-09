@@ -12,7 +12,7 @@ interface Props {
 
 const CarouselReviews: FC<Props> = ({ reviews = [], slidesToShow = 2 }) => {
 	return (
-		<Box paddingX='1em'>
+		<Box paddingX='1em' marginBottom='1em'>
 			<Slider slidesToShow={slidesToShow} autoplay autoplaySpeed={5000}>
 				{reviews.map((item) => (
 					<WhiteBox marginX='1em' paddingY='1em' key={item.id}>
