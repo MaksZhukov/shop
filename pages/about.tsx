@@ -4,19 +4,50 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
+import CarouselReviews from 'components/CarouselReviews';
+import { fetchReviews } from 'api/reviews/reviews';
+import { Review } from 'api/reviews/types';
+import { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import { useMediaQuery } from '@mui/material';
 
 interface Props {
 	page: DefaultPage & { content: string };
 }
 
 const Contacts = ({ page }: Props) => {
+	const [reviews, setReviews] = useState<Review[]>([]);
+	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	const { enqueueSnackbar } = useSnackbar();
+	const fetchData = async () => {
+		try {
+			const {
+				data: { data },
+			} = await fetchReviews();
+			setReviews(data);
+		} catch (err) {
+			enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
+				variant: 'error',
+			});
+		}
+	};
+	useEffect(() => {
+		fetchData();
+	}, []);
 	return (
-		<WhiteBox>
-			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
-				{page.seo?.h1 || 'О нас'}
+		<>
+			<WhiteBox>
+				<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
+					{page.seo?.h1 || 'О нас'}
+				</Typography>
+				<ReactMarkdown content={page.content}></ReactMarkdown>
+			</WhiteBox>
+			<Typography component='h4' variant='h5' textAlign='center' gutterBottom>
+				Отзывы
 			</Typography>
-			<ReactMarkdown content={page.content}></ReactMarkdown>
-		</WhiteBox>
+			<CarouselReviews reviews={reviews} slidesToShow={isMobile ? 1 : isTablet ? 3 : 5}></CarouselReviews>
+		</>
 	);
 };
 

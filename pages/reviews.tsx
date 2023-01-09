@@ -1,4 +1,4 @@
-import { Divider, Pagination, PaginationItem, Rating, Typography } from '@mui/material';
+import { Button, Divider, Link, Pagination, PaginationItem, Rating, Typography, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
@@ -13,89 +13,46 @@ import { Fragment, useEffect, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { useStore } from 'store';
 import NextLink from 'next/link';
+import CarouselReviews from 'components/CarouselReviews';
 
 let COUNT_REVIEWS = 10;
 
 interface Props {
-	data: DefaultPage;
+	page: DefaultPage;
 }
 
-const Reviews = ({ data }: Props) => {
+const Reviews = ({ page }: Props) => {
 	const [reviews, setReviews] = useState<Review[]>([]);
-	const [pageCount, setPageCount] = useState<number>(1);
+	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
-	const router = useRouter();
-	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();
 
-	const { page = '1' } = router.query as {
-		page: string;
-	};
 	const fetchData = async () => {
 		try {
 			const {
-				data: {
-					data,
-					meta: { pagination },
-				},
-			} = await fetchReviews({
-				pagination: { pageSize: COUNT_REVIEWS, page: +page },
-				sort: 'publishedAt:desc',
-			});
-			if (pagination?.pageCount) {
-				setPageCount(pagination.pageCount);
-			}
+				data: { data },
+			} = await fetchReviews();
 			setReviews(data);
 		} catch (err) {
-			enqueueSnackbar('Произошла какая-то ошибка при загрузке отзывов, обратитесь в поддержку', {
+			enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
 				variant: 'error',
 			});
 		}
 	};
 	useEffect(() => {
 		fetchData();
-	}, [page]);
+	}, []);
 
 	return (
-		<WhiteBox>
-			<Typography component='h1' variant='h4' textAlign='center'>
-				{data.seo?.h1 || 'Отзывы'}
+		<Box>
+			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
+				{page.seo?.h1 || 'Отзывы'}
 			</Typography>
-			{reviews.map((item, index) => (
-				<Fragment key={item.id}>
-					<Box paddingY='1em' key={item.id}>
-						<Typography color='text.secondary'>{item.authorName}</Typography>
-						<Rating readOnly value={item.rating}></Rating>
-						<Typography color='text.secondary'>
-							{new Date(item.publishedAt).toLocaleDateString()}
-						</Typography>
-						{item.description && (
-							<Typography marginTop='0.5em' color='text.secondary'>
-								{item.description}
-							</Typography>
-						)}
-					</Box>
-					{reviews.length - 1 !== index && <Divider></Divider>}
-				</Fragment>
-			))}
-			{pageCount !== 1 && (
-				<Box display='flex' marginY='1.5em' justifyContent='center'>
-					<Pagination
-						page={+page}
-						renderItem={(params) => (
-							<NextLink shallow href={`${router.pathname}?page=${params.page}`}>
-								<PaginationItem {...params}>{params.page}</PaginationItem>
-							</NextLink>
-						)}
-						siblingCount={2}
-						color='primary'
-						count={pageCount}
-						variant='outlined'
-					/>
-				</Box>
-			)}
-			<AddReview></AddReview>
-		</WhiteBox>
+			<CarouselReviews reviews={reviews} slidesToShow={isMobile ? 1 : isTablet ? 3 : 5}></CarouselReviews>
+
+			{/* <AddReview></AddReview> */}
+		</Box>
 	);
 };
 

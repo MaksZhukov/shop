@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { Box, Button, CircularProgress, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, Link, Rating, useMediaQuery } from '@mui/material';
 
 import { Dispatch, SetStateAction, UIEventHandler, useRef, useState } from 'react';
 import Slider from 'react-slick';
@@ -39,12 +39,17 @@ import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
 import styles from './index.module.scss';
 import { OFFSET_SCROLL_LOAD_MORE } from '../constants';
+import { fetchReviews } from 'api/reviews/reviews';
+import { Review } from 'api/reviews/types';
+import Typography from 'components/Typography';
+import CarouselReviews from 'components/CarouselReviews';
 
 let OFFSET_LOAD_MORE_SLIDER = 3;
 
 interface Props {
 	page: PageMain;
 	cars: Car[];
+	reviews: Review[];
 	autocomises: Autocomis[];
 	serviceStations: ServiceStation[];
 	articles: Article[];
@@ -60,6 +65,7 @@ const Home: NextPage<Props> = ({
 	articles = [],
 	brands = { data: [] },
 	spareParts,
+	reviews,
 	loadMoreBrands,
 	onScrollBrandsList,
 }) => {
@@ -274,6 +280,12 @@ const Home: NextPage<Props> = ({
 			<Box padding='1em'>
 				<CarouselProducts data={spareParts.data} slidesToShow={2}></CarouselProducts>
 			</Box>
+			<Box paddingX='1em'>
+				<Typography component='h4' variant='h5' textAlign='center' gutterBottom>
+					Отзывы
+				</Typography>
+				<CarouselReviews reviews={reviews} slidesToShow={isTablet ? 1 : 2}></CarouselReviews>
+			</Box>
 		</>
 	);
 
@@ -326,5 +338,8 @@ export const getServerSideProps = getPageProps(
 				populate: ['images', 'brand'],
 			})
 		).data,
+	}),
+	async () => ({
+		reviews: (await fetchReviews()).data.data,
 	})
 );
