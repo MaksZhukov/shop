@@ -67,7 +67,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 				path: '/company-photo',
 				id: 'photo',
 			},
-			{ name: 'Отзывы', path: '/1', id: 'reviews' },
+			{ name: 'Отзывы', path: '/reviews', id: 'reviews' },
 			{ name: 'Вакансии', path: '/vacancies', id: 'vacancy' },
 			{ name: 'Эвакуатор', path: 'https://dostavka-auto.by/', target: '_blank', id: 'towTruck' },
 		],
