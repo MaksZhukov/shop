@@ -6,7 +6,6 @@ import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import { observer } from 'mobx-react-lite';
 import { useSnackbar } from 'notistack';
 import { Fragment, useEffect, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
