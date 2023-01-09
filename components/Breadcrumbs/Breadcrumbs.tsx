@@ -30,6 +30,7 @@ let PATH_NAMES = {
 	'buyback-cars': 'Выкуп авто',
 	about: 'О нас',
 	payment: 'Оплата',
+	reviews: 'Отзывы',
 };
 
 interface Props {
