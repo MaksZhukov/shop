@@ -37,8 +37,9 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2 }) => {
 			fetchData();
 		}
 	}, []);
+
 	return (
-		<Box paddingX='1em' marginBottom='1em' minHeight={212}>
+		<Box paddingX='1.5em' marginBottom='1em' minHeight={212}>
 			{isLoading ? (
 				<Box display='flex' alignItems='center' justifyContent='center' height={212}>
 					<CircularProgress></CircularProgress>
