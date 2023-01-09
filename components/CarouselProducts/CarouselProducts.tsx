@@ -19,7 +19,7 @@ const CarouselProducts: FC<Props> = ({ title, data, slidesToShow = 4 }) => {
 	const { breakpoints } = useTheme();
 
 	return data.length ? (
-		<Box paddingX='1em'>
+		<Box paddingX='1.5em'>
 			{title}
 			<Slider
 				autoplay
