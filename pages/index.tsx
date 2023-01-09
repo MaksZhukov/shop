@@ -277,14 +277,14 @@ const Home: NextPage<Props> = ({
 					<ReactMarkdown content={page.textAfterBrands}></ReactMarkdown>
 				</WhiteBox>
 			)}
-			<Box padding='1em'>
+			<Box>
 				<CarouselProducts data={spareParts.data} slidesToShow={2}></CarouselProducts>
 			</Box>
-			<Box paddingX='1em'>
+			<Box>
 				<Typography component='h4' variant='h5' textAlign='center' gutterBottom>
 					Отзывы
 				</Typography>
-				<CarouselReviews reviews={reviews} slidesToShow={isTablet ? 1 : 2}></CarouselReviews>
+				<CarouselReviews data={reviews} slidesToShow={isTablet ? 1 : 2}></CarouselReviews>
 			</Box>
 		</>
 	);
