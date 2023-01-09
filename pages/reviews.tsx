@@ -22,34 +22,15 @@ interface Props {
 }
 
 const Reviews = ({ page }: Props) => {
-	const [reviews, setReviews] = useState<Review[]>([]);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-
-	const { enqueueSnackbar } = useSnackbar();
-
-	const fetchData = async () => {
-		try {
-			const {
-				data: { data },
-			} = await fetchReviews();
-			setReviews(data);
-		} catch (err) {
-			enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
-				variant: 'error',
-			});
-		}
-	};
-	useEffect(() => {
-		fetchData();
-	}, []);
 
 	return (
 		<Box>
 			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
 				{page.seo?.h1 || 'Отзывы'}
 			</Typography>
-			<CarouselReviews reviews={reviews} slidesToShow={isMobile ? 1 : isTablet ? 3 : 5}></CarouselReviews>
+			<CarouselReviews slidesToShow={isMobile ? 1 : isTablet ? 3 : 5}></CarouselReviews>
 
 			{/* <AddReview></AddReview> */}
 		</Box>

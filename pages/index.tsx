@@ -284,7 +284,7 @@ const Home: NextPage<Props> = ({
 				<Typography component='h4' variant='h5' textAlign='center' gutterBottom>
 					Отзывы
 				</Typography>
-				<CarouselReviews reviews={reviews} slidesToShow={isTablet ? 1 : 2}></CarouselReviews>
+				<CarouselReviews data={reviews} slidesToShow={isTablet ? 1 : 2}></CarouselReviews>
 			</Box>
 		</>
 	);
