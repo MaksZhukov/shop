@@ -30,7 +30,7 @@ const Footer: FC<Props> = ({ footer }) => {
 	const title = typeof window !== 'undefined' ? document.title : '';
 
 	return (
-		<footer className={styles.footer}>
+		<Box component='footer' sx={{ padding: { xs: '20px 0 60px', md: '20px 0' } }} className={styles.footer}>
 			<Container>
 				<Grid container spacing={2} columns={{ xs: 1, sm: 1, md: 12 }}>
 					<Grid item xs={3}>
@@ -127,7 +127,7 @@ const Footer: FC<Props> = ({ footer }) => {
 					</Grid>
 				</Grid>
 			</Container>
-		</footer>
+		</Box>
 	);
 };
 
