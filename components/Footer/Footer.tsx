@@ -123,7 +123,13 @@ const Footer: FC<Props> = ({ footer }) => {
 								>
 									<PinterestIcon size={25}></PinterestIcon>
 								</PinterestShareButton>
-								<OKShareButton className={styles.share} url={'https://connect.ok.ru/dk'} quote={title}>
+								<OKShareButton
+									className={styles.share}
+									url={'https://connect.ok.ru/dk'}
+									title={title}
+									description={description}
+									image={origin + '/logo.jpg'}
+								>
 									<OKIcon size={25}></OKIcon>
 								</OKShareButton>
 								<LivejournalShareButton
@@ -135,81 +141,6 @@ const Footer: FC<Props> = ({ footer }) => {
 									<LivejournalIcon size={25}></LivejournalIcon>
 								</LivejournalShareButton>
 							</Box>
-							{/* <Button
-								id='share-menu'
-								aria-controls={anchorEl ? 'share-menu' : undefined}
-								aria-haspopup='true'
-								sx={{ color: '#fff' }}
-								endIcon={<Share sx={{ marginLeft: '0.1em' }} color='inherit'></Share>}
-								aria-expanded={anchorEl ? 'true' : undefined}
-								onClick={handleClick}
-							>
-								Поделиться
-							</Button>
-							<Menu
-								id='share-menu'
-								anchorEl={anchorEl}
-								open={!!anchorEl}
-								onClose={handleClose}
-								MenuListProps={{
-									'aria-labelledby': 'anchorEl',
-								}}
-							>
-								<MenuItem>
-									<Link href={`http://www.facebook.com/sharer.php?u=${url}`}>Facebook</Link>
-								</MenuItem>
-								<MenuItem>
-									<Link
-										href={`http://vk.com/share.php?${qs.stringify({
-											url,
-											title,
-											description,
-										})}`}
-									>
-										Вконтакте
-									</Link>
-								</MenuItem>
-								<MenuItem>
-									<Link
-										href={`http://www.pinterest.com/pin/create/button?${qs.stringify({
-											url,
-											description,
-										})}`}
-									>
-										Pinterest Pin
-									</Link>
-								</MenuItem>
-								<MenuItem>
-									<Link
-										href={`http://twitter.com/share?${qs.stringify({
-											url,
-											text: description,
-											via: 'https://twitter.com/MZapcastej',
-										})}`}
-									>
-										Twitter
-									</Link>
-								</MenuItem>
-
-								<MenuItem>
-									<Link
-										href={`https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=${url}`}
-									>
-										OK
-									</Link>
-								</MenuItem>
-
-								<MenuItem>
-									<Link
-										href={`http://www.livejournal.com/update.bml?${qs.stringify({
-											event: url,
-											subject: description,
-										})}`}
-									>
-										LiveJournal
-									</Link>
-								</MenuItem>
-							</Menu> */}
 						</Box>
 					</Grid>
 				</Grid>
