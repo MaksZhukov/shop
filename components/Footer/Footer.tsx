@@ -41,8 +41,6 @@ interface Props {
 const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
 
 const Footer: FC<Props> = ({ footer }) => {
-	const router = useRouter();
-	let url = origin + router.pathname;
 	const description =
 		typeof window !== 'undefined' ? (document.querySelector('[name=description]') as HTMLMetaElement).content : '';
 	const title = typeof window !== 'undefined' ? document.title : '';
