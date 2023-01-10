@@ -1,26 +1,10 @@
-import {
-	Typography,
-	Grid,
-	ListItemButton,
-	Link,
-	Box,
-	Icon,
-	Button,
-	MenuItem,
-	Menu,
-	Popper,
-	Grow,
-	MenuList,
-} from '@mui/material';
+import { Typography, Grid, ListItemButton, Box } from '@mui/material';
 import { Container } from '@mui/system';
 import styles from './Footer.module.scss';
 import { Footer as IFooter } from 'api/layout/types';
-import { FC, MetaHTMLAttributes, useState } from 'react';
+import { FC } from 'react';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Image from 'components/Image';
-import qs from 'qs';
-import { Share } from '@mui/icons-material';
-import { useRouter } from 'next/router';
 import { TwitterShareButton } from 'react-share';
 import TwitterIcon from 'react-share/lib/TwitterIcon';
 import FacebookShareButton from 'react-share/lib/FacebookShareButton';
@@ -41,8 +25,6 @@ interface Props {
 const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
 
 const Footer: FC<Props> = ({ footer }) => {
-	const router = useRouter();
-	let url = origin + router.pathname;
 	const description =
 		typeof window !== 'undefined' ? (document.querySelector('[name=description]') as HTMLMetaElement).content : '';
 	const title = typeof window !== 'undefined' ? document.title : '';
