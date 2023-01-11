@@ -135,17 +135,19 @@ const Catalog = ({
 				setData(responseData);
 				if (pagination) {
 					setPageCount(pagination.pageCount);
-					if (pagination.pageCount < +page) {
+					if (paramPage) {
+						router.query.page = '1';
+					} else if (pagination.pageCount < +page) {
 						router.query.page = (pagination.pageCount || 1).toString();
-						router.push(
-							{
-								pathname: router.pathname,
-								query: router.query,
-							},
-							undefined,
-							{ shallow: true }
-						);
 					}
+					router.push(
+						{
+							pathname: router.pathname,
+							query: router.query,
+						},
+						undefined,
+						{ shallow: true }
+					);
 					setTotal(pagination.total);
 				}
 				setIsFirstDataLoaded(true);
@@ -342,7 +344,9 @@ const Catalog = ({
 												href={
 													router.asPath.includes('page=')
 														? `${router.asPath.replace(/page=\d/, `page=${params.page}`)}`
-														: `${router.asPath}?page=${params.page}`
+														: `${router.asPath}${
+																router.asPath.includes('?') ? '&' : '?'
+														  }page=${params.page}`
 												}
 											>
 												<PaginationItem {...params}>{params.page}</PaginationItem>
@@ -352,7 +356,7 @@ const Catalog = ({
 										page={+page}
 										siblingCount={isTablet ? 0 : 2}
 										color='primary'
-										count={100}
+										count={pageCount}
 										variant='outlined'
 									/>
 								</WhiteBox>
