@@ -118,23 +118,9 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 				onInputChange={item.onInputChange}
 				classes={{ noOptions: styles['autocomplete__no-options'] }}
 				disabled={item.disabledDependencyId === undefined ? false : !values[item.disabledDependencyId]}
-				value={value}
+				value={value || null}
 				renderInput={(params) => {
-					return (
-						<TextField
-							{...params}
-							// For fixing value for input
-							inputProps={{
-								...params.inputProps,
-								value:
-									value?.value && value.label !== params.inputProps.value
-										? value.label
-										: params.inputProps.value,
-							}}
-							variant='standard'
-							placeholder={item.placeholder}
-						/>
-					);
+					return <TextField {...params} variant='standard' placeholder={item.placeholder} />;
 				}}
 			></Autocomplete>
 		);
