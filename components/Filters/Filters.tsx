@@ -119,7 +119,20 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 				disabled={item.disabledDependencyId === undefined ? false : !values[item.disabledDependencyId]}
 				value={value}
 				renderInput={(params) => {
-					return <TextField {...params} variant='standard' placeholder={item.placeholder} />;
+					return (
+						<TextField
+							{...params}
+							inputProps={{
+								...params.inputProps,
+								value:
+									value?.value && value.label !== params.inputProps.value
+										? value.label
+										: params.inputProps.value,
+							}}
+							variant='standard'
+							placeholder={item.placeholder}
+						/>
+					);
 				}}
 			></Autocomplete>
 		);
