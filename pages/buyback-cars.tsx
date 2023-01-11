@@ -23,7 +23,7 @@ const BuybackCars = ({ page, cars }: Props) => {
 		<>
 			<WhiteBox>
 				<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
-					{page.seo?.h1 || 'Гарантия'}
+					{page.seo?.h1 || 'Выкуп авто'}
 				</Typography>
 				<ReactMarkdown content={page.content}></ReactMarkdown>
 			</WhiteBox>
