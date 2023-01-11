@@ -113,7 +113,7 @@ const Catalog = ({
 		[key: string]: string;
 	};
 
-	const [throttledFetchProducts] = useThrottle(async ({ searchValue, ...values }: any) => {
+	const [throttledFetchProducts] = useThrottle(async ({ searchValue, ...values }: any, paramPage?: number) => {
 		setIsLoading(true);
 		if (fetchData) {
 			try {
@@ -128,7 +128,7 @@ const Catalog = ({
 						...(searchValue ? { h1: { $contains: searchValue } } : {}),
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
-					pagination: searchValue ? {} : { page: +page },
+					pagination: searchValue ? {} : { page: paramPage || +page },
 					populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
 					sort,
 				});
@@ -234,7 +234,7 @@ const Catalog = ({
 				router.query[key] = key === 'brand' ? [newValues[key]] : newValues[key];
 			}
 		});
-		throttledFetchProducts(newValues);
+		throttledFetchProducts(newValues, 1);
 		// It needs to avoid the same seo data for the page
 		setTimeout(() => {
 			router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
@@ -337,7 +337,14 @@ const Catalog = ({
 								<WhiteBox display='flex' justifyContent='center'>
 									<Pagination
 										renderItem={(params) => (
-											<NextLink shallow href={`${router.pathname}?page=${params.page}`}>
+											<NextLink
+												shallow
+												href={
+													router.asPath.includes('page=')
+														? `${router.asPath.replace(/page=\d/, `page=${params.page}`)}`
+														: `${router.asPath}?page=${params.page}`
+												}
+											>
 												<PaginationItem {...params}>{params.page}</PaginationItem>
 											</NextLink>
 										)}
