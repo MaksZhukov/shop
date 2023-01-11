@@ -103,7 +103,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 			: item.options.find((option) => option.value === values[item.id]);
 		return (
 			<Autocomplete
-				key={item.id + values[item.id]}
+				key={item.id}
 				options={item.options}
 				noOptionsText={item.noOptionsText || 'Совпадений нет'}
 				onOpen={item.onOpen ? item.onOpen(values) : undefined}
