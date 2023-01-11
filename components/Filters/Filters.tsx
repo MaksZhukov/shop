@@ -41,6 +41,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 				}
 			});
 		});
+		console.log(newValues);
 		setValues(newValues);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.query.brand]);
@@ -122,6 +123,7 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
 					return (
 						<TextField
 							{...params}
+							// For fixing value for input
 							inputProps={{
 								...params.inputProps,
 								value:
