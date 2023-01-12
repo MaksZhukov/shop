@@ -7,4 +7,7 @@ export const fetchCars = (params?: CollectionParams) =>
 		params,
 	});
 
-export const fetchCar = (idOrSlug: string) => api.get<ApiResponse<Car>>(`/cars/${idOrSlug}`);
+export const fetchCar = (idOrSlug: string) =>
+	api.get<ApiResponse<Car>>(`/cars/${idOrSlug}`, {
+		params: { populate: ['images', 'model', 'brand', 'generation', 'volume', 'seo.images'] },
+	});
