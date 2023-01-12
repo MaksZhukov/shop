@@ -4,15 +4,15 @@ import Car from 'components/Car';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-	data: ICar;
+	page: ICar;
 }
 
-const CarPage = ({ data }: Props) => {
-	return <Car data={data}></Car>;
+const CarPage = ({ page }: Props) => {
+	return <Car data={page}></Car>;
 };
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	data: (await fetchCar(context.params?.slug as string)).data.data,
+	page: (await fetchCar(context.params?.slug as string)).data.data,
 }));
 
 export default CarPage;
