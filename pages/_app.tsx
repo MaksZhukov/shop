@@ -7,7 +7,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { Box, Button, createTheme, Link, ThemeProvider } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { UIEventHandler, useEffect, useState } from 'react';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
@@ -142,6 +142,11 @@ function MyApp({
 							</Content>
 						</RouteShield>
 						<Footer footer={footer}></Footer>
+						<Box bottom={0} right={0} position='fixed'>
+							<Button variant='contained' component='a' href='tel:+375297804780'>
+								Заказать
+							</Button>
+						</Box>
 					</Layout>
 				</SnackbarProvider>
 			</Provider>
