@@ -10,7 +10,7 @@ import Layout from '../components/Layout';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { UIEventHandler, useEffect, useState } from 'react';
-import { getJwt, getReviewEmail, saveJwt } from '../services/LocalStorageService';
+import { getJwt, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
 import NotistackService from 'services/NotistackService';
 import { fetchBrands } from 'api/brands/brands';
@@ -67,13 +67,7 @@ function MyApp({
 					saveJwt('');
 				}
 			} else {
-				const email = getReviewEmail();
-
-				await Promise.all([
-					// store.cart.loadShoppingCart(),
-					store.favorites.loadFavorites(),
-					...(email ? [store.user.loadReviewStatus(email)] : []),
-				]);
+				await store.favorites.loadFavorites();
 			}
 			store.setIsInitialRequestDone();
 		};
