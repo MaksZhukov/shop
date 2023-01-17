@@ -17,6 +17,6 @@
 	"experimentalDecorators": true,
 	"baseUrl": ".",
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "declarations.d.ts", "declarations_tawk.d.ts", "store/Notification.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "declarations.d.ts", "store/Notification.tsx"],
   "exclude": ["node_modules"]
 }

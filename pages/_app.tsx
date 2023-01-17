@@ -7,10 +7,10 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { Box, Button, createTheme, Link, ThemeProvider } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { UIEventHandler, useEffect, useState } from 'react';
-import { getJwt, getReviewEmail, saveJwt } from '../services/LocalStorageService';
+import { getJwt, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
 import NotistackService from 'services/NotistackService';
 import { fetchBrands } from 'api/brands/brands';
@@ -67,13 +67,7 @@ function MyApp({
 					saveJwt('');
 				}
 			} else {
-				const email = getReviewEmail();
-
-				await Promise.all([
-					// store.cart.loadShoppingCart(),
-					store.favorites.loadFavorites(),
-					...(email ? [store.user.loadReviewStatus(email)] : []),
-				]);
+				await store.favorites.loadFavorites();
 			}
 			store.setIsInitialRequestDone();
 		};
@@ -148,6 +142,11 @@ function MyApp({
 							</Content>
 						</RouteShield>
 						<Footer footer={footer}></Footer>
+						<Box bottom={0} right={0} position='fixed'>
+							<Button variant='contained' component='a' href='tel:+375297804780'>
+								Заказать
+							</Button>
+						</Box>
 					</Layout>
 				</SnackbarProvider>
 			</Provider>
