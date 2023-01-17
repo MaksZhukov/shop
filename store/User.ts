@@ -1,16 +1,13 @@
-import { checkReviewStatus } from 'api/reviews/reviews';
 import { makeAutoObservable, action, runInAction } from 'mobx';
 import RootStore from '.';
 import { getUserInfo, login, updateUserInfo } from '../api/user/user';
-import { getReviewEmail, saveJwt } from '../services/LocalStorageService';
+import { saveJwt } from '../services/LocalStorageService';
 
 export interface User {
 	jwt: string;
 	id: string;
 	email: string;
 }
-
-export type ReviewStatus = '' | 'draft' | 'published';
 
 export default class UserStore implements User {
 	root: RootStore;
@@ -21,7 +18,6 @@ export default class UserStore implements User {
 	username: string = '';
 	phone: string = '';
 	address: string = '';
-	reviewStatus: ReviewStatus = '';
 
 	constructor(root: RootStore) {
 		this.root = root;
@@ -35,17 +31,6 @@ export default class UserStore implements User {
 			this.username = data.username;
 			this.phone = data.phone || '';
 			this.address = data.address || '';
-		});
-		await this.loadReviewStatus(data.email);
-	}
-	async loadReviewStatus(email: string) {
-		const {
-			data: {
-				data: { status },
-			},
-		} = await checkReviewStatus(email);
-		runInAction(() => {
-			this.reviewStatus = status;
 		});
 	}
 	setJWT(jwt: string) {
@@ -62,7 +47,6 @@ export default class UserStore implements User {
 			this.address = data.user.address;
 		});
 		saveJwt(data.jwt);
-		await this.loadReviewStatus(data.user.email);
 	}
 	clearUser() {
 		this.jwt = '';
@@ -70,19 +54,12 @@ export default class UserStore implements User {
 		this.email = '';
 		this.phone = '';
 		this.address = '';
-		this.reviewStatus = '';
 	}
 	async logout() {
 		this.clearUser();
-		// this.root.cart.clearShoppingCartOnLogout();
 		this.root.favorites.clearFavorites();
 		saveJwt('');
-		// this.root.cart.loadShoppingCart();
 		this.root.favorites.loadFavorites();
-		const email = getReviewEmail();
-		if (email) {
-			await this.loadReviewStatus(email);
-		}
 	}
 
 	setUsername(username: string) {
@@ -93,9 +70,6 @@ export default class UserStore implements User {
 	}
 	setAddress(address: string) {
 		this.address = address;
-	}
-	setReviewStatus(status: ReviewStatus) {
-		this.reviewStatus = status;
 	}
 
 	async saveUserInfo() {
