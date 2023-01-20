@@ -1,12 +1,11 @@
 .footer {
-	background-color: #4caf50;
-	text-align: center;
 	&__item {
 		height: 100%;
 		color: #fff;
 		padding: 5px;
-		border-radius: 15px;
-		border: 0.2px solid #bdbdbd;
+		width: 25%;
+		height: 100%;
+
 		&_map {
 			padding: 0;
 			height: 100%;

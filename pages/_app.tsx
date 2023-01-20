@@ -34,8 +34,11 @@ let theme = createTheme({
 	},
 	palette: {
 		primary: {
-			...green,
+			main: '#0C1555',
 			contrastText: '#fff',
+		},
+		secondary: {
+			main: '#fdb819',
 		},
 	},
 });
