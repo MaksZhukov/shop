@@ -1,6 +1,7 @@
 import { Alert, Avatar, Badge, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useStore } from '../../../store';
 import styles from './Profile.module.scss';
 import { observer } from 'mobx-react';
@@ -76,7 +77,7 @@ const Profile = ({ onClickSignIn }: Props) => {
 				onClick={handleClick}
 			>
 				<Badge color='warning' variant='dot' invisible={isInvisibleBadge}>
-					{store.user.email ? <Avatar>{store.user.email.slice(0, 4)}</Avatar> : <Avatar></Avatar>}
+					<MenuIcon sx={{ color: 'white' }}></MenuIcon>
 				</Badge>
 			</IconButton>
 			<Menu

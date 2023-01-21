@@ -44,6 +44,7 @@ export type Filters = {
 		| string
 		| number
 		| number[]
+		| null
 		| undefined;
 };
 

@@ -105,10 +105,9 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 
 interface Props {
 	brands: ApiResponse<Brand[]>;
-	onScrollBrandsList: UIEventHandler<HTMLUListElement>;
 }
 
-const Header = observer(({ brands, onScrollBrandsList }: Props) => {
+const Header = observer(({ brands }: Props) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const timeoutRef = useRef<number>();
 	const router = useRouter();
@@ -187,7 +186,7 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 			<LinkComp
 				className={styles.link}
 				underline='none'
-				color='#fff'
+				color='#000'
 				target={item.target}
 				href={item.path}
 				{...(isTablet
@@ -215,11 +214,6 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 				maxHeight: { xs: '200px', md: 'initial' },
 				overflow: 'auto',
 			}}
-			{...(page.id === 'CarBrands'
-				? {
-						onScroll: onScrollBrandsList,
-				  }
-				: {})}
 		>
 			{page.children?.map((item) => (
 				<MenuItem
@@ -248,11 +242,11 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 				<Image
 					style={{ cursor: 'pointer' }}
 					alt='Logo'
-					width={150}
-					height={42}
+					width={123}
+					height={34}
 					quality={100}
 					isOnSSR={false}
-					src='/logo.jpg'
+					src='/logo.png'
 				/>
 			</NextLink>
 		</Box>
@@ -359,7 +353,7 @@ const Header = observer(({ brands, onScrollBrandsList }: Props) => {
 				<Toolbar sx={{ justifyContent: 'space-between' }} className={styles.toolbar}>
 					{renderLogo('desktop')}
 					<Box
-						color='white'
+						color='black'
 						sx={{
 							display: { xs: 'flex', md: 'none' },
 							flex: { xs: 'initial', md: '1' },

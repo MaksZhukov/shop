@@ -1,13 +1,15 @@
 .footer {
 	&__item {
-		height: 100%;
 		color: #fff;
-		padding: 5px;
+		padding: 0 2em;
 		width: 25%;
 		height: 100%;
+		&:last-child {
+			padding-left: 3em;
+		}
 
 		&_map {
-			padding: 0;
+			padding: 0 10px;
 			height: 100%;
 			border-radius: 15px;
 		}
