@@ -32,7 +32,7 @@ const Footer: FC<Props> = ({ footer }) => {
 	return (
 		<Box
 			component='footer'
-			bgcolor='primary.main'
+			bgcolor='secondary.main'
 			sx={{ padding: { xs: '20px 0 40px', md: '20px 0' } }}
 			className={styles.footer}
 		>
@@ -63,14 +63,10 @@ const Footer: FC<Props> = ({ footer }) => {
 					</Box>
 
 					<Box className={(styles.footer__item, styles.footer__item_map)}>
-						<div className={styles.map}>
-							<iframe
-								src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor'
-								width='100%'
-								height='100%'
-								frameBorder='0'
-							></iframe>
-						</div>
+						<iframe
+							src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor'
+							frameBorder='0'
+						></iframe>
 					</Box>
 
 					<Box className={styles.footer__item}>

@@ -12,15 +12,15 @@ const WhiteBox = ({
 	maxWidth,
 	width,
 	component,
+	marginBottom,
 }: BoxProps) => {
 	return (
 		//@ts-ignore
 		<Box
 			className={className}
-			marginBottom='1em'
+			marginBottom={marginBottom}
 			marginX={marginX}
 			padding={padding || '1em'}
-			borderRadius='10px'
 			textAlign={textAlign}
 			component={component}
 			sx={{ backgroundColor: '#fff' }}

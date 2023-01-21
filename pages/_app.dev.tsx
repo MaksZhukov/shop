@@ -8,8 +8,7 @@ import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
 import { Box, Button, createTheme, Link, ThemeProvider } from '@mui/material';
-import { green } from '@mui/material/colors';
-import { UIEventHandler, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
 import NotistackService from 'services/NotistackService';
@@ -21,8 +20,6 @@ import HeadSEO from 'components/HeadSEO';
 import { Container } from '@mui/system';
 import SEOBox from 'components/SEOBox';
 import Metrics from 'components/Metrics';
-import { ApiResponse } from 'api/types';
-import { useThrottle } from 'rooks';
 import { OFFSET_SCROLL_LOAD_MORE } from '../constants';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -34,11 +31,11 @@ let theme = createTheme({
 	},
 	palette: {
 		primary: {
-			main: '#0C1555',
+			main: '#fdb819',
 			contrastText: '#fff',
 		},
 		secondary: {
-			main: '#fdb819',
+			main: '#0C1555',
 		},
 	},
 });
@@ -46,14 +43,12 @@ let theme = createTheme({
 function MyApp({
 	Component,
 	pageProps: {
+		hasGlobalContainer,
 		layout: { footer },
 		...restPageProps
 	},
 }: AppProps) {
-	const [brands, setBrands] = useState<ApiResponse<Brand[]>>(restPageProps.brands ?? { data: [] });
-	const [throttledLoadMoreBrands] = useThrottle(async () => {
-		await handleLoadMoreBrands();
-	});
+	const [brands, setBrands] = useState<Brand[]>(restPageProps.brands.data ?? []);
 
 	useEffect(() => {
 		const tryFetchData = async () => {
@@ -75,8 +70,10 @@ function MyApp({
 			store.setIsInitialRequestDone();
 		};
 		const fetchBrandsData = async () => {
-			if (!brands.data.length) {
-				const { data } = await fetchBrands({
+			if (!brands.length) {
+				const {
+					data: { data },
+				} = await fetchBrands({
 					pagination: { limit: MAX_LIMIT },
 					populate: ['image', 'seo.images'],
 				});
@@ -88,24 +85,13 @@ function MyApp({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleLoadMoreBrands = async () => {
-		if (brands.meta.pagination?.total && brands.data.length < brands.meta.pagination.total) {
-			const { data } = await fetchBrands({
-				populate: 'image',
-				pagination: { start: brands.data.length },
-			});
-			setBrands({ data: [...brands.data, ...data.data], meta: data.meta });
-		}
-	};
-
-	const handleScrollBrandsList: UIEventHandler<HTMLUListElement> = (event) => {
-		if (
-			event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
-			event.currentTarget.scrollHeight
-		) {
-			throttledLoadMoreBrands();
-		}
-	};
+	const renderContent = (
+		<>
+			<Breadcrumbs h1={restPageProps.data?.h1 || restPageProps.page?.name}></Breadcrumbs>
+			<Component {...restPageProps} brands={brands} />
+			<SEOBox images={restPageProps.page?.seo?.images} content={restPageProps.page?.seo?.content}></SEOBox>
+		</>
+	);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -126,22 +112,10 @@ function MyApp({
 							description={restPageProps.page?.seo?.description}
 							keywords={restPageProps.page?.seo?.keywords}
 						></HeadSEO>
-						<Header onScrollBrandsList={handleScrollBrandsList} brands={brands}></Header>
+						<Header brands={brands}></Header>
 						<RouteShield>
 							<Content>
-								<Container>
-									<Breadcrumbs h1={restPageProps.data?.h1 || restPageProps.page?.name}></Breadcrumbs>
-									<Component
-										{...restPageProps}
-										brands={brands}
-										loadMoreBrands={handleLoadMoreBrands}
-										onScrollBrandsList={handleScrollBrandsList}
-									/>
-									<SEOBox
-										images={restPageProps.page?.seo?.images}
-										content={restPageProps.page?.seo?.content}
-									></SEOBox>
-								</Container>
+								{hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
 							</Content>
 						</RouteShield>
 						<Footer footer={footer}></Footer>
