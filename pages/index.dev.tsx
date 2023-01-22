@@ -526,12 +526,12 @@ const Home: NextPage<Props> = ({
 						</Box>
 					</Box>
 				</Box>
-				<Box>
+				<Box marginBottom='2em'>
 					<Typography fontWeight='bold' withSeparator component='h2' variant='h4' marginBottom='1em'>
 						Осуществляем доставку по республике Беларусь без всяких на то проблем, а также рассматриваем
 						выстраивание логистических путей до других стран.
 					</Typography>
-					<Typography paddingLeft='2.5em' paddingBottom='2em' flex='1' color='text.secondary' variant='body1'>
+					<Typography flex='1' color='text.secondary' variant='body1'>
 						На главной панели нашего сайта можно обнаружить все необходимые данные о компании: контакты,
 						каталог, цены, шаблоны договоров, условия сотрудничества и доставки. Если после этого остануться
 						какие-то вопросы, то сотрудники нашей фирмы устранят их. Все еще сомневаетесь в том, компетентен
