@@ -12,7 +12,7 @@ interface Props {
 	height?: number;
 	image?: IImage;
 	caption?: string;
-	linkProps: LinkProps;
+	linkProps?: LinkProps;
 }
 const LinkWithImage: FC<Props> = ({
 	width = 208,

@@ -48,7 +48,7 @@ function MyApp({
 		...restPageProps
 	},
 }: AppProps) {
-	const [brands, setBrands] = useState<Brand[]>(restPageProps.brands.data ?? []);
+	const [brands, setBrands] = useState<Brand[]>(restPageProps.brands ?? []);
 
 	useEffect(() => {
 		const tryFetchData = async () => {
