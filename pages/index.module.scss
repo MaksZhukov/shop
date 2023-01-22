@@ -2,7 +2,6 @@
 	background: no-repeat center url('/main_head_section.png');
 	background-size: cover;
 
-	width: 100vw;
 	height: 550px;
 	margin-bottom: 2em;
 }
@@ -18,13 +17,40 @@
 }
 
 .categories {
-	background: no-repeat right url('/main_buyback.png');
+	position: relative;
 	&__item {
+		position: relative;
 		background-color: #fff;
-		border-right: 1px solid #e6e6e6;
 		width: 20%;
+		&:nth-child(4) {
+			.categories__item-name {
+				margin-right: 1.5em;
+				position: relative;
+				z-index: 1;
+			}
+		}
+		&:not(:last-child)::after {
+			content: '';
+			display: block;
+			height: 100%;
+			position: absolute;
+			right: 0;
+			top: 0;
+			border-right: 1px solid #e6e6e6;
+			z-index: 1;
+		}
+		&:last-child {
+			background-color: transparent;
+		}
 	}
 	&::after {
 		content: '';
+		position: absolute;
+		background: no-repeat url('/main_buyback.png');
+		background-position: bottom -7px right;
+		width: calc(40% + 22px);
+		right: -33px;
+		height: 100%;
+		display: block;
 	}
 }

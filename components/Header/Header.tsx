@@ -104,7 +104,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
 ];
 
 interface Props {
-	brands: ApiResponse<Brand[]>;
+	brands: Brand[];
 }
 
 const Header = observer(({ brands }: Props) => {
@@ -229,7 +229,7 @@ const Header = observer(({ brands }: Props) => {
 		</MenuList>
 	);
 
-	const navigation = getNavigation(brands.data);
+	const navigation = getNavigation(brands);
 
 	const renderLogo = (type: 'mobile' | 'desktop') => (
 		<Box

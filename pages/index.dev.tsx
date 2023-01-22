@@ -43,6 +43,7 @@ import Image from 'components/Image';
 import NextLink from 'next/link';
 import LinkWithImage from 'components/LinkWithImage';
 import WhiteBox from 'components/WhiteBox';
+import ReactPlayer from 'react-player';
 
 const CATEGORIES = [
 	{ id: 'wheel', href: '/wheels', imgSrc: '/wheels.png', name: 'Колеса', imgWidth: 180, imgHeight: 180 },
@@ -67,7 +68,7 @@ interface Props {
 	autocomises: Autocomis[];
 	serviceStations: ServiceStation[];
 	articles: Article[];
-	brands: ApiResponse<Brand[]>;
+	brands: Brand[];
 	spareParts: ApiResponse<SparePart[]>;
 	loadMoreBrands: () => void;
 	onScrollBrandsList: UIEventHandler<HTMLUListElement>;
@@ -77,7 +78,7 @@ const Home: NextPage<Props> = ({
 	page,
 	cars = [],
 	articles = [],
-	brands = { data: [] },
+	brands = [],
 	spareParts,
 	reviews,
 	serviceStations,
@@ -219,7 +220,7 @@ const Home: NextPage<Props> = ({
 		{
 			id: 'brand',
 			placeholder: 'Марка',
-			options: brands.data.map((item) => ({ label: item.name, value: item.slug })),
+			options: brands.map((item) => ({ label: item.name, value: item.slug })),
 			onChange: handleChangeBrandAutocomplete,
 			onScroll: loadMoreBrands,
 			noOptionsText: noOptionsText,
@@ -337,7 +338,14 @@ const Home: NextPage<Props> = ({
 				<Box className={styles.categories} marginBottom='2em' display='flex'>
 					{CATEGORIES.map((item) => (
 						<Box key={item.id} className={styles.categories__item}>
-							<Box display='flex' alignItems='center' justifyContent='center' minHeight='250px'>
+							<Box
+								position='relative'
+								zIndex={1}
+								display='flex'
+								alignItems='center'
+								justifyContent='center'
+								minHeight='250px'
+							>
 								<Image
 									isOnSSR={false}
 									src={item.imgSrc}
@@ -346,7 +354,12 @@ const Home: NextPage<Props> = ({
 									alt={item.name}
 								></Image>
 							</Box>
-							<Typography marginBottom='0.5em' textAlign='center' variant='h4'>
+							<Typography
+								className={styles['categories__item-name']}
+								marginBottom='0.25em'
+								textAlign='center'
+								variant='h4'
+							>
 								<NextLink href={item.href}>
 									<Link component='span' underline='hover' color='inherit'>
 										{item.name}
@@ -355,12 +368,24 @@ const Home: NextPage<Props> = ({
 							</Typography>
 						</Box>
 					))}
-					<Box
-						sx={{ cursor: 'pointer' }}
-						component='a'
-						onClick={handleClickBuyback}
-						className={styles.categories__item}
-					></Box>
+					<Box className={styles.categories__item}>
+						<NextLink href={'/buyback-cars'}>
+							<Link
+								variant='h4'
+								textTransform='uppercase'
+								fontWeight='bold'
+								component='span'
+								display='block'
+								underline='hover'
+								margin='0.5em 1em'
+								color='inherit'
+								position='relative'
+								zIndex={1}
+							>
+								Выкуп авто
+							</Link>
+						</NextLink>
+					</Box>
 				</Box>
 				<Box marginBottom='3em' justifyContent='space-between' display='flex'>
 					{ADVANTAGES.map((item) => (
@@ -399,7 +424,7 @@ const Home: NextPage<Props> = ({
 						У нас вы сможете найти запчасти <br></br> на самые популярные марки авто.
 					</Typography>
 				</Box>
-				<Box display='flex' marginBottom='4em' gap={'0.5em'} flexWrap='wrap'>
+				<Box display='flex' marginBottom='5em' gap={'0.5em'} flexWrap='wrap'>
 					{brands.map((item) => (
 						<WhiteBox width={137} padding='1em 0.5em' key={item.id}>
 							<LinkWithImage
@@ -412,6 +437,108 @@ const Home: NextPage<Props> = ({
 							></LinkWithImage>
 						</WhiteBox>
 					))}
+				</Box>
+				<Box display='flex' gap='3em' maxHeight='300px' marginBottom='5em'>
+					<Box display='flex' alignItems='center'>
+						<Typography color='text.secondary' variant='body1'>
+							Когда в мире образуется сложная экономическая ситуация, на первый план выходят б/у продажи.
+							Если пользователь не хочет или не может переплачивать, то он готов без проблем приобрести
+							бывшие в употреблении товары. И в этом нет ничего зазорного или плохого, если выбирать
+							правильно. Особенно активно эта тема продвигается в автоиндустрии. Собственно, наш магазин
+							запчастей б/у для автомобилей был основан по схожему принципу.
+						</Typography>
+					</Box>
+					<Box>
+						<ReactPlayer
+							width={600}
+							height={300}
+							url={'https://www.youtube.com/watch?v=MrthDosKEVc'}
+						></ReactPlayer>
+					</Box>
+				</Box>
+				<CarouselReviews marginBottom='6em' data={reviews} slidesToShow={4}></CarouselReviews>
+				<Box marginBottom='1em'>
+					<Typography fontWeight='bold' withSeparator component='h2' variant='h4' marginBottom='1em'>
+						Кому будет полезен наш магазин <br></br> Запчастей Б/У Для Автомобилей
+					</Typography>
+					<Box display='flex'>
+						<Typography flex='1' color='text.secondary' variant='body1'>
+							В фильтрах нашего магазина можно подобрать ту запчасть, которая действительно подойдет на
+							ваш автомобиль. Происходит это все благодаря тому, что у нас доступно много критериев
+							подбора: по марке машины, модели, кузову, типу топлива, коробке передач, поколению
+							производства и так далее. Хоть все и позиционируется в роли бывшего в употреблении товара,
+							но на качестве продукции это практически не сказывается, а если есть какие-то “косяки”, то
+							все доносится клиенту в подобающей для того форме.
+						</Typography>
+						<Box marginTop='-2em'>
+							<Image
+								isOnSSR={false}
+								src={'/interesting_for.png'}
+								width={617}
+								height={347}
+								alt={'Кому будет интересен'}
+							></Image>
+						</Box>
+					</Box>
+				</Box>
+				<Box>
+					<Typography fontWeight='bold' withSeparator component='h2' variant='h4' marginBottom='1em'>
+						Наш магазин запчастей б/у для автомобилей ведет активную социальную жизнь
+					</Typography>
+					<Box padding='0 2.5em' gap={'4em'} display='flex'>
+						<Typography paddingBottom='2em' flex='1' color='text.secondary' variant='body1'>
+							Предоставляя клиентам приятные цены на товары, высокое качество обслуживания и отсутствие
+							проблем с логистикой, мы обзаводимся массой положительных отзывов.
+						</Typography>
+						<Box borderRight='1px solid rgba(0, 0, 0, 0.3)'></Box>
+						<Typography paddingBottom='2em' flex='1' color='text.secondary' variant='body1'>
+							Автомобильные запчасти с бешенными скидками и высоким качеством — вот немногие из тех
+							“козырей”, которыми располагает наш магазин запчастей б/у для автомобилей.
+						</Typography>
+					</Box>
+					<Box display='flex' gap={'1em'} marginBottom='3.5em'>
+						<Box>
+							<Image
+								isOnSSR={false}
+								src='/preview_sample_car.jpg'
+								width={390}
+								height={390}
+								alt='preview_sample'
+							></Image>
+						</Box>
+						<Box>
+							<Image
+								isOnSSR={false}
+								src='/preview_sample_car.jpg'
+								width={390}
+								height={390}
+								alt='preview_sample'
+							></Image>
+						</Box>
+						<Box>
+							<Image
+								isOnSSR={false}
+								src='/preview_sample_car.jpg'
+								width={390}
+								height={390}
+								alt='preview_sample'
+							></Image>
+						</Box>
+					</Box>
+				</Box>
+				<Box>
+					<Typography fontWeight='bold' withSeparator component='h2' variant='h4' marginBottom='1em'>
+						Осуществляем доставку по республике Беларусь без всяких на то проблем, а также рассматриваем
+						выстраивание логистических путей до других стран.
+					</Typography>
+					<Typography paddingLeft='2.5em' paddingBottom='2em' flex='1' color='text.secondary' variant='body1'>
+						На главной панели нашего сайта можно обнаружить все необходимые данные о компании: контакты,
+						каталог, цены, шаблоны договоров, условия сотрудничества и доставки. Если после этого остануться
+						какие-то вопросы, то сотрудники нашей фирмы устранят их. Все еще сомневаетесь в том, компетентен
+						ли наш магазин запчастей б/у для автомобилей? Тогда не медлите и посетите сайт, а если не хватит
+						доказательств, то совершите первую покупку (с хорошей скидкой) и сформируйте мнение о нашей
+						компании самостоятельно.
+					</Typography>
 				</Box>
 			</Container>
 		</>
@@ -435,7 +562,7 @@ export const getServerSideProps = getPageProps(
 				populate: 'image',
 				pagination: { limit: MAX_LIMIT },
 			})
-		).data,
+		).data.data,
 	}),
 	async () => ({
 		spareParts: (
