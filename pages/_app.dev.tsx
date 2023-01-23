@@ -7,7 +7,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { Box, Button, createTheme, Link, ThemeProvider } from '@mui/material';
+import { Box, Button, createTheme, IconButton, Link, ThemeProvider } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
@@ -24,6 +24,7 @@ import { OFFSET_SCROLL_LOAD_MORE } from '../constants';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './app.scss';
+import { LocalPhone } from '@mui/icons-material';
 
 let theme = createTheme({
 	typography: {
@@ -119,9 +120,14 @@ function MyApp({
 							</Content>
 						</RouteShield>
 						<Footer footer={footer}></Footer>
-						<Box bottom={0} right={0} position='fixed'>
-							<Button variant='contained' component='a' href='tel:+375297804780'>
-								Заказать
+						<Box bottom={10} right={10} position='fixed'>
+							<Button
+								sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
+								variant='contained'
+								component='a'
+								href='tel:+375297804780'
+							>
+								<LocalPhone></LocalPhone>
 							</Button>
 						</Box>
 					</Layout>
