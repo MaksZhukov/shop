@@ -42,9 +42,10 @@ const Footer: FC<Props> = ({ footer }) => {
 						<ReactMarkdown content={footer.firstBlock}></ReactMarkdown>
 					</Box>
 
-					<Box display='inline-block' className={styles.footer__item}>
+					<Box display='flex' flexWrap='wrap' className={styles.footer__item}>
 						{footer.socials.map((item) => (
 							<ListItemButton
+								sx={{ width: '50%', padding: '0.5em 0.25em' }}
 								component='a'
 								key={item.id}
 								href={item.link}

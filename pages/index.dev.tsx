@@ -46,7 +46,7 @@ import WhiteBox from 'components/WhiteBox';
 import ReactPlayer from 'react-player';
 
 const CATEGORIES = [
-	{ id: 'wheel', href: '/wheels', imgSrc: '/wheels.png', name: 'Колеса', imgWidth: 180, imgHeight: 180 },
+	{ id: 'wheel', href: '/wheels', imgSrc: '/wheels.png', name: 'Диски', imgWidth: 180, imgHeight: 180 },
 	{ id: 'cabin', href: '/cabins', imgSrc: '/cabins.png', name: 'Салоны', imgWidth: 180, imgHeight: 237 },
 	{
 		id: 'sparePart',
@@ -333,9 +333,9 @@ const Home: NextPage<Props> = ({
 					fontWeight='bold'
 					textTransform='uppercase'
 				>
-					Рекомендуемые товары
+					Категории товаров
 				</Typography>
-				<Box className={styles.categories} marginBottom='2em' display='flex'>
+				<Box className={styles.categories} marginBottom='4em' display='flex'>
 					{CATEGORIES.map((item) => (
 						<Box key={item.id} className={styles.categories__item}>
 							<Box
@@ -377,17 +377,15 @@ const Home: NextPage<Props> = ({
 								component='span'
 								display='block'
 								underline='hover'
-								margin='0.5em 1em'
+								margin='0.25em 0.25em'
 								color='inherit'
-								position='relative'
-								zIndex={1}
 							>
-								Выкуп авто
+								Выкуп авто на з/ч
 							</Link>
 						</NextLink>
 					</Box>
 				</Box>
-				<Box marginBottom='3em' justifyContent='space-between' display='flex'>
+				<Box marginBottom='4em' justifyContent='space-between' display='flex'>
 					{ADVANTAGES.map((item) => (
 						<Image isOnSSR={false} src={item} key={item} alt={item} width={200} height={140}></Image>
 					))}
@@ -456,6 +454,9 @@ const Home: NextPage<Props> = ({
 						></ReactPlayer>
 					</Box>
 				</Box>
+				<Typography withSeparator component='h2' variant='h4' fontWeight='bold'>
+					Гугл отзывы о нас
+				</Typography>
 				<CarouselReviews marginBottom='6em' data={reviews} slidesToShow={4}></CarouselReviews>
 				<Box marginBottom='1em'>
 					<Typography fontWeight='bold' withSeparator component='h2' variant='h4' marginBottom='1em'>

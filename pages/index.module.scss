@@ -22,6 +22,9 @@
 		position: relative;
 		background-color: #fff;
 		width: 20%;
+		&:not(:last-child) {
+			border-right: 1px solid #e6e6e6;
+		}
 		&:nth-child(4) {
 			.categories__item-name {
 				margin-right: 1.5em;
@@ -29,28 +32,8 @@
 				z-index: 1;
 			}
 		}
-		&:not(:last-child)::after {
-			content: '';
-			display: block;
-			height: 100%;
-			position: absolute;
-			right: 0;
-			top: 0;
-			border-right: 1px solid #e6e6e6;
-			z-index: 1;
-		}
 		&:last-child {
-			background-color: transparent;
+			background: no-repeat url('/main_buyback.png');
 		}
-	}
-	&::after {
-		content: '';
-		position: absolute;
-		background: no-repeat url('/main_buyback.png');
-		background-position: bottom -7px right;
-		width: calc(40% + 22px);
-		right: -33px;
-		height: 100%;
-		display: block;
 	}
 }
