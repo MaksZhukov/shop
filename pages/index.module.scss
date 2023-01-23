@@ -25,15 +25,20 @@
 		&:not(:last-child) {
 			border-right: 1px solid #e6e6e6;
 		}
-		&:nth-child(4) {
-			.categories__item-name {
-				margin-right: 1.5em;
-				position: relative;
-				z-index: 1;
-			}
-		}
 		&:last-child {
-			background: no-repeat url('/main_buyback.png');
+            background-color: transparent;
+            position: relative;
+            z-index: 1;
+			&:before {
+                background: no-repeat center url('/main_buyback.png');
+                content: '';
+                position: absolute;
+                z-index: -1;
+                width: 115%;
+                height: 100%;
+                top: 0;
+                left: 0;
+            }
 		}
 	}
 }
