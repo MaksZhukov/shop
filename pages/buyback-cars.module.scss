@@ -1,27 +1,57 @@
 .head {
-    position: relative;
-    &::before {
-        content: '';
-        background: no-repeat center url('/buyback_banner.png');
-        background-size: cover;
-        height: 563px;
-        top: 0;
-        left: 0;
-        position: absolute;
-        width: 100%;
-    }
-    &::after {
-        content: '';
-        background: no-repeat center url('/buyback_banner_bmw.png');
-        background-size: cover;
-        height: 580px;
-        width: 786px;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-    }
+	&__container {
+		display: flex;
+	}
+	position: relative;
+	&::before {
+		content: '';
+		background: no-repeat center url('/buyback_banner.png');
+		background-size: cover;
+		height: 563px;
+		top: 0;
+		left: 0;
+		position: absolute;
+		width: 100%;
+	}
+	&::after {
+		content: '';
+		background: no-repeat center url('/buyback_banner_bmw.png');
+		background-size: cover;
+		height: 580px;
+		width: 786px;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+	}
 }
 
 .autocomplete {
-    margin-bottom: 1em;
+	margin-bottom: 1.5em;
+	border-radius: 0.5em;
+	&__input {
+		padding-top: 0.75em !important;
+		padding-bottom: 0.75em !important;
+	}
+}
+
+.input {
+	background-color: #fff;
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
+	margin-bottom: 1.5em;
+}
+
+.btn {
+	padding: 1.25em;
+	border-radius: 0;
+	font-size: 16px;
+}
+
+.img-empty {
+	width: 100%;
+}
+
+.advantages {
+	&__item {
+	}
 }
