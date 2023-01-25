@@ -1,23 +1,23 @@
 .slick-arrow::before {
-	color: #fdb819;
+    color: #fdb819;
 }
 
 /* custom scrollbar */
 ::-webkit-scrollbar {
-	width: 18px;
+    width: 18px;
 }
 
 ::-webkit-scrollbar-track {
-	background-color: transparent;
+    background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: rgba(#0c1555, 0.5);
-	border-radius: 20px;
-	border: 6px solid transparent;
-	background-clip: content-box;
+    background-color: rgba(#0c1555, 0.5);
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background-color: rgba(#0c1555, 0.3);
+    background-color: rgba(#0c1555, 0.3);
 }

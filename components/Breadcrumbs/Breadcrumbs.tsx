@@ -66,7 +66,7 @@ const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
     }
 
     return (
-        <MUIBreadcrumbs sx={{ marginBottom: '1em' }} aria-label="breadcrumb">
+        <MUIBreadcrumbs sx={{ marginY: '1em' }} aria-label="breadcrumb">
             {breadcrumbs.length > 1 &&
                 breadcrumbs.map((crumb, idx) =>
                     idx === breadcrumbs.length - 1 ? (
