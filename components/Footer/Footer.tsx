@@ -42,7 +42,7 @@ const Footer: FC<Props> = ({ footer }) => {
                     </Box>
 
                     <Box display="flex" flexWrap="wrap" className={styles.footer__item}>
-                        {footer.socials.map((item) => (
+                        {footer.socials?.map((item) => (
                             <ListItemButton
                                 sx={{ width: '50%', padding: '0.5em 0.25em' }}
                                 component="a"

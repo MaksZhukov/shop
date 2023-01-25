@@ -374,7 +374,7 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                     </Typography>
                     <Box display="flex" flexWrap="wrap">
                         {BUYBACK_ANY_CARS.map((item) => (
-                            <Box key={item.title} width={'30%'} marginBottom="3em" textAlign="center">
+                            <Box key={item.title} width={'33.3%'} marginBottom="3em" textAlign="center">
                                 <Box display="flex" alignItems="center" width={115} height={115} margin="auto">
                                     <Image
                                         isOnSSR={false}
