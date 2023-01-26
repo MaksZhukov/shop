@@ -108,7 +108,7 @@ interface Props {
 }
 
 const Header = observer(({ brands }: Props) => {
-    console.log(brands);
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const timeoutRef = useRef<number>();
     const router = useRouter();

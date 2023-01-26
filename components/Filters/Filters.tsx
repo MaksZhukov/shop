@@ -38,7 +38,6 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
                 }
             });
         });
-        console.log(newValues);
         setValues(newValues);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.brand]);
