@@ -9,7 +9,7 @@ import { KindSparePart } from 'api/kindSpareParts/types';
 import { useRouter } from 'next/router';
 import { AxiosResponse } from 'axios';
 import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
-import { MAX_LIMIT } from 'api/constants';
+import { API_MAX_LIMIT, API_UN_LIMIT } from 'api/constants';
 import { fetchModels } from 'api/models/models';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { useSnackbar } from 'notistack';
@@ -26,7 +26,7 @@ import { Article } from 'api/articles/types';
 import { useDebounce, useThrottle } from 'rooks';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
-import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
+import { fetchBrandBySlug } from 'api/brands/brands';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
 import { getParamByRelation } from 'services/ParamsService';
@@ -115,7 +115,7 @@ const SpareParts: NextPage<Props> = ({
         handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
             fetchModels({
                 filters: { brand: { slug: values.brand } },
-                pagination: { limit: MAX_LIMIT }
+                pagination: { limit: API_MAX_LIMIT }
             })
         );
 
@@ -123,7 +123,7 @@ const SpareParts: NextPage<Props> = ({
         handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
             fetchGenerations({
                 filters: { model: { name: values.model as string } },
-                pagination: { limit: MAX_LIMIT }
+                pagination: { limit: API_MAX_LIMIT }
             })
         );
 
@@ -138,7 +138,7 @@ const SpareParts: NextPage<Props> = ({
     const handleOpenAutocompleteVolume = () =>
         handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
             fetchEngineVolumes({
-                pagination: { limit: MAX_LIMIT }
+                pagination: { limit: API_MAX_LIMIT }
             })
         );
 
@@ -274,12 +274,5 @@ export const getServerSideProps = getPageProps(
     },
     async () => ({
         articles: (await fetchArticles({ populate: 'image' })).data.data
-    }),
-    async () => ({
-        brands: (
-            await fetchBrands({
-                populate: ['image', 'seo.image']
-            })
-        ).data.data
     })
 );

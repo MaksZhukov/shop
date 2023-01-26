@@ -7,20 +7,16 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { Box, Button, createTheme, IconButton, Link, ThemeProvider } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, Button, createTheme, ThemeProvider } from '@mui/material';
+import { useEffect } from 'react';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
 import NotistackService from 'services/NotistackService';
-import { fetchBrands } from 'api/brands/brands';
-import { MAX_LIMIT } from 'api/constants';
-import { Brand } from 'api/brands/types';
 import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
 import { Container } from '@mui/system';
 import SEOBox from 'components/SEOBox';
 import Metrics from 'components/Metrics';
-import { OFFSET_SCROLL_LOAD_MORE } from '../constants';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './app.scss';
@@ -49,8 +45,6 @@ function MyApp({
         ...restPageProps
     }
 }: AppProps) {
-    const [brands, setBrands] = useState<Brand[]>(restPageProps.brands ?? []);
-
     useEffect(() => {
         const tryFetchData = async () => {
             let token = getJwt();
@@ -70,19 +64,7 @@ function MyApp({
             }
             store.setIsInitialRequestDone();
         };
-        const fetchBrandsData = async () => {
-            if (!brands.length) {
-                const {
-                    data: { data }
-                } = await fetchBrands({
-                    pagination: { limit: MAX_LIMIT },
-                    populate: ['image', 'seo.images']
-                });
-                setBrands(data);
-            }
-        };
         tryFetchData();
-        fetchBrandsData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -91,7 +73,7 @@ function MyApp({
             <Breadcrumbs
                 exclude={['buyback-cars']}
                 h1={restPageProps.data?.h1 || restPageProps.page?.name}></Breadcrumbs>
-            <Component {...restPageProps} brands={brands} />
+            <Component {...restPageProps} />
             {!hasGlobalContainer ? (
                 <Container>
                     <SEOBox
@@ -121,7 +103,7 @@ function MyApp({
                             title={restPageProps.page?.seo?.title}
                             description={restPageProps.page?.seo?.description}
                             keywords={restPageProps.page?.seo?.keywords}></HeadSEO>
-                        <Header brands={brands}></Header>
+                        <Header brands={restPageProps.brands}></Header>
                         <RouteShield>
                             <Content>
                                 {hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}

@@ -14,7 +14,7 @@ import { Brand } from 'api/brands/types';
 import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, useRef, useState } from 'react';
 import { Model } from 'api/models/types';
 import { fetchModels } from 'api/models/models';
-import { MAX_LIMIT } from 'api/constants';
+import { API_MAX_LIMIT } from 'api/constants';
 import { useSnackbar } from 'notistack';
 import { YEARS } from '../constants';
 import InputMask from 'react-input-mask';
@@ -122,7 +122,7 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                 data: { data }
             } = await fetchModels({
                 filters: { brand: { slug: brand?.value } },
-                pagination: { limit: MAX_LIMIT }
+                pagination: { limit: API_MAX_LIMIT }
             });
             setModels(data);
         } catch (err) {
