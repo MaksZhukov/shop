@@ -28,6 +28,7 @@
     "react-player": "^2.11.0",
     "react-share": "^4.4.1",
     "react-slick": "^0.29.0",
+    "react-window": "^1.8.8",
     "rehype-raw": "^6.1.1",
     "rooks": "^7.4.2",
     "rss-parser": "^3.12.0",

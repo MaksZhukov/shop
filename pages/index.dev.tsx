@@ -303,7 +303,8 @@ const Home: NextPage<Props> = ({
 									<Box width={'calc(25% - 0.5em)'} key={item.id}>
 										<Autocomplete
 											width
-											// className={styles.filters__item}
+											className={styles.filters__item}
+											//@ts-expect-error error
 											options={item.options}
 											noOptionsText={item.noOptionsText}
 											onOpen={item.onOpen}
@@ -312,7 +313,7 @@ const Home: NextPage<Props> = ({
 											fullWidth
 											onInputChange={item.onInputChange}
 											disabled={item.disabled}
-											// value={values[item.id] || null}
+											value={values[item.id] || null}
 										></Autocomplete>
 									</Box>
 								);
