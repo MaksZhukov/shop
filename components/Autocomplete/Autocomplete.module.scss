@@ -5,6 +5,12 @@
 		text-align: center;
 	}
 }
+.test :global {
+	ul {
+		margin-bottom: 0 !important;
+		padding-left: 0;
+	}
+}
 
 .list {
 	&_loading-more {
