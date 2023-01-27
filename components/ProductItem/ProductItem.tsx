@@ -7,19 +7,18 @@ import FavoriteButton from 'components/FavoriteButton';
 import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import Slider from 'react-slick';
-import classNames from 'classnames';
 import Image from 'components/Image';
 import { getProductTypeSlug } from 'services/ProductService';
 
 interface Props {
-    dataFieldsToShow: { id: string; name: string }[];
-    activeView: 'grid' | 'list';
+    dataFieldsToShow?: { id: string; name: string }[];
+    activeView?: 'grid' | 'list';
     data: Product;
+    width?: number | string;
+    height?: number | string;
 }
 
-const ProductItem = ({ data, dataFieldsToShow, activeView }: Props) => {
-    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-
+const ProductItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '100%', height = 'auto' }: Props) => {
     const renderContentByView = {
         list: (
             <Box padding="0.5em 1em" display="flex" flexDirection="column">
@@ -77,7 +76,6 @@ const ProductItem = ({ data, dataFieldsToShow, activeView }: Props) => {
         ),
         grid: (
             <>
-                {' '}
                 <NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
                     <Link
                         height={60}
@@ -96,7 +94,7 @@ const ProductItem = ({ data, dataFieldsToShow, activeView }: Props) => {
                         {data.name}
                     </Link>
                 </NextLink>
-                <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+                <Box display="flex" height={65} flexDirection="column" alignItems="center" justifyContent="center">
                     <Box display="flex" alignItems="center">
                         {!!data.discountPrice && (
                             <Typography
@@ -132,11 +130,11 @@ const ProductItem = ({ data, dataFieldsToShow, activeView }: Props) => {
     return (
         <Box
             marginBottom="1em"
-            height={activeView === 'grid' ? 350 : 150}
+            height={height}
             bgcolor="#fff"
             key={data.id}
             display={activeView === 'list' ? 'flex' : 'initial'}
-            width={activeView === 'grid' ? 280 : '100%'}>
+            width={width}>
             {data.images ? (
                 <Box width={activeView === 'list' ? 200 : '100%'}>
                     <Slider autoplay autoplaySpeed={5000} arrows={false}>
@@ -153,7 +151,7 @@ const ProductItem = ({ data, dataFieldsToShow, activeView }: Props) => {
             ) : (
                 <Box>
                     <Image
-                        style={{ height: '100%' }}
+                        style={{ height: '100%', objectFit: 'cover' }}
                         src=""
                         width={activeView === 'grid' ? 280 : 200}
                         height={activeView === 'grid' ? 215 : 150}
