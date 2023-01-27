@@ -49,7 +49,11 @@
     padding: 0;
     border-radius: 0;
     margin-right: 0.25em;
-    &_active {
-        // background-color: ;
+}
+
+.items {
+    &:after {
+        content: '';
+        width: 280px;
     }
 }

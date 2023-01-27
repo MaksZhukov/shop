@@ -7,11 +7,9 @@ import { useState, SetStateAction, Dispatch } from 'react';
 import { AxiosResponse } from 'axios';
 import { useSnackbar } from 'notistack';
 import { getPageProps } from 'services/PagePropsService';
-import { fetchCars } from 'api/cars/cars';
 import { Car } from 'api/cars/types';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
-import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
@@ -28,7 +26,7 @@ import { fetchBrandBySlug } from 'api/brands/brands';
 interface Props {
     page: DefaultPage;
     cars: Car[];
-    brands: ApiResponse<Brand[]>;
+    brands: Brand[];
     articles: Article[];
     advertising: LinkWithImage[];
     autocomises: Autocomis[];
@@ -37,17 +35,7 @@ interface Props {
     serviceStations: ServiceStation[];
 }
 
-const Cabins: NextPage<Props> = ({
-    page,
-    advertising,
-    autocomises,
-    deliveryAuto,
-    discounts,
-    serviceStations,
-    cars,
-    brands,
-    articles
-}) => {
+const Cabins: NextPage<Props> = ({ page, brands }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
@@ -111,7 +99,7 @@ const Cabins: NextPage<Props> = ({
                 id: 'brand',
                 placeholder: 'Марка',
                 type: 'autocomplete',
-                options: brands.data.map((item) => ({ label: item.name, value: item.slug })),
+                options: brands.map((item) => ({ label: item.name, value: item.slug })),
                 noOptionsText: noOptionsText
             }
         ],
@@ -169,14 +157,6 @@ const Cabins: NextPage<Props> = ({
 
     return (
         <Catalog
-            newProductsTitle="Салонов"
-            advertising={advertising}
-            autocomises={autocomises}
-            deliveryAuto={deliveryAuto}
-            discounts={discounts}
-            serviceStations={serviceStations}
-            cars={cars}
-            articles={articles}
             dataFieldsToShow={[
                 {
                     id: 'brand',
@@ -201,46 +181,22 @@ const Cabins: NextPage<Props> = ({
 
 export default Cabins;
 
-export const getServerSideProps = getPageProps(
-    undefined,
-    async (context) => {
-        const { brand } = context.query;
-        const brandParam = brand ? brand[0] : undefined;
-        let seo: SEO | null = null;
-        if (brandParam) {
-            const {
-                data: { data }
-            } = await fetchBrandBySlug(brandParam, { populate: ['seoCabins.images', 'image'] });
-            seo = data.seoCabins;
-        } else {
-            const {
-                data: { data }
-            } = await fetchPage('cabin')();
-            seo = data.seo;
-        }
-        return {
-            page: { seo }
-        };
-    },
-    async () => {
+export const getServerSideProps = getPageProps(undefined, async (context) => {
+    const { brand } = context.query;
+    const brandParam = brand ? brand[0] : undefined;
+    let seo: SEO | null = null;
+    if (brandParam) {
         const {
-            data: {
-                data: { advertising, deliveryAuto, discounts, autocomises, serviceStations }
-            }
-        } = await fetchPage<PageMain>('main')();
-        return {
-            advertising,
-            deliveryAuto,
-            discounts,
-            autocomises,
-            serviceStations
-        };
-    },
-    async () => {
-        const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } });
-        return { cars: data.data };
-    },
-    async () => ({
-        articles: (await fetchArticles({ populate: 'image' })).data.data
-    })
-);
+            data: { data }
+        } = await fetchBrandBySlug(brandParam, { populate: ['seoCabins.images', 'image'] });
+        seo = data.seoCabins;
+    } else {
+        const {
+            data: { data }
+        } = await fetchPage('cabin')();
+        seo = data.seo;
+    }
+    return {
+        page: { seo }
+    };
+});

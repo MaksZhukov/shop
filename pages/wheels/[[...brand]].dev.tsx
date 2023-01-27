@@ -13,11 +13,9 @@ import { useSnackbar } from 'notistack';
 import { AxiosResponse } from 'axios';
 import { getPageProps } from 'services/PagePropsService';
 import { Car } from 'api/cars/types';
-import { fetchCars } from 'api/cars/cars';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import { Article } from 'api/articles/types';
-import { fetchArticles } from 'api/articles/articles';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { WheelWidth } from 'api/wheelWidths/types';
@@ -35,7 +33,7 @@ import { getParamByRelation } from 'services/ParamsService';
 interface Props {
     page: DefaultPage;
     cars: Car[];
-    brands: ApiResponse<Brand[]>;
+    brands: Brand[];
     articles: Article[];
     advertising: LinkWithImage[];
     autocomises: Autocomis[];
@@ -44,17 +42,7 @@ interface Props {
     serviceStations: ServiceStation[];
 }
 
-const Wheels: NextPage<Props> = ({
-    page,
-    brands,
-    advertising,
-    autocomises,
-    deliveryAuto,
-    discounts,
-    serviceStations,
-    cars,
-    articles
-}) => {
+const Wheels: NextPage<Props> = ({ page, brands }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [widths, setWidths] = useState<WheelWidth[]>([]);
     const [diskOffsets, setDiskOffsets] = useState<WheelDiskOffset[]>([]);
@@ -105,7 +93,7 @@ const Wheels: NextPage<Props> = ({
                 id: 'brand',
                 placeholder: 'Марка',
                 type: 'autocomplete',
-                options: brands.data.map((item) => ({ label: item.name, value: item.slug })),
+                options: brands.map((item) => ({ label: item.name, value: item.slug })),
                 noOptionsText: noOptionsText
             }
         ],
@@ -240,14 +228,6 @@ const Wheels: NextPage<Props> = ({
     return (
         <Catalog
             seo={page.seo}
-            newProductsTitle="Дисков"
-            advertising={advertising}
-            autocomises={autocomises}
-            deliveryAuto={deliveryAuto}
-            discounts={discounts}
-            serviceStations={serviceStations}
-            cars={cars}
-            articles={articles}
             dataFieldsToShow={[
                 {
                     id: 'brand',
@@ -275,46 +255,22 @@ const Wheels: NextPage<Props> = ({
 
 export default Wheels;
 
-export const getServerSideProps = getPageProps(
-    undefined,
-    async (context) => {
-        const { brand } = context.query;
-        const brandParam = brand ? brand[0] : undefined;
-        let seo: SEO | null = null;
-        if (brandParam) {
-            const {
-                data: { data }
-            } = await fetchBrandBySlug(brandParam, { populate: ['seoWheels.images', 'image'] });
-            seo = data.seoWheels;
-        } else {
-            const {
-                data: { data }
-            } = await fetchPage('wheel')();
-            seo = data.seo;
-        }
-        return {
-            page: { seo }
-        };
-    },
-    async () => {
+export const getServerSideProps = getPageProps(undefined, async (context) => {
+    const { brand } = context.query;
+    const brandParam = brand ? brand[0] : undefined;
+    let seo: SEO | null = null;
+    if (brandParam) {
         const {
-            data: {
-                data: { advertising, deliveryAuto, discounts, autocomises, serviceStations }
-            }
-        } = await fetchPage<PageMain>('main')();
-        return {
-            advertising,
-            deliveryAuto,
-            discounts,
-            autocomises,
-            serviceStations
-        };
-    },
-    async () => {
-        const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } });
-        return { cars: data.data };
-    },
-    async () => ({
-        articles: (await fetchArticles({ populate: 'image' })).data.data
-    }),
-);
+            data: { data }
+        } = await fetchBrandBySlug(brandParam, { populate: ['seoWheels.images', 'image'] });
+        seo = data.seoWheels;
+    } else {
+        const {
+            data: { data }
+        } = await fetchPage('wheel')();
+        seo = data.seo;
+    }
+    return {
+        page: { seo }
+    };
+});

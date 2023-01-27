@@ -1,10 +1,7 @@
 import {
     Button,
     CircularProgress,
-    Grid,
-    IconButton,
     Input,
-    Link,
     MenuItem,
     Pagination,
     PaginationItem,
@@ -13,7 +10,7 @@ import {
     useMediaQuery
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useThrottle, useDebounce } from 'rooks';
+import { useThrottle } from 'rooks';
 import { ApiResponse, CollectionParams, LinkWithImage as ILinkWithImage, Product, SEO } from 'api/types';
 import { Image as IImage } from 'api/types';
 import classNames from 'classnames';
@@ -26,23 +23,13 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, useEffect, useState, useRef, ReactNode, KeyboardEvent } from 'react';
 import styles from './Catalog.module.scss';
-import Slider from 'react-slick';
-import { Car } from 'api/cars/types';
-import Image from 'components/Image';
 import NextLink from 'next/link';
 import LinkWithImage from 'components/LinkWithImage';
-import { Autocomis } from 'api/autocomises/types';
-import { ServiceStation } from 'api/serviceStations/types';
 import { AxiosResponse } from 'axios';
-import { Article } from 'api/articles/types';
 import MenuIcon from '@mui/icons-material/MenuSharp';
 import GridViewIcon from '@mui/icons-material/GridViewSharp';
 import Typography from 'components/Typography';
-import { GridViewSharp } from '@mui/icons-material';
-import { getProductTypeSlug } from 'services/ProductService';
 
-// const DynamicNews = dynamic(() => import('components/News'));
-// const DynamicReviews = dynamic(() => import('components/Reviews'));
 const DynamicCarouselProducts = dynamic(() => import('components/CarouselProducts'));
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
@@ -55,22 +42,11 @@ const selectSortItems = [
 
 interface Props {
     seo: SEO | null;
-    textTotal?: string;
-    newProductsTitle?: string;
     searchPlaceholder?: string;
-    cars?: Car[];
-    discounts?: ILinkWithImage[];
-    advertising?: ILinkWithImage[];
-    articles: Article[];
-    filtersBtn?: ReactNode;
-    serviceStations?: ServiceStation[];
-    autocomises?: Autocomis[];
-    deliveryAuto?: ILinkWithImage;
     dataFieldsToShow?: { id: string; name: string }[];
     filtersConfig: (AutocompleteType | NumberType)[][];
     generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
     fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
-    onClickFind?: (values: { [key: string]: string }) => void;
 }
 
 let date = new Date();
@@ -81,17 +57,7 @@ const Catalog = ({
     dataFieldsToShow = [],
     filtersConfig,
     generateFiltersByQuery,
-    cars = [],
-    articles = [],
-    discounts = [],
-    advertising = [],
-    serviceStations = [],
-    autocomises = [],
-    deliveryAuto,
-    seo,
-    filtersBtn,
-    newProductsTitle,
-    textTotal
+    seo
 }: Props) => {
     const [newProducts, setNewProducts] = useState<Product[]>([]);
     const [data, setData] = useState<Product[]>([]);
@@ -367,13 +333,16 @@ const Catalog = ({
                         display="flex"
                         flexWrap="wrap"
                         justifyContent="space-between"
-                        className={classNames({
-                            [styles['loading']]: isLoading,
-                            [styles['content-items_no-data']]: !data.length
-                        })}>
+                        className={classNames(
+                            styles.items,
+                            isLoading && styles['loading'],
+                            !data.length && styles['content-items_no-data']
+                        )}>
                         {data.length ? (
                             data.map((item) => (
                                 <ProductItem
+                                    width={activeView === 'grid' ? 280 : '100%'}
+                                    height={activeView === 'grid' ? 350 : 150}
                                     dataFieldsToShow={dataFieldsToShow || []}
                                     activeView={activeView}
                                     key={item.id}
@@ -396,8 +365,8 @@ const Catalog = ({
                 <DynamicCarouselProducts
                     data={newProducts}
                     title={
-                        <Typography marginBottom="1em" marginTop="1em" textAlign="center" variant="h5">
-                            Новые поступления {newProductsTitle}
+                        <Typography withSeparator fontWeight="bold" marginBottom="1em" marginTop="1em" variant="h5">
+                            ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
                         </Typography>
                     }></DynamicCarouselProducts>
             )}
