@@ -21,16 +21,16 @@ const nextConfig = {
     rewrites: () => {
         return [
             {
-                source: '/(spare-parts|wheels|cabins)/:brand',
-                destination: '/spare-parts/:brand'
+                source: '/:productsSlug(spare-parts|wheels|cabins)/:brand',
+                destination: '/:productsSlug/:brand'
             },
             {
-                source: '/(spare-parts|wheels|cabins)/:brand/:model(model-.*)',
-                destination: '/spare-parts/:brand/:model'
+                source: '/:productsSlug(spare-parts|wheels|cabins)/:brand/:model(model-.*)',
+                destination: '/:productsSlug/:brand/:model'
             },
             {
-                source: '/(spare-parts|wheels|cabins)/(.*)/:slug',
-                destination: '/spare-parts/product'
+                source: '/:productsSlug(spare-parts|wheels|cabins)/(.*)/:slug',
+                destination: '/:productsSlug/product'
             }
         ];
     }
