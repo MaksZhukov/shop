@@ -256,11 +256,14 @@ const Catalog = ({
                 }
             }
         });
-        console.log(router.pathname);
+
         throttledFetchProducts(newValues, 1);
         // It needs to avoid the same seo data for the page
         router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
         router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
+        setTimeout(() => {
+            setIsClickedFind(false);
+        }, 100);
         setIsClickedFind(true);
     };
 
