@@ -138,7 +138,7 @@ function MyApp({
                                 </Container>
                             </Content>
                         </RouteShield>
-                        <Footer footer={footer}></Footer>
+                        {/* <Footer footer={footer}></Footer> */}
                         <Box bottom={0} right={0} position="fixed">
                             <Button variant="contained" component="a" href="tel:+375297804780">
                                 Заказать

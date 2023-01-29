@@ -304,14 +304,14 @@ export const getServerSideProps = getPageProps(
             } = await fetchModelBySlug(model, {
                 populate: ['seoWheels.images', 'image']
             });
-            seo = data.seoSpareParts;
+            seo = data.seoWheels;
         } else if (brand) {
             const {
                 data: { data }
             } = await fetchBrandBySlug(brand, {
                 populate: ['seoWheels.images', 'image']
             });
-            seo = data.seoSpareParts;
+            seo = data.seoWheels;
         } else {
             const {
                 data: { data }
