@@ -253,7 +253,6 @@ export const getServerSideProps = getPageProps(
     async (context) => {
         const { slug = [], ...rest } = context.query;
         const [brand, modelParam] = slug;
-        console.log('HELLO BRO', brand, modelParam, rest);
 
         let seo: SEO | null = null;
         if (modelParam) {
