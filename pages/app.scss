@@ -2,6 +2,10 @@
     color: #fdb819;
 }
 
+.slick-slide div {
+    outline: none;
+}
+
 /* custom scrollbar */
 ::-webkit-scrollbar {
     width: 18px;
