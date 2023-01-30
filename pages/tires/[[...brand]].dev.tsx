@@ -108,7 +108,9 @@ const Tires: NextPage<Props> = ({ page, tireBrands }) => {
                             })
                     ),
                 noOptionsText: noOptionsText
-            },
+            }
+        ],
+        [
             {
                 id: 'height',
                 placeholder: 'Высота',

@@ -87,8 +87,9 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
             <Input
                 key={item.id}
                 fullWidth
+                sx={{ bgcolor: '#fff', padding: '0 1em' }}
                 onChange={handleChangeNumberInput(item)}
-                value={router.query[item.id] ?? ''}
+                value={values[item.id]}
                 placeholder={item.placeholder}
                 type="number"></Input>
         );
