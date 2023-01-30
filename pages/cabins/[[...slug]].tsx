@@ -219,7 +219,7 @@ export default Cabins;
 export const getServerSideProps = getPageProps(
     undefined,
     async (context) => {
-        const { slug } = context.query;
+        const { slug = [] } = context.query;
         const [brand, modelParam] = slug;
 
         let seo: SEO | null = null;
