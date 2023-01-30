@@ -228,7 +228,6 @@ const Home: NextPage<Props> = ({
         } else {
             path = asPath;
         }
-        console.log(path);
         return path;
     };
     const filtersBtn = (
