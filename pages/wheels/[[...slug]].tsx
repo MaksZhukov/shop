@@ -130,7 +130,7 @@ const Wheels: NextPage<Props> = ({
                 placeholder: 'Модель',
                 type: 'autocomplete',
                 disabledDependencyId: 'brand',
-                options: models.map((item) => item.name),
+                options: models.map((item) => ({ label: item.name, value: item.slug })),
                 onOpen: (values: any) =>
                     handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
                         fetchModels({

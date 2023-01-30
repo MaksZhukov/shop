@@ -48,7 +48,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             data: { data: pageSparePart }
         }
     ] = await Promise.all([
-        fetchSparePart(context.params?.slug || ''),
+        fetchSparePart(context.params.slug || ''),
         fetchPage<PageProduct>('product', { populate: ['linksWithImages.image', 'benefits'] })(),
         fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
     ]);
