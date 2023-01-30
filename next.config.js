@@ -29,8 +29,8 @@ const nextConfig = {
                 destination: '/:productsSlug/:brand/:model'
             },
             {
-                source: '/:productsSlug(spare-parts|wheels|cabins)/(.*)/:slug',
-                destination: '/:productsSlug/product'
+                source: '/:productsSlug(spare-parts|wheels|cabins)/:brand/:slug',
+                destination: '/:productsSlug/product/:slug'
             }
         ];
     }

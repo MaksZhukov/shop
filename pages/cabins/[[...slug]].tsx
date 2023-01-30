@@ -136,7 +136,7 @@ const Cabins: NextPage<Props> = ({
                 placeholder: 'Модель',
                 type: 'autocomplete',
                 disabledDependencyId: 'brand',
-                options: models.map((item) => item.name),
+                options: models.map((item) => ({ label: item.name, value: item.slug })),
                 onOpen: handleOpenAutocompleteModel,
                 noOptionsText: noOptionsText
             }
