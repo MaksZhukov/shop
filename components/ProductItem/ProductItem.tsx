@@ -151,7 +151,7 @@ const ProductItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width =
             ) : (
                 <Box>
                     <Image
-                        style={{ height: '100%', objectFit: 'cover' }}
+                        style={{ objectFit: 'cover' }}
                         src=""
                         width={activeView === 'grid' ? 280 : 200}
                         height={activeView === 'grid' ? 215 : 150}
