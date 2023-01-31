@@ -23,6 +23,17 @@ import { getStringByTemplateStr } from 'services/StringService';
 import { Brand, ProductBrandTexts } from 'api/brands/types';
 import Typography from 'components/Typography';
 
+const WHY_WE_BEST = [
+    '/product_why_we_best_1.png',
+    '/product_why_we_best_2.png',
+    '/product_why_we_best_3.png',
+    '/product_why_we_best_4.png',
+    '/product_why_we_best_5.png',
+    '/product_why_we_best_6.png',
+    '/product_why_we_best_7.png',
+    '/product_why_we_best_8.png'
+];
+
 interface Props {
     page: PageProduct & { textAfterDescription: string; textAfterBenefits: string };
     data: IProduct;
@@ -190,30 +201,45 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                         ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
                     </Typography>
                 }></CarouselProducts>
-            {page.benefits && (
-                <>
-                    <Typography gutterBottom component="h3" variant="h5">
-                        Почему мы лучшие в своем деле?
-                    </Typography>
-                    <Box marginY="2em 1em" display="flex" flexWrap="wrap" justifyContent={'space-around'}>
-                        {page.benefits.map((item) => (
-                            <Box maxWidth={208} key={item.id}>
-                                <Image
-                                    alt={item.alternativeText}
-                                    width={110}
-                                    height={110}
-                                    src={item.formats?.thumbnail.url || item.url}></Image>
-                                <Typography component="p" marginY="1em" textAlign="center" variant="body1">
-                                    {item.caption}
-                                </Typography>
-                            </Box>
-                        ))}
-                    </Box>
-                </>
-            )}
-            {page.textAfterBenefits && (
-                <ReactMarkdown content={getStringByTemplateStr(page.textAfterBenefits, data)}></ReactMarkdown>
-            )}
+            <Typography
+                withSeparator
+                textTransform="uppercase"
+                fontWeight="500"
+                gutterBottom
+                component="h3"
+                marginBottom="1.5em"
+                marginTop="1.5em"
+                variant="h5">
+                Почему мы лучшие в своем деле?
+            </Typography>
+            <Box display="flex" justifyContent="space-between" marginBottom="1em" flexWrap="wrap">
+                {WHY_WE_BEST.map((url) => (
+                    <Image
+                        style={{ marginBottom: '2em' }}
+                        alt={url}
+                        isOnSSR={false}
+                        key={url}
+                        src={url}
+                        width={280}
+                        height={185}></Image>
+                ))}
+            </Box>
+            <Typography
+                withSeparator
+                marginBottom="1.5em"
+                textTransform="uppercase"
+                fontWeight="500"
+                g
+                component="h3"
+                variant="h5">
+                Мы осуществляем доставку во все <br></br> населенные пункты беларуси
+            </Typography>
+            <Typography>
+                Наши Запчасти б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в следующих городах
+                Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем что работаем во всех
+                городах и деревнях, просто доставка займет немного больше времени. Будьте уверены, мы приложим все силы,
+                что бы ваш товар - {data.h1} был доставлен максимально быстро.
+            </Typography>
             {brandText && <ReactMarkdown content={brandText}></ReactMarkdown>}
         </>
     );
