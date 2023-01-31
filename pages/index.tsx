@@ -62,29 +62,12 @@ const ADVANTAGES = ['/advantage_1.png', '/advantage_2.png', '/advantage_3.png', 
 
 interface Props {
     page: PageMain;
-    cars: Car[];
     reviews: Review[];
-    autocomises: Autocomis[];
-    serviceStations: ServiceStation[];
-    articles: Article[];
     brands: Brand[];
     spareParts: ApiResponse<SparePart[]>;
-    loadMoreBrands: () => void;
-    onScrollBrandsList: UIEventHandler<HTMLUListElement>;
 }
 
-const Home: NextPage<Props> = ({
-    page,
-    cars = [],
-    articles = [],
-    brands = [],
-    spareParts,
-    reviews,
-    serviceStations,
-    autocomises,
-    loadMoreBrands,
-    onScrollBrandsList
-}) => {
+const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
@@ -221,7 +204,6 @@ const Home: NextPage<Props> = ({
             placeholder: 'Марка',
             options: brands.map((item) => ({ label: item.name, value: item.slug })),
             onChange: handleChangeBrandAutocomplete,
-            onScroll: loadMoreBrands,
             noOptionsText: noOptionsText
         },
 

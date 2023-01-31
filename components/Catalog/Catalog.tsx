@@ -2,6 +2,7 @@ import {
     Button,
     CircularProgress,
     Input,
+    Link,
     MenuItem,
     Pagination,
     PaginationItem,
@@ -29,8 +30,8 @@ import { AxiosResponse } from 'axios';
 import MenuIcon from '@mui/icons-material/MenuSharp';
 import GridViewIcon from '@mui/icons-material/GridViewSharp';
 import Typography from 'components/Typography';
+import CarouselProducts from 'components/CarouselProducts';
 
-const DynamicCarouselProducts = dynamic(() => import('components/CarouselProducts'));
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
 const selectSortItems = [
@@ -79,6 +80,7 @@ const Catalog = ({
         searchValue: querySearchValue = '',
         sort = 'createdAt:desc',
         page = '1',
+        slug,
         ...othersQuery
     } = router.query as {
         searchValue: string;
@@ -86,6 +88,9 @@ const Catalog = ({
         page: string;
         [key: string]: string;
     };
+
+    const [brand, modelParam] = slug || [];
+    const model = modelParam ? modelParam.replace('model-', '') : modelParam;
 
     const [throttledFetchProducts] = useThrottle(async ({ searchValue, ...values }: any, paramPage?: number) => {
         setIsLoading(true);
@@ -168,23 +173,65 @@ const Catalog = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.isReady]);
 
-    let queryBrand = router.query.brand ? router.query.brand[0] : undefined;
-
     useEffect(() => {
         if (router.isReady && !isClickedFind) {
             throttledFetchProducts(
                 Object.keys(othersQuery).reduce(
                     (prev, key) => ({
                         ...prev,
-                        [key]: Array.isArray(othersQuery[key]) ? othersQuery[key][0] : othersQuery[key]
+                        [key]: othersQuery[key]
                     }),
-                    { searchValue: querySearchValue }
+                    { searchValue: querySearchValue, brand, model }
                 )
             );
             setSearchValue(querySearchValue);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sort, page, queryBrand, router.isReady]);
+    }, [sort, page, brand, router.isReady]);
+
+    const handleClickFind = (values: { [key: string]: string | null }) => {
+        let newValues: { [key: string]: string } = { ...values, searchValue };
+
+        let hasNoBrandChanges =
+            (newValues.brand && brand && newValues.brand === brand) || (!newValues.brand && !brand) ? true : false;
+        let hasNoModelChanges =
+            (newValues.model && model && newValues.model === model.replace('model-', '')) ||
+            (!newValues.model && !model)
+                ? true
+                : false;
+        let shallow = hasNoBrandChanges && hasNoModelChanges;
+        Object.keys(newValues).forEach((key) => {
+            if (!newValues[key]) {
+                if (key === 'brand' && !newValues['model']) {
+                    delete router.query.slug;
+                } else {
+                    delete router.query[key];
+                }
+            }
+        });
+        Object.keys(newValues).forEach((key) => {
+            if (newValues[key]) {
+                if (key === 'brand') {
+                    router.query['slug'] = [newValues[key]];
+                    delete router.query[key];
+                } else if (key === 'model') {
+                    (router.query['slug'] as string[]).push('model-' + newValues[key]);
+                    delete router.query[key];
+                } else {
+                    router.query[key] = newValues[key];
+                }
+            }
+        });
+
+        throttledFetchProducts(newValues, 1);
+        // It needs to avoid the same seo data for the page
+        router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
+        router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
+        setTimeout(() => {
+            setIsClickedFind(false);
+        }, 100);
+        setIsClickedFind(true);
+    };
 
     const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
@@ -194,39 +241,6 @@ const Catalog = ({
         router.query.sort = e.target.value as string;
         router.push({ pathname: router.pathname, query: router.query });
     };
-
-    const handleClickFind = (values: { [key: string]: string | null }) => {
-        let newValues: { [key: string]: string } = { ...values, searchValue };
-
-        let shallow =
-            (newValues.brand && router.query.brand && newValues.brand === router.query.brand[0]) ||
-            (!newValues.brand && !router.query.brand)
-                ? true
-                : false;
-        Object.keys(newValues).forEach((key) => {
-            if (!newValues[key]) {
-                delete router.query[key];
-            } else {
-                router.query[key] = key === 'brand' ? [newValues[key]] : newValues[key];
-            }
-        });
-        throttledFetchProducts(newValues, 1);
-        // It needs to avoid the same seo data for the page
-        setTimeout(() => {
-            router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
-            setIsClickedFind(false);
-        }, 100);
-        setIsClickedFind(true);
-    };
-
-    const renderLinkWithImage = (image: IImage, link: string, caption?: string) => (
-        <WhiteBox key={image?.id || link} textAlign="center">
-            <LinkWithImage image={image} link={link} caption={caption}></LinkWithImage>
-        </WhiteBox>
-    );
-
-    const renderLinksWithImages = (items?: { image: IImage; link: string; caption?: string }[]) =>
-        items?.map((item) => renderLinkWithImage(item.image, item.link, item.caption));
 
     const handleClickChangeView = (view: 'grid' | 'list', position: 'top' | 'bottom') => () => {
         if (position === 'bottom') {
@@ -353,22 +367,20 @@ const Catalog = ({
                                 Данных не найдено
                             </Typography>
                         ) : (
-                            <>
-                                <CircularProgress></CircularProgress>
-                            </>
+                            <CircularProgress></CircularProgress>
                         )}
                     </Box>
                     {renderBar('bottom')}
                 </Box>
             </Box>
             {!!newProducts.length && (
-                <DynamicCarouselProducts
+                <CarouselProducts
                     data={newProducts}
                     title={
                         <Typography withSeparator fontWeight="bold" marginBottom="1em" marginTop="1em" variant="h5">
                             ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
                         </Typography>
-                    }></DynamicCarouselProducts>
+                    }></CarouselProducts>
             )}
         </>
     );

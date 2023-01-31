@@ -1,9 +1,8 @@
-import { Box, Button, Input, TextField, Typography } from '@mui/material';
+import { Box, Button, Input, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
-import { ChangeEvent, forwardRef, ReactNode, useEffect, useImperativeHandle, useState } from 'react';
+import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
-import classNames from 'classnames';
 import Autocomplete from 'components/Autocomplete';
 
 interface Props {
@@ -28,23 +27,21 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
     const router = useRouter();
     useEffect(() => {
         let newValues: any = {};
+        let [brand, model] = router.query.slug || [];
         config.forEach((item) => {
             item.forEach((child) => {
-                if (router.query[child.id]) {
-                    newValues[child.id] =
-                        child.id === 'brand' && Array.isArray((router.query as any)[child.id])
-                            ? (router.query as any)[child.id][0]
-                            : router.query[child.id];
+                if (child.id === 'brand') {
+                    newValues[child.id] = brand || null;
+                } else if (child.id === 'model') {
+                    newValues[child.id] = model ? model.replace('model-', '') : null;
+                } else if (router.query[child.id]) {
+                    newValues[child.id] = router.query[child.id];
                 }
             });
         });
         setValues(newValues);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router.query.brand]);
-
-    useImperativeHandle(ref, () => ({
-        onClickFind: handleClickFind
-    }));
+    }, [router.query.slug]);
 
     const handleChangeNumberInput = (item: NumberType) => (e: ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, [item.id]: e.target.value });

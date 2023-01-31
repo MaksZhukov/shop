@@ -43,8 +43,11 @@ const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
 
     const breadcrumbs = useMemo(
         function generateBreadcrumbs() {
-            const asPathNestedRoutes = generatePathParts(router.asPath);
-            const pathnameNestedRoutes = generatePathParts(router.pathname);
+            const asPathNestedRoutes = generatePathParts(router.asPath.replace('model-', ''));
+
+            const pathnameNestedRoutes = generatePathParts(
+                router.pathname.includes('[[...slug]]') ? router.pathname + '/[[...slug]]' : router.pathname
+            );
 
             const crumblist = asPathNestedRoutes.map((subpath, idx) => {
                 const param = pathnameNestedRoutes[idx].replace('[', '').replace(']', '');

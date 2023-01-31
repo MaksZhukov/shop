@@ -1,16 +1,12 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
-import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
+import { ApiResponse, Filters, SEO } from 'api/types';
 import { API_MAX_LIMIT } from 'api/constants';
-import { useState, SetStateAction, Dispatch } from 'react';
+import { useState, SetStateAction, Dispatch, useEffect } from 'react';
 import { AxiosResponse } from 'axios';
 import { useSnackbar } from 'notistack';
 import { getPageProps } from 'services/PagePropsService';
-import { Car } from 'api/cars/types';
-import { Autocomis } from 'api/autocomises/types';
-import { ServiceStation } from 'api/serviceStations/types';
-import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { fetchGenerations } from 'api/generations/generations';
@@ -18,21 +14,15 @@ import { KindSparePart } from 'api/kindSpareParts/types';
 import { Generation } from 'api/generations/types';
 import { Model } from 'api/models/types';
 import { Brand } from 'api/brands/types';
-import { fetchModels } from 'api/models/models';
-import { DefaultPage, PageMain } from 'api/pages/types';
+import { fetchModelBySlug, fetchModels } from 'api/models/models';
+import { DefaultPage } from 'api/pages/types';
 import { fetchCabins } from 'api/cabins/cabins';
 import { fetchBrandBySlug } from 'api/brands/brands';
+import { useRouter } from 'next/router';
 
 interface Props {
     page: DefaultPage;
-    cars: Car[];
     brands: Brand[];
-    articles: Article[];
-    advertising: LinkWithImage[];
-    autocomises: Autocomis[];
-    deliveryAuto: LinkWithImage;
-    discounts: LinkWithImage[];
-    serviceStations: ServiceStation[];
 }
 
 const Cabins: NextPage<Props> = ({ page, brands }) => {
@@ -42,6 +32,20 @@ const Cabins: NextPage<Props> = ({ page, brands }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { enqueueSnackbar } = useSnackbar();
+
+    const router = useRouter();
+    const [brand, model] = router.query.slug || [];
+
+    useEffect(() => {
+        if (!models.length && model) {
+            handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+                fetchModels({
+                    filters: { brand: { slug: brand } },
+                    pagination: { limit: API_MAX_LIMIT }
+                })
+            )();
+        }
+    }, [model]);
 
     const handleOpenAutocomplete =
         <T extends any>(
@@ -109,7 +113,7 @@ const Cabins: NextPage<Props> = ({ page, brands }) => {
                 placeholder: 'Модель',
                 type: 'autocomplete',
                 disabledDependencyId: 'brand',
-                options: models.map((item) => item.name),
+                options: models.map((item) => ({ label: item.name, value: item.slug })),
                 onOpen: handleOpenAutocompleteModel,
                 noOptionsText: noOptionsText
             }
@@ -182,13 +186,24 @@ const Cabins: NextPage<Props> = ({ page, brands }) => {
 export default Cabins;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-    const { brand } = context.query;
-    const brandParam = brand ? brand[0] : undefined;
+    const { slug = [] } = context.query;
+    const [brand, modelParam] = slug;
+
     let seo: SEO | null = null;
-    if (brandParam) {
+    if (modelParam) {
+        let model = modelParam.replace('model-', '');
         const {
             data: { data }
-        } = await fetchBrandBySlug(brandParam, { populate: ['seoCabins.images', 'image'] });
+        } = await fetchModelBySlug(model, {
+            populate: ['seoCabins.images', 'image']
+        });
+        seo = data.seoCabins;
+    } else if (brand) {
+        const {
+            data: { data }
+        } = await fetchBrandBySlug(brand, {
+            populate: ['seoCabins.images', 'image']
+        });
         seo = data.seoCabins;
     } else {
         const {
