@@ -1,18 +1,19 @@
-import { fetchPage } from 'api/pages';
-import { PageProduct, PageProductSparePart } from 'api/pages/types';
+import type { NextPage } from 'next';
 import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
+import { getPageProps } from 'services/PagePropsService';
+import { fetchPage } from 'api/pages';
+import { PageMain, PageProduct, PageProductSparePart } from 'api/pages/types';
+import { getProductPageSeo } from 'services/ProductService';
 import { SparePart } from 'api/spareParts/types';
 import Product from 'components/Product';
-import { getPageProps } from 'services/PagePropsService';
-import { getProductPageSeo } from 'services/ProductService';
 
 interface Props {
     data: SparePart;
-    page: PageProduct & PageProductSparePart;
     relatedProducts: SparePart[];
+    page: PageProduct & PageProductSparePart;
 }
 
-const SparePartPage = ({ data, page, relatedProducts }: Props) => {
+const SpareParts: NextPage<Props> = ({ data, relatedProducts, page }) => {
     return (
         <Product
             data={data}
@@ -26,13 +27,14 @@ const SparePartPage = ({ data, page, relatedProducts }: Props) => {
                 { text: 'Год', value: data.year },
                 { text: 'Коробка', value: data.transmission },
                 { text: 'Обьем', value: data.volume?.name },
-                { text: 'Тип топлива', value: data.fuel as any },
-                { text: 'Описание', value: data.description }
+                { text: 'Тип топлива', value: data.fuel as any }
             ]}
-            page={page}
+            page={page as PageProduct & PageProductSparePart}
             relatedProducts={relatedProducts}></Product>
     );
 };
+
+export default SpareParts;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
     const [
@@ -46,7 +48,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             data: { data: pageSparePart }
         }
     ] = await Promise.all([
-        fetchSparePart(context.params?.slug || ''),
+        fetchSparePart(context.params.slug || ''),
         fetchPage<PageProduct>('product', { populate: ['linksWithImages.image', 'benefits'] })(),
         fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
     ]);
@@ -75,5 +77,3 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
         relatedProducts
     };
 });
-
-export default SparePartPage;

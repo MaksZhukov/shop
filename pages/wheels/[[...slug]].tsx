@@ -1,21 +1,19 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
-import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
+import { ApiResponse, Filters, SEO } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
-import { fetchBrandBySlug } from 'api/brands/brands';
-import { fetchModels } from 'api/models/models';
+import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
+import { fetchModelBySlug, fetchModels } from 'api/models/models';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
 import { API_MAX_LIMIT } from 'api/constants';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { AxiosResponse } from 'axios';
 import { getPageProps } from 'services/PagePropsService';
-import { Car } from 'api/cars/types';
-import { Autocomis } from 'api/autocomises/types';
-import { ServiceStation } from 'api/serviceStations/types';
-import { Article } from 'api/articles/types';
+import { fetchCars } from 'api/cars/cars';
+import { fetchArticles } from 'api/articles/articles';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { WheelWidth } from 'api/wheelWidths/types';
@@ -29,17 +27,11 @@ import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
 import { fetchWheelDiameterCenterHoles } from 'api/wheelDiameterCenterHoles/wheelDiameterCenterHoles';
 import { fetchWheelDiskOffsets } from 'api/wheelDiskOffsets/wheelWidths';
 import { getParamByRelation } from 'services/ParamsService';
+import { useRouter } from 'next/router';
 
 interface Props {
     page: DefaultPage;
-    cars: Car[];
     brands: Brand[];
-    articles: Article[];
-    advertising: LinkWithImage[];
-    autocomises: Autocomis[];
-    deliveryAuto: LinkWithImage;
-    discounts: LinkWithImage[];
-    serviceStations: ServiceStation[];
 }
 
 const Wheels: NextPage<Props> = ({ page, brands }) => {
@@ -52,6 +44,20 @@ const Wheels: NextPage<Props> = ({ page, brands }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { enqueueSnackbar } = useSnackbar();
+
+    const router = useRouter();
+    const [brand, model] = router.query.slug || [];
+
+    useEffect(() => {
+        if (!models.length && model) {
+            handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+                fetchModels({
+                    filters: { brand: { slug: brand } },
+                    pagination: { limit: API_MAX_LIMIT }
+                })
+            )();
+        }
+    }, [model]);
 
     const handleOpenAutocomplete =
         <T extends any>(
@@ -103,7 +109,7 @@ const Wheels: NextPage<Props> = ({ page, brands }) => {
                 placeholder: 'Модель',
                 type: 'autocomplete',
                 disabledDependencyId: 'brand',
-                options: models.map((item) => item.name),
+                options: models.map((item) => ({ label: item.name, value: item.slug })),
                 onOpen: (values: any) =>
                     handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
                         fetchModels({
@@ -256,13 +262,24 @@ const Wheels: NextPage<Props> = ({ page, brands }) => {
 export default Wheels;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-    const { brand } = context.query;
-    const brandParam = brand ? brand[0] : undefined;
+    const { slug = [] } = context.query;
+    const [brand, modelParam] = slug;
+
     let seo: SEO | null = null;
-    if (brandParam) {
+    if (modelParam) {
+        let model = modelParam.replace('model-', '');
         const {
             data: { data }
-        } = await fetchBrandBySlug(brandParam, { populate: ['seoWheels.images', 'image'] });
+        } = await fetchModelBySlug(model, {
+            populate: ['seoWheels.images', 'image']
+        });
+        seo = data.seoWheels;
+    } else if (brand) {
+        const {
+            data: { data }
+        } = await fetchBrandBySlug(brand, {
+            populate: ['seoWheels.images', 'image']
+        });
         seo = data.seoWheels;
     } else {
         const {

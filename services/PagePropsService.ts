@@ -7,8 +7,7 @@ import { AxiosResponse } from 'axios';
 export const getPageProps =
     <T>(fetchPage?: () => Promise<AxiosResponse<ApiResponse<T>>>, ...functions: ((context: any) => any)[]) =>
     async (context: any) => {
-        let props = { data: { seo: {} }, layout: { footer: {} } } as {
-            data: T;
+        let props = { page: { seo: {} }, layout: { footer: {} } } as {
             layout: { footer: any };
             [key: string]: any;
         };

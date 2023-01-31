@@ -33,8 +33,7 @@ const WheelPage = ({ data, page, relatedProducts }: Props) => {
                 {
                     text: 'ET вылет',
                     value: data.diskOffset?.name
-                },
-                { text: 'Описание', value: data.description }
+                }
             ]}
             page={page}
             relatedProducts={relatedProducts}></Product>
