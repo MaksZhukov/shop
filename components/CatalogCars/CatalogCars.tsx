@@ -247,49 +247,37 @@ const CatalogCars: FC<Props> = ({
     };
 
     return (
-        <Catalog
-            filtersConfig={filtersConfig}
-            articles={articles}
-            autocomises={autocomises}
-            seo={page.seo}
-            advertising={advertising}
-            deliveryAuto={deliveryAuto}
-            discounts={discounts}
-            serviceStations={serviceStations}
-            onClickFind={handleClickFind}
-            middleContent={
-                <WhiteBox
-                    className={classNames({
-                        [styles['loading']]: isLoading,
-                        [styles['content-items_no-data']]: !cars.length
-                    })}>
-                    {cars.length ? (
-                        cars.map((item) => <CarItem key={item.id} data={item}></CarItem>)
-                    ) : isFirstDataLoaded && !isLoading ? (
-                        <Typography textAlign="center" variant="h5">
-                            Данных не найдено
-                        </Typography>
-                    ) : (
-                        <></>
-                    )}
-                    {pageCount > 1 && (
-                        <WhiteBox display="flex" justifyContent="center">
-                            <Pagination
-                                renderItem={(params) => (
-                                    <NextLink shallow href={`${router.pathname}?page=${params.page}`}>
-                                        <PaginationItem {...params}>{params.page}</PaginationItem>
-                                    </NextLink>
-                                )}
-                                page={+qPage}
-                                siblingCount={2}
-                                color="primary"
-                                count={pageCount}
-                                variant="outlined"
-                            />
-                        </WhiteBox>
-                    )}
+        <WhiteBox
+            className={classNames({
+                [styles['loading']]: isLoading,
+                [styles['content-items_no-data']]: !cars.length
+            })}>
+            {cars.length ? (
+                cars.map((item) => <CarItem key={item.id} data={item}></CarItem>)
+            ) : isFirstDataLoaded && !isLoading ? (
+                <Typography textAlign="center" variant="h5">
+                    Данных не найдено
+                </Typography>
+            ) : (
+                <></>
+            )}
+            {pageCount > 1 && (
+                <WhiteBox display="flex" justifyContent="center">
+                    <Pagination
+                        renderItem={(params) => (
+                            <NextLink shallow href={`${router.pathname}?page=${params.page}`}>
+                                <PaginationItem {...params}>{params.page}</PaginationItem>
+                            </NextLink>
+                        )}
+                        page={+qPage}
+                        siblingCount={2}
+                        color="primary"
+                        count={pageCount}
+                        variant="outlined"
+                    />
                 </WhiteBox>
-            }></Catalog>
+            )}
+        </WhiteBox>
     );
 };
 
