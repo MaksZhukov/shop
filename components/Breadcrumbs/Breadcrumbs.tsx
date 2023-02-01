@@ -2,6 +2,7 @@ import { Breadcrumbs as MUIBreadcrumbs, Link, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { FC, useMemo } from 'react';
+import { Container } from '@mui/system';
 
 const generatePathParts = (pathStr: string) => {
     const pathWithoutQuery = pathStr.split('?')[0];
@@ -69,22 +70,24 @@ const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
     }
 
     return (
-        <MUIBreadcrumbs sx={{ marginY: '1em' }} aria-label="breadcrumb">
-            {breadcrumbs.length > 1 &&
-                breadcrumbs.map((crumb, idx) =>
-                    idx === breadcrumbs.length - 1 ? (
-                        <Typography textTransform="capitalize" key={crumb.text} color="text.secondary">
-                            {crumb.text}
-                        </Typography>
-                    ) : (
-                        <NextLink key={crumb.text} href={crumb.href}>
-                            <Link component="span" underline="hover" color="primary.main">
-                                <Typography textTransform="capitalize">{crumb.text}</Typography>
-                            </Link>
-                        </NextLink>
-                    )
-                )}
-        </MUIBreadcrumbs>
+        <Container>
+            <MUIBreadcrumbs sx={{ marginY: '1em' }} aria-label="breadcrumb">
+                {breadcrumbs.length > 1 &&
+                    breadcrumbs.map((crumb, idx) =>
+                        idx === breadcrumbs.length - 1 ? (
+                            <Typography textTransform="capitalize" key={crumb.text} color="text.secondary">
+                                {crumb.text}
+                            </Typography>
+                        ) : (
+                            <NextLink key={crumb.text} href={crumb.href}>
+                                <Link component="span" underline="hover" color="primary.main">
+                                    <Typography textTransform="capitalize">{crumb.text}</Typography>
+                                </Link>
+                            </NextLink>
+                        )
+                    )}
+            </MUIBreadcrumbs>
+        </Container>
     );
 };
 

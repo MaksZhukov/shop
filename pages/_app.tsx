@@ -63,9 +63,6 @@ function MyApp({ Component, pageProps: { hasGlobalContainer = true, layout, ...r
 
     const renderContent = (
         <>
-            <Breadcrumbs
-                exclude={['buyback-cars']}
-                h1={restPageProps.data?.h1 || restPageProps.page?.name}></Breadcrumbs>
             <Component {...restPageProps} />
             {!hasGlobalContainer ? (
                 <Container>
@@ -99,6 +96,9 @@ function MyApp({ Component, pageProps: { hasGlobalContainer = true, layout, ...r
                         <Header brands={restPageProps.brands}></Header>
                         <RouteShield>
                             <Content>
+                                <Breadcrumbs
+                                    exclude={['buyback-cars']}
+                                    h1={restPageProps.data?.h1 || restPageProps.page?.name}></Breadcrumbs>
                                 {hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
                             </Content>
                         </RouteShield>
