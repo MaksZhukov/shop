@@ -12,7 +12,7 @@ import styles from './CarouselReviews.module.scss';
 interface Props {
 	data?: Review[];
 	slidesToShow?: number;
-	marginBottom: string;
+	marginBottom?: string;
 }
 
 const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom }) => {

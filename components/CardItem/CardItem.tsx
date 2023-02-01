@@ -46,7 +46,7 @@ const CardItem: FC<Props> = ({ image, description, name, link }) => {
                     <Typography marginTop="0.5em">
                         <NextLink href={link}>
                             <Link color="text.secondary" component="span" underline="hover">
-                                Читать далее >>
+                                Читать далее {'>>'}
                             </Link>
                         </NextLink>
                     </Typography>

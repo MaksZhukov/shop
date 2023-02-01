@@ -229,7 +229,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 marginBottom="1.5em"
                 textTransform="uppercase"
                 fontWeight="500"
-                g
                 component="h3"
                 variant="h5">
                 Мы осуществляем доставку во все <br></br> населенные пункты беларуси
