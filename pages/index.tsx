@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { Box, Button, CircularProgress, Link, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, Link, TextField, useMediaQuery } from '@mui/material';
 
-import { Dispatch, SetStateAction, UIEventHandler, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, UIEventHandler, useMemo, useRef, useState } from 'react';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
@@ -36,6 +36,7 @@ import Typography from 'components/Typography';
 import CarouselReviews from 'components/CarouselReviews';
 import { Container } from '@mui/system';
 import Filters from 'components/Filters';
+import { Autocomplete as MUIAutocomplete } from '@mui/material';
 import Autocomplete from 'components/Autocomplete';
 import qs from 'qs';
 import Image from 'components/Image';
@@ -102,7 +103,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
 
     const updateValue = (id: string, selected: { value: string } | string | null) => {
         let value = typeof selected === 'string' ? selected : selected?.value || null;
-        setValues({ ...values, [id]: value });
+        setValues((prevValues) => ({ ...prevValues, [id]: value }));
     };
 
     const handleOpenAutocomplete =
@@ -129,14 +130,17 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
             }
         };
 
-    const handleChangeBrandAutocomplete = (_: any, selected: string | null) => {
+    const handleChangeBrandAutocomplete = (_: any, selected: { value: string; label: string } | null) => {
         updateValue('brand', selected);
+        updateValue('model', null);
+        updateValue('generation', null);
         setModels([]);
         setGenerations([]);
     };
 
-    const handleChangeModelAutocomplete = (_: any, selected: string | null) => {
+    const handleChangeModelAutocomplete = (_: any, selected: { value: string; label: string } | null) => {
         updateValue('model', selected);
+        updateValue('generation', null);
         setGenerations([]);
     };
 
@@ -176,7 +180,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
         debouncedFetchKindSparePartsRef(value);
     };
 
-    const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLUListElement> = (event) => {
+    const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLDivElement> & UIEventHandler<HTMLUListElement> = (
+        event
+    ) => {
         if (
             event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
             event.currentTarget.scrollHeight
@@ -185,17 +191,17 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
         }
     };
 
-    const handleChangeAutocomplete = (id: string) => (_: any, selected: { value: string } | string | null) => {
-        updateValue(id, selected);
-    };
+    const handleChangeAutocomplete =
+        (id: string) => (_: any, selected: { value: string; label: string } | string | null) => {
+            updateValue(id, selected);
+        };
 
     const handleClickFind = () => {
-        let { brand, ...restValues } = values;
-        router.push(`/spare-parts/${brand || ''}?` + qs.stringify(restValues, { encode: false }));
-    };
-
-    const handleClickBuyback = () => {
-        router.push('/buyback-cars');
+        let { brand, model, ...restValues } = values;
+        router.push(
+            `/spare-parts/${model ? `${brand}/model-${model}` : brand ? `${brand}` : ''}?` +
+                qs.stringify(restValues, { encode: false })
+        );
     };
 
     const filtersConfig = [
@@ -211,7 +217,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
             id: 'model',
             placeholder: 'Модель',
             disabled: !values.brand,
-            options: models.map((item) => item.name),
+            options: models.map((item) => ({ label: item.name, value: item.slug })),
             onChange: handleChangeModelAutocomplete,
             onOpen: handleOpenAutocompleteModel,
             noOptionsText: noOptionsText
@@ -280,20 +286,22 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
                     <Box display="flex" width="100%" position="absolute" bottom="4em" className={styles['head-search']}>
                         <Box display="flex" gap="0.5em" flex="1" flexWrap="wrap" className={styles.filters}>
                             {filtersConfig.map((item) => {
+                                let value = (item.options as any[]).every((option: any) => typeof option === 'string')
+                                    ? values[item.id]
+                                    : (item.options as any[]).find((option) => option.value === values[item.id]);
                                 return (
                                     <Box width={'calc(25% - 0.5em)'} key={item.id}>
                                         <Autocomplete
-                                            width
-                                            //@ts-expect-error error
                                             options={item.options}
                                             noOptionsText={item.noOptionsText}
                                             onOpen={item.onOpen}
                                             placeholder={item.placeholder}
+                                            onScroll={item.onScroll}
                                             onChange={item.onChange || handleChangeAutocomplete(item.id)}
                                             fullWidth
                                             onInputChange={item.onInputChange}
                                             disabled={item.disabled}
-                                            value={values[item.id] || null}></Autocomplete>
+                                            value={value || null}></Autocomplete>
                                     </Box>
                                 );
                             })}
