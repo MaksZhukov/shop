@@ -11,6 +11,7 @@ import CardItem from 'components/CardItem';
 import { Box, Container } from '@mui/system';
 import Image from 'components/Image';
 import Typography from 'components/Typography';
+import BlockImages from 'components/BlockImages';
 
 interface Props {
 	page: DefaultPage;
@@ -77,7 +78,7 @@ const Vacancies: NextPage<Props> = ({ page, vacancies }) => {
 		let [mainImg, ...otherImgs] = item.images;
 		return (
 			<>
-				<Container sx={{ marginBottom: '3em' }}>
+				<Container>
 					<Box key={item.id} display='flex'>
 						<Image isOnSSR={false} src={mainImg} alt='alt' width={500} height={360}></Image>
 						<Box paddingLeft='3em'>
@@ -122,17 +123,7 @@ const Vacancies: NextPage<Props> = ({ page, vacancies }) => {
 						</Box>
 					</Box>
 				</Container>
-				<Box paddingY='3em' marginBottom='3em' bgcolor='#fff'>
-					<Container>
-						<Box display='flex'>
-							{otherImgs.map((option) => (
-								<Box key={option}>
-									<Image isOnSSR={false} src={option} alt='alt' width={390} height={270}></Image>
-								</Box>
-							))}
-						</Box>
-					</Container>
-				</Box>
+				<BlockImages imageSRCs={otherImgs}></BlockImages>
 				<Container sx={{ marginBottom: '8em' }}>
 					<Typography
 						marginBottom='2em'
@@ -156,8 +147,17 @@ const Vacancies: NextPage<Props> = ({ page, vacancies }) => {
 									</Typography>
 								))}
 							</Box>
+							<Box marginTop='2em' display='flex' justifyContent='center'>
+								<Image
+									src='/logo_medium.png'
+									isOnSSR={false}
+									width={315}
+									height={87}
+									alt='Logo'
+								></Image>
+							</Box>
 						</Box>
-						<Box flex='1' paddingRight='5em'>
+						<Box flex='1' paddingRight='10em'>
 							<Typography color='text.secondary' variant='h6' textTransform='uppercase'>
 								Требования
 							</Typography>
