@@ -8,6 +8,7 @@ import Image from 'components/Image';
 import { Box, Container } from '@mui/system';
 import Typography from 'components/Typography';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
+import BlockImages from 'components/BlockImages';
 
 const DELIVERY_OTHER_CITIES = [
 	{ text: 'Время доставки', value: '1-2 рабочих дня' },
@@ -58,40 +59,7 @@ const Delivery: FC<Props> = ({ page }) => {
 					</Box>
 				</Box>
 			</Container>
-			<Box paddingY='3em' bgcolor='#fff'>
-				<Container>
-					<Box display='flex' gap={'1em'}>
-						<Box>
-							<Image
-								width={390}
-								height={260}
-								src='/delivery_img.png'
-								isOnSSR={false}
-								alt={'Delivery'}
-							></Image>
-						</Box>
-						<Box>
-							<Image
-								width={390}
-								height={260}
-								src='/delivery_img.png'
-								isOnSSR={false}
-								alt={'Delivery'}
-							></Image>
-						</Box>
-						<Box>
-							{' '}
-							<Image
-								width={390}
-								height={260}
-								src='/delivery_img.png'
-								isOnSSR={false}
-								alt={'Delivery'}
-							></Image>
-						</Box>
-					</Box>
-				</Container>
-			</Box>
+			<BlockImages imageSRCs={['/delivery_img.png', '/delivery_img.png', '/delivery_img.png']}></BlockImages>
 			<Container>
 				<Typography marginTop='1em' textTransform='uppercase' withSeparator component='h2' variant='h4'>
 					Доставка в другие города (по Беларуси)
@@ -154,40 +122,10 @@ const Delivery: FC<Props> = ({ page }) => {
 					</Box>
 				</Box>
 			</Container>
-			<Box marginBottom='-2em' bgcolor='#fff'>
-				<Container>
-					<Box display='flex' gap={'1em'}>
-						<Box>
-							<Image
-								width={500}
-								height={360}
-								src='/delivery_img.png'
-								isOnSSR={false}
-								alt={'Delivery'}
-							></Image>
-						</Box>
-						<Box>
-							<Image
-								width={500}
-								height={360}
-								src='/delivery_img.png'
-								isOnSSR={false}
-								alt={'Delivery'}
-							></Image>
-						</Box>
-						<Box>
-							{' '}
-							<Image
-								width={500}
-								height={360}
-								src='/delivery_img.png'
-								isOnSSR={false}
-								alt={'Delivery'}
-							></Image>
-						</Box>
-					</Box>
-				</Container>
-			</Box>
+			<BlockImages
+				imageSRCs={['/delivery_img.png', '/delivery_img.png', '/delivery_img.png']}
+				sx={{ marginBottom: '-3em' }}
+			></BlockImages>
 		</>
 	);
 };
