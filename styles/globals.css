@@ -21,6 +21,10 @@ a {
   box-sizing: border-box;
 }
 
-.image-style-side{
+.image-style-align-right{
 	float: right;
+}
+
+.image-style-align-left{
+    float: left;
 }

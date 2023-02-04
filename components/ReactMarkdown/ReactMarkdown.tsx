@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import Typography from 'components/Typography';
 import { Link, useMediaQuery } from '@mui/material';
 import Image from 'components/Image';
+import { Box } from '@mui/system';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -17,19 +18,20 @@ interface Props {
 }
 
 const ReactMarkdown: FC<Props> = ({ content, inline }) => {
+    console.log(content);
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     return (
         <ReactMarkdownLib
             rehypePlugins={[rehypeRaw]}
             components={{
-                img: ({ src, alt = '' }) => {
+                img: ({ src, alt = '', style }) => {
                     return (
                         <Image
                             alt={alt}
                             width={isMobile ? 500 : 640}
                             height={isMobile ? 375 : 480}
                             src={src || ''}
-                            {...(isMobile ? { style: { height: 'auto' } } : {})}></Image>
+                            style={{ height: 'auto', ...style }}></Image>
                     );
                 },
                 video: ({ src }) => {
@@ -57,11 +59,13 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
                         {data.children}
                     </Typography>
                 ),
-                h1: (data) => (
-                    <Typography component="h1" textAlign="center" variant="h4">
-                        {data.children}
-                    </Typography>
-                )
+                h1: (data) => {
+                    return (
+                        <Typography component="h1" variant="h4" style={data.style}>
+                            {data.children}
+                        </Typography>
+                    );
+                }
             }}>
             {content}
         </ReactMarkdownLib>
