@@ -102,7 +102,7 @@ function MyApp({
                             title={restPageProps.page?.seo?.title}
                             description={restPageProps.page?.seo?.description}
                             keywords={restPageProps.page?.seo?.keywords}></HeadSEO>
-                        {/* <Header brands={restPageProps.brands}></Header> */}
+                        <Header brands={restPageProps.brands}></Header>
                         <RouteShield>
                             <Content>
                                 <Breadcrumbs
