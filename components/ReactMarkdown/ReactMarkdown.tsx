@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, isValidElement } from 'react';
 import ReactMarkdownLib from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import getConfig from 'next/config';
@@ -7,6 +7,8 @@ import Typography from 'components/Typography';
 import { Link, useMediaQuery } from '@mui/material';
 import Image from 'components/Image';
 import { Box } from '@mui/system';
+import { Image as IImage } from 'api/types';
+import BlockImages from 'components/BlockImages';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -15,9 +17,10 @@ const { publicRuntimeConfig } = getConfig();
 interface Props {
     content: string;
     inline?: boolean;
+    blockImagesSnippets?: { [key: string]: IImage[] };
 }
 
-const ReactMarkdown: FC<Props> = ({ content, inline }) => {
+const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} }) => {
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     return (
         <ReactMarkdownLib
@@ -64,6 +67,19 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
                             {data.children}
                         </Typography>
                     );
+                },
+                code: (data) => {
+                    let snippet = Object.keys(blockImagesSnippets).find((key) =>
+                        data.children.some((item) => item === `{${key}}`)
+                    );
+                    if (snippet) {
+                        return (
+                            <BlockImages
+                                isOnSSR
+                                imageSRCs={blockImagesSnippets[snippet].map((item) => item.url)}></BlockImages>
+                        );
+                    }
+                    return <></>;
                 }
             }}>
             {content}

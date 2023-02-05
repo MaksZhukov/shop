@@ -10,21 +10,25 @@ import { Review } from 'api/reviews/types';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useMediaQuery } from '@mui/material';
+import { Image } from 'api/types';
 
 interface Props {
-    page: DefaultPage & { content: string };
+    page: DefaultPage & { content: string; blockImages1: Image[]; blockImages2: Image[] };
 }
 
-const Contacts = ({ page }: Props) => {
-    const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
-    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+const About = ({ page }: Props) => {
     return (
         <>
-            <ReactMarkdown content={page.content}></ReactMarkdown>
+            <ReactMarkdown
+                content={page.content}
+                blockImagesSnippets={{
+                    blockImages1: page.blockImages1,
+                    blockImages2: page.blockImages2
+                }}></ReactMarkdown>
         </>
     );
 };
 
-export default Contacts;
+export default About;
 
-export const getStaticProps = getPageProps(fetchPage('about'));
+export const getStaticProps = getPageProps(fetchPage('about', { populate: ['blockImages1', 'blockImages2'] }));
