@@ -546,5 +546,5 @@ export const getServerSideProps = getPageProps(
     async () => ({
         reviews: (await fetchReviews()).data.data
     }),
-    () => ({ hasGlobalContainer: false })
+    () => ({ hasGlobalContainer: false, hideSEOBox: true })
 );
