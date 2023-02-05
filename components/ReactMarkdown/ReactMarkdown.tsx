@@ -18,7 +18,6 @@ interface Props {
 }
 
 const ReactMarkdown: FC<Props> = ({ content, inline }) => {
-    console.log(content);
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     return (
         <ReactMarkdownLib
