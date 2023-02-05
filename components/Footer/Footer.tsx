@@ -28,7 +28,6 @@ const Footer: FC<Props> = ({ footer }) => {
     const description =
         typeof window !== 'undefined' ? (document.querySelector('[name=description]') as HTMLMetaElement)?.content : '';
     const title = typeof window !== 'undefined' ? document.title : '';
-
     return (
         <Box
             component="footer"
@@ -55,7 +54,7 @@ const Footer: FC<Props> = ({ footer }) => {
                                     width={20}
                                     height={20}
                                     src={item.image?.url}></Image>
-                                <Typography marginLeft="0.5em">{item.image.caption}</Typography>
+                                <Typography marginLeft="0.5em">{item.image?.caption}</Typography>
                             </ListItemButton>
                         ))}
                     </Box>
