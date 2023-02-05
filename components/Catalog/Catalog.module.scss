@@ -52,7 +52,7 @@
 }
 
 .items {
-    &:after {
+    &:not(.content-items_no-data):after {
         content: '';
         width: 280px;
     }

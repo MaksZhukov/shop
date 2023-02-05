@@ -6,18 +6,18 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 
 interface Props {
-	page: DefaultPage & { content: string };
+    page: DefaultPage & { content: string };
 }
 
 const Contacts = ({ page }: Props) => {
-	return (
-		<WhiteBox>
-			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
-				{page.seo?.h1 || 'Оплата'}
-			</Typography>
-			<ReactMarkdown content={page.content}></ReactMarkdown>
-		</WhiteBox>
-	);
+    return (
+        <>
+            <Typography marginBottom="1em" component="h1" textTransform="uppercase" variant="h4" textAlign="center">
+                {page.seo?.h1 || 'Оплата'}
+            </Typography>
+            <ReactMarkdown content={page.content}></ReactMarkdown>
+        </>
+    );
 };
 
 export default Contacts;
