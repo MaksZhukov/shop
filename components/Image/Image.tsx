@@ -5,7 +5,7 @@ const { publicRuntimeConfig } = getConfig();
 const Image = ({ src, isOnSSR = true, ...props }: ImageProps & { isOnSSR?: boolean }) => {
 	const getSrc = () => {
 		if (!src) {
-			return props.width && props.width < 300 ? '/photo_thumbnail.png' : '/photo.png';
+			return props.width && props.width < 300 ? '/photo_thumbnail.jpg' : '/photo.jpg';
 		}
 		const hasHttps = src.toString().startsWith('https');
 		if (isOnSSR) {

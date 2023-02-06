@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, isValidElement } from 'react';
 import ReactMarkdownLib from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import getConfig from 'next/config';
@@ -6,6 +6,9 @@ import dynamic from 'next/dynamic';
 import Typography from 'components/Typography';
 import { Link, useMediaQuery } from '@mui/material';
 import Image from 'components/Image';
+import { Box } from '@mui/system';
+import { Image as IImage } from 'api/types';
+import BlockImages from 'components/BlockImages';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -14,22 +17,24 @@ const { publicRuntimeConfig } = getConfig();
 interface Props {
 	content: string;
 	inline?: boolean;
+	blockImagesSnippets?: { [key: string]: IImage[] };
 }
 
-const ReactMarkdown: FC<Props> = ({ content, inline }) => {
+const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<ReactMarkdownLib
 			rehypePlugins={[rehypeRaw]}
 			components={{
-				img: ({ src, alt = '' }) => {
+				img: ({ src, alt = '', style, className }) => {
 					return (
 						<Image
+							className={className}
 							alt={alt}
 							width={isMobile ? 500 : 640}
 							height={isMobile ? 375 : 480}
 							src={src || ''}
-							{...(isMobile ? { style: { height: 'auto' } } : {})}
+							style={{ margin: '0 1.5em', height: 'auto', ...style }}
 						></Image>
 					);
 				},
@@ -59,11 +64,27 @@ const ReactMarkdown: FC<Props> = ({ content, inline }) => {
 						{data.children}
 					</Typography>
 				),
-				h1: (data) => (
-					<Typography component='h1' textAlign='center' variant='h4'>
-						{data.children}
-					</Typography>
-				),
+				h1: (data) => {
+					return (
+						<Typography component='h1' variant='h4' style={data.style}>
+							{data.children}
+						</Typography>
+					);
+				},
+				code: (data) => {
+					let snippet = Object.keys(blockImagesSnippets).find((key) =>
+						data.children.some((item) => item === `{${key}}`)
+					);
+					if (snippet) {
+						return (
+							<BlockImages
+								isOnSSR
+								imageSRCs={blockImagesSnippets[snippet].map((item) => item.url)}
+							></BlockImages>
+						);
+					}
+					return <></>;
+				},
 			}}
 		>
 			{content}

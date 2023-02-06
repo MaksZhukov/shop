@@ -7,131 +7,160 @@ import FavoriteButton from 'components/FavoriteButton';
 import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import Slider from 'react-slick';
-import classNames from 'classnames';
 import Image from 'components/Image';
 import { getProductTypeSlug } from 'services/ProductService';
 
 interface Props {
-	dataFieldsToShow: { id: string; name: string }[];
-	data: Product;
+    dataFieldsToShow?: { id: string; name: string }[];
+    activeView?: 'grid' | 'list';
+    data: Product;
+    width?: number | string;
+    height?: number | string;
 }
 
-const ProductItem = ({ data, dataFieldsToShow }: Props) => {
-	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-	return (
-		<Card className={styles.product}>
-			<Box
-				sx={{
-					display: 'flex',
-					alignItems: 'flex-start',
-					flexDirection: isMobile ? 'column' : 'row',
-				}}
-			>
-				{data.images && data.images.some((image) => image.formats) ? (
-					<Slider
-						className={classNames(styles.slider, isMobile && styles.slider_mobile)}
-						arrows={false}
-						pauseOnHover
-						autoplay
-						autoplaySpeed={3000}
-					>
-						{data.images
-							.filter((item) => item.formats)
-							.map((item) => (
-								<Box key={item.id}>
-									<Image
-										src={`${
-											isMobile
-												? item.formats?.small?.url || item.url
-												: item.formats?.thumbnail.url || item.url
-										}`}
-										width={isMobile ? 500 : 200}
-										height={isMobile ? 375 : 150}
-										alt={item.alternativeText}
-										style={isMobile ? { height: 'auto', maxHeight: '375px' } : {}}
-									></Image>
-								</Box>
-							))}
-					</Slider>
-				) : (
-					<Image src='' alt='photo' width={isMobile ? 500 : 200} height={isMobile ? 375 : 150}></Image>
-				)}
-				<CardContent sx={{ flex: 1, paddingY: '0!important' }}>
-					<Typography lineClamp={1} title={data.h1} component='div' variant='h5'>
-						<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
-							<Link component='span' underline='hover'>
-								{data.h1 || data.h1}
-							</Link>
-						</NextLink>
-					</Typography>
-					<Grid columnSpacing={2} container>
-						{dataFieldsToShow.map((item) => (
-							<Grid key={item.id} item>
-								<Typography fontWeight='500' component='div' variant='subtitle1'>
-									{item.name}
-								</Typography>
-								{typeof data[item.id as keyof Product] === 'object' &&
-								data[item.id as keyof Product] !== null
-									? //@ts-ignore
-									  data[item.id as keyof Product]['name']
-									: data[item.id as keyof Product]}
-							</Grid>
-						))}
-					</Grid>
-					{data.description && (
-						<Typography mt='0.5em' lineClamp={2} variant='body1'>
-							<Typography fontWeight='500' component='span' variant='subtitle1'>
-								Описание:
-							</Typography>{' '}
-							{data.description}
-						</Typography>
-					)}
-				</CardContent>
-			</Box>
+const ProductItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '100%', height = 'auto' }: Props) => {
+    const renderContentByView = {
+        list: (
+            <Box padding="0.5em 1em" display="flex" flexDirection="column">
+                <NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
+                    <Link
+                        variant="h6"
+                        alignItems="center"
+                        sx={{ color: '#000' }}
+                        color="secondary"
+                        component="span"
+                        underline="hover"
+                        fontWeight="500">
+                        {data.name}
+                    </Link>
+                </NextLink>
+                <Grid columnSpacing={2} container>
+                    {dataFieldsToShow.map((item) => (
+                        <Grid key={item.id} item>
+                            <Typography fontWeight="500" component="div" variant="subtitle1">
+                                {item.name}
+                            </Typography>
+                            {typeof data[item.id as keyof Product] === 'object' &&
+                            data[item.id as keyof Product] !== null
+                                ? //@ts-ignore
+                                  data[item.id as keyof Product]['name']
+                                : data[item.id as keyof Product]}
+                        </Grid>
+                    ))}
+                </Grid>
+                <Box display="flex" marginTop="0.5em">
+                    {!!data.discountPrice && (
+                        <Typography fontWeight="bold" variant="h5" marginRight="0.5em" color="secondary">
+                            {data.discountPrice} руб{' '}
+                        </Typography>
+                    )}
+                    {!!data.discountPriceUSD && (
+                        <Typography marginRight="1em" color="text.primary">
+                            ~{data.discountPriceUSD.toFixed()}$
+                        </Typography>
+                    )}
 
-			<CardContent
-				sx={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'space-between',
-				}}
-			>
-				<Box display='flex'>
-					<Typography
-						fontWeight='bold'
-						variant='body1'
-						component={data.discountPrice ? 's' : 'p'}
-						sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-						color='primary'
-					>
-						{data.price} руб{' '}
-						{!!data.priceUSD && (
-							<Typography color='text.secondary' component='sup'>
-								(~{data.priceUSD.toFixed()}$)
-							</Typography>
-						)}
-					</Typography>
-					{!!data.discountPrice && (
-						<Typography paddingLeft='0.5em' fontWeight='bold' variant='body1' color='primary'>
-							{data.discountPrice} руб{' '}
-							{!!data.discountPriceUSD && (
-								<Typography color='text.primary' component='sup'>
-									(~{data.discountPriceUSD.toFixed()}$)
-								</Typography>
-							)}
-						</Typography>
-					)}
-				</Box>
-				<Box>
-					<Button variant='outlined'>
-						<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>Подробнее</NextLink>
-					</Button>
-					<FavoriteButton product={data}></FavoriteButton>
-					{/* <ShoppingCartButton product={data}></ShoppingCartButton> */}
-				</Box>
-			</CardContent>
-		</Card>
-	);
+                    <Typography
+                        marginRight="0.5em"
+                        textAlign="center"
+                        fontWeight="bold"
+                        variant="h5"
+                        component={data.discountPrice ? 's' : 'p'}
+                        sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+                        color="secondary">
+                        {data.price} руб{' '}
+                    </Typography>
+                    {!!data.priceUSD && <Typography color="text.secondary">~{data.priceUSD.toFixed()}$</Typography>}
+                </Box>
+            </Box>
+        ),
+        grid: (
+            <>
+                <NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
+                    <Link
+                        height={60}
+                        variant="body2"
+                        display="flex"
+                        alignItems="center"
+                        sx={{ color: '#000' }}
+                        justifyContent="center"
+                        color="secondary"
+                        component="span"
+                        underline="hover"
+                        fontWeight="500"
+                        padding="0.25em"
+                        marginTop="0.5em"
+                        textAlign="center">
+                        {data.name}
+                    </Link>
+                </NextLink>
+                <Box display="flex" height={65} flexDirection="column" alignItems="center" justifyContent="center">
+                    <Box display="flex" alignItems="center">
+                        {!!data.discountPrice && (
+                            <Typography
+                                paddingLeft="0.5em"
+                                fontWeight="bold"
+                                variant="h5"
+                                marginRight="0.5em"
+                                color="secondary">
+                                {data.discountPrice} руб{' '}
+                            </Typography>
+                        )}
+                        {!!data.discountPriceUSD && (
+                            <Typography color="text.primary">~{data.discountPriceUSD.toFixed()}$</Typography>
+                        )}
+                    </Box>
+                    <Box display="flex" alignItems="center">
+                        <Typography
+                            marginRight="0.5em"
+                            textAlign="center"
+                            fontWeight="bold"
+                            variant="h5"
+                            component={data.discountPrice ? 's' : 'p'}
+                            sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+                            color="secondary">
+                            {data.price} руб{' '}
+                        </Typography>
+                        {!!data.priceUSD && <Typography color="text.secondary">~{data.priceUSD.toFixed()}$</Typography>}
+                    </Box>
+                </Box>
+            </>
+        )
+    };
+    return (
+        <Box
+            marginBottom="1em"
+            height={height}
+            bgcolor="#fff"
+            key={data.id}
+            display={activeView === 'list' ? 'flex' : 'initial'}
+            width={width}>
+            {data.images ? (
+                <Box width={activeView === 'list' ? 200 : '100%'}>
+                    <Slider autoplay autoplaySpeed={5000} arrows={false}>
+                        {data.images?.map((image) => (
+                            <Image
+                                key={image.id}
+                                width={activeView === 'grid' ? 280 : 200}
+                                height={activeView === 'grid' ? 215 : 150}
+                                alt={image.alternativeText}
+                                src={image.url}></Image>
+                        ))}
+                    </Slider>
+                </Box>
+            ) : (
+                <Box>
+                    <Image
+                        style={{ objectFit: 'cover' }}
+                        src=""
+                        width={activeView === 'grid' ? 280 : 200}
+                        height={activeView === 'grid' ? 215 : 150}
+                        alt={data.name}></Image>
+                </Box>
+            )}
+            {renderContentByView[activeView]}
+        </Box>
+    );
 };
 
 export default ProductItem;

@@ -1,4 +1,6 @@
 import {
+	Button,
+	CircularProgress,
 	Input,
 	Link,
 	MenuItem,
@@ -9,7 +11,7 @@ import {
 	useMediaQuery,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useThrottle, useDebounce } from 'rooks';
+import { useThrottle } from 'rooks';
 import { ApiResponse, CollectionParams, LinkWithImage as ILinkWithImage, Product, SEO } from 'api/types';
 import { Image as IImage } from 'api/types';
 import classNames from 'classnames';
@@ -20,22 +22,16 @@ import WhiteBox from 'components/WhiteBox';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { ChangeEvent, useEffect, useState, useRef, ReactNode } from 'react';
+import { ChangeEvent, useEffect, useState, useRef, ReactNode, KeyboardEvent } from 'react';
 import styles from './Catalog.module.scss';
-import Slider from 'react-slick';
-import { Car } from 'api/cars/types';
-import Image from 'components/Image';
 import NextLink from 'next/link';
 import LinkWithImage from 'components/LinkWithImage';
-import { Autocomis } from 'api/autocomises/types';
-import { ServiceStation } from 'api/serviceStations/types';
 import { AxiosResponse } from 'axios';
-import { Article } from 'api/articles/types';
+import MenuIcon from '@mui/icons-material/MenuSharp';
+import GridViewIcon from '@mui/icons-material/GridViewSharp';
 import Typography from 'components/Typography';
+import CarouselProducts from 'components/CarouselProducts';
 
-// const DynamicNews = dynamic(() => import('components/News'));
-// const DynamicReviews = dynamic(() => import('components/Reviews'));
-const DynamicCarouselProducts = dynamic(() => import('components/CarouselProducts'));
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
 const selectSortItems = [
@@ -47,23 +43,11 @@ const selectSortItems = [
 
 interface Props {
 	seo: SEO | null;
-	textTotal?: string;
-	newProductsTitle?: string;
 	searchPlaceholder?: string;
-	cars?: Car[];
-	discounts?: ILinkWithImage[];
-	advertising?: ILinkWithImage[];
-	articles: Article[];
-	filtersBtn?: ReactNode;
-	serviceStations?: ServiceStation[];
-	autocomises?: Autocomis[];
-	deliveryAuto?: ILinkWithImage;
 	dataFieldsToShow?: { id: string; name: string }[];
 	filtersConfig: (AutocompleteType | NumberType)[][];
 	generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
-	onClickFind?: (values: { [key: string]: string }) => void;
-	middleContent?: ReactNode;
 }
 
 let date = new Date();
@@ -74,18 +58,7 @@ const Catalog = ({
 	dataFieldsToShow = [],
 	filtersConfig,
 	generateFiltersByQuery,
-	cars = [],
-	articles = [],
-	discounts = [],
-	advertising = [],
-	serviceStations = [],
-	autocomises = [],
-	deliveryAuto,
-	middleContent,
 	seo,
-	filtersBtn,
-	newProductsTitle,
-	textTotal,
 }: Props) => {
 	const [newProducts, setNewProducts] = useState<Product[]>([]);
 	const [data, setData] = useState<Product[]>([]);
@@ -95,6 +68,8 @@ const Catalog = ({
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const [searchValue, setSearchValue] = useState<string>('');
 	const [pageCount, setPageCount] = useState<number>(0);
+	const [activeView, setActiveView] = useState<'grid' | 'list'>('grid');
+	const filtersRef = useRef<any>(null);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	const router = useRouter();
@@ -273,198 +248,155 @@ const Catalog = ({
 		setIsClickedFind(true);
 	};
 
-	const renderLinkWithImage = (image: IImage, link: string, caption?: string) => (
-		<WhiteBox key={image?.id || link} textAlign='center'>
-			<LinkWithImage image={image} link={link} caption={caption}></LinkWithImage>
-		</WhiteBox>
+	const handleClickChangeView = (view: 'grid' | 'list', position: 'top' | 'bottom') => () => {
+		if (position === 'bottom') {
+			window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+		}
+		setActiveView(view);
+	};
+
+	const handleKeyDown = (position: 'top' | 'bottom') => (e: KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			filtersRef.current.onClickFind();
+			if (position === 'bottom') {
+				window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+			}
+		}
+	};
+
+	const renderPagination = (
+		<Pagination
+			sx={{ flex: 1, display: 'flex', justifyContent: 'right' }}
+			classes={{}}
+			renderItem={(params) => (
+				<NextLink
+					shallow
+					href={
+						router.asPath.includes('page=')
+							? `${router.asPath.replace(/page=\d/, `page=${params.page}`)}`
+							: `${router.asPath}${router.asPath.includes('?') ? '&' : '?'}page=${params.page}`
+					}
+				>
+					<PaginationItem
+						{...params}
+						onClick={() => {
+							window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+						}}
+					>
+						{params.page}
+					</PaginationItem>
+				</NextLink>
+			)}
+			boundaryCount={1}
+			page={+page}
+			siblingCount={0}
+			color='primary'
+			count={pageCount}
+			variant='text'
+		/>
 	);
 
-	const renderLinksWithImages = (items?: { image: IImage; link: string; caption?: string }[]) =>
-		items?.map((item) => renderLinkWithImage(item.image, item.link, item.caption));
+	const renderBar = (position: 'top' | 'bottom') => (
+		<Box display='flex' padding='0.5em' marginBottom='1em' bgcolor='#fff'>
+			<Button
+				variant='contained'
+				onClick={handleClickChangeView('grid', position)}
+				sx={{ bgcolor: activeView === 'grid' ? 'primary.main' : '#000' }}
+				className={classNames(styles['btn-view'])}
+			>
+				<GridViewIcon fontSize='small' sx={{ color: '#fff' }}></GridViewIcon>
+			</Button>
+			<Button
+				variant='contained'
+				sx={{ bgcolor: activeView === 'list' ? 'primary.main' : '#000' }}
+				onClick={handleClickChangeView('list', position)}
+				className={classNames(styles['btn-view'])}
+			>
+				<MenuIcon fontSize='small' sx={{ color: '#fff' }}></MenuIcon>
+			</Button>
+
+			<Input
+				className={styles['search']}
+				sx={{ bgcolor: '#fff', maxWidth: 200, marginRight: '0.5em', paddingLeft: '0.5em' }}
+				onChange={handleChangeSearch}
+				onKeyDown={handleKeyDown(position)}
+				value={searchValue}
+				placeholder={searchPlaceholder}
+			></Input>
+			<Select
+				variant='standard'
+				value={sort as any}
+				sx={{ maxWidth: 200 }}
+				className={styles['sort-select']}
+				onChange={handleChangeSort}
+			>
+				{selectSortItems.map((item) => (
+					<MenuItem key={item.name} value={item.value}>
+						{item.name}
+					</MenuItem>
+				))}
+			</Select>
+			{renderPagination}
+		</Box>
+	);
 
 	return (
 		<>
-			<WhiteBox>
-				<Typography textTransform='capitalize' component='h1' variant='h4' textAlign='center'>
-					{seo?.h1}
-				</Typography>
-			</WhiteBox>
 			<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'initial' } }}>
-				<Box marginRight='1em' component='aside' sx={{ width: { xs: '100%', md: '250px' } }}>
+				<Box marginTop='3.7em' marginRight='1em' component='aside' sx={{ width: { xs: '100%', md: '250px' } }}>
 					<Filters
-						textTotal={textTotal ? textTotal : total !== null ? `Найдено: ${total}` : undefined}
-						btn={filtersBtn}
-						config={filtersConfig}
+						ref={filtersRef}
 						total={total}
+						config={filtersConfig}
 						onClickFind={handleClickFind}
 					></Filters>
-					{renderLinksWithImages(
-						serviceStations.map((item) => ({
-							image: item.image,
-							link: `/service-stations/${item.slug}`,
-							caption: item.name,
-						}))
-					)}
-					{renderLinksWithImages(
-						autocomises.map((item) => ({
-							image: item.image,
-							link: `/autocomises/${item.slug}`,
-							caption: item.name,
-						}))
-					)}
-					{deliveryAuto && renderLinkWithImage(deliveryAuto.image, deliveryAuto.link)}
 				</Box>
-				<Box sx={{ width: { md: 'calc(100% - 500px - 2em)' }, marginRight: { md: '1em' } }}>
-					{middleContent ? (
-						middleContent
-					) : (
-						<>
-							<WhiteBox display='flex'>
-								<Input
-									className={styles['search']}
-									onChange={handleChangeSearch}
-									value={searchValue}
-									placeholder={searchPlaceholder}
-									fullWidth
-								></Input>
-								<Select
-									variant='standard'
-									value={sort as any}
-									fullWidth
-									className={styles['sort-select']}
-									onChange={handleChangeSort}
-								>
-									{selectSortItems.map((item) => (
-										<MenuItem key={item.name} value={item.value}>
-											{item.name}
-										</MenuItem>
-									))}
-								</Select>
-							</WhiteBox>
-							<WhiteBox
-								className={classNames({
-									[styles['loading']]: isLoading,
-									[styles['content-items_no-data']]: !data.length,
-								})}
-							>
-								{data.length ? (
-									data.map((item) => (
-										<ProductItem
-											dataFieldsToShow={dataFieldsToShow || []}
-											key={item.id}
-											data={item}
-										></ProductItem>
-									))
-								) : isFirstDataLoaded && !isLoading ? (
-									<Typography textAlign='center' variant='h5'>
-										Данных не найдено
-									</Typography>
-								) : (
-									<></>
-								)}
-							</WhiteBox>
-							{pageCount > 1 && (
-								<WhiteBox display='flex' justifyContent='center'>
-									<Pagination
-										renderItem={(params) => (
-											<NextLink
-												shallow
-												href={
-													router.asPath.includes('page=')
-														? `${router.asPath.replace(/page=\d/, `page=${params.page}`)}`
-														: `${router.asPath}${
-																router.asPath.includes('?') ? '&' : '?'
-														  }page=${params.page}`
-												}
-											>
-												<PaginationItem {...params}>{params.page}</PaginationItem>
-											</NextLink>
-										)}
-										boundaryCount={isTablet ? 1 : 2}
-										page={+page}
-										siblingCount={isTablet ? 0 : 2}
-										color='primary'
-										count={pageCount}
-										variant='outlined'
-									/>
-								</WhiteBox>
-							)}
-						</>
-					)}
-				</Box>
-
-				<Box sx={{ width: { md: '250px' } }}>
-					{!!cars.length && (
-						<WhiteBox padding='1em 1.5em'>
-							<Slider swipe={false}>
-								{cars
-									.filter((item) => item.images)
-									.map((item) => (
-										<NextLink key={item.id} href={`/awaiting-cars/${item.slug}`}>
-											<Slider arrows={false} key={item.id} autoplay autoplaySpeed={3000}>
-												{item.images?.map((image) => (
-													<Image
-														alt={image.alternativeText}
-														key={image.id}
-														width={208}
-														height={156}
-														src={image.formats?.thumbnail.url || image.url}
-													></Image>
-												))}
-											</Slider>
-										</NextLink>
-									))}
-							</Slider>
-						</WhiteBox>
-					)}
-					{renderLinksWithImages(discounts)}
-					{renderLinksWithImages(advertising)}
-					{!!articles.length && (
-						<WhiteBox padding='1em 1.5em'>
-							<Slider autoplay autoplaySpeed={3000}>
-								{articles.map((item) => (
-									<Box key={item.id}>
-										<NextLink href={`/articles/${item.slug}`}>
-											<Link component='span' underline='hover'>
-												<Typography
-													textAlign={isTablet ? 'center' : 'left'}
-													marginBottom='0.5em'
-													lineClamp={2}
-												>
-													{item.name}
-												</Typography>
-											</Link>
-										</NextLink>
-										<Image
-											style={{ margin: 'auto' }}
-											alt={item.image?.alternativeText || item.name}
-											width={208}
-											height={156}
-											src={item.image?.formats?.thumbnail.url || item.image?.url}
-										></Image>
-										<Typography textAlign='right' color='text.secondary'>
-											{new Date(item.createdAt).toLocaleDateString('ru-RU')}{' '}
-											{new Date(item.createdAt).toLocaleTimeString('ru-RU', {
-												hour: '2-digit',
-												minute: '2-digit',
-											})}
-										</Typography>
-									</Box>
-								))}
-							</Slider>
-						</WhiteBox>
-					)}
+				<Box sx={{ width: { md: 'calc(100% - 250px - 2em)' } }}>
+					<Typography marginBottom='0.5em' textTransform='uppercase' component='h1' variant='h4'>
+						{seo?.h1}
+					</Typography>
+					{renderBar('top')}
+					<Box
+						display='flex'
+						flexWrap='wrap'
+						justifyContent='space-between'
+						className={classNames(
+							styles.items,
+							isLoading && styles['loading'],
+							!data.length && styles['content-items_no-data']
+						)}
+					>
+						{data.length ? (
+							data.map((item) => (
+								<ProductItem
+									width={activeView === 'grid' ? 280 : '100%'}
+									height={activeView === 'grid' ? 350 : 150}
+									dataFieldsToShow={dataFieldsToShow || []}
+									activeView={activeView}
+									key={item.id}
+									data={item}
+								></ProductItem>
+							))
+						) : isFirstDataLoaded && !isLoading ? (
+							<Typography textAlign='center' variant='h5'>
+								Данных не найдено
+							</Typography>
+						) : (
+							<CircularProgress></CircularProgress>
+						)}
+					</Box>
+					{renderBar('bottom')}
 				</Box>
 			</Box>
 			{!!newProducts.length && (
-				<DynamicCarouselProducts
+				<CarouselProducts
 					data={newProducts}
 					title={
-						<Typography marginBottom='1em' marginTop='1em' textAlign='center' variant='h5'>
-							Новые поступления {newProductsTitle}
+						<Typography withSeparator fontWeight='bold' marginBottom='1em' marginTop='1em' variant='h5'>
+							ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
 						</Typography>
 					}
-				></DynamicCarouselProducts>
+				></CarouselProducts>
 			)}
 		</>
 	);

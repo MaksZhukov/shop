@@ -39,11 +39,12 @@ export type ApiResponse<T = any> = {
 export type Filters = {
 	[field: string]:
 		| {
-				[operator: string]: number | string | undefined;
+				[operator: string]: number | string | undefined | null;
 		  }
 		| string
 		| number
 		| number[]
+		| null
 		| undefined;
 };
 

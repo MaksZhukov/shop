@@ -1,0 +1,17 @@
+.overlay {
+	position: relative;
+	z-index: 1;
+	&::after {
+		content: '';
+		position: absolute;
+		display: flex;
+		top: 0;
+		width: 100vw;
+		overflow: hidden;
+		margin-left: 50%;
+		transform: translateX(-50%);
+		z-index: -1;
+		height: 100%;
+		background-color: #fff;
+	}
+}

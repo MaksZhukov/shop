@@ -1,5 +1,7 @@
 .slider {
-	flex: 1;
-	min-width: 0;
-	margin-bottom: 2em;
+    width: 440px;
+    &_small {
+        width: 100px;
+        margin-right: 1.5em;
+    }
 }

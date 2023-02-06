@@ -4,7 +4,7 @@
 
 .menu {
 	&__item {
-		color: white !important;
+		color: #000 !important;
 		&:hover,
 		&_active {
 			text-decoration: underline !important;
@@ -21,8 +21,8 @@
 }
 
 .submenu {
-	background-color: #4caf50;
-	color: #fff;
+	background-color: #fdb819;
+	color: #000;
 	&-wrapper {
 		max-height: 300px;
 		box-shadow: none !important;

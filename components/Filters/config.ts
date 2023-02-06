@@ -25,7 +25,6 @@ interface Params {
     onOpenAutoCompleteKindSparePart: (values: { [key: string]: string | null }) => () => void;
     onOpenAutoCompleteVolume: (values: { [key: string]: string | null }) => () => void;
     onInputChangeKindSparePart: (_: any, value: string) => void;
-    onScrollBrandAutocomplete: UIEventHandler<HTMLUListElement>;
     onScrollKindSparePartAutocomplete: UIEventHandler<HTMLUListElement>;
 }
 
@@ -45,7 +44,6 @@ export const getSparePartsFiltersConfig = ({
     onOpenAutoCompleteVolume,
     onInputChangeKindSparePart,
     onChangeModelAutocomplete,
-    onScrollBrandAutocomplete,
     onScrollKindSparePartAutocomplete,
     onChangeGenerationAutocomplete,
     noOptionsText
@@ -59,7 +57,6 @@ export const getSparePartsFiltersConfig = ({
             options: brands.map((item) => ({ label: item.name, value: item.slug })),
             onChange: onChangeBrandAutocomplete,
             onOpen: onOpenAutoCompleteBrand,
-            onScroll: onScrollBrandAutocomplete,
             noOptionsText: noOptionsText
         }
     ],

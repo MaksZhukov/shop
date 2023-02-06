@@ -24,7 +24,7 @@ export default class FavoritesStore implements Favorites {
     async loadFavorites() {
         if (this.root.user.jwt) {
             const {
-                data: { data },
+                data: { data }
             } = await fetchFavorites();
             runInAction(() => {
                 this.items = data;
@@ -48,14 +48,14 @@ export default class FavoritesStore implements Favorites {
                     this.getFavoritesByTypes(
                         favoriteProducts.filter((item) => item.type === 'cabin').map((item) => item.id),
                         fetchTires
-                    ),
+                    )
                 ]);
 
                 runInAction(() => {
                     this.items = [...spareParts, ...wheels, ...tires].map((item) => ({
                         id: new Date().getTime(),
                         uid: new Date().getTime().toString(),
-                        product: item,
+                        product: item
                     }));
                 });
             } catch (err) {
@@ -70,10 +70,10 @@ export default class FavoritesStore implements Favorites {
         let result: Product[] = [];
         if (ids.length) {
             const {
-                data: { data },
+                data: { data }
             } = await fetchFunc({
                 filters: { id: ids },
-                populate: ['images'],
+                populate: ['images', 'brand']
             });
             result = data;
         }
@@ -83,7 +83,7 @@ export default class FavoritesStore implements Favorites {
         if (this.root.user.id) {
             try {
                 let {
-                    data: { data },
+                    data: { data }
                 } = await addFavorite(favorite.product.id, favorite.product.type);
                 runInAction(() => {
                     this.items.push(data);

@@ -1,0 +1,24 @@
+.loading {
+    opacity: 0.5;
+}
+
+.items {
+    &:not(.content-items_no-data):after {
+        content: '';
+        width: 280px;
+    }
+}
+
+.content-items_no-data {
+    justify-content: center;
+    padding: 12em 1em;
+    min-height: calc(100% - 1em);
+}
+
+.btn-view {
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 0;
+    margin-right: 0.25em;
+}

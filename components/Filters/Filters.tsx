@@ -1,17 +1,13 @@
-import { Autocomplete, Box, Button, Input, TextField, Typography } from '@mui/material';
-import WhiteBox from 'components/WhiteBox';
+import { Box, Button, Input, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
-import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
+import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
-import classNames from 'classnames';
+import Autocomplete from 'components/Autocomplete';
 
 interface Props {
-    fetchData?: (values: { [key: string]: string | null }) => void;
     onClickFind?: (values: { [key: string]: string | null }) => void;
-    total: null | number;
-    textTotal?: string;
-    btn?: ReactNode;
+    total: number | null;
     config: (AutocompleteType | NumberType)[][];
 }
 
@@ -26,7 +22,7 @@ const getDependencyItemIds = (
     return [];
 };
 
-const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
+const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
     const [values, setValues] = useState<{ [key: string]: string | null }>({});
     const router = useRouter();
     useEffect(() => {
@@ -82,17 +78,15 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
         if (onClickFind) {
             onClickFind(values);
         }
-        if (fetchData) {
-            fetchData(values);
-        }
     };
     const renderInput = (item: NumberType) => {
         return (
             <Input
                 key={item.id}
                 fullWidth
+                sx={{ bgcolor: '#fff', padding: '0 1em' }}
                 onChange={handleChangeNumberInput(item)}
-                value={router.query[item.id] ?? ''}
+                value={values[item.id]}
                 placeholder={item.placeholder}
                 type="number"></Input>
         );
@@ -106,30 +100,22 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
             <Autocomplete
                 key={item.id}
                 options={item.options}
-                noOptionsText={item.noOptionsText || 'Совпадений нет'}
+                noOptionsText={item.noOptionsText}
                 onOpen={item.onOpen ? item.onOpen(values) : undefined}
                 onChange={handleChangeAutocomplete(item)}
-                ListboxProps={{
-                    role: 'list-box',
-                    onScroll: item.onScroll,
-                    className: item.loadingMore ? classNames(styles.list, styles['list_loading-more']) : styles.list
-                }}
-                fullWidth
                 onInputChange={item.onInputChange}
-                classes={{ noOptions: styles['autocomplete__no-options'] }}
+                placeholder={item.placeholder}
+                classes={{ input: styles.input }}
                 disabled={item.disabledDependencyId === undefined ? false : !values[item.disabledDependencyId]}
-                value={value || null}
-                renderInput={(params) => {
-                    return <TextField {...params} variant="standard" placeholder={item.placeholder} />;
-                }}></Autocomplete>
+                value={value || null}></Autocomplete>
         );
     };
 
     return (
-        <WhiteBox>
+        <>
             {config.map((items) => {
                 return (
-                    <Box key={items.map((item) => item.id).toString()} display="flex">
+                    <Box key={items.map((item) => item.id).toString()} display="flex" marginBottom="1em">
                         {items.map((item) => {
                             if (item.type === 'autocomplete') {
                                 return renderAutocomplete(item as AutocompleteType);
@@ -142,21 +128,17 @@ const Filters = ({ fetchData, onClickFind, config, btn, textTotal }: Props) => {
                 );
             })}
             <Box marginY="1em" textAlign="center">
-                {btn ? (
-                    btn
-                ) : (
-                    <Button onClick={handleClickFind} fullWidth variant="contained">
-                        Найти
-                    </Button>
-                )}
+                <Button onClick={handleClickFind} fullWidth variant="contained">
+                    Найти
+                </Button>
             </Box>
-            {textTotal !== null && (
+            {total !== null && (
                 <Typography textAlign="center" variant="subtitle1" color="primary">
-                    {textTotal}
+                    Найдено: {total}
                 </Typography>
             )}
-        </WhiteBox>
+        </>
     );
 };
 
-export default Filters;
+export default forwardRef(Filters);
