@@ -1,3 +1,5 @@
+import { fetchBrands } from 'api/brands/brands';
+import { API_MAX_LIMIT, API_UN_LIMIT } from 'api/constants';
 import { fetchLayout } from 'api/layout/layout';
 import { ApiResponse } from 'api/types';
 import { AxiosResponse } from 'axios';
@@ -10,7 +12,8 @@ export const getPageProps =
             [key: string]: any;
         };
         try {
-            const [layoutResponse, response, ...restResponses] = await Promise.all([
+            const [brandsResponse, layoutResponse, response, ...restResponses] = await Promise.all([
+                fetchBrands({ populate: ['seo.images', 'image'], pagination: { limit: API_UN_LIMIT } }),
                 fetchLayout(),
                 ...(fetchPage ? [fetchPage()] : []),
                 ...functions.map((func) => func(context))
@@ -25,6 +28,7 @@ export const getPageProps =
             if (fetchPage) {
                 props.page = response.data.data;
             }
+            props.brands = brandsResponse.data.data;
             props.layout = layoutResponse.data.data;
         } catch (err: any) {
             console.error(err);

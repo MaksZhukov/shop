@@ -1,14 +1,12 @@
-import {
-	SxProps,
-	Typography as UITypography,
-	TypographyProps,
-} from '@mui/material';
-
+import { SxProps, Typography as UITypography, TypographyProps } from '@mui/material';
+import styles from './Typography.module.scss';
+import classNames from 'classnames';
 const Typography = ({
 	children,
 	lineClamp,
+	withSeparator,
 	...props
-}: TypographyProps & { component?: React.ElementType; lineClamp?: number }) => {
+}: TypographyProps & { component?: React.ElementType; lineClamp?: number; withSeparator?: boolean }) => {
 	let sx: SxProps = lineClamp
 		? {
 				display: '-webkit-box',
@@ -20,7 +18,11 @@ const Typography = ({
 		: {};
 
 	return (
-		<UITypography sx={{ ...sx, ...props.sx }} {...props}>
+		<UITypography
+			sx={{ ...sx, ...props.sx }}
+			{...props}
+			className={classNames(props.className, withSeparator && styles['text_with-separator'])}
+		>
 			{children}
 		</UITypography>
 	);

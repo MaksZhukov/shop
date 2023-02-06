@@ -7,18 +7,18 @@ import { DefaultPage } from 'api/pages/types';
 import ReactMarkdown from 'components/ReactMarkdown';
 
 interface Props {
-	page: DefaultPage & { content: string };
+    page: DefaultPage & { content: string };
 }
 
 const InstallmentPlan: FC<Props> = ({ page }) => {
-	return (
-		<WhiteBox>
-			<Typography gutterBottom component='h1' variant='h4' textAlign='center'>
-				{page.seo?.h1 || 'Рассрочка'}
-			</Typography>
-			<ReactMarkdown content={page.content}></ReactMarkdown>
-		</WhiteBox>
-	);
+    return (
+        <>
+            <Typography marginBottom="1em" component="h1" textTransform="uppercase" variant="h4" textAlign="center">
+                {page.seo?.h1 || 'Рассрочка'}
+            </Typography>
+            <ReactMarkdown content={page.content}></ReactMarkdown>
+        </>
+    );
 };
 
 export default InstallmentPlan;

@@ -7,26 +7,20 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { Box, Button, createTheme, Link, ThemeProvider } from '@mui/material';
-import { green } from '@mui/material/colors';
-import { UIEventHandler, useEffect, useState } from 'react';
+import { Box, Button, createTheme, ThemeProvider } from '@mui/material';
+import { useEffect } from 'react';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
 import NotistackService from 'services/NotistackService';
-import { fetchBrands } from 'api/brands/brands';
-import { MAX_LIMIT } from 'api/constants';
-import { Brand } from 'api/brands/types';
 import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
 import { Container } from '@mui/system';
 import SEOBox from 'components/SEOBox';
 import Metrics from 'components/Metrics';
-import { ApiResponse } from 'api/types';
-import { useThrottle } from 'rooks';
-import { OFFSET_SCROLL_LOAD_MORE } from '../constants';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './app.scss';
+import { LocalPhone } from '@mui/icons-material';
 
 let theme = createTheme({
     typography: {
@@ -34,24 +28,19 @@ let theme = createTheme({
     },
     palette: {
         primary: {
-            ...green,
+            main: '#fdb819',
             contrastText: '#fff'
+        },
+        secondary: {
+            main: '#0C1555'
         }
     }
 });
 
 function MyApp({
     Component,
-    pageProps: {
-        layout: { footer },
-        ...restPageProps
-    }
+    pageProps: { hasGlobalContainer = true, hideSEOBox = false, layout, ...restPageProps }
 }: AppProps) {
-    const [brands, setBrands] = useState<ApiResponse<Brand[]>>(restPageProps.brands ?? { data: [] });
-    const [throttledLoadMoreBrands] = useThrottle(async () => {
-        await handleLoadMoreBrands();
-    });
-
     useEffect(() => {
         const tryFetchData = async () => {
             let token = getJwt();
@@ -71,38 +60,30 @@ function MyApp({
             }
             store.setIsInitialRequestDone();
         };
-        const fetchBrandsData = async () => {
-            if (!brands.data.length) {
-                const { data } = await fetchBrands({
-                    pagination: { limit: MAX_LIMIT },
-                    populate: ['image', 'seo.images']
-                });
-                setBrands(data);
-            }
-        };
         tryFetchData();
-        fetchBrandsData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleLoadMoreBrands = async () => {
-        if (brands.meta.pagination?.total && brands.data.length < brands.meta.pagination.total) {
-            const { data } = await fetchBrands({
-                populate: 'image',
-                pagination: { start: brands.data.length }
-            });
-            setBrands({ data: [...brands.data, ...data.data], meta: data.meta });
-        }
-    };
-
-    const handleScrollBrandsList: UIEventHandler<HTMLUListElement> = (event) => {
-        if (
-            event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
-            event.currentTarget.scrollHeight
-        ) {
-            throttledLoadMoreBrands();
-        }
-    };
+    const renderContent = (
+        <>
+            <Component {...restPageProps} />
+            {!hideSEOBox && (
+                <>
+                    {!hasGlobalContainer ? (
+                        <Container>
+                            <SEOBox
+                                images={restPageProps.page?.seo?.images}
+                                content={restPageProps.page?.seo?.content}></SEOBox>
+                        </Container>
+                    ) : (
+                        <SEOBox
+                            images={restPageProps.page?.seo?.images}
+                            content={restPageProps.page?.seo?.content}></SEOBox>
+                    )}
+                </>
+            )}
+        </>
+    );
 
     return (
         <ThemeProvider theme={theme}>
@@ -121,27 +102,23 @@ function MyApp({
                             title={restPageProps.page?.seo?.title}
                             description={restPageProps.page?.seo?.description}
                             keywords={restPageProps.page?.seo?.keywords}></HeadSEO>
-                        <Header onScrollBrandsList={handleScrollBrandsList} brands={brands}></Header>
+                        <Header brands={restPageProps.brands}></Header>
                         <RouteShield>
                             <Content>
-                                <Container>
-                                    <Breadcrumbs h1={restPageProps.data?.h1 || restPageProps.page?.name}></Breadcrumbs>
-                                    <Component
-                                        {...restPageProps}
-                                        brands={brands}
-                                        loadMoreBrands={handleLoadMoreBrands}
-                                        onScrollBrandsList={handleScrollBrandsList}
-                                    />
-                                    <SEOBox
-                                        images={restPageProps.page?.seo?.images}
-                                        content={restPageProps.page?.seo?.content}></SEOBox>
-                                </Container>
+                                <Breadcrumbs
+                                    exclude={['buyback-cars']}
+                                    h1={restPageProps.data?.h1 || restPageProps.page?.name}></Breadcrumbs>
+                                {hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
                             </Content>
                         </RouteShield>
-                        <Footer footer={footer}></Footer>
-                        <Box bottom={0} right={0} position="fixed">
-                            <Button variant="contained" component="a" href="tel:+375297804780">
-                                Заказать
+                        <Footer footer={layout.footer}></Footer>
+                        <Box bottom={10} right={10} position="fixed">
+                            <Button
+                                sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
+                                variant="contained"
+                                component="a"
+                                href="tel:+375297804780">
+                                <LocalPhone></LocalPhone>
                             </Button>
                         </Box>
                     </Layout>

@@ -1,9 +1,147 @@
-.slider {
-	:global {
-		.slick-slide > div {
-			display: flex;
-			justify-content: center;
-			padding: 0 1em;
-		}
-	}
+.head {
+    &__container {
+        display: flex;
+    }
+    position: relative;
+    &::before {
+        content: '';
+        background: no-repeat center url('/buyback_banner.png');
+        background-size: cover;
+        height: 563px;
+        top: 0;
+        left: 0;
+        position: absolute;
+        width: 100%;
+    }
+    &::after {
+        content: '';
+        background: no-repeat center url('/buyback_banner_bmw.png');
+        background-size: cover;
+        height: 580px;
+        width: 786px;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
+}
+
+.autocomplete {
+    margin-bottom: 1.5em;
+    border-radius: 0.5em;
+    &__input {
+        padding-top: 0.75em !important;
+        padding-bottom: 0.75em !important;
+    }
+}
+
+.input {
+    background-color: #fff;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    margin-bottom: 1.5em;
+}
+
+.btn {
+    padding: 1.25em;
+    border-radius: 0;
+    font-size: 16px;
+}
+
+.img-empty {
+    width: 100%;
+}
+
+.section-advantages {
+    min-height: 415px;
+    padding-left: 5em;
+    background: no-repeat right center url('/buyback_advantages.png');
+}
+
+.list {
+    &__item {
+        padding-left: 50px;
+        position: relative;
+        padding: 1em 0px 1em 50px;
+        &::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 45px;
+            height: 45px;
+            background: url('/check.png');
+        }
+    }
+}
+
+.btn-assessment {
+    background-color: #fff;
+    color: #000;
+    text-transform: capitalize;
+    padding: 1.5em 3em;
+    border-radius: 0;
+}
+
+.section-why-we {
+    background: no-repeat left center url('/buyback_why_we.png');
+    min-height: 435px;
+}
+
+.buyback-easy-sell-img-wrapper {
+    transform: translateY(-176px);
+}
+
+.steps {
+    padding-bottom: 4em;
+    &__item {
+        position: relative;
+        &:nth-child(1) {
+            background-color: #ffeec7;
+            width: 30%;
+            padding-left: 5%;
+            &::after {
+                position: absolute;
+                content: '';
+                width: 0;
+                height: 0;
+                right: -100px;
+                border-top: 100px solid transparent;
+                border-bottom: 100px solid transparent;
+                border-left: 100px solid #ffeec7;
+                z-index: 1;
+            }
+        }
+        &:nth-child(2) {
+            width: 30%;
+            padding-left: 10%;
+            background-color: #ffe29f;
+            &::after {
+                position: absolute;
+                content: '';
+                width: 0;
+                height: 0;
+                right: -100px;
+                border-top: 100px solid transparent;
+                border-bottom: 100px solid transparent;
+                border-left: 100px solid #ffe29f;
+                z-index: 1;
+            }
+        }
+        &:nth-child(3) {
+            width: 35%;
+            padding-left: 10%;
+            background-color: #ffd473;
+            &::after {
+                position: absolute;
+                content: '';
+                width: 0;
+                height: 0;
+                right: -100px;
+                border-top: 100px solid transparent;
+                border-bottom: 100px solid transparent;
+                border-left: 100px solid #ffd473;
+                z-index: 1;
+            }
+        }
+    }
 }

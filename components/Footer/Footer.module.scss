@@ -1,14 +1,18 @@
 .footer {
-	background-color: #4caf50;
-	text-align: center;
 	&__item {
-		height: 100%;
 		color: #fff;
-		padding: 5px;
-		border-radius: 15px;
-		border: 0.2px solid #bdbdbd;
+		padding: 0 1.5em;
+		width: 25%;
+		height: 100%;
+		&:nth-child(2) {
+			padding: 0 1em;
+		}
+		&:last-child {
+			padding-left: 3em;
+		}
+
 		&_map {
-			padding: 0;
+			padding: 0 10px;
 			height: 100%;
 			border-radius: 15px;
 		}

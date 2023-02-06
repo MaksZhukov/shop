@@ -1,22 +1,18 @@
 import type { NextPage } from 'next';
 import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
-import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
+import { ApiResponse, Filters, SEO } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
 import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
 import { fetchModelBySlug, fetchModels } from 'api/models/models';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
-import { MAX_LIMIT } from 'api/constants';
+import { API_MAX_LIMIT } from 'api/constants';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { AxiosResponse } from 'axios';
 import { getPageProps } from 'services/PagePropsService';
-import { Car } from 'api/cars/types';
 import { fetchCars } from 'api/cars/cars';
-import { Autocomis } from 'api/autocomises/types';
-import { ServiceStation } from 'api/serviceStations/types';
-import { Article } from 'api/articles/types';
 import { fetchArticles } from 'api/articles/articles';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
@@ -35,27 +31,10 @@ import { useRouter } from 'next/router';
 
 interface Props {
     page: DefaultPage;
-    cars: Car[];
-    brands: ApiResponse<Brand[]>;
-    articles: Article[];
-    advertising: LinkWithImage[];
-    autocomises: Autocomis[];
-    deliveryAuto: LinkWithImage;
-    discounts: LinkWithImage[];
-    serviceStations: ServiceStation[];
+    brands: Brand[];
 }
 
-const Wheels: NextPage<Props> = ({
-    page,
-    brands,
-    advertising,
-    autocomises,
-    deliveryAuto,
-    discounts,
-    serviceStations,
-    cars,
-    articles
-}) => {
+const Wheels: NextPage<Props> = ({ page, brands }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [widths, setWidths] = useState<WheelWidth[]>([]);
     const [diskOffsets, setDiskOffsets] = useState<WheelDiskOffset[]>([]);
@@ -74,7 +53,7 @@ const Wheels: NextPage<Props> = ({
             handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
                 fetchModels({
                     filters: { brand: { slug: brand } },
-                    pagination: { limit: MAX_LIMIT }
+                    pagination: { limit: API_MAX_LIMIT }
                 })
             )();
         }
@@ -120,7 +99,7 @@ const Wheels: NextPage<Props> = ({
                 id: 'brand',
                 placeholder: 'Марка',
                 type: 'autocomplete',
-                options: brands.data.map((item) => ({ label: item.name, value: item.slug })),
+                options: brands.map((item) => ({ label: item.name, value: item.slug })),
                 noOptionsText: noOptionsText
             }
         ],
@@ -135,7 +114,7 @@ const Wheels: NextPage<Props> = ({
                     handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
                         fetchModels({
                             filters: { brand: { slug: values.brand } },
-                            pagination: { limit: MAX_LIMIT }
+                            pagination: { limit: API_MAX_LIMIT }
                         })
                     ),
                 noOptionsText: noOptionsText
@@ -150,7 +129,7 @@ const Wheels: NextPage<Props> = ({
                 onOpen: () =>
                     handleOpenAutocomplete<WheelWidth>(!!widths.length, setWidths, () =>
                         fetchWheelWidths({
-                            pagination: { limit: MAX_LIMIT }
+                            pagination: { limit: API_MAX_LIMIT }
                         })
                     ),
                 noOptionsText: noOptionsText
@@ -165,7 +144,7 @@ const Wheels: NextPage<Props> = ({
                 onOpen: () =>
                     handleOpenAutocomplete<WheelDiameter>(!!diameters.length, setDiameters, () =>
                         fetchWheelDiameters({
-                            pagination: { limit: MAX_LIMIT }
+                            pagination: { limit: API_MAX_LIMIT }
                         })
                     ),
                 noOptionsText: noOptionsText
@@ -180,7 +159,7 @@ const Wheels: NextPage<Props> = ({
                 onOpen: (values: any) =>
                     handleOpenAutocomplete<WheelNumberHole>(!!numberHoles.length, setNumberHoles, () =>
                         fetchWheelNumberHoles({
-                            pagination: { limit: MAX_LIMIT }
+                            pagination: { limit: API_MAX_LIMIT }
                         })
                     ),
                 noOptionsText: noOptionsText
@@ -198,7 +177,7 @@ const Wheels: NextPage<Props> = ({
                         setDiameterCenterHoles,
                         () =>
                             fetchWheelDiameterCenterHoles({
-                                pagination: { limit: MAX_LIMIT }
+                                pagination: { limit: API_MAX_LIMIT }
                             })
                     ),
                 noOptionsText: noOptionsText
@@ -213,7 +192,7 @@ const Wheels: NextPage<Props> = ({
                 onOpen: () =>
                     handleOpenAutocomplete<WheelDiskOffset>(!!diskOffsets.length, setDiskOffsets, () =>
                         fetchWheelDiskOffsets({
-                            pagination: { limit: MAX_LIMIT }
+                            pagination: { limit: API_MAX_LIMIT }
                         })
                     ),
                 noOptionsText: noOptionsText
@@ -255,14 +234,6 @@ const Wheels: NextPage<Props> = ({
     return (
         <Catalog
             seo={page.seo}
-            newProductsTitle="Дисков"
-            advertising={advertising}
-            autocomises={autocomises}
-            deliveryAuto={deliveryAuto}
-            discounts={discounts}
-            serviceStations={serviceStations}
-            cars={cars}
-            articles={articles}
             dataFieldsToShow={[
                 {
                     id: 'brand',
@@ -290,64 +261,33 @@ const Wheels: NextPage<Props> = ({
 
 export default Wheels;
 
-export const getServerSideProps = getPageProps(
-    undefined,
-    async (context) => {
-        const { slug = [] } = context.query;
-        const [brand, modelParam] = slug;
+export const getServerSideProps = getPageProps(undefined, async (context) => {
+    const { slug = [] } = context.query;
+    const [brand, modelParam] = slug;
 
-        let seo: SEO | null = null;
-        if (modelParam) {
-            let model = modelParam.replace('model-', '');
-            const {
-                data: { data }
-            } = await fetchModelBySlug(model, {
-                populate: ['seoWheels.images', 'image']
-            });
-            seo = data.seoWheels;
-        } else if (brand) {
-            const {
-                data: { data }
-            } = await fetchBrandBySlug(brand, {
-                populate: ['seoWheels.images', 'image']
-            });
-            seo = data.seoWheels;
-        } else {
-            const {
-                data: { data }
-            } = await fetchPage('wheel')();
-            seo = data.seo;
-        }
-        return {
-            page: { seo }
-        };
-    },
-    async () => {
+    let seo: SEO | null = null;
+    if (modelParam) {
+        let model = modelParam.replace('model-', '');
         const {
-            data: {
-                data: { advertising, deliveryAuto, discounts, autocomises, serviceStations }
-            }
-        } = await fetchPage<PageMain>('main')();
-        return {
-            advertising,
-            deliveryAuto,
-            discounts,
-            autocomises,
-            serviceStations
-        };
-    },
-    async () => {
-        const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } });
-        return { cars: data.data };
-    },
-    async () => ({
-        articles: (await fetchArticles({ populate: 'image' })).data.data
-    }),
-    async () => ({
-        brands: (
-            await fetchBrands({
-                populate: ['image', 'seo.image']
-            })
-        ).data
-    })
-);
+            data: { data }
+        } = await fetchModelBySlug(model, {
+            populate: ['seoWheels.images', 'image']
+        });
+        seo = data.seoWheels;
+    } else if (brand) {
+        const {
+            data: { data }
+        } = await fetchBrandBySlug(brand, {
+            populate: ['seoWheels.images', 'image']
+        });
+        seo = data.seoWheels;
+    } else {
+        const {
+            data: { data }
+        } = await fetchPage('wheel')();
+        seo = data.seo;
+    }
+    return {
+        page: { seo }
+    };
+});

@@ -1,14 +1,7 @@
 .slider {
-	flex: 1;
-	min-width: 0;
-	margin-bottom: 1em;
-	&_small {
-		:global {
-			.slick-slide > div {
-				display: flex;
-				justify-content: center;
-				padding: 0 0.5em;
-			}
-		}
-	}
+    width: 440px;
+    &_small {
+        width: 100px;
+        margin-right: 1.5em;
+    }
 }

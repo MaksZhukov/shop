@@ -1,25 +1,19 @@
 import type { NextPage } from 'next';
 import { Dispatch, SetStateAction, UIEventHandler, useEffect, useRef, useState } from 'react';
 import { Brand } from 'api/brands/types';
-import { ApiResponse, Filters, LinkWithImage, SEO } from 'api/types';
+import { ApiResponse, Filters, SEO } from 'api/types';
 import { fetchModelBySlug, fetchModels } from 'api/models/models';
 import { getPageProps } from 'services/PagePropsService';
 import { fetchCars } from 'api/cars/cars';
-import { Car } from 'api/cars/types';
-import { Autocomis } from 'api/autocomises/types';
-import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
-import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
-import { DefaultPage, PageMain, PageProduct, PageProductSparePart } from 'api/pages/types';
+import { DefaultPage, PageMain } from 'api/pages/types';
 import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
-import { SparePart } from 'api/spareParts/types';
 import Catalog from 'components/Catalog';
 import { getParamByRelation } from 'services/ParamsService';
 import { getSparePartsFiltersConfig } from 'components/Filters/config';
 import { CircularProgress } from '@mui/material';
 import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
-import { MAX_LIMIT } from 'api/constants';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
 import { fetchGenerations } from 'api/generations/generations';
@@ -32,34 +26,14 @@ import { KindSparePart } from 'api/kindSpareParts/types';
 import { Generation } from 'api/generations/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { useRouter } from 'next/router';
+import { API_MAX_LIMIT } from 'api/constants';
 
 interface Props {
-    data?: SparePart;
-    relatedProducts: SparePart[];
-    page: DefaultPage | (PageProduct & PageProductSparePart);
-    brands: ApiResponse<Brand[]>;
-    cars: Car[];
-    articles: Article[];
-    advertising: LinkWithImage[];
-    autocomises: Autocomis[];
-    deliveryAuto: LinkWithImage;
-    discounts: LinkWithImage[];
-    serviceStations: ServiceStation[];
-    onScrollBrandsList: UIEventHandler<HTMLUListElement>;
+    page: DefaultPage;
+    brands: Brand[];
 }
 
-const SpareParts: NextPage<Props> = ({
-    page,
-    advertising,
-    autocomises,
-    deliveryAuto,
-    discounts,
-    serviceStations,
-    cars,
-    brands,
-    articles,
-    onScrollBrandsList
-}) => {
+const SpareParts: NextPage<Props> = ({ page, brands }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
@@ -89,7 +63,7 @@ const SpareParts: NextPage<Props> = ({
             handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
                 fetchModels({
                     filters: { brand: { slug: brand } },
-                    pagination: { limit: MAX_LIMIT }
+                    pagination: { limit: API_MAX_LIMIT }
                 })
             )();
         }
@@ -132,7 +106,7 @@ const SpareParts: NextPage<Props> = ({
         handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
             fetchModels({
                 filters: { brand: { slug: values.brand } },
-                pagination: { limit: MAX_LIMIT }
+                pagination: { limit: API_MAX_LIMIT }
             })
         );
 
@@ -140,7 +114,7 @@ const SpareParts: NextPage<Props> = ({
         handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
             fetchGenerations({
                 filters: { model: { slug: values.slug as string } },
-                pagination: { limit: MAX_LIMIT }
+                pagination: { limit: API_MAX_LIMIT }
             })
         );
 
@@ -155,7 +129,7 @@ const SpareParts: NextPage<Props> = ({
     const handleOpenAutocompleteVolume = () =>
         handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
             fetchEngineVolumes({
-                pagination: { limit: MAX_LIMIT }
+                pagination: { limit: API_MAX_LIMIT }
             })
         );
 
@@ -175,7 +149,7 @@ const SpareParts: NextPage<Props> = ({
     const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
     const filtersConfig = getSparePartsFiltersConfig({
-        brands: brands.data,
+        brands,
         models,
         kindSpareParts: kindSpareParts.data,
         generations,
@@ -183,7 +157,6 @@ const SpareParts: NextPage<Props> = ({
         volumes,
         isLoadingMoreKindSpareParts: isLoadingMore,
         onScrollKindSparePartAutocomplete: handleScrollKindSparePartAutocomplete,
-        onScrollBrandAutocomplete: onScrollBrandsList,
         onOpenAutocompleteModel: handleOpenAutocompleteModel,
         onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
         onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
@@ -216,14 +189,6 @@ const SpareParts: NextPage<Props> = ({
 
     return (
         <Catalog
-            newProductsTitle="Запчастей"
-            advertising={advertising}
-            autocomises={autocomises}
-            deliveryAuto={deliveryAuto}
-            discounts={discounts}
-            serviceStations={serviceStations}
-            cars={cars}
-            articles={articles}
             dataFieldsToShow={[
                 {
                     id: 'brand',
@@ -279,33 +244,5 @@ export const getServerSideProps = getPageProps(
         return {
             page: { seo }
         };
-    },
-    async () => {
-        const {
-            data: {
-                data: { advertising, deliveryAuto, discounts, autocomises, serviceStations }
-            }
-        } = await fetchPage<PageMain>('main')();
-        return {
-            advertising,
-            deliveryAuto,
-            discounts,
-            autocomises,
-            serviceStations
-        };
-    },
-    async () => {
-        const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } });
-        return { cars: data.data };
-    },
-    async () => ({
-        articles: (await fetchArticles({ populate: 'image' })).data.data
-    }),
-    async () => ({
-        brands: (
-            await fetchBrands({
-                populate: ['image', 'seo.image']
-            })
-        ).data
-    })
+    }
 );
