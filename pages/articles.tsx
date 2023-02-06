@@ -13,17 +13,15 @@ import { DefaultPage } from 'api/pages/types';
 import NextLink from 'next/link';
 import Typography from 'components/Typography';
 
-const LIMIT = 10;
-
 interface Props {
     page: DefaultPage;
     articles: ApiResponse<Article[]>;
 }
 
 const Articles: NextPage<Props> = ({ page, articles }) => {
-    const [data, setData] = useState<Article[]>(articles.data);
+    const [data, setData] = useState<Article[]>(articles ? articles.data : []);
     const [isMounted, setIsMounted] = useState<boolean>(false);
-    const pageCount = articles.meta.pagination?.pageCount ?? 0;
+    const pageCount = articles?.meta?.pagination?.pageCount ?? 0;
     const router = useRouter();
 
     const { page: qPage = '1' } = router.query as {
@@ -36,7 +34,7 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
                 const {
                     data: { data }
                 } = await fetchArticles({
-                    pagination: { page: +qPage, pageSize: LIMIT },
+                    pagination: { page: +qPage },
                     populate: 'image'
                 });
                 setData(data);
@@ -85,7 +83,6 @@ export const getServerSideProps = getPageProps(fetchPage('article'), async (cont
     articles: (
         await fetchArticles({
             pagination: {
-                pageSize: LIMIT,
                 page: context.query?.page ?? 1
             },
             populate: 'image'
