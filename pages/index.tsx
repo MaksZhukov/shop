@@ -426,10 +426,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
                         </Typography>
                     </Box>
                     <Box>
-                        <ReactPlayer
-                            width={600}
-                            height={300}
-                            url={'https://www.youtube.com/watch?v=MrthDosKEVc'}></ReactPlayer>
+                        <ReactPlayer width={600} height={300} url={'https://youtu.be/UnBjkTvGduw'}></ReactPlayer>
                     </Box>
                 </Box>
                 <Typography withSeparator component="h2" variant="h4" fontWeight="bold">
