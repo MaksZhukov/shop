@@ -14,7 +14,7 @@ const About = ({ page }: Props) => {
 	return (
 		<>
 			<Box display='flex'>
-				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'}></Image>
+				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'} alt={''}></Image>
 				<Box marginLeft='3em'>
 					<Typography component='h1' variant='h4' marginBottom='1em' textTransform='uppercase'>
 						Авторазборка в Гродно
@@ -88,7 +88,7 @@ const About = ({ page }: Props) => {
 						плане.
 					</Typography>
 				</Box>
-				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'}></Image>
+				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'} alt={''}></Image>
 			</Box>
 			<BlockImages imageSRCs={['/about_img.png', '/about_img.png', '/about_img.png']}></BlockImages>
 			<Typography marginBottom='3em'>
@@ -123,7 +123,7 @@ const About = ({ page }: Props) => {
 				imageSRCs={['/about_img.png', '/about_img.png', '/about_img.png']}
 			></BlockImages>
 			<Box display='flex' marginBottom='3em'>
-				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'}></Image>
+				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'} alt={''}></Image>
 				<Box marginTop='4em' marginLeft='3em'>
 					<Typography component='h2' variant='h4'>
 						Ценовая политика — правда ли так выгодно?
