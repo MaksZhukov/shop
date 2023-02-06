@@ -1,32 +1,147 @@
-import WhiteBox from 'components/WhiteBox';
 import { getPageProps } from 'services/PagePropsService';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
-import CarouselReviews from 'components/CarouselReviews';
-import { fetchReviews } from 'api/reviews/reviews';
-import { Review } from 'api/reviews/types';
-import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
-import { useMediaQuery } from '@mui/material';
-import { Image } from 'api/types';
+import { Box } from '@mui/system';
+import Image from 'components/Image';
+import BlockImages from 'components/BlockImages';
 
 interface Props {
-    page: DefaultPage & { content: string; blockImages1: Image[]; blockImages2: Image[] };
+	page: DefaultPage & { content: string };
 }
 
 const About = ({ page }: Props) => {
-    return (
-        <>
-            <ReactMarkdown
-                content={page.content}
-                blockImagesSnippets={{
-                    blockImages1: page.blockImages1,
-                    blockImages2: page.blockImages2
-                }}></ReactMarkdown>
-        </>
-    );
+	return (
+		<>
+			<Box display='flex'>
+				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'}></Image>
+				<Box marginLeft='3em'>
+					<Typography component='h1' variant='h4' marginBottom='1em' textTransform='uppercase'>
+						Авторазборка в Гродно
+					</Typography>
+					<Typography>
+						Опытные автовладельцы с завидной регулярностью прибегают к услугам фирм, занимающихся
+						авторазбором. Особенно четко эта тенденция прослеживается, когда на рынке буйствует агрессивная
+						ценовая политика, тогда спрос на вторичные детали (часто аналогичные по качеству заводским)
+						возрастает в сотни раз. Конечно, есть и определенные моменты, которые стоит учитывать при
+						приобретении таких комплектующих, например, состояние выбранного изделия. Подобное не является
+						большой проблемой при должных навыках. Далее рассказываем подробнее о том, что такое разборка
+						авто, как формируются сопутствующие процессы, какие существуют нюансы и каким образом
+						складывается стоимость “отработавшей” детали.
+					</Typography>
+				</Box>
+			</Box>
+			<BlockImages imageSRCs={['/about_img.png', '/about_img.png', '/about_img.png']}></BlockImages>
+			<Box>
+				<Typography marginBottom='1em' component='h2' variant='h4' withSeparator textTransform='uppercase'>
+					Зачем нужны сервисы по разбору автомобилей
+				</Typography>
+				<Typography>
+					В реалиях стран СНГ авторазборы начали появляться в 90-х годах, когда был финансовый кризис,
+					нестабильность, разруха и прочие благоприятные для подобного бизнеса факторы. По своей сути, это
+					была противоположность официальном производству транспорту — если там его собрали и продавали
+					целиком, то здесь разбирали и продавали по частям. И вот, уже сейчас нельзя не получить ответа на
+					вопрос, что такое разборка авто, даже от самого необразованного автовладельца. И если вы считаете,
+					что необходимости в создании такой системы нет, то глубоко ошибаетесь, как минимум, по двум
+					причинам:
+				</Typography>
+			</Box>
+			<BlockImages
+				sx={{ marginY: '2em' }}
+				withoutOverlay
+				imageSRCs={['/about_img.png', '/about_img.png', '/about_img.png']}
+			></BlockImages>
+			<Box component='ol' marginBottom='3em'>
+				<Typography component='li'>
+					<Typography component='span' fontWeight='500'>
+						Это бизнес
+					</Typography>
+					. Какой-никакой заработок даже начальных этапах подобная схема своему владельцу предоставляет. Если
+					не понаслышке знакомы с техникой, то проблем в управлении всеми процессами будет минимум. Часто
+					хватает пары человек и гаража для организации небольшого разборочного комплекса.
+				</Typography>
+				<Typography component='li'>
+					<Typography component='span' fontWeight='500'>
+						Это выгодно.
+					</Typography>
+					Причем подобная выгода есть как для поставщика услуг, так и для потребителя. Конечно, если вы не
+					знаете, что такое разборка авто, никогда не сталкивались с высокими рыночными ценами и
+					необходимостью поиска альтернатив, то мало чего поймете. Иногда бюджет не позволяет приобретать
+					фирменные изделия брендов, поэтому приходится изощряться. Имея небольшую теоретическую базу, можно
+					выбрать нужную деталь по более низкой цене с аналогичным заводскому качеству или просто с
+					минимальным износом.
+				</Typography>
+			</Box>
+			<Box display='flex'>
+				<Box marginRight='3em'>
+					<Typography marginBottom='1em' component='h2' variant='h4' withSeparator textTransform='uppercase'>
+						Основные принципы функционирования сервисов разбора авто
+					</Typography>
+					<Typography>
+						Функционируют компании-авторазборы по простейшим принципам по типу “купил-разобрал-продал”.
+						Товарный ассортимент у хорошо развитого бизнеса зачастую опережает официальные резервуары, так
+						как тачки заводятся не только с отечественных территорий, но и из-за рубежа. Отсюда возникает
+						большой выбор узлов и механизмов, причем качество везде разное, цены тоже. Есть те, кто
+						проверяют комплектующие самостоятельно и выдают готовый вердикт потребителю, а есть компании,
+						полагающиеся на навыки подбора потенциального клиента. Зная хотя бы то, что такое разборка авто
+						и какие запчасти там получится найти, можно нехило сэкономить и в финансовом, и во временном
+						плане.
+					</Typography>
+				</Box>
+				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'}></Image>
+			</Box>
+			<BlockImages imageSRCs={['/about_img.png', '/about_img.png', '/about_img.png']}></BlockImages>
+			<Typography marginBottom='3em'>
+				Теперь чуть подробнее о схеме функционирования рассматриваемых сервисов. Итак, первоочередная задача
+				состоит в том, чтобы обеспечить себе (продавцу) постоянный поток техники для разбора. Источников тому
+				может быть масса, но в основном это тачки, выкупленные после ДТП и не подлежащие восстановлению. Дальше
+				транспортное средство разбирается на составные части: двигатель, коробка, детали кузова и так далее.
+				Если есть возможность продать какой-то узел целиком, то он выставляется на продажу полностью. После
+				вмешивается маркетинг и прочие “штуки-распространители”: приходят клиенты, покупают нужную запчасть и
+				все заново движется по кругу.
+			</Typography>
+			<Typography withSeparator component='h2' textTransform='uppercase' marginBottom='1em' variant='h4'>
+				Нюансы авторазборов
+			</Typography>
+			<Typography marginBottom='1em'>
+				Что такое разборка авто разобрались, теперь о “темных” сторонах подобного сервиса. Конечно, авторазборы
+				дают запчасти неплохого качества по очень вменяемым ценам. Часто ассортимент превышает отдельно взятый
+				заводской, поэтому времени экономиться немало, тем более если фирма базируется в вашем городе. Но есть и
+				недостатки подобной экономии.
+			</Typography>
+			<Typography>
+				Первый заключается, конечно же, не в новизне узлов. Чтобы получить аналогичное заводскому качество с
+				минимальным или вовсе отсутствующим износом, нужно сильно постараться и обзавестись хотя бы какими-то
+				теоретическими знаниями. Второй нюанс авторазборов — отсутствие каких-либо гарантий на комплектующие.
+				Есть сервисы, которые производят предпродажную оценку качества механизмов и дают какие-никакие гарантии,
+				но большинство этим не занимается и гарантийных обязательств за собой не закрепляет, поэтому приходится
+				надеяться только на себя.
+			</Typography>
+			<BlockImages
+				sx={{ margin: '1em 0 3em' }}
+				withoutOverlay
+				imageSRCs={['/about_img.png', '/about_img.png', '/about_img.png']}
+			></BlockImages>
+			<Box display='flex' marginBottom='3em'>
+				<Image width={500} height={360} isOnSSR={false} src={'/about_img.png'}></Image>
+				<Box marginTop='4em' marginLeft='3em'>
+					<Typography component='h2' variant='h4'>
+						Ценовая политика — правда ли так выгодно?
+					</Typography>
+					<Typography>
+						На первый взгляд покупку детали на б/у рынке действительно выглядит выгодно. Но стоит копнуть
+						чуть поглубже в тему того, что такое разборка авто, и можно уже не быть таким оптимистичным. В
+						любом деле есть нюансы и определенные моменты, требующие внимания к себе. Здесь это — политика
+						ценообразования. Просто так занизить цену на товар нельзя, поэтому взамен получаем не лучшее
+						качество.
+					</Typography>
+				</Box>
+			</Box>
+			<Typography textTransform='uppercase' variant='h5'>
+				C уважением, магазин б/у запчастей для автомобиля.
+			</Typography>
+		</>
+	);
 };
 
 export default About;
