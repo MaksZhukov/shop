@@ -3,7 +3,7 @@ import { Link, LinkProps } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import Image from 'components/Image';
 import NextLink from 'next/link';
-import { FC, HTMLAttributeAnchorTarget } from 'react';
+import { CSSProperties, FC, HTMLAttributeAnchorTarget } from 'react';
 import styles from './LinkWithImage.module.scss';
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
     width?: number;
     height?: number;
     image?: IImage;
+    imageStyle?: CSSProperties;
     caption?: string;
     linkProps?: LinkProps;
 }
@@ -21,6 +22,7 @@ const LinkWithImage: FC<Props> = ({
     link,
     image,
     caption,
+    imageStyle = { objectFit: 'contain', margin: 'auto' },
     targetLink = '_self',
     linkProps = { variant: 'h6', marginTop: '1em' }
 }) => {
@@ -28,12 +30,12 @@ const LinkWithImage: FC<Props> = ({
     return (
         <NextLink className={styles.link} href={link} target={targetLink}>
             <Image
-                style={{ objectFit: 'contain', margin: 'auto' }}
+                style={imageStyle}
                 alt={image?.alternativeText || ''}
                 width={width}
                 height={height}
                 isOnSSR={!!image}
-                src={image?.formats?.thumbnail.url || image?.url || ''}></Image>
+                src={width > 200 ? image?.url : image?.formats?.thumbnail.url || ''}></Image>
             {title && (
                 <Link {...linkProps} color="inherit" underline={'hover'} component="div" textAlign="center">
                     {title}
