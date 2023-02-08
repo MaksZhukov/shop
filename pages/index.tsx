@@ -411,7 +411,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                 caption={item.name}
                                 link={`/spare-parts/${item.slug}`}
                                 image={item.image}
-                                linkProps={{ fontWeight: 'bold', variant: 'body1' }}></LinkWithImage>
+                                typographyProps={{ fontWeight: 'bold', variant: 'body1' }}></LinkWithImage>
                         </WhiteBox>
                     ))}
                 </Box>
