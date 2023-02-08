@@ -318,6 +318,7 @@ const Catalog = ({
                 placeholder={searchPlaceholder}></Input>
             <Select
                 variant="standard"
+                MenuProps={{ disableScrollLock: true }}
                 value={sort as any}
                 sx={{ maxWidth: 200 }}
                 className={styles['sort-select']}

@@ -121,7 +121,7 @@ const Vacancies: NextPage<Props> = ({ page, vacancies }) => {
                     withSeparator>
                     {item.fullTitle}
                 </Typography>
-                <Box display="flex">
+                <Box display="flex" marginBottom="4em">
                     <Box flex="1" paddingRight="5em">
                         <Typography color="text.secondary" variant="h6" textTransform="uppercase">
                             Обязаности
