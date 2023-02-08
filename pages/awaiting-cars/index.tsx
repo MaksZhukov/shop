@@ -194,11 +194,6 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
         ]
     ];
 
-    const handleChangeSort = (e: SelectChangeEvent<HTMLInputElement>) => {
-        router.query.sort = e.target.value as string;
-        router.push({ pathname: router.pathname, query: router.query });
-    };
-
     const handleClickFind = (values: any) => {
         Object.keys(values).forEach((key) => {
             if (!values[key]) {
