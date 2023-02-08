@@ -41,19 +41,17 @@ interface Props {
 
 const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
     const router = useRouter();
-
     const breadcrumbs = useMemo(
         function generateBreadcrumbs() {
+            if (router.asPath.includes('.json')) {
+                return [];
+            }
             const asPathNestedRoutes = generatePathParts(router.asPath.replace('model-', ''));
-
             const pathnameNestedRoutes = generatePathParts(
                 router.pathname.includes('[[...slug]]') ? router.pathname + '/[[...slug]]' : router.pathname
             );
 
             const crumblist = asPathNestedRoutes.map((subpath, idx) => {
-                if (pathnameNestedRoutes[idx] === undefined) {
-                    console.log(pathnameNestedRoutes);
-                }
                 const param = pathnameNestedRoutes[idx].replace('[', '').replace(']', '');
                 const href = '/' + asPathNestedRoutes.slice(0, idx + 1).join('/');
                 return {

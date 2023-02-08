@@ -7,7 +7,7 @@ import { getPageProps } from 'services/PagePropsService';
 import { fetchCars } from 'api/cars/cars';
 import { fetchArticles } from 'api/articles/articles';
 import { fetchPage } from 'api/pages';
-import { DefaultPage, PageMain } from 'api/pages/types';
+import { DefaultPage, PageMain, PageProduct, PageProductSparePart } from 'api/pages/types';
 import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
 import Catalog from 'components/Catalog';
 import { getParamByRelation } from 'services/ParamsService';
@@ -24,225 +24,115 @@ import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { useSnackbar } from 'notistack';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { Generation } from 'api/generations/types';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
+import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
 import { useRouter } from 'next/router';
 import { API_MAX_LIMIT } from 'api/constants';
+import CatalogSpareParts from 'components/CatalogSpareParts';
+import Product from 'components/Product';
+import { getProductPageSeo } from 'services/ProductService';
+import { SparePart } from 'api/spareParts/types';
 
 interface Props {
+    data: SparePart;
+    relatedProducts: SparePart[];
     page: DefaultPage;
     brands: Brand[];
 }
 
-const SpareParts: NextPage<Props> = ({ page, brands }) => {
-    const [models, setModels] = useState<Model[]>([]);
-    const [generations, setGenerations] = useState<Generation[]>([]);
-    const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
-    const [volumes, setVolumes] = useState<EngineVolume[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-    const { enqueueSnackbar } = useSnackbar();
-
-    const router = useRouter();
-    const [brand, model] = router.query.slug || [];
-
-    const loadKindSpareParts = async () => {
-        const { data } = await fetchKindSpareParts({
-            pagination: { start: kindSpareParts.data.length }
-        });
-        setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
-    };
-
-    const [throttledLoadMoreKindSpareParts] = useThrottle(async () => {
-        setIsLoadingMore(true);
-        await loadKindSpareParts();
-        setIsLoadingMore(false);
-    });
-
-    useEffect(() => {
-        if (!models.length && model) {
-            handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-                fetchModels({
-                    filters: { brand: { slug: brand } },
-                    pagination: { limit: API_MAX_LIMIT }
-                })
-            )();
-        }
-    }, [model]);
-
-    const fetchKindSparePartsRef = useRef(async (value: string) => {
-        setIsLoading(true);
-        const { data } = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
-        setKindSpareParts(data);
-        setIsLoading(false);
-    });
-
-    const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
-
-    const handleOpenAutocomplete =
-        <T extends any>(
-            hasData: boolean,
-            setState: Dispatch<SetStateAction<T[]>>,
-            fetchFunc: () => Promise<AxiosResponse<ApiResponse<T[]>>>
-        ) =>
-        async () => {
-            if (!hasData) {
-                setIsLoading(true);
-                try {
-                    const {
-                        data: { data }
-                    } = await fetchFunc();
-                    setState(data);
-                } catch (err) {
-                    enqueueSnackbar(
-                        'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
-                        { variant: 'error' }
-                    );
-                }
-                setIsLoading(false);
-            }
-        };
-
-    const handleOpenAutocompleteModel = (values: any) =>
-        handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-            fetchModels({
-                filters: { brand: { slug: values.brand } },
-                pagination: { limit: API_MAX_LIMIT }
-            })
+const SpareParts: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
+    if (data && relatedProducts) {
+        return (
+            <Product
+                data={data}
+                printOptions={[
+                    { text: 'Поколение', value: data.generation?.name },
+                    ...(data.engineNumber ? [{ text: 'Маркировка двигателя', value: data.engineNumber }] : []),
+                    ...(data.engine ? [{ text: 'Двигатель', value: data.engine }] : []),
+                    { text: 'Запчасть', value: data.kindSparePart?.name },
+                    { text: 'Марка', value: data.brand?.name },
+                    { text: 'Модель', value: data.model?.name },
+                    { text: 'Год', value: data.year },
+                    { text: 'Коробка', value: data.transmission },
+                    { text: 'Обьем', value: data.volume?.name },
+                    { text: 'Тип топлива', value: data.fuel as any }
+                ]}
+                page={page as PageProduct & PageProductSparePart}
+                relatedProducts={relatedProducts}></Product>
         );
-
-    const handleOpenAutocompleteGeneration = (values: { [key: string]: string | null }) =>
-        handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
-            fetchGenerations({
-                filters: { model: { slug: values.slug as string } },
-                pagination: { limit: API_MAX_LIMIT }
-            })
-        );
-
-    const handleOpenAutocompleteKindSparePart = () => async () => {
-        if (!kindSpareParts.data.length) {
-            setIsLoading(true);
-            await loadKindSpareParts();
-            setIsLoading(false);
-        }
-    };
-
-    const handleOpenAutocompleteVolume = () =>
-        handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
-            fetchEngineVolumes({
-                pagination: { limit: API_MAX_LIMIT }
-            })
-        );
-
-    const handleInputChangeKindSparePart = (_: any, value: string) => {
-        debouncedFetchKindSparePartsRef(value);
-    };
-
-    const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLUListElement> = (event) => {
-        if (
-            event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
-            event.currentTarget.scrollHeight
-        ) {
-            throttledLoadMoreKindSpareParts();
-        }
-    };
-
-    const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
-
-    const filtersConfig = getSparePartsFiltersConfig({
-        brands,
-        models,
-        kindSpareParts: kindSpareParts.data,
-        generations,
-        noOptionsText,
-        volumes,
-        isLoadingMoreKindSpareParts: isLoadingMore,
-        onScrollKindSparePartAutocomplete: handleScrollKindSparePartAutocomplete,
-        onOpenAutocompleteModel: handleOpenAutocompleteModel,
-        onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
-        onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
-        onInputChangeKindSparePart: handleInputChangeKindSparePart,
-        onOpenAutoCompleteVolume: handleOpenAutocompleteVolume
-    });
-
-    const generateFiltersByQuery = ({
-        brand,
-        model,
-        generation,
-        kindSparePart,
-        brandName,
-        modelName,
-        generationName,
-        volume,
-        ...others
-    }: {
-        [key: string]: string;
-    }): Filters => {
-        let filters: Filters = {
-            brand: getParamByRelation(brand, 'slug'),
-            model: getParamByRelation(model, 'slug'),
-            generation: getParamByRelation(generation),
-            kindSparePart: getParamByRelation(kindSparePart),
-            volume: getParamByRelation(volume)
-        };
-        return { ...filters, ...others };
-    };
-
-    return (
-        <Catalog
-            dataFieldsToShow={[
-                {
-                    id: 'brand',
-                    name: 'Марка'
-                },
-                {
-                    id: 'model',
-                    name: 'Модель'
-                },
-                {
-                    id: 'kindSparePart',
-                    name: 'Запчасть'
-                }
-            ]}
-            searchPlaceholder="Поиск детали ..."
-            filtersConfig={filtersConfig}
-            seo={page?.seo}
-            fetchData={fetchSpareParts}
-            generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-    );
+    }
+    return <CatalogSpareParts page={page} brands={brands}></CatalogSpareParts>;
 };
 
 export default SpareParts;
 
-export const getServerSideProps = getPageProps(
-    undefined,
-    async (context) => {
-        const { slug = [] } = context.query;
-        const [brand, modelParam] = slug;
+export const getServerSideProps = getPageProps(undefined, async (context) => {
+    const { slug = [] } = context.query;
+    const [brand, modelOrProductParam] = slug;
+    const productParam =
+        modelOrProductParam && !modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
+    const modelParam = modelOrProductParam && modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
+    let props: any = {};
 
-        let seo: SEO | null = null;
-        if (modelParam) {
-            let model = modelParam.replace('model-', '');
-            const {
+    if (productParam) {
+        const [
+            {
                 data: { data }
-            } = await fetchModelBySlug(model, {
-                populate: ['seoSpareParts.images', 'image']
-            });
-            seo = data.seoSpareParts;
-        } else if (brand) {
-            const {
-                data: { data }
-            } = await fetchBrandBySlug(brand, {
-                populate: ['seoSpareParts.images', 'image']
-            });
-            seo = data.seoSpareParts;
-        } else {
-            const {
-                data: { data }
-            } = await fetchPage('spare-part')();
-            seo = data.seo;
-        }
-        return {
-            page: { seo }
+            },
+            {
+                data: { data: page }
+            },
+            {
+                data: { data: pageSparePart }
+            }
+        ] = await Promise.all([
+            fetchSparePart(productParam),
+            fetchPage<PageProduct>('product', { populate: ['linksWithImages.image', 'benefits'] })(),
+            fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
+        ]);
+        const {
+            data: { data: relatedProducts }
+        } = await fetchSpareParts({
+            filters: {
+                price: { $gt: 0 },
+                id: {
+                    $ne: data.id
+                },
+                model: data.model?.id || ''
+            },
+            populate: ['images', 'brand']
+        });
+        const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
+        let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
+        props = {
+            data,
+            page: {
+                ...page,
+                ...pageSparePart,
+                textAfterDescription: pageSparePart.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
+                seo: getProductPageSeo(pageSparePart.seo, data)
+            },
+            relatedProducts
         };
+    } else if (modelParam) {
+        let model = modelParam.replace('model-', '');
+        const {
+            data: { data }
+        } = await fetchModelBySlug(model, {
+            populate: ['seoSpareParts.images', 'image']
+        });
+        props = { page: { seo: data.seoSpareParts } };
+    } else if (brand) {
+        const {
+            data: { data }
+        } = await fetchBrandBySlug(brand, {
+            populate: ['seoSpareParts.images', 'image']
+        });
+        props = { page: { seo: data.seoSpareParts } };
+    } else {
+        const {
+            data: { data }
+        } = await fetchPage('spare-part')();
+        props = { page: { seo: data.seo } };
     }
-);
+    return props;
+});

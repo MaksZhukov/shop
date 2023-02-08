@@ -17,22 +17,6 @@ const nextConfig = {
                 hostname: '**'
             }
         ]
-    },
-    rewrites: () => {
-        return [
-            {
-                source: '/:productsSlug(spare-parts|wheels|cabins)/:brand',
-                destination: '/:productsSlug/:brand'
-            },
-            {
-                source: '/:productsSlug(spare-parts|wheels|cabins)/:brand/:model(model-.*)',
-                destination: '/:productsSlug/:brand/:model'
-            },
-            {
-                source: '/:productsSlug(spare-parts|wheels|cabins)/:brand/:slug',
-                destination: '/:productsSlug/product/:slug'
-            }
-        ];
     }
 };
 
