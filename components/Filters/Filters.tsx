@@ -58,8 +58,8 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 
     const handleChangeAutocomplete =
         (item: AutocompleteType) => (_: any, selected: { value: string } | string | null) => {
-            let selectedValue = typeof selected === 'string' ? selected : selected?.value || null;
-
+            let selectedValue =
+                typeof selected === 'string' || typeof selected === 'number' ? selected : selected?.value || null;
             let dependencyItemIds = getDependencyItemIds(config, item);
             let depValues = dependencyItemIds.reduce((prev, key) => ({ ...prev, [key]: null }), {});
             setValues({ ...values, ...depValues, [item.id]: selectedValue });
@@ -93,7 +93,7 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
     };
 
     const renderAutocomplete = (item: AutocompleteType) => {
-        let value = item.options.every((option) => typeof option === 'string')
+        let value = item.options.every((option) => typeof option === 'string' || typeof option === 'number')
             ? values[item.id]
             : item.options.find((option) => option.value === values[item.id]);
         return (

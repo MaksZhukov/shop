@@ -26,7 +26,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.error(error);
+        console.error(error?.message);
         if (error.response?.status === 401) {
             if (store.user.id) {
                 store.user.logout();
