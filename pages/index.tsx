@@ -479,6 +479,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                 imageStyle={{ objectFit: 'cover' }}
                                 key={item.id}
                                 width={390}
+                                caption={item.name}
                                 image={item.image}></LinkWithImage>
                         ))}
                     </Box>
@@ -507,7 +508,7 @@ export default Home;
 export const getServerSideProps = getPageProps(
     fetchPage('main'),
     async () => ({
-        articles: (await fetchArticles({ populate: 'image' })).data.data
+        articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data
     }),
     async () => ({
         reviews: (await fetchReviews()).data.data
