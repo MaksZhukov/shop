@@ -15,11 +15,6 @@ import { useSnackbar } from 'notistack';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { getPageProps } from 'services/PagePropsService';
-import { Car } from 'api/cars/types';
-import { fetchCars } from 'api/cars/cars';
-import { SparePart } from 'api/spareParts/types';
-import { Autocomis } from 'api/autocomises/types';
-import { ServiceStation } from 'api/serviceStations/types';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { API_MAX_LIMIT, API_UN_LIMIT } from 'api/constants';
@@ -35,8 +30,6 @@ import { Review } from 'api/reviews/types';
 import Typography from 'components/Typography';
 import CarouselReviews from 'components/CarouselReviews';
 import { Container } from '@mui/system';
-import Filters from 'components/Filters';
-import { Autocomplete as MUIAutocomplete } from '@mui/material';
 import Autocomplete from 'components/Autocomplete';
 import qs from 'qs';
 import Image from 'components/Image';
@@ -411,7 +404,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                 caption={item.name}
                                 link={`/spare-parts/${item.slug}`}
                                 image={item.image}
-                                linkProps={{ fontWeight: 'bold', variant: 'body1' }}></LinkWithImage>
+                                typographyProps={{ fontWeight: 'bold', variant: 'body1' }}></LinkWithImage>
                         </WhiteBox>
                     ))}
                 </Box>
@@ -479,6 +472,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                 imageStyle={{ objectFit: 'cover' }}
                                 key={item.id}
                                 width={390}
+                                caption={item.name}
                                 image={item.image}></LinkWithImage>
                         ))}
                     </Box>
@@ -507,7 +501,7 @@ export default Home;
 export const getServerSideProps = getPageProps(
     fetchPage('main'),
     async () => ({
-        articles: (await fetchArticles({ populate: 'image' })).data.data
+        articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data
     }),
     async () => ({
         reviews: (await fetchReviews()).data.data
