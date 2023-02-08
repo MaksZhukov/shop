@@ -10,7 +10,7 @@ const generatePathParts = (pathStr: string) => {
 };
 
 let PATH_NAMES = {
-    articles: 'Статьи',
+    articles: 'Блог',
     'spare-parts': 'Запчасти',
     wheels: 'Диски',
     cabins: 'Салоны',
@@ -41,6 +41,7 @@ interface Props {
 
 const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
     const router = useRouter();
+    console.log('BREADCRUMBS', router);
     const breadcrumbs = useMemo(
         function generateBreadcrumbs() {
             if (router.asPath.includes('.json')) {
