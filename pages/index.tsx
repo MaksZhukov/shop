@@ -64,11 +64,11 @@ const ADVANTAGES = ['/advantage_1.png', '/advantage_2.png', '/advantage_3.png', 
 interface Props {
     page: PageMain;
     reviews: Review[];
+    articles: Article[];
     brands: Brand[];
-    spareParts: ApiResponse<SparePart[]>;
 }
 
-const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
+const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
@@ -472,30 +472,15 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews }) => {
                         </Typography>
                     </Box>
                     <Box display="flex" gap={'1em'} marginBottom="3.5em">
-                        <Box>
-                            <Image
-                                isOnSSR={false}
-                                src="/preview_sample_car.jpg"
-                                width={390}
+                        {articles.map((item) => (
+                            <LinkWithImage
+                                link={`/articles/${item.slug}`}
                                 height={390}
-                                alt="preview_sample"></Image>
-                        </Box>
-                        <Box>
-                            <Image
-                                isOnSSR={false}
-                                src="/preview_sample_car.jpg"
+                                imageStyle={{ objectFit: 'cover' }}
+                                key={item.id}
                                 width={390}
-                                height={390}
-                                alt="preview_sample"></Image>
-                        </Box>
-                        <Box>
-                            <Image
-                                isOnSSR={false}
-                                src="/preview_sample_car.jpg"
-                                width={390}
-                                height={390}
-                                alt="preview_sample"></Image>
-                        </Box>
+                                image={item.image}></LinkWithImage>
+                        ))}
                     </Box>
                 </Box>
                 <Box marginBottom="2em">
@@ -521,24 +506,8 @@ export default Home;
 
 export const getServerSideProps = getPageProps(
     fetchPage('main'),
-    async () => {
-        const { data } = await fetchCars({ populate: ['images'], pagination: { limit: 10 } });
-        return { cars: data.data };
-    },
     async () => ({
         articles: (await fetchArticles({ populate: 'image' })).data.data
-    }),
-    async () => ({
-        spareParts: (
-            await fetchSpareParts({
-                filters: {
-                    price: { $gt: 0 }
-                },
-                sort: 'createdAt:desc',
-                pagination: { limit: 10 },
-                populate: ['images', 'brand']
-            })
-        ).data
     }),
     async () => ({
         reviews: (await fetchReviews()).data.data

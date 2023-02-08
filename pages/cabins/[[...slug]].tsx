@@ -1,217 +1,112 @@
 import type { NextPage } from 'next';
-import Catalog from 'components/Catalog';
-import { CircularProgress } from '@mui/material';
-import { ApiResponse, Filters, SEO } from 'api/types';
-import { API_MAX_LIMIT } from 'api/constants';
-import { useState, SetStateAction, Dispatch, useEffect } from 'react';
-import { AxiosResponse } from 'axios';
-import { useSnackbar } from 'notistack';
+import { SEO } from 'api/types';
 import { getPageProps } from 'services/PagePropsService';
 import { fetchPage } from 'api/pages';
-import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { fetchGenerations } from 'api/generations/generations';
-import { KindSparePart } from 'api/kindSpareParts/types';
-import { Generation } from 'api/generations/types';
-import { Model } from 'api/models/types';
 import { Brand } from 'api/brands/types';
-import { fetchModelBySlug, fetchModels } from 'api/models/models';
-import { DefaultPage } from 'api/pages/types';
-import { fetchCabins } from 'api/cabins/cabins';
+import { fetchModelBySlug } from 'api/models/models';
+import { DefaultPage, PageProduct, PageProductCabin } from 'api/pages/types';
 import { fetchBrandBySlug } from 'api/brands/brands';
-import { useRouter } from 'next/router';
+import CatalogCabins from 'components/CatalogCabins';
+import { getProductPageSeo } from 'services/ProductService';
+import { fetchCabin, fetchCabins } from 'api/cabins/cabins';
+import Product from 'components/Product';
+import { Cabin } from 'api/cabins/types';
 
 interface Props {
-    page: DefaultPage;
+    data: Cabin;
+    relatedProducts: Cabin[];
+    page: DefaultPage | (PageProduct & PageProductCabin);
     brands: Brand[];
 }
 
-const Cabins: NextPage<Props> = ({ page, brands }) => {
-    const [models, setModels] = useState<Model[]>([]);
-    const [generations, setGenerations] = useState<Generation[]>([]);
-    const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const { enqueueSnackbar } = useSnackbar();
-
-    const router = useRouter();
-    const [brand, model] = router.query.slug || [];
-
-    useEffect(() => {
-        if (!models.length && model) {
-            handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-                fetchModels({
-                    filters: { brand: { slug: brand } },
-                    pagination: { limit: API_MAX_LIMIT }
-                })
-            )();
-        }
-    }, [model]);
-
-    const handleOpenAutocomplete =
-        <T extends any>(
-            hasData: boolean,
-            setState: Dispatch<SetStateAction<T[]>>,
-            fetchFunc: () => Promise<AxiosResponse<ApiResponse<T[]>>>
-        ) =>
-        async () => {
-            if (!hasData) {
-                setIsLoading(true);
-                try {
-                    const {
-                        data: { data }
-                    } = await fetchFunc();
-                    setState(data);
-                } catch (err) {
-                    enqueueSnackbar(
-                        'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
-                        { variant: 'error' }
-                    );
-                }
-                setIsLoading(false);
-            }
-        };
-
-    const handleOpenAutocompleteModel = (values: any) =>
-        handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-            fetchModels({
-                filters: { brand: { slug: values.brand } },
-                pagination: { limit: API_MAX_LIMIT }
-            })
+const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
+    if (data) {
+        return (
+            <Product
+                data={data}
+                printOptions={[
+                    { text: 'Артикул', value: data.id },
+                    { text: 'Марка', value: data.brand?.name },
+                    { text: 'Модель', value: data.model?.name },
+                    { text: 'Поколение', value: data.generation?.name },
+                    { text: 'Год', value: data.year },
+                    { text: 'Запчасть', value: data.kindSparePart?.name },
+                    ...(data.seatUpholstery ? [{ text: 'Обивка сидений', value: data.seatUpholstery }] : [])
+                ]}
+                page={page as PageProduct & PageProductCabin}
+                relatedProducts={relatedProducts}></Product>
         );
-
-    const handleOpenAutocompleteGeneration = (values: { [key: string]: string | null }) =>
-        handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
-            fetchGenerations({
-                filters: { model: { name: values.model as string } },
-                pagination: { limit: API_MAX_LIMIT }
-            })
-        );
-
-    const handleOpenAutocompleteKindSparePart = () =>
-        handleOpenAutocomplete<KindSparePart>(!!kindSpareParts.length, setKindSpareParts, () =>
-            fetchKindSpareParts({
-                filters: { type: 'cabin' },
-                pagination: { limit: API_MAX_LIMIT }
-            })
-        );
-
-    const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
-
-    const filtersConfig = [
-        [
-            {
-                id: 'brand',
-                placeholder: 'Марка',
-                type: 'autocomplete',
-                options: brands.map((item) => ({ label: item.name, value: item.slug })),
-                noOptionsText: noOptionsText
-            }
-        ],
-        [
-            {
-                id: 'model',
-                placeholder: 'Модель',
-                type: 'autocomplete',
-                disabledDependencyId: 'brand',
-                options: models.map((item) => ({ label: item.name, value: item.slug })),
-                onOpen: handleOpenAutocompleteModel,
-                noOptionsText: noOptionsText
-            }
-        ],
-        [
-            {
-                id: 'generation',
-                placeholder: 'Поколение',
-                type: 'autocomplete',
-                disabledDependencyId: 'model',
-                options: generations.map((item) => item.name),
-                onOpen: handleOpenAutocompleteGeneration,
-                noOptionsText: noOptionsText
-            }
-        ],
-        [
-            {
-                id: 'kindSparePart',
-                placeholder: 'Запчасть',
-                type: 'autocomplete',
-                options: kindSpareParts.map((item) => item.name),
-                onOpen: handleOpenAutocompleteKindSparePart,
-                noOptionsText: noOptionsText
-            }
-        ]
-    ];
-
-    const generateFiltersByQuery = ({
-        brand,
-        model,
-        generation,
-        kindSparePart,
-        ...others
-    }: {
-        [key: string]: string;
-    }): Filters => {
-        let filters: Filters = {
-            brand: { slug: brand },
-            model: { name: model },
-            generation: { name: generation },
-            kindSparePart: { name: kindSparePart }
-        };
-        return { ...filters, ...others };
-    };
-
-    return (
-        <Catalog
-            dataFieldsToShow={[
-                {
-                    id: 'brand',
-                    name: 'Марка'
-                },
-                {
-                    id: 'model',
-                    name: 'Модель'
-                },
-                {
-                    id: 'kindSparePart',
-                    name: 'Запчасть'
-                }
-            ]}
-            searchPlaceholder="Поиск детали ..."
-            filtersConfig={filtersConfig}
-            seo={page.seo}
-            fetchData={fetchCabins}
-            generateFiltersByQuery={generateFiltersByQuery}></Catalog>
-    );
+    }
+    return <CatalogCabins page={page} brands={brands}></CatalogCabins>;
 };
 
 export default Cabins;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
     const { slug = [] } = context.query;
-    const [brand, modelParam] = slug;
+    const [brand, modelOrProductParam] = slug;
 
-    let seo: SEO | null = null;
-    if (modelParam) {
+    const productParam =
+        modelOrProductParam && !modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
+    const modelParam = modelOrProductParam && modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
+    let props: any = {};
+    if (productParam) {
+        const [
+            {
+                data: { data }
+            },
+            {
+                data: { data: page }
+            },
+            {
+                data: { data: pageCabin }
+            }
+        ] = await Promise.all([
+            fetchCabin(productParam),
+            fetchPage<PageProduct>('product', { populate: ['linksWithImages.image', 'benefits'] })(),
+            fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'] })()
+        ]);
+        const {
+            data: { data: relatedProducts }
+        } = await fetchCabins({
+            filters: {
+                price: { $gt: 0 },
+                id: {
+                    $ne: data.id
+                },
+                model: data.model?.id || ''
+            },
+            populate: ['images', 'brand']
+        });
+        props = {
+            data,
+            page: {
+                ...page,
+                ...pageCabin,
+                seo: getProductPageSeo(pageCabin.seo, data)
+            },
+            relatedProducts
+        };
+    } else if (modelParam) {
         let model = modelParam.replace('model-', '');
         const {
             data: { data }
         } = await fetchModelBySlug(model, {
             populate: ['seoCabins.images', 'image']
         });
-        seo = data.seoCabins;
+        props = { page: { seo: data.seoCabins } };
     } else if (brand) {
         const {
             data: { data }
         } = await fetchBrandBySlug(brand, {
             populate: ['seoCabins.images', 'image']
         });
-        seo = data.seoCabins;
+        props = { page: { seo: data.seoCabins } };
     } else {
         const {
             data: { data }
         } = await fetchPage('cabin')();
-        seo = data.seo;
+        props = { page: { seo: data.seo } };
     }
-    return {
-        page: { seo }
-    };
+    return props;
 });

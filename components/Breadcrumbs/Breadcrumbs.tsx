@@ -41,11 +41,12 @@ interface Props {
 
 const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
     const router = useRouter();
-
     const breadcrumbs = useMemo(
         function generateBreadcrumbs() {
+            if (router.asPath.includes('.json')) {
+                return [];
+            }
             const asPathNestedRoutes = generatePathParts(router.asPath.replace('model-', ''));
-
             const pathnameNestedRoutes = generatePathParts(
                 router.pathname.includes('[[...slug]]') ? router.pathname + '/[[...slug]]' : router.pathname
             );

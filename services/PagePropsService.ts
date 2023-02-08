@@ -2,7 +2,7 @@ import { fetchBrands } from 'api/brands/brands';
 import { API_MAX_LIMIT, API_UN_LIMIT } from 'api/constants';
 import { fetchLayout } from 'api/layout/layout';
 import { ApiResponse } from 'api/types';
-import { AxiosResponse } from 'axios';
+import { Axios, AxiosResponse, isAxiosError } from 'axios';
 
 export const getPageProps =
     <T>(fetchPage?: () => Promise<AxiosResponse<ApiResponse<T>>>, ...functions: ((context: any) => any)[]) =>
@@ -31,7 +31,9 @@ export const getPageProps =
             props.brands = brandsResponse.data.data;
             props.layout = layoutResponse.data.data;
         } catch (err: any) {
-            console.error(err);
+            if (!isAxiosError(err)) {
+                console.log(err);
+            }
             if (err?.response?.status === 404) {
                 return { redirect: { destination: '/404' } };
             }
