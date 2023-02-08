@@ -262,6 +262,7 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                             </InputMask>
                             <LoadingButton
                                 loading={isEmailSending}
+                                sx={{ padding: '1.25em', borderRadius: 0, fontSize: '16px' }}
                                 className={classNames(styles.btn, isEmailSending && styles.btn_loading)}
                                 fullWidth
                                 type="submit"
