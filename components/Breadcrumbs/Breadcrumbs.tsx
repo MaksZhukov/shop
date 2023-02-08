@@ -41,7 +41,6 @@ interface Props {
 
 const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
     const router = useRouter();
-    console.log('BREADCRUMBS', router);
     const breadcrumbs = useMemo(
         function generateBreadcrumbs() {
             if (router.asPath.includes('.json')) {
