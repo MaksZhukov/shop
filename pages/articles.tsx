@@ -13,6 +13,8 @@ import { DefaultPage } from 'api/pages/types';
 import NextLink from 'next/link';
 import Typography from 'components/Typography';
 
+let LIMIT = 10;
+
 interface Props {
     page: DefaultPage;
     articles: ApiResponse<Article[]>;
@@ -34,7 +36,10 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
                 const {
                     data: { data }
                 } = await fetchArticles({
-                    pagination: { page: +qPage },
+                    pagination: {
+                        start: qPage === '1' ? 0 : +qPage * LIMIT,
+                        limit: LIMIT
+                    },
                     populate: 'image'
                 });
                 setData(data);
@@ -79,13 +84,17 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 
 export default Articles;
 
-export const getServerSideProps = getPageProps(fetchPage('article'), async (context) => ({
-    articles: (
-        await fetchArticles({
-            pagination: {
-                page: context.query?.page ?? 1
-            },
-            populate: 'image'
-        })
-    ).data
-}));
+export const getServerSideProps = getPageProps(fetchPage('article'), async (context) => {
+    const start = !context.query?.page || context.query?.page === '1' ? 0 : +context.query.page * LIMIT;
+    return {
+        articles: (
+            await fetchArticles({
+                pagination: {
+                    start,
+                    limit: LIMIT
+                },
+                populate: 'image'
+            })
+        ).data
+    };
+});
