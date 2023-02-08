@@ -2,6 +2,7 @@
 import { Link, LinkProps } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import Image from 'components/Image';
+import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import { CSSProperties, FC, HTMLAttributeAnchorTarget } from 'react';
 import styles from './LinkWithImage.module.scss';
@@ -14,7 +15,7 @@ interface Props {
     image?: IImage;
     imageStyle?: CSSProperties;
     caption?: string;
-    linkProps?: LinkProps;
+    typographyProps?: LinkProps;
 }
 const LinkWithImage: FC<Props> = ({
     width = 208,
@@ -24,7 +25,7 @@ const LinkWithImage: FC<Props> = ({
     caption,
     imageStyle = { objectFit: 'contain', margin: 'auto' },
     targetLink = '_self',
-    linkProps = { variant: 'h6', marginTop: '1em' }
+    typographyProps = { variant: 'h6', marginTop: '1em' }
 }) => {
     let title = caption || image?.caption;
     return (
@@ -37,9 +38,9 @@ const LinkWithImage: FC<Props> = ({
                 isOnSSR={!!image}
                 src={width > 200 ? image?.url : image?.formats?.thumbnail.url || ''}></Image>
             {title && (
-                <Link {...linkProps} color="inherit" underline={'hover'} component="div" textAlign="center">
+                <Typography lineClamp="2" width={width} textAlign="center" {...typographyProps}>
                     {title}
-                </Link>
+                </Typography>
             )}
         </NextLink>
     );
