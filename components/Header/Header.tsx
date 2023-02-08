@@ -4,6 +4,7 @@ import {
     Button,
     Collapse,
     Container,
+    Divider,
     Grow,
     IconButton,
     Link,
@@ -31,6 +32,8 @@ import { useOutsideClick } from 'rooks';
 import { Brand } from 'api/brands/types';
 import Image from 'components/Image';
 import { ApiResponse } from 'api/types';
+import { useStore } from 'store';
+import { useSnackbar } from 'notistack';
 
 interface NavigationChild {
     name: string;
@@ -111,6 +114,8 @@ const Header = observer(({ brands }: Props) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const timeoutRef = useRef<number>();
     const router = useRouter();
+    const store = useStore();
+    const { enqueueSnackbar } = useSnackbar();
     const { code } = router.query;
 
     const [isOpenedModal, setIsOpenedModal] = useState<boolean>(false);
@@ -178,6 +183,20 @@ const Header = observer(({ brands }: Props) => {
     const handleClickLinkTablet = () => {
         setIsOpenedTabletMenu(false);
         setAnchorEl(null);
+    };
+
+    const handleClickLogout = async () => {
+        try {
+            await store.user.logout();
+            enqueueSnackbar('Вы успешно вышли из аккаунта', {
+                variant: 'success'
+            });
+        } catch (err) {
+            enqueueSnackbar('Произошла какая-то ошибка с выходом из аккаунта, обратитесь в поддержку', {
+                variant: 'error'
+            });
+        }
+        router.push('/', undefined, { shallow: true });
     };
 
     const renderLink = (item: NavigationChild) => {
@@ -248,11 +267,17 @@ const Header = observer(({ brands }: Props) => {
         </Box>
     );
 
-    const renterRootMenuBtn = (page: Navigation, type: 'mobile' | 'desktop', isOpened: boolean) => {
+    const renterRootMenuBtn = (
+        page: Navigation,
+        type: 'mobile' | 'desktop',
+        isOpened: boolean,
+        onClick?: () => void
+    ) => {
         let ArrowIcon =
             type === 'desktop' ? KeyboardArrowDownIcon : isOpened ? KeyboardArrowUpIcon : KeyboardArrowDownIcon;
         return (
             <Button
+                onClick={onClick}
                 {...(!isTablet
                     ? {
                           onMouseOver: handleMouseOver,
@@ -281,6 +306,37 @@ const Header = observer(({ brands }: Props) => {
         );
     };
 
+    const renderProfileMenuItems = (
+        <>
+            {store.user.id
+                ? renterRootMenuBtn({ id: 'profile', name: 'Профиль', path: '/profile', children: [] }, 'mobile', false)
+                : renterRootMenuBtn(
+                      { id: 'signin', name: 'Войти', path: '', children: [] },
+                      'mobile',
+                      false,
+                      handleClick
+                  )}
+            {renterRootMenuBtn(
+                {
+                    id: 'signin',
+                    name: `Избранные ${store.favorites.items.length}`,
+                    path: '/favorites',
+                    children: []
+                },
+                'mobile',
+                false
+            )}
+            {store.user.id &&
+                renterRootMenuBtn(
+                    { id: 'signout', name: 'Выход', path: '', children: [] },
+                    'mobile',
+                    false,
+                    handleClickLogout
+                )}
+            <Divider />
+        </>
+    );
+
     const renderMenu = (type: 'mobile' | 'desktop') => (
         <Box
             padding="0 10px"
@@ -295,6 +351,7 @@ const Header = observer(({ brands }: Props) => {
                       flex: '1',
                       flexWrap: 'wrap'
                   })}>
+            {isTablet && renderProfileMenuItems}
             {navigation.map((page, index) => {
                 return (
                     <Fragment key={page.id}>
@@ -363,7 +420,7 @@ const Header = observer(({ brands }: Props) => {
                     </Box>
                     {renderLogo('mobile')}
                     {!isTablet && renderMenu('desktop')}
-                    <Profile onClickSignIn={handleClick}></Profile>
+                    {!isTablet && <Profile onClickLogout={handleClickLogout} onClickSignIn={handleClick}></Profile>}
                     {isOpenedModal && (
                         <ModalAuth isResetPassword={!!code} onChangeModalOpened={setIsOpenedModal}></ModalAuth>
                     )}

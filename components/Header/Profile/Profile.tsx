@@ -21,9 +21,10 @@ import { useSnackbar } from 'notistack';
 
 interface Props {
     onClickSignIn: () => void;
+    onClickLogout: () => void;
 }
 
-const Profile = ({ onClickSignIn }: Props) => {
+const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isOpened = !!anchorEl;
     const [isInvisibleBadge, setIsInvisibleBadge] = useState<boolean>(true);
@@ -31,7 +32,6 @@ const Profile = ({ onClickSignIn }: Props) => {
 
     const store = useStore();
     const router = useRouter();
-    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (store.isInitialRequestDone) {
@@ -56,20 +56,6 @@ const Profile = ({ onClickSignIn }: Props) => {
     };
     const handleClose = () => {
         setAnchorEl(null);
-    };
-
-    const handleClickLogout = async () => {
-        try {
-            await store.user.logout();
-            enqueueSnackbar('Вы успешно вышли из аккаунта', {
-                variant: 'success'
-            });
-        } catch (err) {
-            enqueueSnackbar('Произошла какая-то ошибка с выходом из аккаунта, обратитесь в поддержку', {
-                variant: 'error'
-            });
-        }
-        router.push('/', undefined, { shallow: true });
     };
 
     const handleClickLink = (path: string) => () => {
@@ -128,7 +114,7 @@ const Profile = ({ onClickSignIn }: Props) => {
                                         </Typography>
                                     </MenuItem>
                                     {store.user.id && <Divider />}
-                                    {store.user.id && <MenuItem onClick={handleClickLogout}>Выход</MenuItem>}
+                                    {store.user.id && <MenuItem onClick={onClickLogout}>Выход</MenuItem>}
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>
