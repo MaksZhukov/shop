@@ -1,26 +1,25 @@
-import '../styles/globals.css';
+import { Box, Button, createTheme, ThemeProvider } from '@mui/material';
 import type { AppProps } from 'next/app';
 import { SnackbarProvider } from 'notistack';
+import { Container } from '@mui/system';
 import { Provider } from 'mobx-react';
 import { store } from '../store';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Content from '../components/Content';
 import Layout from '../components/Layout';
-import { Box, Button, createTheme, ThemeProvider } from '@mui/material';
 import { useEffect } from 'react';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import RouteShield from '../components/RouteShield/RouteShield';
 import NotistackService from 'services/NotistackService';
 import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
-import { Container } from '@mui/system';
 import SEOBox from 'components/SEOBox';
 import Metrics from 'components/Metrics';
+import { LocalPhone } from '@mui/icons-material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './app.scss';
-import { LocalPhone } from '@mui/icons-material';
 
 let theme = createTheme({
     typography: {

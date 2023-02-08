@@ -19,9 +19,11 @@ import { useSnackbar } from 'notistack';
 import { YEARS } from '../constants';
 import InputMask from 'react-input-mask';
 import { send } from 'api/email';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { useThrottle } from 'rooks';
 
 import styles from './buyback-cars.module.scss';
+import classNames from 'classnames';
 
 const WE_PROVIDES = [
     {
@@ -90,6 +92,7 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
         value: string;
     } | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isEmailSending, setIsEmailSending] = useState<boolean>(false);
     const [year, setYear] = useState<string | null>(null);
     const [phone, setPhone] = useState<string>('');
     const ref = useRef<HTMLFormElement>(null);
@@ -140,6 +143,7 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
 
     const [throttledSubmit] = useThrottle(async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsEmailSending(true);
         try {
             await send(
                 'Запрос на выкуп авто',
@@ -157,6 +161,7 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                 variant: 'error'
             });
         }
+        setIsEmailSending(false);
     }, 300);
 
     const handleClickAssessment = () => {
@@ -199,6 +204,7 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                                 Оценить автомобиль
                             </Typography>
                             <Autocomplete
+                                disabled={isEmailSending}
                                 className={styles.autocomplete}
                                 required
                                 classes={{ input: styles.autocomplete__input }}
@@ -215,12 +221,13 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                                 required
                                 value={model}
                                 placeholder="Выберите модель"
-                                disabled={!brand}
+                                disabled={!brand || isEmailSending}
                                 noOptionsText={noOptionsText}
                                 onOpen={handleOpenAutocompleteModels}
                                 onChange={handleChangeAutocomplete(setModel)}
                                 options={models.map((item) => ({ label: item.name, value: item.name }))}></Autocomplete>
                             <Autocomplete
+                                disabled={isEmailSending}
                                 className={styles.autocomplete}
                                 classes={{ input: styles.autocomplete__input }}
                                 value={year}
@@ -231,22 +238,37 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                                 required
                                 mask="+375 99 999 99 99"
                                 value={phone}
+                                disabled={isEmailSending}
                                 maskChar=" "
                                 onChange={handleChangePhone}>
                                 {
                                     //@ts-ignore
-                                    () => (
-                                        <Input
-                                            className={styles.input}
-                                            required
-                                            placeholder="Ваш телефон"
-                                            fullWidth></Input>
-                                    )
+                                    (inputProps) => {
+                                        return (
+                                            <Input
+                                                {...inputProps}
+                                                inputRef={(ref) => {
+                                                    if (ref) {
+                                                        ref.disabled = isEmailSending;
+                                                    }
+                                                }}
+                                                className={styles.input}
+                                                sx={{ color: isEmailSending ? 'rgba(0,0,0,0.4)' : 'initial' }}
+                                                placeholder="Ваш телефон"
+                                                fullWidth></Input>
+                                        );
+                                    }
                                 }
                             </InputMask>
-                            <Button className={styles.btn} fullWidth type="submit" variant="contained">
+                            <LoadingButton
+                                loading={isEmailSending}
+                                sx={{ padding: '1.25em', borderRadius: 0, fontSize: '16px' }}
+                                className={classNames(styles.btn, isEmailSending && styles.btn_loading)}
+                                fullWidth
+                                type="submit"
+                                variant="contained">
                                 Оставить заявку
-                            </Button>
+                            </LoadingButton>
                         </Box>
                     </Box>
                 </Container>

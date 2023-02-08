@@ -43,6 +43,16 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.slug]);
 
+    const handleClickFind = () => {
+        if (onClickFind) {
+            onClickFind(values);
+        }
+    };
+
+    useImperativeHandle(ref, () => ({
+        onClickFind: handleClickFind
+    }));
+
     const handleChangeNumberInput = (item: NumberType) => (e: ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, [item.id]: e.target.value });
         if (item.storeInUrl) {
@@ -74,11 +84,6 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
             }
         };
 
-    const handleClickFind = () => {
-        if (onClickFind) {
-            onClickFind(values);
-        }
-    };
     const renderInput = (item: NumberType) => {
         return (
             <Input
