@@ -36,7 +36,10 @@ import Image from 'components/Image';
 import NextLink from 'next/link';
 import LinkWithImage from 'components/LinkWithImage';
 import WhiteBox from 'components/WhiteBox';
-import ReactPlayer from 'react-player';
+import ReactMarkdown from 'components/ReactMarkdown';
+import dynamic from 'next/dynamic';
+
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 const CATEGORIES = [
     { id: 'wheel', href: '/wheels', imgSrc: '/wheels.png', name: 'Диски', imgWidth: 180, imgHeight: 180 },
@@ -267,13 +270,19 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
     return (
         <>
             <Box className={styles['head-section']}>
+                <Image
+                    width={1400}
+                    height={550}
+                    style={{ position: 'absolute', top: 0, objectFit: 'cover', width: '100vw', height: '100%' }}
+                    src={page.banner?.url || ''}
+                    alt={page.banner?.alternativeText || ''}></Image>
                 <Container sx={{ height: '100%', position: 'relative' }}>
-                    <Box className={styles['head-text']}>
+                    <Box maxWidth="600px" className={styles['head-text']}>
                         <Typography fontWeight="bold" component="h1" variant="h3">
-                            МАГАЗИН ЗАПЧАСТЕЙ <br></br> ДЛЯ Б/У АВТОМОБИЛЕЙ{' '}
+                            {page.h1}
                         </Typography>
                         <Typography component="h2" variant="h4">
-                            У нас найдется все!
+                            {page.subH1}
                         </Typography>
                     </Box>
                     <Box display="flex" width="100%" position="absolute" bottom="4em" className={styles['head-search']}>
@@ -313,7 +322,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     marginBottom="1.5em"
                     fontWeight="bold"
                     textTransform="uppercase">
-                    Категории товаров
+                    {page.titleCategories}
                 </Typography>
                 <Box className={styles.categories} marginBottom="4em" display="flex">
                     {CATEGORIES.map((item) => (
@@ -362,8 +371,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     </Box>
                 </Box>
                 <Box marginBottom="4em" justifyContent="space-between" display="flex">
-                    {ADVANTAGES.map((item) => (
-                        <Image isOnSSR={false} src={item} key={item} alt={item} width={200} height={140}></Image>
+                    {page.benefits?.map((item) => (
+                        <Image src={item.url} key={item.id} alt={item.alternativeText} width={200} height={140}></Image>
                     ))}
                 </Box>
                 <Box display="flex" gap={'2em'} marginBottom="4em" justifyContent="space-between">
@@ -391,8 +400,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         variant="h4"
                         marginBottom="1.5em"
                         fontWeight="bold"
+                        maxWidth="700px"
                         textTransform="uppercase">
-                        У нас вы сможете найти запчасти <br></br> на самые популярные марки авто.
+                        {page.popularBrandsTitle}
                     </Typography>
                 </Box>
                 <Box display="flex" marginBottom="5em" gap={'0.5em'} flexWrap="wrap">
@@ -411,57 +421,51 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 <Box display="flex" gap="3em" maxHeight="300px" marginBottom="5em">
                     <Box display="flex" alignItems="center">
                         <Typography color="text.secondary" variant="body1">
-                            Когда в мире образуется сложная экономическая ситуация, на первый план выходят б/у продажи.
-                            Если пользователь не хочет или не может переплачивать, то он готов без проблем приобрести
-                            бывшие в употреблении товары. И в этом нет ничего зазорного или плохого, если выбирать
-                            правильно. Особенно активно эта тема продвигается в автоиндустрии. Собственно, наш магазин
-                            запчастей б/у для автомобилей был основан по схожему принципу.
+                            <ReactMarkdown content={page.leftSideText}></ReactMarkdown>
                         </Typography>
                     </Box>
                     <Box>
-                        <ReactPlayer width={600} height={300} url={'https://youtu.be/UnBjkTvGduw'}></ReactPlayer>
+                        <ReactPlayer width={600} height={300} url={page.videoUrl}></ReactPlayer>
                     </Box>
                 </Box>
                 <Typography withSeparator component="h2" variant="h4" fontWeight="bold">
-                    Гугл отзывы о нас
+                    {page.reviewsTitle}
                 </Typography>
                 <CarouselReviews marginBottom="6em" data={reviews} slidesToShow={4}></CarouselReviews>
                 <Box marginBottom="1em">
-                    <Typography fontWeight="bold" withSeparator component="h2" variant="h4" marginBottom="1em">
-                        Кому будет полезен наш магазин <br></br> Запчастей Б/У Для Автомобилей
+                    <Typography
+                        fontWeight="bold"
+                        maxWidth="500px"
+                        withSeparator
+                        component="h2"
+                        variant="h4"
+                        marginBottom="1em">
+                        {page.benefitsTitle}
                     </Typography>
                     <Box display="flex">
                         <Typography flex="1" color="text.secondary" variant="body1">
-                            В фильтрах нашего магазина можно подобрать ту запчасть, которая действительно подойдет на
-                            ваш автомобиль. Происходит это все благодаря тому, что у нас доступно много критериев
-                            подбора: по марке машины, модели, кузову, типу топлива, коробке передач, поколению
-                            производства и так далее. Хоть все и позиционируется в роли бывшего в употреблении товара,
-                            но на качестве продукции это практически не сказывается, а если есть какие-то “косяки”, то
-                            все доносится клиенту в подобающей для того форме.
+                            <ReactMarkdown content={page.benefitsLeftText}></ReactMarkdown>
                         </Typography>
                         <Box marginTop="-2em">
                             <Image
-                                isOnSSR={false}
-                                src={'/interesting_for.png'}
+                                src={page.benefitsRightImage?.url}
                                 width={617}
                                 height={347}
-                                alt={'Кому будет интересен'}></Image>
+                                alt={page.benefitsRightImage?.alternativeText}></Image>
                         </Box>
                     </Box>
                 </Box>
                 <Box>
                     <Typography fontWeight="bold" withSeparator component="h2" variant="h4" marginBottom="1em">
-                        Наш магазин запчастей б/у для автомобилей ведет активную социальную жизнь
+                        {page.blogTitle}
                     </Typography>
                     <Box padding="0 2.5em" gap={'4em'} display="flex">
                         <Typography paddingBottom="2em" flex="1" color="text.secondary" variant="body1">
-                            Предоставляя клиентам приятные цены на товары, высокое качество обслуживания и отсутствие
-                            проблем с логистикой, мы обзаводимся массой положительных отзывов.
+                            <ReactMarkdown content={page.blogLeftText}></ReactMarkdown>
                         </Typography>
                         <Box borderRight="1px solid rgba(0, 0, 0, 0.3)"></Box>
                         <Typography paddingBottom="2em" flex="1" color="text.secondary" variant="body1">
-                            Автомобильные запчасти с бешенными скидками и высоким качеством — вот немногие из тех
-                            “козырей”, которыми располагает наш магазин запчастей б/у для автомобилей.
+                            <ReactMarkdown content={page.blogRightText}></ReactMarkdown>
                         </Typography>
                     </Box>
                     <Box display="flex" gap={'1em'} marginBottom="3.5em">
@@ -479,16 +483,10 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 </Box>
                 <Box marginBottom="2em">
                     <Typography fontWeight="bold" withSeparator component="h2" variant="h4" marginBottom="1em">
-                        Осуществляем доставку по республике Беларусь без всяких на то проблем, а также рассматриваем
-                        выстраивание логистических путей до других стран.
+                        {page.deliveryTitle}
                     </Typography>
                     <Typography flex="1" color="text.secondary" variant="body1">
-                        На главной панели нашего сайта можно обнаружить все необходимые данные о компании: контакты,
-                        каталог, цены, шаблоны договоров, условия сотрудничества и доставки. Если после этого остануться
-                        какие-то вопросы, то сотрудники нашей фирмы устранят их. Все еще сомневаетесь в том, компетентен
-                        ли наш магазин запчастей б/у для автомобилей? Тогда не медлите и посетите сайт, а если не хватит
-                        доказательств, то совершите первую покупку (с хорошей скидкой) и сформируйте мнение о нашей
-                        компании самостоятельно.
+                        <ReactMarkdown content={page.deliveryText}></ReactMarkdown>
                     </Typography>
                 </Box>
             </Container>
@@ -499,7 +497,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 export default Home;
 
 export const getServerSideProps = getPageProps(
-    fetchPage('main'),
+    fetchPage('main', {
+        populate: ['seo', 'benefits', 'categoryImages', 'banner', 'benefitsRightImage']
+    }),
     async () => ({
         articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data
     }),
