@@ -498,7 +498,15 @@ export default Home;
 
 export const getServerSideProps = getPageProps(
     fetchPage('main', {
-        populate: ['seo', 'benefits', 'categoryImages', 'banner', 'benefitsRightImage']
+        populate: [
+            'seo',
+            'benefits',
+            'categoryImages',
+            'banner',
+            'benefitsRightImage',
+            'autocomises.image',
+            'serviceStations.image'
+        ]
     }),
     async () => ({
         articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data
