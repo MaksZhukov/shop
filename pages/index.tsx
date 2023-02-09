@@ -380,6 +380,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         <WhiteBox width="25%" key={item.id}>
                             <LinkWithImage
                                 height={100}
+                                width={264}
                                 image={item.image}
                                 link={`/service-stations/${item.slug}`}></LinkWithImage>
                         </WhiteBox>
