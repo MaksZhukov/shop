@@ -282,7 +282,7 @@ const Catalog = ({
 						shallow
 						href={
 							router.asPath.includes('page=')
-								? `${router.asPath.replace(/page=\d/, `page=${params.page}`)}`
+								? `${router.asPath.replace(/page=\d+/, `page=${params.page}`)}`
 								: `${router.asPath}${router.asPath.includes('?') ? '&' : '?'}page=${params.page}`
 						}
 					>
@@ -307,7 +307,7 @@ const Catalog = ({
 	);
 
 	const renderBar = (position: 'top' | 'bottom') => (
-		<Box display='flex' padding='0.5em' marginBottom='1em' bgcolor='#fff'>
+		<Box display='flex' padding='0.5em 0 0.5em 0.5em' marginBottom='1em' bgcolor='#fff'>
 			<Button
 				variant='contained'
 				onClick={handleClickChangeView('grid', position)}
