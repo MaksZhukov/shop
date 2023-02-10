@@ -16,6 +16,8 @@ export type Image = {
     url: string;
     alternativeText: string;
     caption: string;
+    width: number;
+    height: number;
     formats?: {
         thumbnail: { url: string };
         small: { url: string };
