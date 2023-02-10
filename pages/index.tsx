@@ -477,6 +477,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                 imageStyle={{ objectFit: 'cover' }}
                                 key={item.id}
                                 width={390}
+                                typographyProps={{ width: 390, variant: 'h6', marginTop: '1em' }}
                                 caption={item.name}
                                 image={item.image}></LinkWithImage>
                         ))}
