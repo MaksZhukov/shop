@@ -271,8 +271,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         <>
             <Box className={styles['head-section']}>
                 <Image
-                    width={1400}
-                    height={550}
+                    width={page.banner?.width}
+                    height={page.banner?.height}
                     style={{ position: 'absolute', top: 0, objectFit: 'cover', width: '100vw', height: '100%' }}
                     src={page.banner?.url || ''}
                     alt={page.banner?.alternativeText || ''}></Image>

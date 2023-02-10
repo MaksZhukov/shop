@@ -1,11 +1,12 @@
 import { getPageProps } from 'services/PagePropsService';
 import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
+import { DefaultPage, PageBuybackCars } from 'api/pages/types';
 import ReactMarkdown from 'components/ReactMarkdown';
 import { fetchCarsOnParts } from 'api/cars-on-parts/cars-on-parts';
 import { CarOnParts } from 'api/cars-on-parts/types';
 import Slider from 'react-slick';
 import { Box } from '@mui/system';
+import reactStringReplace from 'react-string-replace';
 import Image from 'components/Image';
 import Typography from 'components/Typography';
 import { Button, CircularProgress, Container, Input, TextField, useTheme } from '@mui/material';
@@ -21,67 +22,16 @@ import InputMask from 'react-input-mask';
 import { send } from 'api/email';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useThrottle } from 'rooks';
-
-import styles from './buyback-cars.module.scss';
 import classNames from 'classnames';
-
-const WE_PROVIDES = [
-    {
-        title: 'Выезд оценщика',
-        description: 'В любую точку города и области',
-        imgUrl: '/buyback_provide_1.png',
-        imgWidth: 104,
-        imgHeight: 101
-    },
-    {
-        title: 'Полное юридическое сопровождение',
-        description: 'Поможем снять автомобиль с учета и юридически оформим сделку',
-        imgUrl: '/buyback_provide_2.png',
-        imgWidth: 82,
-        imgHeight: 92
-    },
-    {
-        title: 'Выезд эвакуатора',
-        description: 'Когда машина не исправна мы сами приезжаем за ней',
-        imgUrl: '/buyback_provide_3.png',
-        imgWidth: 118,
-        imgHeight: 87
-    }
-];
-
-const BUYBACK_ANY_CARS = [
-    { title: 'Новые', description: 'Дадим от 95% рыночной стоимости', imgUrl: '/buyback_any_cars_1.png' },
-    { title: 'После ДТП', description: 'Выкупим битые автомобили', imgUrl: '/buyback_any_cars_2.png' },
-    { title: 'Взятые в кредит', description: 'Погасим Ваш кредит и переоформим', imgUrl: '/buyback_any_cars_3.png' },
-    {
-        title: 'Старые авто',
-        description: 'Возраст не имеет значение',
-        imgUrl: '/buyback_any_cars_4.png',
-        imgWidth: 113,
-        imgHeight: 113
-    },
-    { title: 'С пробегом', description: 'Такие нам даже больше нравятся', imgUrl: '/buyback_any_cars_5.png' },
-    {
-        title: 'После возгорания',
-        description: 'Нас не пугают  машины после пожара',
-        imgUrl: '/buyback_any_cars_6.png',
-        imgWidth: 113
-    }
-];
-
-const STEPS = [
-    { title: '1', description: 'Позвоните или оставьте онлайн заявку' },
-    { title: '2', description: 'Мы оценим Ваш автотранспорт и юридически оформим сделку' },
-    { title: '3', description: 'Вы получите деньги и мы заберем автомобиль' }
-];
+import styles from './buyback-cars.module.scss';
 
 interface Props {
-    page: DefaultPage & { content: string };
+    page: PageBuybackCars;
     brands: Brand[];
     cars: CarOnParts[];
 }
 
-const BuybackCars = ({ page, cars, brands }: Props) => {
+const BuybackCars = ({ page, cars = [], brands }: Props) => {
     const [brand, setBrand] = useState<{
         label: string;
         value: string;
@@ -171,6 +121,18 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
     return (
         <>
             <Box className={styles.head} marginBottom="2em" minHeight={744} display="flex">
+                <Image
+                    width={page.mainBackgroundImage?.width}
+                    height={page.mainBackgroundImage?.height}
+                    style={{ position: 'absolute', top: 0, objectFit: 'cover', width: '100%' }}
+                    src={page.mainBackgroundImage?.url}
+                    alt={page.mainBackgroundImage?.alternativeText}></Image>
+                <Image
+                    width={page.mainBackgroundLeftImage?.width}
+                    height={page.mainBackgroundLeftImage?.height}
+                    style={{ position: 'absolute', bottom: 0, left: 0 }}
+                    src={page.mainBackgroundLeftImage?.url}
+                    alt={page.mainBackgroundLeftImage?.alternativeText}></Image>
                 <Container>
                     <Box display="flex" height={'100%'} position="relative" zIndex={1} ref={ref}>
                         <Typography
@@ -183,12 +145,13 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                             alignSelf={'center'}
                             flex="1"
                             textTransform="uppercase">
-                            Выкуп{' '}
-                            <Typography color="primary" variant="h1" component="span">
-                                авто
-                            </Typography>{' '}
-                            <br></br>
-                            на З/Ч
+                            {reactStringReplace(page.h1, /<highlight>/g, (match, i) => {
+                                return (
+                                    <Typography color="primary" variant="h1" component="span">
+                                        {match}
+                                    </Typography>
+                                );
+                            })}
                         </Typography>
                         <Box
                             alignSelf="center"
@@ -262,7 +225,12 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                             </InputMask>
                             <LoadingButton
                                 loading={isEmailSending}
-                                sx={{ padding: '1.25em', borderRadius: 0, fontSize: '16px' }}
+                                sx={{
+                                    padding: '1.25em',
+                                    borderRadius: 0,
+                                    fontSize: '16px',
+                                    ...(isEmailSending ? { bgcolor: '#fdb819' } : {})
+                                }}
                                 className={classNames(styles.btn, isEmailSending && styles.btn_loading)}
                                 fullWidth
                                 type="submit"
@@ -276,17 +244,16 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
             <Container>
                 <Box marginBottom="5em">
                     <Typography component="h2" variant="h3" fontWeight="500" textAlign="center" marginBottom="2em">
-                        МЫ БЕСПЛАТНО ПРЕДОСТАВЛЯЕМ
+                        {page.weProvideTitle}
                     </Typography>
                     <Box display="flex" gap={'5%'}>
-                        {WE_PROVIDES.map((item) => (
+                        {page.weProvide.map((item) => (
                             <Box width={'30%'} textAlign="center" key={item.title}>
                                 <Image
-                                    isOnSSR={false}
-                                    src={item.imgUrl}
-                                    alt={item.title}
-                                    width={item.imgWidth}
-                                    height={item.imgHeight}></Image>
+                                    src={item.image?.url}
+                                    alt={item.image?.alternativeText}
+                                    width={item.image?.width || 100}
+                                    height={item.image?.height || 100}></Image>
                                 <Typography variant="h6" marginBottom="0.5em">
                                     {item.title}
                                 </Typography>
@@ -303,21 +270,23 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                         component="h2"
                         variant="h3"
                         marginBottom="1.5em">
-                        Наши{' '}
-                        <Typography component="span" color="primary" variant="h3">
-                            выкупленные
-                        </Typography>{' '}
-                        авто
+                        {reactStringReplace(page.purchasedCarsTitle, /<highlight>/g, (match, i) => {
+                            return (
+                                <Typography color="primary" variant="h3" component="span">
+                                    {match}
+                                </Typography>
+                            );
+                        })}
                     </Typography>
                     <Slider
                         className={styles.slider}
-                        // autoplaySpeed={5000}
-                        // autoplay
+                        autoplaySpeed={5000}
+                        autoplay
                         slidesToShow={cars.length < 4 ? cars.length : 4}>
                         {cars.map((item) => {
                             let name = item.brand?.name + ' ' + item.model?.name;
                             return (
-                                <Box maxWidth="288px" width="100%" key={item.id}>
+                                <Box maxWidth="288px" paddingX="1em" width="100%" key={item.id}>
                                     {item.images && item.images.some((image) => image.formats) ? (
                                         <Slider swipe={false} pauseOnHover arrows={false} autoplay autoplaySpeed={3000}>
                                             {item.images
@@ -368,42 +337,49 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                         fontWeight="500"
                         variant="h3"
                         marginBottom="1.5em">
-                        УДОБНО{' '}
-                        <Typography variant="h3" color="primary" component="span">
-                            ВЫГОДНО
-                        </Typography>{' '}
-                        БЫСТРО
+                        {reactStringReplace(page.advantagesTitle, /<highlight>/g, (match, i) => {
+                            return (
+                                <Typography color="primary" variant="h3" component="span">
+                                    {match}
+                                </Typography>
+                            );
+                        })}
                     </Typography>
                     <Box className={styles.list}>
-                        <Typography className={styles.list__item}>
-                            Приедем на оценку вашего авто в течении 1 часа
-                        </Typography>
-                        <Typography className={styles.list__item}>
-                            Предложим от 95% от рыночной стоимости авто
-                        </Typography>
-                        <Typography className={styles.list__item}>Оплата любым удобным для Вас способом</Typography>
-                        <Typography className={styles.list__item}>Готовы приехать в область</Typography>
+                        {page.advantages.split('\n').map((item) => (
+                            <Typography key={item} className={styles.list__item}>
+                                {item}
+                            </Typography>
+                        ))}
                     </Box>
                 </Container>
+                <Image
+                    width={page.advantagesRightImage?.width}
+                    height={page.advantagesRightImage?.height}
+                    style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', right: 0 }}
+                    src={page.advantagesRightImage?.url}
+                    alt={page.advantagesRightImage?.alternativeText}></Image>
             </Box>
             <Box padding="1em" bgcolor="#fff">
                 <Container>
                     <Typography marginBottom="2em" variant="h3" textAlign="center">
-                        ВЫКУП{' '}
-                        <Typography variant="h3" color="primary" component="span">
-                            ЛЮБЫХ АВТОМОБИЛЕЙ
-                        </Typography>
+                        {reactStringReplace(page.buyAnyCarsTitle, /<highlight>/g, (match, i) => {
+                            return (
+                                <Typography color="primary" variant="h3" component="span">
+                                    {match}
+                                </Typography>
+                            );
+                        })}
                     </Typography>
                     <Box display="flex" flexWrap="wrap">
-                        {BUYBACK_ANY_CARS.map((item) => (
+                        {page.anyCarsAfter.map((item) => (
                             <Box key={item.title} width={'33.3%'} marginBottom="3em" textAlign="center">
                                 <Box display="flex" alignItems="center" width={115} height={115} margin="auto">
                                     <Image
-                                        isOnSSR={false}
-                                        width={item.imgWidth || 100}
-                                        height={item.imgHeight || 100}
-                                        alt={item.title}
-                                        src={item.imgUrl}></Image>
+                                        width={item.image?.width || 100}
+                                        height={item.image?.height || 100}
+                                        alt={item.image?.alternativeText}
+                                        src={item.image?.url}></Image>
                                 </Box>
                                 <Typography marginTop="1em" marginBottom="0.5em" variant="h6">
                                     {item.title}
@@ -419,23 +395,22 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
             <Box marginTop="176px" position="relative" textAlign="center">
                 <Box position="absolute" width="100%" top={'-176px'}>
                     <Image
-                        width={567}
-                        height={376}
-                        isOnSSR={false}
-                        src={'/buyback_easy_sell.png'}
-                        alt=" ПРОДАТЬ АВТОМОБИЛЬ ЛЕГКО"></Image>
+                        width={page.sellImage?.width}
+                        height={page.sellImage?.height}
+                        src={page.sellImage?.url}
+                        alt={page.sellImage?.alternativeText}></Image>
                 </Box>
                 <Box bgcolor="primary.main" paddingTop="250px" minHeight={500}>
                     <Container>
                         <Typography fontWeight="500" textAlign="center" marginBottom="1em" variant="h3">
-                            ПРОДАТЬ АВТОМОБИЛЬ ЛЕГКО!
+                            {page.sellCarTitle}
                         </Typography>
                         <Box display="flex" className={styles.steps}>
-                            {STEPS.map((item) => (
+                            {page.sellSteps.map((item) => (
                                 <Box
+                                    key={item.title}
                                     display="flex"
                                     flexDirection="column"
-                                    key={item.title}
                                     height={200}
                                     justifyContent="center"
                                     alignItems="center"
@@ -454,10 +429,16 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                 <Container>
                     <Box display="flex" alignItems="center">
                         <Typography flex="1" color="#fff">
-                            Оставьте заявку на бесплатную <br></br> оценку вашего автомобиля
+                            <ReactMarkdown content={page.applicationLeftText}></ReactMarkdown>
                         </Typography>
                         <Button
-                            className={styles['btn-assessment']}
+                            sx={{
+                                bgcolor: '#fff',
+                                color: '#000',
+                                textTransform: 'capitalize',
+                                padding: '1.5em 3em',
+                                borderRadius: 0
+                            }}
                             variant="contained"
                             onClick={handleClickAssessment}>
                             Оценить автомобиль
@@ -466,25 +447,23 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
                 </Container>
             </Box>
             <Box className={styles['section-why-we']}>
+                <Image
+                    width={page.whyWeLeftImage?.width}
+                    height={page.whyWeLeftImage?.height}
+                    style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}
+                    src={page.whyWeLeftImage?.url}
+                    alt={page.whyWeLeftImage?.alternativeText}></Image>
                 <Container>
                     <Box maxWidth={650} paddingLeft="4em" margin="auto">
                         <Typography marginBottom="1em" variant="h3">
-                            ПОЧЕМУ ВЫБИРАЮТ НАС
+                            {page.whyWeTitle}
                         </Typography>
                         <Box className={styles.list}>
-                            <Typography className={styles.list__item}>
-                                Мы гарантируем юридическую чистоту сделки
-                            </Typography>
-                            <Typography className={styles.list__item}>
-                                Заключаем договор и выплачиваем всю сумму без каких-либо комиссий и удержаний
-                            </Typography>
-                            <Typography className={styles.list__item}>
-                                Работая с нами вы защищаете себя от мошенничества со стороны недобросовестных
-                                покупателей
-                            </Typography>
-                            <Typography className={styles.list__item}>
-                                Проводим сделки купли-продажи автомобилей уже 10 лет
-                            </Typography>
+                            {page.whyWe.split('\n').map((item) => (
+                                <Typography key={item} className={styles.list__item}>
+                                    {item}
+                                </Typography>
+                            ))}
                         </Box>
                     </Box>
                 </Container>
@@ -496,7 +475,19 @@ const BuybackCars = ({ page, cars, brands }: Props) => {
 export default BuybackCars;
 
 export const getStaticProps = getPageProps(
-    fetchPage('buyback-car'),
+    fetchPage('buyback-car', {
+        populate: [
+            'seo',
+            'mainBackgroundImage',
+            'mainBackgroundLeftImage',
+            'weProvide.image',
+            'advantagesRightImage',
+            'anyCarsAfter.image',
+            'sellSteps',
+            'sellImage',
+            'whyWeLeftImage'
+        ]
+    }),
     async () => ({
         cars: (await fetchCarsOnParts({ pagination: { limit: 10 }, populate: ['brand', 'model', 'images'] })).data.data
     }),

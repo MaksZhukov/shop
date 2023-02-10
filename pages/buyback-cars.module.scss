@@ -3,26 +3,6 @@
         display: flex;
     }
     position: relative;
-    &::before {
-        content: '';
-        background: no-repeat center url('/buyback_banner.png');
-        background-size: cover;
-        height: 563px;
-        top: 0;
-        left: 0;
-        position: absolute;
-        width: 100%;
-    }
-    &::after {
-        content: '';
-        background: no-repeat center url('/buyback_banner_bmw.png');
-        background-size: cover;
-        height: 580px;
-        width: 786px;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-    }
 }
 
 .autocomplete {
@@ -41,12 +21,6 @@
     margin-bottom: 1.5em;
 }
 
-.btn {
-    &_loading {
-        background-color: #fdb819 !important;
-    }
-}
-
 .img-empty {
     width: 100%;
 }
@@ -54,7 +28,7 @@
 .section-advantages {
     min-height: 415px;
     padding-left: 5em;
-    background: no-repeat right center url('/buyback_advantages.png');
+    position: relative;
 }
 
 .list {
@@ -74,16 +48,8 @@
     }
 }
 
-.btn-assessment {
-    background-color: #fff;
-    color: #000;
-    text-transform: capitalize;
-    padding: 1.5em 3em;
-    border-radius: 0;
-}
-
 .section-why-we {
-    background: no-repeat left center url('/buyback_why_we.png');
+    position: relative;
     min-height: 435px;
 }
 
