@@ -69,6 +69,18 @@ export type PageVacancies = {
     vacancies: Vacancy[];
 };
 
+export type PageContacts = {
+    seo: SEO | null;
+    h1: string;
+    phone1: string;
+    phone2: string;
+    location: string;
+    askTitle: string;
+    askText: string;
+    content: string;
+    images?: Image[];
+};
+
 export type PageProduct = {
     linksWithImages: LinkWithImage[];
     benefits: Image[];
