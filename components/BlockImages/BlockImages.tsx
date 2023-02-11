@@ -13,6 +13,9 @@ interface Props {
 }
 
 const BlockImages: FC<Props> = ({ images, imageSRCs = [], isOnSSR = false, withoutOverlay = false, sx }) => {
+    if (!images && imageSRCs.length === 0) {
+        return <></>;
+    }
     return (
         <Box
             className={withoutOverlay ? '' : styles.overlay}
