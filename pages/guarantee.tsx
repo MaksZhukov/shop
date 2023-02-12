@@ -34,9 +34,7 @@ const Guarantee = ({ page }: Props) => {
             <Typography>
                 <ReactMarkdown content={page.guaranteeNotApplyText}></ReactMarkdown>
             </Typography>
-            <BlockImages
-                images={page.images1}
-                sx={{ bgcolor: 'transparent', padding: 0, marginY: '2em' }}></BlockImages>
+            <BlockImages withoutOverlay images={page.images1} sx={{ padding: 0, marginY: '2em' }}></BlockImages>
             <Box marginBottom="4em" bgcolor="#FFF5DD" padding="2em 4em">
                 <Typography variant="h5" textTransform="uppercase" fontWeight="500">
                     {page.warningTitle}
