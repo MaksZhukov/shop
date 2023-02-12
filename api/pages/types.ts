@@ -1,6 +1,6 @@
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
-import { Image, LinkWithImage, SEO } from 'api/types';
+import { Image, LinkWithImage, SEO, ShortSEO } from 'api/types';
 
 export type DefaultPage = {
     seo: SEO;
@@ -70,7 +70,7 @@ export type PageVacancies = {
 };
 
 export type PageContacts = {
-    seo: SEO | null;
+    seo: ShortSEO | null;
     h1: string;
     phone1: string;
     phone2: string;
@@ -79,6 +79,37 @@ export type PageContacts = {
     askText: string;
     content: string;
     images?: Image[];
+};
+
+export type PageDelivery = {
+    seo: ShortSEO | null;
+    h1: string;
+    mainImageLeft: Image;
+    mainTextRight: string;
+    images1: Image[];
+    deliveryCitiesTitle: string;
+    deliveryCitiesDescription: { label: string; value: string }[];
+    courierTitle: string;
+    courierDescription: string;
+    shipmentTitle: string;
+    shipmentText: string;
+    shipmentImageRight: Image;
+    images2?: Image[];
+};
+
+export type PageGuarantee = {
+    seo: ShortSEO | null;
+    h1: string;
+    mainLeftImage: Image;
+    mainRightText: string;
+    images1: Image[];
+    guaranteeNotApplyTitle: string;
+    guaranteeNotApplyText: string;
+    images2: Image[];
+    warningTitle: string;
+    warningLeftImage: Image;
+    warningRightText: string;
+    content: string;
 };
 
 export type PageProduct = {
