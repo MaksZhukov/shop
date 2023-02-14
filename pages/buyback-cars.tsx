@@ -122,12 +122,14 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
         <>
             <Box className={styles.head} marginBottom="2em" minHeight={744} display="flex">
                 <Image
+                    title={page.mainBackgroundImage?.caption}
                     width={page.mainBackgroundImage?.width}
                     height={page.mainBackgroundImage?.height}
                     style={{ position: 'absolute', top: 0, objectFit: 'cover', width: '100%' }}
                     src={page.mainBackgroundImage?.url}
                     alt={page.mainBackgroundImage?.alternativeText}></Image>
                 <Image
+                    title={page.mainBackgroundLeftImage?.caption}
                     width={page.mainBackgroundLeftImage?.width}
                     height={page.mainBackgroundLeftImage?.height}
                     style={{ position: 'absolute', bottom: 0, left: 0 }}
@@ -250,6 +252,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                         {page.weProvide.map((item) => (
                             <Box width={'30%'} textAlign="center" key={item.title}>
                                 <Image
+                                    title={item.image?.caption}
                                     src={item.image?.url}
                                     alt={item.image?.alternativeText}
                                     width={item.image?.width || 100}
@@ -293,6 +296,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                                                 .filter((item) => item.formats)
                                                 .map((image) => (
                                                     <Image
+                                                        title={image?.caption}
                                                         key={image.id}
                                                         alt={image.alternativeText}
                                                         src={image.formats?.thumbnail.url || image.url}
@@ -304,6 +308,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                                     ) : (
                                         <Box>
                                             <Image
+                                                title={name}
                                                 style={{ margin: 'auto', width: '100%' }}
                                                 alt={name}
                                                 src={''}
@@ -354,6 +359,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                     </Box>
                 </Container>
                 <Image
+                    title={page.advantagesRightImage?.caption}
                     width={page.advantagesRightImage?.width}
                     height={page.advantagesRightImage?.height}
                     style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', right: 0 }}
@@ -376,6 +382,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                             <Box key={item.title} width={'33.3%'} marginBottom="3em" textAlign="center">
                                 <Box display="flex" alignItems="center" width={115} height={115} margin="auto">
                                     <Image
+                                        title={page.image?.caption}
                                         width={item.image?.width || 100}
                                         height={item.image?.height || 100}
                                         alt={item.image?.alternativeText}
@@ -395,6 +402,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
             <Box marginTop="176px" position="relative" textAlign="center">
                 <Box position="absolute" width="100%" top={'-176px'}>
                     <Image
+                        title={page.sellImage?.caption}
                         width={page.sellImage?.width}
                         height={page.sellImage?.height}
                         src={page.sellImage?.url}
@@ -448,6 +456,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
             </Box>
             <Box className={styles['section-why-we']}>
                 <Image
+                    title={page.whyWeLeftImage?.caption}
                     width={page.whyWeLeftImage?.width}
                     height={page.whyWeLeftImage?.height}
                     style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}

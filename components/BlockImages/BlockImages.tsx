@@ -5,38 +5,38 @@ import { FC } from 'react';
 import styles from './BlockImages.module.scss';
 
 interface Props {
-    images?: IImage[];
-    imageSRCs?: string[];
-    isOnSSR?: boolean;
-    withoutOverlay?: boolean;
-    sx?: SxProps<any>;
+	images?: IImage[];
+	isOnSSR?: boolean;
+	withoutOverlay?: boolean;
+	sx?: SxProps<any>;
 }
 
-const BlockImages: FC<Props> = ({ images, imageSRCs = [], isOnSSR = false, withoutOverlay = false, sx }) => {
-    if (!images && imageSRCs.length === 0) {
-        return <></>;
-    }
-    return (
-        <Box
-            className={withoutOverlay ? '' : styles.overlay}
-            paddingY="3em"
-            marginY="3em"
-            display="flex"
-            gap={'1em'}
-            sx={sx}>
-            {images
-                ? images.map((item) => (
-                      <Box key={item.id}>
-                          <Image src={item.url} alt={item.alternativeText} width={390} height={270}></Image>
-                      </Box>
-                  ))
-                : imageSRCs.map((src) => (
-                      <Box key={src}>
-                          <Image isOnSSR={isOnSSR} src={src} alt="alt" width={390} height={270}></Image>
-                      </Box>
-                  ))}
-        </Box>
-    );
+const BlockImages: FC<Props> = ({ images, withoutOverlay = false, sx }) => {
+	if (!images) {
+		return <></>;
+	}
+	return (
+		<Box
+			className={withoutOverlay ? '' : styles.overlay}
+			paddingY='3em'
+			marginY='3em'
+			display='flex'
+			gap={'1em'}
+			sx={sx}
+		>
+			{images.map((item) => (
+				<Box key={item.id}>
+					<Image
+						title={item.caption}
+						src={item.url}
+						alt={item.alternativeText}
+						width={390}
+						height={270}
+					></Image>
+				</Box>
+			))}
+		</Box>
+	);
 };
 
 export default BlockImages;

@@ -16,6 +16,7 @@ const About = ({ page }: Props) => {
 		<>
 			<Box display='flex'>
 				<Image
+					title={page.mainImageLeft?.caption}
 					width={page.mainImageLeft?.width}
 					height={page.mainImageLeft?.height}
 					src={page.mainImageLeft?.url}
@@ -47,6 +48,7 @@ const About = ({ page }: Props) => {
 					<ReactMarkdown content={page.mainPrinciplesTextLeft}></ReactMarkdown>
 				</Box>
 				<Image
+					title={page.mainPrinciplesImageRight?.caption}
 					width={page.mainPrinciplesImageRight?.width}
 					height={page.mainPrinciplesImageRight?.height}
 					src={page.mainPrinciplesImageRight?.url}
@@ -62,6 +64,7 @@ const About = ({ page }: Props) => {
 			<BlockImages sx={{ margin: '1em 0 3em' }} withoutOverlay images={page.images4}></BlockImages>
 			<Box display='flex' marginBottom='3em'>
 				<Image
+					title={page.pricesLeftImage?.caption}
 					width={page.pricesLeftImage?.width}
 					height={page.pricesLeftImage?.height}
 					src={page.pricesLeftImage?.url}

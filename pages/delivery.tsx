@@ -19,6 +19,7 @@ const Delivery: FC<Props> = ({ page }) => {
         <>
             <Box marginBottom="4em" display="flex">
                 <Image
+                    title={page.mainImageLeft?.caption}
                     width={page.mainImageLeft?.width}
                     height={page.mainImageLeft?.height}
                     src={page.mainImageLeft?.url}
@@ -79,6 +80,7 @@ const Delivery: FC<Props> = ({ page }) => {
                 </Box>
                 <Box>
                     <Image
+                        title={page.shipmentImageRight?.caption}
                         width={page.shipmentImageRight?.width}
                         height={page.shipmentImageRight?.height}
                         src={page.shipmentImageRight?.url}

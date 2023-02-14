@@ -18,6 +18,7 @@ const CardItem: FC<Props> = ({ image, description, name, link }) => {
     return (
         <Box display="flex" marginBottom="3em" sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
             <Image
+                title={image?.caption}
                 alt={image?.alternativeText || name}
                 width={isMobile ? 500 : 330}
                 height={isMobile ? 375 : 220}

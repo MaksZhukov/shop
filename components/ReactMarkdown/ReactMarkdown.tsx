@@ -75,12 +75,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 						data.children.some((item) => item === `{${key}}`)
 					);
 					if (snippet) {
-						return (
-							<BlockImages
-								isOnSSR
-								imageSRCs={blockImagesSnippets[snippet].map((item) => item.url)}
-							></BlockImages>
-						);
+						return <></>;
 					}
 					return <></>;
 				},
