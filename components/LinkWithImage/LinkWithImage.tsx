@@ -31,6 +31,7 @@ const LinkWithImage: FC<Props> = ({
     return (
         <NextLink className={styles.link} href={link} target={targetLink}>
             <Image
+                title={image?.caption}
                 style={imageStyle}
                 alt={image?.alternativeText || ''}
                 width={width}

@@ -17,7 +17,7 @@ const Vacancies: NextPage<Props> = ({ page }) => {
         return (
             <>
                 <Box key={item.id} display="flex">
-                    <Image src={item.image?.url} alt={item.image.alternativeText} width={500} height={360}></Image>
+                    <Image title={item.image.caption} src={item.image?.url} alt={item.image.alternativeText} width={500} height={360}></Image>
                     <Box paddingLeft="3em">
                         <Typography
                             marginBottom="1em"
@@ -72,7 +72,7 @@ const Vacancies: NextPage<Props> = ({ page }) => {
                             ))}
                         </Box>
                         <Box marginTop="2em" display="flex" justifyContent="center">
-                            <Image src="/logo_medium.png" isOnSSR={false} width={315} height={87} alt="Logo"></Image>
+                            <Image src="/logo_medium.png" isOnSSR={false} width={315} height={87} alt="Разборка авто вакансия" title='Разборка авто вакансия'></Image>
                         </Box>
                     </Box>
                     <Box flex="1" paddingRight="10em">

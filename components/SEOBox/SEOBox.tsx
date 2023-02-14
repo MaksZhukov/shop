@@ -22,6 +22,7 @@ const SEOBox: FC<Props> = ({ images, content }) => {
                     {images?.map((item) => (
                         <Box key={item.id} padding="0.5em">
                             <Image
+                                title={item.caption}
                                 alt={item.alternativeText}
                                 width={208}
                                 height={156}

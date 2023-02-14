@@ -50,6 +50,7 @@ const Footer: FC<Props> = ({ footer }) => {
                                 target="_blank"
                                 color="inherit">
                                 <Image
+                                    title={item.image?.caption}
                                     alt={item.image?.alternativeText}
                                     width={20}
                                     height={20}

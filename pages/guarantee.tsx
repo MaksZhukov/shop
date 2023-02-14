@@ -16,6 +16,7 @@ const Guarantee = ({ page }: Props) => {
         <>
             <Box display="flex">
                 <Image
+                    title={page.mainLeftImage?.caption}
                     src={page.mainLeftImage?.url}
                     width={page.mainLeftImage?.width}
                     height={page.mainLeftImage?.height}
@@ -42,6 +43,7 @@ const Guarantee = ({ page }: Props) => {
                 <Box display="flex">
                     <Box marginTop="2em" maxWidth="250px" width="100%">
                         <Image
+                            title={page.warningLeftImage?.caption}
                             src={page.warningLeftImage?.url}
                             width={page.warningLeftImage?.width}
                             height={page.warningLeftImage?.height}

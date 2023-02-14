@@ -100,6 +100,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                 {data.images.map((item) => (
                                     <Box paddingX={'1em'} key={item.id}>
                                         <Image
+                                            title={item.caption}
                                             // style={{ height: '100%' }}
                                             alt={item.alternativeText}
                                             width={440}
@@ -111,6 +112,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                         </>
                     ) : (
                         <Image
+                            title={data.nam}
                             alt={data.name}
                             quality={100}
                             width={540}
@@ -215,6 +217,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
             <Box display="flex" justifyContent="space-between" marginBottom="1em" flexWrap="wrap">
                 {WHY_WE_BEST.map((url) => (
                     <Image
+                        title={url}
                         style={{ marginBottom: '2em' }}
                         alt={url}
                         isOnSSR={false}

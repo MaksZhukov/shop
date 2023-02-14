@@ -255,8 +255,9 @@ const Header = observer(({ brands }: Props) => {
             {...(type === 'mobile' ? { order: { xs: '2', md: 'initial' } } : {})}>
             <NextLink href="/">
                 <Image
+                    title={'Разборка авто'}
                     style={{ cursor: 'pointer' }}
-                    alt="Logo"
+                    alt={'Разборка авто'}
                     width={123}
                     height={34}
                     quality={100}
