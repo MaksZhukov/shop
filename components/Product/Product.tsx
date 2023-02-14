@@ -71,6 +71,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 								{data.images.map((item) => (
 									<Box marginY='0.5em' key={item.id}>
 										<Image
+                                            title={item.caption}
 											alt={item.alternativeText}
 											width={104}
 											height={78}
