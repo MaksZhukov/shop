@@ -112,7 +112,9 @@ const Catalog = ({
 						...(searchValue ? { h1: { $contains: searchValue } } : {}),
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
 					},
-					pagination: searchValue ? {} : { start: (paramPage || +page) * API_DEFAULT_LIMIT },
+					pagination: searchValue
+						? {}
+						: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
 					populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
 					sort,
 				});
@@ -337,7 +339,7 @@ const Catalog = ({
 				variant='standard'
 				MenuProps={{ disableScrollLock: true }}
 				value={sort as any}
-				sx={{ maxWidth: 200 }}
+				sx={{ maxWidth: 150 }}
 				className={styles['sort-select']}
 				onChange={handleChangeSort}
 			>
