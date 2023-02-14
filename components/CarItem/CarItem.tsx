@@ -90,6 +90,7 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
             ) : (
                 <Box>
                     <Image
+                        title={name}
                         style={{ objectFit: 'cover' }}
                         src=""
                         width={activeView === 'grid' ? 280 : 200}

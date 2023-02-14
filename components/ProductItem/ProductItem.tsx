@@ -141,6 +141,7 @@ const ProductItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width =
                         {data.images?.map((image) => (
                             <Image
                                 key={image.id}
+                                title={image.caption}
                                 width={activeView === 'grid' ? 280 : 200}
                                 height={activeView === 'grid' ? 215 : 150}
                                 alt={image.alternativeText}
@@ -151,6 +152,7 @@ const ProductItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width =
             ) : (
                 <Box>
                     <Image
+                        title={data.name}
                         style={{ objectFit: 'cover' }}
                         src=""
                         width={activeView === 'grid' ? 280 : 200}

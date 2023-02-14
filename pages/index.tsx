@@ -271,6 +271,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         <>
             <Box className={styles['head-section']}>
                 <Image
+                    title={page.banner?.caption}
                     width={page.banner?.width}
                     height={page.banner?.height}
                     style={{ position: 'absolute', top: 0, objectFit: 'cover', width: '100vw', height: '100%' }}
@@ -335,6 +336,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                 justifyContent="center"
                                 minHeight="250px">
                                 <Image
+                                    title={item.name}
                                     isOnSSR={false}
                                     src={item.imgSrc}
                                     width={item.imgWidth}
@@ -372,7 +374,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 </Box>
                 <Box marginBottom="4em" justifyContent="space-between" display="flex">
                     {page.benefits?.map((item) => (
-                        <Image src={item.url} key={item.id} alt={item.alternativeText} width={200} height={140}></Image>
+                        <Image title={item.caption} src={item.url} key={item.id} alt={item.alternativeText} width={200} height={140}></Image>
                     ))}
                 </Box>
                 <Box display="flex" gap={'2em'} marginBottom="4em" justifyContent="space-between">
@@ -449,6 +451,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         </Typography>
                         <Box marginTop="-2em">
                             <Image
+                                title={page.benefitsRightImage?.caption}
                                 src={page.benefitsRightImage?.url}
                                 width={617}
                                 height={347}

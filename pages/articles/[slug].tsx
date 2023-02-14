@@ -38,6 +38,7 @@ const Article: NextPage<Props> = ({ page }) => {
                         float: 'left'
                     }}>
                     <Image
+                        title={page.image?.caption}
                         alt={page.image?.alternativeText}
                         width={isMobile ? 500 : 640}
                         height={isMobile ? 375 : 480}

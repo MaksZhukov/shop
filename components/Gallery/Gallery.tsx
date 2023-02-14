@@ -32,6 +32,7 @@ const Gallery: FC<Props> = ({ page }) => {
                 {page.images?.map((item, i) => (
                     <Box onClick={handleClickImage(i)} sx={{ cursor: 'pointer' }} marginBottom="1em" key={item.id}>
                         <Image
+                            title={item.caption}
                             width={300}
                             height={225}
                             src={item.formats?.small?.url || item.url}
@@ -58,6 +59,7 @@ const Gallery: FC<Props> = ({ page }) => {
                     <Slider className={styles.slider} slidesToShow={1} initialSlide={index as number}>
                         {page.images?.map((item) => (
                             <Image
+                                title={item.caption}
                                 key={item.id}
                                 width={isTablet ? 500 : 640}
                                 height={isTablet ? 375 : 480}
