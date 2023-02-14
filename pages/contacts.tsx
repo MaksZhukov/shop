@@ -61,7 +61,7 @@ const Contacts = ({ page }: Props) => {
             </Typography>
             <Box display="flex" gap="1em" marginBottom="2em">
                 <Box flex="1" display="flex" padding="2em 1em" alignItems="center" bgcolor="#fff">
-                    <Image src="/phone.png" width={50} isOnSSR={false} height={50} alt="phone 1"></Image>
+                    <Image title={'Телефон 1'} src="/phone.png" width={50} isOnSSR={false} height={50} alt="Телефон 1"></Image>
                     <Link
                         marginLeft="1em"
                         color="#000"
@@ -71,7 +71,7 @@ const Contacts = ({ page }: Props) => {
                     </Link>
                 </Box>
                 <Box flex="1" display="flex" padding="2em 1em" bgcolor="#fff" alignItems="center">
-                    <Image width={50} height={50} isOnSSR={false} src="/phone.png" alt="phone 1"></Image>
+                    <Image title='Телефон 2' width={50} height={50} isOnSSR={false} src="/phone.png" alt="Телефон 2"></Image>
                     <Link
                         marginLeft="1em"
                         color="#000"
@@ -81,7 +81,7 @@ const Contacts = ({ page }: Props) => {
                     </Link>
                 </Box>
                 <Box flex="1" display="flex" padding="2em 1em" bgcolor="#fff" alignItems="center">
-                    <Image width={50} height={50} isOnSSR={false} src="/mark.png" alt="phone 1"></Image>
+                    <Image title='Расположение ' width={50} height={50} isOnSSR={false} src="/mark.png" alt="Расположение"></Image>
                     <Typography marginLeft="1em">д полотково, Гродно 231710</Typography>
                 </Box>
             </Box>

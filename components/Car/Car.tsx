@@ -63,6 +63,7 @@ const Car: FC<Props> = ({ data }) => {
                             {data.images.map((item) => (
                                 <Box marginY="0.5em" key={item.id}>
                                     <Image
+                                        title={item.caption}
                                         alt={item.alternativeText}
                                         width={104}
                                         height={78}
@@ -83,6 +84,7 @@ const Car: FC<Props> = ({ data }) => {
                                 <Box paddingX={'1em'} key={item.id}>
                                     <Image
                                         // style={{ height: '100%' }}
+                                        title={item.caption}
                                         alt={item.alternativeText}
                                         width={440}
                                         height={480}
@@ -93,6 +95,7 @@ const Car: FC<Props> = ({ data }) => {
                     </>
                 ) : (
                     <Image
+                        title={name}
                         alt={name}
                         quality={100}
                         width={540}

@@ -49,6 +49,7 @@ const Favorites = () => {
                                                 .filter((item) => item.formats)
                                                 .map((image) => (
                                                     <Image
+                                                        title={image?.caption}
                                                         src={`${
                                                             isMobile
                                                                 ? image.formats?.small?.url || image.url
@@ -62,6 +63,7 @@ const Favorites = () => {
                                         </Slider>
                                     ) : (
                                         <Image
+                                            title={item.product.name}
                                             src={''}
                                             alt={item.product.name}
                                             width={isMobile ? 500 : 150}

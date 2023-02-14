@@ -29,6 +29,7 @@ const Card: FC<Props> = ({ data }) => {
                             float: 'left'
                         }}>
                         <Image
+                            title={data.image.caption}
                             alt={data.image.alternativeText}
                             width={isMobile ? 500 : 640}
                             height={isMobile ? 375 : 480}
