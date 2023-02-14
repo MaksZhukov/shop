@@ -382,7 +382,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                             <Box key={item.title} width={'33.3%'} marginBottom="3em" textAlign="center">
                                 <Box display="flex" alignItems="center" width={115} height={115} margin="auto">
                                     <Image
-                                        title={page.image?.caption}
+                                        title={item.image?.caption}
                                         width={item.image?.width || 100}
                                         height={item.image?.height || 100}
                                         alt={item.image?.alternativeText}
