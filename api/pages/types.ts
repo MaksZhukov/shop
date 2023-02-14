@@ -137,8 +137,7 @@ export type PageAbout = {
 }
 
 export type PageProduct = {
-    linksWithImages: LinkWithImage[];
-    benefits: Image[];
+    whyWeBestImages: Image[]
 };
 
 export type PageProductTire = {
