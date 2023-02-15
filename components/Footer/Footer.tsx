@@ -35,15 +35,27 @@ const Footer: FC<Props> = ({ footer }) => {
             sx={{ padding: { xs: '20px 0 40px', md: '20px 0' } }}
             className={styles.footer}>
             <Container>
-                <Box display="flex">
-                    <Box className={styles.footer__item}>
+                <Box
+                    display="flex"
+                    sx={{ flexWrap: { xs: 'wrap', md: 'nowrap' }, flexDirection: { xs: 'column', sm: 'row' } }}>
+                    <Box
+                        className={styles.footer__item}
+                        sx={{
+                            order: { xs: 4, sm: 1 },
+                            width: { md: '25%', xs: '100%' },
+                            paddingX: { xs: 0, md: '1.5em' }
+                        }}>
                         <ReactMarkdown content={footer.firstBlock}></ReactMarkdown>
                     </Box>
 
-                    <Box display="flex" flexWrap="wrap" className={styles.footer__item}>
+                    <Box
+                        display="flex"
+                        flexWrap="wrap"
+                        className={styles.footer__item}
+                        sx={{ order: { xs: 2 }, width: { md: '25%', xs: '100%' }, padding: { xs: 0, md: '0 1em' } }}>
                         {footer.socials?.map((item) => (
                             <ListItemButton
-                                sx={{ width: '50%', padding: '0.5em 0.25em' }}
+                                sx={{ width: { xs: '100%', md: '50%' }, padding: '0.5em 0.25em' }}
                                 component="a"
                                 key={item.id}
                                 href={item.link}
@@ -60,13 +72,22 @@ const Footer: FC<Props> = ({ footer }) => {
                         ))}
                     </Box>
 
-                    <Box className={(styles.footer__item, styles.footer__item_map)}>
+                    <Box
+                        className={(styles.footer__item, styles.footer__item_map)}
+                        sx={{ order: { xs: 3 }, width: { md: '25%', xs: '100%' }, paddingX: { xs: 0, md: '1em' } }}>
                         <iframe
+                            style={{ maxWidth: '100%' }}
                             src="https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor"
                             frameBorder="0"></iframe>
                     </Box>
 
-                    <Box className={styles.footer__item}>
+                    <Box
+                        className={styles.footer__item}
+                        sx={{
+                            order: { xs: 1, md: 4 },
+                            width: { md: '25%', xs: '100%' },
+                            padding: { xs: 0, md: '0 1.5em 0 3em' }
+                        }}>
                         <ReactMarkdown content={footer.fourthBlock}></ReactMarkdown>
                         <Box>
                             <Typography>Поделиться:</Typography>

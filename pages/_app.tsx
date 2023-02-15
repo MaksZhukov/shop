@@ -111,7 +111,7 @@ function MyApp({
                             </Content>
                         </RouteShield>
                         <Footer footer={layout.footer}></Footer>
-                        <Box bottom={10} right={10} position="fixed">
+                        <Box bottom={10} right={10} zIndex={10} position="fixed">
                             <Button
                                 sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
                                 variant="contained"
