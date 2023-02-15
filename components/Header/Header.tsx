@@ -416,7 +416,7 @@ const Header = observer(({ brands }: Props) => {
                             color="inherit"
                             aria-haspopup="true"
                             onClick={handleToggleMenu}>
-                            <MenuIcon />
+                            <MenuIcon sx={{ color: '#fff' }} />
                         </IconButton>
                     </Box>
                     {renderLogo('mobile')}
