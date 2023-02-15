@@ -1,6 +1,5 @@
 .head-section {
     position: relative;
-    height: 550px;
     margin-bottom: 2em;
 }
 
@@ -36,6 +35,20 @@
                 height: 100%;
                 top: 0;
                 left: 0;
+            }
+        }
+        &_mobile {
+            width: 47.5%;
+            margin-bottom: 1em;
+            &:last-child {
+                height: 300px;
+                padding-top: 1em;
+                width: 100%;
+                text-align: right;
+                &::before {
+                    width: 110%;
+                    background-size: cover;
+                }
             }
         }
     }
