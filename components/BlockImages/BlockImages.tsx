@@ -3,6 +3,7 @@ import { Image as IImage } from 'api/types';
 import Image from 'components/Image';
 import { FC } from 'react';
 import styles from './BlockImages.module.scss';
+import { useMediaQuery } from '@mui/material';
 
 interface Props {
 	images?: IImage[];
@@ -32,6 +33,7 @@ const BlockImages: FC<Props> = ({ images, withoutOverlay = false, sx }) => {
 						alt={item.alternativeText}
 						width={390}
 						height={270}
+						style={{ height: 'auto' }}
 					></Image>
 				</Box>
 			))}
