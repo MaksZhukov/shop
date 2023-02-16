@@ -51,8 +51,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 
 	return (
 		<>
-			<Box display='flex' marginTop='3em' gap={'2em'}>
-				<Box display='flex' width='50%' maxHeight={480}>
+			<Box display='flex' marginTop='3em' gap={'2em'} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
+				<Box display='flex' sx={{ width: { xs: '100%', md: '570px' } }} maxHeight={isMobile ? 360 : 480}>
 					{data.images ? (
 						<>
 							<Slider
@@ -65,13 +65,17 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 								arrows={false}
 								slidesToShow={getSlidesToShow()}
 								focusOnSelect
-								className={classNames(styles.slider, styles.slider_small)}
+								className={classNames(
+									styles.slider,
+									styles.slider_small,
+									isMobile && styles.slider_small_mobile
+								)}
 								asNavFor={sliderBig || undefined}
 							>
 								{data.images.map((item) => (
 									<Box marginY='0.5em' key={item.id}>
 										<Image
-                                            title={item.caption}
+											title={item.caption}
 											alt={item.alternativeText}
 											width={104}
 											height={78}
@@ -88,16 +92,16 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 								arrows={false}
 								autoplay
 								autoplaySpeed={5000}
-								className={styles.slider}
+								className={classNames(styles.slider, isMobile && styles.slider_mobile)}
 							>
 								{data.images.map((item) => (
-									<Box paddingX={'1em'} key={item.id}>
+									<Box sx={{ paddingX: { xs: '0.25em', md: '1em' } }} key={item.id}>
 										<Image
 											title={item.caption}
 											// style={{ height: '100%' }}
 											alt={item.alternativeText}
 											width={440}
-											height={480}
+											height={isMobile ? 360 : 480}
 											src={item.url}
 										></Image>
 									</Box>
@@ -177,23 +181,12 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					</Button>
 				</Box>
 			</Box>
-			{/* {!!page.linksWithImages?.length && (
-                <Box marginTop="2em" display="flex" flexWrap="wrap" justifyContent={'space-around'}>
-                    {page.linksWithImages.map((item) => (
-                        <LinkWithImage
-                            width={110}
-                            height={110}
-                            key={item.id}
-                            image={item.image}
-                            link={item.link}></LinkWithImage>
-                    ))}
-                </Box>
-            )} */}
 			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
 				{data.h1} характеристики
 			</Typography>
 			{page.textAfterDescription && <ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>}
 			<CarouselProducts
+				sx={{ paddingX: { xs: '1em', md: '0' } }}
 				data={relatedProducts}
 				title={
 					<Typography withSeparator fontWeight='500' marginBottom='1em' marginTop='1em' variant='h5'>
@@ -213,19 +206,39 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 			>
 				Почему мы лучшие в своем деле?
 			</Typography>
-			<Box display='flex' justifyContent='space-between' marginBottom='1em' flexWrap='wrap'>
-				{page.whyWeBestImages.map((image) => (
-					<Image
-						title={image.caption}
-						style={{ marginBottom: '2em' }}
-						alt={image?.alternativeText}
-						key={image.id}
-						src={image.url}
-						width={280}
-						height={185}
-					></Image>
-				))}
-			</Box>
+			{isMobile ? (
+				<Box paddingX='1em' marginBottom='2em'>
+					<Slider slidesToShow={1}>
+						{page.whyWeBestImages.map((image) => (
+							<Box key={image.id}>
+								<Image
+									title={image.caption}
+									style={{ margin: 'auto' }}
+									alt={image?.alternativeText}
+									key={image.id}
+									src={image.url}
+									width={280}
+									height={185}
+								></Image>
+							</Box>
+						))}
+					</Slider>
+				</Box>
+			) : (
+				<Box display='flex' justifyContent='space-between' marginBottom='1em' flexWrap='wrap'>
+					{page.whyWeBestImages.map((image) => (
+						<Image
+							title={image.caption}
+							style={{ marginBottom: '2em' }}
+							alt={image?.alternativeText}
+							key={image.id}
+							src={image.url}
+							width={280}
+							height={185}
+						></Image>
+					))}
+				</Box>
+			)}
 			<Typography
 				withSeparator
 				marginBottom='1.5em'
