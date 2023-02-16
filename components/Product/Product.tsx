@@ -208,7 +208,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 			</Typography>
 			{isMobile ? (
 				<Box paddingX='1em' marginBottom='2em'>
-					<Slider slidesToShow={1}>
+					<Slider slidesToShow={1} autoplay autoplaySpeed={3000}>
 						{page.whyWeBestImages.map((image) => (
 							<Box key={image.id}>
 								<Image
