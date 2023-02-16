@@ -26,6 +26,7 @@ const About = ({ page }: Props) => {
 					title={page.mainImageLeft?.caption}
 					width={page.mainImageLeft?.width}
 					height={page.mainImageLeft?.height}
+					style={isTablet ? { height: 'auto' } : {}}
 					src={page.mainImageLeft?.url}
 					alt={page.mainImageLeft.alternativeText}
 				></Image>
@@ -89,6 +90,7 @@ const About = ({ page }: Props) => {
 							height={page.mainPrinciplesImageRight?.height}
 							src={page.mainPrinciplesImageRight?.url}
 							alt={page.mainPrinciplesImageRight.alternativeText}
+							style={isTablet ? { height: 'auto' } : {}}
 						></Image>
 					</Box>
 				) : (
@@ -96,6 +98,7 @@ const About = ({ page }: Props) => {
 						title={page.mainPrinciplesImageRight?.caption}
 						width={page.mainPrinciplesImageRight?.width}
 						height={page.mainPrinciplesImageRight?.height}
+						style={isTablet ? { height: 'auto' } : {}}
 						src={page.mainPrinciplesImageRight?.url}
 						alt={page.mainPrinciplesImageRight.alternativeText}
 					></Image>
@@ -127,6 +130,7 @@ const About = ({ page }: Props) => {
 					width={page.pricesLeftImage?.width}
 					height={page.pricesLeftImage?.height}
 					src={page.pricesLeftImage?.url}
+					style={isTablet ? { height: 'auto' } : {}}
 					alt={page.pricesLeftImage.alternativeText}
 				></Image>
 				<Box sx={{ margin: { xs: 0, md: '4em 0 0 3em' } }}>
