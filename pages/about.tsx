@@ -83,7 +83,6 @@ const About = ({ page }: Props) => {
 						>
 							{page.mainPrinciplesTitle}
 						</Typography>
-
 						<Image
 							title={page.mainPrinciplesImageRight?.caption}
 							width={page.mainPrinciplesImageRight?.width}
