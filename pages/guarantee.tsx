@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
+import { typography } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { PageGuarantee } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
@@ -12,36 +13,73 @@ interface Props {
 }
 
 const Guarantee = ({ page }: Props) => {
+    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     return (
         <>
             <Box display="flex">
-                <Image
-                    title={page.mainLeftImage?.caption}
-                    src={page.mainLeftImage?.url}
-                    width={page.mainLeftImage?.width}
-                    height={page.mainLeftImage?.height}
-                    alt={page.mainLeftImage?.alternativeText}></Image>
-                <Box marginLeft="3em">
+                <Box maxWidth={389} sx={{ width: { xs: '50%', md: 'initial' } }}>
+                    <Image
+                        title={page.mainLeftImage?.caption}
+                        src={page.mainLeftImage?.url}
+                        width={page.mainLeftImage?.width}
+                        style={isMobile ? { height: '100%', objectFit: 'cover' } : {}}
+                        height={page.mainLeftImage?.height}
+                        alt={page.mainLeftImage?.alternativeText}></Image>
+                </Box>
+                <Box sx={{ marginLeft: { xs: '1em', md: '3em' }, flex: { xs: 1, md: 'initial' } }}>
                     <Typography variant="h4" component="h1" marginBottom="0.5em" fontWeight="500">
                         {page.h1}
                     </Typography>
                     <ReactMarkdown content={page.mainRightText}></ReactMarkdown>
                 </Box>
             </Box>
-            <BlockImages images={page.images1}></BlockImages>
-            <Typography withSeparator variant="h4" textTransform="uppercase" fontWeight="500" marginBottom="0.5em">
-                {page.guaranteeNotApplyTitle}
-            </Typography>
+            <BlockImages
+                withoutOverlay={isMobile}
+                images={page.images1}
+                sx={{
+                    marginY: { xs: '1em', md: '3em' },
+                    paddingY: { xs: '1em', md: '3em' },
+                    flexDirection: { xs: 'column', sm: 'row' }
+                }}></BlockImages>
+            <Box sx={{ typography: { xs: 'h5', md: 'h4' } }}>
+                <Typography
+                    withSeparator
+                    textTransform="uppercase"
+                    fontWeight="500"
+                    marginBottom="0.5em"
+                    variant="inherit">
+                    {page.guaranteeNotApplyTitle}
+                </Typography>
+            </Box>
             <Typography>
                 <ReactMarkdown content={page.guaranteeNotApplyText}></ReactMarkdown>
             </Typography>
-            <BlockImages withoutOverlay images={page.images1} sx={{ padding: 0, marginY: '2em' }}></BlockImages>
-            <Box marginBottom="4em" bgcolor="#FFF5DD" padding="2em 4em">
-                <Typography variant="h5" textTransform="uppercase" fontWeight="500">
-                    {page.warningTitle}
-                </Typography>
+            <BlockImages
+                withoutOverlay={isMobile}
+                images={page.images1}
+                sx={{
+                    marginY: { xs: '1em', md: '2em' },
+                    padding: { xs: '1em 0', md: '2em 0' },
+                    flexDirection: { xs: 'column', sm: 'row' }
+                }}></BlockImages>
+            <Box
+                bgcolor="#FFF5DD"
+                sx={{ marginBottom: { xs: '1em', sm: '4em' }, padding: { xs: '1em 0.5em', sm: '2em 4em' } }}>
+                <Box display="flex" alignItems="center">
+                    <Box display={{ xs: 'block', sm: 'none' }} marginRight="1em" maxWidth="250px" width="100%">
+                        <Image
+                            title={page.warningLeftImage?.caption}
+                            src={page.warningLeftImage?.url}
+                            width={page.warningLeftImage?.width}
+                            height={page.warningLeftImage?.height}
+                            alt={page.warningLeftImage?.alternativeText}></Image>
+                    </Box>
+                    <Box textTransform="uppercase" fontWeight="500" sx={{ typography: { xs: 'h6', sm: 'h6' } }}>
+                        {page.warningTitle}
+                    </Box>
+                </Box>
                 <Box display="flex">
-                    <Box marginTop="2em" maxWidth="250px" width="100%">
+                    <Box display={{ xs: 'none', sm: 'block' }} marginTop="2em" maxWidth="250px" width="100%">
                         <Image
                             title={page.warningLeftImage?.caption}
                             src={page.warningLeftImage?.url}
