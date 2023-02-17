@@ -17,16 +17,15 @@ const About = ({ page }: Props) => {
     return (
         <>
             <Box display="flex" sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
-                {isTablet && (
-                    <Typography
-                        sx={{ display: { xs: 'block', md: 'none' } }}
-                        component="h1"
-                        variant="h4"
-                        marginBottom="1em"
-                        textTransform="uppercase">
-                        {page.h1}
-                    </Typography>
-                )}
+                <Typography
+                    sx={{ display: { xs: 'block', md: 'none' } }}
+                    component="h1"
+                    variant="h4"
+                    marginBottom="1em"
+                    textTransform="uppercase">
+                    {page.h1}
+                </Typography>
+
                 <Image
                     title={page.mainImageLeft?.caption}
                     width={page.mainImageLeft?.width}
@@ -35,16 +34,15 @@ const About = ({ page }: Props) => {
                     src={page.mainImageLeft?.url}
                     alt={page.mainImageLeft.alternativeText}></Image>
                 <Box sx={{ marginLeft: { xs: 0, md: '3em' } }}>
-                    {!isTablet && (
-                        <Typography
-                            sx={{ display: { xs: 'none', md: 'block' } }}
-                            component="h1"
-                            variant="h4"
-                            marginBottom="1em"
-                            textTransform="uppercase">
-                            {page.h1}
-                        </Typography>
-                    )}
+                    <Typography
+                        sx={{ display: { xs: 'none', md: 'block' } }}
+                        component="h1"
+                        variant="h4"
+                        marginBottom="1em"
+                        textTransform="uppercase">
+                        {page.h1}
+                    </Typography>
+
                     <Typography sx={{ marginTop: { xs: '1em', md: '0' } }}>
                         <ReactMarkdown content={page.mainTextRight}></ReactMarkdown>
                     </Typography>
@@ -67,37 +65,31 @@ const About = ({ page }: Props) => {
             <ReactMarkdown content={page.whyNeedServicesTextAfterImages2}></ReactMarkdown>
             <Box display="flex" marginBottom="3em" sx={{ flexDirection: { xs: 'column-reverse', md: 'row' } }}>
                 <Box sx={{ marginRight: { xs: 0, md: '3em' }, marginTop: { xs: '1em', md: 0 } }}>
-                    {!isTablet && (
-                        <Typography
-                            marginBottom="1em"
-                            component="h2"
-                            variant="h4"
-                            withSeparator
-                            textTransform="uppercase">
-                            {page.mainPrinciplesTitle}
-                        </Typography>
-                    )}
+                    <Typography
+                        display={{ xs: 'none', md: 'block' }}
+                        marginBottom="1em"
+                        component="h2"
+                        variant="h4"
+                        withSeparator
+                        textTransform="uppercase">
+                        {page.mainPrinciplesTitle}
+                    </Typography>
+
                     <ReactMarkdown content={page.mainPrinciplesTextLeft}></ReactMarkdown>
                 </Box>
-                {isTablet ? (
-                    <Box>
-                        <Typography
-                            marginBottom="1em"
-                            component="h2"
-                            variant="h4"
-                            withSeparator
-                            textTransform="uppercase">
-                            {page.mainPrinciplesTitle}
-                        </Typography>
-                        <Image
-                            title={page.mainPrinciplesImageRight?.caption}
-                            width={page.mainPrinciplesImageRight?.width}
-                            height={page.mainPrinciplesImageRight?.height}
-                            src={page.mainPrinciplesImageRight?.url}
-                            alt={page.mainPrinciplesImageRight.alternativeText}
-                            style={isTablet ? { height: 'auto' } : {}}></Image>
-                    </Box>
-                ) : (
+                <Box display={{ xs: 'block', md: 'none' }}>
+                    <Typography marginBottom="1em" component="h2" variant="h4" withSeparator textTransform="uppercase">
+                        {page.mainPrinciplesTitle}
+                    </Typography>
+                    <Image
+                        title={page.mainPrinciplesImageRight?.caption}
+                        width={page.mainPrinciplesImageRight?.width}
+                        height={page.mainPrinciplesImageRight?.height}
+                        src={page.mainPrinciplesImageRight?.url}
+                        alt={page.mainPrinciplesImageRight.alternativeText}
+                        style={isTablet ? { height: 'auto' } : {}}></Image>
+                </Box>
+                <Box display={{ xs: 'none', md: 'block' }} minWidth="500px">
                     <Image
                         title={page.mainPrinciplesImageRight?.caption}
                         width={page.mainPrinciplesImageRight?.width}
@@ -105,7 +97,7 @@ const About = ({ page }: Props) => {
                         style={isTablet ? { height: 'auto' } : {}}
                         src={page.mainPrinciplesImageRight?.url}
                         alt={page.mainPrinciplesImageRight.alternativeText}></Image>
-                )}
+                </Box>
             </Box>
             <Typography withSeparator component="h2" textTransform="uppercase" marginBottom="1em" variant="h4">
                 {page.nuancesTitle}
@@ -121,11 +113,9 @@ const About = ({ page }: Props) => {
                 withoutOverlay
                 images={page.images4}></BlockImages>
             <Box display="flex" marginBottom="3em" sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
-                {isTablet && (
-                    <Typography marginBottom="1em" component="h2" variant="h4">
-                        {page.pricesTitle}
-                    </Typography>
-                )}
+                <Typography display={{ xs: 'block', md: 'none' }} marginBottom="1em" component="h2" variant="h4">
+                    {page.pricesTitle}
+                </Typography>
                 <Image
                     title={page.pricesLeftImage?.caption}
                     width={page.pricesLeftImage?.width}
@@ -134,11 +124,9 @@ const About = ({ page }: Props) => {
                     style={isTablet ? { height: 'auto' } : {}}
                     alt={page.pricesLeftImage.alternativeText}></Image>
                 <Box sx={{ margin: { xs: 0, md: '4em 0 0 3em' } }}>
-                    {!isTablet && (
-                        <Typography component="h2" variant="h4">
-                            {page.pricesTitle}
-                        </Typography>
-                    )}
+                    <Typography display={{ xs: 'none', md: 'block' }} component="h2" variant="h4">
+                        {page.pricesTitle}
+                    </Typography>
                     <Typography sx={{ marginTop: { xs: '1em', md: 0 } }}>
                         <ReactMarkdown content={page.pricesRightText}></ReactMarkdown>
                     </Typography>
