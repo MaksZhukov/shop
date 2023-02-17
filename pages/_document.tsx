@@ -8,9 +8,8 @@ export default function Document() {
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
                 <link
-                    rel="preload"
                     href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-                    as="style"
+                    rel="stylesheet"
                 />
                 <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-16x16.png" />
