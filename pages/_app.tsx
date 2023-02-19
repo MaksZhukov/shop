@@ -147,9 +147,9 @@ function MyApp({
     );
 }
 
-// MyApp.getInitialProps = (context: any) => ({
-//     ...NextApp.getInitialProps(context),
-//     deviceType: context.ctx.req ? parser(context.ctx.req.headers['user-agent']).device.type || 'desktop' : 'desktop'
-// });
+MyApp.getInitialProps = (context: any) => ({
+    ...NextApp.getInitialProps(context),
+    deviceType: context.ctx.req ? parser(context.ctx.req.headers['user-agent']).device.type || 'desktop' : 'desktop'
+});
 
 export default MyApp;
