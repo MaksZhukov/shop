@@ -1,12 +1,16 @@
 import { ReactNode } from 'react';
-import styles from './Content.module.scss';
+import { Box } from '@mui/material';
 
 interface Props {
     children: ReactNode;
 }
 
 const Content = ({ children }: Props) => {
-    return <div className={styles.content}>{children}</div>;
+    return (
+        <Box flex="1" paddingTop={{ xs: '3.5em', md: '4em' }}>
+            {children}
+        </Box>
+    );
 };
 
 export default Content;
