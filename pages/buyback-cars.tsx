@@ -115,6 +115,9 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                 variant: 'error'
             });
         }
+        if (isTablet) {
+            setIsModalOpened(false);
+        }
         setIsEmailSending(false);
     }, 300);
 
