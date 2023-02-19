@@ -208,7 +208,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
                     name: 'Запчасть'
                 }
             ]}
-            searchPlaceholder="Поиск детали ..."
+            searchPlaceholder="Поиск ..."
             filtersConfig={filtersConfig}
             seo={page?.seo}
             fetchData={fetchSpareParts}
