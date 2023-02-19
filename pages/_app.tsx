@@ -23,6 +23,7 @@ import { LocalPhone } from '@mui/icons-material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './app.scss';
+import { roboto } from 'fonts';
 
 function MyApp({
     Component,
@@ -33,7 +34,7 @@ function MyApp({
         () =>
             createTheme({
                 typography: {
-                    fontFamily: 'Roboto'
+                    fontFamily: roboto.style.fontFamily
                 },
                 palette: {
                     primary: {
