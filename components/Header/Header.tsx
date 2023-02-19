@@ -400,7 +400,9 @@ const Header = observer(({ brands }: Props) => {
     return (
         <AppBar position="fixed">
             <Container ref={ref}>
-                <Toolbar sx={{ justifyContent: 'space-between' }} className={styles.toolbar}>
+                <Toolbar
+                    sx={{ justifyContent: 'space-between', minHeight: { xs: '56px', md: '64px' } }}
+                    className={styles.toolbar}>
                     {renderLogo('desktop')}
                     <Box
                         color="black"
