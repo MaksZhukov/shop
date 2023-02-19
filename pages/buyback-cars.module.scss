@@ -25,12 +25,6 @@
     width: 100%;
 }
 
-.section-advantages {
-    min-height: 415px;
-    padding-left: 5em;
-    position: relative;
-}
-
 .list {
     &__item {
         padding-left: 50px;
@@ -63,7 +57,6 @@
         position: relative;
         &:nth-child(1) {
             background-color: #ffeec7;
-            width: 30%;
             padding-left: 5%;
             &::after {
                 position: absolute;
@@ -78,7 +71,6 @@
             }
         }
         &:nth-child(2) {
-            width: 30%;
             padding-left: 10%;
             background-color: #ffe29f;
             &::after {
@@ -94,7 +86,6 @@
             }
         }
         &:nth-child(3) {
-            width: 35%;
             padding-left: 10%;
             background-color: #ffd473;
             &::after {

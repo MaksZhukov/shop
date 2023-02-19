@@ -65,7 +65,7 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
     return (
         <>
             <IconButton
-                sx={{ order: { xs: '1', md: 'initial' } }}
+                sx={{ order: { xs: '1', md: 'initial' }, display: { xs: 'none', md: 'block' } }}
                 id="account-button"
                 className={styles['button']}
                 aria-controls={isOpened ? 'account-menu' : undefined}
