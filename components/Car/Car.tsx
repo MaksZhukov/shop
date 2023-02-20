@@ -13,7 +13,7 @@ import { Button, Link, Table, TableBody, TableCell, TableRow, useMediaQuery } fr
 import classNames from 'classnames';
 
 interface Props {
-    data: ICar | CarOnParts;
+    data: ICar;
 }
 
 const Car: FC<Props> = ({ data }) => {
@@ -42,7 +42,7 @@ const Car: FC<Props> = ({ data }) => {
     ];
 
     let manufactureYear = new Date(data.manufactureDate).getFullYear();
-    let name = data.brand?.name + ' ' + data.model?.name + ' ' + manufactureYear;
+
     return (
         <Box display="flex" marginTop="3em" gap={'2em'}>
             <Box display="flex" width="50%" maxHeight={480}>
@@ -95,8 +95,8 @@ const Car: FC<Props> = ({ data }) => {
                     </>
                 ) : (
                     <Image
-                        title={name}
-                        alt={name}
+                        title={data.name}
+                        alt={data.name}
                         quality={100}
                         width={540}
                         height={480}
@@ -105,8 +105,8 @@ const Car: FC<Props> = ({ data }) => {
                 )}
             </Box>
             <Box flex="1">
-                <Typography variant="h4" fontWeight="500" title={name} component="h1">
-                    {name}
+                <Typography variant="h4" fontWeight="500" title={data.name} component="h1">
+                    {data.name}
                 </Typography>
                 <Box marginBottom="1em" alignItems="center" display="flex">
                     <Link marginRight="0.5em" variant="h6" href="tel:+375297804780">
