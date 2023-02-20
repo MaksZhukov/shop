@@ -1,4 +1,4 @@
-import { Typography, Grid, ListItemButton, Box } from '@mui/material';
+import { Typography, Grid, ListItemButton, Box, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import styles from './Footer.module.scss';
 import { Footer as IFooter } from 'api/layout/types';
@@ -25,6 +25,7 @@ interface Props {
 const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
 
 const Footer: FC<Props> = ({ footer }) => {
+    const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
     const description =
         typeof window !== 'undefined' ? (document.querySelector('[name=description]') as HTMLMetaElement)?.content : '';
     const title = typeof window !== 'undefined' ? document.title : '';
@@ -131,6 +132,16 @@ const Footer: FC<Props> = ({ footer }) => {
                             </LivejournalShareButton>
                         </Box>
                     </Box>
+                </Box>
+                <Box overflow={{ xs: 'auto', md: 'initial' }}>
+                    <Image
+                        title="Bepaid карточки"
+                        alt="Bepaid карточки"
+                        isOnSSR={false}
+                        src="/be_paid_cards.png"
+                        width={1452}
+                        style={isTablet ? { maxWidth: 'initial' } : {}}
+                        height={100}></Image>
                 </Box>
             </Container>
         </Box>
