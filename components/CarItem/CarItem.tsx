@@ -15,7 +15,6 @@ interface Props {
 }
 
 const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '100%', height = 'auto' }: Props) => {
-    let name = data.brand?.name + ' ' + data.model?.name + ' ' + new Date(data.manufactureDate).getFullYear();
     const renderContentByView = {
         list: (
             <Box padding="0.5em 1em" display="flex" flexDirection="column">
@@ -28,7 +27,7 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
                         component="span"
                         underline="hover"
                         fontWeight="500">
-                        {name}
+                        {data.name}
                     </Link>
                 </NextLink>
                 <Grid columnSpacing={2} container>
@@ -60,7 +59,7 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
                         padding="0.25em"
                         marginTop="0.5em"
                         textAlign="center">
-                        {name}
+                        {data.name}
                     </Link>
                 </NextLink>
             </>
@@ -90,12 +89,12 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
             ) : (
                 <Box>
                     <Image
-                        title={name}
+                        title={data.name}
                         style={{ objectFit: 'cover' }}
                         src=""
                         width={activeView === 'grid' ? 280 : 200}
                         height={activeView === 'grid' ? 215 : 150}
-                        alt={name}></Image>
+                        alt={data.name}></Image>
                 </Box>
             )}
             {renderContentByView[activeView]}
