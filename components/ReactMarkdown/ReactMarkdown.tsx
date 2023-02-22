@@ -28,15 +28,23 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
         <ReactMarkdownLib
             rehypePlugins={[rehypeRaw]}
             components={{
-                img: ({ src, alt = '', style, className }) => {
+                img: ({ src, alt = '', style, className = '' }) => {
+                    const modifiedClassName = isMobile
+                        ? className?.replace('image-style-align-left', '').replace('image-style-align-right', '')
+                        : className;
                     return (
                         <Image
-                            className={className}
+                            className={modifiedClassName}
                             alt={alt}
                             width={isMobile ? 500 : 640}
                             height={isMobile ? 375 : 480}
                             src={src || ''}
-                            style={{ margin: '0 1.5em', height: 'auto', ...style }}></Image>
+                            style={{
+                                margin: isMobile ? 0 : '0 1.5em',
+                                height: 'auto',
+                                ...style,
+                                ...(isMobile ? { width: '100%' } : {})
+                            }}></Image>
                     );
                 },
                 video: ({ src }) => {
