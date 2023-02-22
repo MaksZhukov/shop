@@ -118,7 +118,8 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
         const {
             data: { data }
         } = await fetchModelBySlug(model, {
-            populate: ['seoSpareParts.images', 'image']
+            populate: ['seoSpareParts.images', 'image'],
+            filters: { brand: { slug: brand } }
         });
         props = { page: { seo: data.seoSpareParts } };
     } else if (brand) {
