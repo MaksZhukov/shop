@@ -427,6 +427,7 @@ const Catalog = ({
                 <Box sx={{ width: { md: 'calc(100% - 250px - 2em)' } }}>
                     <Box
                         marginBottom="0.5em"
+                        marginTop="0"
                         textTransform="uppercase"
                         component="h1"
                         typography={{ xs: 'h5', md: 'h4' }}>
