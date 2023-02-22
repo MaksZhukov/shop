@@ -250,6 +250,10 @@ const Catalog = ({
             setIsClickedFind(false);
         }, 100);
         setIsClickedFind(true);
+
+        if (isTablet) {
+            setIsOpenFilters(false);
+        }
     };
 
     const handleClickChangeView = (view: 'grid' | 'list', position: 'top' | 'bottom') => () => {
