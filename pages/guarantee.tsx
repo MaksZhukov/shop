@@ -30,7 +30,7 @@ const Guarantee = ({ page }: Props) => {
                         title={page.mainLeftImage?.caption}
                         src={page.mainLeftImage?.url}
                         width={page.mainLeftImage?.width}
-                        style={isMobile ? { height: '100%', objectFit: 'cover' } : {}}
+                        style={isMobile ? { height: '100%', width: '100%', objectFit: 'cover' } : {}}
                         height={page.mainLeftImage?.height}
                         alt={page.mainLeftImage?.alternativeText}></Image>
                 </Box>
