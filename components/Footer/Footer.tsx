@@ -54,9 +54,16 @@ const Footer: FC<Props> = ({ footer }) => {
                         flexWrap="wrap"
                         className={styles.footer__item}
                         sx={{ order: { xs: 2 }, width: { md: '25%', xs: '100%' }, padding: { xs: 0, md: '0 1em' } }}>
+                        <Typography
+                            gutterBottom
+                            display={{ xs: 'block', md: 'none' }}
+                            width={'100%'}
+                            textTransform="uppercase">
+                            Мы в соц сетях:
+                        </Typography>
                         {footer.socials?.map((item) => (
                             <ListItemButton
-                                sx={{ width: { xs: '100%', md: '50%' }, padding: '0.5em 0.25em' }}
+                                sx={{ padding: '0.5em 0.25em', width: { xs: 'auto', md: '50%' }, flex: 'initial' }}
                                 component="a"
                                 key={item.id}
                                 href={item.link}
