@@ -1,4 +1,4 @@
-import { FC, isValidElement } from 'react';
+import { FC } from 'react';
 import ReactMarkdownLib from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import getConfig from 'next/config';
@@ -7,8 +7,6 @@ import Typography from 'components/Typography';
 import { Box, Link, useMediaQuery } from '@mui/material';
 import Image from 'components/Image';
 import { Image as IImage } from 'api/types';
-import BlockImages from 'components/BlockImages';
-import styles from './ReactMarkdown.module.scss';
 import classNames from 'classnames';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
