@@ -250,6 +250,10 @@ const Catalog = ({
             setIsClickedFind(false);
         }, 100);
         setIsClickedFind(true);
+
+        if (isTablet) {
+            setIsOpenFilters(false);
+        }
     };
 
     const handleClickChangeView = (view: 'grid' | 'list', position: 'top' | 'bottom') => () => {
@@ -329,20 +333,28 @@ const Catalog = ({
             marginBottom="1em"
             alignItems={{ xs: 'initial', md: 'center' }}
             bgcolor={{ xs: 'initial', md: '#fff' }}>
-            <Button
-                variant="contained"
-                onClick={handleClickChangeView('grid', position)}
-                sx={{ bgcolor: activeView === 'grid' ? 'primary.main' : '#000', display: { xs: 'none', md: 'flex' } }}
-                className={classNames(styles['btn-view'])}>
-                <GridViewIcon fontSize="small" sx={{ color: '#fff' }}></GridViewIcon>
-            </Button>
-            <Button
-                variant="contained"
-                sx={{ bgcolor: activeView === 'list' ? 'primary.main' : '#000', display: { xs: 'none', md: 'flex' } }}
-                onClick={handleClickChangeView('list', position)}
-                className={classNames(styles['btn-view'])}>
-                <MenuIcon fontSize="small" sx={{ color: '#fff' }}></MenuIcon>
-            </Button>
+            <Box display="flex" sx={{ order: { xs: 3, md: 0 }, width: { xs: '100%', md: 'auto' } }}>
+                <Button
+                    variant="contained"
+                    onClick={handleClickChangeView('grid', position)}
+                    sx={{
+                        bgcolor: activeView === 'grid' ? 'primary.main' : '#000',
+                        display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
+                    }}
+                    className={classNames(styles['btn-view'])}>
+                    <GridViewIcon fontSize="small" sx={{ color: '#fff' }}></GridViewIcon>
+                </Button>
+                <Button
+                    variant="contained"
+                    sx={{
+                        bgcolor: activeView === 'list' ? 'primary.main' : '#000',
+                        display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
+                    }}
+                    onClick={handleClickChangeView('list', position)}
+                    className={classNames(styles['btn-view'])}>
+                    <MenuIcon fontSize="small" sx={{ color: '#fff' }}></MenuIcon>
+                </Button>
+            </Box>
             {position === 'top' && (
                 <Button
                     sx={{ display: { xs: 'flex', md: 'none' } }}
@@ -415,6 +427,7 @@ const Catalog = ({
                 <Box sx={{ width: { md: 'calc(100% - 250px - 2em)' } }}>
                     <Box
                         marginBottom="0.5em"
+                        marginTop="0"
                         textTransform="uppercase"
                         component="h1"
                         typography={{ xs: 'h5', md: 'h4' }}>
@@ -435,7 +448,7 @@ const Catalog = ({
                             data.map((item) => (
                                 <ProductItem
                                     width={activeView === 'grid' ? 280 : '100%'}
-                                    height={activeView === 'grid' ? 350 : 150}
+                                    minHeight={activeView === 'grid' ? 350 : 150}
                                     dataFieldsToShow={dataFieldsToShow || []}
                                     activeView={activeView}
                                     key={item.id}

@@ -309,6 +309,7 @@ const Header = observer(({ brands }: Props) => {
 
     const renderProfileMenuItems = (
         <>
+            <Divider />
             {store.user.id
                 ? renterRootMenuBtn({ id: 'profile', name: 'Профиль', path: '/profile', children: [] }, 'mobile', false)
                 : renterRootMenuBtn(
@@ -334,7 +335,6 @@ const Header = observer(({ brands }: Props) => {
                     false,
                     handleClickLogout
                 )}
-            <Divider />
         </>
     );
 
@@ -352,7 +352,6 @@ const Header = observer(({ brands }: Props) => {
                       flex: '1',
                       flexWrap: 'wrap'
                   })}>
-            {isTablet && renderProfileMenuItems}
             {navigation.map((page, index) => {
                 return (
                     <Fragment key={page.id}>
@@ -394,6 +393,7 @@ const Header = observer(({ brands }: Props) => {
                     </Fragment>
                 );
             })}
+            {isTablet && renderProfileMenuItems}
         </Box>
     );
 

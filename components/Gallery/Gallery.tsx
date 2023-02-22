@@ -30,12 +30,19 @@ const Gallery: FC<Props> = ({ page }) => {
             </Typography>
             <Box display="flex" justifyContent="space-around" flexWrap="wrap">
                 {page.images?.map((item, i) => (
-                    <Box onClick={handleClickImage(i)} sx={{ cursor: 'pointer' }} marginBottom="1em" key={item.id}>
+                    <Box
+                        width={{ xs: 150, md: 300 }}
+                        height={{ xs: 115, md: 225 }}
+                        onClick={handleClickImage(i)}
+                        sx={{ cursor: 'pointer' }}
+                        marginBottom="1em"
+                        key={item.id}>
                         <Image
                             title={item.caption}
                             width={300}
                             height={225}
                             src={item.formats?.small?.url || item.url}
+                            style={{ maxHeight: '100%' }}
                             alt={item.alternativeText}></Image>
                     </Box>
                 ))}

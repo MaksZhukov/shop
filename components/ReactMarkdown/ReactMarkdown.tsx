@@ -8,6 +8,8 @@ import { Box, Link, useMediaQuery } from '@mui/material';
 import Image from 'components/Image';
 import { Image as IImage } from 'api/types';
 import BlockImages from 'components/BlockImages';
+import styles from './ReactMarkdown.module.scss';
+import classNames from 'classnames';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -21,28 +23,37 @@ interface Props {
 
 const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} }) => {
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
     return (
         <ReactMarkdownLib
             rehypePlugins={[rehypeRaw]}
             components={{
-                img: ({ src, alt = '', style, className }) => {
+                img: ({ src, alt = '', style, className = '' }) => {
+                    const modifiedClassName = isMobile
+                        ? className?.replace('image-style-align-left', '').replace('image-style-align-right', '')
+                        : className;
                     return (
                         <Image
-                            className={className}
+                            className={modifiedClassName}
                             alt={alt}
                             width={isMobile ? 500 : 640}
                             height={isMobile ? 375 : 480}
                             src={src || ''}
-                            style={{ margin: '0 1.5em', height: 'auto', ...style }}></Image>
+                            style={{
+                                margin: isMobile ? 0 : '0 1.5em',
+                                height: 'auto',
+                                ...style,
+                                ...(isMobile ? { width: '100%' } : {})
+                            }}></Image>
                     );
                 },
                 video: ({ src }) => {
                     return (
                         <ReactPlayer
-                            width={isMobile ? 'auto' : 640}
-                            height={isMobile ? 'auto' : 480}
+                            width={isTablet ? '100%' : 640}
+                            height={isTablet ? 360 : 480}
                             controls
-                            style={{ margin: '1em' }}
+                            style={isTablet ? {} : { margin: '1em' }}
                             url={publicRuntimeConfig.backendLocalUrl + src}></ReactPlayer>
                     );
                 },
@@ -76,6 +87,14 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
                         return <></>;
                     }
                     return <></>;
+                },
+                div: ({ className, children, style = {} }) => {
+                    const { float, ...restStyle } = style;
+                    return (
+                        <Box sx={isTablet && float ? restStyle : style} className={classNames(className)}>
+                            {children}
+                        </Box>
+                    );
                 }
             }}>
             {content}

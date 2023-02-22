@@ -16,24 +16,44 @@ const Guarantee = ({ page }: Props) => {
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     return (
         <>
-            <Box display="flex">
-                <Box maxWidth={389} sx={{ width: { xs: '50%', md: 'initial' } }}>
+            <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }}>
+                <Typography
+                    variant={'h4'}
+                    display={{ xs: 'block', sm: 'none' }}
+                    component="h1"
+                    marginBottom="0.5em"
+                    fontWeight="500">
+                    {page.h1}
+                </Typography>
+                <Box maxWidth={{ xs: 'initial', sm: 390 }} width="100%">
                     <Image
                         title={page.mainLeftImage?.caption}
                         src={page.mainLeftImage?.url}
                         width={page.mainLeftImage?.width}
-                        style={isMobile ? { height: '100%', objectFit: 'cover' } : {}}
+                        style={isMobile ? { height: '100%', width: '100%', objectFit: 'cover' } : {}}
                         height={page.mainLeftImage?.height}
                         alt={page.mainLeftImage?.alternativeText}></Image>
                 </Box>
-                <Box sx={{ marginLeft: { xs: '1em', md: '3em' }, flex: { xs: 1, md: 'initial' } }}>
-                    <Typography variant="h4" component="h1" marginBottom="0.5em" fontWeight="500">
+                <Box
+                    minWidth={250}
+                    sx={{
+                        marginLeft: { xs: '0', sm: '3em' },
+                        flex: { xs: 1, md: 'initial' },
+                        marginTop: { xs: '0.5em', md: 0 }
+                    }}>
+                    <Typography
+                        display={{ xs: 'none', sm: 'block' }}
+                        variant="h4"
+                        component="h1"
+                        marginBottom="0.5em"
+                        fontWeight="500">
                         {page.h1}
                     </Typography>
                     <ReactMarkdown content={page.mainRightText}></ReactMarkdown>
                 </Box>
             </Box>
             <BlockImages
+                withSlider={isMobile}
                 withoutOverlay={isMobile}
                 images={page.images1}
                 sx={{
@@ -55,6 +75,7 @@ const Guarantee = ({ page }: Props) => {
                 <ReactMarkdown content={page.guaranteeNotApplyText}></ReactMarkdown>
             </Typography>
             <BlockImages
+                withSlider={isMobile}
                 withoutOverlay={isMobile}
                 images={page.images1}
                 sx={{

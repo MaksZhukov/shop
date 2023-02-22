@@ -107,7 +107,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
     const handleOpenAutocompleteGeneration = (values: { [key: string]: string | null }) =>
         handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
             fetchGenerations({
-                filters: { model: { slug: values.model as string } },
+                filters: { model: { slug: values.model as string }, brand: { slug: values.brand } },
                 pagination: { limit: API_MAX_LIMIT }
             })
         );
