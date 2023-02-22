@@ -149,7 +149,7 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				onOpen: (values: { [key: string]: string | null }) =>
 					handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
 						fetchGenerations({
-							filters: { model: { name: values.model as string } },
+                            filters: { model: { slug: values.model as string }, brand: { slug: values.brand } },
 							pagination: { limit: API_MAX_LIMIT },
 						})
 					),
