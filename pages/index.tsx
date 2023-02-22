@@ -1,7 +1,5 @@
 import type { NextPage } from 'next';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { Box, Button, CircularProgress, Input, Link, Modal, TextField, useMediaQuery } from '@mui/material';
-
 import { Dispatch, SetStateAction, UIEventHandler, useMemo, useRef, useState, ChangeEvent, KeyboardEvent } from 'react';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';
@@ -151,7 +149,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         setGenerations,
         () =>
             fetchGenerations({
-                filters: { model: { name: values.model } },
+                filters: { model: { slug: values.model as string }, brand: { slug: values.brand } },
                 pagination: { limit: API_MAX_LIMIT }
             })
     );
