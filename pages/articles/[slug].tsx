@@ -20,16 +20,6 @@ const Article: NextPage<Props> = ({ page }) => {
             <Typography component="h1" variant="h4" gutterBottom>
                 {page.name}
             </Typography>
-            <Typography variant="body1" color="text.secondary" gutterBottom>
-                Категория: {page.type}
-            </Typography>
-            <Typography variant="body1" color="text.secondary" gutterBottom>
-                Дата публиации: {new Date(page.createdAt).toLocaleDateString('ru-RU')}{' '}
-                {new Date(page.createdAt).toLocaleTimeString('ru-RU', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })}
-            </Typography>
             <Box>
                 <Box
                     sx={{

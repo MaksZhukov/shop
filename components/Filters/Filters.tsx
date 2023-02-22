@@ -31,10 +31,11 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
         config.forEach((item) => {
             item.forEach((child) => {
                 if (child.id === 'brand') {
-                    newValues[child.id] = brand || null;
+                    newValues[child.id] = brand || router.query.brand || null;
                 } else if (child.id === 'model') {
-                    newValues[child.id] = model ? model.replace('model-', '') : null;
+                    newValues[child.id] = model ? model.replace('model-', '') : router.query.model || null;
                 } else if (router.query[child.id]) {
+                    console.log(router.query[child.id]);
                     newValues[child.id] = router.query[child.id];
                 }
             });

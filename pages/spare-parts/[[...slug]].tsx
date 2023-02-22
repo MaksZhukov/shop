@@ -1,32 +1,11 @@
 import type { NextPage } from 'next';
-import { Dispatch, SetStateAction, UIEventHandler, useEffect, useRef, useState } from 'react';
 import { Brand } from 'api/brands/types';
-import { ApiResponse, Filters, SEO } from 'api/types';
-import { fetchModelBySlug, fetchModels } from 'api/models/models';
+import { fetchModelBySlug } from 'api/models/models';
 import { getPageProps } from 'services/PagePropsService';
-import { fetchCars } from 'api/cars/cars';
-import { fetchArticles } from 'api/articles/articles';
 import { fetchPage } from 'api/pages';
-import { DefaultPage, PageMain, PageProduct, PageProductSparePart } from 'api/pages/types';
-import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
-import Catalog from 'components/Catalog';
-import { getParamByRelation } from 'services/ParamsService';
-import { getSparePartsFiltersConfig } from 'components/Filters/config';
-import { CircularProgress } from '@mui/material';
-import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
-import { EngineVolume } from 'api/engineVolumes/types';
-import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
-import { fetchGenerations } from 'api/generations/generations';
-import { Model } from 'api/models/types';
-import { AxiosResponse } from 'axios';
-import { useDebounce, useThrottle } from 'rooks';
-import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { useSnackbar } from 'notistack';
-import { KindSparePart } from 'api/kindSpareParts/types';
-import { Generation } from 'api/generations/types';
+import { DefaultPage, PageProduct, PageProductSparePart } from 'api/pages/types';
+import { fetchBrandBySlug } from 'api/brands/brands';
 import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
-import { useRouter } from 'next/router';
-import { API_MAX_LIMIT } from 'api/constants';
 import CatalogSpareParts from 'components/CatalogSpareParts';
 import Product from 'components/Product';
 import { getProductPageSeo } from 'services/ProductService';
@@ -118,7 +97,8 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
         const {
             data: { data }
         } = await fetchModelBySlug(model, {
-            populate: ['seoSpareParts.images', 'image']
+            populate: ['seoSpareParts.images', 'image'],
+            filters: { brand: { slug: brand } }
         });
         props = { page: { seo: data.seoSpareParts } };
     } else if (brand) {
