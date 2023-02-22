@@ -303,7 +303,7 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
     );
 
     const renderBar = (position: 'top' | 'bottom') => (
-        <Box gap={'0.5em'} display="flex" padding="0.5em" marginBottom="1em" bgcolor={{ xs: 'initial', md: '#fff' }}>
+        <Box gap={'0.25em'} display="flex" padding="0.5em" marginBottom="1em" bgcolor={{ xs: 'initial', md: '#fff' }}>
             {position === 'top' && (
                 <Button
                     sx={{ display: { xs: 'flex', md: 'none' } }}
