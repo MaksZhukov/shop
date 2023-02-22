@@ -1,4 +1,4 @@
-import { Link, Grid } from '@mui/material';
+import { Link, Grid, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import Typography from 'components/Typography';
 import NextLink from 'next/link';
@@ -11,13 +11,18 @@ interface Props {
     activeView?: 'grid' | 'list';
     data: Car;
     width?: number | string;
-    height?: number | string;
+    minHeight?: number | string;
 }
 
-const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '100%', height = 'auto' }: Props) => {
+const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '100%', minHeight = 'auto' }: Props) => {
+    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     const renderContentByView = {
         list: (
-            <Box padding="0.5em 1em" display="flex" flexDirection="column">
+            <Box
+                padding="0.5em 1em"
+                width={{ xs: 'calc(100% - 150px)', sm: 'initial' }}
+                display="flex"
+                flexDirection="column">
                 <NextLink href={`/awaiting-cars/` + data.slug}>
                     <Link
                         variant="h6"
@@ -68,13 +73,13 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
     return (
         <Box
             marginBottom="1em"
-            height={height}
+            minHeight={minHeight}
             bgcolor="#fff"
             key={data.id}
             display={activeView === 'list' ? 'flex' : 'initial'}
             width={width}>
             {data.images ? (
-                <Box width={activeView === 'list' ? 200 : '100%'}>
+                <Box width={activeView === 'list' ? (isMobile ? 150 : 200) : '100%'}>
                     <Slider autoplay autoplaySpeed={5000} arrows={false}>
                         {data.images?.map((image) => (
                             <Image
@@ -87,12 +92,12 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
                     </Slider>
                 </Box>
             ) : (
-                <Box>
+                <Box width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}>
                     <Image
                         title={data.name}
                         style={{ objectFit: 'cover' }}
                         src=""
-                        width={activeView === 'grid' ? 280 : 200}
+                        width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
                         height={activeView === 'grid' ? 215 : 150}
                         alt={data.name}></Image>
                 </Box>
