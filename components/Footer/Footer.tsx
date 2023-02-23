@@ -1,4 +1,4 @@
-import { Typography, Grid, ListItemButton, Box, useMediaQuery } from '@mui/material';
+import { Typography, Grid, ListItemButton, Box, useMediaQuery, Link } from '@mui/material';
 import { Container } from '@mui/system';
 import styles from './Footer.module.scss';
 import { Footer as IFooter } from 'api/layout/types';
@@ -17,6 +17,7 @@ import OKShareButton from 'react-share/lib/OKShareButton';
 import OKIcon from 'react-share/lib/OKIcon';
 import LivejournalShareButton from 'react-share/lib/LivejournalShareButton';
 import LivejournalIcon from 'react-share/lib/LivejournalIcon';
+import NextLink from 'next/link';
 
 interface Props {
     footer: IFooter;
@@ -47,6 +48,11 @@ const Footer: FC<Props> = ({ footer }) => {
                             paddingX: { xs: 0, md: '1.5em' }
                         }}>
                         <ReactMarkdown content={footer.firstBlock}></ReactMarkdown>
+                        <NextLink href={'/privacy'}>
+                            <Link color="#fff" component="span">
+                                Политика конфиденциальности
+                            </Link>
+                        </NextLink>
                     </Box>
 
                     <Box
