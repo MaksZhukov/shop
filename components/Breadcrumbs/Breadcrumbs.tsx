@@ -32,7 +32,8 @@ let PATH_NAMES = {
     about: 'О нас',
     payment: 'Оплата',
     reviews: 'Отзывы',
-    sitemap: 'Карта сайта'
+    sitemap: 'Карта сайта',
+    privacy: 'Политика конфидециальности'
 };
 
 interface Props {
