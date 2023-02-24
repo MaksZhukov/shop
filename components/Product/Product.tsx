@@ -21,6 +21,8 @@ import Buy from 'components/Buy';
 import styles from './product.module.scss';
 import { isTireBrand } from 'services/ProductService';
 
+
+
 interface Props {
     page: PageProduct & { textAfterDescription: string };
     data: IProduct;
