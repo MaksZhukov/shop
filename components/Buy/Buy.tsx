@@ -28,8 +28,8 @@ const Buy: FC<Props> = ({ sx, product }) => {
                 test: true,
                 transaction_type: 'payment',
                 token,
-                public_key:
-                    'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvh9glzn7wvBQtt7+6WP4PZeVrqTBmspkCCyQwVKoPKfK2LBHt0KMmFOquJNuxLj4nO3tVE0oEE7ZJhPuUkoh0HHqQjkWHneJqp7dA08UeQHQ09Pg/GjTvA1Knzd+hb/Bv9VxCNuOO3Ov00tHJ1HJZypT5L9oPN5zv8XaZnj56gXMmvqc2Lt8Avxil2u2EIOgyp7xlVVk3Q/Q41RHabAD/Ajikl8H7yWadWCOf2sGje6mgr6T4gBP4MawGeknzEUFiP8wBoP79APTvDaYU2wtp+Z+faPctH7LlpSdhIUyFj17/d400Zbvf7nJMklATVsz/7b/+7a4j6oSt3GE1sJzRQIDAQAB',
+                // public_key:
+                //     'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvh9glzn7wvBQtt7+6WP4PZeVrqTBmspkCCyQwVKoPKfK2LBHt0KMmFOquJNuxLj4nO3tVE0oEE7ZJhPuUkoh0HHqQjkWHneJqp7dA08UeQHQ09Pg/GjTvA1Knzd+hb/Bv9VxCNuOO3Ov00tHJ1HJZypT5L9oPN5zv8XaZnj56gXMmvqc2Lt8Avxil2u2EIOgyp7xlVVk3Q/Q41RHabAD/Ajikl8H7yWadWCOf2sGje6mgr6T4gBP4MawGeknzEUFiP8wBoP79APTvDaYU2wtp+Z+faPctH7LlpSdhIUyFj17/d400Zbvf7nJMklATVsz/7b/+7a4j6oSt3GE1sJzRQIDAQAB',
                 order: {
                     amount: product.price * 100,
                     currency: 'BYN',
