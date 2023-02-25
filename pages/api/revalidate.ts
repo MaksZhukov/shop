@@ -16,6 +16,8 @@ const PAGES = [
 	'/delivery',
 	'/contacts',
 	'/buyback-cars',
+    '/privacy',
+    '/sitemap'
 ];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

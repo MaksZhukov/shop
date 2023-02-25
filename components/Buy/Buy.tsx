@@ -18,23 +18,7 @@ const Buy: FC<Props> = ({ sx, product }) => {
         } = await fetchOrderCheckout(product.id, product.type);
         const params = {
             checkout_url: 'https://checkout.bepaid.by',
-            token,
-            checkout: {
-                iframe: true,
-                test: true,
-                transaction_type: 'payment',
-                order: {
-                    amount: (product.discountPrice || product.price) * 100,
-                    currency: 'BYN',
-                    description: product.h1
-                },
-                settings: {
-                    language: 'ru',
-                    customer_fields: {
-                        visible: ['first_name', 'phone', 'email']
-                    }
-                }
-            }
+            token
         };
         new BeGateway(params).createWidget();
     };
