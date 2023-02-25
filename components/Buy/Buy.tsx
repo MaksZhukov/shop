@@ -1,12 +1,8 @@
 import Button from '@mui/material/Button';
 import { SxProps } from '@mui/material';
 import { Product } from 'api/types';
-import { FC, useState } from 'react';
-import { useSnackbar } from 'notistack';
+import { FC } from 'react';
 import { fetchOrderCheckout } from 'api/orders';
-import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
 
 interface Props {
     sx?: SxProps;
@@ -47,7 +43,6 @@ const Buy: FC<Props> = ({ sx, product }) => {
             <Button sx={sx} onClick={handleClickBuy} variant="contained">
                 Купить
             </Button>
-            {/* <Modal open={isModalOpened}></Modal> */}
         </>
     );
 };
