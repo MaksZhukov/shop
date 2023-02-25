@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { Brand } from 'api/brands/types';
-import { fetchModelBySlug } from 'api/models/models';
+import { fetchModelBySlug, fetchModels } from 'api/models/models';
 import { getPageProps } from 'services/PagePropsService';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageProduct, PageProductSparePart } from 'api/pages/types';
