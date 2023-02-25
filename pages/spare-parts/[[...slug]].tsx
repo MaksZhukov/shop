@@ -19,7 +19,7 @@ interface Props {
 }
 
 const SpareParts: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
-    if (data && relatedProducts) {
+    if (data) {
         return (
             <Product
                 data={data}
@@ -68,18 +68,19 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             fetchPage<PageProduct>('product', { populate: ['whyWeBestImages'] })(),
             fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
         ]);
-        const {
-            data: { data: relatedProducts }
-        } = await fetchSpareParts({
-            filters: {
-                price: { $gt: 0 },
-                id: {
-                    $ne: data.id
-                },
-                model: data.model?.id || ''
-            },
-            populate: ['images', 'brand']
-        });
+
+        // const {
+        //     data: { data: relatedProducts }
+        // } = await fetchSpareParts({
+        //     filters: {
+        //         price: { $gt: 0 },
+        //         id: {
+        //             $ne: data.id
+        //         },
+        //         model: data.model?.id || ''
+        //     },
+        //     populate: ['images', 'brand']
+        // });
         const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
         let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
         props = {
@@ -88,9 +89,9 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
                 ...page,
                 ...pageSparePart,
                 textAfterDescription: pageSparePart.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-                seo: getProductPageSeo(pageSparePart.seo, data)
+                seo: {}
             },
-            relatedProducts
+            relatedProducts: []
         };
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
