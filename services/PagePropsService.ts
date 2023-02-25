@@ -31,7 +31,6 @@ export const getPageProps =
             props.brands = brandsResponse.data.data;
             props.layout = layoutResponse.data.data;
         } catch (err: any) {
-            console.log(err);
             if (!axios.isAxiosError(err)) {
                 console.log(err);
             }
