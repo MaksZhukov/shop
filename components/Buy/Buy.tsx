@@ -40,7 +40,7 @@ const Buy: FC<Props> = ({ sx, product }) => {
                     customer_fields: {
                         visible: ['first_name', 'phone', 'email']
                     },
-                    notification_url: `${publicRuntimeConfig.backendUrl}/api/orders?token=${token}`
+                    notification_url: `${publicRuntimeConfig.backendUrl}/api/orders/notification`
                 }
             },
             closeWidget: (status: string) => {
