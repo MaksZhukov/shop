@@ -21,8 +21,6 @@ import Buy from 'components/Buy';
 import styles from './product.module.scss';
 import { isTireBrand } from 'services/ProductService';
 
-
-
 interface Props {
     page: PageProduct & { textAfterDescription: string };
     data: IProduct;
@@ -172,7 +170,10 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                         href="tel:+375297804780">
                         Позвонить
                     </Button>
-                    {/* <Buy product={data} sx={{ padding: '0.5em 4em', fontSize: '1em', marginBottom: '0.5em' }}></Buy> */}
+
+                    {data.id === 41283 && (
+                        <Buy product={data} sx={{ padding: '0.5em 4em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
+                    )}
                 </Box>
             </Box>
             <Typography withSeparator gutterBottom marginY="1em" component="h2" variant="h5" fontWeight="500">
