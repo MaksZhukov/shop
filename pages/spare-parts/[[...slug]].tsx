@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { Brand } from 'api/brands/types';
-import { fetchModelBySlug } from 'api/models/models';
+import { fetchModelBySlug, fetchModels } from 'api/models/models';
 import { getPageProps } from 'services/PagePropsService';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageProduct, PageProductSparePart } from 'api/pages/types';
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const SpareParts: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
-    if (data) {
+    if (data && relatedProducts) {
         return (
             <Product
                 data={data}
@@ -68,19 +68,18 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             fetchPage<PageProduct>('product', { populate: ['whyWeBestImages'] })(),
             fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
         ]);
-
-        // const {
-        //     data: { data: relatedProducts }
-        // } = await fetchSpareParts({
-        //     filters: {
-        //         price: { $gt: 0 },
-        //         id: {
-        //             $ne: data.id
-        //         },
-        //         model: data.model?.id || ''
-        //     },
-        //     populate: ['images', 'brand']
-        // });
+        const {
+            data: { data: relatedProducts }
+        } = await fetchSpareParts({
+            filters: {
+                price: { $gt: 0 },
+                id: {
+                    $ne: data.id
+                },
+                model: data.model?.id || ''
+            },
+            populate: ['images', 'brand']
+        });
         const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
         let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
         props = {
@@ -89,9 +88,9 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
                 ...page,
                 ...pageSparePart,
                 textAfterDescription: pageSparePart.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-                seo: {}
+                seo: getProductPageSeo(pageSparePart.seo, data)
             },
-            relatedProducts: []
+            relatedProducts
         };
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
