@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { SxProps } from '@mui/material';
 import { Product } from 'api/types';
@@ -10,15 +11,19 @@ interface Props {
 }
 
 const Buy: FC<Props> = ({ sx, product }) => {
+    const [token, setToken] = useState<string>('');
     const handleClickBuy = async () => {
-        const {
-            data: {
-                data: { token }
-            }
-        } = await fetchOrderCheckout(product.id, product.type);
+        let newToken = token;
+        if (!newToken) {
+            const {
+                data: { data }
+            } = await fetchOrderCheckout(product.id, product.type);
+            newToken = data.token;
+            setToken(newToken);
+        }
         const params = {
             checkout_url: 'https://checkout.bepaid.by',
-            token
+            token: newToken
         };
         new BeGateway(params).createWidget();
     };
