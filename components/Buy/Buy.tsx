@@ -5,7 +5,6 @@ import { FC, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { fetchOrderCheckout } from 'api/orders';
 import getConfig from 'next/config';
-import axios from 'axios';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -15,14 +14,12 @@ interface Props {
 }
 
 const Buy: FC<Props> = ({ sx, product }) => {
-    const { enqueueSnackbar } = useSnackbar();
     const handleClickBuy = async () => {
         const {
             data: {
                 data: { token }
             }
         } = await fetchOrderCheckout(product.id, product.type);
-
         const params = {
             checkout_url: 'https://checkout.bepaid.by',
             token,
@@ -39,18 +36,7 @@ const Buy: FC<Props> = ({ sx, product }) => {
                     language: 'ru',
                     customer_fields: {
                         visible: ['first_name', 'phone', 'email']
-                    },
-                    notification_url: `${publicRuntimeConfig.backendUrl}/api/orders/notification`
-                }
-            },
-            closeWidget: (status: string) => {
-                if (status === 'successful') {
-                    // axios.post(`${publicRuntimeConfig.backendUrl}/api/orders?token=${token}`);
-                    enqueueSnackbar('Вы успешно заказали товар. Вскоре с вами свяжуться', { variant: 'success' });
-                } else if (status === 'failed') {
-                    enqueueSnackbar('Что-то пошло не так, попробуйте ещё раз', { variant: 'warning' });
-                } else if (status === 'error') {
-                    enqueueSnackbar('Что-то пошло не так, попробуйте ещё раз', { variant: 'warning' });
+                    }
                 }
             }
         };
