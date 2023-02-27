@@ -174,7 +174,11 @@ const Contacts = ({ page }: Props) => {
             <Typography component="h2" variant="h5" textTransform="uppercase" marginBottom="1em">
                 {page.requisitesTitle}
             </Typography>
-            <BlockImages withSlider={isMobile} images={page.requisites}></BlockImages>
+            <BlockImages
+                withSlider={isMobile}
+                withoutOverlay
+                sx={{ margin: 0, padding: 0 }}
+                images={page.requisites}></BlockImages>
             <BlockImages sx={{ marginBottom: '-2em' }} images={page.images}></BlockImages>
         </>
     );
