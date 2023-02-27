@@ -28,7 +28,7 @@ const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSlider = f
                                 alt={item.alternativeText}
                                 width={390}
                                 height={270}
-                                style={{ height: 'auto' }}
+                                style={{ height: 'auto', margin: 'auto' }}
                                 src={item.formats?.small?.url || item.url}></Image>
                         </Box>
                     ))}
