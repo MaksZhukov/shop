@@ -182,4 +182,4 @@ const Contacts = ({ page }: Props) => {
 
 export default Contacts;
 
-export const getStaticProps = getPageProps(fetchPage('contact', { populate: ['seo', 'images'] }));
+export const getStaticProps = getPageProps(fetchPage('contact', { populate: ['seo', 'images', 'requisites'] }));
