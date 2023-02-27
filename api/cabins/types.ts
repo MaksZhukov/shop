@@ -2,6 +2,7 @@ import { Brand } from 'api/brands/types';
 import { Generation } from 'api/generations/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { Model } from 'api/models/types';
+import { Order } from 'api/orders/types';
 import { Image, ProductSnippets, SEO } from 'api/types';
 
 export interface Cabin {
@@ -24,4 +25,5 @@ export interface Cabin {
 	seo?: SEO;
 	snippets: ProductSnippets;
 	year: string;
+    order?: Order;
 }

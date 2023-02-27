@@ -29,6 +29,7 @@ interface Props {
 }
 
 const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
+    console.log(data);
     const [sliderBig, setSliderBig] = useState<Slider | null>(null);
     const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
@@ -170,7 +171,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                         href="tel:+375297804780">
                         Позвонить
                     </Button>
-
+                    {/* {!data.order && 'hello'} */}
                     {data.id === 41283 && (
                         <Buy product={data} sx={{ padding: '0.5em 4em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
                     )}
