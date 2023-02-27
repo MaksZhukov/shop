@@ -79,6 +79,8 @@ export type PageContacts = {
     askText: string;
     content: string;
     images?: Image[];
+    requisitesTitle: string;
+    requisites?: Image[];
 };
 
 export type PageDelivery = {
@@ -117,27 +119,27 @@ export type PageAbout = {
     h1: string;
     mainImageLeft: Image;
     mainTextRight: string;
-    images1:Image[];
+    images1: Image[];
     whyNeedServicesTitle: string;
-    whyNeedServicesText:string;
+    whyNeedServicesText: string;
     images2: Image[];
     whyNeedServicesTextAfterImages2: string;
-    mainPrinciplesTitle:string;
-    mainPrinciplesTextLeft:string;
+    mainPrinciplesTitle: string;
+    mainPrinciplesTextLeft: string;
     mainPrinciplesImageRight: Image;
     images3: Image[];
     mainPrinciplesTextAfterImages3: string;
-    nuancesTitle:string;
-    nuancesText:string;
+    nuancesTitle: string;
+    nuancesText: string;
     images4: Image[];
     pricesTitle: string;
     pricesLeftImage: Image;
     pricesRightText: string;
-    content:string;
-}
+    content: string;
+};
 
 export type PageProduct = {
-    whyWeBestImages: Image[]
+    whyWeBestImages: Image[];
 };
 
 export type PageProductTire = {
