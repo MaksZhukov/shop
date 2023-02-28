@@ -18,6 +18,7 @@ import {
     Product as IProduct,
     ProductType
 } from 'api/types';
+import Head from 'next/head';
 import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import CarouselProducts from 'components/CarouselProducts';
@@ -33,6 +34,9 @@ import Buy from 'components/Buy';
 import styles from './product.module.scss';
 import { isTireBrand } from 'services/ProductService';
 import GalleryImages from 'components/GalleryImages/GalleryImages';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
+const { publicRuntimeConfig } = getConfig();
 
 interface Props {
     page: PageProduct & { textAfterDescription: string };
@@ -46,6 +50,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
     const [sliderSmall, setSliderSmall] = useState<Slider | null>(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+    const router = useRouter();
 
     let brandText =
         data.brand && isTireBrand(data.brand)
@@ -110,7 +115,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
             )}
         </>
     );
-
+    console.log(router);
     return (
         <>
             <Box display="flex" marginTop="3em" gap={'2em'} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
