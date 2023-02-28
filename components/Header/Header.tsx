@@ -72,7 +72,6 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
             },
             { name: 'Отзывы', path: '/reviews', id: 'reviews' },
             { name: 'Вакансии', path: '/vacancies', id: 'vacancy' },
-            { name: 'Карта сайта', path: '/sitemap', id: 'sitemap' },
             { name: 'Эвакуатор', path: 'https://dostavka-auto.by/', target: '_blank', id: 'towTruck' }
         ],
         id: 'aboutUs'

@@ -103,7 +103,7 @@ const Footer: FC<Props> = ({ footer }) => {
                             padding: { xs: 0, md: '0 1.5em 0 3em' }
                         }}>
                         <ReactMarkdown content={footer.fourthBlock}></ReactMarkdown>
-                        <Box>
+                        <Box marginBottom="0.5em">
                             <Typography>Поделиться:</Typography>
                             <TwitterShareButton
                                 className={styles.share}
@@ -144,6 +144,11 @@ const Footer: FC<Props> = ({ footer }) => {
                                 <LivejournalIcon size={25}></LivejournalIcon>
                             </LivejournalShareButton>
                         </Box>
+                        <NextLink href={'/sitemap'}>
+                            <Link color="#fff" component="span">
+                                Карта сайта
+                            </Link>
+                        </NextLink>
                     </Box>
                 </Box>
                 <Box overflow={{ xs: 'auto', md: 'initial' }}>
@@ -155,6 +160,9 @@ const Footer: FC<Props> = ({ footer }) => {
                         width={1452}
                         style={isTablet ? { maxWidth: 'initial' } : {}}
                         height={100}></Image>
+                </Box>
+                <Box color="#fff">
+                    <ReactMarkdown content={footer.textAfterPayments}></ReactMarkdown>
                 </Box>
             </Container>
         </Box>
