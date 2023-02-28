@@ -23,6 +23,8 @@ const getOGType = (url: string) => {
         return 'Статья';
     } else if (url.match(/articles\//)) {
         return 'Статьи';
+    } else {
+        return 'Страница';
     }
 };
 
@@ -40,7 +42,7 @@ const HeadSEO: FC<Props> = ({ title, description, keywords, image }) => {
             <meta property="og:type" content={getOGType(router.asPath)} />
             <meta
                 property="og:image"
-                content={image ? publicRuntimeConfig.backendLocalUrl + image.url : origin + '/photo.jpg'}
+                content={image ? publicRuntimeConfig.backendUrl + image.url : origin + '/photo.jpg'}
             />
             <meta property="twitter:title" content={title} />
             <meta property="twitter:description" content={description} />
