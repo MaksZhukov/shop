@@ -576,27 +576,16 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						{page.popularBrandsTitle}
 					</Typography>
 				</Box>
-				{isMobile ? (
-					<Box paddingX='1em' marginBottom='2em'>
-						<Slider slidesToShow={2}>
-							{brands.map((item) => (
-								<WhiteBox marginX='auto' width={137} padding='1em 0.5em' key={item.id}>
-									<LinkWithImage
-										width={100}
-										height={40}
-										caption={item.name}
-										link={`/spare-parts/${item.slug}`}
-										image={item.image}
-										typographyProps={{ fontWeight: 'bold', variant: 'body1' }}
-									></LinkWithImage>
-								</WhiteBox>
-							))}
-						</Slider>
-					</Box>
-				) : (
-					<Box display='flex' marginBottom='5em' gap={'0.5em'} flexWrap='wrap'>
+				<Box paddingX='1em' marginBottom='2em'>
+					<Slider rows={isMobile ? 1 : 2} slidesToShow={isMobile ? 2 : isTablet ? 4 : 7}>
 						{brands.map((item) => (
-							<WhiteBox width={137} padding='1em 0.5em' key={item.id}>
+							<WhiteBox
+								marginX='auto'
+								marginBottom={{ xs: 0, sm: '1em' }}
+								width={137}
+								padding='1em 0'
+								key={item.id}
+							>
 								<LinkWithImage
 									width={100}
 									height={40}
@@ -607,8 +596,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 								></LinkWithImage>
 							</WhiteBox>
 						))}
-					</Box>
-				)}
+					</Slider>
+				</Box>
+
 				<Box
 					display='flex'
 					gap='3em'
