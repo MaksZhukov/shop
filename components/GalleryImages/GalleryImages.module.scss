@@ -1,0 +1,16 @@
+.slider {
+	:global {
+		.slick-prev:before,
+		.slick-next:before {
+			font-size: 30px;
+			color: #fff;
+		}
+		.slick-prev {
+			left: -35px;
+		}
+		// .slick-slide:active,
+		// .slick-slide:focus {
+		// 	outline: none;
+		// }
+	}
+}
