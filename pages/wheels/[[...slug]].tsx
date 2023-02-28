@@ -41,6 +41,10 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
                     {
                         text: 'ET вылет',
                         value: data.diskOffset?.name
+                    },
+                    {
+                        text: 'Описание',
+                        value: data.description
                     }
                 ]}
                 page={page as PageProduct & PageProductWheel}
