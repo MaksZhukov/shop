@@ -104,6 +104,41 @@ function MyApp({
         </>
     );
 
+    const getHeadSEOImage = () => {
+        let image = null;
+        if (restPageProps.data) {
+            Object.keys(restPageProps.data).forEach((key) => {
+                if (key.includes('image')) {
+                    image =
+                        Array.isArray(restPageProps.data[key]) && restPageProps.data[key][0]?.url
+                            ? restPageProps.data[key][0]
+                            : restPageProps.data[key]?.url
+                            ? restPageProps.data[key]
+                            : null;
+                }
+            });
+            if (image) {
+                return image;
+            }
+        }
+        if (restPageProps.page) {
+            Object.keys(restPageProps.page).forEach((key) => {
+                if (key.includes('image')) {
+                    image =
+                        Array.isArray(restPageProps.page[key]) && restPageProps.page[key][0]?.url
+                            ? restPageProps.page[key][0]
+                            : restPageProps.page[key]?.url
+                            ? restPageProps.page[key]
+                            : null;
+                }
+            });
+            if (image) {
+                return image;
+            }
+        }
+        return image;
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Provider store={store}>
@@ -120,7 +155,8 @@ function MyApp({
                         <HeadSEO
                             title={restPageProps.page?.seo?.title}
                             description={restPageProps.page?.seo?.description}
-                            keywords={restPageProps.page?.seo?.keywords}></HeadSEO>
+                            keywords={restPageProps.page?.seo?.keywords}
+                            image={getHeadSEOImage()}></HeadSEO>
                         <Header brands={restPageProps.brands}></Header>
                         <RouteShield>
                             <Content>
