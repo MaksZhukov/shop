@@ -9,7 +9,7 @@ interface Props {
     title?: string;
     description?: string;
     keywords?: string;
-    image?: Image;
+    image?: Image | null;
 }
 
 const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
