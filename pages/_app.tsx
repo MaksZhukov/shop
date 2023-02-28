@@ -108,7 +108,7 @@ function MyApp({
         let image = null;
         if (restPageProps.data) {
             Object.keys(restPageProps.data).forEach((key) => {
-                if (key.includes('image')) {
+                if (key.includes('image') || key.includes('banner')) {
                     image =
                         Array.isArray(restPageProps.data[key]) && restPageProps.data[key][0]?.url
                             ? restPageProps.data[key][0]
