@@ -31,5 +31,5 @@ export interface SparePart {
     engine?: string;
     fuel: typeof FUELS;
     engineNumber: string;
-    order?: Order;
+    sold: boolean;
 }

@@ -13,7 +13,17 @@ export const getPageProps =
         };
         try {
             const [brandsResponse, layoutResponse, response, ...restResponses] = await Promise.all([
-                fetchBrands({ populate: ['seo.images', 'image'], pagination: { limit: API_UN_LIMIT } }),
+                fetchBrands({
+                    populate: ['seo.images', 'image'],
+                    pagination: { limit: API_UN_LIMIT },
+                    filters: {
+                        spareParts: {
+                            id: {
+                                $notNull: true
+                            }
+                        }
+                    }
+                }),
                 fetchLayout(),
                 ...(fetchPage ? [fetchPage()] : []),
                 ...functions.map((func) => func(context))
