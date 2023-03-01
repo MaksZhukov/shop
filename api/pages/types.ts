@@ -9,6 +9,7 @@ export type DefaultPage = {
 export type PageMain = {
     seo: SEO | null;
     banner?: Image;
+    bannerMobile?: Image;
     h1: string;
     subH1: string;
     titleCategories: string;

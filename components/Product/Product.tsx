@@ -242,7 +242,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                         href="tel:+375297804780">
                         Позвонить
                     </Button>
-                    {/* {!data.order && 'hello'} */}
+                    {/* {!data.sold && 'hello'} */}
                     {data.id === 41283 && (
                         <Buy product={data} sx={{ padding: '0.5em 4em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
                     )}
@@ -281,13 +281,13 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 variant="h5">
                 Мы осуществляем доставку во все <br></br> населенные пункты беларуси
             </Typography>
-            {renderWhyWeBest(whyWeBestImages2)}
-            <Typography>
+            <Typography marginBottom="2em">
                 Наши Запчасти б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в следующих городах
                 Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем что работаем во всех
                 городах и деревнях, просто доставка займет немного больше времени. Будьте уверены, мы приложим все силы,
                 что бы ваш товар - {data.h1} был доставлен максимально быстро.
             </Typography>
+            {renderWhyWeBest(whyWeBestImages2)}
             {brandText && <ReactMarkdown content={brandText}></ReactMarkdown>}
             <GalleryImages
                 images={data.images}

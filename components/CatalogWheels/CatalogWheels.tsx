@@ -3,7 +3,6 @@ import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
 import { ApiResponse, Filters, SEO } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
-import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
 import { fetchModelBySlug, fetchModels } from 'api/models/models';
 import { Brand } from 'api/brands/types';
 import { Model } from 'api/models/types';

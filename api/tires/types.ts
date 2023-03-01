@@ -27,5 +27,5 @@ export interface Tire {
     images: Image[];
     seo?: SEO;
     snippets?: ProductSnippets;
-    order?: Order;
+    sold: boolean;
 }
