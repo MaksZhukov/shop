@@ -153,31 +153,33 @@ const ProductItem = ({
             key={data.id}
             display={activeView === 'list' ? 'flex' : 'initial'}
             width={width}>
-            {data.images ? (
-                <Box width={activeView === 'list' ? (isMobile ? 150 : 200) : '100%'}>
-                    <Slider autoplay autoplaySpeed={5000} arrows={false}>
-                        {data.images?.map((image) => (
-                            <Image
-                                key={image.id}
-                                title={image.caption}
-                                width={activeView === 'grid' ? 280 : 200}
-                                height={activeView === 'grid' ? 215 : 150}
-                                alt={image.alternativeText}
-                                src={image.url}></Image>
-                        ))}
-                    </Slider>
-                </Box>
-            ) : (
-                <Box>
-                    <Image
-                        title={data.name}
-                        style={{ objectFit: 'cover', maxWidth: '100%', margin: 'auto' }}
-                        src=""
-                        width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
-                        height={activeView === 'grid' ? 215 : 150}
-                        alt={data.name}></Image>
-                </Box>
-            )}
+            <NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
+                {data.images ? (
+                    <Box width={activeView === 'list' ? (isMobile ? 150 : 200) : '100%'}>
+                        <Slider autoplay autoplaySpeed={5000} arrows={false}>
+                            {data.images?.map((image) => (
+                                <Image
+                                    key={image.id}
+                                    title={image.caption}
+                                    width={activeView === 'grid' ? 280 : 200}
+                                    height={activeView === 'grid' ? 215 : 150}
+                                    alt={image.alternativeText}
+                                    src={image.url}></Image>
+                            ))}
+                        </Slider>
+                    </Box>
+                ) : (
+                    <Box>
+                        <Image
+                            title={data.name}
+                            style={{ objectFit: 'cover', maxWidth: '100%', margin: 'auto' }}
+                            src=""
+                            width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
+                            height={activeView === 'grid' ? 215 : 150}
+                            alt={data.name}></Image>
+                    </Box>
+                )}
+            </NextLink>
             {renderContentByView[activeView]}
         </Box>
     );
