@@ -111,7 +111,7 @@ const Catalog = ({
                     }
                 } = await fetchData({
                     filters: {
-                        price: { $gt: 0 },
+                        sold: { $eq: false },
                         ...(searchValue ? { h1: { $contains: searchValue } } : {}),
                         ...(generateFiltersByQuery ? generateFiltersByQuery(values) : {})
                     },
@@ -159,8 +159,8 @@ const Catalog = ({
                             sort: 'createdAt:desc',
                             populate: ['images', 'brand'],
                             filters: {
-                                price: {
-                                    $gt: 0
+                                sold: {
+                                    $eq: false
                                 },
                                 createdAt: {
                                     $gte: date.setDate(date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT)
