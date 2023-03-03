@@ -29,14 +29,14 @@ const ProductItem = ({
     const renderContentByView = {
         list: (
             <Box
-                padding="0.5em 1em"
-                display="flex"
-                flexDirection="column"
+                padding='0.5em 1em'
+                display='flex'
+                flexDirection='column'
                 width={{ xs: 'calc(100% - 150px)', sm: 'initial' }}>
                 <NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
                     <Link
                         typography={'h6'}
-                        alignItems="center"
+                        alignItems='center'
                         sx={{
                             color: '#000',
                             display: '-webkit-box',
@@ -45,17 +45,17 @@ const ProductItem = ({
                             overflow: 'hidden',
                             textOverflow: 'ellipsis'
                         }}
-                        color="secondary"
-                        component="span"
-                        underline="hover"
-                        fontWeight="500">
+                        color='secondary'
+                        component='span'
+                        underline='hover'
+                        fontWeight='500'>
                         {data.name}
                     </Link>
                 </NextLink>
                 <Grid sx={{ display: { xs: 'none', md: 'flex' } }} columnSpacing={2} container>
                     {dataFieldsToShow.map((item) => (
                         <Grid key={item.id} item>
-                            <Typography fontWeight="500" component="div" variant="subtitle1">
+                            <Typography fontWeight='500' component='div' variant='subtitle1'>
                                 {item.name}
                             </Typography>
                             {typeof data[item.id as keyof Product] === 'object' &&
@@ -66,29 +66,32 @@ const ProductItem = ({
                         </Grid>
                     ))}
                 </Grid>
-                <Box display="flex" marginTop="0.5em">
+                <Box display='flex' marginTop='0.5em' flexWrap='wrap'>
                     {!!data.discountPrice && (
-                        <Typography fontWeight="bold" variant="h5" marginRight="0.5em" color="secondary">
-                            {data.discountPrice} руб{' '}
-                        </Typography>
+                        <>
+                            <Typography variant='h6'>Скидка:</Typography>
+                            <Typography fontWeight='bold' variant='h5' marginRight='0.5em' color='secondary'>
+                                {data.discountPrice} руб{' '}
+                            </Typography>
+                        </>
                     )}
                     {!!data.discountPriceUSD && (
-                        <Typography marginRight="1em" color="text.primary">
+                        <Typography marginRight='1em' color='text.primary'>
                             ~{data.discountPriceUSD.toFixed()}$
                         </Typography>
                     )}
 
                     <Typography
-                        marginRight="0.5em"
-                        textAlign="center"
-                        fontWeight="bold"
-                        variant="h5"
+                        marginRight='0.5em'
+                        textAlign='center'
+                        fontWeight='bold'
+                        variant='h5'
                         component={data.discountPrice ? 's' : 'p'}
                         sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-                        color="secondary">
+                        color='secondary'>
                         {data.price} руб{' '}
                     </Typography>
-                    {!!data.priceUSD && <Typography color="text.secondary">~{data.priceUSD.toFixed()}$</Typography>}
+                    {!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
                 </Box>
             </Box>
         ),
@@ -97,49 +100,52 @@ const ProductItem = ({
                 <NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
                     <Link
                         height={60}
-                        variant="body2"
-                        display="flex"
-                        alignItems="center"
+                        variant='body2'
+                        display='flex'
+                        alignItems='center'
                         sx={{ color: '#000' }}
-                        justifyContent="center"
-                        color="secondary"
-                        component="span"
-                        underline="hover"
-                        fontWeight="500"
-                        padding="0.25em"
-                        marginTop="0.5em"
-                        textAlign="center">
+                        justifyContent='center'
+                        color='secondary'
+                        component='span'
+                        underline='hover'
+                        fontWeight='500'
+                        padding='0.25em'
+                        marginTop='0.5em'
+                        textAlign='center'>
                         {data.name}
                     </Link>
                 </NextLink>
-                <Box display="flex" height={65} flexDirection="column" alignItems="center" justifyContent="center">
-                    <Box display="flex" alignItems="center">
+                <Box display='flex' height={65} flexDirection='column' alignItems='center' justifyContent='center'>
+                    <Box display='flex' alignItems='center'>
                         {!!data.discountPrice && (
-                            <Typography
-                                paddingLeft="0.5em"
-                                fontWeight="bold"
-                                variant="h5"
-                                marginRight="0.5em"
-                                color="secondary">
-                                {data.discountPrice} руб{' '}
-                            </Typography>
+                            <>
+                                <Typography variant='h6'>Скидка:</Typography>
+                                <Typography
+                                    paddingLeft='0.5em'
+                                    fontWeight='bold'
+                                    variant='h5'
+                                    marginRight='0.5em'
+                                    color='secondary'>
+                                    {data.discountPrice} руб{' '}
+                                </Typography>
+                            </>
                         )}
                         {!!data.discountPriceUSD && (
-                            <Typography color="text.primary">~{data.discountPriceUSD.toFixed()}$</Typography>
+                            <Typography color='text.primary'>~{data.discountPriceUSD.toFixed()}$</Typography>
                         )}
                     </Box>
-                    <Box display="flex" alignItems="center">
+                    <Box display='flex' alignItems='center'>
                         <Typography
-                            marginRight="0.5em"
-                            textAlign="center"
-                            fontWeight="bold"
-                            variant="h5"
+                            marginRight='0.5em'
+                            textAlign='center'
+                            fontWeight='bold'
+                            variant='h5'
                             component={data.discountPrice ? 's' : 'p'}
                             sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-                            color="secondary">
+                            color='secondary'>
                             {data.price} руб{' '}
                         </Typography>
-                        {!!data.priceUSD && <Typography color="text.secondary">~{data.priceUSD.toFixed()}$</Typography>}
+                        {!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
                     </Box>
                 </Box>
             </>
@@ -147,9 +153,9 @@ const ProductItem = ({
     };
     return (
         <Box
-            marginBottom="1em"
+            marginBottom='1em'
             minHeight={minHeight}
-            bgcolor="#fff"
+            bgcolor='#fff'
             key={data.id}
             display={activeView === 'list' ? 'flex' : 'initial'}
             width={width}>
@@ -173,7 +179,7 @@ const ProductItem = ({
                         <Image
                             title={data.name}
                             style={{ objectFit: 'cover', maxWidth: '100%', margin: 'auto' }}
-                            src=""
+                            src=''
                             width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
                             height={activeView === 'grid' ? 215 : 150}
                             alt={data.name}></Image>

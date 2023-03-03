@@ -36,7 +36,7 @@ const HeadSEO: FC<Props> = ({ title, description, keywords, image }) => {
             <meta name="description" content={description}></meta>
             <meta name="keywords" content={keywords} />
             <meta property="og:url" content={origin + router.asPath} />
-            <meta property="og:site_name" content="Разбор авто" />
+            <meta property="og:site_name" content="Магазин запчастей б/у" />
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />
             <meta property="og:type" content={getOGType(router.asPath)} />

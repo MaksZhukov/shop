@@ -31,10 +31,19 @@ const Buy: FC<Props> = ({ sx, product, onSold = () => {} }) => {
         const params = {
             checkout_url: 'https://checkout.bepaid.by',
             token: newToken,
-            closeWidget: (status: string) => {
+            closeWidget: async (status: string | null | undefined) => {
                 if (status === 'successful') {
                     onSold();
-                    enqueueSnackbar('Спасибо за заказ, вам прийдет уведомление на почту');
+                    enqueueSnackbar('Спасибо за заказ, вам прийдет уведомление на почту', { variant: 'success' });
+                }
+                // Close after expired
+                if (status === undefined) {
+                    setIsLoadingToken(true);
+                    const {
+                        data: { data }
+                    } = await fetchOrderCheckout(product.id, product.type);
+                    setToken(data.token);
+                    setIsLoadingToken(false);
                 }
             }
         };
