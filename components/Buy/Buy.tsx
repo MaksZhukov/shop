@@ -34,7 +34,7 @@ const Buy: FC<Props> = ({ sx, product, onSold = () => {} }) => {
             closeWidget: (status: string) => {
                 if (status === 'successful') {
                     onSold();
-                    enqueueSnackbar('Спасибо за заказ, вам прийдет уведомление на почту');
+                    enqueueSnackbar('Спасибо за заказ, вам прийдет уведомление на почту', { variant: 'success' });
                 }
             }
         };
