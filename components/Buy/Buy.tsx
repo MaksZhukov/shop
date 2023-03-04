@@ -29,12 +29,7 @@ const Buy: FC<Props> = ({ sx, product, onSold = () => {} }) => {
                 newToken = data.token;
                 setToken(newToken);
             } catch (err) {
-                // Add because it can be getaddrinfo enotfound from BE for the first request
-                const {
-                    data: { data }
-                } = await fetchOrderCheckout(product.id, product.type);
-                newToken = data.token;
-                setToken(newToken);
+                console.log(err);
             }
             setIsLoadingToken(false);
         }
