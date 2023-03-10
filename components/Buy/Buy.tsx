@@ -17,15 +17,20 @@ const Buy: FC<Props> = ({ sx, product, onSold = () => {} }) => {
     const [token, setToken] = useState<string>('');
     const [isLoadingToken, setIsLoadingToken] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
+
     const handleClickBuy = async () => {
         let newToken = token;
         if (!newToken) {
             setIsLoadingToken(true);
-            const {
-                data: { data }
-            } = await fetchOrderCheckout(product.id, product.type);
-            newToken = data.token;
-            setToken(newToken);
+            try {
+                const {
+                    data: { data }
+                } = await fetchOrderCheckout(product.id, product.type);
+                newToken = data.token;
+                setToken(newToken);
+            } catch (err) {
+                console.log(err);
+            }
             setIsLoadingToken(false);
         }
         const params = {

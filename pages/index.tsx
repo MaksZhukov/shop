@@ -372,9 +372,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         <>
             <Box sx={{ height: { xs: 400, sm: 550 } }} className={styles['head-section']}>
                 <Image
-                    title={page.banner?.caption}
-                    width={page.banner?.width}
-                    height={page.banner?.height}
+                    title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
+                    width={isMobile ? page.bannerMobile?.width : page.banner?.width}
+                    height={isMobile ? page.bannerMobile?.height :page.banner?.height}
                     style={{
                         position: 'absolute',
                         top: 0,
@@ -383,8 +383,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         height: '100%',
                         ...(isMobile ? { objectPosition: '25%' } : {})
                     }}
-                    src={page.banner?.url || ''}
-                    alt={page.banner?.alternativeText || ''}></Image>
+                    src={isMobile ? page.bannerMobile?.url : page.banner?.url || ''}
+                    alt={isMobile ? page.bannerMobile?.alternativeText : page.banner?.alternativeText || ''}></Image>
                 <Container sx={{ height: '100%', position: 'relative' }}>
                     <Box maxWidth="650px" className={styles['head-text']}>
                         <Typography fontWeight="bold" component="h1" variant={isMobile ? 'h4' : 'h3'}>
@@ -721,6 +721,7 @@ export const getServerSideProps = getPageProps(
             'benefits',
             'categoryImages',
             'banner',
+            'bannerMobile',
             'benefitsRightImage',
             'autocomises.image',
             'serviceStations.image'
