@@ -286,7 +286,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
     ];
 
     const renderMobileFilters = (
-        <Box marginTop='5em'>
+        <Box marginTop='3em'>
             <Input
                 sx={{ bgcolor: '#fff', maxWidth: 300, padding: '0.25em 1em' }}
                 fullWidth
@@ -370,7 +370,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     return (
         <>
-            <Box sx={{ height: { xs: '100vh', sm: 550 } }} className={styles['head-section']}>
+            <Box sx={{ height: { xs: 'calc(100vh - 56px)', sm: 550 } }} className={styles['head-section']}>
                 <Image
                     title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
                     width={isMobile ? page.bannerMobile?.width : page.banner?.width}
