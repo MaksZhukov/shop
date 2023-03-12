@@ -235,7 +235,14 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                             {item.text}
                                         </Typography>
                                     </TableCell>
-                                    <TableCell width='100%' sx={{ border: 'none', paddingLeft: '2em' }} padding='none'>
+                                    <TableCell
+                                        width='100%'
+                                        sx={{
+                                            border: 'none',
+                                            paddingLeft: { xs: '0.5em', sm: '2em' },
+                                            wordBreak: { xs: 'break-word', sm: 'initial' }
+                                        }}
+                                        padding='none'>
                                         <Typography>{item.value}</Typography>
                                     </TableCell>
                                 </TableRow>
