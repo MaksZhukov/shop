@@ -370,7 +370,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     return (
         <>
-            <Box sx={{ height: { xs: 360, sm: 550 } }} className={styles['head-section']}>
+            <Box sx={{ height: { xs: 400, sm: 550 } }} className={styles['head-section']}>
                 <Image
                     title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
                     width={isMobile ? page.bannerMobile?.width : page.banner?.width}
