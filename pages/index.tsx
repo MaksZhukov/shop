@@ -286,22 +286,22 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
     ];
 
     const renderMobileFilters = (
-        <Box marginTop="1em">
+        <Box marginTop='1em'>
             <Input
                 sx={{ bgcolor: '#fff', maxWidth: 300, padding: '0.25em 1em' }}
                 fullWidth
-                placeholder="Поиск"
+                placeholder='Поиск'
                 value={searchValue}
                 onKeyDown={handleKeyDownSearch}
                 onChange={handleChangeSearch}></Input>
-            <Box marginTop="1em">
-                <Button variant="contained" onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
+            <Box marginTop='1em'>
+                <Button variant='contained' onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
                     Фильтр
                 </Button>
             </Box>
             <Modal open={isOpenedModal} onClose={handleCloseModal}>
                 <Container>
-                    <Box marginY="2em" bgcolor="#fff">
+                    <Box marginY='2em' bgcolor='#fff'>
                         {' '}
                         {filtersConfig.map((item) => {
                             let value = (item.options as any[]).every((option: any) => typeof option === 'string')
@@ -324,7 +324,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                 </Box>
                             );
                         })}
-                        <Button onClick={handleClickFind} variant="contained" fullWidth>
+                        <Button onClick={handleClickFind} variant='contained' fullWidth>
                             Поиск
                         </Button>
                     </Box>
@@ -335,12 +335,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     const renderDesktopFilters = (
         <Box
-            display="flex"
-            width="calc(100% - 48px)"
-            position="absolute"
-            bottom="4em"
+            display='flex'
+            width='calc(100% - 48px)'
+            position='absolute'
+            bottom='4em'
             className={styles['head-search']}>
-            <Box display="flex" gap="0.5em" flex="1" flexWrap="wrap" className={styles.filters}>
+            <Box display='flex' gap='0.5em' flex='1' flexWrap='wrap' className={styles.filters}>
                 {filtersConfig.map((item) => {
                     let value = (item.options as any[]).every((option: any) => typeof option === 'string')
                         ? values[item.id]
@@ -362,7 +362,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     );
                 })}
             </Box>
-            <Button onClick={handleClickFind} variant="contained" className={styles['btn-search']}>
+            <Button onClick={handleClickFind} variant='contained' className={styles['btn-search']}>
                 Поиск
             </Button>
         </Box>
@@ -370,27 +370,27 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     return (
         <>
-            <Box sx={{ height: { xs: 400, sm: 550 } }} className={styles['head-section']}>
+            <Box sx={{ height: { xs: 360, sm: 550 } }} className={styles['head-section']}>
                 <Image
                     title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
                     width={isMobile ? page.bannerMobile?.width : page.banner?.width}
-                    height={isMobile ? page.bannerMobile?.height :page.banner?.height}
+                    height={isMobile ? page.bannerMobile?.height : page.banner?.height}
                     style={{
                         position: 'absolute',
                         top: 0,
                         objectFit: 'cover',
                         width: '100vw',
                         height: '100%',
-                        ...(isMobile ? { objectPosition: '25%' } : {})
+                        ...(isMobile ? { objectPosition: 'right' } : {})
                     }}
                     src={isMobile ? page.bannerMobile?.url : page.banner?.url || ''}
                     alt={isMobile ? page.bannerMobile?.alternativeText : page.banner?.alternativeText || ''}></Image>
                 <Container sx={{ height: '100%', position: 'relative' }}>
-                    <Box maxWidth="650px" className={styles['head-text']}>
-                        <Typography fontWeight="bold" component="h1" variant={isMobile ? 'h4' : 'h3'}>
+                    <Box maxWidth='650px' className={styles['head-text']}>
+                        <Typography fontWeight='bold' component='h1' variant={isMobile ? 'h4' : 'h3'}>
                             {page.h1}
                         </Typography>
-                        <Typography component="h2" variant={isMobile ? 'h5' : 'h4'}>
+                        <Typography component='h2' variant={isMobile ? 'h5' : 'h4'}>
                             {page.subH1}
                         </Typography>
                     </Box>
@@ -400,16 +400,16 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             <Container>
                 <Typography
                     withSeparator
-                    component="h2"
+                    component='h2'
                     variant={isMobile ? 'h5' : 'h4'}
                     sx={{ marginBottom: { xs: '0.5em', md: '1.5em' } }}
-                    fontWeight="bold"
-                    textTransform="uppercase">
+                    fontWeight='bold'
+                    textTransform='uppercase'>
                     {page.titleCategories}
                 </Typography>
                 <Box
                     className={styles.categories}
-                    display="flex"
+                    display='flex'
                     sx={{
                         flexWrap: { xs: 'wrap', md: 'initial' },
                         gap: { xs: '5%', md: 'initial' },
@@ -420,12 +420,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             key={item.id}
                             className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
                             <Box
-                                position="relative"
+                                position='relative'
                                 zIndex={1}
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                minHeight="250px">
+                                display='flex'
+                                alignItems='center'
+                                justifyContent='center'
+                                minHeight='250px'>
                                 <Image
                                     title={item.caption}
                                     src={item.url}
@@ -435,11 +435,11 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             </Box>
                             <Typography
                                 className={styles['categories__item-name']}
-                                marginBottom="0.25em"
-                                textAlign="center"
-                                variant="h4">
+                                marginBottom='0.25em'
+                                textAlign='center'
+                                variant='h4'>
                                 <NextLink href={CATEGORIES[i].href}>
-                                    <Link component="span" underline="hover" color="inherit">
+                                    <Link component='span' underline='hover' color='inherit'>
                                         {CATEGORIES[i].name}
                                     </Link>
                                 </NextLink>
@@ -450,23 +450,23 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         <NextLink href={'/buyback-cars'}>
                             <Link
                                 variant={isMobile ? 'h5' : 'h4'}
-                                textTransform="uppercase"
-                                fontWeight="bold"
-                                component="span"
-                                display="block"
-                                underline="hover"
-                                margin="0.25em 0.25em"
-                                color="inherit">
+                                textTransform='uppercase'
+                                fontWeight='bold'
+                                component='span'
+                                display='block'
+                                underline='hover'
+                                margin='0.25em 0.25em'
+                                color='inherit'>
                                 Выкуп авто на з/ч
                             </Link>
                         </NextLink>
                     </Box>
                 </Box>
                 {isMobile ? (
-                    <Box paddingX="1em">
+                    <Box paddingX='1em'>
                         <Slider slidesToShow={2}>
                             {page.benefits?.map((item) => (
-                                <Box paddingX="0.5em" key={item.id}>
+                                <Box paddingX='0.5em' key={item.id}>
                                     <Image
                                         title={item.caption}
                                         src={item.url}
@@ -479,7 +479,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         </Slider>
                     </Box>
                 ) : (
-                    <Box flexWrap="wrap" marginBottom="4em" justifyContent="space-between" display="flex">
+                    <Box flexWrap='wrap' marginBottom='4em' justifyContent='space-between' display='flex'>
                         {page.benefits?.map((item) => (
                             <Image
                                 title={item.caption}
@@ -492,10 +492,10 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     </Box>
                 )}
                 {isTablet ? (
-                    <Box paddingX="1em" marginBottom="2em">
+                    <Box paddingX='1em' marginBottom='2em'>
                         <Slider slidesToShow={2}>
                             {page.serviceStations?.map((item) => (
-                                <Box key={item.id} paddingX="0.5em">
+                                <Box key={item.id} paddingX='0.5em'>
                                     <WhiteBox>
                                         <LinkWithImage
                                             height={100}
@@ -508,7 +508,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                 </Box>
                             ))}
                             {page.autocomises?.map((item) => (
-                                <Box key={item.id} paddingX="0.5em">
+                                <Box key={item.id} paddingX='0.5em'>
                                     <WhiteBox>
                                         <LinkWithImage
                                             imageStyle={{ maxWidth: '100%', objectFit: 'contain', margin: 'auto' }}
@@ -522,9 +522,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         </Slider>
                     </Box>
                 ) : (
-                    <Box display="flex" gap={'2em'} marginBottom="4em" justifyContent="space-between">
+                    <Box display='flex' gap={'2em'} marginBottom='4em' justifyContent='space-between'>
                         {page.serviceStations?.map((item) => (
-                            <Box bgcolor="#fff" padding="1em" sx={{ width: { xs: 'auto', md: '22.5%' } }} key={item.id}>
+                            <Box bgcolor='#fff' padding='1em' sx={{ width: { xs: 'auto', md: '22.5%' } }} key={item.id}>
                                 <LinkWithImage
                                     // height={100}
                                     imageStyle={{ width: '100%', objectFit: 'contain' }}
@@ -534,7 +534,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             </Box>
                         ))}
                         {page.autocomises?.map((item) => (
-                            <Box bgcolor="#fff" padding="1em" sx={{ width: { xs: 'auto', md: '22.5%' } }} key={item.id}>
+                            <Box bgcolor='#fff' padding='1em' sx={{ width: { xs: 'auto', md: '22.5%' } }} key={item.id}>
                                 <LinkWithImage
                                     imageStyle={{ width: '100%', objectFit: 'contain' }}
                                     // height={100}
@@ -545,26 +545,26 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         ))}
                     </Box>
                 )}
-                <Box marginBottom="4em">
+                <Box marginBottom='4em'>
                     <Typography
                         withSeparator
-                        component="h2"
+                        component='h2'
                         variant={isMobile ? 'h5' : 'h4'}
                         sx={{ marginBottom: { xs: '0.5em', md: '1.5em' } }}
-                        fontWeight="bold"
-                        maxWidth="700px"
-                        textTransform="uppercase">
+                        fontWeight='bold'
+                        maxWidth='700px'
+                        textTransform='uppercase'>
                         {page.popularBrandsTitle}
                     </Typography>
                 </Box>
-                <Box paddingX="1em" marginBottom="2em">
+                <Box paddingX='1em' marginBottom='2em'>
                     <Slider rows={isMobile ? 1 : 2} slidesToShow={isMobile ? 2 : isTablet ? 4 : 7}>
                         {brands.map((item) => (
                             <WhiteBox
-                                marginX="auto"
+                                marginX='auto'
                                 marginBottom={{ xs: 0, sm: '1em' }}
                                 width={137}
-                                padding="1em 0"
+                                padding='1em 0'
                                 key={item.id}>
                                 <LinkWithImage
                                     width={100}
@@ -579,11 +579,11 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 </Box>
 
                 <Box
-                    display="flex"
-                    gap="3em"
+                    display='flex'
+                    gap='3em'
                     sx={{ marginBottom: { xs: '2em', md: '5em' }, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
-                    <Box display="flex" alignItems="center">
-                        <Typography color="text.secondary" variant="body1">
+                    <Box display='flex' alignItems='center'>
+                        <Typography color='text.secondary' variant='body1'>
                             <ReactMarkdown content={page.leftSideText}></ReactMarkdown>
                         </Typography>
                     </Box>
@@ -591,25 +591,25 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         <ReactPlayer width={isMobile ? '100%' : 600} height={300} url={page.videoUrl}></ReactPlayer>
                     </Box>
                 </Box>
-                <Typography withSeparator component="h2" variant={isMobile ? 'h5' : 'h4'} fontWeight="bold">
+                <Typography withSeparator component='h2' variant={isMobile ? 'h5' : 'h4'} fontWeight='bold'>
                     {page.reviewsTitle}
                 </Typography>
                 <CarouselReviews
                     marginBottom={isMobile ? '3em' : '6em'}
                     data={reviews}
                     slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}></CarouselReviews>
-                <Box marginBottom="1em">
+                <Box marginBottom='1em'>
                     <Typography
-                        fontWeight="bold"
-                        maxWidth="500px"
+                        fontWeight='bold'
+                        maxWidth='500px'
                         withSeparator
-                        component="h2"
+                        component='h2'
                         variant={isMobile ? 'h5' : 'h4'}
-                        marginBottom="1em">
+                        marginBottom='1em'>
                         {page.benefitsTitle}
                     </Typography>
-                    <Box display="flex" flexDirection={isMobile ? 'column-reverse' : 'initial'}>
-                        <Typography flex="1" color="text.secondary" variant="body1">
+                    <Box display='flex' flexDirection={isMobile ? 'column-reverse' : 'initial'}>
+                        <Typography flex='1' color='text.secondary' variant='body1'>
                             <ReactMarkdown content={page.benefitsLeftText}></ReactMarkdown>
                         </Typography>
                         <Box marginTop={isMobile ? '0' : '-2em'}>
@@ -625,23 +625,23 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 </Box>
                 <Box>
                     <Typography
-                        fontWeight="bold"
+                        fontWeight='bold'
                         withSeparator
-                        component="h2"
+                        component='h2'
                         variant={isMobile ? 'h5' : 'h4'}
-                        marginBottom="1em">
+                        marginBottom='1em'>
                         {page.blogTitle}
                     </Typography>
                     <Box
-                        padding="0 2.5em"
-                        display="flex"
-                        flexWrap="wrap"
+                        padding='0 2.5em'
+                        display='flex'
+                        flexWrap='wrap'
                         sx={{ flexDirection: { xs: 'column', md: 'initial' }, gap: { xs: '1em', md: '4em' } }}>
                         <Typography
                             sx={{ paddingBottom: { xs: '0.5em', md: '2em' } }}
-                            flex="1"
-                            color="text.secondary"
-                            variant="body1">
+                            flex='1'
+                            color='text.secondary'
+                            variant='body1'>
                             <ReactMarkdown content={page.blogLeftText}></ReactMarkdown>
                         </Typography>
                         <Box
@@ -654,17 +654,17 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             }}></Box>
                         <Typography
                             sx={{ paddingBottom: { xs: '0', md: '2em' } }}
-                            flex="1"
-                            color="text.secondary"
-                            variant="body1">
+                            flex='1'
+                            color='text.secondary'
+                            variant='body1'>
                             <ReactMarkdown content={page.blogRightText}></ReactMarkdown>
                         </Typography>
                     </Box>
                     {isTablet ? (
-                        <Box marginBottom="1em" paddingX="1em">
+                        <Box marginBottom='1em' paddingX='1em'>
                             <Slider slidesToShow={1}>
                                 {articles.map((item) => (
-                                    <Box paddingX="0.5em" key={item.id}>
+                                    <Box paddingX='0.5em' key={item.id}>
                                         <LinkWithImage
                                             link={`/articles/${item.slug}`}
                                             height={390}
@@ -679,7 +679,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             </Slider>
                         </Box>
                     ) : (
-                        <Box display="flex" gap={'1em'} marginBottom="3.5em">
+                        <Box display='flex' gap={'1em'} marginBottom='3.5em'>
                             {articles.map((item) => (
                                 <LinkWithImage
                                     link={`/articles/${item.slug}`}
@@ -694,16 +694,16 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         </Box>
                     )}
                 </Box>
-                <Box marginBottom="2em">
+                <Box marginBottom='2em'>
                     <Typography
-                        fontWeight="bold"
+                        fontWeight='bold'
                         withSeparator
-                        component="h2"
+                        component='h2'
                         variant={isMobile ? 'h5' : 'h4'}
-                        marginBottom="1em">
+                        marginBottom='1em'>
                         {page.deliveryTitle}
                     </Typography>
-                    <Typography flex="1" color="text.secondary" variant="body1">
+                    <Typography flex='1' color='text.secondary' variant='body1'>
                         <ReactMarkdown content={page.deliveryText}></ReactMarkdown>
                     </Typography>
                 </Box>
