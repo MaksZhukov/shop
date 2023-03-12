@@ -286,7 +286,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
     ];
 
     const renderMobileFilters = (
-        <Box marginTop='1em'>
+        <Box marginTop='3em'>
             <Input
                 sx={{ bgcolor: '#fff', maxWidth: 300, padding: '0.25em 1em' }}
                 fullWidth
@@ -370,7 +370,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     return (
         <>
-            <Box sx={{ height: { xs: 400, sm: 550 } }} className={styles['head-section']}>
+            <Box sx={{ height: { xs: 'calc(100vh - 56px)', sm: 550 } }} className={styles['head-section']}>
                 <Image
                     title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
                     width={isMobile ? page.bannerMobile?.width : page.banner?.width}
@@ -381,12 +381,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         objectFit: 'cover',
                         width: '100vw',
                         height: '100%',
-                        ...(isMobile ? { objectPosition: 'right' } : {})
+                        ...(isMobile ? { objectPosition: '70%' } : {})
                     }}
                     src={isMobile ? page.bannerMobile?.url : page.banner?.url || ''}
                     alt={isMobile ? page.bannerMobile?.alternativeText : page.banner?.alternativeText || ''}></Image>
                 <Container sx={{ height: '100%', position: 'relative' }}>
-                    <Box maxWidth='650px' className={styles['head-text']}>
+                    <Box maxWidth='650px' paddingTop={{ xs: '1em', sm: '3em' }}>
                         <Typography fontWeight='bold' component='h1' variant={isMobile ? 'h4' : 'h3'}>
                             {page.h1}
                         </Typography>
