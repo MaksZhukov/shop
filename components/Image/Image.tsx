@@ -23,7 +23,7 @@ const Image = ({
                     alt={alt}
                     height={237}
                     title={props.title}
-                    src={'/photo.jpg'}
+                    src={'/photo.png'}
                     style={{ objectFit: 'contain', maxWidth: '50%' }}></NextImage>
             </Box>
         );
