@@ -15,6 +15,7 @@ export const getPageProps =
             const [brandsResponse, layoutResponse, response, ...restResponses] = await Promise.all([
                 fetchBrands({
                     populate: ['seo.images', 'image'],
+                    sort: 'name',
                     pagination: { limit: API_UN_LIMIT },
                     filters: {
                         spareParts: {
