@@ -21,7 +21,7 @@ const Image = ({
                 <NextImage
                     width={1200}
                     alt={alt}
-                    height={237}
+                    height={props.height || 237}
                     title={props.title}
                     src={'/photo.png'}
                     style={{ objectFit: 'contain', maxWidth: '50%' }}></NextImage>
