@@ -1,10 +1,16 @@
+import { fetchCabins } from 'api/cabins/cabins';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchTires } from 'api/tires/tires';
 import { ApiResponse, CollectionParams, Product } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
-import { getFavoriteProducts, removeFavoriteProduct, saveFavoriteProduct } from 'services/LocalStorageService';
+import {
+    getFavorites,
+    removeFavorite as removeFavoriteLS,
+    saveFavorite,
+    StorageFavorite
+} from 'services/LocalStorageService';
 import RootStore from '.';
 import { removeFavorite, addFavorite, fetchFavorites } from '../api/favorites/favorites';
 import { Favorite } from '../api/favorites/types';
@@ -30,33 +36,29 @@ export default class FavoritesStore implements Favorites {
                 this.items = data;
             });
         } else {
-            const favoriteProducts = getFavoriteProducts();
+            const favorites = getFavorites();
             try {
-                const [spareParts, wheels, tires] = await Promise.all([
+                const [spareParts, wheels, tires, cabins] = await Promise.all([
                     this.getFavoritesByTypes(
-                        favoriteProducts.filter((item) => item.type === 'sparePart').map((item) => item.id),
+                        favorites.filter((item) => item.product.type === 'sparePart'),
                         fetchSpareParts
                     ),
                     this.getFavoritesByTypes(
-                        favoriteProducts.filter((item) => item.type === 'wheel').map((item) => item.id),
+                        favorites.filter((item) => item.product.type === 'wheel'),
                         fetchWheels
                     ),
                     this.getFavoritesByTypes(
-                        favoriteProducts.filter((item) => item.type === 'tire').map((item) => item.id),
+                        favorites.filter((item) => item.product.type === 'tire'),
                         fetchTires
                     ),
                     this.getFavoritesByTypes(
-                        favoriteProducts.filter((item) => item.type === 'cabin').map((item) => item.id),
-                        fetchTires
+                        favorites.filter((item) => item.product.type === 'cabin'),
+                        fetchCabins
                     )
                 ]);
 
                 runInAction(() => {
-                    this.items = [...spareParts, ...wheels, ...tires].map((item) => ({
-                        id: new Date().getTime(),
-                        uid: new Date().getTime().toString(),
-                        product: item
-                    }));
+                    this.items = [...spareParts, ...wheels, ...tires, ...cabins];
                 });
             } catch (err) {
                 console.error(err);
@@ -64,18 +66,21 @@ export default class FavoritesStore implements Favorites {
         }
     }
     async getFavoritesByTypes(
-        ids: number[],
+        favorites: StorageFavorite[],
         fetchFunc: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>
     ) {
-        let result: Product[] = [];
-        if (ids.length) {
+        let result: Favorite[] = [];
+        if (favorites.length) {
             const {
                 data: { data }
             } = await fetchFunc({
-                filters: { id: ids },
+                filters: { id: favorites.map((item) => item.product.id) },
                 populate: ['images', 'brand']
             });
-            result = data;
+            result = favorites.map((item) => ({
+                ...item,
+                product: data.find((el) => el.id === item.product.id) as Product
+            }));
         }
         return result;
     }
@@ -92,7 +97,7 @@ export default class FavoritesStore implements Favorites {
                 console.error(err);
             }
         } else {
-            saveFavoriteProduct(favorite.product.id, favorite.product.type);
+            saveFavorite(favorite);
             runInAction(() => {
                 this.items.push(favorite);
             });
@@ -102,18 +107,14 @@ export default class FavoritesStore implements Favorites {
         if (this.root.user.id) {
             await removeFavorite(favorite.id);
         } else {
-            removeFavoriteProduct(favorite.product.id, favorite.product.type);
+            removeFavoriteLS(favorite);
         }
         runInAction(() => {
-            this.items = this.items.filter(
-                (el) => el.product.id !== favorite.product.id && el.product.type === favorite.product.type
-            );
+            this.items = this.items.filter((el) => el.id !== favorite.id);
         });
     }
     clearFavorites() {
-        let favoriteProducts = getFavoriteProducts();
-        this.items = this.items.filter((item) => {
-            return favoriteProducts.filter((el) => el.id === item.id && el.type === item.product.type);
-        });
+        let favorites = getFavorites();
+        this.items = this.items.filter((item) => favorites.filter((el) => el.id === item.id));
     }
 }
