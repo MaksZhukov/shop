@@ -43,7 +43,7 @@ const Image = ({
     if (withZoom && !isTablet) {
         return (
             <Zoom
-                img={getSrc()}
+                img={publicRuntimeConfig.backendUrl + src}
                 width={props.width || 640}
                 height={props.height || 480}
                 style={{ margin: 'auto' }}
