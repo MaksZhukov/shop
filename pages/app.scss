@@ -33,6 +33,10 @@ a {
     color: #fdb819;
 }
 
+.slick-slider {
+    touch-action: auto !important;
+}
+
 .slick-slide div {
     outline: none;
 }
