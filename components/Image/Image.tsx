@@ -1,15 +1,19 @@
 import { Box } from '@mui/system';
 import getConfig from 'next/config';
 import NextImage, { ImageProps } from 'next/image';
+import Zoom from 'react-img-hover-zoom';
+import { useMediaQuery } from '@mui/material';
 const { publicRuntimeConfig } = getConfig();
 
 const Image = ({
     src,
     alt = '',
     isOnSSR = true,
+    withZoom = false,
     style,
     ...props
-}: Omit<ImageProps, 'src' | 'alt'> & { src?: string; alt?: string; isOnSSR?: boolean }) => {
+}: Omit<ImageProps, 'src' | 'alt'> & { src?: string; alt?: string; isOnSSR?: boolean; withZoom?: boolean }) => {
+    const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
     if (!src) {
         return (
             <Box
@@ -35,6 +39,18 @@ const Image = ({
         }
         return src;
     };
+
+    if (withZoom && !isTablet) {
+        return (
+            <Zoom
+                img={getSrc()}
+                width={props.width || 640}
+                height={props.height || 480}
+                style={{ margin: 'auto' }}
+                zoomScale={3}
+            />
+        );
+    }
 
     return (
         <NextImage
