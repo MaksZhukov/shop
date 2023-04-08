@@ -1,44 +1,44 @@
-import type { NextPage } from 'next';
-import { Box, Button, CircularProgress, Input, Link, Modal, TextField, useMediaQuery } from '@mui/material';
-import { Dispatch, SetStateAction, UIEventHandler, useMemo, useRef, useState, ChangeEvent, KeyboardEvent } from 'react';
-import { Brand } from 'api/brands/types';
-import { Model } from 'api/models/types';
-import { KindSparePart } from 'api/kindSpareParts/types';
-import { useRouter } from 'next/router';
-import { AxiosResponse } from 'axios';
-import { ApiResponse, Image as IImage } from 'api/types';
-import { fetchModels } from 'api/models/models';
-import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { useSnackbar } from 'notistack';
-import { fetchGenerations } from 'api/generations/generations';
-import { Generation } from 'api/generations/types';
-import { getPageProps } from 'services/PagePropsService';
+import TuneIcon from '@mui/icons-material/Tune';
+import { Box, Button, CircularProgress, Input, Link, Modal, useMediaQuery } from '@mui/material';
+import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
-import { API_MAX_LIMIT, API_UN_LIMIT } from 'api/constants';
-import { useDebounce, useThrottle } from 'rooks';
-import { fetchPage } from 'api/pages';
-import { PageMain } from 'api/pages/types';
+import { Brand } from 'api/brands/types';
+import { API_MAX_LIMIT } from 'api/constants';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
-import styles from './index.module.scss';
-import { BODY_STYLES, FUELS, OFFSET_SCROLL_LOAD_MORE, TRANSMISSIONS } from '../constants';
+import { fetchGenerations } from 'api/generations/generations';
+import { Generation } from 'api/generations/types';
+import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
+import { KindSparePart } from 'api/kindSpareParts/types';
+import { fetchModels } from 'api/models/models';
+import { Model } from 'api/models/types';
+import { fetchPage } from 'api/pages';
+import { PageMain } from 'api/pages/types';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
-import Typography from 'components/Typography';
-import CarouselReviews from 'components/CarouselReviews';
-import { Container } from '@mui/system';
-import Autocomplete from 'components/Autocomplete';
-import qs from 'qs';
-import Image from 'components/Image';
-import NextLink from 'next/link';
-import LinkWithImage from 'components/LinkWithImage';
-import WhiteBox from 'components/WhiteBox';
-import ReactMarkdown from 'components/ReactMarkdown';
-import dynamic from 'next/dynamic';
-import TuneIcon from '@mui/icons-material/Tune';
+import { ApiResponse } from 'api/types';
+import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
+import Autocomplete from 'components/Autocomplete';
+import CarouselReviews from 'components/CarouselReviews';
+import Image from 'components/Image';
+import LinkWithImage from 'components/LinkWithImage';
+import ReactMarkdown from 'components/ReactMarkdown';
+import Typography from 'components/Typography';
+import WhiteBox from 'components/WhiteBox';
+import type { NextPage } from 'next';
+import dynamic from 'next/dynamic';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import qs from 'qs';
+import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction, UIEventHandler, useRef, useState } from 'react';
 import Slider from 'react-slick';
+import { useDebounce, useThrottle } from 'rooks';
+import { getPageProps } from 'services/PagePropsService';
+import { BODY_STYLES, FUELS, OFFSET_SCROLL_LOAD_MORE, TRANSMISSIONS } from '../constants';
+import styles from './index.module.scss';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -419,31 +419,31 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         <Box
                             key={item.id}
                             className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
-                            <Box
-                                position='relative'
-                                zIndex={1}
-                                display='flex'
-                                alignItems='center'
-                                justifyContent='center'
-                                minHeight='250px'>
-                                <Image
-                                    title={item.caption}
-                                    src={item.url}
-                                    width={item.width}
-                                    height={item.height}
-                                    alt={item.alternativeText}></Image>
-                            </Box>
-                            <Typography
-                                className={styles['categories__item-name']}
-                                marginBottom='0.25em'
-                                textAlign='center'
-                                variant='h4'>
-                                <NextLink href={CATEGORIES[i].href}>
+                            <NextLink href={CATEGORIES[i].href}>
+                                <Box
+                                    position='relative'
+                                    zIndex={1}
+                                    display='flex'
+                                    alignItems='center'
+                                    justifyContent='center'
+                                    minHeight='250px'>
+                                    <Image
+                                        title={item.caption}
+                                        src={item.url}
+                                        width={item.width}
+                                        height={item.height}
+                                        alt={item.alternativeText}></Image>
+                                </Box>
+                                <Typography
+                                    className={styles['categories__item-name']}
+                                    marginBottom='0.25em'
+                                    textAlign='center'
+                                    variant='h4'>
                                     <Link component='span' underline='hover' color='inherit'>
                                         {CATEGORIES[i].name}
                                     </Link>
-                                </NextLink>
-                            </Typography>
+                                </Typography>
+                            </NextLink>
                         </Box>
                     ))}
                     <Box className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
@@ -594,10 +594,28 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 <Typography withSeparator component='h2' variant={isMobile ? 'h5' : 'h4'} fontWeight='bold'>
                     {page.reviewsTitle}
                 </Typography>
-                <CarouselReviews
-                    marginBottom={isMobile ? '3em' : '6em'}
-                    data={reviews}
-                    slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}></CarouselReviews>
+                <Box marginBottom={isMobile ? '3em' : '5em'}>
+                    <CarouselReviews
+                        marginBottom='1em'
+                        data={reviews}
+                        slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}></CarouselReviews>
+                    <Box gap={{ xs: 2, md: 0 }} flexWrap='wrap' display='flex' justifyContent='center'>
+                        <Button
+                            sx={{ marginRight: { md: '5em', xs: 0 }, marginLeft: { md: '1em', xs: 0 } }}
+                            variant='contained'
+                            target='_blank'
+                            href='https://g.page/r/CZioQh24913HEB0/review'>
+                            Оставить отзыв гугл
+                        </Button>
+                        <Button
+                            sx={{ marginLeft: { xs: 0, md: '0.5em' } }}
+                            variant='contained'
+                            target='_blank'
+                            href='https://yandex.by/maps/org/magazin_avtozapchastey_i_avtotovarov/1032020244/reviews/?add-review=true&ll=23.853612%2C53.583955&z=16'>
+                            Оставить отзыв Яндекс
+                        </Button>
+                    </Box>
+                </Box>
                 <Box marginBottom='1em'>
                     <Typography
                         fontWeight='bold'
