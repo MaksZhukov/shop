@@ -10,6 +10,7 @@ import CatalogSpareParts from 'components/CatalogSpareParts';
 import Product from 'components/Product';
 import { getProductPageSeo } from 'services/ProductService';
 import { SparePart } from 'api/spareParts/types';
+import { withKindSparePart } from 'services/SEOService';
 
 interface Props {
     data: SparePart;
@@ -49,7 +50,7 @@ const SpareParts: NextPage<Props> = ({ page, brands, data, relatedProducts }) =>
 export default SpareParts;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-    const { slug = [] } = context.query;
+    const { slug = [], kindSparePart } = context.query;
     const [brand, modelOrProductParam] = slug;
     const productParam =
         modelOrProductParam && !modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
@@ -104,14 +105,14 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             populate: ['seoSpareParts.images', 'image'],
             filters: { brand: { slug: brand } }
         });
-        props = { page: { seo: data.seoSpareParts } };
+        props = { page: { seo: withKindSparePart(data.seoSpareParts, kindSparePart) } };
     } else if (brand) {
         const {
             data: { data }
         } = await fetchBrandBySlug(brand, {
             populate: ['seoSpareParts.images', 'image']
         });
-        props = { page: { seo: data.seoSpareParts } };
+        props = { page: { seo: withKindSparePart(data.seoSpareParts, kindSparePart) } };
     } else {
         const {
             data: { data }

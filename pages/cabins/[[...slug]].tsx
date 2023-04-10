@@ -11,6 +11,7 @@ import { getProductPageSeo } from 'services/ProductService';
 import { fetchCabin, fetchCabins } from 'api/cabins/cabins';
 import Product from 'components/Product';
 import { Cabin } from 'api/cabins/types';
+import { withKindSparePart } from 'services/SEOService';
 
 interface Props {
     data: Cabin;
@@ -47,7 +48,7 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
 export default Cabins;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-    const { slug = [] } = context.query;
+    const { slug = [], kindSpareParts } = context.query;
     const [brand, modelOrProductParam] = slug;
 
     const productParam =
@@ -99,14 +100,14 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             populate: ['seoCabins.images', 'image'],
             filters: { brand: { slug: brand } }
         });
-        props = { page: { seo: data.seoCabins } };
+        props = { page: { seo: withKindSparePart(data.seoCabins, kindSpareParts) } };
     } else if (brand) {
         const {
             data: { data }
         } = await fetchBrandBySlug(brand, {
             populate: ['seoCabins.images', 'image']
         });
-        props = { page: { seo: data.seoCabins } };
+        props = { page: { seo: withKindSparePart(data.seoCabins, kindSpareParts) } };
     } else {
         const {
             data: { data }
