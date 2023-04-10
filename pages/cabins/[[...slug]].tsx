@@ -112,7 +112,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
         const {
             data: { data }
         } = await fetchPage('cabin')();
-        props = { page: { seo: data.seo } };
+        props = { page: { seo: withKindSparePart(data.seo, kindSpareParts) } };
     }
     return props;
 });
