@@ -117,7 +117,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
         const {
             data: { data }
         } = await fetchPage('spare-part')();
-        props = { page: { seo: data.seo } };
+        props = { page: { seo: withKindSparePart(data.seo, kindSparePart) } };
     }
     return props;
 });
