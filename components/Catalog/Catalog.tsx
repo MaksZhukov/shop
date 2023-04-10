@@ -82,6 +82,7 @@ const Catalog = ({
         searchValue: querySearchValue = '',
         sort = 'createdAt:desc',
         page = '1',
+        kindSparePart,
         slug,
         ...othersQuery
     } = router.query as {
@@ -218,7 +219,8 @@ const Catalog = ({
             (!newValues.model && !model)
                 ? true
                 : false;
-        let shallow = hasNoBrandChanges && hasNoModelChanges;
+        let hasNoKindSparePartChanges = newValues.kindSparePart === kindSparePart;
+        let shallow = hasNoBrandChanges && hasNoModelChanges && hasNoKindSparePartChanges;
         Object.keys(newValues).forEach((key) => {
             if (!newValues[key]) {
                 if (key === 'brand' && !newValues['model']) {
@@ -318,54 +320,54 @@ const Catalog = ({
             boundaryCount={1}
             page={+page}
             siblingCount={1}
-            color="primary"
+            color='primary'
             count={pageCount}
-            variant="text"
+            variant='text'
         />
     );
 
     const renderBar = (position: 'top' | 'bottom') => (
         <Box
-            display="flex"
+            display='flex'
             flexWrap={{ xs: 'wrap', md: 'nowrap' }}
             padding={{ xs: 0, md: '0.5em 0 0.5em 0.5em' }}
             gap={{ xs: '0.5em', md: 0 }}
-            marginBottom="1em"
+            marginBottom='1em'
             alignItems={{ xs: 'initial', md: 'center' }}
             bgcolor={{ xs: 'initial', md: '#fff' }}>
-            <Box display="flex" sx={{ order: { xs: 3, md: 0 }, width: { xs: '100%', md: 'auto' } }}>
+            <Box display='flex' sx={{ order: { xs: 3, md: 0 }, width: { xs: '100%', md: 'auto' } }}>
                 <Button
-                    variant="contained"
+                    variant='contained'
                     onClick={handleClickChangeView('grid', position)}
                     sx={{
                         bgcolor: activeView === 'grid' ? 'primary.main' : '#000',
                         display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
                     }}
                     className={classNames(styles['btn-view'])}>
-                    <GridViewIcon fontSize="small" sx={{ color: '#fff' }}></GridViewIcon>
+                    <GridViewIcon fontSize='small' sx={{ color: '#fff' }}></GridViewIcon>
                 </Button>
                 <Button
-                    variant="contained"
+                    variant='contained'
                     sx={{
                         bgcolor: activeView === 'list' ? 'primary.main' : '#000',
                         display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
                     }}
                     onClick={handleClickChangeView('list', position)}
                     className={classNames(styles['btn-view'])}>
-                    <MenuIcon fontSize="small" sx={{ color: '#fff' }}></MenuIcon>
+                    <MenuIcon fontSize='small' sx={{ color: '#fff' }}></MenuIcon>
                 </Button>
             </Box>
             {position === 'top' && (
                 <Button
                     sx={{ display: { xs: 'flex', md: 'none' } }}
-                    variant="contained"
+                    variant='contained'
                     onClick={handleClickOpenFilters}
                     startIcon={<TuneIcon></TuneIcon>}>
                     Параметры
                 </Button>
             )}
             <Modal open={isOpenFilters} onClose={handleCloseFilters}>
-                <Box padding="1em" bgcolor="#f1f2f6">
+                <Box padding='1em' bgcolor='#f1f2f6'>
                     <Filters
                         ref={filtersRef}
                         total={total}
@@ -389,7 +391,7 @@ const Catalog = ({
                 value={searchValue}
                 placeholder={searchPlaceholder}></Input>
             <Select
-                variant="standard"
+                variant='standard'
                 MenuProps={{ disableScrollLock: true }}
                 value={sort as any}
                 sx={{
@@ -411,12 +413,12 @@ const Catalog = ({
 
     return (
         <>
-            <Box display="flex" sx={{ flexDirection: { xs: 'column', md: 'initial' } }}>
+            <Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'initial' } }}>
                 <Box
-                    marginTop="3.7em"
+                    marginTop='3.7em'
                     display={{ xs: 'none', md: 'block' }}
-                    marginRight="1em"
-                    component="aside"
+                    marginRight='1em'
+                    component='aside'
                     sx={{ width: { xs: '100%', md: '250px' } }}>
                     <Filters
                         ref={filtersRef}
@@ -426,17 +428,17 @@ const Catalog = ({
                 </Box>
                 <Box sx={{ width: { md: 'calc(100% - 250px - 2em)' } }}>
                     <Box
-                        marginBottom="0.5em"
-                        marginTop="0"
-                        textTransform="uppercase"
-                        component="h1"
+                        marginBottom='0.5em'
+                        marginTop='0'
+                        textTransform='uppercase'
+                        component='h1'
                         typography={{ xs: 'h5', md: 'h4' }}>
                         {seo?.h1}
                     </Box>
                     {renderBar('top')}
                     <Box
-                        display="flex"
-                        flexWrap="wrap"
+                        display='flex'
+                        flexWrap='wrap'
                         gap={{ xs: '1em', md: 0 }}
                         justifyContent={{ xs: 'center', md: 'space-between' }}
                         className={classNames(
@@ -455,7 +457,7 @@ const Catalog = ({
                                     data={item}></ProductItem>
                             ))
                         ) : isFirstDataLoaded && !isLoading ? (
-                            <Typography textAlign="center" variant="h5">
+                            <Typography textAlign='center' variant='h5'>
                                 Данных не найдено
                             </Typography>
                         ) : (
@@ -470,7 +472,7 @@ const Catalog = ({
                     sx={{ paddingX: '1em' }}
                     data={newProducts}
                     title={
-                        <Typography withSeparator fontWeight="bold" marginBottom="1em" marginTop="1em" variant="h5">
+                        <Typography withSeparator fontWeight='bold' marginBottom='1em' marginTop='1em' variant='h5'>
                             ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
                         </Typography>
                     }></CarouselProducts>
