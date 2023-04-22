@@ -84,6 +84,17 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
     const whyWeBestImages1 = page.whyWeBestImages.slice(0, 4);
     const whyWeBestImages2 = page.whyWeBestImages.slice(4, 8);
 
+    const renderH1 = (device: 'mobile' | 'desktop') => (
+        <Typography
+            display={device === 'mobile' ? { xs: 'block', md: 'none' } : { xs: 'none', md: 'block' }}
+            variant='h4'
+            fontWeight='500'
+            title={data.h1}
+            component='h1'>
+            {data.h1}
+        </Typography>
+    );
+
     const renderWhyWeBest = (images: IImage[]) => (
         <>
             {isMobile ? (
@@ -123,6 +134,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
     return (
         <>
             <Box display='flex' marginTop='3em' gap={'2em'} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
+                {renderH1('mobile')}
                 <Box display='flex' sx={{ width: { xs: '100%', md: '570px' } }} maxHeight={isMobile ? 360 : 480}>
                     {data.images ? (
                         <>
@@ -190,9 +202,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                     )}
                 </Box>
                 <Box flex='1'>
-                    <Typography variant='h4' fontWeight='500' title={data.h1} component='h1'>
-                        {data.h1}
-                    </Typography>
+                    {renderH1('desktop')}
                     <Box marginBottom='1em' alignItems='center' display='flex'>
                         <Link marginRight='0.5em' variant='h6' href='tel:+375297804780'>
                             +375 29 780 4 780
