@@ -49,7 +49,7 @@ const ProductItem = ({
                         component='span'
                         underline='hover'
                         fontWeight='500'>
-                        {data.name}
+                        {data.h1}
                     </Link>
                 </NextLink>
                 <Grid sx={{ display: { xs: 'none', md: 'flex' } }} columnSpacing={2} container>
@@ -112,7 +112,7 @@ const ProductItem = ({
                         padding='0.25em'
                         marginTop='0.5em'
                         textAlign='center'>
-                        {data.name}
+                        {data.h1}
                     </Link>
                 </NextLink>
                 <Box display='flex' height={65} flexDirection='column' alignItems='center' justifyContent='center'>
@@ -177,12 +177,12 @@ const ProductItem = ({
                 ) : (
                     <Box>
                         <Image
-                            title={data.name}
+                            title={data.h1}
                             style={{ objectFit: 'cover', maxWidth: '100%', margin: 'auto' }}
                             src=''
                             width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
                             height={activeView === 'grid' ? 215 : 150}
-                            alt={data.name}></Image>
+                            alt={data.h1}></Image>
                     </Box>
                 )}
             </NextLink>
