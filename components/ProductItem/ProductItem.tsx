@@ -49,7 +49,7 @@ const ProductItem = ({
                         component='span'
                         underline='hover'
                         fontWeight='500'>
-                        {data.h1 || data.name}
+                        {data.h1}
                     </Link>
                 </NextLink>
                 <Grid sx={{ display: { xs: 'none', md: 'flex' } }} columnSpacing={2} container>
@@ -112,7 +112,7 @@ const ProductItem = ({
                         padding='0.25em'
                         marginTop='0.5em'
                         textAlign='center'>
-                        {data.h1 || data.name}
+                        {data.h1}
                     </Link>
                 </NextLink>
                 <Box display='flex' height={65} flexDirection='column' alignItems='center' justifyContent='center'>
