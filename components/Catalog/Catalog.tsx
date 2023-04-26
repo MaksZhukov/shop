@@ -201,7 +201,7 @@ const Catalog = ({
                         ...prev,
                         [key]: othersQueryByFilters[key]
                     }),
-                    { searchValue: querySearchValue, brand, model }
+                    { searchValue: querySearchValue, brand, model, kindSparePart }
                 )
             );
             setSearchValue(querySearchValue);
