@@ -105,19 +105,19 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             populate: ['seoSpareParts.images', 'image'],
             filters: { brand: { slug: brand } }
         });
-        props = { page: { seo: withKindSparePart(data.seoSpareParts, kindSparePart) } };
+        props = { page: { seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart) } };
     } else if (brand) {
         const {
             data: { data }
         } = await fetchBrandBySlug(brand, {
             populate: ['seoSpareParts.images', 'image']
         });
-        props = { page: { seo: withKindSparePart(data.seoSpareParts, kindSparePart) } };
+        props = { page: { seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart) } };
     } else {
         const {
             data: { data }
         } = await fetchPage('spare-part')();
-        props = { page: { seo: withKindSparePart(data.seo, kindSparePart) } };
+        props = { page: { seo: withKindSparePart(data.seo, 'запчасти', kindSparePart) } };
     }
     return props;
 });

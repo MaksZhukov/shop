@@ -48,7 +48,7 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
 export default Cabins;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-    const { slug = [], kindSpareParts } = context.query;
+    const { slug = [], kindSparePart } = context.query;
     const [brand, modelOrProductParam] = slug;
 
     const productParam =
@@ -100,19 +100,19 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             populate: ['seoCabins.images', 'image'],
             filters: { brand: { slug: brand } }
         });
-        props = { page: { seo: withKindSparePart(data.seoCabins, kindSpareParts) } };
+        props = { page: { seo: withKindSparePart(data.seoCabins, 'салоны', kindSparePart) } };
     } else if (brand) {
         const {
             data: { data }
         } = await fetchBrandBySlug(brand, {
             populate: ['seoCabins.images', 'image']
         });
-        props = { page: { seo: withKindSparePart(data.seoCabins, kindSpareParts) } };
+        props = { page: { seo: withKindSparePart(data.seoCabins, 'салоны', kindSparePart) } };
     } else {
         const {
             data: { data }
         } = await fetchPage('cabin')();
-        props = { page: { seo: withKindSparePart(data.seo, kindSpareParts) } };
+        props = { page: { seo: withKindSparePart(data.seo, 'салоны', kindSparePart) } };
     }
     return props;
 });
