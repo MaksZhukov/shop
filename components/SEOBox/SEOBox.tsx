@@ -35,12 +35,12 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
             : images;
     return (
         <>
-            {renderImages && (
+            {images && (
                 <>
                     {isTablet ? (
                         <Box paddingX='1em'>
                             <Slider slidesToShow={2}>
-                                {renderImages.map((item) => (
+                                {images.map((item) => (
                                     <Box key={item.id} padding='0.5em'>
                                         <Image
                                             isOnSSR={!(isCatalog && !images)}
@@ -56,7 +56,7 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
                         </Box>
                     ) : (
                         <Box display='flex' flexWrap='wrap' justifyContent='space-around'>
-                            {renderImages?.map((item) => (
+                            {images.map((item) => (
                                 <Box key={item.id} padding='0.5em'>
                                     <Image
                                         isOnSSR={!(isCatalog && !images)}
