@@ -2,7 +2,6 @@ import { Box, useMediaQuery } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import Image from 'components/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
-import WhiteBox from 'components/WhiteBox';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
@@ -33,14 +32,15 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
                   { id: 5, alternativeText: h1, caption: h1, url: '/advantage_5.png' }
               ] as IImage[])
             : images;
+
     return (
         <>
-            {/* {images && (
+            {renderImages && (
                 <>
                     {isTablet ? (
                         <Box paddingX='1em'>
                             <Slider slidesToShow={2}>
-                                {images.map((item) => (
+                                {renderImages.map((item) => (
                                     <Box key={item.id} padding='0.5em'>
                                         <Image
                                             isOnSSR={!(isCatalog && !images)}
@@ -56,7 +56,7 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
                         </Box>
                     ) : (
                         <Box display='flex' flexWrap='wrap' justifyContent='space-around'>
-                            {images.map((item) => (
+                            {renderImages.map((item) => (
                                 <Box key={item.id} padding='0.5em'>
                                     <Image
                                         isOnSSR={!(isCatalog && !images)}
@@ -70,7 +70,7 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
                         </Box>
                     )}
                 </>
-            )} */}
+            )}
             {content && <ReactMarkdown content={content}></ReactMarkdown>}
         </>
     );
