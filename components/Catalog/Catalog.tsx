@@ -51,6 +51,8 @@ const getTextCategory = (
 <p>Наши Запчасти б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в следующих городах Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем, что работаем со всеми городами  и деревнями, просто доставка займет немного больше времени. Будьте уверены, мы приложим все силы, что бы ваш товар был доставлен максимально быстро.</p>
 `;
 
+const getKindSparePartText = (h1?: string) => '';
+
 interface Props {
     seo: SEO | null;
     searchPlaceholder?: string;
@@ -489,6 +491,11 @@ const Catalog = ({
             <Box>
                 <ReactMarkdown content={getTextCategory(seo?.h1)}></ReactMarkdown>
             </Box>
+            {kindSparePart && (
+                <Box>
+                    <ReactMarkdown content={getKindSparePartText(seo?.h1)}></ReactMarkdown>
+                </Box>
+            )}
         </>
     );
 };
