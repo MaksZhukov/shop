@@ -35,7 +35,7 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
             : images;
     return (
         <>
-            {images && (
+            {/* {images && (
                 <>
                     {isTablet ? (
                         <Box paddingX='1em'>
@@ -70,7 +70,7 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
                         </Box>
                     )}
                 </>
-            )}
+            )} */}
             {content && <ReactMarkdown content={content}></ReactMarkdown>}
         </>
     );
