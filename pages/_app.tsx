@@ -91,11 +91,13 @@ function MyApp({
                     {!hasGlobalContainer ? (
                         <Container>
                             <SEOBox
-                                images={restPageProps.page?.seo?.images}
-                                content={restPageProps.page?.seo?.content}></SEOBox>
+                                images={restPageProps.page?.seo}
+                                content={restPageProps.page?.seo?.content}
+                                h1={restPageProps.page?.seo?.h1}></SEOBox>
                         </Container>
                     ) : (
                         <SEOBox
+                            h1={restPageProps.page?.seo?.h1}
                             images={restPageProps.page?.seo?.images}
                             content={restPageProps.page?.seo?.content}></SEOBox>
                     )}
@@ -167,12 +169,12 @@ function MyApp({
                             </Content>
                         </RouteShield>
                         <Footer footer={layout.footer}></Footer>
-                        <Box bottom={10} right={10} zIndex={10} position="fixed">
+                        <Box bottom={10} right={10} zIndex={10} position='fixed'>
                             <Button
                                 sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
-                                variant="contained"
-                                component="a"
-                                href="tel:+375297804780">
+                                variant='contained'
+                                component='a'
+                                href='tel:+375297804780'>
                                 <LocalPhone></LocalPhone>
                             </Button>
                         </Box>
