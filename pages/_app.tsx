@@ -91,7 +91,7 @@ function MyApp({
                     {!hasGlobalContainer ? (
                         <Container>
                             <SEOBox
-                                images={restPageProps.page?.seo}
+                                images={restPageProps.page?.seo?.images}
                                 content={restPageProps.page?.seo?.content}
                                 h1={restPageProps.page?.seo?.h1}></SEOBox>
                         </Container>
