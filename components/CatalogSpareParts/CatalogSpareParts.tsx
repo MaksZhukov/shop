@@ -53,6 +53,10 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
     });
 
     useEffect(() => {
+        setModels([]);
+    }, [brand]);
+
+    useEffect(() => {
         if (!models.length && model) {
             handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
                 fetchModels({
@@ -208,7 +212,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
                     name: 'Запчасть'
                 }
             ]}
-            searchPlaceholder="Поиск ..."
+            searchPlaceholder='Поиск ...'
             filtersConfig={filtersConfig}
             seo={page?.seo}
             fetchData={fetchSpareParts}

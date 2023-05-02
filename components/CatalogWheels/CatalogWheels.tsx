@@ -44,6 +44,10 @@ const CatalogWheels: FC<Props> = ({ page, brands }) => {
     const [brand, model] = router.query.slug || [];
 
     useEffect(() => {
+        setModels([]);
+    }, [brand]);
+
+    useEffect(() => {
         if (!models.length && model) {
             handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
                 fetchModels({
@@ -252,7 +256,7 @@ const CatalogWheels: FC<Props> = ({ page, brands }) => {
                     name: 'Количество'
                 }
             ]}
-            searchPlaceholder="Поиск ..."
+            searchPlaceholder='Поиск ...'
             filtersConfig={filtersConfig}
             fetchData={fetchWheels}
             generateFiltersByQuery={generateFiltersByQuery}></Catalog>
