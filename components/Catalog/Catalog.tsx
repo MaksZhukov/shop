@@ -258,8 +258,9 @@ const Catalog = ({
                 }
             }
         });
+        router.query.page = '1';
 
-        throttledFetchProducts(newValues, 1);
+        throttledFetchProducts(newValues, 1, false);
         // It needs to avoid the same seo data for the page
         router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
         router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
