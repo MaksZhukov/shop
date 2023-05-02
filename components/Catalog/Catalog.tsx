@@ -198,10 +198,9 @@ const Catalog = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.isReady]);
-    console.log(router);
+
     useEffect(() => {
         if (router.isReady && !isClickedFind) {
-            console.log('USE EFFECT FETCH');
             throttledFetchProducts(
                 Object.keys(othersQueryByFilters).reduce(
                     (prev, key) => ({
