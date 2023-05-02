@@ -198,9 +198,10 @@ const Catalog = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.isReady]);
-
+    console.log(router);
     useEffect(() => {
         if (router.isReady && !isClickedFind) {
+            console.log('USE EFFECT FETCH');
             throttledFetchProducts(
                 Object.keys(othersQueryByFilters).reduce(
                     (prev, key) => ({
@@ -263,7 +264,7 @@ const Catalog = ({
         throttledFetchProducts(newValues, 1, false);
         // It needs to avoid the same seo data for the page
         router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
-        router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
+        // router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
         setTimeout(() => {
             setIsClickedFind(false);
         }, 100);
@@ -306,7 +307,7 @@ const Catalog = ({
             newQuery = { brand };
         }
         delete router.query.kindSparePart;
-        fetchProducts(
+        throttledFetchProducts(
             Object.keys(othersQueryByFilters).reduce(
                 (prev, key) => ({
                     ...prev,
