@@ -71,7 +71,7 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
                     )}
                 </>
             )}
-            {content && <ReactMarkdown content={content}></ReactMarkdown>}
+            {content && !router.query.kindSparePart && <ReactMarkdown content={content}></ReactMarkdown>}
         </>
     );
 };
