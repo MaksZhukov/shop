@@ -6,19 +6,21 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import { Box } from '@mui/system';
 import Image from 'components/Image';
-import { Button, Input, Link, TextareaAutosize, TextField, useMediaQuery } from '@mui/material';
+import { Button, Input, Link, ListItemButton, TextareaAutosize, TextField, useMediaQuery } from '@mui/material';
 import { ChangeEventHandler, FormEvent, useState } from 'react';
 import ReactInputMask from 'react-input-mask';
 import { useThrottle } from 'rooks';
 import { send } from 'api/email';
 import { useSnackbar } from 'notistack';
 import BlockImages from 'components/BlockImages';
+import { LinkWithImage } from 'api/types';
 
 interface Props {
     page: PageContacts;
+    socials: LinkWithImage[];
 }
 
-const Contacts = ({ page }: Props) => {
+const Contacts = ({ page, socials }: Props) => {
     const [name, setName] = useState<string>('');
     const [phone, setPhone] = useState<string>('');
     const [message, setMessage] = useState<string>('');
@@ -58,87 +60,87 @@ const Contacts = ({ page }: Props) => {
     }, 300);
     return (
         <>
-            <Typography component="h1" marginBottom="1.5em" variant="h4" textTransform="uppercase">
+            <Typography component='h1' marginBottom='1.5em' variant='h4' textTransform='uppercase'>
                 {page.h1}
             </Typography>
-            <Box display="flex" gap="1em" marginBottom="2em" sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
-                <Box flex="1" display="flex" padding="2em 1em" alignItems="center" bgcolor="#fff">
+            <Box display='flex' gap='1em' marginBottom='2em' sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
+                <Box flex='1' display='flex' padding='2em 1em' alignItems='center' bgcolor='#fff'>
                     <Image
                         title={'Телефон 1'}
-                        src="/phone.png"
+                        src='/phone.png'
                         width={50}
                         isOnSSR={false}
                         height={50}
-                        alt="Телефон 1"></Image>
+                        alt='Телефон 1'></Image>
                     <Link
-                        marginLeft="1em"
-                        color="#000"
-                        underline="hover"
+                        marginLeft='1em'
+                        color='#000'
+                        underline='hover'
                         href={`tel:${page.phone1.replaceAll(' ', '')}`}>
                         {page.phone1}
                     </Link>
                 </Box>
-                <Box flex="1" display="flex" padding="2em 1em" bgcolor="#fff" alignItems="center">
+                <Box flex='1' display='flex' padding='2em 1em' bgcolor='#fff' alignItems='center'>
                     <Image
-                        title="Телефон 2"
+                        title='Телефон 2'
                         width={50}
                         height={50}
                         isOnSSR={false}
-                        src="/phone.png"
-                        alt="Телефон 2"></Image>
+                        src='/phone.png'
+                        alt='Телефон 2'></Image>
                     <Link
-                        marginLeft="1em"
-                        color="#000"
-                        underline="hover"
+                        marginLeft='1em'
+                        color='#000'
+                        underline='hover'
                         href={`tel:${page.phone2.replaceAll(' ', '')}`}>
                         {page.phone2}
                     </Link>
                 </Box>
-                <Box flex="1" display="flex" padding="2em 1em" bgcolor="#fff" alignItems="center">
+                <Box flex='1' display='flex' padding='2em 1em' bgcolor='#fff' alignItems='center'>
                     <Image
-                        title="Расположение "
+                        title='Расположение '
                         width={50}
                         height={50}
                         isOnSSR={false}
-                        src="/mark.png"
-                        alt="Расположение"></Image>
-                    <Typography marginLeft="1em">д полотково, Гродно 231710</Typography>
+                        src='/mark.png'
+                        alt='Расположение'></Image>
+                    <Typography marginLeft='1em'>д полотково, Гродно 231710</Typography>
                 </Box>
             </Box>
             <Box
-                display="flex"
-                sx={{ flexDirection: { xs: 'column-reverse', md: 'row' }, marginBottom: { xs: '1em', md: '5em' } }}>
+                display='flex'
+                sx={{ flexDirection: { xs: 'column-reverse', md: 'row' }, marginBottom: { xs: '1em', md: '3em' } }}>
                 <iframe
                     style={{ flex: '1', minHeight: isMobile ? 400 : 500 }}
-                    src="https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor"
-                    frameBorder="0"></iframe>
-                <Box flex="1" sx={{ marginBottom: { xs: '3em', md: '0' }, marginLeft: { xs: 0, md: '2em' } }}>
+                    src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor'
+                    frameBorder='0'></iframe>
+                <Box flex='1' sx={{ marginBottom: { xs: '3em', md: '0' }, marginLeft: { xs: 0, md: '2em' } }}>
                     <Typography
-                        component="h2"
-                        fontWeight="500"
-                        marginBottom="1em"
-                        variant="h5"
-                        textTransform="uppercase">
+                        component='h2'
+                        fontWeight='500'
+                        marginBottom='1em'
+                        variant='h5'
+                        textTransform='uppercase'>
                         {page.askTitle}
                     </Typography>
-                    <Typography color="text.secondary" marginBottom="1em">
+                    <Typography color='text.secondary' marginBottom='1em'>
                         <ReactMarkdown content={page.askText}></ReactMarkdown>
                     </Typography>
-                    <Box component="form" onSubmit={throttledSubmit} sx={{ maxWidth: { xs: 'initial', md: '430px' } }}>
-                        <Box marginBottom="1em">
+                    <Box component='form' onSubmit={throttledSubmit} sx={{ maxWidth: { xs: 'initial', md: '430px' } }}>
+                        <Box marginBottom='1em'>
                             <Input
                                 sx={{ background: '#fff', padding: '0.5em 1em', border: 'none' }}
                                 required
                                 onChange={handleChangeName}
-                                placeholder="Ваше имя"
+                                placeholder='Ваше имя'
                                 fullWidth></Input>
                         </Box>
-                        <Box marginBottom="1em">
+                        <Box marginBottom='1em'>
                             <ReactInputMask
                                 required
-                                mask="+375 99 999 99 99"
+                                mask='+375 99 999 99 99'
                                 value={phone}
-                                maskChar=" "
+                                maskChar=' '
                                 onChange={handleChangePhone}>
                                 {
                                     //@ts-ignore
@@ -146,32 +148,54 @@ const Contacts = ({ page }: Props) => {
                                         <Input
                                             sx={{ background: '#fff', padding: '0.5em 1em' }}
                                             required
-                                            placeholder="Ваш телефон"
+                                            placeholder='Ваш телефон'
                                             fullWidth></Input>
                                     )
                                 }
                             </ReactInputMask>
                         </Box>
-                        <Box marginBottom="1em">
+                        <Box marginBottom='1em'>
                             <Input
                                 required
                                 sx={{ background: '#fff', padding: '0.5em 1em' }}
                                 onChange={handleChangeMessage}
-                                placeholder="Интересуемый вопрос"
+                                placeholder='Интересуемый вопрос'
                                 multiline
                                 fullWidth
                                 rows={4}></Input>
                         </Box>
-                        <Button fullWidth={isMobile} variant="contained" sx={{ padding: '0.5em 5em' }} type="submit">
+                        <Button fullWidth={isMobile} variant='contained' sx={{ padding: '0.5em 5em' }} type='submit'>
                             Отправить
                         </Button>
                     </Box>
                 </Box>
             </Box>
+            <Typography gutterBottom width={'100%'} textTransform='uppercase'>
+                Мы в соц сетях:
+            </Typography>
+            <Box display='flex' gap='1em' flexWrap='wrap' marginBottom='1em'>
+                {socials?.map((item) => (
+                    <ListItemButton
+                        sx={{ padding: '0.5em 0.25em', flex: 'initial' }}
+                        component='a'
+                        key={item.id}
+                        href={item.link}
+                        target='_blank'
+                        color='inherit'>
+                        <Image
+                            title={item.image?.caption}
+                            alt={item.image?.alternativeText}
+                            width={20}
+                            height={20}
+                            src={item.image?.url}></Image>
+                        <Typography marginLeft='0.5em'>{item.image?.caption}</Typography>
+                    </ListItemButton>
+                ))}
+            </Box>
             <Box>
                 <ReactMarkdown content={page.content}></ReactMarkdown>
             </Box>
-            <Typography component="h2" variant="h5" textTransform="uppercase" marginBottom="1em">
+            <Typography component='h2' variant='h5' textTransform='uppercase' marginBottom='1em'>
                 {page.requisitesTitle}
             </Typography>
             <BlockImages
