@@ -85,7 +85,7 @@ function MyApp({
 
     const renderContent = (
         <>
-            <Component {...restPageProps} />
+            <Component {...restPageProps} socials={layout.footer?.socials} />
             {!hideSEOBox && (
                 <>
                     {!hasGlobalContainer ? (
