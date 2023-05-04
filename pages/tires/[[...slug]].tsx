@@ -20,6 +20,7 @@ interface Props {
 }
 
 const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts }) => {
+    console.log(page);
     if (data && relatedProducts) {
         return (
             <Product
@@ -101,7 +102,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
                 pagination: { limit: API_MAX_LIMIT }
             })
         ]);
-        props = { seo: data.seo, tireBrands: tireBrandsData };
+        props = { page: { seo: data.seo }, tireBrands: tireBrandsData };
     } else {
         const {
             data: { data }
