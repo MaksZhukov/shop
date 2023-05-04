@@ -7,12 +7,8 @@ import { useState, SetStateAction, Dispatch, FC } from 'react';
 import { AxiosResponse } from 'axios';
 import { fetchTires } from 'api/tires/tires';
 import { useSnackbar } from 'notistack';
-import { fetchTireBrandBySlug, fetchTireBrands } from 'api/tireBrands/tireBrands';
-import { getPageProps } from 'services/PagePropsService';
+import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { TireBrand } from 'api/tireBrands/types';
-import { fetchCars } from 'api/cars/cars';
-import { fetchArticles } from 'api/articles/articles';
-import { fetchPage } from 'api/pages';
 import { DefaultPage, PageMain } from 'api/pages/types';
 import { TireWidth } from 'api/tireWidths/types';
 import { TireHeight } from 'api/tireHeights/types';
@@ -188,7 +184,7 @@ const CatalogTires: FC<Props> = ({ page, tireBrands }) => {
                     name: 'Количество'
                 }
             ]}
-            searchPlaceholder="Поиск ..."
+            searchPlaceholder='Поиск ...'
             filtersConfig={filtersConfig}
             fetchData={fetchTires}
             generateFiltersByQuery={generateFiltersByQuery}></Catalog>
