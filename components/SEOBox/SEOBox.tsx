@@ -25,24 +25,29 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
     const renderImages: IImage[] | undefined =
         isCatalog && !images
             ? ([
-                  { id: 1, alternativeText: h1, caption: h1, url: '/advantage_1.png' },
-                  { id: 2, alternativeText: `${h1} купить`, caption: `${h1} купить`, url: '/advantage_2.png' },
+                  { id: 1, alternativeText: h1.trim(), caption: h1.trim(), url: '/advantage_1.png' },
+                  {
+                      id: 2,
+                      alternativeText: `${h1.trim()} купить`,
+                      caption: `${h1.trim()} купить`,
+                      url: '/advantage_2.png'
+                  },
                   {
                       id: 3,
-                      alternativeText: `${h1} купить с доставкой`,
-                      caption: `${h1} купить с доставкой`,
+                      alternativeText: `${h1.trim()} купить с доставкой`,
+                      caption: `${h1.trim()} купить с доставкой`,
                       url: '/advantage_3.png'
                   },
                   {
                       id: 4,
-                      alternativeText: `${h1} купить в магазине запчастей бу`,
-                      caption: `${h1} купить в магазине запчастей бу`,
+                      alternativeText: `${h1.trim()} купить в магазине запчастей бу`,
+                      caption: `${h1.trim()} купить в магазине запчастей бу`,
                       url: '/advantage_4.png'
                   },
                   {
                       id: 5,
-                      alternativeText: `${h1} купить на авторазборке`,
-                      caption: `${h1} купить на авторазборке`,
+                      alternativeText: `${h1.trim()} купить на авторазборке`,
+                      caption: `${h1.trim()} купить на авторазборке`,
                       url: '/advantage_5.png'
                   }
               ] as IImage[])
