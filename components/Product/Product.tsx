@@ -275,7 +275,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 </Box>
             </Box>
             <Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
-                {data.h1} характеристики
+                Характеристики для {data.h1}
             </Typography>
             {page.textAfterDescription && <ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>}
             <CarouselProducts
