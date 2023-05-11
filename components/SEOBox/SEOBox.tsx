@@ -25,11 +25,16 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
     const renderImages: IImage[] | undefined =
         isCatalog && !images
             ? ([
-                  { id: 1, alternativeText: h1, caption: h1, url: '/advantage_1.png' },
-                  { id: 2, alternativeText: h1, caption: h1, url: '/advantage_2.png' },
-                  { id: 3, alternativeText: h1, caption: h1, url: '/advantage_3.png' },
-                  { id: 4, alternativeText: h1, caption: h1, url: '/advantage_4.png' },
-                  { id: 5, alternativeText: h1, caption: h1, url: '/advantage_5.png' }
+                  { id: 1, alternativeText: `${h1}`, caption: h1, url: '/advantage_1.png' },
+                  { id: 2, alternativeText: `${h1} купить`, caption: h1, url: '/advantage_2.png' },
+                  { id: 3, alternativeText: `${h1} купить с доставкой`, caption: h1, url: '/advantage_3.png' },
+                  {
+                      id: 4,
+                      alternativeText: `${h1} купить в магазине запчастей бу`,
+                      caption: h1,
+                      url: '/advantage_4.png'
+                  },
+                  { id: 5, alternativeText: `${h1} купить на авторазборке`, caption: h1, url: '/advantage_5.png' }
               ] as IImage[])
             : images;
 
