@@ -25,7 +25,7 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
     const renderImages: IImage[] | undefined =
         isCatalog && !images
             ? ([
-                  { id: 1, alternativeText: h1, caption: h1, url: '/advantage_1.png' },
+                  { id: 1, alternativeText: h1.trim(), caption: h1.trim(), url: '/advantage_1.png' },
                   {
                       id: 2,
                       alternativeText: `${h1.trim()} купить`,
