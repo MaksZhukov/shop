@@ -467,13 +467,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         <Slider slidesToShow={2}>
                             {page.benefits?.map((item) => (
                                 <Box paddingX='0.5em' key={item.id}>
-                                    <Image
-                                        title={item.caption}
-                                        src={item.url}
-                                        key={item.id}
-                                        alt={item.alternativeText}
+                                    <LinkWithImage
+                                        withoutTitle
+                                        link={item.link}
+                                        image={item.image}
                                         width={200}
-                                        height={140}></Image>
+                                        height={140}></LinkWithImage>
                                 </Box>
                             ))}
                         </Slider>
@@ -481,13 +480,13 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 ) : (
                     <Box flexWrap='wrap' marginBottom='4em' justifyContent='space-between' display='flex'>
                         {page.benefits?.map((item) => (
-                            <Image
-                                title={item.caption}
-                                src={item.url}
+                            <LinkWithImage
                                 key={item.id}
-                                alt={item.alternativeText}
+                                withoutTitle
+                                link={item.link}
+                                image={item.image}
                                 width={200}
-                                height={140}></Image>
+                                height={140}></LinkWithImage>
                         ))}
                     </Box>
                 )}
@@ -736,7 +735,7 @@ export const getServerSideProps = getPageProps(
     fetchPage('main', {
         populate: [
             'seo',
-            'benefits',
+            'benefits.image',
             'categoryImages',
             'banner',
             'bannerMobile',
