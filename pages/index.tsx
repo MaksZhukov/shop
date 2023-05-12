@@ -736,7 +736,7 @@ export const getServerSideProps = getPageProps(
     fetchPage('main', {
         populate: [
             'seo',
-            'benefits',
+            'benefits.image',
             'categoryImages',
             'banner',
             'bannerMobile',
