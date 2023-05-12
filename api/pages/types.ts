@@ -14,7 +14,7 @@ export type PageMain = {
     subH1: string;
     titleCategories: string;
     categoryImages?: Image[];
-    benefits?: Image[];
+    benefits?: LinkWithImage[];
     autocomises?: Autocomis[];
     serviceStations?: ServiceStation[];
     popularBrandsTitle: string;
@@ -140,7 +140,7 @@ export type PageAbout = {
 };
 
 export type PageProduct = {
-    whyWeBestImages: Image[];
+    whyWeBest: LinkWithImage[];
 };
 
 export type PageProductTire = {
