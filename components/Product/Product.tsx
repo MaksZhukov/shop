@@ -36,6 +36,7 @@ import { isTireBrand } from 'services/ProductService';
 import GalleryImages from 'components/GalleryImages/GalleryImages';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
+import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
@@ -81,8 +82,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
     const handleClickImage = (i: number) => () => {
         setSelectedImageIndex(i);
     };
-    const whyWeBestImages1 = page.whyWeBestImages.slice(0, 4);
-    const whyWeBestImages2 = page.whyWeBestImages.slice(4, 8);
+    const whyWeBest1 = page.whyWeBest.slice(0, 4);
+    const whyWeBest2 = page.whyWeBest.slice(4, 8);
 
     const renderH1 = (device: 'mobile' | 'desktop') => (
         <Typography
@@ -95,36 +96,41 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
         </Typography>
     );
 
-    const renderWhyWeBest = (images: IImage[]) => (
+    const renderWhyWeBest = (items: ILinkWithImage[]) => (
         <>
             {isMobile ? (
                 <Box paddingX='1em' marginBottom='2em'>
                     <Slider slidesToShow={1} autoplay autoplaySpeed={3000}>
-                        {images.map((image) => (
-                            <Box key={image.id}>
-                                <Image
-                                    title={getStringByTemplateStr(image.caption, data)}
-                                    alt={getStringByTemplateStr(image.alternativeText, data)}
-                                    style={{ margin: 'auto' }}
-                                    key={image.id}
-                                    src={image.url}
+                        {items.map((item) => (
+                            <Box key={item.id}>
+                                <LinkWithImage
+                                    image={{
+                                        ...item.image,
+                                        caption: getStringByTemplateStr(item.image.caption, data),
+                                        alternativeText: getStringByTemplateStr(item.image.alternativeText, data)
+                                    }}
+                                    link={item.link}
                                     width={280}
-                                    height={185}></Image>
+                                    height={185}
+                                    withoutTitle></LinkWithImage>
                             </Box>
                         ))}
                     </Slider>
                 </Box>
             ) : (
                 <Box display='flex' justifyContent='space-between' marginBottom='1em' flexWrap='wrap'>
-                    {images.map((image) => (
-                        <Image
-                            style={{ marginBottom: '2em' }}
-                            title={getStringByTemplateStr(image.caption, data)}
-                            alt={getStringByTemplateStr(image.alternativeText, data)}
-                            key={image.id}
-                            src={image.url}
+                    {items.map((item) => (
+                        <LinkWithImage
+                            key={item.id}
+                            image={{
+                                ...item.image,
+                                caption: getStringByTemplateStr(item.image.caption, data),
+                                alternativeText: getStringByTemplateStr(item.image.alternativeText, data)
+                            }}
+                            link={item.link}
                             width={280}
-                            height={185}></Image>
+                            height={185}
+                            withoutTitle></LinkWithImage>
                     ))}
                 </Box>
             )}
@@ -297,7 +303,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 variant='h5'>
                 Почему мы лучшие в своем деле?
             </Typography>
-            {renderWhyWeBest(whyWeBestImages1)}
+            {renderWhyWeBest(whyWeBest1)}
             <Typography
                 withSeparator
                 marginBottom='1.5em'
@@ -313,7 +319,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 городах и деревнях, просто доставка займет немного больше времени. Будьте уверены, мы приложим все силы,
                 что бы ваш товар - {data.h1} был доставлен максимально быстро.
             </Typography>
-            {renderWhyWeBest(whyWeBestImages2)}
+            {renderWhyWeBest(whyWeBest2)}
             {brandText && <ReactMarkdown content={brandText}></ReactMarkdown>}
             <GalleryImages
                 images={data.images}

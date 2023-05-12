@@ -64,7 +64,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             }
         ] = await Promise.all([
             fetchTire(productSlugParam),
-            fetchPage<PageProduct>('product', { populate: ['whyWeBestImages'] })(),
+            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
             fetchPage<PageProductTire>('product-tire', { populate: ['seo'] })()
         ]);
         const {
