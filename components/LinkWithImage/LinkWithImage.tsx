@@ -12,9 +12,11 @@ interface Props {
     targetLink?: HTMLAttributeAnchorTarget;
     width?: number;
     height?: number;
+    withoutTitle?: boolean;
     image?: IImage;
     imageStyle?: CSSProperties;
     caption?: string;
+    isOnSSR?: boolean;
     typographyProps?: LinkProps;
 }
 const LinkWithImage: FC<Props> = ({
@@ -23,6 +25,8 @@ const LinkWithImage: FC<Props> = ({
     link,
     image,
     caption,
+    withoutTitle = false,
+    isOnSSR = true,
     imageStyle = { objectFit: 'contain', margin: 'auto' },
     targetLink = '_self',
     typographyProps = { variant: 'h6', marginTop: '1em' }
@@ -36,10 +40,10 @@ const LinkWithImage: FC<Props> = ({
                 alt={image?.alternativeText || ''}
                 width={width}
                 height={height}
-                isOnSSR={!!image}
+                isOnSSR={isOnSSR}
                 src={width > 200 ? image?.url : image?.formats?.thumbnail.url || ''}></Image>
-            {title && (
-                <Typography lineClamp="2" textAlign="center" {...typographyProps}>
+            {!withoutTitle && title && (
+                <Typography lineClamp='2' textAlign='center' {...typographyProps}>
                     {title}
                 </Typography>
             )}

@@ -68,7 +68,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             }
         ] = await Promise.all([
             fetchCabin(productParam),
-            fetchPage<PageProduct>('product', { populate: ['whyWeBestImages'] })(),
+            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
             fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'] })()
         ]);
         const {
