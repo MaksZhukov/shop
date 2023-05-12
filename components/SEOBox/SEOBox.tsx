@@ -19,7 +19,6 @@ interface Props {
     h1: string;
 }
 const SEOBox: FC<Props> = ({ images, content, h1 }) => {
-    console.log(images);
     const router = useRouter();
     const path = router.asPath.split('/');
     const isCatalog =

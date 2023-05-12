@@ -20,7 +20,6 @@ interface Props {
 }
 
 const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts }) => {
-    console.log(page);
     if (data && relatedProducts) {
         return (
             <Product
