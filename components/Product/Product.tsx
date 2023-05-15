@@ -32,11 +32,12 @@ import { Brand, ProductBrandTexts } from 'api/brands/types';
 import Typography from 'components/Typography';
 import Buy from 'components/Buy';
 import styles from './product.module.scss';
-import { isTireBrand } from 'services/ProductService';
+import { isSparePart, isTireBrand } from 'services/ProductService';
 import GalleryImages from 'components/GalleryImages/GalleryImages';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
+import ReactPlayer from 'react-player';
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
@@ -52,6 +53,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
     const [sold, setSold] = useState<boolean>(data.sold);
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
     const handleSold = () => {
         setSold(true);
@@ -141,70 +143,79 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
         <>
             <Box display='flex' marginTop='3em' gap={'2em'} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
                 {renderH1('mobile')}
-                <Box display='flex' sx={{ width: { xs: '100%', md: '570px' } }} maxHeight={isMobile ? 360 : 480}>
-                    {data.images ? (
-                        <>
-                            <Slider
-                                ref={(ref) => {
-                                    setSliderSmall(ref);
-                                }}
-                                swipeToSlide
-                                verticalSwiping
-                                vertical
-                                arrows={false}
-                                slidesToShow={getSlidesToShow()}
-                                focusOnSelect
-                                className={classNames(
-                                    styles.slider,
-                                    styles.slider_small,
-                                    isMobile && styles.slider_small_mobile
-                                )}
-                                asNavFor={sliderBig || undefined}>
-                                {data.images.map((item) => (
-                                    <Box marginY='0.5em' key={item.id}>
-                                        <Image
-                                            title={item.caption}
-                                            alt={item.alternativeText}
-                                            width={104}
-                                            height={78}
-                                            src={item.formats?.thumbnail.url || item.url}></Image>
-                                    </Box>
-                                ))}
-                            </Slider>
-                            <Slider
-                                ref={(ref) => {
-                                    setSliderBig(ref);
-                                }}
-                                asNavFor={sliderSmall || undefined}
-                                arrows={false}
-                                autoplay
-                                autoplaySpeed={5000}
-                                className={classNames(styles.slider, isMobile && styles.slider_mobile)}>
-                                {data.images.map((item, i) => (
-                                    <Box
-                                        onClick={handleClickImage(i)}
-                                        sx={{ paddingX: { xs: '0.25em', md: '1em' } }}
-                                        key={item.id}>
-                                        <Image
-                                            title={item.caption}
-                                            // style={{ height: '100%' }}
-                                            alt={item.alternativeText}
-                                            width={440}
-                                            height={isMobile ? 360 : 480}
-                                            src={item.url}></Image>
-                                    </Box>
-                                ))}
-                            </Slider>
-                        </>
-                    ) : (
-                        <Image
-                            title={data.name}
-                            alt={data.name}
-                            quality={100}
-                            width={540}
-                            height={480}
-                            style={{ objectFit: 'cover', height: 'auto' }}
-                            src=''></Image>
+                <Box>
+                    <Box display='flex' sx={{ width: { xs: '100%', md: '570px' } }} maxHeight={isMobile ? 360 : 480}>
+                        {data.images ? (
+                            <>
+                                <Slider
+                                    ref={(ref) => {
+                                        setSliderSmall(ref);
+                                    }}
+                                    swipeToSlide
+                                    verticalSwiping
+                                    vertical
+                                    arrows={false}
+                                    slidesToShow={getSlidesToShow()}
+                                    focusOnSelect
+                                    className={classNames(
+                                        styles.slider,
+                                        styles.slider_small,
+                                        isMobile && styles.slider_small_mobile
+                                    )}
+                                    asNavFor={sliderBig || undefined}>
+                                    {data.images.map((item) => (
+                                        <Box marginY='0.5em' key={item.id}>
+                                            <Image
+                                                title={item.caption}
+                                                alt={item.alternativeText}
+                                                width={104}
+                                                height={78}
+                                                src={item.formats?.thumbnail.url || item.url}></Image>
+                                        </Box>
+                                    ))}
+                                </Slider>
+                                <Slider
+                                    ref={(ref) => {
+                                        setSliderBig(ref);
+                                    }}
+                                    asNavFor={sliderSmall || undefined}
+                                    arrows={false}
+                                    autoplay
+                                    autoplaySpeed={5000}
+                                    className={classNames(styles.slider, isMobile && styles.slider_mobile)}>
+                                    {data.images.map((item, i) => (
+                                        <Box
+                                            onClick={handleClickImage(i)}
+                                            sx={{ paddingX: { xs: '0.25em', md: '1em' } }}
+                                            key={item.id}>
+                                            <Image
+                                                title={item.caption}
+                                                // style={{ height: '100%' }}
+                                                alt={item.alternativeText}
+                                                width={440}
+                                                height={isMobile ? 360 : 480}
+                                                src={item.url}></Image>
+                                        </Box>
+                                    ))}
+                                </Slider>
+                            </>
+                        ) : (
+                            <Image
+                                title={data.name}
+                                alt={data.name}
+                                quality={100}
+                                width={540}
+                                height={480}
+                                style={{ objectFit: 'cover', height: 'auto' }}
+                                src=''></Image>
+                        )}
+                    </Box>
+                    {isSparePart(data) && data.videoLink && (
+                        <ReactPlayer
+                            width={'100%'}
+                            height={isMobile ? 240 : 360}
+                            controls
+                            url={data.videoLink}></ReactPlayer>
                     )}
                 </Box>
                 <Box flex='1'>

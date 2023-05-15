@@ -32,4 +32,5 @@ export interface SparePart {
     fuel: typeof FUELS;
     engineNumber: string;
     sold: boolean;
+    videoLink: string;
 }
