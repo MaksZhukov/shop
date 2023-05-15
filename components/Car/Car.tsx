@@ -111,12 +111,14 @@ const Car: FC<Props> = ({ data }) => {
                                 src=''></Image>
                         )}
                     </Box>
-                    <ReactPlayer
-                        width={'100%'}
-                        height={isMobile ? 240 : 360}
-                        controls
-                        style={{ marginTop: '1em' }}
-                        url={data.videoLink}></ReactPlayer>
+                    {data.videoLink && (
+                        <ReactPlayer
+                            width={'100%'}
+                            height={isMobile ? 240 : 360}
+                            controls
+                            style={{ marginTop: '1em' }}
+                            url={data.videoLink}></ReactPlayer>
+                    )}
                 </Box>
 
                 <Box flex='1'>
