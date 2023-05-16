@@ -415,7 +415,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             {
                 id: 'diskOffset',
                 placeholder: 'PCD расстояние между отверстиями, мм',
-                options: diskOffsets.map((item) => item.name),
+                options: diskOffsets.map((item) => item.name.toString()),
                 onOpen: handleOpenAutocomplete<WheelDiskOffset>(!!diskOffsets.length, setDiskOffsets, () =>
                     fetchWheelDiskOffsets({
                         pagination: { limit: API_MAX_LIMIT }
