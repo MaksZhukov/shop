@@ -60,7 +60,16 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
-import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction, UIEventHandler, useRef, useState } from 'react';
+import {
+	ChangeEvent,
+	Dispatch,
+	KeyboardEvent,
+	ReactNode,
+	SetStateAction,
+	UIEventHandler,
+	useRef,
+	useState,
+} from 'react';
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
@@ -168,10 +177,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		setGenerations([]);
 	};
 
-	const handleChangeTireBrandAutocomplete = (_: any, selected: { value: string; label: string } | null) => {
-		updateValue('tireBrand', selected);
-	};
-
 	const handleChangeModelAutocomplete = (_: any, selected: { value: string; label: string } | null) => {
 		updateValue('model', selected);
 		updateValue('generation', null);
@@ -226,10 +231,18 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
 	const handleClickFind = () => {
 		let { brand, model, ...restValues } = values;
-		router.push(
-			`/spare-parts/${model ? `${brand}/model-${model}` : brand ? `${brand}` : ''}?` +
-				qs.stringify(restValues, { encode: false })
-		);
+		let url = '/';
+		if (productType === 'sparePart' || productType === 'cabin') {
+			url =
+				`/${productType === 'sparePart' ? 'spare-parts' : 'cabins'}/${
+					model ? `${brand}/model-${model}` : brand ? `${brand}` : ''
+				}?` + qs.stringify(restValues, { encode: false });
+		} else if (productType === 'wheel') {
+			url = `/wheels/${brand ? `${brand}` : ''}?` + qs.stringify(restValues, { encode: false });
+		} else if (productType === 'tire') {
+			url = `/tires/${brand ? `${brand}` : ''}?` + qs.stringify(restValues, { encode: false });
+		}
+		router.push(url);
 	};
 
 	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -308,7 +321,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		{
 			id: 'transmission',
 			placeholder: 'Коробка',
-			type: 'autocomplete',
 			options: TRANSMISSIONS,
 		},
 
@@ -319,21 +331,39 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		},
 	];
 
-	const filtersConfig = {
+	const filtersConfig: {
+		[key: string]: {
+			id: string;
+			placeholder: string;
+			disabled?: boolean;
+			options: readonly (string | { label: string; value: string })[];
+			onOpen?: () => void;
+			onChange?: (
+				_: any,
+				selected: {
+					value: string;
+					label: string;
+				} | null
+			) => void;
+			onScroll?: UIEventHandler<HTMLDivElement> & UIEventHandler<HTMLUListElement>;
+			loadingMore?: boolean;
+			onInputChange?: (_: any, value: string) => void;
+			noOptionsText?: ReactNode;
+		}[];
+	} = {
 		sparePart: sparePartsAndCabinsFiltersConfig,
 		cabin: sparePartsAndCabinsFiltersConfig,
 		wheel: [
 			{
 				id: 'kind',
 				placeholder: 'Тип диска',
-				type: 'autocomplete',
 				options: ['литой', 'штампованный'],
 			},
 			brandAutocompleteConfig,
 			{
 				id: 'width',
 				placeholder: 'J ширина, мм',
-				options: wheelWidths.map((item) => item.name),
+				options: wheelWidths.map((item) => item.name.toString()),
 				onOpen: handleOpenAutocomplete<WheelWidth>(!!wheelWidths.length, setWheelWidths, () =>
 					fetchWheelWidths({
 						pagination: { limit: API_MAX_LIMIT },
@@ -344,7 +374,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			{
 				id: 'diameter',
 				placeholder: 'R диаметр, дюйм',
-				type: 'autocomplete',
 				options: wheelDiameters.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<WheelDiameter>(!!wheelDiameters.length, setWheelDiameters, () =>
 					fetchWheelDiameters({
@@ -356,8 +385,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			{
 				id: 'numberHoles',
 				placeholder: 'Количество отверстий',
-				type: 'autocomplete',
-				options: numberHoles.map((item) => item.name),
+				options: numberHoles.map((item) => item.name.toString()),
 				onOpen: handleOpenAutocomplete<WheelNumberHole>(!!numberHoles.length, setNumberHoles, () =>
 					fetchWheelNumberHoles({
 						pagination: { limit: API_MAX_LIMIT },
@@ -368,8 +396,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			{
 				id: 'diameterCenterHole',
 				placeholder: 'DIA диаметр центрального отверстия, мм',
-				type: 'autocomplete',
-				options: diameterCenterHoles.map((item) => item.name),
+				options: diameterCenterHoles.map((item) => item.name.toString()),
 				onOpen: handleOpenAutocomplete<WheelDiameterCenterHole>(
 					!!diameterCenterHoles.length,
 					setDiameterCenterHoles,
@@ -383,7 +410,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			{
 				id: 'diskOffset',
 				placeholder: 'PCD расстояние между отверстиями, мм',
-				type: 'autocomplete',
 				options: diskOffsets.map((item) => item.name),
 				onOpen: handleOpenAutocomplete<WheelDiskOffset>(!!diskOffsets.length, setDiskOffsets, () =>
 					fetchWheelDiskOffsets({
@@ -398,7 +424,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 				id: 'brand',
 				placeholder: 'Марка',
 				options: tireBrands.map((item) => ({ label: item.name, value: item.slug })),
-				onChange: handleChangeTireBrandAutocomplete,
 				onOpen: handleOpenAutocomplete<TireBrand>(!!tireBrands.length, setTireBrands, () =>
 					fetchTireBrands({
 						pagination: { limit: API_MAX_LIMIT },
@@ -410,8 +435,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			{
 				id: 'width',
 				placeholder: 'Ширина',
-				options: tireWidths.map((item) => item.name),
-				onChange: handleChangeModelAutocomplete,
+				options: tireWidths.map((item) => item.name.toString()),
 				onOpen: handleOpenAutocomplete<TireWidth>(!!tireWidths.length, setTireWidths, () =>
 					fetchTireWidths({
 						pagination: { limit: API_MAX_LIMIT },
@@ -423,7 +447,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			{
 				id: 'height',
 				placeholder: 'Высота',
-				options: heights.map((item) => item.name),
+				options: heights.map((item) => item.name.toString()),
 				onOpen: handleOpenAutocomplete<TireHeight>(!!heights.length, setHeights, () =>
 					fetchTireHeights({
 						pagination: { limit: API_MAX_LIMIT },
