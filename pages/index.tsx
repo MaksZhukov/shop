@@ -1,12 +1,21 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import { Box, Button, CircularProgress, Input, Link, Modal, useMediaQuery } from '@mui/material';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Input,
+    Link,
+    MenuItem,
+    Modal,
+    Select,
+    SelectChangeEvent,
+    useMediaQuery
+} from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
 import { API_MAX_LIMIT } from 'api/constants';
-import { EngineVolume } from 'api/engineVolumes/types';
-import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
@@ -17,7 +26,25 @@ import { fetchPage } from 'api/pages';
 import { PageMain } from 'api/pages/types';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
-import { ApiResponse } from 'api/types';
+import { fetchTireBrands } from 'api/tireBrands/tireBrands';
+import { TireBrand } from 'api/tireBrands/types';
+import { fetchTireDiameters } from 'api/tireDiameters/tireDiameters';
+import { TireDiameter } from 'api/tireDiameters/types';
+import { fetchTireHeights } from 'api/tireHeights/tireHeights';
+import { TireHeight } from 'api/tireHeights/types';
+import { fetchTireWidths } from 'api/tireWidths/tireWidths';
+import { TireWidth } from 'api/tireWidths/types';
+import { ApiResponse, ProductType } from 'api/types';
+import { WheelDiameterCenterHole } from 'api/wheelDiameterCenterHoles/types';
+import { fetchWheelDiameterCenterHoles } from 'api/wheelDiameterCenterHoles/wheelDiameterCenterHoles';
+import { WheelDiameter } from 'api/wheelDiameters/types';
+import { fetchWheelDiameters } from 'api/wheelDiameters/wheelDiameters';
+import { WheelDiskOffset } from 'api/wheelDiskOffsets/types';
+import { fetchWheelDiskOffsets } from 'api/wheelDiskOffsets/wheelWidths';
+import { WheelNumberHole } from 'api/wheelNumberHoles/types';
+import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
+import { WheelWidth } from 'api/wheelWidths/types';
+import { fetchWheelWidths } from 'api/wheelWidths/wheelWidths';
 import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
 import Autocomplete from 'components/Autocomplete';
@@ -33,11 +60,20 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
-import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction, UIEventHandler, useRef, useState } from 'react';
+import {
+    ChangeEvent,
+    Dispatch,
+    KeyboardEvent,
+    ReactNode,
+    SetStateAction,
+    UIEventHandler,
+    useRef,
+    useState
+} from 'react';
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
-import { BODY_STYLES, FUELS, OFFSET_SCROLL_LOAD_MORE, TRANSMISSIONS } from '../constants';
+import { BODY_STYLES, FUELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -57,15 +93,27 @@ interface Props {
 }
 
 const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
+    const [wheelWidths, setWheelWidths] = useState<WheelWidth[]>([]);
+    const [diskOffsets, setDiskOffsets] = useState<WheelDiskOffset[]>([]);
+    const [numberHoles, setNumberHoles] = useState<WheelNumberHole[]>([]);
+    const [diameterCenterHoles, setDiameterCenterHoles] = useState<WheelDiameterCenterHole[]>([]);
+    const [wheelDiameters, setWheelDiameters] = useState<WheelDiameter[]>([]);
+
+    const [tireBrands, setTireBrands] = useState<TireBrand[]>([]);
+    const [tireWidths, setTireWidths] = useState<TireWidth[]>([]);
+    const [heights, setHeights] = useState<TireHeight[]>([]);
+    const [tireDiameters, setTireDiameters] = useState<TireDiameter[]>([]);
+
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
-    const [volumes, setVolumes] = useState<EngineVolume[]>([]);
     const [values, setValues] = useState<{ [key: string]: string | null }>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>('');
+    const [productType, setProductType] = useState<ProductType>('sparePart');
     const [isOpenedModal, setIsOpenModal] = useState<boolean>(false);
+    const [isOpenedProductTypeModal, setIsOpenedProductTypeModal] = useState<boolean>(false);
     const router = useRouter();
 
     const loadKindSpareParts = async () => {
@@ -162,12 +210,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         }
     };
 
-    const handleOpenAutocompleteVolume = handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
-        fetchEngineVolumes({
-            pagination: { limit: API_MAX_LIMIT }
-        })
-    );
-
     const handleInputChangeKindSparePart = (_: any, value: string) => {
         debouncedFetchKindSparePartsRef(value);
     };
@@ -190,10 +232,18 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     const handleClickFind = () => {
         let { brand, model, ...restValues } = values;
-        router.push(
-            `/spare-parts/${model ? `${brand}/model-${model}` : brand ? `${brand}` : ''}?` +
-                qs.stringify(restValues, { encode: false })
-        );
+        let url = '/';
+        if (productType === 'sparePart' || productType === 'cabin') {
+            url =
+                `/${productType === 'sparePart' ? 'spare-parts' : 'cabins'}/${
+                    model ? `${brand}/model-${model}` : brand ? `${brand}` : ''
+                }?` + qs.stringify(restValues, { encode: false });
+        } else if (productType === 'wheel') {
+            url = `/wheels/${brand ? `${brand}` : ''}?` + qs.stringify(restValues, { encode: false });
+        } else if (productType === 'tire') {
+            url = `/tires/${brand ? `${brand}` : ''}?` + qs.stringify(restValues, { encode: false });
+        }
+        router.push(url);
     };
 
     const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -208,35 +258,46 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         setIsOpenModal(false);
     };
 
+    const handleCloseProductTypeModal = () => {
+        setIsOpenedProductTypeModal(false);
+    };
+
     const handleKeyDownSearch = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            let { brand, model, ...restValues } = values;
-            router.push(
-                `/spare-parts/${model ? `${brand}/model-${model}` : brand ? `${brand}` : ''}?` +
-                    qs.stringify({ ...restValues, searchValue }, { encode: false })
-            );
+        if (e.key === 'Enter' && searchValue) {
+            setIsOpenedProductTypeModal(true);
         }
     };
 
-    const filtersConfig = [
-        {
-            id: 'brand',
-            placeholder: 'Марка',
-            options: brands.map((item) => ({ label: item.name, value: item.slug })),
-            onChange: handleChangeBrandAutocomplete,
-            noOptionsText: noOptionsText
-        },
+    const handleChangeProductType = (event: SelectChangeEvent<ProductType>) => {
+        setProductType(event.target.value as ProductType);
+        setValues({});
+    };
 
-        {
-            id: 'model',
-            placeholder: 'Модель',
-            disabled: !values.brand,
-            options: models.map((item) => ({ label: item.name, value: item.slug })),
-            onChange: handleChangeModelAutocomplete,
-            onOpen: handleOpenAutocompleteModel,
-            noOptionsText: noOptionsText
-        },
+    const handleClickSearchIn = (catalogUrl: string) => () => {
+        router.push(`${catalogUrl}?searchValue=${searchValue}`);
+    };
 
+    const brandAutocompleteConfig = {
+        id: 'brand',
+        placeholder: 'Марка',
+        options: brands.map((item) => ({ label: item.name, value: item.slug })),
+        onChange: handleChangeBrandAutocomplete,
+        noOptionsText: noOptionsText
+    };
+
+    const modelAutocompleteConfig = {
+        id: 'model',
+        placeholder: 'Модель',
+        disabled: !values.brand,
+        options: models.map((item) => ({ label: item.name, value: item.slug })),
+        onChange: handleChangeModelAutocomplete,
+        onOpen: handleOpenAutocompleteModel,
+        noOptionsText: noOptionsText
+    };
+
+    const sparePartsAndCabinsFiltersConfig = [
+        brandAutocompleteConfig,
+        modelAutocompleteConfig,
         {
             id: 'generation',
             placeholder: 'Поколение',
@@ -248,7 +309,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
         {
             id: 'kindSparePart',
-            placeholder: 'Запчасть',
+            placeholder: 'Вид запчасти',
             options: kindSpareParts.data.map((item) => item.name),
             loadingMore: isLoadingMore,
             onScroll: handleScrollKindSparePartAutocomplete,
@@ -256,15 +317,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             onInputChange: handleInputChangeKindSparePart,
             noOptionsText: noOptionsText
         },
-
-        {
-            id: 'volume',
-            placeholder: 'Обьем 2.0',
-            options: volumes.map((item) => item.name),
-            onOpen: handleOpenAutocompleteVolume,
-            noOptionsText: noOptionsText
-        },
-
         {
             id: 'bodyStyle',
             placeholder: 'Кузов',
@@ -274,7 +326,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         {
             id: 'transmission',
             placeholder: 'Коробка',
-            type: 'autocomplete',
             options: TRANSMISSIONS
         },
 
@@ -284,6 +335,172 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             options: FUELS
         }
     ];
+
+    const filtersConfig: {
+        [key: string]: {
+            id: string;
+            placeholder: string;
+            disabled?: boolean;
+            options: readonly (string | { label: string; value: string })[];
+            onOpen?: () => void;
+            onChange?: (
+                _: any,
+                selected: {
+                    value: string;
+                    label: string;
+                } | null
+            ) => void;
+            onScroll?: UIEventHandler<HTMLDivElement> & UIEventHandler<HTMLUListElement>;
+            loadingMore?: boolean;
+            onInputChange?: (_: any, value: string) => void;
+            noOptionsText?: ReactNode;
+        }[];
+    } = {
+        sparePart: sparePartsAndCabinsFiltersConfig,
+        cabin: sparePartsAndCabinsFiltersConfig,
+        wheel: [
+            {
+                id: 'kind',
+                placeholder: 'Тип диска',
+                options: ['литой', 'штампованный']
+            },
+            brandAutocompleteConfig,
+            {
+                id: 'width',
+                placeholder: 'J ширина, мм',
+                options: wheelWidths.map((item) => item.name.toString()),
+                onOpen: handleOpenAutocomplete<WheelWidth>(!!wheelWidths.length, setWheelWidths, () =>
+                    fetchWheelWidths({
+                        pagination: { limit: API_MAX_LIMIT }
+                    })
+                ),
+                noOptionsText: noOptionsText
+            },
+            {
+                id: 'diameter',
+                placeholder: 'R диаметр, дюйм',
+                options: wheelDiameters.map((item) => item.name),
+                onOpen: handleOpenAutocomplete<WheelDiameter>(!!wheelDiameters.length, setWheelDiameters, () =>
+                    fetchWheelDiameters({
+                        pagination: { limit: API_MAX_LIMIT }
+                    })
+                ),
+                noOptionsText: noOptionsText
+            },
+            {
+                id: 'numberHoles',
+                placeholder: 'Количество отверстий',
+                options: numberHoles.map((item) => item.name.toString()),
+                onOpen: handleOpenAutocomplete<WheelNumberHole>(!!numberHoles.length, setNumberHoles, () =>
+                    fetchWheelNumberHoles({
+                        pagination: { limit: API_MAX_LIMIT }
+                    })
+                ),
+                noOptionsText: noOptionsText
+            },
+            {
+                id: 'diameterCenterHole',
+                placeholder: 'DIA диаметр центрального отверстия, мм',
+                options: diameterCenterHoles.map((item) => item.name.toString()),
+                onOpen: handleOpenAutocomplete<WheelDiameterCenterHole>(
+                    !!diameterCenterHoles.length,
+                    setDiameterCenterHoles,
+                    () =>
+                        fetchWheelDiameterCenterHoles({
+                            pagination: { limit: API_MAX_LIMIT }
+                        })
+                ),
+                noOptionsText: noOptionsText
+            },
+            {
+                id: 'diskOffset',
+                placeholder: 'PCD расстояние между отверстиями, мм',
+                options: diskOffsets.map((item) => item.name.toString()),
+                onOpen: handleOpenAutocomplete<WheelDiskOffset>(!!diskOffsets.length, setDiskOffsets, () =>
+                    fetchWheelDiskOffsets({
+                        pagination: { limit: API_MAX_LIMIT }
+                    })
+                ),
+                noOptionsText: noOptionsText
+            }
+        ],
+        tire: [
+            {
+                id: 'brand',
+                placeholder: 'Марка',
+                options: tireBrands.map((item) => ({ label: item.name, value: item.slug })),
+                onOpen: handleOpenAutocomplete<TireBrand>(!!tireBrands.length, setTireBrands, () =>
+                    fetchTireBrands({
+                        pagination: { limit: API_MAX_LIMIT }
+                    })
+                ),
+                noOptionsText: noOptionsText
+            },
+
+            {
+                id: 'width',
+                placeholder: 'Ширина',
+                options: tireWidths.map((item) => item.name.toString()),
+                onOpen: handleOpenAutocomplete<TireWidth>(!!tireWidths.length, setTireWidths, () =>
+                    fetchTireWidths({
+                        pagination: { limit: API_MAX_LIMIT }
+                    })
+                ),
+                noOptionsText: noOptionsText
+            },
+
+            {
+                id: 'height',
+                placeholder: 'Высота',
+                options: heights.map((item) => item.name.toString()),
+                onOpen: handleOpenAutocomplete<TireHeight>(!!heights.length, setHeights, () =>
+                    fetchTireHeights({
+                        pagination: { limit: API_MAX_LIMIT }
+                    })
+                ),
+                noOptionsText: noOptionsText
+            },
+
+            {
+                id: 'diameter',
+                placeholder: 'Диаметр',
+                options: tireDiameters.map((item) => item.name),
+                onOpen: handleOpenAutocomplete<TireDiameter>(!!tireDiameters.length, setTireDiameters, () =>
+                    fetchTireDiameters({
+                        pagination: { limit: API_MAX_LIMIT }
+                    })
+                ),
+                noOptionsText: noOptionsText
+            },
+            {
+                id: 'season',
+                placeholder: 'Сезон',
+                options: SEASONS
+            }
+        ]
+    };
+
+    const renderProductTypeSelect = (
+        <Select
+            fullWidth
+            variant='standard'
+            MenuProps={{ disableScrollLock: true }}
+            value={productType}
+            sx={{ background: '#fff', paddingLeft: '1em', height: '33px' }}
+            className={styles.select}
+            onChange={handleChangeProductType}>
+            {[
+                { label: 'Запчасти', value: 'sparePart' },
+                { label: 'Салоны', value: 'cabin' },
+                { label: 'Шины', value: 'tire' },
+                { label: 'Диски', value: 'wheel' }
+            ].map((item) => (
+                <MenuItem key={item.value} value={item.value}>
+                    {item.label}
+                </MenuItem>
+            ))}
+        </Select>
+    );
 
     const renderMobileFilters = (
         <Box marginTop='3em'>
@@ -299,11 +516,48 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     Фильтр
                 </Button>
             </Box>
+            <Modal open={isOpenedProductTypeModal} onClose={handleCloseProductTypeModal}>
+                <Container>
+                    <Box padding='1em' borderRadius='1em' marginY='2em' bgcolor='#fff'>
+                        <Typography textAlign='center' variant='h6' gutterBottom>
+                            Где искать?
+                        </Typography>
+                        <Button
+                            onClick={handleClickSearchIn('/spare-parts')}
+                            sx={{ marginBottom: '1em' }}
+                            fullWidth
+                            variant='contained'>
+                            В запчастях
+                        </Button>
+                        <Button
+                            onClick={handleClickSearchIn('/cabins')}
+                            sx={{ marginBottom: '1em' }}
+                            fullWidth
+                            variant='contained'>
+                            В салонах
+                        </Button>
+                        <Button
+                            onClick={handleClickSearchIn('/tires')}
+                            sx={{ marginBottom: '1em' }}
+                            fullWidth
+                            variant='contained'>
+                            В шинах
+                        </Button>
+                        <Button
+                            onClick={handleClickSearchIn('/wheels')}
+                            sx={{ marginBottom: '1em' }}
+                            fullWidth
+                            variant='contained'>
+                            В дисках
+                        </Button>
+                    </Box>
+                </Container>
+            </Modal>
             <Modal open={isOpenedModal} onClose={handleCloseModal}>
                 <Container>
                     <Box marginY='2em' bgcolor='#fff'>
-                        {' '}
-                        {filtersConfig.map((item) => {
+                        <Box>{renderProductTypeSelect}</Box>
+                        {filtersConfig[productType].map((item) => {
                             let value = (item.options as any[]).every((option: any) => typeof option === 'string')
                                 ? values[item.id]
                                 : (item.options as any[]).find((option) => option.value === values[item.id]);
@@ -325,7 +579,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             );
                         })}
                         <Button onClick={handleClickFind} variant='contained' fullWidth>
-                            Поиск
+                            Подобрать
                         </Button>
                     </Box>
                 </Container>
@@ -341,7 +595,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             bottom='4em'
             className={styles['head-search']}>
             <Box display='flex' gap='0.5em' flex='1' flexWrap='wrap' className={styles.filters}>
-                {filtersConfig.map((item) => {
+                <Box width={'calc(25% - 0.5em)'}>{renderProductTypeSelect}</Box>
+                {filtersConfig[productType].map((item) => {
                     let value = (item.options as any[]).every((option: any) => typeof option === 'string')
                         ? values[item.id]
                         : (item.options as any[]).find((option) => option.value === values[item.id]);
@@ -363,7 +618,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 })}
             </Box>
             <Button onClick={handleClickFind} variant='contained' className={styles['btn-search']}>
-                Поиск
+                Подобрать
             </Button>
         </Box>
     );
