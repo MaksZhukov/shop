@@ -1,51 +1,59 @@
 .head-section {
-    position: relative;
-    margin-bottom: 2em;
+	position: relative;
+	margin-bottom: 2em;
 }
 
 .filters {
-    &__item {
-        width: 25%;
-    }
+	&__item {
+		width: 25%;
+	}
+}
+
+.select {
+	:global {
+		.MuiSelect-select:focus {
+			background-color: transparent;
+		}
+	}
 }
 
 .categories {
-    position: relative;
-    &__item {
-        position: relative;
-        background-color: #fff;
-        width: 20%;
-        &:not(:last-child) {
-            border-right: 1px solid #e6e6e6;
-        }
-        &:last-child {
-            background-color: transparent;
-            position: relative;
-            z-index: 1;
-            &:before {
-                background: no-repeat center url('/main_buyback.png');
-                content: '';
-                position: absolute;
-                z-index: -1;
-                width: 115%;
-                height: 100%;
-                top: 0;
-                left: 0;
-            }
-        }
-        &_mobile {
-            width: 47.5%;
-            margin-bottom: 1em;
-            &:last-child {
-                height: 300px;
-                padding-top: 1em;
-                width: 100%;
-                text-align: right;
-                &::before {
-                    width: 110%;
-                    background-size: cover;
-                }
-            }
-        }
-    }
+	position: relative;
+	&__item {
+		position: relative;
+		background-color: #fff;
+		width: 20%;
+		&:not(:last-child) {
+			border-right: 1px solid #e6e6e6;
+		}
+		&:last-child {
+			background-color: transparent;
+			position: relative;
+			z-index: 1;
+			&:before {
+				background: no-repeat center url('/main_buyback.png');
+				content: '';
+				position: absolute;
+				z-index: -1;
+				width: 115%;
+				height: 100%;
+				top: 0;
+				left: 0;
+			}
+		}
+		&_mobile {
+			width: 47.5%;
+			margin-bottom: 1em;
+			&:last-child {
+				height: 300px;
+				padding-top: 1em;
+				width: 100%;
+				text-align: right;
+				&::before {
+					width: 110%;
+					background-size: cover;
+				}
+			}
+		}
+	}
 }
