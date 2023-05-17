@@ -11,6 +11,7 @@ import Product from 'components/Product';
 import { getProductPageSeo } from 'services/ProductService';
 import { SparePart } from 'api/spareParts/types';
 import { withKindSparePart } from 'services/SEOService';
+import { AxiosError, AxiosHeaders } from 'axios';
 
 interface Props {
     data: SparePart;
@@ -58,45 +59,58 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
     let props: any = {};
 
     if (productParam) {
-        const [
-            {
-                data: { data }
-            },
-            {
-                data: { data: page }
-            },
-            {
-                data: { data: pageSparePart }
-            }
-        ] = await Promise.all([
-            fetchSparePart(productParam),
-            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-            fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
-        ]);
-        const {
-            data: { data: relatedProducts }
-        } = await fetchSpareParts({
-            filters: {
-                sold: { $eq: false },
-                id: {
-                    $ne: data.id
+        if (brand.toLowerCase() === 'undefined') {
+            throw new AxiosError(undefined, undefined, undefined, undefined, {
+                statusText: '',
+                config: { headers: new AxiosHeaders() },
+                headers: {},
+                data: {},
+                status: 404
+            });
+        } else {
+            const [
+                {
+                    data: { data }
                 },
-                model: data.model?.id || ''
-            },
-            populate: ['images', 'brand']
-        });
-        const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
-        let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
-        props = {
-            data,
-            page: {
-                ...page,
-                ...pageSparePart,
-                textAfterDescription: pageSparePart.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
-                seo: getProductPageSeo(pageSparePart.seo, data)
-            },
-            relatedProducts
-        };
+                {
+                    data: { data: page }
+                },
+                {
+                    data: { data: pageSparePart }
+                }
+            ] = await Promise.all([
+                fetchSparePart(productParam),
+                fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
+                fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
+            ]);
+            const {
+                data: { data: relatedProducts }
+            } = await fetchSpareParts({
+                filters: {
+                    sold: { $eq: false },
+                    id: {
+                        $ne: data.id
+                    },
+                    model: data.model?.id || ''
+                },
+                populate: ['images', 'brand']
+            });
+            const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
+            let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
+            props = {
+                data,
+                page: {
+                    ...page,
+                    ...pageSparePart,
+                    textAfterDescription: pageSparePart.textAfterDescription.replace(
+                        '{autoSynonyms}',
+                        randomAutoSynonym
+                    ),
+                    seo: getProductPageSeo(pageSparePart.seo, data)
+                },
+                relatedProducts
+            };
+        }
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
         const {

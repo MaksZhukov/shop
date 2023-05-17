@@ -12,6 +12,7 @@ import { Wheel } from 'api/wheels/types';
 import { getProductPageSeo } from 'services/ProductService';
 import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import { withKindSparePart } from 'services/SEOService';
+import { AxiosError, AxiosHeaders } from 'axios';
 
 interface Props {
     data?: Wheel;
@@ -66,42 +67,52 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
     let props: any = {};
 
     if (productParam) {
-        const [
-            {
-                data: { data }
-            },
-            {
-                data: { data: page }
-            },
-            {
-                data: { data: pageWheel }
-            }
-        ] = await Promise.all([
-            fetchWheel(productParam),
-            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-            fetchPage<PageProductWheel>('product-wheel', { populate: ['seo'] })()
-        ]);
-        const {
-            data: { data: relatedProducts }
-        } = await fetchWheels({
-            filters: {
-                sold: { $eq: false },
-                id: {
-                    $ne: data.id
+        if (brand.toLowerCase() === 'undefined') {
+            throw new AxiosError(undefined, undefined, undefined, undefined, {
+                statusText: '',
+                config: { headers: new AxiosHeaders() },
+                headers: {},
+                data: {},
+                status: 404
+            });
+        } else {
+            const [
+                {
+                    data: { data }
                 },
-                model: data.model?.id || ''
-            },
-            populate: ['images', 'brand']
-        });
-        props = {
-            data,
-            page: {
-                ...page,
-                ...pageWheel,
-                seo: getProductPageSeo(pageWheel.seo, data)
-            },
-            relatedProducts
-        };
+                {
+                    data: { data: page }
+                },
+                {
+                    data: { data: pageWheel }
+                }
+            ] = await Promise.all([
+                fetchWheel(productParam),
+                fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
+                fetchPage<PageProductWheel>('product-wheel', { populate: ['seo'] })()
+            ]);
+            const {
+                data: { data: relatedProducts }
+            } = await fetchWheels({
+                filters: {
+                    sold: { $eq: false },
+                    id: {
+                        $ne: data.id
+                    },
+                    model: data.model?.id || ''
+                },
+                populate: ['images', 'brand']
+            });
+            props = {
+                data,
+                page: {
+                    ...page,
+                    ...pageWheel,
+                    seo: getProductPageSeo(pageWheel.seo, data)
+                },
+                relatedProducts
+            };
+        }
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
         const {
