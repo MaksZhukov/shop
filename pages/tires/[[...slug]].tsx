@@ -11,6 +11,7 @@ import CatalogTires from 'components/CatalogTires';
 import { getProductPageSeo } from 'services/ProductService';
 import Product from 'components/Product';
 import { Tire } from 'api/tires/types';
+import { AxiosError, AxiosHeaders } from 'axios';
 
 interface Props {
     data?: Tire;
@@ -51,42 +52,52 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
     let seo: SEO | null = null;
     let props: any = {};
     if (productSlugParam) {
-        const [
-            {
-                data: { data }
-            },
-            {
-                data: { data: page }
-            },
-            {
-                data: { data: pageTire }
-            }
-        ] = await Promise.all([
-            fetchTire(productSlugParam),
-            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-            fetchPage<PageProductTire>('product-tire', { populate: ['seo'] })()
-        ]);
-        const {
-            data: { data: relatedProducts }
-        } = await fetchTires({
-            filters: {
-                sold: { $eq: false },
-                id: {
-                    $ne: data.id
+        if (brandParam.toLowerCase() === 'undefined') {
+            throw new AxiosError(undefined, undefined, undefined, undefined, {
+                statusText: '',
+                config: { headers: new AxiosHeaders() },
+                headers: {},
+                data: {},
+                status: 404
+            });
+        } else {
+            const [
+                {
+                    data: { data }
                 },
-                brand: data.brand?.id
-            },
-            populate: ['images', 'brand']
-        });
-        props = {
-            data,
-            page: {
-                ...page,
-                ...pageTire,
-                seo: getProductPageSeo(pageTire.seo, data)
-            },
-            relatedProducts
-        };
+                {
+                    data: { data: page }
+                },
+                {
+                    data: { data: pageTire }
+                }
+            ] = await Promise.all([
+                fetchTire(productSlugParam),
+                fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
+                fetchPage<PageProductTire>('product-tire', { populate: ['seo'] })()
+            ]);
+            const {
+                data: { data: relatedProducts }
+            } = await fetchTires({
+                filters: {
+                    sold: { $eq: false },
+                    id: {
+                        $ne: data.id
+                    },
+                    brand: data.brand?.id
+                },
+                populate: ['images', 'brand']
+            });
+            props = {
+                data,
+                page: {
+                    ...page,
+                    ...pageTire,
+                    seo: getProductPageSeo(pageTire.seo, data)
+                },
+                relatedProducts
+            };
+        }
     } else if (brandParam) {
         const [
             {
