@@ -12,6 +12,7 @@ import { fetchCabin, fetchCabins } from 'api/cabins/cabins';
 import Product from 'components/Product';
 import { Cabin } from 'api/cabins/types';
 import { withKindSparePart } from 'services/SEOService';
+import { AxiosError, AxiosHeaders } from 'axios';
 
 interface Props {
     data: Cabin;
@@ -56,42 +57,52 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
     const modelParam = modelOrProductParam && modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
     let props: any = {};
     if (productParam) {
-        const [
-            {
-                data: { data }
-            },
-            {
-                data: { data: page }
-            },
-            {
-                data: { data: pageCabin }
-            }
-        ] = await Promise.all([
-            fetchCabin(productParam),
-            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-            fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'] })()
-        ]);
-        const {
-            data: { data: relatedProducts }
-        } = await fetchCabins({
-            filters: {
-                sold: { $eq: false },
-                id: {
-                    $ne: data.id
+        if (brand.toLowerCase() === 'undefined') {
+            throw new AxiosError(undefined, undefined, undefined, undefined, {
+                statusText: '',
+                config: { headers: new AxiosHeaders() },
+                headers: {},
+                data: {},
+                status: 404
+            });
+        } else {
+            const [
+                {
+                    data: { data }
                 },
-                model: data.model?.id || ''
-            },
-            populate: ['images', 'brand']
-        });
-        props = {
-            data,
-            page: {
-                ...page,
-                ...pageCabin,
-                seo: getProductPageSeo(pageCabin.seo, data)
-            },
-            relatedProducts
-        };
+                {
+                    data: { data: page }
+                },
+                {
+                    data: { data: pageCabin }
+                }
+            ] = await Promise.all([
+                fetchCabin(productParam),
+                fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
+                fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'] })()
+            ]);
+            const {
+                data: { data: relatedProducts }
+            } = await fetchCabins({
+                filters: {
+                    sold: { $eq: false },
+                    id: {
+                        $ne: data.id
+                    },
+                    model: data.model?.id || ''
+                },
+                populate: ['images', 'brand']
+            });
+            props = {
+                data,
+                page: {
+                    ...page,
+                    ...pageCabin,
+                    seo: getProductPageSeo(pageCabin.seo, data)
+                },
+                relatedProducts
+            };
+        }
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
         const {
