@@ -67,52 +67,52 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
     let props: any = {};
 
     if (productParam) {
-        if (brand.toLowerCase() === 'undefined') {
-            throw new AxiosError(undefined, undefined, undefined, undefined, {
-                statusText: '',
-                config: { headers: new AxiosHeaders() },
-                headers: {},
-                data: {},
-                status: 404
-            });
-        } else {
-            const [
-                {
-                    data: { data }
+        // if (brand.toLowerCase() === 'undefined') {
+        //     throw new AxiosError(undefined, undefined, undefined, undefined, {
+        //         statusText: '',
+        //         config: { headers: new AxiosHeaders() },
+        //         headers: {},
+        //         data: {},
+        //         status: 404
+        //     });
+        // } else {
+        const [
+            {
+                data: { data }
+            },
+            {
+                data: { data: page }
+            },
+            {
+                data: { data: pageWheel }
+            }
+        ] = await Promise.all([
+            fetchWheel(productParam),
+            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
+            fetchPage<PageProductWheel>('product-wheel', { populate: ['seo'] })()
+        ]);
+        const {
+            data: { data: relatedProducts }
+        } = await fetchWheels({
+            filters: {
+                sold: { $eq: false },
+                id: {
+                    $ne: data.id
                 },
-                {
-                    data: { data: page }
-                },
-                {
-                    data: { data: pageWheel }
-                }
-            ] = await Promise.all([
-                fetchWheel(productParam),
-                fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-                fetchPage<PageProductWheel>('product-wheel', { populate: ['seo'] })()
-            ]);
-            const {
-                data: { data: relatedProducts }
-            } = await fetchWheels({
-                filters: {
-                    sold: { $eq: false },
-                    id: {
-                        $ne: data.id
-                    },
-                    model: data.model?.id || ''
-                },
-                populate: ['images', 'brand']
-            });
-            props = {
-                data,
-                page: {
-                    ...page,
-                    ...pageWheel,
-                    seo: getProductPageSeo(pageWheel.seo, data)
-                },
-                relatedProducts
-            };
-        }
+                model: data.model?.id || ''
+            },
+            populate: ['images', 'brand']
+        });
+        props = {
+            data,
+            page: {
+                ...page,
+                ...pageWheel,
+                seo: getProductPageSeo(pageWheel.seo, data)
+            },
+            relatedProducts
+        };
+        // }
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
         const {

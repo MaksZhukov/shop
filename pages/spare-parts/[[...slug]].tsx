@@ -59,15 +59,15 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
     let props: any = {};
 
     if (productParam) {
-        if (brand.toLowerCase() === 'undefined') {
-            throw new AxiosError(undefined, undefined, undefined, undefined, {
-                statusText: '',
-                config: { headers: new AxiosHeaders() },
-                headers: {},
-                data: {},
-                status: 404
-            });
-        } else {
+        // if (brand.toLowerCase() === 'undefined') {
+        //     throw new AxiosError(undefined, undefined, undefined, undefined, {
+        //         statusText: '',
+        //         config: { headers: new AxiosHeaders() },
+        //         headers: {},
+        //         data: {},
+        //         status: 404
+        //     });
+        // } else {
             const [
                 {
                     data: { data }
@@ -110,7 +110,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
                 },
                 relatedProducts
             };
-        }
+        // }
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
         const {
