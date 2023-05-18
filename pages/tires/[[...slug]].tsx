@@ -52,15 +52,15 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
     let seo: SEO | null = null;
     let props: any = {};
     if (productSlugParam) {
-        if (brandParam.toLowerCase() === 'undefined') {
-            throw new AxiosError(undefined, undefined, undefined, undefined, {
-                statusText: '',
-                config: { headers: new AxiosHeaders() },
-                headers: {},
-                data: {},
-                status: 404
-            });
-        } else {
+        // if (brandParam.toLowerCase() === 'undefined') {
+        //     throw new AxiosError(undefined, undefined, undefined, undefined, {
+        //         statusText: '',
+        //         config: { headers: new AxiosHeaders() },
+        //         headers: {},
+        //         data: {},
+        //         status: 404
+        //     });
+        // } else {
             const [
                 {
                     data: { data }
@@ -97,7 +97,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
                 },
                 relatedProducts
             };
-        }
+        // }
     } else if (brandParam) {
         const [
             {
