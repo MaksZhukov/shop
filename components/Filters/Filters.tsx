@@ -112,6 +112,7 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
                 noOptionsText={item.noOptionsText}
                 onOpen={item.onOpen ? item.onOpen(values) : undefined}
                 onChange={handleChangeAutocomplete(item)}
+                onScroll={item.onScroll}
                 onInputChange={item.onInputChange}
                 placeholder={item.placeholder}
                 classes={{ input: styles.input }}
