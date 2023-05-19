@@ -24,6 +24,7 @@ const getDependencyItemIds = (
 
 const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
+
 	const router = useRouter();
 	useEffect(() => {
 		let newValues: any = {};

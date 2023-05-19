@@ -1,5 +1,6 @@
 export interface KindSparePart {
-    id: number;
-    name: string;
-    type: 'regular' | 'cabin';
+	id: number;
+	name: string;
+	slug: string;
+	type: 'regular' | 'cabin';
 }
