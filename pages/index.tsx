@@ -60,6 +60,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
+
 import {
     ChangeEvent,
     Dispatch,
@@ -73,7 +74,15 @@ import {
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
-import { BODY_STYLES, FUELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
+import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
+
+import {
+    BODY_STYLES_SLUGIFY,
+    FUELS_SLUGIFY,
+    KIND_WHEELS_SLUGIFY,
+    SEASONS_SLUGIFY,
+    TRANSMISSIONS_SLUGIFY
+} from 'config';
 import styles from './index.module.scss';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -118,6 +127,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     const loadKindSpareParts = async () => {
         const { data } = await fetchKindSpareParts({
+            filters: { type: productType === 'cabin' ? 'cabin' : 'regular' },
             pagination: { start: kindSpareParts.data.length }
         });
         setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
@@ -232,16 +242,23 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     const handleClickFind = () => {
         let { brand, model, ...restValues } = values;
+        let sanitazedValues = Object.keys(restValues).reduce(
+            (prev, curr) => (restValues[curr] ? { ...prev, [curr]: restValues[curr] } : prev),
+            {}
+        );
+
+        const query = qs.stringify(sanitazedValues, { encode: false });
+        const formattedQuery = `${query ? `?${query}` : ''}`;
+
         let url = '/';
         if (productType === 'sparePart' || productType === 'cabin') {
-            url =
-                `/${productType === 'sparePart' ? 'spare-parts' : 'cabins'}/${
-                    model ? `${brand}/model-${model}` : brand ? `${brand}` : ''
-                }?` + qs.stringify(restValues, { encode: false });
+            url = `/${productType === 'sparePart' ? 'spare-parts' : 'cabins'}/${
+                model ? `${brand}/model-${model}` : brand ? `${brand}` : ''
+            }${formattedQuery}`;
         } else if (productType === 'wheel') {
-            url = `/wheels/${brand ? `${brand}` : ''}?` + qs.stringify(restValues, { encode: false });
+            url = `/wheels/${brand ? `${brand}` : ''}${formattedQuery}`;
         } else if (productType === 'tire') {
-            url = `/tires/${brand ? `${brand}` : ''}?` + qs.stringify(restValues, { encode: false });
+            url = `/tires/${brand ? `${brand}` : ''}${formattedQuery}`;
         }
         router.push(url);
     };
@@ -271,6 +288,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
     const handleChangeProductType = (event: SelectChangeEvent<ProductType>) => {
         setProductType(event.target.value as ProductType);
         setValues({});
+        setKindSpareParts({ data: [], meta: {} });
     };
 
     const handleClickSearchIn = (catalogUrl: string) => () => {
@@ -302,7 +320,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             id: 'generation',
             placeholder: 'Поколение',
             disabled: !values.model,
-            options: generations.map((item) => item.name),
+            options: generations.map((item) => ({ label: item.name, value: item.slug })),
             onOpen: handleOpenAutocompleteGeneration,
             noOptionsText: noOptionsText
         },
@@ -310,7 +328,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         {
             id: 'kindSparePart',
             placeholder: 'Вид запчасти',
-            options: kindSpareParts.data.map((item) => item.name),
+            options: kindSpareParts.data.map((item) => ({ label: item.name, value: item.slug })),
             loadingMore: isLoadingMore,
             onScroll: handleScrollKindSparePartAutocomplete,
             onOpen: handleOpenAutocompleteKindSparePart,
@@ -320,19 +338,19 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         {
             id: 'bodyStyle',
             placeholder: 'Кузов',
-            options: BODY_STYLES
+            options: BODY_STYLES.map((item) => ({ label: item, value: BODY_STYLES_SLUGIFY[item] }))
         },
 
         {
             id: 'transmission',
             placeholder: 'Коробка',
-            options: TRANSMISSIONS
+            options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] }))
         },
 
         {
             id: 'fuel',
             placeholder: 'Тип топлива',
-            options: FUELS
+            options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] }))
         }
     ];
 
@@ -362,7 +380,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             {
                 id: 'kind',
                 placeholder: 'Тип диска',
-                options: ['литой', 'штампованный']
+                options: KIND_WHEELS.map((item) => ({ label: item, value: KIND_WHEELS_SLUGIFY[item] }))
             },
             brandAutocompleteConfig,
             {
@@ -475,7 +493,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             {
                 id: 'season',
                 placeholder: 'Сезон',
-                options: SEASONS
+                options: SEASONS.map((item) => ({ label: item, value: SEASONS_SLUGIFY[item] }))
             }
         ]
     };

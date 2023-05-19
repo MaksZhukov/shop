@@ -13,15 +13,18 @@ import Product from 'components/Product';
 import { Cabin } from 'api/cabins/types';
 import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
+import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
+import { KindSparePart } from 'api/kindSpareParts/types';
 
 interface Props {
     data: Cabin;
     relatedProducts: Cabin[];
     page: DefaultPage | (PageProduct & PageProductCabin);
     brands: Brand[];
+    kindSparePart?: KindSparePart;
 }
 
-const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
+const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSparePart }) => {
     if (data) {
         return (
             <Product
@@ -43,13 +46,13 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogCabins page={page} brands={brands}></CatalogCabins>;
+    return <CatalogCabins page={page} brands={brands} kindSparePart={kindSparePart}></CatalogCabins>;
 };
 
 export default Cabins;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-    const { slug = [], kindSparePart } = context.query;
+    const { slug = [], kindSparePart: kindSparePartSlug } = context.query;
     const [brand, modelOrProductParam] = slug;
 
     const productParam =
@@ -105,25 +108,55 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
         // }
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
-        const {
-            data: { data }
-        } = await fetchModelBySlug(model, {
-            populate: ['seoCabins.images', 'image'],
-            filters: { brand: { slug: brand } }
-        });
-        props = { page: { seo: withKindSparePart(data.seoCabins, 'салоны', kindSparePart) } };
+        const [
+            {
+                data: { data }
+            },
+            resultKindSpareParts
+        ] = await Promise.all([
+            fetchModelBySlug(model, {
+                populate: ['seoCabins.images', 'image'],
+                filters: { brand: { slug: brand } }
+            }),
+            ...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
+        ]);
+        const kindSparePart = resultKindSpareParts?.data?.data[0];
+        props = {
+            page: { seo: withKindSparePart(data.seoCabins, 'салоны', kindSparePart?.name) },
+            ...(kindSparePart ? { kindSparePart } : {})
+        };
     } else if (brand) {
-        const {
-            data: { data }
-        } = await fetchBrandBySlug(brand, {
-            populate: ['seoCabins.images', 'image']
-        });
-        props = { page: { seo: withKindSparePart(data.seoCabins, 'салоны', kindSparePart) } };
+        const [
+            {
+                data: { data }
+            },
+            resultKindSpareParts
+        ] = await Promise.all([
+            fetchBrandBySlug(brand, {
+                populate: ['seoCabins.images', 'image']
+            }),
+            ...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
+        ]);
+        const kindSparePart = resultKindSpareParts?.data?.data[0];
+        props = {
+            page: { seo: withKindSparePart(data.seoCabins, 'салоны', kindSparePart?.name) },
+            ...(kindSparePart ? { kindSparePart } : {})
+        };
     } else {
-        const {
-            data: { data }
-        } = await fetchPage('cabin')();
-        props = { page: { seo: withKindSparePart(data.seo, 'салоны', kindSparePart) } };
+        const [
+            {
+                data: { data }
+            },
+            resultKindSpareParts
+        ] = await Promise.all([
+            fetchPage('cabin')(),
+            ...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
+        ]);
+        const kindSparePart = resultKindSpareParts?.data?.data[0];
+        props = {
+            page: { seo: withKindSparePart(data.seo, 'салоны', kindSparePart?.name) },
+            ...(kindSparePart ? { kindSparePart } : {})
+        };
     }
     return props;
 });

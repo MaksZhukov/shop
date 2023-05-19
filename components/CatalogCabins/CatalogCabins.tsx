@@ -1,36 +1,56 @@
-import Catalog from 'components/Catalog';
 import { CircularProgress } from '@mui/material';
-import { ApiResponse, Filters, SEO } from 'api/types';
-import { API_MAX_LIMIT } from 'api/constants';
-import { useState, SetStateAction, Dispatch, useEffect, FC } from 'react';
-import { AxiosResponse } from 'axios';
-import { useSnackbar } from 'notistack';
-import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { fetchGenerations } from 'api/generations/generations';
-import { KindSparePart } from 'api/kindSpareParts/types';
-import { Generation } from 'api/generations/types';
-import { Model } from 'api/models/types';
 import { Brand } from 'api/brands/types';
-import { fetchModels } from 'api/models/models';
-import { DefaultPage } from 'api/pages/types';
 import { fetchCabins } from 'api/cabins/cabins';
+import { API_MAX_LIMIT } from 'api/constants';
+import { fetchGenerations } from 'api/generations/generations';
+import { Generation } from 'api/generations/types';
+import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
+import { KindSparePart } from 'api/kindSpareParts/types';
+import { fetchModels } from 'api/models/models';
+import { Model } from 'api/models/types';
+import { DefaultPage } from 'api/pages/types';
+import { ApiResponse, Filters } from 'api/types';
+import { AxiosResponse } from 'axios';
+import Catalog from 'components/Catalog';
+import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'config';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { getParamByRelation } from 'services/ParamsService';
 
 interface Props {
     page: DefaultPage;
     brands: Brand[];
+    kindSparePart?: KindSparePart;
 }
 
-const CatalogCabins: FC<Props> = ({ page, brands }) => {
+const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
-    const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
+    const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>(kindSparePart ? [kindSparePart] : []);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { enqueueSnackbar } = useSnackbar();
 
     const router = useRouter();
     const [brand, model] = router.query.slug || [];
+
+    useEffect(() => {
+        if (router.query.kindSparePart) {
+            handleOpenAutocompleteKindSparePart();
+        }
+    }, [router.query.kindSparePart]);
+
+    useEffect(() => {
+        if (router.query.generation) {
+            handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
+                fetchGenerations({
+                    filters: { model: { slug: model.replace('model-', '') as string }, brand: { slug: brand } },
+                    pagination: { limit: API_MAX_LIMIT }
+                })
+            )();
+        }
+    }, [router.query.generation]);
 
     useEffect(() => {
         setModels([]);
@@ -88,7 +108,7 @@ const CatalogCabins: FC<Props> = ({ page, brands }) => {
         );
 
     const handleOpenAutocompleteKindSparePart = () =>
-        handleOpenAutocomplete<KindSparePart>(!!kindSpareParts.length, setKindSpareParts, () =>
+        handleOpenAutocomplete<KindSparePart>(kindSpareParts.length > 1, setKindSpareParts, () =>
             fetchKindSpareParts({
                 filters: { type: 'cabin' },
                 pagination: { limit: API_MAX_LIMIT }
@@ -135,7 +155,7 @@ const CatalogCabins: FC<Props> = ({ page, brands }) => {
                 placeholder: 'Поколение',
                 type: 'autocomplete',
                 disabledDependencyId: 'model',
-                options: generations.map((item) => item.name),
+                options: generations.map((item) => ({ label: item.name, value: item.slug })),
                 onOpen: handleOpenAutocompleteGeneration,
                 noOptionsText: noOptionsText
             }
@@ -145,7 +165,7 @@ const CatalogCabins: FC<Props> = ({ page, brands }) => {
                 id: 'kindSparePart',
                 placeholder: 'Запчасть',
                 type: 'autocomplete',
-                options: kindSpareParts.map((item) => item.name),
+                options: kindSpareParts.map((item) => ({ label: item.name, value: item.slug })),
                 onOpen: handleOpenAutocompleteKindSparePart,
                 noOptionsText: noOptionsText
             }
@@ -157,15 +177,21 @@ const CatalogCabins: FC<Props> = ({ page, brands }) => {
         model,
         generation,
         kindSparePart,
+        fuel,
+        bodyStyle,
+        transmission,
         ...others
     }: {
         [key: string]: string;
     }): Filters => {
         let filters: Filters = {
-            brand: { slug: brand },
-            model: { name: model },
-            generation: { name: generation },
-            kindSparePart: { name: kindSparePart }
+            brand: getParamByRelation(brand, 'slug'),
+            model: getParamByRelation(model),
+            generation: getParamByRelation(generation, 'slug'),
+            kindSparePart: getParamByRelation(kindSparePart, 'slug'),
+            fuel: SLUGIFY_FUELS[fuel],
+            bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
+            transmission: SLUGIFY_TRANSMISSIONS[transmission]
         };
         return { ...filters, ...others };
     };
