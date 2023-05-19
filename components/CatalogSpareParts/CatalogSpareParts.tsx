@@ -168,6 +168,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
     };
 
     const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLUListElement> = (event) => {
+        console.log('hello');
         if (
             event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
             event.currentTarget.scrollHeight
