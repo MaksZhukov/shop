@@ -1,36 +1,41 @@
-import { Dispatch, FC, SetStateAction, UIEventHandler, useEffect, useRef, useState } from 'react';
-import { Brand } from 'api/brands/types';
-import { ApiResponse, Filters } from 'api/types';
-import { fetchModels } from 'api/models/models';
-import { DefaultPage } from 'api/pages/types';
-import Catalog from 'components/Catalog';
-import { getParamByRelation } from 'services/ParamsService';
-import { getSparePartsFiltersConfig } from 'components/Filters/config';
 import { CircularProgress } from '@mui/material';
-import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
+import { Brand } from 'api/brands/types';
+import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'api/constants';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
 import { fetchGenerations } from 'api/generations/generations';
-import { Model } from 'api/models/types';
-import { AxiosResponse } from 'axios';
-import { useDebounce, useThrottle } from 'rooks';
-import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { useSnackbar } from 'notistack';
-import { KindSparePart } from 'api/kindSpareParts/types';
 import { Generation } from 'api/generations/types';
+import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
+import { KindSparePart } from 'api/kindSpareParts/types';
+import { fetchModels } from 'api/models/models';
+import { Model } from 'api/models/types';
+import { DefaultPage } from 'api/pages/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
+import { ApiResponse, Filters } from 'api/types';
+import { AxiosResponse } from 'axios';
+import Catalog from 'components/Catalog';
+import { getSparePartsFiltersConfig } from 'components/Filters/config';
+import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'config';
 import { useRouter } from 'next/router';
-import { API_MAX_LIMIT } from 'api/constants';
+import { useSnackbar } from 'notistack';
+import { Dispatch, FC, SetStateAction, UIEventHandler, useEffect, useRef, useState } from 'react';
+import { useDebounce, useThrottle } from 'rooks';
+import { getParamByRelation } from 'services/ParamsService';
+import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
 
 interface Props {
     page: DefaultPage;
     brands: Brand[];
+    kindSparePart?: KindSparePart;
 }
 
-const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
+const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
-    const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
+    const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({
+        data: kindSparePart ? [kindSparePart] : [],
+        meta: {}
+    });
     const [volumes, setVolumes] = useState<EngineVolume[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
@@ -39,11 +44,35 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
     const router = useRouter();
     const [brand, model] = router.query.slug || [];
 
+    useEffect(() => {
+        if (router.query.kindSparePart) {
+            loadKindSpareParts();
+        }
+    }, [router.query.kindSparePart]);
+
+    useEffect(() => {
+        if (router.query.generation) {
+            handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
+                fetchGenerations({
+                    filters: { model: { slug: model.replace('model-', '') as string }, brand: { slug: brand } },
+                    pagination: { limit: API_MAX_LIMIT }
+                })
+            )();
+        }
+    }, [router.query.generation]);
+
     const loadKindSpareParts = async () => {
         const { data } = await fetchKindSpareParts({
+            filters: { type: 'regular' },
             pagination: { start: kindSpareParts.data.length }
         });
-        setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
+        setKindSpareParts({
+            data: [
+                ...kindSpareParts.data,
+                ...(kindSparePart ? data.data.filter((item) => item.id !== kindSparePart.id) : data.data)
+            ],
+            meta: data.meta
+        });
     };
 
     const [throttledLoadMoreKindSpareParts] = useThrottle(async () => {
@@ -69,7 +98,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
 
     const fetchKindSparePartsRef = useRef(async (value: string) => {
         setIsLoading(true);
-        const { data } = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
+        const { data } = await fetchKindSpareParts({ filters: { type: 'regular', name: { $contains: value } } });
         setKindSpareParts(data);
         setIsLoading(false);
     });
@@ -117,7 +146,10 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
         );
 
     const handleOpenAutocompleteKindSparePart = () => async () => {
-        if (!kindSpareParts.data.length) {
+        if (
+            kindSpareParts.data.length < API_DEFAULT_LIMIT &&
+            kindSpareParts.meta.pagination?.total !== kindSpareParts.data.length
+        ) {
             setIsLoading(true);
             await loadKindSpareParts();
             setIsLoading(false);
@@ -182,6 +214,9 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
         modelName,
         generationName,
         volume,
+        fuel,
+        bodyStyle,
+        transmission,
         ...others
     }: {
         [key: string]: string;
@@ -189,9 +224,12 @@ const CatalogSpareParts: FC<Props> = ({ page, brands }) => {
         let filters: Filters = {
             brand: getParamByRelation(brand, 'slug'),
             model: getParamByRelation(model, 'slug'),
-            generation: getParamByRelation(generation),
-            kindSparePart: getParamByRelation(kindSparePart),
-            volume: getParamByRelation(volume)
+            generation: getParamByRelation(generation, 'slug'),
+            kindSparePart: getParamByRelation(kindSparePart, 'slug'),
+            volume: getParamByRelation(volume),
+            fuel: SLUGIFY_FUELS[fuel],
+            bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
+            transmission: SLUGIFY_TRANSMISSIONS[transmission]
         };
         return { ...filters, ...others };
     };
