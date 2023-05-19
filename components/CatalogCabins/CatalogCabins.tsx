@@ -19,188 +19,205 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { getParamByRelation } from 'services/ParamsService';
 
 interface Props {
-	page: DefaultPage;
-	brands: Brand[];
+    page: DefaultPage;
+    brands: Brand[];
+    kindSparePart?: KindSparePart;
 }
 
-const CatalogCabins: FC<Props> = ({ page, brands }) => {
-	const [models, setModels] = useState<Model[]>([]);
-	const [generations, setGenerations] = useState<Generation[]>([]);
-	const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>([]);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
+    const [models, setModels] = useState<Model[]>([]);
+    const [generations, setGenerations] = useState<Generation[]>([]);
+    const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>(kindSparePart ? [kindSparePart] : []);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const { enqueueSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
-	const router = useRouter();
-	const [brand, model] = router.query.slug || [];
+    const router = useRouter();
+    const [brand, model] = router.query.slug || [];
 
-	useEffect(() => {
-		setModels([]);
-	}, [brand]);
+    useEffect(() => {
+        if (router.query.kindSparePart) {
+            handleOpenAutocompleteKindSparePart();
+        }
+    }, [router.query.kindSparePart]);
 
-	useEffect(() => {
-		if (!models.length && model) {
-			handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-				fetchModels({
-					filters: { brand: { slug: brand } },
-					pagination: { limit: API_MAX_LIMIT },
-				})
-			)();
-		}
-	}, [model]);
+    useEffect(() => {
+        if (router.query.generation) {
+            handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
+                fetchGenerations({
+                    filters: { model: { slug: model.replace('model-', '') as string }, brand: { slug: brand } },
+                    pagination: { limit: API_MAX_LIMIT }
+                })
+            )();
+        }
+    }, [router.query.generation]);
 
-	const handleOpenAutocomplete =
-		<T extends any>(
-			hasData: boolean,
-			setState: Dispatch<SetStateAction<T[]>>,
-			fetchFunc: () => Promise<AxiosResponse<ApiResponse<T[]>>>
-		) =>
-		async () => {
-			if (!hasData) {
-				setIsLoading(true);
-				try {
-					const {
-						data: { data },
-					} = await fetchFunc();
-					setState(data);
-				} catch (err) {
-					enqueueSnackbar(
-						'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
-						{ variant: 'error' }
-					);
-				}
-				setIsLoading(false);
-			}
-		};
+    useEffect(() => {
+        setModels([]);
+    }, [brand]);
 
-	const handleOpenAutocompleteModel = (values: any) =>
-		handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-			fetchModels({
-				filters: { brand: { slug: values.brand } },
-				pagination: { limit: API_MAX_LIMIT },
-			})
-		);
+    useEffect(() => {
+        if (!models.length && model) {
+            handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+                fetchModels({
+                    filters: { brand: { slug: brand } },
+                    pagination: { limit: API_MAX_LIMIT }
+                })
+            )();
+        }
+    }, [model]);
 
-	const handleOpenAutocompleteGeneration = (values: { [key: string]: string | null }) =>
-		handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
-			fetchGenerations({
-				filters: { model: { slug: values.model as string }, brand: { slug: values.brand } },
-				pagination: { limit: API_MAX_LIMIT },
-			})
-		);
+    const handleOpenAutocomplete =
+        <T extends any>(
+            hasData: boolean,
+            setState: Dispatch<SetStateAction<T[]>>,
+            fetchFunc: () => Promise<AxiosResponse<ApiResponse<T[]>>>
+        ) =>
+        async () => {
+            if (!hasData) {
+                setIsLoading(true);
+                try {
+                    const {
+                        data: { data }
+                    } = await fetchFunc();
+                    setState(data);
+                } catch (err) {
+                    enqueueSnackbar(
+                        'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
+                        { variant: 'error' }
+                    );
+                }
+                setIsLoading(false);
+            }
+        };
 
-	const handleOpenAutocompleteKindSparePart = () =>
-		handleOpenAutocomplete<KindSparePart>(!!kindSpareParts.length, setKindSpareParts, () =>
-			fetchKindSpareParts({
-				filters: { type: 'cabin' },
-				pagination: { limit: API_MAX_LIMIT },
-			})
-		);
+    const handleOpenAutocompleteModel = (values: any) =>
+        handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+            fetchModels({
+                filters: { brand: { slug: values.brand } },
+                pagination: { limit: API_MAX_LIMIT }
+            })
+        );
 
-	const handleChangeBrandAutocomplete = () => {
-		setModels([]);
-		setGenerations([]);
-	};
+    const handleOpenAutocompleteGeneration = (values: { [key: string]: string | null }) =>
+        handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
+            fetchGenerations({
+                filters: { model: { slug: values.model as string }, brand: { slug: values.brand } },
+                pagination: { limit: API_MAX_LIMIT }
+            })
+        );
 
-	const handleChangeModelAutocomplete = () => {
-		setGenerations([]);
-	};
+    const handleOpenAutocompleteKindSparePart = () =>
+        handleOpenAutocomplete<KindSparePart>(kindSpareParts.length > 1, setKindSpareParts, () =>
+            fetchKindSpareParts({
+                filters: { type: 'cabin' },
+                pagination: { limit: API_MAX_LIMIT }
+            })
+        );
 
-	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
+    const handleChangeBrandAutocomplete = () => {
+        setModels([]);
+        setGenerations([]);
+    };
 
-	const filtersConfig = [
-		[
-			{
-				id: 'brand',
-				placeholder: 'Марка',
-				type: 'autocomplete',
-				onChange: handleChangeBrandAutocomplete,
-				options: brands.map((item) => ({ label: item.name, value: item.slug })),
-				noOptionsText: noOptionsText,
-			},
-		],
-		[
-			{
-				id: 'model',
-				placeholder: 'Модель',
-				type: 'autocomplete',
-				disabledDependencyId: 'brand',
-				onChange: handleChangeModelAutocomplete,
-				options: models.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: handleOpenAutocompleteModel,
-				noOptionsText: noOptionsText,
-			},
-		],
-		[
-			{
-				id: 'generation',
-				placeholder: 'Поколение',
-				type: 'autocomplete',
-				disabledDependencyId: 'model',
-				options: generations.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: handleOpenAutocompleteGeneration,
-				noOptionsText: noOptionsText,
-			},
-		],
-		[
-			{
-				id: 'kindSparePart',
-				placeholder: 'Запчасть',
-				type: 'autocomplete',
-				options: kindSpareParts.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: handleOpenAutocompleteKindSparePart,
-				noOptionsText: noOptionsText,
-			},
-		],
-	];
+    const handleChangeModelAutocomplete = () => {
+        setGenerations([]);
+    };
 
-	const generateFiltersByQuery = ({
-		brand,
-		model,
-		generation,
-		kindSparePart,
-		fuel,
-		bodyStyle,
-		transmission,
-		...others
-	}: {
-		[key: string]: string;
-	}): Filters => {
-		let filters: Filters = {
-			brand: getParamByRelation(brand, 'slug'),
-			model: getParamByRelation(model),
-			generation: getParamByRelation(generation, 'slug'),
-			kindSparePart: getParamByRelation(kindSparePart, 'slug'),
-			fuel: SLUGIFY_FUELS[fuel],
-			bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
-			transmission: SLUGIFY_TRANSMISSIONS[transmission],
-		};
-		return { ...filters, ...others };
-	};
+    const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
-	return (
-		<Catalog
-			dataFieldsToShow={[
-				{
-					id: 'brand',
-					name: 'Марка',
-				},
-				{
-					id: 'model',
-					name: 'Модель',
-				},
-				{
-					id: 'kindSparePart',
-					name: 'Запчасть',
-				},
-			]}
-			searchPlaceholder='Поиск ...'
-			filtersConfig={filtersConfig}
-			seo={page.seo}
-			fetchData={fetchCabins}
-			generateFiltersByQuery={generateFiltersByQuery}
-		></Catalog>
-	);
+    const filtersConfig = [
+        [
+            {
+                id: 'brand',
+                placeholder: 'Марка',
+                type: 'autocomplete',
+                onChange: handleChangeBrandAutocomplete,
+                options: brands.map((item) => ({ label: item.name, value: item.slug })),
+                noOptionsText: noOptionsText
+            }
+        ],
+        [
+            {
+                id: 'model',
+                placeholder: 'Модель',
+                type: 'autocomplete',
+                disabledDependencyId: 'brand',
+                onChange: handleChangeModelAutocomplete,
+                options: models.map((item) => ({ label: item.name, value: item.slug })),
+                onOpen: handleOpenAutocompleteModel,
+                noOptionsText: noOptionsText
+            }
+        ],
+        [
+            {
+                id: 'generation',
+                placeholder: 'Поколение',
+                type: 'autocomplete',
+                disabledDependencyId: 'model',
+                options: generations.map((item) => ({ label: item.name, value: item.slug })),
+                onOpen: handleOpenAutocompleteGeneration,
+                noOptionsText: noOptionsText
+            }
+        ],
+        [
+            {
+                id: 'kindSparePart',
+                placeholder: 'Запчасть',
+                type: 'autocomplete',
+                options: kindSpareParts.map((item) => ({ label: item.name, value: item.slug })),
+                onOpen: handleOpenAutocompleteKindSparePart,
+                noOptionsText: noOptionsText
+            }
+        ]
+    ];
+
+    const generateFiltersByQuery = ({
+        brand,
+        model,
+        generation,
+        kindSparePart,
+        fuel,
+        bodyStyle,
+        transmission,
+        ...others
+    }: {
+        [key: string]: string;
+    }): Filters => {
+        let filters: Filters = {
+            brand: getParamByRelation(brand, 'slug'),
+            model: getParamByRelation(model),
+            generation: getParamByRelation(generation, 'slug'),
+            kindSparePart: getParamByRelation(kindSparePart, 'slug'),
+            fuel: SLUGIFY_FUELS[fuel],
+            bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
+            transmission: SLUGIFY_TRANSMISSIONS[transmission]
+        };
+        return { ...filters, ...others };
+    };
+
+    return (
+        <Catalog
+            dataFieldsToShow={[
+                {
+                    id: 'brand',
+                    name: 'Марка'
+                },
+                {
+                    id: 'model',
+                    name: 'Модель'
+                },
+                {
+                    id: 'kindSparePart',
+                    name: 'Запчасть'
+                }
+            ]}
+            searchPlaceholder='Поиск ...'
+            filtersConfig={filtersConfig}
+            seo={page.seo}
+            fetchData={fetchCabins}
+            generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+    );
 };
 
 export default CatalogCabins;
