@@ -240,16 +240,23 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
 	const handleClickFind = () => {
 		let { brand, model, ...restValues } = values;
+		let sanitazedValues = Object.keys(restValues).reduce(
+			(prev, curr) => (restValues[curr] ? { ...prev, [curr]: restValues[curr] } : prev),
+			{}
+		);
+
+		const query = qs.stringify(sanitazedValues, { encode: false });
+		const formattedQuery = `${query ? `?${query}` : ''}`;
+
 		let url = '/';
 		if (productType === 'sparePart' || productType === 'cabin') {
-			url =
-				`/${productType === 'sparePart' ? 'spare-parts' : 'cabins'}/${
-					model ? `${brand}/model-${model}` : brand ? `${brand}` : ''
-				}?` + qs.stringify(restValues, { encode: false });
+			url = `/${productType === 'sparePart' ? 'spare-parts' : 'cabins'}/${
+				model ? `${brand}/model-${model}` : brand ? `${brand}` : ''
+			}${formattedQuery}`;
 		} else if (productType === 'wheel') {
-			url = `/wheels/${brand ? `${brand}` : ''}?` + qs.stringify(restValues, { encode: false });
+			url = `/wheels/${brand ? `${brand}` : ''}${formattedQuery}`;
 		} else if (productType === 'tire') {
-			url = `/tires/${brand ? `${brand}` : ''}?` + qs.stringify(restValues, { encode: false });
+			url = `/tires/${brand ? `${brand}` : ''}${formattedQuery}`;
 		}
 		router.push(url);
 	};
