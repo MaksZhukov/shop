@@ -138,7 +138,7 @@ const Catalog = ({
 					setPageCount(Math.ceil(pagination.total / API_DEFAULT_LIMIT));
 					if (paramPage) {
 						router.query.page = '1';
-					} else if (Math.ceil(pagination.total / API_DEFAULT_LIMIT) < +page) {
+					} else if (router.query.page && Math.ceil(pagination.total / API_DEFAULT_LIMIT) < +page) {
 						router.query.page = (Math.ceil(pagination.total / API_DEFAULT_LIMIT) || 1).toString();
 					}
 					if (withRouterPush) {
