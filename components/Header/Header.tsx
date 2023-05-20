@@ -262,7 +262,7 @@ const Header = observer(({ brands }: Props) => {
                     height={34}
                     quality={100}
                     isOnSSR={false}
-                    src="/logo.jpg"
+                    src="/logo.png"
                 />
             </NextLink>
         </Box>
