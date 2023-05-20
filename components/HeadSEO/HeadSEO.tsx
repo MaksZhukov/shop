@@ -42,7 +42,7 @@ const HeadSEO: FC<Props> = ({ title, description, keywords, image }) => {
             <meta property="og:type" content={getOGType(router.asPath)} />
             <meta
                 property="og:image"
-                content={image ? publicRuntimeConfig.backendUrl + image.url : origin + '/logo.png'}
+                content={image ? publicRuntimeConfig.backendUrl + image.url : origin + '/logo.jpg'}
             />
             <meta property="twitter:title" content={title} />
             <meta property="twitter:description" content={description} />
