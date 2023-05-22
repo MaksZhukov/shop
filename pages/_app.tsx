@@ -30,7 +30,7 @@ import { store } from '../store';
 import './app.scss';
 
 const { publicRuntimeConfig } = getConfig();
-console.log(publicRuntimeConfig.emailFEErrors);
+
 function MyApp({
 	Component,
 	pageProps: { hasGlobalContainer = true, hideSEOBox = false, layout, ...restPageProps },
@@ -152,11 +152,11 @@ function MyApp({
 
 	const handleRenderError = (error: Error) => {
 		send(
-			'FE_RENDER_ERROR',
+			'Razbor Auto FE Error',
 			`<b>URL</b>: ${router.asPath} <br /><b>Name</b>: ${error.name} <br /> <b>Message</b>: ${error.message} <br /> <b>Stack</b>: ${error.stack} <br />`,
 			publicRuntimeConfig.emailFEErrors
 		);
-		router.push('/500');
+		router.push('/500', undefined, { shallow: true });
 	};
 
 	return (
