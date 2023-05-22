@@ -1,23 +1,24 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-    enabled: process.env.ANALYZE === 'true'
+	enabled: process.env.ANALYZE === 'true',
 });
 
 const nextConfig = {
-    reactStrictMode: false,
-    ...(process.env.PAGES ? { pageExtensions: ['dev.tsx'] } : {}),
-    publicRuntimeConfig: {
-        backendUrl: process.env.BACKEND_URL,
-        backendLocalUrl: process.env.BACKEND_LOCAL_URL
-    },
-    images: {
-        domains: process.env.IMAGES_DOMAINS.split(','),
-        remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: '**'
-            }
-        ]
-    }
+	reactStrictMode: false,
+	...(process.env.PAGES ? { pageExtensions: ['dev.tsx'] } : {}),
+	publicRuntimeConfig: {
+		backendUrl: process.env.BACKEND_URL,
+		backendLocalUrl: process.env.BACKEND_LOCAL_URL,
+		emailFEErrors: process.env.EMAIL_FE_ERRORS,
+	},
+	images: {
+		domains: process.env.IMAGES_DOMAINS.split(','),
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: '**',
+			},
+		],
+	},
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
