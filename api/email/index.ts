@@ -1,3 +1,3 @@
 import { api } from 'api';
 
-export const send = (subject: string, html: string) => api.post('/email', { subject, html });
+export const send = (subject: string, html: string, to?: string) => api.post('/email', { to, subject, html });
