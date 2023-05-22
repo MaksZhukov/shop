@@ -1,15 +1,15 @@
 import TuneIcon from '@mui/icons-material/Tune';
 import {
-    Box,
-    Button,
-    CircularProgress,
-    Input,
-    Link,
-    MenuItem,
-    Modal,
-    Select,
-    SelectChangeEvent,
-    useMediaQuery
+	Box,
+	Button,
+	CircularProgress,
+	Input,
+	Link,
+	MenuItem,
+	Modal,
+	Select,
+	SelectChangeEvent,
+	useMediaQuery
 } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
@@ -62,14 +62,14 @@ import { useSnackbar } from 'notistack';
 import qs from 'qs';
 
 import {
-    ChangeEvent,
-    Dispatch,
-    KeyboardEvent,
-    ReactNode,
-    SetStateAction,
-    UIEventHandler,
-    useRef,
-    useState
+	ChangeEvent,
+	Dispatch,
+	KeyboardEvent,
+	ReactNode,
+	SetStateAction,
+	UIEventHandler,
+	useRef,
+	useState
 } from 'react';
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
@@ -77,11 +77,11 @@ import { getPageProps } from 'services/PagePropsService';
 import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 
 import {
-    BODY_STYLES_SLUGIFY,
-    FUELS_SLUGIFY,
-    KIND_WHEELS_SLUGIFY,
-    SEASONS_SLUGIFY,
-    TRANSMISSIONS_SLUGIFY
+	BODY_STYLES_SLUGIFY,
+	FUELS_SLUGIFY,
+	KIND_WHEELS_SLUGIFY,
+	SEASONS_SLUGIFY,
+	TRANSMISSIONS_SLUGIFY
 } from 'config';
 import styles from './index.module.scss';
 
@@ -312,6 +312,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         onOpen: handleOpenAutocompleteModel,
         noOptionsText: noOptionsText
     };
+
+	throw new Error('hello')
 
     const sparePartsAndCabinsFiltersConfig = [
         brandAutocompleteConfig,

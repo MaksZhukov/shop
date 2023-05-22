@@ -11,6 +11,8 @@ import { roboto } from 'fonts';
 import { Provider } from 'mobx-react';
 import type { AppProps } from 'next/app';
 import NextApp from 'next/app';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 import { SnackbarProvider } from 'notistack';
 import { useEffect, useMemo } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -27,11 +29,14 @@ import { getJwt, saveJwt } from '../services/LocalStorageService';
 import { store } from '../store';
 import './app.scss';
 
+const { publicRuntimeConfig } = getConfig();
+console.log(publicRuntimeConfig.emailFEErrors);
 function MyApp({
 	Component,
 	pageProps: { hasGlobalContainer = true, hideSEOBox = false, layout, ...restPageProps },
 	deviceType,
 }: AppProps & { deviceType: 'desktop' | 'mobile' }) {
+	const router = useRouter();
 	let theme = useMemo(
 		() =>
 			createTheme({
@@ -146,7 +151,12 @@ function MyApp({
 	};
 
 	const handleRenderError = (error: Error) => {
-		send('FE_RENDER_ERROR', JSON.stringify(error), 'maks_zhukov_97@mail.ru');
+		send(
+			'FE_RENDER_ERROR',
+			`<b>URL</b>: ${router.asPath} <br /><b>Name</b>: ${error.name} <br /> <b>Message</b>: ${error.message} <br /> <b>Stack</b>: ${error.stack} <br />`,
+			publicRuntimeConfig.emailFEErrors
+		);
+		router.push('/500');
 	};
 
 	return (
@@ -172,7 +182,7 @@ function MyApp({
 						<Header brands={restPageProps.brands}></Header>
 						<RouteShield>
 							<Content>
-								<ErrorBoundary fallback={null} onError={handleRenderError}>
+								<ErrorBoundary fallback={<></>} onError={handleRenderError}>
 									<Breadcrumbs
 										exclude={['buyback-cars']}
 										h1={restPageProps.data?.h1 || restPageProps.page?.name}
