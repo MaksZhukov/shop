@@ -313,8 +313,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		noOptionsText: noOptionsText,
 	};
 
-	throw new Error('hello');
-
 	const sparePartsAndCabinsFiltersConfig = [
 		brandAutocompleteConfig,
 		modelAutocompleteConfig,
