@@ -12,15 +12,18 @@ import { getProductPageSeo } from 'services/ProductService';
 import { SparePart } from 'api/spareParts/types';
 import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
+import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
+import { KindSparePart } from 'api/kindSpareParts/types';
 
 interface Props {
     data: SparePart;
     relatedProducts: SparePart[];
     page: DefaultPage;
     brands: Brand[];
+    kindSparePart?: KindSparePart;
 }
 
-const SpareParts: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
+const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts }) => {
     if (data && relatedProducts) {
         return (
             <Product
@@ -45,13 +48,13 @@ const SpareParts: NextPage<Props> = ({ page, brands, data, relatedProducts }) =>
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogSpareParts page={page} brands={brands}></CatalogSpareParts>;
+    return <CatalogSpareParts page={page} brands={brands} kindSparePart={kindSparePart}></CatalogSpareParts>;
 };
 
 export default SpareParts;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-    const { slug = [], kindSparePart } = context.query;
+    const { slug = [], kindSparePart: kindSparePartSlug } = context.query;
     const [brand, modelOrProductParam] = slug;
     const productParam =
         modelOrProductParam && !modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
@@ -68,70 +71,98 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
         //         status: 404
         //     });
         // } else {
-            const [
-                {
-                    data: { data }
+        const [
+            {
+                data: { data }
+            },
+            {
+                data: { data: page }
+            },
+            {
+                data: { data: pageSparePart }
+            }
+        ] = await Promise.all([
+            fetchSparePart(productParam),
+            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
+            fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
+        ]);
+        const {
+            data: { data: relatedProducts }
+        } = await fetchSpareParts({
+            filters: {
+                sold: { $eq: false },
+                id: {
+                    $ne: data.id
                 },
-                {
-                    data: { data: page }
-                },
-                {
-                    data: { data: pageSparePart }
-                }
-            ] = await Promise.all([
-                fetchSparePart(productParam),
-                fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-                fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
-            ]);
-            const {
-                data: { data: relatedProducts }
-            } = await fetchSpareParts({
-                filters: {
-                    sold: { $eq: false },
-                    id: {
-                        $ne: data.id
-                    },
-                    model: data.model?.id || ''
-                },
-                populate: ['images', 'brand']
-            });
-            const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
-            let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
-            props = {
-                data,
-                page: {
-                    ...page,
-                    ...pageSparePart,
-                    textAfterDescription: pageSparePart.textAfterDescription.replace(
-                        '{autoSynonyms}',
-                        randomAutoSynonym
-                    ),
-                    seo: getProductPageSeo(pageSparePart.seo, data)
-                },
-                relatedProducts
-            };
+                model: data.model?.id || ''
+            },
+            populate: ['images', 'brand']
+        });
+        const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
+        let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
+        props = {
+            data,
+            page: {
+                ...page,
+                ...pageSparePart,
+                textAfterDescription: pageSparePart.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
+                seo: getProductPageSeo(pageSparePart.seo, data)
+            },
+            relatedProducts
+        };
         // }
     } else if (modelParam) {
         let model = modelParam.replace('model-', '');
-        const {
-            data: { data }
-        } = await fetchModelBySlug(model, {
-            populate: ['seoSpareParts.images', 'image'],
-            filters: { brand: { slug: brand } }
-        });
-        props = { page: { seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart) } };
+        const [
+            {
+                data: { data }
+            },
+            resultKindSpareParts
+        ] = await Promise.all([
+            fetchModelBySlug(model, {
+                populate: ['seoSpareParts.images', 'image'],
+                filters: { brand: { slug: brand } }
+            }),
+            ...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
+        ]);
+        const kindSparePart = resultKindSpareParts?.data?.data[0];
+        props = {
+            page: { seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart?.name) },
+            ...(kindSparePart ? { kindSparePart } : {})
+        };
     } else if (brand) {
-        const {
-            data: { data }
-        } = await fetchBrandBySlug(brand, {
-            populate: ['seoSpareParts.images', 'image']
-        });
-        props = { page: { seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart) } };
+        const [
+            {
+                data: { data }
+            },
+            resultKindSpareParts
+        ] = await Promise.all([
+            fetchBrandBySlug(brand, {
+                populate: ['seoSpareParts.images', 'image']
+            }),
+            ...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
+        ]);
+        const kindSparePart = resultKindSpareParts?.data?.data[0];
+        props = {
+            page: { seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart?.name) },
+            ...(kindSparePart ? { kindSparePart } : {})
+        };
     } else {
-        const {
-            data: { data }
-        } = await fetchPage('spare-part')();
-        props = { page: { seo: withKindSparePart(data.seo, 'запчасти', kindSparePart) } };
+        const [
+            {
+                data: { data }
+            },
+            resultKindSpareParts
+        ] = await Promise.all([
+            fetchPage('spare-part')(),
+            ...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
+        ]);
+        const kindSparePart = resultKindSpareParts?.data?.data[0];
+
+        props = {
+            page: { seo: withKindSparePart(data.seo, 'запчасти', kindSparePart?.name) },
+            ...(kindSparePart ? { kindSparePart } : {})
+        };
     }
     return props;
 });
