@@ -91,7 +91,7 @@ export const getSparePartsFiltersConfig = ({
 		{
 			id: 'kindSparePart',
 			storeInUrl: storeInUrlIds.includes('kindSparePart'),
-			placeholder: 'Запчасть',
+			placeholder: 'Вид запчасти',
 			type: 'autocomplete',
 			options: kindSpareParts.map((item) => ({ label: item.name, value: item.slug })),
 			loadingMore: isLoadingMoreKindSpareParts,
