@@ -31,14 +31,19 @@ import { getStringByTemplateStr } from 'services/StringService';
 import { Brand, ProductBrandTexts } from 'api/brands/types';
 import Typography from 'components/Typography';
 import Buy from 'components/Buy';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import ShieldIcon from '@mui/icons-material/Shield';
 import styles from './product.module.scss';
 import { isSparePart, isTireBrand } from 'services/ProductService';
 import GalleryImages from 'components/GalleryImages/GalleryImages';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
-import ReactPlayer from 'react-player';
+import NextLink from 'next/link';
+import dynamic from 'next/dynamic';
 const { publicRuntimeConfig } = getConfig();
+
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 interface Props {
     page: PageProduct & { textAfterDescription: string };
@@ -71,10 +76,11 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
             : '';
 
     const getSlidesToShow = () => {
+        const videoLinkPlus = isSparePart(data) && data.videoLink ? 1 : 0;
         if (isMobile) {
-            return data.images?.length === 1 ? 1 : 2;
+            return data.images?.length === 1 ? 1 + videoLinkPlus : 2 + videoLinkPlus;
         }
-        return data.images && data.images.length >= 5 ? 5 : data.images?.length;
+        return data.images && data.images.length >= 5 ? 4 + videoLinkPlus : (data.images?.length || 0) + videoLinkPlus;
     };
 
     const handleClose = () => {
@@ -96,6 +102,24 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
             component='h1'>
             {data.h1}
         </Typography>
+    );
+
+    const renderActionBtns = (
+        <>
+            <Button
+                sx={{ padding: '0.5em 4em', fontSize: '1em', margin: '0 1em 0.5em 0' }}
+                variant='contained'
+                component='a'
+                href='tel:+375297804780'>
+                Позвонить
+            </Button>
+            {!sold && (
+                <Buy
+                    onSold={handleSold}
+                    product={data}
+                    sx={{ padding: '0.5em 4em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
+            )}
+        </>
     );
 
     const renderWhyWeBest = (items: ILinkWithImage[]) => (
@@ -147,40 +171,55 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                     <Box display='flex' sx={{ width: { xs: '100%', md: '570px' } }} maxHeight={isMobile ? 360 : 480}>
                         {data.images ? (
                             <>
-                                <Slider
-                                    ref={(ref) => {
-                                        setSliderSmall(ref);
-                                    }}
-                                    swipeToSlide
-                                    verticalSwiping
-                                    vertical
-                                    arrows={false}
-                                    slidesToShow={getSlidesToShow()}
-                                    focusOnSelect
-                                    className={classNames(
-                                        styles.slider,
-                                        styles.slider_small,
-                                        isMobile && styles.slider_small_mobile
-                                    )}
-                                    asNavFor={sliderBig || undefined}>
-                                    {data.images.map((item) => (
-                                        <Box marginY='0.5em' key={item.id}>
-                                            <Image
-                                                title={item.caption}
-                                                alt={item.alternativeText}
-                                                width={104}
-                                                height={78}
-                                                src={item.formats?.thumbnail.url || item.url}></Image>
-                                        </Box>
-                                    ))}
-                                </Slider>
+                                <Box>
+                                    <Slider
+                                        ref={(ref) => {
+                                            setSliderSmall(ref);
+                                        }}
+                                        swipeToSlide
+                                        verticalSwiping
+                                        vertical
+                                        arrows={false}
+                                        slidesToShow={getSlidesToShow()}
+                                        focusOnSelect
+                                        className={classNames(
+                                            styles.slider,
+                                            styles.slider_small,
+                                            isMobile && styles.slider_small_mobile
+                                        )}
+                                        asNavFor={sliderBig || undefined}>
+                                        {data.images.map((item) => (
+                                            <Box marginY='0.5em' key={item.id}>
+                                                <Image
+                                                    title={item.caption}
+                                                    alt={item.alternativeText}
+                                                    width={104}
+                                                    height={78}
+                                                    src={item.formats?.thumbnail.url || item.url}></Image>
+                                            </Box>
+                                        ))}
+                                        {isSparePart(data) && data.videoLink && (
+                                            <Box>
+                                                <Typography
+                                                    width={98}
+                                                    bgcolor='primary.main'
+                                                    height={98}
+                                                    display='flex'
+                                                    alignItems='center'
+                                                    justifyContent='center'>
+                                                    Видео
+                                                </Typography>
+                                            </Box>
+                                        )}
+                                    </Slider>
+                                </Box>
                                 <Slider
                                     ref={(ref) => {
                                         setSliderBig(ref);
                                     }}
                                     asNavFor={sliderSmall || undefined}
                                     arrows={false}
-                                    autoplay
+                                    autoplay={false}
                                     autoplaySpeed={5000}
                                     className={classNames(styles.slider, isMobile && styles.slider_mobile)}>
                                     {data.images.map((item, i) => (
@@ -191,12 +230,26 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                             <Image
                                                 title={item.caption}
                                                 // style={{ height: '100%' }}
+                                                style={{
+                                                    objectPosition: 'top',
+                                                    ...(isMobile ? { height: 'auto' } : {})
+                                                }}
                                                 alt={item.alternativeText}
                                                 width={440}
                                                 height={isMobile ? 360 : 480}
                                                 src={item.url}></Image>
                                         </Box>
                                     ))}
+                                    {isSparePart(data) && data.videoLink && (
+                                        <Box>
+                                            <ReactPlayer
+                                                controls
+                                                style={{ height: '100%' }}
+                                                width={'100%'}
+                                                height={isMobile ? '100%' : 480}
+                                                url={data.videoLink}></ReactPlayer>
+                                        </Box>
+                                    )}
                                 </Slider>
                             </>
                         ) : (
@@ -210,17 +263,10 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                 src=''></Image>
                         )}
                     </Box>
-                    {isSparePart(data) && data.videoLink && (
-                        <ReactPlayer
-                            width={'100%'}
-                            height={isMobile ? 240 : 360}
-                            controls
-                            url={data.videoLink}></ReactPlayer>
-                    )}
                 </Box>
                 <Box flex='1'>
                     {renderH1('desktop')}
-                    <Box marginBottom='1em' alignItems='center' display='flex'>
+                    <Box marginBottom='1em' alignItems='center' display={{ xs: 'none', md: 'flex' }}>
                         <Link marginRight='0.5em' variant='h6' href='tel:+375297804780'>
                             +375 29 780 4 780
                         </Link>
@@ -239,7 +285,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                             <Typography color='text.primary'>~{data.discountPriceUSD.toFixed()}$</Typography>
                         )}
                     </Box>
-                    <Box display='flex' alignItems='center'>
+
+                    <Box display='flex' alignItems='center' marginBottom={{ xs: '1em', md: '1em' }}>
                         <Typography
                             marginRight='0.5em'
                             textAlign='center'
@@ -251,9 +298,24 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                             {data.price} руб{' '}
                         </Typography>
                         {!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
+                        {isTablet && (
+                            <>
+                                <NextLink href={'/delivery'}>
+                                    <IconButton>
+                                        <LocalShippingIcon color='primary'></LocalShippingIcon>
+                                    </IconButton>
+                                </NextLink>
+                                <NextLink href='/guarantee'>
+                                    <IconButton>
+                                        <ShieldIcon color='primary'></ShieldIcon>
+                                    </IconButton>
+                                </NextLink>
+                                <FavoriteButton product={data}></FavoriteButton>
+                            </>
+                        )}
                     </Box>
-
-                    <Table sx={{ marginY: '2em' }}>
+                    {isTablet && renderActionBtns}
+                    <Table sx={{ marginY: { xs: '1em', md: '2em' } }}>
                         <TableBody>
                             {printOptions.map((item) => (
                                 <TableRow key={item.value}>
@@ -276,19 +338,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                             ))}
                         </TableBody>
                     </Table>
-                    <Button
-                        sx={{ padding: '0.5em 4em', fontSize: '1em', margin: '0 1em 0.5em 0' }}
-                        variant='contained'
-                        component='a'
-                        href='tel:+375297804780'>
-                        Позвонить
-                    </Button>
-                    {!sold && (
-                        <Buy
-                            onSold={handleSold}
-                            product={data}
-                            sx={{ padding: '0.5em 4em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
-                    )}
+                    {!isTablet && renderActionBtns}
                 </Box>
             </Box>
             <Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
