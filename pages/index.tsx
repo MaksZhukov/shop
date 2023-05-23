@@ -719,18 +719,29 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             </NextLink>
                         </Box>
                     ))}
-                    <Box className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
+                    <Box
+                        position='relative'
+                        className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
+                        <Image
+                            width={260}
+                            height={300}
+                            alt='Выкуп авто на з/ч'
+                            isOnSSR={false}
+                            style={isMobile ? { objectFit: 'cover' } : {}}
+                            src='/main_buyback.png'></Image>
                         <NextLink href={'/buyback-cars'}>
                             <Link
+                                position='absolute'
+                                top={'5px'}
                                 variant={isMobile ? 'h5' : 'h4'}
                                 textTransform='uppercase'
                                 fontWeight='bold'
                                 component='span'
                                 display='block'
                                 underline='hover'
-                                margin='0.25em 0.25em'
+                                margin='0.25em 0.125em'
                                 color='inherit'>
-                                Выкуп авто на з/ч
+                                Выкуп <br /> авто на з/ч
                             </Link>
                         </NextLink>
                     </Box>
