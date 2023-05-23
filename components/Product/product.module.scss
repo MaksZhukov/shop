@@ -18,11 +18,5 @@
         &_mobile {
             margin-right: 0;
         }
-        :global {
-            .slick-track,
-            .slick-list {
-                height: 100% !important;
-            }
-        }
     }
 }
