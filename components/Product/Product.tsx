@@ -18,7 +18,6 @@ import {
     Product as IProduct,
     ProductType
 } from 'api/types';
-import Head from 'next/head';
 import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import CarouselProducts from 'components/CarouselProducts';
