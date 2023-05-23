@@ -32,7 +32,7 @@ const LinkWithImage: FC<Props> = ({
     typographyProps = { variant: 'h6', marginTop: '1em' }
 }) => {
     let title = caption || image?.caption;
-    console.log(image,width);
+
     return (
         <NextLink className={styles.link} href={link} target={targetLink}>
             <Image
