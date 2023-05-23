@@ -40,6 +40,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
 import NextLink from 'next/link';
+import Head from 'next/head';
 import dynamic from 'next/dynamic';
 const { publicRuntimeConfig } = getConfig();
 
@@ -165,6 +166,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 
     return (
         <>
+            <Head>
+                <script async type='text/javascript' src='https://js.bepaid.by/widget/be_gateway.js'></script>
+            </Head>
             <Box display='flex' marginTop='3em' gap={'2em'} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
                 {renderH1('mobile')}
                 <Box>
