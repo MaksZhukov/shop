@@ -719,18 +719,29 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             </NextLink>
                         </Box>
                     ))}
-                    <Box className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
+                    <Box
+                        position='relative'
+                        className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
+                        <Image
+                            width={260}
+                            height={300}
+                            alt='Выкуп авто на з/ч'
+                            isOnSSR={false}
+                            style={isMobile ? { objectFit: 'cover' } : {}}
+                            src='/main_buyback.png'></Image>
                         <NextLink href={'/buyback-cars'}>
                             <Link
+                                position='absolute'
+                                top={'5px'}
                                 variant={isMobile ? 'h5' : 'h4'}
                                 textTransform='uppercase'
                                 fontWeight='bold'
                                 component='span'
                                 display='block'
                                 underline='hover'
-                                margin='0.25em 0.25em'
+                                margin='0.25em 0.125em'
                                 color='inherit'>
-                                Выкуп авто на з/ч
+                                Выкуп <br /> авто на з/ч
                             </Link>
                         </NextLink>
                     </Box>
@@ -771,7 +782,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                     <WhiteBox>
                                         <LinkWithImage
                                             height={100}
-                                            width={264}
+                                            width={isMobile ? 150 : 264}
                                             image={item.image}
                                             imageStyle={{ maxWidth: '100%', objectFit: 'contain', margin: 'auto' }}
                                             typographyProps={{ minHeight: '64px', variant: 'h6', marginTop: '1em' }}
@@ -785,6 +796,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                         <LinkWithImage
                                             imageStyle={{ maxWidth: '100%', objectFit: 'contain', margin: 'auto' }}
                                             height={100}
+                                            width={isMobile ? 150 : 208}
                                             image={item.image}
                                             typographyProps={{ minHeight: '64px', variant: 'h6', marginTop: '1em' }}
                                             link={`/autocomises/${item.slug}`}></LinkWithImage>
