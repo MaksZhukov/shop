@@ -41,6 +41,7 @@ import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
+import Script from 'next/script';
 const { publicRuntimeConfig } = getConfig();
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -165,9 +166,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 
     return (
         <>
-            <Head>
-                <script async type='text/javascript' src='https://js.bepaid.by/widget/be_gateway.js'></script>
-            </Head>
+            <Script src='https://js.bepaid.by/widget/be_gateway.js'></Script>
             <Box display='flex' marginTop='3em' gap={'2em'} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
                 {renderH1('mobile')}
                 <Box>
