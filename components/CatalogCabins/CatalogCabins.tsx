@@ -16,6 +16,7 @@ import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'confi
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { usePreviousDifferent } from 'rooks';
 import { getParamByRelation } from 'services/ParamsService';
 
 interface Props {
@@ -34,6 +35,7 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 
     const router = useRouter();
     const [brand, model] = router.query.slug || [];
+    const prevBrand = usePreviousDifferent(brand);
 
     useEffect(() => {
         if (router.query.kindSparePart) {
@@ -53,7 +55,9 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
     }, [router.query.generation]);
 
     useEffect(() => {
-        setModels([]);
+        if (brand !== prevBrand && !model) {
+            setModels([]);
+        }
     }, [brand]);
 
     useEffect(() => {

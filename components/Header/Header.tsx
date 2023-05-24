@@ -48,7 +48,13 @@ interface Navigation {
     children: NavigationChild[];
 }
 
-export const getNavigation = (brands: Brand[]): Navigation[] => [
+const carBrandsProductCatalogSlugs: { [key: string]: string } = {
+    'spare-parts': 'spare-parts',
+    wheels: 'wheels',
+    cabins: 'cabins'
+};
+
+export const getNavigation = (brands: Brand[], mainSlug: string): Navigation[] => [
     {
         name: 'Магазин',
         path: '/',
@@ -94,7 +100,7 @@ export const getNavigation = (brands: Brand[]): Navigation[] => [
         children: brands.map((item) => ({
             id: item.id,
             name: item.name,
-            path: `/spare-parts/${item.slug}`
+            path: `/${carBrandsProductCatalogSlugs[mainSlug] || 'spare-parts'}/${item.slug}`
         }))
     },
     { name: 'Ожидаемые авто', path: '/awaiting-cars', id: 'awaiting-cars', children: [] },
@@ -204,7 +210,7 @@ const Header = observer(({ brands }: Props) => {
         return (
             <LinkComp
                 className={styles.link}
-                underline="none"
+                underline='none'
                 style={{ color: '#000' }}
                 target={item.target}
                 href={item.path}
@@ -245,7 +251,7 @@ const Header = observer(({ brands }: Props) => {
         </MenuList>
     );
 
-    const navigation = getNavigation(brands);
+    const navigation = getNavigation(brands, router.asPath.split('/')[1]);
 
     const renderLogo = (type: 'mobile' | 'desktop') => (
         <Box
@@ -253,7 +259,7 @@ const Header = observer(({ brands }: Props) => {
                 display: type == 'desktop' ? { xs: 'none', md: 'flex' } : { xs: 'flex', md: 'none' }
             }}
             {...(type === 'mobile' ? { order: { xs: '2', md: 'initial' } } : {})}>
-            <NextLink href="/">
+            <NextLink href='/'>
                 <Image
                     title={'Разборка авто'}
                     style={{ cursor: 'pointer' }}
@@ -262,7 +268,7 @@ const Header = observer(({ brands }: Props) => {
                     height={34}
                     quality={100}
                     isOnSSR={false}
-                    src="/logo.png"
+                    src='/logo.png'
                 />
             </NextLink>
         </Box>
@@ -340,7 +346,7 @@ const Header = observer(({ brands }: Props) => {
 
     const renderMenu = (type: 'mobile' | 'desktop') => (
         <Box
-            padding="0 10px"
+            padding='0 10px'
             {...(type === 'mobile'
                 ? {
                       flexDirection: 'column',
@@ -369,7 +375,7 @@ const Header = observer(({ brands }: Props) => {
                                     open={!!anchorEl}
                                     anchorEl={anchorEl}
                                     role={undefined}
-                                    placement="bottom-start"
+                                    placement='bottom-start'
                                     transition
                                     sx={{ zIndex: 1, top: { sm: '-3px !important' } }}
                                     disablePortal>
@@ -398,14 +404,14 @@ const Header = observer(({ brands }: Props) => {
     );
 
     return (
-        <AppBar position="fixed">
+        <AppBar position='fixed'>
             <Container ref={ref}>
                 <Toolbar
                     sx={{ justifyContent: 'space-between', minHeight: { xs: '56px', md: '64px' } }}
                     className={styles.toolbar}>
                     {renderLogo('desktop')}
                     <Box
-                        color="black"
+                        color='black'
                         sx={{
                             display: { xs: 'flex', md: 'none' },
                             flex: { xs: 'initial', md: '1' },
@@ -413,10 +419,10 @@ const Header = observer(({ brands }: Props) => {
                         }}
                         className={styles['mobile-menu']}>
                         <IconButton
-                            size="large"
-                            aria-controls="header-menu"
-                            color="inherit"
-                            aria-haspopup="true"
+                            size='large'
+                            aria-controls='header-menu'
+                            color='inherit'
+                            aria-haspopup='true'
                             onClick={handleToggleMenu}>
                             <MenuIcon sx={{ color: '#fff' }} />
                         </IconButton>
