@@ -19,7 +19,7 @@ import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'confi
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, UIEventHandler, useEffect, useRef, useState } from 'react';
-import { useDebounce, useThrottle } from 'rooks';
+import { useDebounce, usePreviousDifferent, useThrottle } from 'rooks';
 import { getParamByRelation } from 'services/ParamsService';
 import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
 
@@ -43,6 +43,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 
     const router = useRouter();
     const [brand, model] = router.query.slug || [];
+    const prevBrand = usePreviousDifferent(brand);
 
     useEffect(() => {
         if (router.query.kindSparePart) {
@@ -80,9 +81,10 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
         await loadKindSpareParts();
         setIsLoadingMore(false);
     });
-
     useEffect(() => {
-        setModels([]);
+        if (brand !== prevBrand && !model) {
+            setModels([]);
+        }
     }, [brand]);
 
     useEffect(() => {
