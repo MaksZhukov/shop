@@ -120,7 +120,6 @@ const Header = observer(({ brands }: Props) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const timeoutRef = useRef<number>();
     const router = useRouter();
-    console.log(router.pathname);
     const store = useStore();
     const { enqueueSnackbar } = useSnackbar();
     const { code } = router.query;
