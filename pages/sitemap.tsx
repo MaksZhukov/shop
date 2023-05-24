@@ -5,7 +5,7 @@ import NextLink from 'next/link';
 import { getPageProps } from 'services/PagePropsService';
 
 const SiteMap = () => {
-    const pages = getNavigation([]);
+    const pages = getNavigation([], '');
 
     return (
         <>
