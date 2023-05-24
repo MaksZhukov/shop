@@ -648,6 +648,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
                     width={isMobile ? page.bannerMobile?.width : page.banner?.width}
                     height={isMobile ? page.bannerMobile?.height : page.banner?.height}
+                    // loading='lazy'
                     style={{
                         position: 'absolute',
                         top: 0,
