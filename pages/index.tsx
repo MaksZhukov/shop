@@ -711,6 +711,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                     className={styles['categories__item-name']}
                                     marginBottom='0.25em'
                                     textAlign='center'
+                                    component="h3"
                                     variant='h4'>
                                     <Link component='span' underline='hover' color='inherit'>
                                         {CATEGORIES[i].name}
