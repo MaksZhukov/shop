@@ -48,9 +48,9 @@ const FavoriteButton = ({ product }: Props) => {
     return (
         <IconButton onClick={handleClick}>
             {favorite ? (
-                <FavoriteIcon color='primary'></FavoriteIcon>
+                <FavoriteIcon titleAccess='Удалить избранное' color='primary'></FavoriteIcon>
             ) : (
-                <FavoriteBorderIcon color='primary'></FavoriteBorderIcon>
+                <FavoriteBorderIcon titleAccess='Добавить в избранное' color='primary'></FavoriteBorderIcon>
             )}
         </IconButton>
     );

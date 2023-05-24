@@ -1031,8 +1031,7 @@ export const getServerSideProps = getPageProps(
         ]
     }),
     async () => ({
-        // TEMPORARY SLICE
-        articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data.slice(0, 3)
+        articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data
     }),
     async () => ({
         reviews: (await fetchReviews()).data.data
