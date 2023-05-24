@@ -4,7 +4,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
     reactStrictMode: false,
-    largePageDataBytes: 200 * 1000,
     ...(process.env.PAGES ? { pageExtensions: ['dev.tsx'] } : {}),
     publicRuntimeConfig: {
         backendUrl: process.env.BACKEND_URL,
@@ -19,7 +18,8 @@ const nextConfig = {
                 hostname: '**'
             }
         ]
-    }
+    },
+    experimental: { largePageDataBytes: 200 * 1000 }
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
