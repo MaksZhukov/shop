@@ -711,7 +711,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                     className={styles['categories__item-name']}
                                     marginBottom='0.25em'
                                     textAlign='center'
-                                    component="h3"
+                                    component='h3'
                                     variant='h4'>
                                     <Link component='span' underline='hover' color='inherit'>
                                         {CATEGORIES[i].name}
@@ -1031,7 +1031,8 @@ export const getServerSideProps = getPageProps(
         ]
     }),
     async () => ({
-        articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data
+        // TEMPORARY SLICE
+        articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data.slice(0, 3)
     }),
     async () => ({
         reviews: (await fetchReviews()).data.data
