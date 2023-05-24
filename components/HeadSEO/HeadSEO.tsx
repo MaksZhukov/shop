@@ -33,19 +33,21 @@ const HeadSEO: FC<Props> = ({ title, description, keywords, image }) => {
     return (
         <Head>
             <title>{title}</title>
-            <meta name="description" content={description}></meta>
-            <meta name="keywords" content={keywords} />
-            <meta property="og:url" content={origin + router.asPath} />
-            <meta property="og:site_name" content="Магазин запчастей б/у" />
-            <meta property="og:title" content={title} />
-            <meta property="og:description" content={description} />
-            <meta property="og:type" content={getOGType(router.asPath)} />
+            <meta name='description' content={description}></meta>
+            <meta name='keywords' content={keywords} />
+            <meta property='og:url' content={origin + router.asPath} />
+            <meta property='og:site_name' content='Магазин запчастей б/у' />
+            <meta property='og:title' content={title} />
+            <meta property='og:description' content={description} />
+            <meta property='og:type' content={getOGType(router.asPath)} />
             <meta
-                property="og:image"
-                content={image ? publicRuntimeConfig.backendUrl + image.url : origin + '/logo.jpg'}
+                property='og:image'
+                content={
+                    image ? publicRuntimeConfig.backendUrl + image.url : origin + '/favicons/android-chrome-192x192.png'
+                }
             />
-            <meta property="twitter:title" content={title} />
-            <meta property="twitter:description" content={description} />
+            <meta property='twitter:title' content={title} />
+            <meta property='twitter:description' content={description} />
         </Head>
     );
 };

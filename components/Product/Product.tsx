@@ -272,7 +272,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                         <Link marginRight='0.5em' variant='h6' href='tel:+375297804780'>
                             +375 29 780 4 780
                         </Link>
-                        <FavoriteButton product={data}></FavoriteButton>
                     </Box>
                     <Box display='flex' alignItems='center'>
                         {!!data.discountPrice && (
@@ -300,24 +299,20 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                             {data.price} руб{' '}
                         </Typography>
                         {!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
-                        {isTablet && (
-                            <>
-                                <NextLink href={'/delivery'}>
-                                    <IconButton>
-                                        <LocalShippingIcon color='primary'></LocalShippingIcon>
-                                    </IconButton>
-                                </NextLink>
-                                <NextLink href='/guarantee'>
-                                    <IconButton>
-                                        <ShieldIcon color='primary'></ShieldIcon>
-                                    </IconButton>
-                                </NextLink>
-                                <FavoriteButton product={data}></FavoriteButton>
-                            </>
-                        )}
+                        <NextLink href={'/delivery'}>
+                            <IconButton>
+                                <LocalShippingIcon titleAccess='Доставка' color='primary'></LocalShippingIcon>
+                            </IconButton>
+                        </NextLink>
+                        <NextLink href='/guarantee'>
+                            <IconButton>
+                                <ShieldIcon titleAccess='Гарантия' color='primary'></ShieldIcon>
+                            </IconButton>
+                        </NextLink>
+                        <FavoriteButton product={data}></FavoriteButton>
                     </Box>
-                    {isTablet && renderActionBtns}
-                    <Table sx={{ marginY: { xs: '1em', md: '2em' } }}>
+                    {renderActionBtns}
+                    <Table sx={{ marginY: '1em' }}>
                         <TableBody>
                             {printOptions.map((item) => (
                                 <TableRow key={item.value}>
@@ -340,7 +335,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                             ))}
                         </TableBody>
                     </Table>
-                    {!isTablet && renderActionBtns}
                 </Box>
             </Box>
             <Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
