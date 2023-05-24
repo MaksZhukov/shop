@@ -3,6 +3,7 @@ import getConfig from 'next/config';
 import NextImage, { ImageProps } from 'next/image';
 import Zoom from 'react-img-hover-zoom';
 import { useMediaQuery } from '@mui/material';
+import { useState } from 'react';
 const { publicRuntimeConfig } = getConfig();
 
 const Image = ({
@@ -14,6 +15,13 @@ const Image = ({
     ...props
 }: Omit<ImageProps, 'src' | 'alt'> & { src?: string; alt?: string; isOnSSR?: boolean; withZoom?: boolean }) => {
     const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+    const [key, setKey] = useState<number>(0);
+
+    const handleError = () => {
+        if (key < 3) {
+            setKey(key + 1);
+        }
+    };
     if (!src) {
         return (
             <Box
@@ -54,8 +62,10 @@ const Image = ({
 
     return (
         <NextImage
+            key={key}
             alt={alt}
             src={getSrc()}
+            onError={handleError}
             style={{
                 objectFit: 'contain',
                 maxWidth: '100%',

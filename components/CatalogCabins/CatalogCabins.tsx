@@ -186,7 +186,7 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
     }): Filters => {
         let filters: Filters = {
             brand: getParamByRelation(brand, 'slug'),
-            model: getParamByRelation(model),
+            model: getParamByRelation(model, 'slug'),
             generation: getParamByRelation(generation, 'slug'),
             kindSparePart: getParamByRelation(kindSparePart, 'slug'),
             fuel: SLUGIFY_FUELS[fuel],
