@@ -149,14 +149,17 @@ function MyApp({
 		}
 		return image;
 	};
-
 	const handleRenderError = (error: Error) => {
-		send(
-			'Razbor Auto FE Error',
-			`<b>URL</b>: ${router.asPath} <br /><b>Name</b>: ${error.name} <br /> <b>Message</b>: ${error.message} <br /> <b>Stack</b>: ${error.stack} <br />`,
-			publicRuntimeConfig.emailFEErrors
-		);
-		router.push('/500', undefined, { shallow: true });
+		if (process.env.NODE_ENV === 'production') {
+			send(
+				'Razbor Auto FE Error',
+				`<b>URL</b>: ${router.asPath} <br /><b>Name</b>: ${error.name} <br /> <b>Message</b>: ${error.message} <br /> <b>Stack</b>: ${error.stack} <br />`,
+				publicRuntimeConfig.emailFEErrors
+			);
+			router.push('/500', undefined, { shallow: true });
+		} else {
+			console.error(error);
+		}
 	};
 
 	return (
