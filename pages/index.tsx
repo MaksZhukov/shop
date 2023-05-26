@@ -644,6 +644,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     const checkIfBannerWidthIsFull = () =>
         ((window.innerHeight - 64) / (page.banner?.height || 1)) * (page.banner?.width || 1) > window.innerWidth;
+
     return (
         <>
             <Box
@@ -658,7 +659,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         top: 0,
                         objectFit:
                             typeof window === 'undefined' ||
-                            (isLaptop && typeof window !== 'undefined' && !checkIfBannerWidthIsFull())
+                            (isLaptop && typeof window !== 'undefined' && checkIfBannerWidthIsFull())
                                 ? 'fill'
                                 : 'cover',
                         width: '100vw',
