@@ -57,7 +57,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
                 },
                 p: (data) => {
                     return (
-                        <Typography component="span" display={inline ? 'inline' : 'block'} gutterBottom>
+                        <Typography component='span' display={inline ? 'inline' : 'block'} gutterBottom>
                             {data.children}
                         </Typography>
                     );
@@ -65,14 +65,19 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
                 a: (data) => {
                     return <Link href={data.href}>{data.children}</Link>;
                 },
+                h3: (data) => (
+                    <Typography component='h3' gutterBottom variant='h6'>
+                        {data.children}
+                    </Typography>
+                ),
                 h2: (data) => (
-                    <Typography component="h2" gutterBottom marginTop="1em" variant="h5">
+                    <Typography component='h2' gutterBottom marginTop='1em' variant='h5'>
                         {data.children}
                     </Typography>
                 ),
                 h1: (data) => {
                     return (
-                        <Typography component="h1" variant="h4" style={data.style}>
+                        <Typography component='h1' variant='h4' style={data.style}>
                             {data.children}
                         </Typography>
                     );
