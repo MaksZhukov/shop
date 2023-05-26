@@ -97,6 +97,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
     const renderH1 = (device: 'mobile' | 'desktop') => (
         <Typography
             display={device === 'mobile' ? { xs: 'block', md: 'none' } : { xs: 'none', md: 'block' }}
+            gutterBottom={device === 'desktop'}
             variant='h4'
             fontWeight='500'
             title={data.h1}
@@ -268,11 +269,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 </Box>
                 <Box flex='1'>
                     {renderH1('desktop')}
-                    <Box marginBottom='1em' alignItems='center' display={{ xs: 'none', md: 'flex' }}>
-                        <Link marginRight='0.5em' variant='h6' href='tel:+375297804780'>
-                            +375 29 780 4 780
-                        </Link>
-                    </Box>
                     <Box display='flex' alignItems='center'>
                         {!!data.discountPrice && (
                             <>
