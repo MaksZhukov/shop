@@ -68,7 +68,6 @@ import {
     ReactNode,
     SetStateAction,
     UIEventHandler,
-    useEffect,
     useRef,
     useState
 } from 'react';
@@ -124,18 +123,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
     const [productType, setProductType] = useState<ProductType>('sparePart');
     const [isOpenedModal, setIsOpenModal] = useState<boolean>(false);
     const [isOpenedProductTypeModal, setIsOpenedProductTypeModal] = useState<boolean>(false);
-    const [bannerObjectFit, setBannerObjectFit] = useState<'cover' | 'fill'>('fill');
 
     const router = useRouter();
-
-    useEffect(() => {
-        if (
-            isLaptop &&
-            ((window.innerHeight - 64) / (page.banner?.height || 1)) * (page.banner?.width || 1) < window.innerWidth
-        ) {
-            setBannerObjectFit('cover');
-        }
-    }, []);
 
     const loadKindSpareParts = async () => {
         const { data } = await fetchKindSpareParts({
