@@ -1,19 +1,18 @@
-import { Box, Pagination, PaginationItem, useMediaQuery } from '@mui/material';
+import { Box, Pagination, PaginationItem } from '@mui/material';
 import { fetchArticles } from 'api/articles/articles';
-import { Article, Article as IArticle } from 'api/articles/types';
+import { Article } from 'api/articles/types';
+import { fetchPage } from 'api/pages';
+import { DefaultPage } from 'api/pages/types';
 import { ApiResponse } from 'api/types';
-import WhiteBox from 'components/WhiteBox';
+import CardItem from 'components/CardItem';
+import Typography from 'components/Typography';
 import { NextPage } from 'next';
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
-import CardItem from 'components/CardItem';
-import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
-import NextLink from 'next/link';
-import Typography from 'components/Typography';
 
-let LIMIT = 10;
+const LIMIT = 10;
 
 interface Props {
     page: DefaultPage;
@@ -23,10 +22,9 @@ interface Props {
 const Articles: NextPage<Props> = ({ page, articles }) => {
     const [data, setData] = useState<Article[]>(articles ? articles.data : []);
     const [isMounted, setIsMounted] = useState<boolean>(false);
-    const pageCount = articles?.meta?.pagination?.pageCount ?? 0;
+    const total = articles?.meta?.pagination?.total ?? 0;
+    const pageCount = Math.ceil(total / LIMIT);
     const router = useRouter();
-
-    const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
     const { page: qPage = '1' } = router.query as {
         page: string;
@@ -39,10 +37,10 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
                     data: { data }
                 } = await fetchArticles({
                     pagination: {
-                        start: qPage === '1' ? 0 : +qPage * LIMIT,
+                        start: qPage === '1' ? 0 : (+qPage - 1) * LIMIT,
                         limit: LIMIT
                     },
-                    populate: 'image'
+                    populate: 'mainImage'
                 });
                 setData(data);
             };
@@ -56,34 +54,38 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
             <Box sx={{ typography: { xs: 'h5', md: 'h4' } }}>
                 <Typography
                     withSeparator
-                    textTransform="uppercase"
-                    component="h1"
-                    marginBottom="1em"
-                    fontSize="inherit">
+                    textTransform='uppercase'
+                    component='h1'
+                    marginBottom='1em'
+                    fontSize='inherit'>
                     {page.seo?.h1 || 'Статьи'}
                 </Typography>
             </Box>
             {data.map((item) => (
                 <CardItem
                     key={item.id}
-                    description={item.description}
+                    description={item.rightText}
                     name={item.name}
-                    image={item.image}
+                    image={item.mainImage}
                     link={`/articles/${item.slug}`}></CardItem>
             ))}
             {pageCount > 1 && (
-                <Box display="flex" justifyContent="center">
+                <Box display='flex' justifyContent='center'>
                     <Pagination
                         page={+qPage}
-                        renderItem={(params) => (
-                            <NextLink shallow href={`${router.pathname}?page=${params.page}`}>
-                                <PaginationItem {...params}>{params.page}</PaginationItem>
-                            </NextLink>
-                        )}
+                        renderItem={(params) =>
+                            params.disabled ? (
+                                <PaginationItem {...params} />
+                            ) : (
+                                <NextLink shallow href={`${router.pathname}?page=${params.page}`}>
+                                    <PaginationItem {...params} />
+                                </NextLink>
+                            )
+                        }
                         siblingCount={2}
-                        color="primary"
+                        color='primary'
                         count={pageCount}
-                        variant="outlined"
+                        variant='outlined'
                     />
                 </Box>
             )}
@@ -102,7 +104,7 @@ export const getServerSideProps = getPageProps(fetchPage('article'), async (cont
                     start,
                     limit: LIMIT
                 },
-                populate: 'image'
+                populate: 'mainImage'
             })
         ).data
     };

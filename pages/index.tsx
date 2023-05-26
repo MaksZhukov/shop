@@ -102,6 +102,7 @@ interface Props {
 }
 
 const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
+    console.log(articles);
     const [wheelWidths, setWheelWidths] = useState<WheelWidth[]>([]);
     const [diskOffsets, setDiskOffsets] = useState<WheelDiskOffset[]>([]);
     const [numberHoles, setNumberHoles] = useState<WheelNumberHole[]>([]);
@@ -976,7 +977,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                             width={390}
                                             typographyProps={{ width: '100%', variant: 'h6', marginTop: '1em' }}
                                             caption={item.name}
-                                            image={item.image}></LinkWithImage>
+                                            image={item.mainImage}></LinkWithImage>
                                     </Box>
                                 ))}
                             </Slider>
@@ -992,7 +993,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                                     width={390}
                                     typographyProps={{ maxWidth: 390, variant: 'h6', marginTop: '1em' }}
                                     caption={item.name}
-                                    image={item.image}></LinkWithImage>
+                                    image={item.mainImage}></LinkWithImage>
                             ))}
                         </Box>
                     )}
@@ -1031,7 +1032,7 @@ export const getServerSideProps = getPageProps(
         ]
     }),
     async () => ({
-        articles: (await fetchArticles({ populate: 'image', pagination: { limit: 3 } })).data.data
+        articles: (await fetchArticles({ populate: 'mainImage', pagination: { limit: 3 } })).data.data
     }),
     async () => ({
         reviews: (await fetchReviews()).data.data
