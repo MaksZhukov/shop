@@ -102,7 +102,6 @@ interface Props {
 }
 
 const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
-    console.log(articles);
     const [wheelWidths, setWheelWidths] = useState<WheelWidth[]>([]);
     const [diskOffsets, setDiskOffsets] = useState<WheelDiskOffset[]>([]);
     const [numberHoles, setNumberHoles] = useState<WheelNumberHole[]>([]);
@@ -142,6 +141,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
     const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+    const isLaptop = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
     const { enqueueSnackbar } = useSnackbar();
 
     const fetchKindSparePartsRef = useRef(async (value: string) => {
@@ -611,7 +611,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             display='flex'
             width='calc(100% - 48px)'
             position='absolute'
-            bottom='4em'
+            bottom='8em'
             className={styles['head-search']}>
             <Box display='flex' gap='0.5em' flex='1' flexWrap='wrap' className={styles.filters}>
                 <Box width={'calc(25% - 0.5em)'}>{renderProductTypeSelect}</Box>
@@ -642,9 +642,13 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
         </Box>
     );
 
+    const checkIfBannerWidthIsFull = () =>
+        ((window.innerHeight - 64) / (page.banner?.height || 1)) * (page.banner?.width || 1) > window.innerWidth;
     return (
         <>
-            <Box sx={{ height: { xs: 'calc(100vh - 56px - 60px)', sm: 550 } }} className={styles['head-section']}>
+            <Box
+                sx={{ height: { xs: 'calc(100vh - 56px - 60px)', sm: 'calc(100vh - 64px)' } }}
+                className={styles['head-section']}>
                 <Image
                     title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
                     width={isMobile ? page.bannerMobile?.width : page.banner?.width}
@@ -652,7 +656,11 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     style={{
                         position: 'absolute',
                         top: 0,
-                        objectFit: 'cover',
+                        objectFit:
+                            typeof window === 'undefined' ||
+                            (isLaptop && typeof window !== 'undefined' && !checkIfBannerWidthIsFull())
+                                ? 'fill'
+                                : 'cover',
                         width: '100vw',
                         height: '100%',
                         ...(isMobile ? { objectPosition: '70%' } : {})
