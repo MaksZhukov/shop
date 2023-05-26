@@ -34,6 +34,7 @@ import Image from 'components/Image';
 import { ApiResponse } from 'api/types';
 import { useStore } from 'store';
 import { useSnackbar } from 'notistack';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 interface NavigationChild {
     name: string;
@@ -412,12 +413,14 @@ const Header = observer(({ brands }: Props) => {
                     {renderLogo('desktop')}
                     <Box
                         color='black'
+                        alignItems='center'
                         sx={{
                             display: { xs: 'flex', md: 'none' },
                             flex: { xs: 'initial', md: '1' },
                             order: { xs: '3', md: 'initial' }
                         }}
                         className={styles['mobile-menu']}>
+                        <ShoppingCartIcon sx={{ color: '#fff' }}></ShoppingCartIcon>
                         <IconButton
                             size='large'
                             aria-controls='header-menu'
@@ -429,7 +432,12 @@ const Header = observer(({ brands }: Props) => {
                     </Box>
                     {renderLogo('mobile')}
                     {!isTablet && renderMenu('desktop')}
-                    {!isTablet && <Profile onClickLogout={handleClickLogout} onClickSignIn={handleClick}></Profile>}
+                    {!isTablet && (
+                        <>
+                            <ShoppingCartIcon sx={{ color: '#fff' }}></ShoppingCartIcon>
+                            <Profile onClickLogout={handleClickLogout} onClickSignIn={handleClick}></Profile>
+                        </>
+                    )}
                     {isOpenedModal && (
                         <ModalAuth isResetPassword={!!code} onChangeModalOpened={setIsOpenedModal}></ModalAuth>
                     )}
