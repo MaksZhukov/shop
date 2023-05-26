@@ -19,16 +19,16 @@ const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSlider = f
     }
     if (withSlider) {
         return (
-            <Box paddingX="1em">
+            <Box paddingX='1em'>
                 <Slider slidesToShow={1}>
                     {images.map((item) => (
-                        <Box key={item.id} padding="0.5em">
+                        <Box key={item.id} padding='0.5em'>
                             <Image
                                 title={item.caption}
                                 alt={item.alternativeText}
                                 width={390}
                                 height={270}
-                                style={{ height: 'auto', margin: 'auto' }}
+                                style={{ height: '270px', objectFit: 'cover', margin: 'auto' }}
                                 src={item.formats?.small?.url || item.url}></Image>
                         </Box>
                     ))}
@@ -39,9 +39,9 @@ const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSlider = f
     return (
         <Box
             className={withoutOverlay ? '' : styles.overlay}
-            paddingY="3em"
-            marginY="3em"
-            display="flex"
+            paddingY='3em'
+            marginY='3em'
+            display='flex'
             gap={'1em'}
             sx={sx}>
             {images.map((item) => (
@@ -52,7 +52,7 @@ const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSlider = f
                         alt={item.alternativeText}
                         width={390}
                         height={270}
-                        style={{ height: 'auto' }}></Image>
+                        style={{ height: '100%', objectFit: 'cover' }}></Image>
                 </Box>
             ))}
         </Box>
