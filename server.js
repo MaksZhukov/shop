@@ -35,7 +35,7 @@ app.prepare().then(() => {
         if (process.env.NODE_APP_INSTANCE === '0') {
             axios.post(process.env.BACKEND_LOCAL_URL + '/api/email', {
                 to: 'maks_zhukov_97@mail.ru',
-                subject: 'Start Shop Successful'
+                subject: 'Start Nextjs FE Successful'
             });
         }
         if (err) throw err;
