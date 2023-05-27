@@ -152,7 +152,7 @@ function MyApp({
 	const handleRenderError = (error: Error) => {
 		if (process.env.NODE_ENV === 'production') {
 			send(
-				'Razbor Auto FE Error',
+				'Nextjs FE Error',
 				`<b>URL</b>: ${router.asPath} <br /><b>Name</b>: ${error.name} <br /> <b>Message</b>: ${error.message} <br /> <b>Stack</b>: ${error.stack} <br />`,
 				publicRuntimeConfig.emailFEErrors
 			);
