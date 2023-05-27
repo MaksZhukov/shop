@@ -22,6 +22,7 @@ module.exports = {
 			env: {
 				PORT: 3000,
 				NODE_ENV: 'production',
+                BACKEND_LOCAL_URL: 'http://127.0.0.1:1337'
 			},
 			instances: 'max',
 			exec_mode: 'cluster',
