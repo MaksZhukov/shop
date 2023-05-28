@@ -1028,7 +1028,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
 export default Home;
 
-export const getStaticProps = getPageProps(
+export const getServerSideProps = getPageProps(
     fetchPage('main', {
         populate: [
             'seo',
