@@ -5,15 +5,17 @@ import { Product } from 'api/types';
 import { FC } from 'react';
 import { fetchOrderCheckout } from 'api/orders';
 import Loader from 'components/Loader';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useSnackbar } from 'notistack';
 
 interface Props {
     sx?: SxProps;
     product: Product;
     onSold?: () => void;
+    withIcon?: boolean;
 }
 
-const Buy: FC<Props> = ({ sx, product, onSold = () => {} }) => {
+const Buy: FC<Props> = ({ sx, product, withIcon, onSold = () => {} }) => {
     const [token, setToken] = useState<string>('');
     const [isLoadingToken, setIsLoadingToken] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
@@ -57,7 +59,8 @@ const Buy: FC<Props> = ({ sx, product, onSold = () => {} }) => {
     return (
         <>
             <Button sx={sx} onClick={handleClickBuy} variant='contained'>
-                Купить
+                Купить в 1 клик
+                {withIcon && <ShoppingCartIcon sx={{ color: '#fff', marginLeft: '0.25em' }}></ShoppingCartIcon>}
             </Button>
             <Modal open={isLoadingToken}>
                 <Loader></Loader>
