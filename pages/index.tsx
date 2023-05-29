@@ -94,6 +94,13 @@ const CATEGORIES = [
     { name: 'Колеса', href: '/tires' }
 ];
 
+const nameByProductType = {
+    sparePart: 'Запчасти',
+    cabin: 'Салоны',
+    wheel: 'Диски',
+    tire: 'Шины'
+};
+
 interface Props {
     page: PageMain;
     reviews: Review[];
@@ -523,7 +530,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
     );
 
     const renderMobileFilters = (
-        <Box marginTop='3em'>
+        <Box marginTop='1em'>
             <Input
                 sx={{ bgcolor: '#fff', maxWidth: 300, padding: '0.25em 1em' }}
                 fullWidth
@@ -533,7 +540,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 onChange={handleChangeSearch}></Input>
             <Box marginTop='1em'>
                 <Button variant='contained' onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
-                    Фильтр
+                    Подобрать {nameByProductType[productType]}
                 </Button>
             </Box>
             <Modal open={isOpenedProductTypeModal} onClose={handleCloseProductTypeModal}>
@@ -599,7 +606,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                             );
                         })}
                         <Button onClick={handleClickFind} variant='contained' fullWidth>
-                            Подобрать
+                            Подобрать {nameByProductType[productType]}
                         </Button>
                     </Box>
                 </Container>
@@ -612,7 +619,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
             display='flex'
             width='calc(100% - 48px)'
             position='absolute'
-            bottom='8em'
+            bottom='2em'
             className={styles['head-search']}>
             <Box display='flex' gap='0.5em' flex='1' flexWrap='wrap' className={styles.filters}>
                 <Box width={'calc(25% - 0.5em)'}>{renderProductTypeSelect}</Box>
@@ -638,7 +645,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 })}
             </Box>
             <Button onClick={handleClickFind} variant='contained' className={styles['btn-search']}>
-                Подобрать
+                Подобрать <br></br> {nameByProductType[productType]}
             </Button>
         </Box>
     );
@@ -656,7 +663,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                         position: 'absolute',
                         top: 0,
                         objectFit:
-                            isMobile ||
+                            !isMobile ||
                             (isLaptop &&
                                 typeof window !== 'undefined' &&
                                 ((window.innerHeight - 64) / (page.banner?.height || 1)) * (page.banner?.width || 1) <
