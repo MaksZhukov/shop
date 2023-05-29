@@ -32,6 +32,7 @@ import { Tune as TuneIcon } from '@mui/icons-material';
 import { API_DEFAULT_LIMIT } from 'api/constants';
 import { getCatalogAnchor, getCatalogAnchorText } from 'services/AnchorService';
 import styles from './Catalog.module.scss';
+import Script from 'next/script';
 
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
@@ -454,6 +455,7 @@ const Catalog = ({
 
     return (
         <>
+            <Script src='https://js.bepaid.by/widget/be_gateway.js'></Script>
             <Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'initial' } }}>
                 <Box
                     marginTop='3.7em'
@@ -491,7 +493,7 @@ const Catalog = ({
                             data.map((item) => (
                                 <ProductItem
                                     width={activeView === 'grid' ? 280 : '100%'}
-                                    minHeight={activeView === 'grid' ? 350 : 150}
+                                    minHeight={activeView === 'grid' ? 390 : 150}
                                     dataFieldsToShow={dataFieldsToShow || []}
                                     activeView={activeView}
                                     key={item.id}
