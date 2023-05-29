@@ -9,6 +9,7 @@ import NextLink from 'next/link';
 import Slider from 'react-slick';
 import Image from 'components/Image';
 import { getProductTypeSlug } from 'services/ProductService';
+import Buy from 'components/Buy/Buy';
 
 interface Props {
     dataFieldsToShow?: { id: string; name: string }[];
@@ -66,11 +67,11 @@ const ProductItem = ({
                         </Grid>
                     ))}
                 </Grid>
-                <Box display='flex' marginTop='0.5em' flexWrap='wrap'>
+                <Box display='flex' marginTop='0.5em' flexWrap='wrap' alignItems='center' gap={'0.5em'}>
                     {!!data.discountPrice && (
                         <>
                             <Typography variant='h6'>Скидка:</Typography>
-                            <Typography fontWeight='bold' variant='h5' marginRight='0.5em' color='secondary'>
+                            <Typography fontWeight='bold' variant='h5' color='secondary'>
                                 {data.discountPrice} руб{' '}
                             </Typography>
                         </>
@@ -82,7 +83,6 @@ const ProductItem = ({
                     )}
 
                     <Typography
-                        marginRight='0.5em'
                         textAlign='center'
                         fontWeight='bold'
                         variant='h5'
@@ -92,6 +92,8 @@ const ProductItem = ({
                         {data.price} руб{' '}
                     </Typography>
                     {!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
+                    <Buy withIcon product={data}></Buy>
+                    <FavoriteButton product={data}></FavoriteButton>
                 </Box>
             </Box>
         ),
@@ -147,6 +149,10 @@ const ProductItem = ({
                         </Typography>
                         {!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
                     </Box>
+                </Box>
+                <Box display='flex' gap={'1em'} justifyContent='center' marginBottom='1em'>
+                    <Buy withIcon product={data}></Buy>
+                    <FavoriteButton product={data}></FavoriteButton>
                 </Box>
             </>
         )

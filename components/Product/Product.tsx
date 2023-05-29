@@ -18,6 +18,7 @@ import {
     Product as IProduct,
     ProductType
 } from 'api/types';
+import PhoneIcon from '@mui/icons-material/Phone';
 import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import CarouselProducts from 'components/CarouselProducts';
@@ -109,17 +110,18 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
     const renderActionBtns = (
         <>
             <Button
-                sx={{ padding: '0.5em 4em', fontSize: '1em', margin: '0 1em 0.5em 0' }}
+                sx={{ padding: '0.5em 3em 0.5em 1.5em', fontSize: '1em', margin: '0 1em 0.5em 0' }}
                 variant='contained'
                 component='a'
                 href='tel:+375297804780'>
+                <PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
                 Позвонить
             </Button>
             {!sold && (
                 <Buy
                     onSold={handleSold}
                     product={data}
-                    sx={{ padding: '0.5em 4em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
+                    sx={{ padding: '0.5em 3em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
             )}
         </>
     );
