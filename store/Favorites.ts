@@ -6,6 +6,7 @@ import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
 import {
+    clearFavorites,
     getFavorites,
     removeFavorite as removeFavoriteLS,
     saveFavorite,
@@ -116,10 +117,9 @@ export default class FavoritesStore implements Favorites {
     async clearFavorites() {
         if (this.root.user.id) {
             await removeFavorites(this.items.map((item) => item.id));
-            this.items = [];
         } else {
-            let favorites = getFavorites();
-            this.items = this.items.filter((item) => favorites.filter((el) => el.id === item.id));
+            clearFavorites();
         }
+        this.items = [];
     }
 }
