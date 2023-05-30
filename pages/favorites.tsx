@@ -10,6 +10,7 @@ import Image from 'components/Image';
 import Typography from 'components/Typography';
 import { observer } from 'mobx-react';
 import Head from 'next/head';
+import { useRef, useEffect } from 'react';
 import NextLink from 'next/link';
 import { Fragment } from 'react';
 import Slider from 'react-slick';
@@ -22,10 +23,14 @@ import Buy from 'components/Buy/Buy';
 const Favorites = () => {
     const store = useStore();
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+    const ref = useRef();
     let items = store.favorites.items;
     const handleSold = () => {
         store.favorites.clearFavorites();
     };
+    useEffect(() => {
+        console.log(ref);
+    }, []);
     return (
         <>
             <Head>
@@ -154,7 +159,8 @@ const Favorites = () => {
                             );
                         })}
                     </List>
-                    <Box display='flex' justifyContent='center' gap={'1em'}>
+                    Show buttons
+                    <Box ref={ref} display='flex' justifyContent='center' gap={'1em'}>
                         <Buy onSold={handleSold} products={items.map((item) => item.product)} withIcon></Buy>
                         <Button variant='contained' component='a' href='tel:+375297804780'>
                             <PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
