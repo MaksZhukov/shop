@@ -12,7 +12,7 @@ import {
     StorageFavorite
 } from 'services/LocalStorageService';
 import RootStore from '.';
-import { removeFavorite, addFavorite, fetchFavorites } from '../api/favorites/favorites';
+import { removeFavorite, addFavorite, fetchFavorites, removeFavorites } from '../api/favorites/favorites';
 import { Favorite } from '../api/favorites/types';
 
 export interface Favorites {
@@ -113,8 +113,13 @@ export default class FavoritesStore implements Favorites {
             this.items = this.items.filter((el) => el.id !== favorite.id);
         });
     }
-    clearFavorites() {
-        let favorites = getFavorites();
-        this.items = this.items.filter((item) => favorites.filter((el) => el.id === item.id));
+    async clearFavorites() {
+        if (this.root.user.id) {
+            await removeFavorites(this.items.map((item) => item.id));
+            this.items = [];
+        } else {
+            let favorites = getFavorites();
+            this.items = this.items.filter((item) => favorites.filter((el) => el.id === item.id));
+        }
     }
 }

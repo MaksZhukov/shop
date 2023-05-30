@@ -1,5 +1,6 @@
 import { Card, CardContent, Button, Link, Grid, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
+import { useState } from 'react';
 import { Product } from '../../api/types';
 import styles from './ProductItem.module.scss';
 // import ShoppingCartButton from 'components/ShoppingCartButton';
@@ -27,6 +28,11 @@ const ProductItem = ({
     minHeight = 'auto'
 }: Props) => {
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+    const [sold, setSold] = useState<boolean>(false);
+
+    const handleSold = () => {
+        setSold(true);
+    };
     const renderContentByView = {
         list: (
             <Box
@@ -92,7 +98,7 @@ const ProductItem = ({
                         {data.price} руб{' '}
                     </Typography>
                     {!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
-                    <Buy withIcon product={data}></Buy>
+                    {!sold && <Buy onSold={handleSold} withIcon products={[data]}></Buy>}
                     <FavoriteButton product={data}></FavoriteButton>
                 </Box>
             </Box>
@@ -151,7 +157,7 @@ const ProductItem = ({
                     </Box>
                 </Box>
                 <Box display='flex' gap={'1em'} justifyContent='center' marginBottom='1em'>
-                    <Buy withIcon product={data}></Buy>
+                    {!sold && <Buy onSold={handleSold} withIcon products={[data]}></Buy>}
                     <FavoriteButton product={data}></FavoriteButton>
                 </Box>
             </>
