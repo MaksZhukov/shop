@@ -120,7 +120,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
             {!sold && (
                 <Buy
                     onSold={handleSold}
-                    product={data}
+                    products={[data]}
                     sx={{ padding: '0.5em 3em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
             )}
         </>
@@ -169,7 +169,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 
     return (
         <>
-            <Script src='https://js.bepaid.by/widget/be_gateway.js'></Script>
             <Box display='flex' marginTop='3em' gap={'2em'} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
                 {renderH1('mobile')}
                 <Box>

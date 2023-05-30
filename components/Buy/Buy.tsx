@@ -7,15 +7,16 @@ import { fetchOrderCheckout } from 'api/orders';
 import Loader from 'components/Loader';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useSnackbar } from 'notistack';
+import Script from 'next/script';
 
 interface Props {
     sx?: SxProps;
-    product: Product;
+    products: Product[];
     onSold?: () => void;
     withIcon?: boolean;
 }
 
-const Buy: FC<Props> = ({ sx, product, withIcon, onSold = () => {} }) => {
+const Buy: FC<Props> = ({ sx, products, withIcon, onSold = () => {} }) => {
     const [token, setToken] = useState<string>('');
     const [isLoadingToken, setIsLoadingToken] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
@@ -27,7 +28,7 @@ const Buy: FC<Props> = ({ sx, product, withIcon, onSold = () => {} }) => {
             try {
                 const {
                     data: { data }
-                } = await fetchOrderCheckout(product.id, product.type);
+                } = await fetchOrderCheckout(products.map((item) => ({ id: item.id, type: item.type })));
                 newToken = data.token;
                 setToken(newToken);
             } catch (err) {
@@ -48,7 +49,7 @@ const Buy: FC<Props> = ({ sx, product, withIcon, onSold = () => {} }) => {
                     setIsLoadingToken(true);
                     const {
                         data: { data }
-                    } = await fetchOrderCheckout(product.id, product.type);
+                    } = await fetchOrderCheckout(products.map((item) => ({ id: item.id, type: item.type })));
                     setToken(data.token);
                     setIsLoadingToken(false);
                 }
@@ -58,6 +59,7 @@ const Buy: FC<Props> = ({ sx, product, withIcon, onSold = () => {} }) => {
     };
     return (
         <>
+            <Script src='https://js.bepaid.by/widget/be_gateway.js'></Script>
             <Button sx={sx} onClick={handleClickBuy} variant='contained'>
                 Купить в 1 клик
                 {withIcon && <ShoppingCartIcon sx={{ color: '#fff', marginLeft: '0.25em' }}></ShoppingCartIcon>}
