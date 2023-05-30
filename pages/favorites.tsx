@@ -1,7 +1,10 @@
-import { Container, List, ListItem, Divider, Link, useMediaQuery } from '@mui/material';
+import { Container, List, ListItem, Divider, Link, useMediaQuery, IconButton, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import classNames from 'classnames';
 import FavoriteButton from 'components/FavoriteButton';
+import PhoneIcon from '@mui/icons-material/Phone';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import ShieldIcon from '@mui/icons-material/Shield';
 import Image from 'components/Image';
 // import ShoppingCartButton from 'components/ShoppingCartButton';
 import Typography from 'components/Typography';
@@ -14,144 +17,167 @@ import { getPageProps } from 'services/PagePropsService';
 import { getProductTypeSlug } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './favorites.module.scss';
+import Buy from 'components/Buy/Buy';
 
 const Favorites = () => {
     const store = useStore();
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     let items = store.favorites.items;
+    const handleSold = () => {
+        store.favorites.clearFavorites();
+    };
     return (
         <>
             <Head>
                 <title>Избранные</title>
-                <meta name="description" content="Избранные товары"></meta>
-                <meta name="keywords" content="авто, ожидаемые авто, автомобили, ожидаемые автомобили" />
+                <meta name='description' content='Избранные товары'></meta>
+                <meta name='keywords' content='авто, ожидаемые авто, автомобили, ожидаемые автомобили' />
             </Head>
-            <Typography textTransform="uppercase" variant="h4" component="h1" marginBottom="1em" textAlign="center">
+            <Typography textTransform='uppercase' variant='h4' component='h1' marginBottom='1em' textAlign='center'>
                 Избранные
             </Typography>
             {items.length ? (
-                <List>
-                    {items.map((item, index) => {
-                        return (
-                            <Fragment key={item.id}>
-                                <ListItem
-                                    sx={{ bgcolor: '#fff' }}
-                                    className={classNames(isMobile && styles.list__item_mobile)}
-                                    key={item.id}>
-                                    {item.product.images && item.product.images.some((image) => image.formats) ? (
-                                        <Slider
-                                            className={classNames(styles.slider, isMobile && styles.slider_mobile)}
-                                            arrows={false}
-                                            autoplay
-                                            pauseOnHover
-                                            autoplaySpeed={3000}>
-                                            {item.product.images
-                                                .filter((item) => item.formats)
-                                                .map((image) => (
-                                                    <Image
-                                                        title={image?.caption}
-                                                        src={`${
-                                                            isMobile
-                                                                ? image.formats?.small?.url || image.url
-                                                                : image.formats?.thumbnail?.url || image.url
-                                                        }`}
-                                                        alt={image.alternativeText}
-                                                        key={image.id}
-                                                        width={isMobile ? 500 : 150}
-                                                        height={isMobile ? 375 : 100}></Image>
-                                                ))}
-                                        </Slider>
-                                    ) : (
-                                        <Image
-                                            title={item.product.name}
-                                            src={''}
-                                            alt={item.product.name}
-                                            width={isMobile ? 500 : 150}
-                                            height={isMobile ? 375 : 100}></Image>
-                                    )}
-                                    <Box flex="1" padding="1em">
-                                        <Typography
-                                            lineClamp={1}
-                                            title={item.product.h1}
-                                            marginBottom="0.5em"
-                                            variant="h5"
-                                            component="h2">
-                                            <NextLink
-                                                href={`/${getProductTypeSlug(item.product)}/${item.product.slug}`}>
-                                                <Link component="span" underline="hover">
-                                                    {item.product.h1}
-                                                </Link>
-                                            </NextLink>
-                                        </Typography>
-                                        {item.product.description && (
-                                            <Typography
-                                                lineClamp={2}
-                                                color="text.secondary"
-                                                className={styles.description}>
-                                                {item.product.description}
-                                            </Typography>
+                <>
+                    <List>
+                        {items.map((item, index) => {
+                            return (
+                                <Fragment key={item.id}>
+                                    <ListItem
+                                        sx={{ bgcolor: '#fff' }}
+                                        className={classNames(isMobile && styles.list__item_mobile)}
+                                        key={item.id}>
+                                        {item.product.images && item.product.images.some((image) => image.formats) ? (
+                                            <Slider
+                                                className={classNames(styles.slider, isMobile && styles.slider_mobile)}
+                                                arrows={false}
+                                                autoplay
+                                                pauseOnHover
+                                                autoplaySpeed={3000}>
+                                                {item.product.images
+                                                    .filter((item) => item.formats)
+                                                    .map((image) => (
+                                                        <Image
+                                                            title={image?.caption}
+                                                            src={`${
+                                                                isMobile
+                                                                    ? image.formats?.small?.url || image.url
+                                                                    : image.formats?.thumbnail?.url || image.url
+                                                            }`}
+                                                            alt={image.alternativeText}
+                                                            key={image.id}
+                                                            width={isMobile ? 500 : 150}
+                                                            height={isMobile ? 375 : 100}></Image>
+                                                    ))}
+                                            </Slider>
+                                        ) : (
+                                            <Image
+                                                title={item.product.name}
+                                                src={''}
+                                                alt={item.product.name}
+                                                width={isMobile ? 500 : 150}
+                                                height={isMobile ? 375 : 100}></Image>
                                         )}
-                                    </Box>
-                                    <Box
-                                        display={isMobile ? 'flex' : 'block'}
-                                        {...(isMobile && {
-                                            justifyContent: 'end'
-                                        })}>
-                                        <Box display="flex">
-                                            <Box display="flex" marginRight="1em" alignItems="center">
-                                                {!!item.product.discountPrice && (
-                                                    <Typography
-                                                        fontWeight="bold"
-                                                        variant="h4"
-                                                        marginRight="0.5em"
-                                                        color="secondary">
-                                                        {item.product.discountPrice} руб{' '}
-                                                    </Typography>
-                                                )}
-                                                {!!item.product.discountPriceUSD && (
-                                                    <Typography color="text.primary">
-                                                        ~{item.product.discountPriceUSD.toFixed()}$
-                                                    </Typography>
-                                                )}
-                                            </Box>
-                                            <Box display="flex" alignItems="center">
+                                        <Box flex='1' padding='1em'>
+                                            <Typography
+                                                lineClamp={1}
+                                                title={item.product.h1}
+                                                marginBottom='0.5em'
+                                                variant='h5'
+                                                component='h2'>
+                                                <NextLink
+                                                    href={`/${getProductTypeSlug(item.product)}/${item.product.slug}`}>
+                                                    <Link component='span' underline='hover'>
+                                                        {item.product.h1}
+                                                    </Link>
+                                                </NextLink>
+                                            </Typography>
+                                            {item.product.description && (
                                                 <Typography
-                                                    marginRight="0.5em"
-                                                    textAlign="center"
-                                                    fontWeight="bold"
-                                                    variant="h4"
-                                                    component={item.product.discountPrice ? 's' : 'p'}
-                                                    sx={{ opacity: item.product.discountPrice ? '0.8' : '1' }}
-                                                    color="secondary">
-                                                    {item.product.price} руб{' '}
+                                                    lineClamp={2}
+                                                    color='text.secondary'
+                                                    className={styles.description}>
+                                                    {item.product.description}
                                                 </Typography>
-                                                {!!item.product.priceUSD && (
-                                                    <Typography color="text.secondary">
-                                                        ~{item.product.priceUSD.toFixed()}$
-                                                    </Typography>
-                                                )}
-                                            </Box>
+                                            )}
                                         </Box>
-                                        <Box textAlign="right">
-                                            {/* <ShoppingCartButton
+                                        <Box
+                                            display={isMobile ? 'flex' : 'block'}
+                                            {...(isMobile && {
+                                                justifyContent: 'end'
+                                            })}>
+                                            <Box display='flex'>
+                                                <Box display='flex' marginRight='1em' alignItems='center'>
+                                                    {!!item.product.discountPrice && (
+                                                        <Typography
+                                                            fontWeight='bold'
+                                                            variant='h4'
+                                                            marginRight='0.5em'
+                                                            color='secondary'>
+                                                            {item.product.discountPrice} руб{' '}
+                                                        </Typography>
+                                                    )}
+                                                    {!!item.product.discountPriceUSD && (
+                                                        <Typography color='text.primary'>
+                                                            ~{item.product.discountPriceUSD.toFixed()}$
+                                                        </Typography>
+                                                    )}
+                                                </Box>
+                                                <Box display='flex' alignItems='center'>
+                                                    <Typography
+                                                        marginRight='0.5em'
+                                                        textAlign='center'
+                                                        fontWeight='bold'
+                                                        variant='h4'
+                                                        component={item.product.discountPrice ? 's' : 'p'}
+                                                        sx={{ opacity: item.product.discountPrice ? '0.8' : '1' }}
+                                                        color='secondary'>
+                                                        {item.product.price} руб{' '}
+                                                    </Typography>
+                                                    {!!item.product.priceUSD && (
+                                                        <Typography color='text.secondary'>
+                                                            ~{item.product.priceUSD.toFixed()}$
+                                                        </Typography>
+                                                    )}
+                                                </Box>
+                                            </Box>
+                                            <Box textAlign='right'>
+                                                {/* <ShoppingCartButton
 														product={
 															item.product
 														}></ShoppingCartButton> */}
-                                            <FavoriteButton product={item.product}></FavoriteButton>
+                                                <FavoriteButton product={item.product}></FavoriteButton>
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </ListItem>
-                                {index !== items.length - 1 && <Divider light></Divider>}
-                            </Fragment>
-                        );
-                    })}
-                </List>
+                                    </ListItem>
+                                    {index !== items.length - 1 && <Divider light></Divider>}
+                                </Fragment>
+                            );
+                        })}
+                    </List>
+                    <Box display='flex' justifyContent='center' gap={'1em'}>
+                        <Buy onSold={handleSold} products={items.map((item) => item.product)} withIcon></Buy>
+                        <Button variant='contained' component='a' href='tel:+375297804780'>
+                            <PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
+                            Позвонить
+                        </Button>
+                        <NextLink href={'/delivery'}>
+                            <IconButton>
+                                <LocalShippingIcon titleAccess='Доставка' color='primary'></LocalShippingIcon>
+                            </IconButton>
+                        </NextLink>
+                        <NextLink href='/guarantee'>
+                            <IconButton>
+                                <ShieldIcon titleAccess='Гарантия' color='primary'></ShieldIcon>
+                            </IconButton>
+                        </NextLink>
+                    </Box>
+                </>
             ) : (
-                <Typography variant="subtitle1" marginY="1em" textAlign="center">
+                <Typography variant='subtitle1' marginY='1em' textAlign='center'>
                     У вас нет товаров в избранном, добавьте их из{' '}
                     <NextLink href={'/'}>
-                        <Link component="span" textTransform={'uppercase'}>
-                            Каталога
+                        <Link component='span' textTransform={'uppercase'}>
+                            Магазина
                         </Link>
                     </NextLink>
                 </Typography>
