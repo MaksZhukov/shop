@@ -53,6 +53,7 @@ const Buy: FC<Props> = ({ sx, products, withIcon, onSold = () => {} }) => {
                     setToken(data.token);
                     setIsLoadingToken(false);
                 }
+                setToken('');
             }
         };
         new BeGateway(params).createWidget();
