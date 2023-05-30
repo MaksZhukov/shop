@@ -16,6 +16,10 @@ export const getFavorites = (): StorageFavorite[] => {
     return result ? JSON.parse(result) : [];
 };
 
+export const clearFavorites = () => {
+    localStorage.setItem('favoriteProducts', JSON.stringify([]));
+};
+
 export const saveFavorite = (favorite: Favorite) => {
     let favorites = getFavorites();
     favorites.push({ ...favorite, product: { id: favorite.product.id, type: favorite.product.type } });
