@@ -31,6 +31,7 @@ const Favorites = () => {
     useEffect(() => {
         console.log(ref);
     }, []);
+    console.log(items);
     return (
         <>
             <Head>
