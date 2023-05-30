@@ -98,7 +98,7 @@ const ProductItem = ({
                         {data.price} руб{' '}
                     </Typography>
                     {!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
-                    {!sold && <Buy onSold={handleSold} withIcon product={data}></Buy>}
+                    {!sold && <Buy onSold={handleSold} withIcon products={[data]}></Buy>}
                     <FavoriteButton product={data}></FavoriteButton>
                 </Box>
             </Box>
@@ -157,7 +157,7 @@ const ProductItem = ({
                     </Box>
                 </Box>
                 <Box display='flex' gap={'1em'} justifyContent='center' marginBottom='1em'>
-                    {!sold && <Buy onSold={handleSold} withIcon product={data}></Buy>}
+                    {!sold && <Buy onSold={handleSold} withIcon products={[data]}></Buy>}
                     <FavoriteButton product={data}></FavoriteButton>
                 </Box>
             </>

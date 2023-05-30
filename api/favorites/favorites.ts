@@ -2,7 +2,8 @@ import { api } from '..';
 import { ApiResponse } from '../types';
 import { Favorite } from './types';
 
-export const fetchFavorites = () => api.get<ApiResponse<Favorite[]>>('favorites');
+export const fetchFavorites = () =>
+    api.get<ApiResponse<Favorite[]>>('favorites', { params: { filters: { product: { sold: { $eq: false } } } } });
 
 export const addFavorite = (productId: number, type: 'sparePart' | 'wheel' | 'tire' | 'cabin') =>
     api.post<ApiResponse<Favorite>>('favorites', {
@@ -10,10 +11,11 @@ export const addFavorite = (productId: number, type: 'sparePart' | 'wheel' | 'ti
             product: [
                 {
                     __component: `product.${type === 'sparePart' ? 'spare-part' : type}`,
-                    product: productId,
-                },
-            ],
-        },
+                    product: productId
+                }
+            ]
+        }
     });
 
 export const removeFavorite = (favoriteId: number) => api.delete(`favorites/${favoriteId}`);
+export const removeFavorites = (ids: number[]) => api.delete(`favorites`, { params: { ids } });

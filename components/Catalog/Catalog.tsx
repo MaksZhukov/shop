@@ -455,7 +455,6 @@ const Catalog = ({
 
     return (
         <>
-            <Script src='https://js.bepaid.by/widget/be_gateway.js'></Script>
             <Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'initial' } }}>
                 <Box
                     marginTop='3.7em'
