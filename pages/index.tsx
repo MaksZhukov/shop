@@ -662,14 +662,14 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     style={{
                         position: 'absolute',
                         top: 0,
-                        objectFit:
-                            !isMobile ||
-                            (isLaptop &&
-                                typeof window !== 'undefined' &&
-                                ((window.innerHeight - 64) / (page.banner?.height || 1)) * (page.banner?.width || 1) <
-                                    window.innerWidth)
-                                ? 'cover'
-                                : 'fill',
+                        objectFit: isMobile
+                            ? 'fill'
+                            : isLaptop &&
+                              typeof window !== 'undefined' &&
+                              ((window.innerHeight - 64) / (page.banner?.height || 1)) * (page.banner?.width || 1) <
+                                  window.innerWidth
+                            ? 'cover'
+                            : 'fill',
                         width: '100vw',
                         height: '100%',
                         ...(isMobile ? { objectPosition: '70%' } : {})
