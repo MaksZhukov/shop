@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { Brand } from 'api/brands/types';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'api/constants';
 import { EngineVolume } from 'api/engineVolumes/types';
@@ -22,14 +22,17 @@ import { Dispatch, FC, SetStateAction, UIEventHandler, useEffect, useRef, useSta
 import { useDebounce, usePreviousDifferent, useThrottle } from 'rooks';
 import { getParamByRelation } from 'services/ParamsService';
 import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
+import { ReactElement } from 'react-markdown/lib/react-markdown';
+import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 
 interface Props {
     page: DefaultPage;
     brands: Brand[];
     kindSparePart?: KindSparePart;
+    setRenderBeforeFooter: (element: ReactElement) => void;
 }
 
-const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
+const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart, setRenderBeforeFooter }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({
@@ -44,6 +47,14 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
     const router = useRouter();
     const [brand, model] = router.query.slug || [];
     const prevBrand = usePreviousDifferent(brand);
+
+    useEffect(() => {
+        setRenderBeforeFooter(
+            <Box marginY='1em'>
+                <BrandsSlider brands={brands}></BrandsSlider>
+            </Box>
+        );
+    }, []);
 
     useEffect(() => {
         if (router.query.kindSparePart) {

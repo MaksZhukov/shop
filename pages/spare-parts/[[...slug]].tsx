@@ -14,6 +14,7 @@ import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
+import { ReactElement } from 'react-markdown/lib/react-markdown';
 
 interface Props {
     data: SparePart;
@@ -21,9 +22,10 @@ interface Props {
     page: DefaultPage;
     brands: Brand[];
     kindSparePart?: KindSparePart;
+    setRenderBeforeFooter: (element: ReactElement) => void;
 }
 
-const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts }) => {
+const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts, setRenderBeforeFooter }) => {
     if (data && relatedProducts) {
         return (
             <Product
@@ -48,7 +50,13 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogSpareParts page={page} brands={brands} kindSparePart={kindSparePart}></CatalogSpareParts>;
+    return (
+        <CatalogSpareParts
+            setRenderBeforeFooter={setRenderBeforeFooter}
+            page={page}
+            brands={brands}
+            kindSparePart={kindSparePart}></CatalogSpareParts>
+    );
 };
 
 export default SpareParts;

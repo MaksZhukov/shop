@@ -13,15 +13,17 @@ import { getProductPageSeo } from 'services/ProductService';
 import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
+import { ReactElement } from 'react-markdown/lib/react-markdown';
 
 interface Props {
     data?: Wheel;
     relatedProducts?: Wheel[];
     page: DefaultPage | (PageProduct & PageProductWheel);
     brands: Brand[];
+    setRenderBeforeFooter: (element: ReactElement) => void;
 }
 
-const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
+const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRenderBeforeFooter }) => {
     if (data && relatedProducts) {
         return (
             <Product
@@ -53,7 +55,7 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogWheels page={page} brands={brands}></CatalogWheels>;
+    return <CatalogWheels setRenderBeforeFooter={setRenderBeforeFooter} page={page} brands={brands}></CatalogWheels>;
 };
 
 export default Wheels;

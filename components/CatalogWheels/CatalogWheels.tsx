@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { Brand } from 'api/brands/types';
 import { API_MAX_LIMIT } from 'api/constants';
 import { fetchModels } from 'api/models/models';
@@ -25,13 +25,16 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { getParamByRelation } from 'services/ParamsService';
 import { KIND_WHEELS } from '../../constants';
 import { usePreviousDifferent } from 'rooks';
+import { ReactElement } from 'react-markdown/lib/react-markdown';
+import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 
 interface Props {
     page: DefaultPage;
     brands: Brand[];
+    setRenderBeforeFooter: (element: ReactElement) => void;
 }
 
-const CatalogWheels: FC<Props> = ({ page, brands }) => {
+const CatalogWheels: FC<Props> = ({ page, brands, setRenderBeforeFooter }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [widths, setWidths] = useState<WheelWidth[]>([]);
     const [diskOffsets, setDiskOffsets] = useState<WheelDiskOffset[]>([]);
@@ -45,6 +48,14 @@ const CatalogWheels: FC<Props> = ({ page, brands }) => {
     const router = useRouter();
     const [brand, model] = router.query.slug || [];
     const prevBrand = usePreviousDifferent(brand);
+
+    useEffect(() => {
+        setRenderBeforeFooter(
+            <Box marginY='1em'>
+                <BrandsSlider linkType='wheels' brands={brands}></BrandsSlider>
+            </Box>
+        );
+    }, []);
 
     useEffect(() => {
         if (brand !== prevBrand && !model) {

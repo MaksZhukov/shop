@@ -15,6 +15,7 @@ import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
+import { ReactElement } from 'react-markdown/lib/react-markdown';
 
 interface Props {
     data: Cabin;
@@ -22,9 +23,10 @@ interface Props {
     page: DefaultPage | (PageProduct & PageProductCabin);
     brands: Brand[];
     kindSparePart?: KindSparePart;
+    setRenderBeforeFooter: (element: ReactElement) => void;
 }
 
-const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSparePart }) => {
+const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSparePart, setRenderBeforeFooter }) => {
     if (data) {
         return (
             <Product
@@ -46,7 +48,13 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSpar
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogCabins page={page} brands={brands} kindSparePart={kindSparePart}></CatalogCabins>;
+    return (
+        <CatalogCabins
+            setRenderBeforeFooter={setRenderBeforeFooter}
+            page={page}
+            brands={brands}
+            kindSparePart={kindSparePart}></CatalogCabins>
+    );
 };
 
 export default Cabins;

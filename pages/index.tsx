@@ -84,6 +84,7 @@ import {
     TRANSMISSIONS_SLUGIFY
 } from 'config';
 import styles from './index.module.scss';
+import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -861,26 +862,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                     </Typography>
                 </Box>
                 <Box paddingX='1em' marginBottom='2em'>
-                    <Slider rows={isMobile ? 1 : 2} slidesToShow={isMobile ? 2 : isTablet ? 4 : 7}>
-                        {brands.map((item) => (
-                            <WhiteBox
-                                marginX='auto'
-                                marginBottom={{ xs: 0, sm: '1em' }}
-                                width={137}
-                                padding='1em 0'
-                                key={item.id}>
-                                <LinkWithImage
-                                    width={100}
-                                    height={40}
-                                    caption={item.name}
-                                    link={`/spare-parts/${item.slug}`}
-                                    image={item.image}
-                                    typographyProps={{ fontWeight: 'bold', variant: 'body1' }}></LinkWithImage>
-                            </WhiteBox>
-                        ))}
-                    </Slider>
+                    <BrandsSlider brands={brands}></BrandsSlider>
                 </Box>
-
                 <Box
                     display='flex'
                     gap='3em'
