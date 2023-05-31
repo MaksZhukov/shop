@@ -12,18 +12,21 @@ import { getProductPageSeo } from 'services/ProductService';
 import Product from 'components/Product';
 import { Tire } from 'api/tires/types';
 import { AxiosError, AxiosHeaders } from 'axios';
+import { Brand } from 'api/brands/types';
 
 interface Props {
     data?: Tire;
     relatedProducts?: Tire[];
     page: DefaultPage | (PageProduct & PageProductTire);
     tireBrands: TireBrand[];
+    brands: Brand[];
 }
 
-const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts }) => {
+const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brands }) => {
     if (data && relatedProducts) {
         return (
             <Product
+                brands={brands}
                 data={data}
                 printOptions={[
                     { text: 'Артикул', value: data.id },
@@ -39,7 +42,7 @@ const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts }) => 
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogTires page={page} tireBrands={tireBrands}></CatalogTires>;
+    return <CatalogTires page={page} tireBrands={tireBrands} brands={brands}></CatalogTires>;
 };
 
 export default Tires;

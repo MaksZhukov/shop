@@ -1,20 +1,18 @@
-import type { NextPage } from 'next';
-import { SEO } from 'api/types';
-import { getPageProps } from 'services/PagePropsService';
-import { fetchPage } from 'api/pages';
-import { Brand } from 'api/brands/types';
-import { fetchModelBySlug } from 'api/models/models';
-import { DefaultPage, PageProduct, PageProductCabin } from 'api/pages/types';
 import { fetchBrandBySlug } from 'api/brands/brands';
-import CatalogCabins from 'components/CatalogCabins';
-import { getProductPageSeo } from 'services/ProductService';
+import { Brand } from 'api/brands/types';
 import { fetchCabin, fetchCabins } from 'api/cabins/cabins';
-import Product from 'components/Product';
 import { Cabin } from 'api/cabins/types';
-import { withKindSparePart } from 'services/SEOService';
-import { AxiosError, AxiosHeaders } from 'axios';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
+import { fetchModelBySlug } from 'api/models/models';
+import { fetchPage } from 'api/pages';
+import { DefaultPage, PageProduct, PageProductCabin } from 'api/pages/types';
+import CatalogCabins from 'components/CatalogCabins';
+import Product from 'components/Product';
+import type { NextPage } from 'next';
+import { getPageProps } from 'services/PagePropsService';
+import { getProductPageSeo } from 'services/ProductService';
+import { withKindSparePart } from 'services/SEOService';
 
 interface Props {
     data: Cabin;
@@ -28,6 +26,7 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSpar
     if (data) {
         return (
             <Product
+                brands={brands}
                 data={data}
                 printOptions={[
                     { text: 'Артикул', value: data.id },
