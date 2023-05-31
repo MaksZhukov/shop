@@ -193,8 +193,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                         )}
                                         asNavFor={sliderBig || undefined}>
                                         {data.images.map((item) => (
-                                            <Box marginY='0.5em' key={item.id}>
+                                            <Box key={item.id}>
                                                 <Image
+                                                    style={{ objectPosition: 'top' }}
                                                     title={item.caption}
                                                     alt={item.alternativeText}
                                                     width={104}
@@ -227,10 +228,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                     autoplaySpeed={5000}
                                     className={classNames(styles.slider, isMobile && styles.slider_mobile)}>
                                     {data.images.map((item, i) => (
-                                        <Box
-                                            onClick={handleClickImage(i)}
-                                            sx={{ paddingX: { xs: '0.25em', md: '1em' } }}
-                                            key={item.id}>
+                                        <Box onClick={handleClickImage(i)} sx={{ paddingX: '0.25em' }} key={item.id}>
                                             <Image
                                                 title={item.caption}
                                                 // style={{ height: '100%' }}
@@ -239,7 +237,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                                     ...(isMobile ? { height: 'auto' } : {})
                                                 }}
                                                 alt={item.alternativeText}
-                                                width={440}
+                                                width={470}
                                                 height={isMobile ? 360 : 480}
                                                 src={item.url}></Image>
                                         </Box>
