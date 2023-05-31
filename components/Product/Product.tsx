@@ -121,7 +121,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 <Buy
                     onSold={handleSold}
                     products={[data]}
-                    sx={{ padding: '0.5em 3em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
+                    sx={{ padding: '0.5em 1.5em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
             )}
         </>
     );

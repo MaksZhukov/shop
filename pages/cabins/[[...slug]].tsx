@@ -15,7 +15,9 @@ import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
-import { ReactElement } from 'react-markdown/lib/react-markdown';
+import { ReactElement, useEffect } from 'react';
+import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import { Box } from '@mui/material';
 
 interface Props {
     data: Cabin;
@@ -23,10 +25,20 @@ interface Props {
     page: DefaultPage | (PageProduct & PageProductCabin);
     brands: Brand[];
     kindSparePart?: KindSparePart;
-    setRenderBeforeFooter: (element: ReactElement) => void;
+    setRenderBeforeFooter: (element: ReactElement | null) => void;
 }
 
 const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSparePart, setRenderBeforeFooter }) => {
+    useEffect(() => {
+        setRenderBeforeFooter(
+            <Box marginY='1em'>
+                <BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
+            </Box>
+        );
+        return () => {
+            setRenderBeforeFooter(null);
+        };
+    }, []);
     if (data) {
         return (
             <Product
