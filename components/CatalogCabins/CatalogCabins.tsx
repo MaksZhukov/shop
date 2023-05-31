@@ -11,13 +11,11 @@ import { Model } from 'api/models/types';
 import { DefaultPage } from 'api/pages/types';
 import { ApiResponse, Filters } from 'api/types';
 import { AxiosResponse } from 'axios';
-import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 import Catalog from 'components/Catalog';
 import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'config';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
-import { ReactElement } from 'react-markdown/lib/react-markdown';
 import { usePreviousDifferent } from 'rooks';
 import { getParamByRelation } from 'services/ParamsService';
 
@@ -25,10 +23,9 @@ interface Props {
     page: DefaultPage;
     brands: Brand[];
     kindSparePart?: KindSparePart;
-    setRenderBeforeFooter: (element: ReactElement) => void;
 }
 
-const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart, setRenderBeforeFooter }) => {
+const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [kindSpareParts, setKindSpareParts] = useState<KindSparePart[]>(kindSparePart ? [kindSparePart] : []);
@@ -39,14 +36,6 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart, setRenderBefore
     const router = useRouter();
     const [brand, model] = router.query.slug || [];
     const prevBrand = usePreviousDifferent(brand);
-
-    useEffect(() => {
-        setRenderBeforeFooter(
-            <Box marginY='1em'>
-                <BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
-            </Box>
-        );
-    }, []);
 
     useEffect(() => {
         if (router.query.kindSparePart) {
