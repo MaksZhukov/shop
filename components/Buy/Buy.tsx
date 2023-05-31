@@ -13,10 +13,9 @@ interface Props {
     sx?: SxProps;
     products: Product[];
     onSold?: () => void;
-    withIcon?: boolean;
 }
 
-const Buy: FC<Props> = ({ sx, products, withIcon, onSold = () => {} }) => {
+const Buy: FC<Props> = ({ sx, products, onSold = () => {} }) => {
     const [token, setToken] = useState<string>('');
     const [isLoadingToken, setIsLoadingToken] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
@@ -63,7 +62,7 @@ const Buy: FC<Props> = ({ sx, products, withIcon, onSold = () => {} }) => {
             <Script src='https://js.bepaid.by/widget/be_gateway.js'></Script>
             <Button sx={sx} onClick={handleClickBuy} variant='contained'>
                 Купить в 1 клик
-                {withIcon && <ShoppingCartIcon sx={{ color: '#fff', marginLeft: '0.25em' }}></ShoppingCartIcon>}
+                <ShoppingCartIcon sx={{ color: '#fff', marginLeft: '0.25em' }}></ShoppingCartIcon>
             </Button>
             <Modal open={isLoadingToken}>
                 <Loader></Loader>

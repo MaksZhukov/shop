@@ -155,7 +155,7 @@ const Favorites = () => {
                         })}
                     </List>
                     <Box display='flex' justifyContent='center' gap={'1em'}>
-                        <Buy onSold={handleSold} products={items.map((item) => item.product)} withIcon></Buy>
+                        <Buy onSold={handleSold} products={items.map((item) => item.product)}></Buy>
                         <Button variant='contained' component='a' href='tel:+375297804780'>
                             <PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
                             Позвонить
