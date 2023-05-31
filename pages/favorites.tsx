@@ -70,46 +70,54 @@ const Favorites = () => {
                                         sx={{ bgcolor: '#fff', paddingLeft: '0.5em' }}
                                         className={classNames(isMobile && styles.list__item_mobile)}
                                         key={item.id}>
-                                        <Checkbox
-                                            onChange={handleChangeCheckbox(
-                                                item.id,
-                                                selectedFavoritesIDs.includes(item.id)
+                                        <Box display='flex'>
+                                            <Checkbox
+                                                onChange={handleChangeCheckbox(
+                                                    item.id,
+                                                    selectedFavoritesIDs.includes(item.id)
+                                                )}
+                                                checked={selectedFavoritesIDs.includes(item.id)}></Checkbox>
+                                            {item.product.images &&
+                                            item.product.images.some((image) => image.formats) ? (
+                                                <Slider
+                                                    className={classNames(
+                                                        styles.slider,
+                                                        isMobile && styles.slider_mobile
+                                                    )}
+                                                    arrows={false}
+                                                    autoplay
+                                                    pauseOnHover
+                                                    autoplaySpeed={3000}>
+                                                    {item.product.images
+                                                        .filter((item) => item.formats)
+                                                        .map((image) => (
+                                                            <Box key={image.id}>
+                                                                <Image
+                                                                    title={image?.caption}
+                                                                    src={`${
+                                                                        isMobile
+                                                                            ? image.formats?.small?.url || image.url
+                                                                            : image.formats?.thumbnail?.url || image.url
+                                                                    }`}
+                                                                    style={isMobile ? { height: 'auto' } : {}}
+                                                                    alt={image.alternativeText}
+                                                                    width={isMobile ? 500 : 150}
+                                                                    height={isMobile ? 375 : 100}></Image>
+                                                            </Box>
+                                                        ))}
+                                                </Slider>
+                                            ) : (
+                                                <Image
+                                                    title={item.product.name}
+                                                    src={''}
+                                                    alt={item.product.name}
+                                                    width={isMobile ? 500 : 150}
+                                                    height={isMobile ? 375 : 100}></Image>
                                             )}
-                                            checked={selectedFavoritesIDs.includes(item.id)}></Checkbox>
-                                        {item.product.images && item.product.images.some((image) => image.formats) ? (
-                                            <Slider
-                                                className={classNames(styles.slider, isMobile && styles.slider_mobile)}
-                                                arrows={false}
-                                                autoplay
-                                                pauseOnHover
-                                                autoplaySpeed={3000}>
-                                                {item.product.images
-                                                    .filter((item) => item.formats)
-                                                    .map((image) => (
-                                                        <Image
-                                                            title={image?.caption}
-                                                            src={`${
-                                                                isMobile
-                                                                    ? image.formats?.small?.url || image.url
-                                                                    : image.formats?.thumbnail?.url || image.url
-                                                            }`}
-                                                            alt={image.alternativeText}
-                                                            key={image.id}
-                                                            width={isMobile ? 500 : 150}
-                                                            height={isMobile ? 375 : 100}></Image>
-                                                    ))}
-                                            </Slider>
-                                        ) : (
-                                            <Image
-                                                title={item.product.name}
-                                                src={''}
-                                                alt={item.product.name}
-                                                width={isMobile ? 500 : 150}
-                                                height={isMobile ? 375 : 100}></Image>
-                                        )}
+                                        </Box>
                                         <Box flex='1' padding='1em'>
                                             <Typography
-                                                lineClamp={1}
+                                                lineClamp={isMobile ? 5 : 2}
                                                 title={item.product.h1}
                                                 marginBottom='0.5em'
                                                 variant='h5'
@@ -184,8 +192,14 @@ const Favorites = () => {
                             );
                         })}
                     </List>
-                    <Box display='flex' alignItems='center' gap={'1em'}>
-                        <Box marginLeft='150px' flex='1' display='flex' justifyContent='center' gap={'1em'}>
+                    <Box display='flex' alignItems={{ xs: 'initial', md: 'center' }} gap={'1em'}>
+                        <Box
+                            marginLeft={{ xs: 0, md: '150px' }}
+                            flex='1'
+                            flexWrap='wrap'
+                            display='flex'
+                            justifyContent={{ xs: 'initial', md: 'center' }}
+                            gap={{ xs: '0.25em', md: '1em' }}>
                             <Buy
                                 onSold={handleSold}
                                 products={selectedFavoritesIDs.map(
