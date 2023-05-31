@@ -15,7 +15,6 @@ interface Props {
 }
 
 const Delivery: FC<Props> = ({ page }) => {
-    console.log(page);
     const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
     const renderH1 = (sx: SxProps) => (
         <Box sx={sx} fontWeight='500' textTransform='uppercase' marginBottom='1em' component='h1'>

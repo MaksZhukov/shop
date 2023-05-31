@@ -30,7 +30,7 @@ interface Props {
 const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts, setRenderBeforeFooter }) => {
     useEffect(() => {
         setRenderBeforeFooter(
-            <Box marginY='1em'>
+            <Box marginY='1em' paddingX="1em">
                 <BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
             </Box>
         );
