@@ -1,4 +1,4 @@
-import { Container, List, ListItem, Divider, Link, useMediaQuery, IconButton, Button } from '@mui/material';
+import { Container, List, ListItem, Divider, Link, useMediaQuery, IconButton, Button, Checkbox } from '@mui/material';
 import { Box } from '@mui/system';
 import classNames from 'classnames';
 import FavoriteButton from 'components/FavoriteButton';
@@ -17,15 +17,39 @@ import { getPageProps } from 'services/PagePropsService';
 import { getProductTypeSlug } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './favorites.module.scss';
+import { useState, useEffect } from 'react';
 import Buy from 'components/Buy/Buy';
+import { Product } from 'api/types';
 
 const Favorites = () => {
+    const [selectedFavoritesIDs, setSelectedFavoritesIDs] = useState<number[]>([]);
     const store = useStore();
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     let items = store.favorites.items;
     const handleSold = () => {
-        store.favorites.clearFavorites();
+        store.favorites.removeFavorites(selectedFavoritesIDs);
     };
+
+    useEffect(() => {
+        setSelectedFavoritesIDs(items.map((item) => item.id));
+    }, [items]);
+    const handleChangeCheckbox = (id: number, checked: boolean) => () => {
+        if (checked) {
+            setSelectedFavoritesIDs(selectedFavoritesIDs.filter((item) => item !== id));
+        } else {
+            setSelectedFavoritesIDs([...selectedFavoritesIDs, id]);
+        }
+    };
+
+    let total = selectedFavoritesIDs.reduce(
+        (prev, curr) =>
+            prev +
+            (items.find((item) => item.id === curr)?.product.discountPrice ||
+                items.find((item) => item.id === curr)?.product.price ||
+                0),
+        0
+    );
+
     return (
         <>
             <Head>
@@ -43,9 +67,15 @@ const Favorites = () => {
                             return (
                                 <Fragment key={item.id}>
                                     <ListItem
-                                        sx={{ bgcolor: '#fff' }}
+                                        sx={{ bgcolor: '#fff', paddingLeft: '0.5em' }}
                                         className={classNames(isMobile && styles.list__item_mobile)}
                                         key={item.id}>
+                                        <Checkbox
+                                            onChange={handleChangeCheckbox(
+                                                item.id,
+                                                selectedFavoritesIDs.includes(item.id)
+                                            )}
+                                            checked={selectedFavoritesIDs.includes(item.id)}></Checkbox>
                                         {item.product.images && item.product.images.some((image) => image.formats) ? (
                                             <Slider
                                                 className={classNames(styles.slider, isMobile && styles.slider_mobile)}
@@ -154,22 +184,31 @@ const Favorites = () => {
                             );
                         })}
                     </List>
-                    <Box display='flex' justifyContent='center' gap={'1em'}>
-                        <Buy onSold={handleSold} products={items.map((item) => item.product)}></Buy>
-                        <Button variant='contained' component='a' href='tel:+375297804780'>
-                            <PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
-                            Позвонить
-                        </Button>
-                        <NextLink href={'/delivery'}>
-                            <IconButton>
-                                <LocalShippingIcon titleAccess='Доставка' color='primary'></LocalShippingIcon>
-                            </IconButton>
-                        </NextLink>
-                        <NextLink href='/guarantee'>
-                            <IconButton>
-                                <ShieldIcon titleAccess='Гарантия' color='primary'></ShieldIcon>
-                            </IconButton>
-                        </NextLink>
+                    <Box display='flex' alignItems='center' gap={'1em'}>
+                        <Box marginLeft='150px' flex='1' display='flex' justifyContent='center' gap={'1em'}>
+                            <Buy
+                                onSold={handleSold}
+                                products={selectedFavoritesIDs.map(
+                                    (id) => items.find((item) => item.id === id)?.product as Product
+                                )}></Buy>
+                            <Button variant='contained' component='a' href='tel:+375297804780'>
+                                <PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
+                                Позвонить
+                            </Button>
+                            <NextLink href={'/delivery'}>
+                                <IconButton>
+                                    <LocalShippingIcon titleAccess='Доставка' color='primary'></LocalShippingIcon>
+                                </IconButton>
+                            </NextLink>
+                            <NextLink href='/guarantee'>
+                                <IconButton>
+                                    <ShieldIcon titleAccess='Гарантия' color='primary'></ShieldIcon>
+                                </IconButton>
+                            </NextLink>
+                        </Box>
+                        <Typography width='150px' textAlign='center' variant='h6'>
+                            Итого: {total} руб
+                        </Typography>
                     </Box>
                 </>
             ) : (

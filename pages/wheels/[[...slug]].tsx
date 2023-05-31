@@ -68,7 +68,7 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRende
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogWheels setRenderBeforeFooter={setRenderBeforeFooter} page={page} brands={brands}></CatalogWheels>;
+    return <CatalogWheels page={page} brands={brands}></CatalogWheels>;
 };
 
 export default Wheels;

@@ -62,7 +62,6 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSpar
     }
     return (
         <CatalogCabins
-            setRenderBeforeFooter={setRenderBeforeFooter}
             page={page}
             brands={brands}
             kindSparePart={kindSparePart}></CatalogCabins>

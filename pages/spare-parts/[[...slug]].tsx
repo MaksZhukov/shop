@@ -65,7 +65,6 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
     }
     return (
         <CatalogSpareParts
-            setRenderBeforeFooter={setRenderBeforeFooter}
             page={page}
             brands={brands}
             kindSparePart={kindSparePart}></CatalogSpareParts>
