@@ -28,6 +28,7 @@ const Image = ({
                 maxWidth={props.width}
                 bgcolor='primary.main'
                 display='flex'
+                margin="auto"
                 alignItems='center'
                 justifyContent='center'>
                 <NextImage

@@ -34,7 +34,7 @@ import Buy from 'components/Buy';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ShieldIcon from '@mui/icons-material/Shield';
 import styles from './product.module.scss';
-import { isSparePart, isTireBrand } from 'services/ProductService';
+import { isSparePart, isTire, isTireBrand } from 'services/ProductService';
 import GalleryImages from 'components/GalleryImages/GalleryImages';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -44,6 +44,13 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
 const { publicRuntimeConfig } = getConfig();
+
+const TYPE_TEXT = {
+    sparePart: 'Запчасти',
+    wheel: 'Диски',
+    cabin: 'Салоны',
+    tire: 'Шины'
+};
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -121,7 +128,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 <Buy
                     onSold={handleSold}
                     products={[data]}
-                    sx={{ padding: '0.5em 3em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
+                    sx={{ padding: '0.5em 1.5em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
             )}
         </>
     );
@@ -193,8 +200,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                         )}
                                         asNavFor={sliderBig || undefined}>
                                         {data.images.map((item) => (
-                                            <Box marginY='0.5em' key={item.id}>
+                                            <Box key={item.id}>
                                                 <Image
+                                                    style={{ objectPosition: 'top' }}
                                                     title={item.caption}
                                                     alt={item.alternativeText}
                                                     width={104}
@@ -227,10 +235,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                     autoplaySpeed={5000}
                                     className={classNames(styles.slider, isMobile && styles.slider_mobile)}>
                                     {data.images.map((item, i) => (
-                                        <Box
-                                            onClick={handleClickImage(i)}
-                                            sx={{ paddingX: { xs: '0.25em', md: '1em' } }}
-                                            key={item.id}>
+                                        <Box onClick={handleClickImage(i)} sx={{ paddingX: '0.25em' }} key={item.id}>
                                             <Image
                                                 title={item.caption}
                                                 // style={{ height: '100%' }}
@@ -239,7 +244,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                                                     ...(isMobile ? { height: 'auto' } : {})
                                                 }}
                                                 alt={item.alternativeText}
-                                                width={440}
+                                                width={470}
                                                 height={isMobile ? 360 : 480}
                                                 src={item.url}></Image>
                                         </Box>
@@ -342,8 +347,15 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 sx={{ paddingX: { xs: '1em', md: '0' } }}
                 data={relatedProducts}
                 title={
-                    <Typography withSeparator fontWeight='500' marginBottom='1em' marginTop='1em' variant='h5'>
-                        ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
+                    <Typography
+                        textTransform='uppercase'
+                        withSeparator
+                        fontWeight='500'
+                        marginBottom='1em'
+                        marginTop='1em'
+                        variant='h5'>
+                        ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ НА НАШИ {TYPE_TEXT[data.type]} ОТ {data.brand?.name}{' '}
+                        {!isTire(data) && data.model?.name}
                     </Typography>
                 }></CarouselProducts>
             <Typography
@@ -368,13 +380,37 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
                 Мы осуществляем доставку во все <br></br> населенные пункты беларуси
             </Typography>
             <Typography marginBottom='2em'>
-                Наши Запчасти б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в следующих городах
-                Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем что работаем во всех
-                городах и деревнях, просто доставка займет немного больше времени. Будьте уверены, мы приложим все силы,
-                что бы ваш товар - {data.h1} был доставлен максимально быстро.
+                Наши {TYPE_TEXT[data.type]} б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в
+                следующих городах Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем что
+                работаем во всех городах и деревнях, просто доставка займет немного больше времени. Будьте уверены, мы
+                приложим все силы, что бы ваш товар - {data.h1} был доставлен максимально быстро.
             </Typography>
             {renderWhyWeBest(whyWeBest2)}
             {brandText && <ReactMarkdown content={brandText}></ReactMarkdown>}
+            {!isTire(data) && (
+                <Typography marginBottom='1em'>
+                    Продаем только оригинальные, качественные б/у детали для иномарок {data.brand?.name}{' '}
+                    {data.model?.name} без пробега по Беларуси. {TYPE_TEXT[data.type]} с гарантией до 30 дней Доставка
+                    по РБ в течение суток-двух, в зависимости от места расположения. Огромный каталог товаров запчастей
+                    на сайте! Выбирайте и заказывайте! У нас в ассортименте представлены автозапчасти б/у на все
+                    известные иномарки. Являясь первыми импортерами, мы предоставляем отличные цены поставляемых
+                    контрактных деталей. При заказе {data.h1} наша курьерская служба поможет организовать доставку во
+                    все населенные пункты нашей родины. Для постоянных клиентов предоставляем бонусы и скидки.
+                </Typography>
+            )}
+            <Typography
+                gutterBottom
+                textTransform='uppercase'
+                withSeparator
+                component='h2'
+                variant='h5'
+                fontWeight='500'>
+                наши эксперты всегда помогут подобрать вам нужные {TYPE_TEXT[data.type]}
+            </Typography>
+            <Typography>
+                Не стоит экономить на безопасности и выбирать недорогие, но неизвестного производителя запчасти. Лучше
+                всего выбирать оригинальные {TYPE_TEXT[data.type]} или качественные аналоги от известных производителей.
+            </Typography>
             <GalleryImages
                 images={data.images}
                 selectedIndex={selectedImageIndex}
