@@ -15,6 +15,9 @@ import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
+import { ReactElement, useEffect } from 'react';
+import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import { Box } from '@mui/material';
 
 interface Props {
     data: Cabin;
@@ -22,9 +25,20 @@ interface Props {
     page: DefaultPage | (PageProduct & PageProductCabin);
     brands: Brand[];
     kindSparePart?: KindSparePart;
+    setRenderBeforeFooter: (element: ReactElement | null) => void;
 }
 
-const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSparePart }) => {
+const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSparePart, setRenderBeforeFooter }) => {
+    useEffect(() => {
+        setRenderBeforeFooter(
+            <Box marginY='1em'>
+                <BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
+            </Box>
+        );
+        return () => {
+            setRenderBeforeFooter(null);
+        };
+    }, []);
     if (data) {
         return (
             <Product
@@ -46,7 +60,12 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSpar
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogCabins page={page} brands={brands} kindSparePart={kindSparePart}></CatalogCabins>;
+    return (
+        <CatalogCabins
+            page={page}
+            brands={brands}
+            kindSparePart={kindSparePart}></CatalogCabins>
+    );
 };
 
 export default Cabins;

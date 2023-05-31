@@ -14,9 +14,10 @@
     }
     &_small {
         width: 100px;
-        margin-right: 1.5em;
-        &_mobile {
-            margin-right: 0;
+        :global{
+            .slick-track {
+                height: auto !important;
+            }
         }
     }
 }

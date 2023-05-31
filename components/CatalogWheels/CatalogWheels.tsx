@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { Brand } from 'api/brands/types';
 import { API_MAX_LIMIT } from 'api/constants';
 import { fetchModels } from 'api/models/models';
