@@ -125,4 +125,9 @@ export default class FavoritesStore implements Favorites {
             this.items = this.items.filter((el) => !favoritesIDs.includes(el.id));
         });
     }
+
+    clearFavorites() {
+        let favorites = getFavorites();
+        this.items = this.items.filter((item) => favorites.filter((el) => el.id === item.id));
+    }
 }
