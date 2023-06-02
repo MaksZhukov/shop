@@ -16,10 +16,6 @@ export const getFavorites = (): StorageFavorite[] => {
     return result ? JSON.parse(result) : [];
 };
 
-export const clearFavorites = () => {
-    localStorage.setItem('favoriteProducts', JSON.stringify([]));
-};
-
 export const saveFavorite = (favorite: Favorite) => {
     let favorites = getFavorites();
     favorites.push({ ...favorite, product: { id: favorite.product.id, type: favorite.product.type } });
@@ -29,4 +25,12 @@ export const saveFavorite = (favorite: Favorite) => {
 export const removeFavorite = (favorite: Favorite) => {
     let favorites = getFavorites();
     localStorage.setItem('favoriteProducts', JSON.stringify(favorites.filter((item) => item.id !== favorite.id)));
+};
+
+export const removeFavorites = (favoritesIDs: number[]) => {
+    let favoritesLS = getFavorites();
+    localStorage.setItem(
+        'favoriteProducts',
+        JSON.stringify(favoritesLS.filter((item) => !favoritesIDs.includes(item.id)))
+    );
 };

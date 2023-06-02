@@ -85,6 +85,7 @@ import {
     TRANSMISSIONS_SLUGIFY
 } from 'config';
 import styles from './index.module.scss';
+import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -864,7 +865,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
                 <Box paddingX='1em' marginBottom='2em'>
                     <BrandsSlider brands={brands}></BrandsSlider>
                 </Box>
-
                 <Box
                     display='flex'
                     gap='3em'

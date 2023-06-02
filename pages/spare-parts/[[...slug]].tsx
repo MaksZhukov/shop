@@ -14,6 +14,9 @@ import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
+import { ReactElement, useEffect } from 'react';
+import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import { Box } from '@mui/material';
 
 interface Props {
     data: SparePart;
@@ -21,9 +24,21 @@ interface Props {
     page: DefaultPage;
     brands: Brand[];
     kindSparePart?: KindSparePart;
+    setRenderBeforeFooter: (element: ReactElement | null) => void;
 }
 
-const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts }) => {
+const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts, setRenderBeforeFooter }) => {
+    useEffect(() => {
+        setRenderBeforeFooter(
+            <Box marginY='1em' paddingX="1em">
+                <BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
+            </Box>
+        );
+        return () => {
+            setRenderBeforeFooter(null);
+        };
+    }, []);
+
     if (data && relatedProducts) {
         return (
             <Product
@@ -49,7 +64,12 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogSpareParts page={page} brands={brands} kindSparePart={kindSparePart}></CatalogSpareParts>;
+    return (
+        <CatalogSpareParts
+            page={page}
+            brands={brands}
+            kindSparePart={kindSparePart}></CatalogSpareParts>
+    );
 };
 
 export default SpareParts;

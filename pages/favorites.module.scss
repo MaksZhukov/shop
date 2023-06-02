@@ -1,13 +1,13 @@
 .slider {
-  width: 150px;
-  &_mobile {
-    width: 100%;
-  }
+    width: 150px;
+    &_mobile {
+        width: calc(95% - 42px);
+    }
 }
 
 .list__item {
-  &_mobile {
-    padding: 1em 0;
-    display: block;
-  }
+    &_mobile {
+        padding: 1em 0;
+        display: block;
+    }
 }
