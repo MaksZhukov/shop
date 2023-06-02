@@ -75,8 +75,7 @@ import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
 import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
-
-import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import BrandsSlider from 'components/BrandsSlider';
 import {
     BODY_STYLES_SLUGIFY,
     FUELS_SLUGIFY,
@@ -85,7 +84,6 @@ import {
     TRANSMISSIONS_SLUGIFY
 } from 'config';
 import styles from './index.module.scss';
-import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
