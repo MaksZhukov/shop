@@ -6,9 +6,9 @@ import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
 import {
-    clearFavorites,
     getFavorites,
     removeFavorite as removeFavoriteLS,
+    removeFavorites as removeFavoritesLS,
     saveFavorite,
     StorageFavorite
 } from 'services/LocalStorageService';
@@ -114,12 +114,20 @@ export default class FavoritesStore implements Favorites {
             this.items = this.items.filter((el) => el.id !== favorite.id);
         });
     }
-    async clearFavorites() {
+    async removeFavorites(favoritesIDs: number[]) {
+        debugger;
         if (this.root.user.id) {
-            await removeFavorites(this.items.map((item) => item.id));
+            await removeFavorites(favoritesIDs);
         } else {
-            clearFavorites();
+            removeFavoritesLS(favoritesIDs);
         }
-        this.items = [];
+        runInAction(() => {
+            this.items = this.items.filter((el) => !favoritesIDs.includes(el.id));
+        });
+    }
+
+    clearFavorites() {
+        let favorites = getFavorites();
+        this.items = this.items.filter((item) => favorites.filter((el) => el.id === item.id));
     }
 }

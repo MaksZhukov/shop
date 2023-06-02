@@ -60,7 +60,7 @@ const Buy: FC<Props> = ({ sx, products, onSold = () => {} }) => {
     return (
         <>
             <Script src='https://js.bepaid.by/widget/be_gateway.js'></Script>
-            <Button sx={sx} onClick={handleClickBuy} variant='contained'>
+            <Button disabled={!products.length} sx={sx} onClick={handleClickBuy} variant='contained'>
                 Купить в 1 клик
                 <ShoppingCartIcon sx={{ color: '#fff', marginLeft: '0.25em' }}></ShoppingCartIcon>
             </Button>

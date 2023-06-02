@@ -13,15 +13,30 @@ import { getProductPageSeo } from 'services/ProductService';
 import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import { withKindSparePart } from 'services/SEOService';
 import { AxiosError, AxiosHeaders } from 'axios';
+import { ReactElement, useEffect } from 'react';
+import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import { Box } from '@mui/material';
 
 interface Props {
     data?: Wheel;
     relatedProducts?: Wheel[];
     page: DefaultPage | (PageProduct & PageProductWheel);
     brands: Brand[];
+    setRenderBeforeFooter: (element: ReactElement | null) => void;
 }
 
-const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
+const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRenderBeforeFooter }) => {
+    useEffect(() => {
+        setRenderBeforeFooter(
+            <Box marginY='1em' paddingX="1em">
+                <BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
+            </Box>
+        );
+        return () => {
+            setRenderBeforeFooter(null);
+        };
+    }, []);
+
     if (data && relatedProducts) {
         return (
             <Product
