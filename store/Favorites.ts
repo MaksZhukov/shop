@@ -1,34 +1,37 @@
-import { fetchCabins } from 'api/cabins/cabins';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { fetchTires } from 'api/tires/tires';
-import { ApiResponse, CollectionParams, Product } from 'api/types';
-import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
 import {
+    StorageFavorite,
     getFavorites,
     removeFavorite as removeFavoriteLS,
     removeFavorites as removeFavoritesLS,
-    saveFavorite,
-    StorageFavorite
+    saveFavorite
 } from 'services/LocalStorageService';
 import RootStore from '.';
-import { removeFavorite, addFavorite, fetchFavorites, removeFavorites } from '../api/favorites/favorites';
+import { addFavorite, fetchFavorites, removeFavorite, removeFavorites } from '../api/favorites/favorites';
 import { Favorite } from '../api/favorites/types';
+import { fetchCabins } from 'api/cabins/cabins';
+import { fetchTires } from 'api/tires/tires';
+import { fetchWheels } from 'api/wheels/wheels';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
+import { ApiResponse, CollectionParams, Product } from 'api/types';
 
 export interface Favorites {
     items: Favorite[];
+    isLoading: boolean;
 }
 
 export default class FavoritesStore implements Favorites {
     root: RootStore;
     items: Favorite[] = [];
+    isLoading: boolean = false;
 
     constructor(root: RootStore) {
         this.root = root;
         makeAutoObservable(this);
     }
     async loadFavorites() {
+        this.isLoading = true;
         if (this.root.user.jwt) {
             const {
                 data: { data }
@@ -65,6 +68,7 @@ export default class FavoritesStore implements Favorites {
                 console.error(err);
             }
         }
+        this.isLoading = false;
     }
     async getFavoritesByTypes(
         favorites: StorageFavorite[],

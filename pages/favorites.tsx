@@ -20,12 +20,14 @@ import styles from './favorites.module.scss';
 import { useState, useEffect } from 'react';
 import Buy from 'components/Buy/Buy';
 import { Product } from 'api/types';
+import Loader from 'components/Loader/Loader';
 
 const Favorites = () => {
     const [selectedFavoritesIDs, setSelectedFavoritesIDs] = useState<number[]>([]);
     const store = useStore();
     const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-    let items = store.favorites.items;
+    const items = store.favorites.items;
+    const isLoading = store.favorites.isLoading;
     const handleSold = () => {
         store.favorites.removeFavorites(selectedFavoritesIDs);
     };
@@ -40,6 +42,14 @@ const Favorites = () => {
             setSelectedFavoritesIDs([...selectedFavoritesIDs, id]);
         }
     };
+
+    if (isLoading) {
+		return (
+			<Box paddingY='10em' position='relative'>
+				<Loader></Loader>
+			</Box>
+		);
+	}
 
     let total = selectedFavoritesIDs.reduce(
         (prev, curr) =>
