@@ -42,7 +42,7 @@ const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brand
                 relatedProducts={relatedProducts}></Product>
         );
     }
-    return <CatalogTires page={page} tireBrands={tireBrands} brands={brands}></CatalogTires>;
+    return <CatalogTires page={page} tireBrands={tireBrands}></CatalogTires>;
 };
 
 export default Tires;
@@ -64,42 +64,42 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
         //         status: 404
         //     });
         // } else {
-            const [
-                {
-                    data: { data }
+        const [
+            {
+                data: { data }
+            },
+            {
+                data: { data: page }
+            },
+            {
+                data: { data: pageTire }
+            }
+        ] = await Promise.all([
+            fetchTire(productSlugParam),
+            fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
+            fetchPage<PageProductTire>('product-tire', { populate: ['seo'] })()
+        ]);
+        const {
+            data: { data: relatedProducts }
+        } = await fetchTires({
+            filters: {
+                sold: { $eq: false },
+                id: {
+                    $ne: data.id
                 },
-                {
-                    data: { data: page }
-                },
-                {
-                    data: { data: pageTire }
-                }
-            ] = await Promise.all([
-                fetchTire(productSlugParam),
-                fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-                fetchPage<PageProductTire>('product-tire', { populate: ['seo'] })()
-            ]);
-            const {
-                data: { data: relatedProducts }
-            } = await fetchTires({
-                filters: {
-                    sold: { $eq: false },
-                    id: {
-                        $ne: data.id
-                    },
-                    brand: data.brand?.id
-                },
-                populate: ['images', 'brand']
-            });
-            props = {
-                data,
-                page: {
-                    ...page,
-                    ...pageTire,
-                    seo: getProductPageSeo(pageTire.seo, data)
-                },
-                relatedProducts
-            };
+                brand: data.brand?.id
+            },
+            populate: ['images', 'brand']
+        });
+        props = {
+            data,
+            page: {
+                ...page,
+                ...pageTire,
+                seo: getProductPageSeo(pageTire.seo, data)
+            },
+            relatedProducts
+        };
         // }
     } else if (brandParam) {
         const [
