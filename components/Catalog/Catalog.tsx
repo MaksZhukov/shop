@@ -11,7 +11,7 @@ import {
 	PaginationItem,
 	Select,
 	SelectChangeEvent,
-	useMediaQuery,
+	useMediaQuery
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
@@ -41,13 +41,13 @@ const selectSortItems = [
 	{ name: 'Новые', value: 'createdAt:desc' },
 	{ name: 'Старые', value: 'createdAt:asc' },
 	{ name: 'Дешевые', value: 'price:asc' },
-	{ name: 'Дорогие', value: 'price:desc' },
+	{ name: 'Дорогие', value: 'price:desc' }
 ];
 
 const anchorText = {
 	'spare-parts': 'запчасть',
 	cabins: 'салон',
-	wheels: 'диск',
+	wheels: 'диск'
 };
 
 interface Props {
@@ -69,7 +69,7 @@ const Catalog = ({
 	dataFieldsToShow = [],
 	filtersConfig,
 	generateFiltersByQuery,
-	seo,
+	seo
 }: Props) => {
 	const [newProducts, setNewProducts] = useState<Product[]>([]);
 	const [data, setData] = useState<Product[]>([]);
@@ -82,6 +82,7 @@ const Catalog = ({
 	const [activeView, setActiveView] = useState<'grid' | 'list'>('grid');
 	const [isOpenFilters, setIsOpenFilters] = useState<boolean>(false);
 	const filtersRef = useRef<any>(null);
+	const leaveRef = useRef<boolean>(false);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	const router = useRouter();
@@ -123,19 +124,19 @@ const Catalog = ({
 				const {
 					data: {
 						data: responseData,
-						meta: { pagination },
-					},
+						meta: { pagination }
+					}
 				} = await fetchData({
 					filters: {
 						sold: { $eq: false },
 						...(searchValue ? { h1: { $contains: searchValue } } : {}),
-						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {}),
+						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {})
 					},
 					pagination: searchValue
 						? {}
 						: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
 					populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
-					sort,
+					sort
 				});
 				setData(responseData);
 				if (pagination) {
@@ -145,11 +146,11 @@ const Catalog = ({
 					} else if (router.query.page && Math.ceil(pagination.total / API_DEFAULT_LIMIT) < +page) {
 						router.query.page = (Math.ceil(pagination.total / API_DEFAULT_LIMIT) || 1).toString();
 					}
-					if (withRouterPush) {
+					if (withRouterPush && !leaveRef.current) {
 						router.push(
 							{
 								pathname: router.pathname,
-								query: router.query,
+								query: router.query
 							},
 							undefined,
 							{ shallow: true }
@@ -171,6 +172,12 @@ const Catalog = ({
 	const [throttledFetchProducts] = useThrottle(fetchProducts, 300);
 
 	useEffect(() => {
+		return () => {
+			leaveRef.current = true;
+		};
+	}, []);
+
+	useEffect(() => {
 		if (router.isReady) {
 			const fetchNewProducts = async () => {
 				if (fetchData) {
@@ -181,19 +188,19 @@ const Catalog = ({
 							pagination: { limit: API_DEFAULT_LIMIT / 2 },
 							filters: {
 								sold: {
-									$eq: false,
+									$eq: false
 								},
 								createdAt: {
-									$gte: date.setDate(date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT),
-								},
-							},
+									$gte: date.setDate(date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT)
+								}
+							}
 						});
 						setNewProducts(response.data.data);
 					} catch (err) {
 						enqueueSnackbar(
 							'Произошла какая-то ошибка при загрузке новых продуктов, обратитесь в поддержку',
 							{
-								variant: 'error',
+								variant: 'error'
 							}
 						);
 					}
@@ -210,7 +217,7 @@ const Catalog = ({
 				Object.keys(othersQueryByFilters).reduce(
 					(prev, key) => ({
 						...prev,
-						[key]: othersQueryByFilters[key],
+						[key]: othersQueryByFilters[key]
 					}),
 					{ searchValue: querySearchValue, brand, model, kindSparePart }
 				)
@@ -318,7 +325,7 @@ const Catalog = ({
 			Object.keys(othersQueryByFilters).reduce(
 				(prev, key) => ({
 					...prev,
-					[key]: othersQueryByFilters[key],
+					[key]: othersQueryByFilters[key]
 				}),
 				{ searchValue: querySearchValue, ...newQuery }
 			),
@@ -332,7 +339,7 @@ const Catalog = ({
 			sx={{
 				flex: 1,
 				display: { xs: position === 'top' ? 'none' : 'flex', md: 'flex' },
-				justifyContent: { xs: 'center', md: 'right' },
+				justifyContent: { xs: 'center', md: 'right' }
 			}}
 			classes={{}}
 			renderItem={(params) =>
@@ -341,8 +348,7 @@ const Catalog = ({
 						{...params}
 						onClick={() => {
 							window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-						}}
-					>
+						}}>
 						{params.page}
 					</PaginationItem>
 				) : (
@@ -352,14 +358,12 @@ const Catalog = ({
 							router.asPath.includes('page=')
 								? `${router.asPath.replace(/page=\d+/, `page=${params.page}`)}`
 								: `${router.asPath}${router.asPath.includes('?') ? '&' : '?'}page=${params.page}`
-						}
-					>
+						}>
 						<PaginationItem
 							{...params}
 							onClick={() => {
 								window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-							}}
-						>
+							}}>
 							{params.page}
 						</PaginationItem>
 					</NextLink>
@@ -382,29 +386,26 @@ const Catalog = ({
 			gap={{ xs: '0.5em', md: 0 }}
 			marginBottom='1em'
 			alignItems={{ xs: 'initial', md: 'center' }}
-			bgcolor={{ xs: 'initial', md: '#fff' }}
-		>
+			bgcolor={{ xs: 'initial', md: '#fff' }}>
 			<Box display='flex' sx={{ order: { xs: 3, md: 0 }, width: { xs: '100%', md: 'auto' } }}>
 				<Button
 					variant='contained'
 					onClick={handleClickChangeView('grid', position)}
 					sx={{
 						bgcolor: activeView === 'grid' ? 'primary.main' : '#000',
-						display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' },
+						display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
 					}}
-					className={classNames(styles['btn-view'])}
-				>
+					className={classNames(styles['btn-view'])}>
 					<GridViewIcon fontSize='small' sx={{ color: '#fff' }}></GridViewIcon>
 				</Button>
 				<Button
 					variant='contained'
 					sx={{
 						bgcolor: activeView === 'list' ? 'primary.main' : '#000',
-						display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' },
+						display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
 					}}
 					onClick={handleClickChangeView('list', position)}
-					className={classNames(styles['btn-view'])}
-				>
+					className={classNames(styles['btn-view'])}>
 					<MenuIcon fontSize='small' sx={{ color: '#fff' }}></MenuIcon>
 				</Button>
 			</Box>
@@ -413,8 +414,7 @@ const Catalog = ({
 					sx={{ display: { xs: 'flex', md: 'none' } }}
 					variant='contained'
 					onClick={handleClickOpenFilters}
-					startIcon={<TuneIcon></TuneIcon>}
-				>
+					startIcon={<TuneIcon></TuneIcon>}>
 					Параметры
 				</Button>
 			)}
@@ -424,8 +424,7 @@ const Catalog = ({
 						ref={filtersRef}
 						total={total}
 						config={filtersConfig}
-						onClickFind={handleClickFind}
-					></Filters>
+						onClickFind={handleClickFind}></Filters>
 				</Box>
 			</Modal>
 			<Input
@@ -437,13 +436,12 @@ const Catalog = ({
 					marginRight: { xs: 0, md: '1em' },
 					paddingLeft: '0.5em',
 					display: { xs: position === 'bottom' ? 'none' : 'initial', md: 'initial' },
-					order: { xs: 2, md: 'initial' },
+					order: { xs: 2, md: 'initial' }
 				}}
 				onChange={handleChangeSearch}
 				onKeyDown={handleKeyDown(position)}
 				value={searchValue}
-				placeholder={searchPlaceholder}
-			></Input>
+				placeholder={searchPlaceholder}></Input>
 			<Select
 				variant='standard'
 				MenuProps={{ disableScrollLock: true }}
@@ -451,11 +449,10 @@ const Catalog = ({
 				sx={{
 					maxWidth: 150,
 					display: { xs: position === 'bottom' ? 'none' : 'initial', md: 'initial' },
-					order: { xs: 1, md: 'initial' },
+					order: { xs: 1, md: 'initial' }
 				}}
 				className={styles['sort-select']}
-				onChange={handleChangeSort}
-			>
+				onChange={handleChangeSort}>
 				{selectSortItems.map((item) => (
 					<MenuItem key={item.name} value={item.value}>
 						{item.name}
@@ -474,14 +471,12 @@ const Catalog = ({
 					display={{ xs: 'none', md: 'block' }}
 					marginRight='1em'
 					component='aside'
-					sx={{ width: { xs: '100%', md: '250px' } }}
-				>
+					sx={{ width: { xs: '100%', md: '250px' } }}>
 					<Filters
 						ref={filtersRef}
 						total={total}
 						config={filtersConfig}
-						onClickFind={handleClickFind}
-					></Filters>
+						onClickFind={handleClickFind}></Filters>
 				</Box>
 				<Box sx={{ width: { md: 'calc(100% - 250px - 2em)' } }}>
 					<Box
@@ -489,8 +484,7 @@ const Catalog = ({
 						marginTop='0'
 						textTransform='uppercase'
 						component='h1'
-						typography={{ xs: 'h5', md: 'h4' }}
-					>
+						typography={{ xs: 'h5', md: 'h4' }}>
 						{seo?.h1}
 					</Box>
 					{renderBar('top')}
@@ -503,8 +497,7 @@ const Catalog = ({
 							styles.items,
 							isLoading && styles['loading'],
 							!data.length && styles['content-items_no-data']
-						)}
-					>
+						)}>
 						{data.length ? (
 							data.map((item) => (
 								<ProductItem
@@ -513,8 +506,7 @@ const Catalog = ({
 									dataFieldsToShow={dataFieldsToShow || []}
 									activeView={activeView}
 									key={item.id}
-									data={item}
-								></ProductItem>
+									data={item}></ProductItem>
 							))
 						) : isFirstDataLoaded && !isLoading ? (
 							<Typography textAlign='center' variant='h5'>
@@ -536,8 +528,7 @@ const Catalog = ({
 						<Typography withSeparator fontWeight='bold' marginBottom='1em' marginTop='1em' variant='h5'>
 							ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
 						</Typography>
-					}
-				></CarouselProducts>
+					}></CarouselProducts>
 			)}
 			<Box marginTop='2.5em'>
 				<Typography>
