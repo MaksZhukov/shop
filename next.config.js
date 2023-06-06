@@ -19,7 +19,11 @@ const nextConfig = {
             }
         ]
     },
-    experimental: { largePageDataBytes: 200 * 1000, isrMemoryCacheSize: 0 }
+    experimental: {
+        largePageDataBytes: 200 * 1000,
+        // IT NEEDS FOR DISABLING CACHE FOR EACH CLUSTER INDEPENDENTLY
+        isrMemoryCacheSize: 0
+    }
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
