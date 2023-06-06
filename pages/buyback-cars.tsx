@@ -33,6 +33,7 @@ interface Props {
 }
 
 const BuybackCars = ({ page, cars = [], brands }: Props) => {
+    console.log(cars);
     const [brand, setBrand] = useState<{
         label: string;
         value: string;
@@ -139,18 +140,18 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 
     const renderApplication = (device: 'mobile' | 'desktop') => (
         <Box
-            alignSelf="center"
+            alignSelf='center'
             maxWidth={510}
             display={device === 'desktop' ? { xs: 'none', md: 'block' } : { xs: 'block', md: 'none' }}
-            borderRadius="2em"
-            padding="1em 2em 3em 2em"
-            bgcolor="secondary.main"
-            textAlign="center"
+            borderRadius='2em'
+            padding='1em 2em 3em 2em'
+            bgcolor='secondary.main'
+            textAlign='center'
             margin={{ xs: 'auto', md: 'initial' }}
             onSubmit={throttledSubmit}
-            component="form"
+            component='form'
             width={'100%'}>
-            <Typography variant="h5" color="#fff" fontWeight="500" marginBottom="1em">
+            <Typography variant='h5' color='#fff' fontWeight='500' marginBottom='1em'>
                 Оценить автомобиль
             </Typography>
             <Autocomplete
@@ -159,7 +160,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                 required
                 classes={{ input: styles.autocomplete__input }}
                 value={brand}
-                placeholder="Выберите марку"
+                placeholder='Выберите марку'
                 onChange={handleChangeAutocomplete(setBrand, () => {
                     setModel(null);
                     setModels([]);
@@ -170,7 +171,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                 classes={{ input: styles.autocomplete__input }}
                 required
                 value={model}
-                placeholder="Выберите модель"
+                placeholder='Выберите модель'
                 disabled={!brand || isEmailSending}
                 noOptionsText={noOptionsText}
                 onOpen={handleOpenAutocompleteModels}
@@ -181,15 +182,15 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                 className={styles.autocomplete}
                 classes={{ input: styles.autocomplete__input }}
                 value={year}
-                placeholder="Укажите год выпуска"
+                placeholder='Укажите год выпуска'
                 onChange={handleChangeAutocomplete(setYear)}
                 options={YEARS.map((item) => item.toString())}></Autocomplete>
             <InputMask
                 required
-                mask="+375 99 999 99 99"
+                mask='+375 99 999 99 99'
                 value={phone}
                 disabled={isEmailSending}
-                maskChar=" "
+                maskChar=' '
                 onChange={handleChangePhone}>
                 {
                     //@ts-ignore
@@ -204,7 +205,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                                 }}
                                 className={styles.input}
                                 sx={{ color: isEmailSending ? 'rgba(0,0,0,0.4)' : 'initial' }}
-                                placeholder="Ваш телефон"
+                                placeholder='Ваш телефон'
                                 fullWidth></Input>
                         );
                     }
@@ -220,8 +221,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                 }}
                 className={classNames(styles.btn, isEmailSending && styles.btn_loading)}
                 fullWidth
-                type="submit"
-                variant="contained">
+                type='submit'
+                variant='contained'>
                 Оставить заявку
             </LoadingButton>
         </Box>
@@ -229,7 +230,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 
     return (
         <>
-            <Box className={styles.head} marginBottom="2em" minHeight={{ xs: 350, md: 744 }} display="flex">
+            <Box className={styles.head} marginBottom='2em' minHeight={{ xs: 350, md: 744 }} display='flex'>
                 <Image
                     title={page.mainBackgroundImage?.caption}
                     width={page.mainBackgroundImage?.width}
@@ -256,9 +257,9 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                 </Box>
                 <Container>
                     <Box
-                        display="flex"
+                        display='flex'
                         height={'100%'}
-                        position="relative"
+                        position='relative'
                         alignItems={{ xs: 'end', md: 'initial' }}
                         flexDirection={{ xs: 'column', md: 'row' }}
                         zIndex={1}
@@ -266,16 +267,16 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                         <Box
                             marginTop={{ xs: '0.5em', md: '-25%' }}
                             marginRight={{ xs: 0, md: '3%' }}
-                            textAlign="right"
-                            component="h1"
+                            textAlign='right'
+                            component='h1'
                             fontWeight={'500'}
                             typography={{ xs: 'h3', md: 'h1' }}
                             alignSelf={'center'}
                             flex={{ xs: 'initial', md: '1' }}
-                            textTransform="uppercase">
+                            textTransform='uppercase'>
                             {reactStringReplace(page.h1, /<highlight>/g, (match, i) => {
                                 return (
-                                    <Box color="primary.main" typography={{ xs: 'h3', md: 'h1' }} component="span">
+                                    <Box color='primary.main' typography={{ xs: 'h3', md: 'h1' }} component='span'>
                                         {match}
                                     </Box>
                                 );
@@ -283,7 +284,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                         </Box>
                         <Button
                             sx={{ display: { xs: 'flex', md: 'none' } }}
-                            variant="contained"
+                            variant='contained'
                             onClick={handleClickOpenModal}
                             startIcon={<TuneIcon></TuneIcon>}>
                             Оценить авто
@@ -296,22 +297,22 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                 </Container>
             </Box>
             <Container>
-                <Box marginBottom="5em">
+                <Box marginBottom='5em'>
                     <Box
-                        component="h2"
+                        component='h2'
                         sx={{ typography: { xs: 'h4', md: 'h3' } }}
-                        fontWeight="500"
-                        textAlign="center"
-                        marginBottom="2em">
+                        fontWeight='500'
+                        textAlign='center'
+                        marginBottom='2em'>
                         {page.weProvideTitle}
                     </Box>
-                    <Box display="flex" flexWrap="wrap" gap={'5%'}>
+                    <Box display='flex' flexWrap='wrap' gap={'5%'}>
                         {page.weProvide.map((item, i) => (
                             <Box
                                 width={{ xs: i === 1 ? '100%' : '45%', md: '30%' }}
                                 order={{ xs: i === 1 ? '3' : 'initial', md: 'initial' }}
-                                textAlign="center"
-                                marginBottom="1em"
+                                textAlign='center'
+                                marginBottom='1em'
                                 key={item.title}>
                                 <Image
                                     title={item.image?.caption}
@@ -319,31 +320,31 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                                     alt={item.image?.alternativeText}
                                     width={item.image?.width || 100}
                                     height={item.image?.height || 100}></Image>
-                                <Typography variant="h6" marginBottom="0.5em">
+                                <Typography variant='h6' marginBottom='0.5em'>
                                     {item.title}
                                 </Typography>
-                                <Typography color="text.secondary">{item.description}</Typography>
+                                <Typography color='text.secondary'>{item.description}</Typography>
                             </Box>
                         ))}
                     </Box>
                 </Box>
-                <Box marginBottom="4em">
+                <Box marginBottom='4em'>
                     <Typography
-                        textAlign="center"
-                        fontWeight="500"
-                        textTransform="uppercase"
-                        component="h2"
-                        variant="h3"
-                        marginBottom="1.5em">
+                        textAlign='center'
+                        fontWeight='500'
+                        textTransform='uppercase'
+                        component='h2'
+                        variant='h3'
+                        marginBottom='1.5em'>
                         {reactStringReplace(page.purchasedCarsTitle, /<highlight>/g, (match, i) => {
                             return (
-                                <Typography color="primary" variant="h3" component="span">
+                                <Typography color='primary' variant='h3' component='span'>
                                     {match}
                                 </Typography>
                             );
                         })}
                     </Typography>
-                    <Box paddingX="1em">
+                    <Box paddingX='1em'>
                         <Slider
                             className={styles.slider}
                             autoplaySpeed={5000}
@@ -370,7 +371,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                             {cars.map((item) => {
                                 let name = item.brand?.name + ' ' + item.model?.name;
                                 return (
-                                    <Box maxWidth="288px" paddingX="1em" width="100%" key={item.id}>
+                                    <Box maxWidth='288px' paddingX='1em' width='100%' key={item.id}>
                                         {item.images && item.images.some((image) => image.formats) ? (
                                             <Slider
                                                 swipe={false}
@@ -378,18 +379,16 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                                                 arrows={false}
                                                 autoplay
                                                 autoplaySpeed={3000}>
-                                                {item.images
-                                                    .filter((item) => item.formats)
-                                                    .map((image) => (
-                                                        <Image
-                                                            title={image?.caption}
-                                                            key={image.id}
-                                                            alt={image.alternativeText}
-                                                            src={image.formats?.thumbnail.url || image.url}
-                                                            width={263}
-                                                            height={207}
-                                                        />
-                                                    ))}
+                                                {item.images.map((image) => (
+                                                    <Image
+                                                        title={image.caption}
+                                                        key={image.id}
+                                                        alt={image.alternativeText}
+                                                        src={image.formats?.thumbnail.url || image.url}
+                                                        width={263}
+                                                        height={207}
+                                                    />
+                                                ))}
                                             </Slider>
                                         ) : (
                                             <Box>
@@ -404,14 +403,14 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                                             </Box>
                                         )}
                                         <Typography
-                                            textAlign="center"
-                                            marginBottom="0.25em"
-                                            variant="h6"
+                                            textAlign='center'
+                                            marginBottom='0.25em'
+                                            variant='h6'
                                             title={name}
                                             lineClamp={1}>
                                             {name}
                                         </Typography>
-                                        <Typography textAlign="center" variant="h5" title={name} lineClamp={1}>
+                                        <Typography textAlign='center' variant='h5' title={name} lineClamp={1}>
                                             {item.priceUSD}$
                                         </Typography>
                                     </Box>
@@ -423,19 +422,19 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
             </Container>
             <Box
                 minHeight={{ xs: 350, md: 415 }}
-                position="relative"
+                position='relative'
                 paddingLeft={{ xs: 0, md: '5em' }}
-                paddingBottom="1em">
+                paddingBottom='1em'>
                 <Container>
                     <Box
-                        textTransform="uppercase"
-                        component="h2"
-                        fontWeight="500"
+                        textTransform='uppercase'
+                        component='h2'
+                        fontWeight='500'
                         typography={{ xs: 'h4', md: 'h3' }}
-                        marginBottom="1.5em">
+                        marginBottom='1.5em'>
                         {reactStringReplace(page.advantagesTitle, /<highlight>/g, (match, i) => {
                             return (
-                                <Box color="primary.main" typography={{ xs: 'h4', md: 'h3' }} component="span">
+                                <Box color='primary.main' typography={{ xs: 'h4', md: 'h3' }} component='span'>
                                     {match}
                                 </Box>
                             );
@@ -466,25 +465,25 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                         alt={page.advantagesRightImage?.alternativeText}></Image>
                 </Box>
             </Box>
-            <Box padding="1em" bgcolor="#fff">
+            <Box padding='1em' bgcolor='#fff'>
                 <Container>
-                    <Box marginBottom={{ xs: '1em', md: '2em' }} typography={{ xs: 'h4', md: 'h3' }} textAlign="center">
+                    <Box marginBottom={{ xs: '1em', md: '2em' }} typography={{ xs: 'h4', md: 'h3' }} textAlign='center'>
                         {reactStringReplace(page.buyAnyCarsTitle, /<highlight>/g, (match, i) => {
                             return (
-                                <Box color="primary.main" typography={{ xs: 'h4', md: 'h3' }} component="span">
+                                <Box color='primary.main' typography={{ xs: 'h4', md: 'h3' }} component='span'>
                                     {match}
                                 </Box>
                             );
                         })}
                     </Box>
-                    <Box display="flex" flexWrap="wrap">
+                    <Box display='flex' flexWrap='wrap'>
                         {page.anyCarsAfter.map((item) => (
                             <Box
                                 key={item.title}
                                 width={{ xs: '50%', md: '33.3%' }}
-                                marginBottom="3em"
-                                textAlign="center">
-                                <Box display="flex" alignItems="center" width={115} height={115} margin="auto">
+                                marginBottom='3em'
+                                textAlign='center'>
+                                <Box display='flex' alignItems='center' width={115} height={115} margin='auto'>
                                     <Image
                                         title={item.image?.caption}
                                         width={item.image?.width || 100}
@@ -492,10 +491,10 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                                         alt={item.image?.alternativeText}
                                         src={item.image?.url}></Image>
                                 </Box>
-                                <Typography marginTop="1em" marginBottom="0.5em" variant="h6">
+                                <Typography marginTop='1em' marginBottom='0.5em' variant='h6'>
                                     {item.title}
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant='body2' color='text.secondary'>
                                     {item.description}
                                 </Typography>
                             </Box>
@@ -503,9 +502,9 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                     </Box>
                 </Container>
             </Box>
-            <Box marginTop="176px" position="relative" textAlign="center">
+            <Box marginTop='176px' position='relative' textAlign='center'>
                 <Box
-                    position="absolute"
+                    position='absolute'
                     width={{ xs: '80%', md: '100%' }}
                     left={{ xs: '10%', md: 'initial' }}
                     top={'-176px'}>
@@ -517,23 +516,23 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                         src={page.sellImage?.url}
                         alt={page.sellImage?.alternativeText}></Image>
                 </Box>
-                <Box bgcolor="primary.main" paddingTop={{ xs: '35%', md: '250px' }} minHeight={500}>
+                <Box bgcolor='primary.main' paddingTop={{ xs: '35%', md: '250px' }} minHeight={500}>
                     <Container>
-                        <Box fontWeight="500" textAlign="center" marginBottom="1em" typography={{ xs: 'h4', md: 'h3' }}>
+                        <Box fontWeight='500' textAlign='center' marginBottom='1em' typography={{ xs: 'h4', md: 'h3' }}>
                             {page.sellCarTitle}
                         </Box>
-                        <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} className={styles.steps}>
+                        <Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} className={styles.steps}>
                             {page.sellSteps.map((item, i) => (
                                 <Box
                                     key={item.title}
-                                    display="flex"
-                                    flexDirection="column"
+                                    display='flex'
+                                    flexDirection='column'
                                     height={200}
-                                    justifyContent="center"
-                                    alignItems="center"
+                                    justifyContent='center'
+                                    alignItems='center'
                                     width={{ xs: 'calc(100% - 100px)', md: ['25%', '30%', '35%'][i] }}
                                     className={styles.steps__item}>
-                                    <Box typography={{ xs: 'h4', md: 'h2' }} marginBottom="0.25em" fontWeight="bold">
+                                    <Box typography={{ xs: 'h4', md: 'h2' }} marginBottom='0.25em' fontWeight='bold'>
                                         {item.title}
                                     </Box>
                                     <Typography maxWidth={250}>{item.description}</Typography>
@@ -544,12 +543,12 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                 </Box>
             </Box>
             <Box
-                bgcolor="secondary.main"
+                bgcolor='secondary.main'
                 padding={{ xs: '1em 0', md: '2em 4em 3em' }}
                 marginBottom={{ xs: '2em', md: '5em' }}>
                 <Container>
-                    <Box display="flex" alignItems="center">
-                        <Typography flex="1" marginRight={'1em'} color="#fff">
+                    <Box display='flex' alignItems='center'>
+                        <Typography flex='1' marginRight={'1em'} color='#fff'>
                             <ReactMarkdown content={page.applicationLeftText}></ReactMarkdown>
                         </Typography>
                         <Button
@@ -560,7 +559,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                                 padding: { xs: '0.5em 1em', md: '1.5em 3em' },
                                 borderRadius: 0
                             }}
-                            variant="contained"
+                            variant='contained'
                             onClick={handleClickAssessment}>
                             Оценить автомобиль
                         </Button>
@@ -583,8 +582,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
                         alt={page.whyWeLeftImage?.alternativeText}></Image>
                 </Box>
                 <Container>
-                    <Box maxWidth={650} paddingLeft="4em" marginLeft={{ xs: '80px', md: '350px' }}>
-                        <Box marginBottom="1em" typography={{ xs: 'h4', md: 'h3' }}>
+                    <Box maxWidth={650} paddingLeft='4em' marginLeft={{ xs: '80px', md: '350px' }}>
+                        <Box marginBottom='1em' typography={{ xs: 'h4', md: 'h3' }}>
                             {page.whyWeTitle}
                         </Box>
                         <Box className={styles.list}>
