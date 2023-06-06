@@ -19,7 +19,7 @@ const nextConfig = {
             }
         ]
     },
-    experimental: { largePageDataBytes: 200 * 1000 }
+    experimental: { largePageDataBytes: 200 * 1000, isrMemoryCacheSize: 0 }
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
