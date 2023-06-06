@@ -202,6 +202,7 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 
     return (
         <Catalog
+            brands={brands}
             dataFieldsToShow={[
                 {
                     id: 'brand',

@@ -18,13 +18,15 @@ import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { getParamByRelation } from 'services/ParamsService';
 import { SEASONS } from '../../constants';
+import { Brand } from 'api/brands/types';
 
 interface Props {
 	page: DefaultPage;
+	brands: Brand[];
 	tireBrands: TireBrand[];
 }
 
-const CatalogTires: FC<Props> = ({ page, tireBrands }) => {
+const CatalogTires: FC<Props> = ({ page, tireBrands, brands }) => {
 	const [brands, setBrands] = useState<TireBrand[]>(tireBrands);
 	const [widths, setWidths] = useState<TireWidth[]>([]);
 	const [heights, setHeights] = useState<TireHeight[]>([]);
@@ -169,6 +171,7 @@ const CatalogTires: FC<Props> = ({ page, tireBrands }) => {
 
 	return (
 		<Catalog
+			brands={brands}
 			seo={page.seo}
 			dataFieldsToShow={[
 				{
