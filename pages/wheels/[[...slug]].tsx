@@ -40,6 +40,7 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRende
     if (data && relatedProducts) {
         return (
             <Product
+                brands={brands}
                 data={data}
                 printOptions={[
                     { text: 'Артикул', value: data.id },

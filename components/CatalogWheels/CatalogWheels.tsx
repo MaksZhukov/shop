@@ -22,9 +22,9 @@ import { KIND_WHEELS_SLUGIFY, SLUGIFY_KIND_WHEELS } from 'config';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { usePreviousDifferent } from 'rooks';
 import { getParamByRelation } from 'services/ParamsService';
 import { KIND_WHEELS } from '../../constants';
-import { usePreviousDifferent } from 'rooks';
 
 interface Props {
     page: DefaultPage;
@@ -244,6 +244,7 @@ const CatalogWheels: FC<Props> = ({ page, brands }) => {
 
     return (
         <Catalog
+            brands={brands}
             seo={page.seo}
             dataFieldsToShow={[
                 {

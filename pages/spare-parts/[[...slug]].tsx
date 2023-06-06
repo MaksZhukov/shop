@@ -42,6 +42,7 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
     if (data && relatedProducts) {
         return (
             <Product
+                brands={brands}
                 data={data}
                 printOptions={[
                     { text: 'Поколение', value: data.generation?.name },
