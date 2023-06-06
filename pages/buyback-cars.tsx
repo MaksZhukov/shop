@@ -33,7 +33,6 @@ interface Props {
 }
 
 const BuybackCars = ({ page, cars = [], brands }: Props) => {
-    console.log(cars);
     const [brand, setBrand] = useState<{
         label: string;
         value: string;
