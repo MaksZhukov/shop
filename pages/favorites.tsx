@@ -20,7 +20,6 @@ import { getPageProps } from 'services/PagePropsService';
 import { getProductTypeSlug } from 'services/ProductService';
 import { useStore } from 'store';
 import styles from './favorites.module.scss';
-<<<<<<< HEAD
 
 const Favorites = () => {
 	const [selectedFavoritesIDs, setSelectedFavoritesIDs] = useState<number[]>([]);
@@ -31,22 +30,6 @@ const Favorites = () => {
 	const handleSold = () => {
 		store.favorites.removeFavorites(selectedFavoritesIDs);
 	};
-=======
-import { useState, useEffect } from 'react';
-import Buy from 'components/Buy/Buy';
-import { Product } from 'api/types';
-import Loader from 'components/Loader/Loader';
-
-const Favorites = () => {
-    const [selectedFavoritesIDs, setSelectedFavoritesIDs] = useState<number[]>([]);
-    const store = useStore();
-    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-    const items = store.favorites.items;
-    const isLoading = store.favorites.isLoading;
-    const handleSold = () => {
-        store.favorites.removeFavorites(selectedFavoritesIDs);
-    };
->>>>>>> 0a16f8d63281b199de2f3430ce0597dcb84045de
 
 	useEffect(() => {
 		setSelectedFavoritesIDs(items.map((item) => item.id));
@@ -67,7 +50,7 @@ const Favorites = () => {
 		);
 	}
 
-    let total = selectedFavoritesIDs.reduce(
+    let totalPrice = selectedFavoritesIDs.reduce(
         (prev, curr) =>
             prev +
             (items.find((item) => item.id === curr)?.product.discountPrice ||
