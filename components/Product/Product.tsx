@@ -258,7 +258,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 								alt={data.name}
 								quality={100}
 								width={540}
-								height={480}
+								height={isMobile ? 360 : 480}
 								style={{ objectFit: 'cover', height: 'auto' }}
 								src=''
 							></Image>
@@ -311,8 +311,11 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 						<TableBody>
 							{printOptions.map((item) => (
 								<TableRow key={item.value}>
-									<TableCell sx={{ border: 'none', padding: '0.5em 0 0.5em 0' }} padding='none'>
-										<Typography whiteSpace='nowrap' fontWeight='500'>
+									<TableCell
+										sx={{ border: 'none', padding: '0 0 1em 0', minWidth: '150px' }}
+										padding='none'
+									>
+										<Typography whiteSpace={{ xs: 'initial', md: 'nowrap' }} fontWeight='500'>
 											{item.text}
 										</Typography>
 									</TableCell>
@@ -320,6 +323,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 										width='100%'
 										sx={{
 											border: 'none',
+											verticalAlign: 'baseline',
 											paddingLeft: { xs: '0.5em', sm: '2em' },
 											wordBreak: { xs: 'break-word', sm: 'initial' },
 										}}
