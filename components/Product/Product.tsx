@@ -293,6 +293,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 						</NextLink>
 						<FavoriteButton product={data}></FavoriteButton>
 					</Box>
+					<Typography variant='h6' marginY='1em'>
+						При покупке с сайта до 500 руб скидка - 10%, выше - 5%
+					</Typography>
 					{renderActionBtns}
 					<Table sx={{ marginY: '1em' }}>
 						<TableBody>
