@@ -565,9 +565,6 @@ const Catalog = ({
 					</Typography>
 				)}
 			</Box>
-			<Box margin={'2em 0 1em'}>
-				<BrandsSlider brands={brands}></BrandsSlider>
-			</Box>
 		</>
 	);
 };
