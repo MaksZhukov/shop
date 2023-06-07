@@ -55,10 +55,6 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
                     { text: 'Коробка', value: data.transmission },
                     { text: 'Обьем', value: data.volume?.name },
                     { text: 'Тип топлива', value: data.fuel as any },
-                    {
-                        text: 'Описание',
-                        value: data.description
-                    }
                 ]}
                 page={page as PageProduct & PageProductSparePart}
                 relatedProducts={relatedProducts}></Product>

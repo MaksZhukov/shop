@@ -52,7 +52,6 @@ const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brand
 					{ text: 'Высота', value: data.height?.name },
 					{ text: 'Ширина', value: data.width?.name },
 					{ text: 'Сезон', value: data.season },
-					{ text: 'Описание', value: data.description }
 				]}
 				page={page as PageProduct & PageProductTire}
 				relatedProducts={relatedProducts}></Product>
