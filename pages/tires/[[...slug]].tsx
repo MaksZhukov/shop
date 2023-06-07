@@ -51,7 +51,7 @@ const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brand
 					{ text: 'Диаметр', value: data.diameter?.name },
 					{ text: 'Высота', value: data.height?.name },
 					{ text: 'Ширина', value: data.width?.name },
-					{ text: 'Сезон', value: data.season },
+					{ text: 'Сезон', value: data.season }
 				]}
 				page={page as PageProduct & PageProductTire}
 				relatedProducts={relatedProducts}></Product>
@@ -155,7 +155,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 				populate: ['image']
 			})
 		]);
-		props = { page: { seo: data.seo }, tireBrands: [] };
+		props = { page: { seo: data.seo }, tireBrands: tireBrandsData };
 	}
 	return props;
 });
