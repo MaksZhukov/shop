@@ -325,10 +325,14 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 					</Table>
 				</Box>
 			</Box>
-			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
-				Описание
-			</Typography>
-			<Typography paddingLeft='35px'>{data.description}</Typography>
+			{data.description && (
+				<>
+					<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
+						Описание
+					</Typography>
+					<Typography paddingLeft='35px'>{data.description}</Typography>
+				</>
+			)}
 			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
 				Характеристики для {data.h1}
 			</Typography>
