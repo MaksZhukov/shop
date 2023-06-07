@@ -28,7 +28,7 @@ const TYPE_TEXT = {
 	sparePart: 'Запчасти',
 	wheel: 'Диски',
 	cabin: 'Салоны',
-	tire: 'Шины',
+	tire: 'Шины'
 };
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -89,8 +89,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 			variant='h4'
 			fontWeight='500'
 			title={data.h1}
-			component='h1'
-		>
+			component='h1'>
 			{data.h1}
 		</Typography>
 	);
@@ -101,8 +100,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				sx={{ padding: '0.5em 3em 0.5em 1.5em', fontSize: '1em', margin: '0 1em 0.5em 0' }}
 				variant='contained'
 				component='a'
-				href='tel:+375297804780'
-			>
+				href='tel:+375297804780'>
 				<PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
 				Позвонить
 			</Button>
@@ -110,8 +108,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				<Buy
 					onSold={handleSold}
 					products={[data]}
-					sx={{ padding: '0.5em 1.5em', fontSize: '1em', marginBottom: '0.5em' }}
-				></Buy>
+					sx={{ padding: '0.5em 1.5em', fontSize: '1em', marginBottom: '0.5em' }}></Buy>
 			)}
 		</>
 	);
@@ -127,13 +124,12 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 									image={{
 										...item.image,
 										caption: getStringByTemplateStr(item.image.caption, data),
-										alternativeText: getStringByTemplateStr(item.image.alternativeText, data),
+										alternativeText: getStringByTemplateStr(item.image.alternativeText, data)
 									}}
 									link={item.link}
 									width={280}
 									height={185}
-									withoutTitle
-								></LinkWithImage>
+									withoutTitle></LinkWithImage>
 							</Box>
 						))}
 					</Slider>
@@ -146,13 +142,12 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 							image={{
 								...item.image,
 								caption: getStringByTemplateStr(item.image.caption, data),
-								alternativeText: getStringByTemplateStr(item.image.alternativeText, data),
+								alternativeText: getStringByTemplateStr(item.image.alternativeText, data)
 							}}
 							link={item.link}
 							width={280}
 							height={185}
-							withoutTitle
-						></LinkWithImage>
+							withoutTitle></LinkWithImage>
 					))}
 				</Box>
 			)}
@@ -183,8 +178,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 											styles.slider_small,
 											isMobile && styles.slider_small_mobile
 										)}
-										asNavFor={sliderBig || undefined}
-									>
+										asNavFor={sliderBig || undefined}>
 										{data.images.map((item) => (
 											<Box key={item.id}>
 												<Image
@@ -193,8 +187,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 													alt={item.alternativeText}
 													width={104}
 													height={78}
-													src={item.formats?.thumbnail.url || item.url}
-												></Image>
+													src={item.formats?.thumbnail.url || item.url}></Image>
 											</Box>
 										))}
 										{isSparePart(data) && data.videoLink && (
@@ -205,8 +198,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 													height={98}
 													display='flex'
 													alignItems='center'
-													justifyContent='center'
-												>
+													justifyContent='center'>
 													Видео
 												</Typography>
 											</Box>
@@ -221,8 +213,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 									arrows={false}
 									autoplay={false}
 									autoplaySpeed={5000}
-									className={classNames(styles.slider, isMobile && styles.slider_mobile)}
-								>
+									className={classNames(styles.slider, isMobile && styles.slider_mobile)}>
 									{data.images.map((item, i) => (
 										<Box onClick={handleClickImage(i)} sx={{ paddingX: '0.25em' }} key={item.id}>
 											<Image
@@ -230,13 +221,12 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 												// style={{ height: '100%' }}
 												style={{
 													objectPosition: 'top',
-													...(isMobile ? { height: 'auto' } : {}),
+													...(isMobile ? { height: 'auto' } : {})
 												}}
 												alt={item.alternativeText}
 												width={470}
 												height={isMobile ? 360 : 480}
-												src={item.url}
-											></Image>
+												src={item.url}></Image>
 										</Box>
 									))}
 									{isSparePart(data) && data.videoLink && (
@@ -246,8 +236,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 												style={{ height: '100%' }}
 												width={'100%'}
 												height={isMobile ? '100%' : 480}
-												url={data.videoLink}
-											></ReactPlayer>
+												url={data.videoLink}></ReactPlayer>
 										</Box>
 									)}
 								</Slider>
@@ -260,8 +249,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 								width={540}
 								height={isMobile ? 360 : 480}
 								style={{ objectFit: 'cover', height: 'auto' }}
-								src=''
-							></Image>
+								src=''></Image>
 						)}
 					</Box>
 				</Box>
@@ -289,8 +277,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 							variant='h4'
 							component={data.discountPrice ? 's' : 'p'}
 							sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-							color='secondary'
-						>
+							color='secondary'>
 							{data.price} руб{' '}
 						</Typography>
 						{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
@@ -306,6 +293,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 						</NextLink>
 						<FavoriteButton product={data}></FavoriteButton>
 					</Box>
+					<Typography variant='h6' marginY='1em'>
+						При покупке с сайта до 500 руб скидка - 10%, выше - 5%
+					</Typography>
 					{renderActionBtns}
 					<Table sx={{ marginY: '1em' }}>
 						<TableBody>
@@ -313,8 +303,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 								<TableRow key={item.value}>
 									<TableCell
 										sx={{ border: 'none', padding: '0 0 1em 0', minWidth: '150px' }}
-										padding='none'
-									>
+										padding='none'>
 										<Typography whiteSpace={{ xs: 'initial', md: 'nowrap' }} fontWeight='500'>
 											{item.text}
 										</Typography>
@@ -325,10 +314,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 											border: 'none',
 											verticalAlign: 'baseline',
 											paddingLeft: { xs: '0.5em', sm: '2em' },
-											wordBreak: { xs: 'break-word', sm: 'initial' },
+											wordBreak: { xs: 'break-word', sm: 'initial' }
 										}}
-										padding='none'
-									>
+										padding='none'>
 										<Typography>{item.value}</Typography>
 									</TableCell>
 								</TableRow>
@@ -338,9 +326,17 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				</Box>
 			</Box>
 			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
+				Описание
+			</Typography>
+			<Typography paddingLeft='35px'>{data.description}</Typography>
+			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
 				Характеристики для {data.h1}
 			</Typography>
-			{page.textAfterDescription && <ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>}
+			{page.textAfterDescription && (
+				<Box paddingLeft='35px'>
+					<ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>
+				</Box>
+			)}
 			<CarouselProducts
 				sx={{ paddingX: { xs: '1em', md: '0' } }}
 				data={relatedProducts}
@@ -351,13 +347,11 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 						fontWeight='500'
 						marginBottom='1em'
 						marginTop='1em'
-						variant='h5'
-					>
+						variant='h5'>
 						ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ НА НАШИ {TYPE_TEXT[data.type]} ОТ {data.brand?.name}{' '}
 						{!isTire(data) && data.model?.name}
 					</Typography>
-				}
-			></CarouselProducts>
+				}></CarouselProducts>
 			<Typography
 				withSeparator
 				textTransform='uppercase'
@@ -366,8 +360,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				component='h3'
 				marginBottom='1.5em'
 				marginTop='1.5em'
-				variant='h5'
-			>
+				variant='h5'>
 				Почему мы лучшие в своем деле?
 			</Typography>
 			{renderWhyWeBest(whyWeBest1)}
@@ -377,11 +370,10 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				textTransform='uppercase'
 				fontWeight='500'
 				component='h3'
-				variant='h5'
-			>
+				variant='h5'>
 				Мы осуществляем доставку во все <br></br> населенные пункты беларуси
 			</Typography>
-			<Typography marginBottom='2em'>
+			<Typography paddingLeft='35px' marginBottom='2em'>
 				Наши {TYPE_TEXT[data.type]} б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в
 				следующих городах Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем что
 				работаем во всех городах и деревнях, просто доставка займет немного больше времени. Будьте уверены, мы
@@ -406,19 +398,17 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				withSeparator
 				component='h2'
 				variant='h5'
-				fontWeight='500'
-			>
+				fontWeight='500'>
 				наши эксперты всегда помогут подобрать вам нужные {TYPE_TEXT[data.type]}
 			</Typography>
-			<Typography>
+			<Typography paddingLeft='35px'>
 				Не стоит экономить на безопасности и выбирать недорогие, но неизвестного производителя запчасти. Лучше
 				всего выбирать оригинальные {TYPE_TEXT[data.type]} или качественные аналоги от известных производителей.
 			</Typography>
 			<GalleryImages
 				images={data.images}
 				selectedIndex={selectedImageIndex}
-				onClose={handleClose}
-			></GalleryImages>
+				onClose={handleClose}></GalleryImages>
 		</>
 	);
 };
