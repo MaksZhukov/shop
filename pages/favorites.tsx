@@ -209,8 +209,8 @@ const Favorites = () => {
 							);
 						})}
 					</List>
-					<Typography textAlign='center' variant='h6' marginY='0.5em'>
-						При покупке с сайта до 500 руб скидка - 10%, выше - 5%
+					<Typography textAlign='center' marginY='0.5em'>
+						При покупке на нашем сайте вы получите скидку до 10%
 					</Typography>
 					<Box display='flex' alignItems={{ xs: 'initial', md: 'center' }} gap={'1em'}>
 						<Box
