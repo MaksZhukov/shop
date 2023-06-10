@@ -28,24 +28,20 @@ const Gallery: FC<Props> = ({ page }) => {
 			<Typography component='h1' textTransform='uppercase' variant='h4' textAlign='center' marginBottom='1em'>
 				{page.seo?.h1}
 			</Typography>
-			<Box display='flex' justifyContent='space-around' flexWrap='wrap'>
+			<Box display='flex' justifyContent='space-around' flexWrap='wrap' gap={'1em'}>
 				{page.images?.map((item, i) => (
 					<Box
-						width={{ xs: 150, md: 300 }}
-						height={{ xs: 115, md: 225 }}
+						width={{ xs: '100%', md: 500 }}
 						onClick={handleClickImage(i)}
 						sx={{ cursor: 'pointer' }}
-						marginBottom='1em'
-						key={item.id}
-					>
+						key={item.id}>
 						<Image
 							title={item.caption}
-							width={300}
-							height={225}
+							width={item.width > item.height ? 500 : 375}
+							height={item.width > item.height ? 375 : 500}
 							src={item.formats?.small?.url || item.url}
-							style={{ maxHeight: '100%' }}
-							alt={item.alternativeText}
-						></Image>
+							style={{ maxHeight: '100%', height: 'auto', width: '100%' }}
+							alt={item.alternativeText}></Image>
 					</Box>
 				))}
 			</Box>
