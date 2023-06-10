@@ -146,18 +146,21 @@ export type PageProduct = {
 export type PageProductTire = {
     textAfterDescription: string;
     textAfterBenefits: string;
+    additionalDescription: string;
     seo: SEO;
 };
 
 export type PageProductCabin = {
     textAfterDescription: string;
     textAfterBenefits: string;
+    additionalDescription: string;
     seo: SEO;
 };
 
 export type PageProductWheel = {
     textAfterDescription: string;
     textAfterBenefits: string;
+    additionalDescription: string;
     seo: SEO;
 };
 
@@ -165,5 +168,6 @@ export type PageProductSparePart = {
     textAfterDescription: string;
     autoSynonyms: string;
     textAfterBenefits: string;
+    additionalDescription: string;
     seo: SEO;
 };

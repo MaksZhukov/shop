@@ -3,7 +3,13 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import ShieldIcon from '@mui/icons-material/Shield';
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
 import { Brand, ProductBrandTexts } from 'api/brands/types';
-import { PageProduct } from 'api/pages/types';
+import {
+	PageProduct,
+	PageProductCabin,
+	PageProductSparePart,
+	PageProductTire,
+	PageProductWheel
+} from 'api/pages/types';
 import { BrandTextComponent, LinkWithImage as ILinkWithImage, Product as IProduct } from 'api/types';
 import classNames from 'classnames';
 import Buy from 'components/Buy';
@@ -34,7 +40,7 @@ const TYPE_TEXT = {
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 interface Props {
-	page: PageProduct & { textAfterDescription: string };
+	page: PageProduct & (PageProductCabin | PageProductSparePart | PageProductTire | PageProductWheel);
 	data: IProduct;
 	brands: Brand[];
 	relatedProducts: IProduct[];
@@ -323,14 +329,14 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 					</Table>
 				</Box>
 			</Box>
-			{data.description && (
-				<>
-					<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
-						Описание
-					</Typography>
-					<Typography paddingLeft='35px'>{data.description}</Typography>
-				</>
-			)}
+			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
+				Описание
+			</Typography>
+			<Typography paddingLeft='35px'>{data.description}</Typography>
+			<Box paddingLeft='35px'>
+				<ReactMarkdown content={page.additionalDescription}></ReactMarkdown>
+			</Box>
+
 			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
 				Характеристики для {data.h1}
 			</Typography>
