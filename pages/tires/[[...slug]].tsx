@@ -16,6 +16,7 @@ import { Brand } from 'api/brands/types';
 import { ReactElement, useEffect } from 'react';
 import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 import { Box } from '@mui/material';
+import { getStringByTemplateStr } from 'services/StringService';
 
 interface Props {
 	data?: Tire;
@@ -118,6 +119,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 			page: {
 				...page,
 				...pageTire,
+				additionalDescription: getStringByTemplateStr(pageTire.additionalDescription, data),
 				seo: getProductPageSeo(pageTire.seo, data)
 			},
 			tireBrands: tireBrandsData,

@@ -16,6 +16,7 @@ import { AxiosError, AxiosHeaders } from 'axios';
 import { ReactElement, useEffect } from 'react';
 import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 import { Box } from '@mui/material';
+import { getStringByTemplateStr } from 'services/StringService';
 
 interface Props {
     data?: Wheel;
@@ -120,6 +121,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
             page: {
                 ...page,
                 ...pageWheel,
+                additionalDescription: getStringByTemplateStr(pageWheel.additionalDescription, data),
                 seo: getProductPageSeo(pageWheel.seo, data)
             },
             relatedProducts
