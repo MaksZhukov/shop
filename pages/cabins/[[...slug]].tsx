@@ -16,6 +16,7 @@ import { ReactElement, useEffect } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
 import { withKindSparePart } from 'services/SEOService';
+import { getStringByTemplateStr } from 'services/StringService';
 
 interface Props {
 	data: Cabin;
@@ -49,11 +50,10 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSpar
 					{ text: 'Поколение', value: data.generation?.name },
 					{ text: 'Год', value: data.year },
 					{ text: 'Запчасть', value: data.kindSparePart?.name },
-					...(data.seatUpholstery ? [{ text: 'Обивка сидений', value: data.seatUpholstery }] : []),
+					...(data.seatUpholstery ? [{ text: 'Обивка сидений', value: data.seatUpholstery }] : [])
 				]}
 				page={page as PageProduct & PageProductCabin}
-				relatedProducts={relatedProducts}
-			></Product>
+				relatedProducts={relatedProducts}></Product>
 		);
 	}
 	return <CatalogCabins page={page} brands={brands} kindSparePart={kindSparePart}></CatalogCabins>;
@@ -81,91 +81,92 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		// } else {
 		const [
 			{
-				data: { data },
+				data: { data }
 			},
 			{
-				data: { data: page },
+				data: { data: page }
 			},
 			{
-				data: { data: pageCabin },
-			},
+				data: { data: pageCabin }
+			}
 		] = await Promise.all([
 			fetchCabin(productParam),
 			fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-			fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'] })(),
+			fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'] })()
 		]);
 		const {
-			data: { data: relatedProducts },
+			data: { data: relatedProducts }
 		} = await fetchCabins({
 			filters: {
 				sold: { $eq: false },
 				id: {
-					$ne: data.id,
+					$ne: data.id
 				},
-				model: data.model?.id || '',
+				model: data.model?.id || ''
 			},
-			populate: ['images', 'brand'],
+			populate: ['images', 'brand']
 		});
 		props = {
 			data,
 			page: {
 				...page,
 				...pageCabin,
-				seo: getProductPageSeo(pageCabin.seo, data),
+				additionalDescription: getStringByTemplateStr(pageCabin.additionalDescription, data),
+				seo: getProductPageSeo(pageCabin.seo, data)
 			},
-			relatedProducts,
+			relatedProducts
 		};
 		// }
 	} else if (modelParam) {
 		let model = modelParam.replace('model-', '');
 		const [
 			{
-				data: { data },
+				data: { data }
 			},
-			resultKindSpareParts,
+			resultKindSpareParts
 		] = await Promise.all([
 			fetchModelBySlug(model, {
 				populate: ['seoCabins.images', 'image'],
-				filters: { brand: { slug: brand } },
+				filters: { brand: { slug: brand } }
 			}),
-			...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : []),
+			...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
 		]);
 		const kindSparePart = resultKindSpareParts?.data?.data[0];
 		props = {
 			page: { seo: withKindSparePart(data.seoCabins, 'салоны', kindSparePart?.name) },
-			...(kindSparePart ? { kindSparePart } : {}),
+			...(kindSparePart ? { kindSparePart } : {})
 		};
 	} else if (brand) {
 		const [
 			{
-				data: { data },
+				data: { data }
 			},
-			resultKindSpareParts,
+			resultKindSpareParts
 		] = await Promise.all([
 			fetchBrandBySlug(brand, {
-				populate: ['seoCabins.images', 'image'],
+				populate: ['seoCabins.images', 'image']
 			}),
-			...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : []),
+			...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
 		]);
 		const kindSparePart = resultKindSpareParts?.data?.data[0];
 		props = {
 			page: { seo: withKindSparePart(data.seoCabins, 'салоны', kindSparePart?.name) },
-			...(kindSparePart ? { kindSparePart } : {}),
+			...(kindSparePart ? { kindSparePart } : {})
 		};
 	} else {
 		const [
 			{
-				data: { data },
+				data: { data }
 			},
-			resultKindSpareParts,
+			resultKindSpareParts
 		] = await Promise.all([
 			fetchPage('cabin')(),
-			...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : []),
+			...(kindSparePartSlug ? [fetchKindSpareParts({ filters: { slug: kindSparePartSlug } })] : [])
 		]);
 		const kindSparePart = resultKindSpareParts?.data?.data[0];
 		props = {
 			page: { seo: withKindSparePart(data.seo, 'салоны', kindSparePart?.name) },
-			...(kindSparePart ? { kindSparePart } : {}),
+			...(kindSparePart ? { kindSparePart } : {})
 		};
 	}
 	return props;
