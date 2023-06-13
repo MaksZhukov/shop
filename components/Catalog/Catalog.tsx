@@ -129,7 +129,9 @@ const Catalog = ({
 				} = await fetchData({
 					filters: {
 						sold: { $eq: false },
-						...(searchValue ? { h1: { $contains: searchValue } } : {}),
+						...(searchValue
+							? { $and: searchValue.split(' ').map((word: string) => ({ h1: { $contains: word } })) }
+							: {}),
 						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {})
 					},
 					pagination: searchValue

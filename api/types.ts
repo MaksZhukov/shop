@@ -52,7 +52,9 @@ export type Filters = {
 		| number
 		| number[]
 		| null
-		| undefined;
+		| boolean
+		| undefined
+		| any[];
 };
 
 export type CollectionParams = {
