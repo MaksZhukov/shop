@@ -235,7 +235,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			fetchFunc = fetchByType[productType];
 			apiFilters = { ...apiFilters, ...filters[productType] };
 		}
-		console.log(apiFilters, filters[productType]);
 		const {
 			data: { data }
 		} = await fetchFunc({

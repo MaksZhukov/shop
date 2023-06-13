@@ -180,7 +180,7 @@ const ProductItem = ({
 						{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
 					</Box>
 				</Box>
-				<Box display='flex' gap={'1em'} justifyContent='center' marginBottom='1em'>
+				<Box display='flex' gap={'1em'} justifyContent='center' marginY='0.5em'>
 					{!sold && <Buy onSold={handleSold} products={[data]}></Buy>}
 					<FavoriteButton product={data}></FavoriteButton>
 				</Box>
