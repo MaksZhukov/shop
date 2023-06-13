@@ -608,7 +608,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 				sx={{ bgcolor: '#fff', maxWidth: 300, padding: '0.25em 1em' }}
 				fullWidth
 				placeholder='Поиск'
-				value={''}
+				value={searchValue}
 				onKeyDown={handleKeyDownSearch}
 				onChange={handleChangeSearch}></Input>
 			<Box marginTop='1em'>
