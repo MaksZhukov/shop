@@ -1,4 +1,4 @@
-import { useRef, useState, FC, CSSProperties, MouseEventHandler } from 'react';
+import { CSSProperties, FC, MouseEventHandler, useRef, useState } from 'react';
 
 interface Props {
 	className?: string;
@@ -59,7 +59,8 @@ const Zoom: FC<Props> = ({ className, zoomScale, height, width, style, src, tran
 			onMouseOver={handleMouseOver}
 			onMouseOut={handleMouseOut}
 			onMouseMove={handleMouseMovement}
-			ref={ref}>
+			ref={ref}
+		>
 			<div
 				style={{
 					...transform,

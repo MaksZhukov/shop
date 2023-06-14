@@ -20,14 +20,14 @@ export const getPageProps =
 					filters: {
 						spareParts: {
 							id: {
-								$notNull: true,
-							},
-						},
-					},
+								$notNull: true
+							}
+						}
+					}
 				}),
 				fetchLayout(),
 				...(fetchPage ? [fetchPage()] : []),
-				...functions.map((func) => func(context)),
+				...functions.map((func) => func(context))
 			]);
 			[...(fetchPage ? restResponses : response ? [response, ...restResponses] : [...restResponses])].forEach(
 				(item) => {

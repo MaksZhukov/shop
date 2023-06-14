@@ -1,16 +1,13 @@
-import { Box, Link, Typography } from '@mui/material';
-import { Container } from '@mui/system';
-import { ApiResponse, MetaResponse } from 'api/types';
-import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
-import WhiteBox from 'components/WhiteBox';
-import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
+import { Typography } from '@mui/material';
 import { fetchAutocomises } from 'api/autocomises/autocomises';
 import { Autocomis } from 'api/autocomises/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
+import { ApiResponse } from 'api/types';
 import CardItem from 'components/CardItem';
+import WhiteBox from 'components/WhiteBox';
+import { NextPage } from 'next';
+import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
 	page: DefaultPage;
@@ -42,7 +39,7 @@ export const getStaticProps = getPageProps(fetchPage('autocomis'), async () => (
 	autocomises: (
 		await fetchAutocomises({
 			populate: 'image',
-			sort: 'updatedAt:desc',
+			sort: 'updatedAt:desc'
 		})
-	).data,
+	).data
 }));

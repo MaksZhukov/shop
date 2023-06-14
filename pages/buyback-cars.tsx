@@ -1,30 +1,30 @@
-import { getPageProps } from 'services/PagePropsService';
-import { fetchPage } from 'api/pages';
-import { DefaultPage, PageBuybackCars } from 'api/pages/types';
-import ReactMarkdown from 'components/ReactMarkdown';
+import { Tune as TuneIcon } from '@mui/icons-material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, CircularProgress, Container, Input, Modal, useMediaQuery, useTheme } from '@mui/material';
+import { Box } from '@mui/system';
+import { Brand } from 'api/brands/types';
 import { fetchCarsOnParts } from 'api/cars-on-parts/cars-on-parts';
 import { CarOnParts } from 'api/cars-on-parts/types';
-import Slider from 'react-slick';
-import { Box } from '@mui/system';
-import reactStringReplace from 'react-string-replace';
-import Image from 'components/Image';
-import Typography from 'components/Typography';
-import { Button, CircularProgress, Container, Input, TextField, useTheme, Modal, useMediaQuery } from '@mui/material';
-import Autocomplete from 'components/Autocomplete';
-import { Brand } from 'api/brands/types';
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, useRef, useState } from 'react';
-import { Model } from 'api/models/types';
-import { fetchModels } from 'api/models/models';
 import { API_MAX_LIMIT } from 'api/constants';
-import { useSnackbar } from 'notistack';
-import { YEARS } from '../constants';
-import InputMask from 'react-input-mask';
 import { send } from 'api/email';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { useThrottle } from 'rooks';
+import { fetchModels } from 'api/models/models';
+import { Model } from 'api/models/types';
+import { fetchPage } from 'api/pages';
+import { PageBuybackCars } from 'api/pages/types';
 import classNames from 'classnames';
+import Autocomplete from 'components/Autocomplete';
+import Image from 'components/Image';
+import ReactMarkdown from 'components/ReactMarkdown';
+import Typography from 'components/Typography';
+import { useSnackbar } from 'notistack';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import InputMask from 'react-input-mask';
+import Slider from 'react-slick';
+import reactStringReplace from 'react-string-replace';
+import { useThrottle } from 'rooks';
+import { getPageProps } from 'services/PagePropsService';
+import { YEARS } from '../constants';
 import styles from './buyback-cars.module.scss';
-import { Tune as TuneIcon } from '@mui/icons-material';
 
 interface Props {
 	page: PageBuybackCars;
@@ -149,7 +149,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 			margin={{ xs: 'auto', md: 'initial' }}
 			onSubmit={throttledSubmit}
 			component='form'
-			width={'100%'}>
+			width={'100%'}
+		>
 			<Typography variant='h5' color='#fff' fontWeight='500' marginBottom='1em'>
 				Оценить автомобиль
 			</Typography>
@@ -164,7 +165,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 					setModel(null);
 					setModels([]);
 				})}
-				options={brands.map((item) => ({ label: item.name, value: item.slug }))}></Autocomplete>
+				options={brands.map((item) => ({ label: item.name, value: item.slug }))}
+			></Autocomplete>
 			<Autocomplete
 				className={styles.autocomplete}
 				classes={{ input: styles.autocomplete__input }}
@@ -175,7 +177,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				noOptionsText={noOptionsText}
 				onOpen={handleOpenAutocompleteModels}
 				onChange={handleChangeAutocomplete(setModel)}
-				options={models.map((item) => ({ label: item.name, value: item.name }))}></Autocomplete>
+				options={models.map((item) => ({ label: item.name, value: item.name }))}
+			></Autocomplete>
 			<Autocomplete
 				disabled={isEmailSending}
 				className={styles.autocomplete}
@@ -183,14 +186,16 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				value={year}
 				placeholder='Укажите год выпуска'
 				onChange={handleChangeAutocomplete(setYear)}
-				options={YEARS.map((item) => item.toString())}></Autocomplete>
+				options={YEARS.map((item) => item.toString())}
+			></Autocomplete>
 			<InputMask
 				required
 				mask='+375 99 999 99 99'
 				value={phone}
 				disabled={isEmailSending}
 				maskChar=' '
-				onChange={handleChangePhone}>
+				onChange={handleChangePhone}
+			>
 				{
 					//@ts-ignore
 					(inputProps) => {
@@ -205,7 +210,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 								className={styles.input}
 								sx={{ color: isEmailSending ? 'rgba(0,0,0,0.4)' : 'initial' }}
 								placeholder='Ваш телефон'
-								fullWidth></Input>
+								fullWidth
+							></Input>
 						);
 					}
 				}
@@ -221,7 +227,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				className={classNames(styles.btn, isEmailSending && styles.btn_loading)}
 				fullWidth
 				type='submit'
-				variant='contained'>
+				variant='contained'
+			>
 				Оставить заявку
 			</LoadingButton>
 		</Box>
@@ -236,7 +243,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 					height={page.mainBackgroundImage?.height}
 					style={{ position: 'absolute', top: 0, height: '100%', objectFit: 'cover', width: '100%' }}
 					src={page.mainBackgroundImage?.url}
-					alt={page.mainBackgroundImage?.alternativeText}></Image>
+					alt={page.mainBackgroundImage?.alternativeText}
+				></Image>
 				<Box
 					sx={{
 						position: 'absolute',
@@ -245,14 +253,16 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 						display: 'flex',
 						alignItems: 'end'
 					}}
-					height={{ xs: 200, md: '100%' }}>
+					height={{ xs: 200, md: '100%' }}
+				>
 					<Image
 						title={page.mainBackgroundLeftImage?.caption}
 						width={page.mainBackgroundLeftImage?.width}
 						height={page.mainBackgroundLeftImage?.height}
 						style={{ maxHeight: '100%', width: 'auto' }}
 						src={page.mainBackgroundLeftImage?.url}
-						alt={page.mainBackgroundLeftImage?.alternativeText}></Image>
+						alt={page.mainBackgroundLeftImage?.alternativeText}
+					></Image>
 				</Box>
 				<Container>
 					<Box
@@ -262,7 +272,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 						alignItems={{ xs: 'end', md: 'initial' }}
 						flexDirection={{ xs: 'column', md: 'row' }}
 						zIndex={1}
-						ref={ref}>
+						ref={ref}
+					>
 						<Box
 							marginTop={{ xs: '0.5em', md: '-25%' }}
 							marginRight={{ xs: 0, md: '3%' }}
@@ -272,7 +283,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 							typography={{ xs: 'h3', md: 'h1' }}
 							alignSelf={'center'}
 							flex={{ xs: 'initial', md: '1' }}
-							textTransform='uppercase'>
+							textTransform='uppercase'
+						>
 							{reactStringReplace(page.h1, /<highlight>/g, (match, i) => {
 								return (
 									<Box color='primary.main' typography={{ xs: 'h3', md: 'h1' }} component='span'>
@@ -285,7 +297,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 							sx={{ display: { xs: 'flex', md: 'none' } }}
 							variant='contained'
 							onClick={handleClickOpenModal}
-							startIcon={<TuneIcon></TuneIcon>}>
+							startIcon={<TuneIcon></TuneIcon>}
+						>
 							Оценить авто
 						</Button>
 						{renderApplication('desktop')}
@@ -302,7 +315,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 						sx={{ typography: { xs: 'h4', md: 'h3' } }}
 						fontWeight='500'
 						textAlign='center'
-						marginBottom='2em'>
+						marginBottom='2em'
+					>
 						{page.weProvideTitle}
 					</Box>
 					<Box display='flex' flexWrap='wrap' gap={'5%'}>
@@ -312,13 +326,15 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 								order={{ xs: i === 1 ? '3' : 'initial', md: 'initial' }}
 								textAlign='center'
 								marginBottom='1em'
-								key={item.title}>
+								key={item.title}
+							>
 								<Image
 									title={item.image?.caption}
 									src={item.image?.url}
 									alt={item.image?.alternativeText}
 									width={item.image?.width || 100}
-									height={item.image?.height || 100}></Image>
+									height={item.image?.height || 100}
+								></Image>
 								<Typography variant='h6' marginBottom='0.5em'>
 									{item.title}
 								</Typography>
@@ -334,7 +350,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 						textTransform='uppercase'
 						component='h2'
 						variant='h3'
-						marginBottom='1.5em'>
+						marginBottom='1.5em'
+					>
 						{reactStringReplace(page.purchasedCarsTitle, /<highlight>/g, (match, i) => {
 							return (
 								<Typography color='primary' variant='h3' component='span'>
@@ -366,7 +383,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 									}
 								}
 							]}
-							slidesToShow={cars.length < 4 ? cars.length : 4}>
+							slidesToShow={cars.length < 4 ? cars.length : 4}
+						>
 							{cars.map((item) => {
 								let name = item.brand?.name + ' ' + item.model?.name;
 								return (
@@ -377,7 +395,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 												pauseOnHover
 												arrows={false}
 												autoplay
-												autoplaySpeed={3000}>
+												autoplaySpeed={3000}
+											>
 												{item.images.map((image) => (
 													<Image
 														title={image.caption}
@@ -406,7 +425,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 											marginBottom='0.25em'
 											variant='h6'
 											title={name}
-											lineClamp={1}>
+											lineClamp={1}
+										>
 											{name}
 										</Typography>
 										<Typography textAlign='center' variant='h5' title={name} lineClamp={1}>
@@ -423,14 +443,16 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				minHeight={{ xs: 350, md: 415 }}
 				position='relative'
 				paddingLeft={{ xs: 0, md: '5em' }}
-				paddingBottom='1em'>
+				paddingBottom='1em'
+			>
 				<Container>
 					<Box
 						textTransform='uppercase'
 						component='h2'
 						fontWeight='500'
 						typography={{ xs: 'h4', md: 'h3' }}
-						marginBottom='1.5em'>
+						marginBottom='1.5em'
+					>
 						{reactStringReplace(page.advantagesTitle, /<highlight>/g, (match, i) => {
 							return (
 								<Box color='primary.main' typography={{ xs: 'h4', md: 'h3' }} component='span'>
@@ -454,14 +476,16 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 						transform: 'translateY(-50%)',
 						right: 0,
 						width: { xs: '100px', md: 'initial' }
-					}}>
+					}}
+				>
 					<Image
 						title={page.advantagesRightImage?.caption}
 						width={page.advantagesRightImage?.width}
 						height={page.advantagesRightImage?.height}
 						style={{ height: 'auto' }}
 						src={page.advantagesRightImage?.url}
-						alt={page.advantagesRightImage?.alternativeText}></Image>
+						alt={page.advantagesRightImage?.alternativeText}
+					></Image>
 				</Box>
 			</Box>
 			<Box padding='1em' bgcolor='#fff'>
@@ -481,14 +505,16 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 								key={item.title}
 								width={{ xs: '50%', md: '33.3%' }}
 								marginBottom='3em'
-								textAlign='center'>
+								textAlign='center'
+							>
 								<Box display='flex' alignItems='center' width={115} height={115} margin='auto'>
 									<Image
 										title={item.image?.caption}
 										width={item.image?.width || 100}
 										height={item.image?.height || 100}
 										alt={item.image?.alternativeText}
-										src={item.image?.url}></Image>
+										src={item.image?.url}
+									></Image>
 								</Box>
 								<Typography marginTop='1em' marginBottom='0.5em' variant='h6'>
 									{item.title}
@@ -506,14 +532,16 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 					position='absolute'
 					width={{ xs: '80%', md: '100%' }}
 					left={{ xs: '10%', md: 'initial' }}
-					top={'-176px'}>
+					top={'-176px'}
+				>
 					<Image
 						title={page.sellImage?.caption}
 						width={page.sellImage?.width}
 						// style={{ height: 'auto' }}
 						height={page.sellImage?.height}
 						src={page.sellImage?.url}
-						alt={page.sellImage?.alternativeText}></Image>
+						alt={page.sellImage?.alternativeText}
+					></Image>
 				</Box>
 				<Box bgcolor='primary.main' paddingTop={{ xs: '35%', md: '250px' }} minHeight={500}>
 					<Container>
@@ -530,7 +558,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 									justifyContent='center'
 									alignItems='center'
 									width={{ xs: 'calc(100% - 100px)', md: ['25%', '30%', '35%'][i] }}
-									className={styles.steps__item}>
+									className={styles.steps__item}
+								>
 									<Box typography={{ xs: 'h4', md: 'h2' }} marginBottom='0.25em' fontWeight='bold'>
 										{item.title}
 									</Box>
@@ -544,7 +573,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 			<Box
 				bgcolor='secondary.main'
 				padding={{ xs: '1em 0', md: '2em 4em 3em' }}
-				marginBottom={{ xs: '2em', md: '5em' }}>
+				marginBottom={{ xs: '2em', md: '5em' }}
+			>
 				<Container>
 					<Box display='flex' alignItems='center'>
 						<Typography flex='1' marginRight={'1em'} color='#fff'>
@@ -559,7 +589,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 								borderRadius: 0
 							}}
 							variant='contained'
-							onClick={handleClickAssessment}>
+							onClick={handleClickAssessment}
+						>
 							Оценить автомобиль
 						</Button>
 					</Box>
@@ -572,13 +603,15 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 						top: '50%',
 						transform: 'translateY(-50%)',
 						width: { xs: '150px', md: 'initial' }
-					}}>
+					}}
+				>
 					<Image
 						title={page.whyWeLeftImage?.caption}
 						width={page.whyWeLeftImage?.width}
 						height={page.whyWeLeftImage?.height}
 						src={page.whyWeLeftImage?.url}
-						alt={page.whyWeLeftImage?.alternativeText}></Image>
+						alt={page.whyWeLeftImage?.alternativeText}
+					></Image>
 				</Box>
 				<Container>
 					<Box maxWidth={650} paddingLeft='4em' marginLeft={{ xs: '80px', md: '350px' }}>

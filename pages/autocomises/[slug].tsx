@@ -13,5 +13,5 @@ const Autocomis: NextPage<Props> = ({ page }) => <Card data={page}></Card>;
 export default Autocomis;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	page: (await fetchAutocomis(context.params?.slug as string)).data.data,
+	page: (await fetchAutocomis(context.params?.slug as string)).data.data
 }));

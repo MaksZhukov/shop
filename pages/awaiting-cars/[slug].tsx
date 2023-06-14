@@ -12,7 +12,7 @@ const CarPage = ({ page }: Props) => {
 };
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	page: (await fetchCar(context.params?.slug as string)).data.data,
+	page: (await fetchCar(context.params?.slug as string)).data.data
 }));
 
 export default CarPage;

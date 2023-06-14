@@ -1,6 +1,6 @@
-import { Autocomplete as MUIAutocomplete, AutocompleteProps, TextField } from '@mui/material';
-import React, { UIEventHandler } from 'react';
+import { AutocompleteProps, Autocomplete as MUIAutocomplete, TextField } from '@mui/material';
 import classNames from 'classnames';
+import { UIEventHandler } from 'react';
 
 // import VirtualizedListBox from './VirtualizedListBox';
 import styles from './Autocomplete.module.scss';
@@ -50,7 +50,8 @@ const Autocomplete = <
 						placeholder={props.placeholder}
 					/>
 				);
-			}}></MUIAutocomplete>
+			}}
+		></MUIAutocomplete>
 	);
 };
 

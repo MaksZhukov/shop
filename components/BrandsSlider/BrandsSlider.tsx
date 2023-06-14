@@ -1,10 +1,10 @@
 import { useMediaQuery } from '@mui/material';
 import { Brand } from 'api/brands/types';
-import Slider from 'react-slick';
-import { FC } from 'react';
-import WhiteBox from 'components/WhiteBox/WhiteBox';
-import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
 import { TireBrand } from 'api/tireBrands/types';
+import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
+import WhiteBox from 'components/WhiteBox/WhiteBox';
+import { FC } from 'react';
+import Slider from 'react-slick';
 
 interface Props {
 	brands: Brand[] | TireBrand[];
@@ -24,7 +24,8 @@ const BrandsSlider: FC<Props> = ({ brands, linkType = 'spare-parts' }) => {
 						caption={item.name}
 						link={`/${linkType}/${item.slug}`}
 						image={item.image}
-						typographyProps={{ fontWeight: 'bold', variant: 'body1' }}></LinkWithImage>
+						typographyProps={{ fontWeight: 'bold', variant: 'body1' }}
+					></LinkWithImage>
 				</WhiteBox>
 			))}
 		</Slider>

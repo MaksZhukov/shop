@@ -9,5 +9,5 @@ export const fetchPage =
 	() =>
 		api.get<ApiResponse<T>>(`/page-${pageUrl}`, {
 			params,
-			baseURL: publicRuntimeConfig.backendLocalUrl + '/api',
+			baseURL: publicRuntimeConfig.backendLocalUrl + '/api'
 		});

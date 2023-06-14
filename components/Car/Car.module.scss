@@ -1,18 +1,23 @@
 .slider {
-    width: 440px;
-    &_mobile {
-        width: calc(100% - 100px);
-    }
-    &_small {
-        width: 100px;
-        margin-right: 1.5em;
-        &_mobile {
-            margin-right: 0;
-        }
-        :global {
-            .slick-list {
-                height: 100% !important;
-            }
-        }
-    }
+	width: 440px;
+	&_mobile {
+		width: calc(100% - 100px);
+		:global {
+			.slick-track,
+			.slick-list {
+				height: 100% !important;
+			}
+			.slick-slide div {
+				height: 100%;
+			}
+		}
+	}
+	&_small {
+		width: 100px;
+		:global {
+			.slick-track {
+				height: auto !important;
+			}
+		}
+	}
 }

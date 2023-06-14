@@ -4,7 +4,7 @@ export interface TireBrand {
 	id: number;
 	name: string;
 	slug: string;
-    image: Image;
+	image: Image;
 	seo: SEO;
 	productBrandText?: BrandTextComponent;
 }
