@@ -47,7 +47,7 @@ export const getSparePartsFiltersConfig = ({
 	onChangeModelAutocomplete,
 	onScrollKindSparePartAutocomplete,
 	onChangeGenerationAutocomplete,
-	noOptionsText,
+	noOptionsText
 }: Params) => [
 	[
 		{
@@ -58,8 +58,8 @@ export const getSparePartsFiltersConfig = ({
 			options: brands.map((item) => ({ label: item.name, value: item.slug })),
 			onChange: onChangeBrandAutocomplete,
 			onOpen: onOpenAutoCompleteBrand,
-			noOptionsText: noOptionsText,
-		},
+			noOptionsText: noOptionsText
+		}
 	],
 	[
 		{
@@ -71,8 +71,8 @@ export const getSparePartsFiltersConfig = ({
 			options: models.map((item) => ({ label: item.name, value: item.slug })),
 			onChange: onChangeModelAutocomplete,
 			onOpen: onOpenAutocompleteModel,
-			noOptionsText: noOptionsText,
-		},
+			noOptionsText: noOptionsText
+		}
 	],
 	[
 		{
@@ -84,8 +84,8 @@ export const getSparePartsFiltersConfig = ({
 			options: generations.map((item) => ({ label: item.name, value: item.slug })),
 			onChange: onChangeGenerationAutocomplete,
 			onOpen: onOpenAutocompleteGeneration,
-			noOptionsText: noOptionsText,
-		},
+			noOptionsText: noOptionsText
+		}
 	],
 	[
 		{
@@ -98,8 +98,8 @@ export const getSparePartsFiltersConfig = ({
 			onScroll: onScrollKindSparePartAutocomplete,
 			onOpen: onOpenAutoCompleteKindSparePart,
 			onInputChange: onInputChangeKindSparePart,
-			noOptionsText: noOptionsText,
-		},
+			noOptionsText: noOptionsText
+		}
 	],
 	[
 		{
@@ -109,8 +109,8 @@ export const getSparePartsFiltersConfig = ({
 			type: 'autocomplete',
 			options: volumes.map((item) => item.name),
 			onOpen: onOpenAutoCompleteVolume,
-			noOptionsText: noOptionsText,
-		},
+			noOptionsText: noOptionsText
+		}
 	],
 	[
 		{
@@ -120,8 +120,8 @@ export const getSparePartsFiltersConfig = ({
 			type: 'autocomplete',
 			options: BODY_STYLES.map((item) => ({ label: item, value: BODY_STYLES_SLUGIFY[item] })),
 			onOpen: () => {},
-			noOptionsText: '',
-		},
+			noOptionsText: ''
+		}
 	],
 	[
 		{
@@ -131,8 +131,8 @@ export const getSparePartsFiltersConfig = ({
 			type: 'autocomplete',
 			options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] })),
 			onOpen: () => {},
-			noOptionsText: '',
-		},
+			noOptionsText: ''
+		}
 	],
 	[
 		{
@@ -142,7 +142,7 @@ export const getSparePartsFiltersConfig = ({
 			type: 'autocomplete',
 			options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] })),
 			onOpen: () => {},
-			noOptionsText: '',
-		},
-	],
+			noOptionsText: ''
+		}
+	]
 ];

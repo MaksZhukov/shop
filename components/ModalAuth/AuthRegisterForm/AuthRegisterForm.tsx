@@ -1,14 +1,7 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-	Alert,
-	Button,
-	IconButton,
-	InputAdornment,
-	TextField,
-	Typography,
-} from '@mui/material';
+import { Button, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { ErrorTypes } from '../../../api/types';
@@ -22,13 +15,7 @@ interface Props {
 	onChangeType: (type: ModalAuthStates) => void;
 	onChangeModalOpened: (value: boolean) => void;
 }
-const AuthRegisterForm = ({
-	type,
-	isLoading,
-	onChangeType,
-	onChangeIsLoading,
-	onChangeModalOpened,
-}: Props) => {
+const AuthRegisterForm = ({ type, isLoading, onChangeType, onChangeIsLoading, onChangeModalOpened }: Props) => {
 	const [email, setEmail] = useState<string>('');
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [password, setPassword] = useState<string>('');
@@ -52,21 +39,17 @@ const AuthRegisterForm = ({
 				await store.user.login(email, password);
 				await Promise.all([
 					// store.cart.loadShoppingCart(),
-					store.favorites.loadFavorites(),
+					store.favorites.loadFavorites()
 				]);
 				onChangeModalOpened(false);
 				enqueueSnackbar('Вы вошли в свой аккаунт', {
-					variant: 'success',
+					variant: 'success'
 				});
 			} catch (err) {
 				if (axios.isAxiosError(err)) {
-					if (
-						err.response?.data.error.name ===
-							ErrorTypes.ValidationError ||
-						err.response?.status === 500
-					) {
+					if (err.response?.data.error.name === ErrorTypes.ValidationError || err.response?.status === 500) {
 						enqueueSnackbar('Неверные данные', {
-							variant: 'error',
+							variant: 'error'
 						});
 					}
 				}
@@ -76,7 +59,7 @@ const AuthRegisterForm = ({
 			try {
 				await register(email, password);
 				enqueueSnackbar('Вы успешно зарегистрировались', {
-					variant: 'success',
+					variant: 'success'
 				});
 				onChangeType('login');
 				setEmail('');
@@ -84,16 +67,10 @@ const AuthRegisterForm = ({
 			} catch (err) {
 				if (axios.isAxiosError(err)) {
 					if (err.response?.data.error.status === 400) {
-						if (
-							err.response.data.error.message ===
-							'Email is already taken'
-						) {
-							enqueueSnackbar(
-								'Такой пользователь уже существует',
-								{
-									variant: 'error',
-								}
-							);
+						if (err.response.data.error.message === 'Email is already taken') {
+							enqueueSnackbar('Такой пользователь уже существует', {
+								variant: 'error'
+							});
 						}
 					}
 				}
@@ -119,7 +96,8 @@ const AuthRegisterForm = ({
 				onChange={handleChangeEmail}
 				value={email}
 				required
-				placeholder='Почта'></TextField>
+				placeholder='Почта'
+			></TextField>
 			<OutlinedInput
 				disabled={isLoading}
 				fullWidth
@@ -135,16 +113,14 @@ const AuthRegisterForm = ({
 						<IconButton
 							aria-label='toggle password visibility'
 							onClick={handleClickShowPassword}
-							edge='end'>
+							edge='end'
+						>
 							{showPassword ? <VisibilityOff /> : <Visibility />}
 						</IconButton>
 					</InputAdornment>
-				}></OutlinedInput>
-			<Button
-				disabled={isLoading}
-				variant='contained'
-				type='submit'
-				fullWidth>
+				}
+			></OutlinedInput>
+			<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
 				{type === 'login' ? 'Войти' : 'Зарегистрироваться'}
 			</Button>
 		</form>

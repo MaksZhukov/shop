@@ -1,18 +1,10 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-	Alert,
-	Button,
-	IconButton,
-	InputAdornment,
-	OutlinedInput,
-	Typography,
-} from '@mui/material';
+import { Button, IconButton, InputAdornment, OutlinedInput, Typography } from '@mui/material';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { resetPassword } from '../../../api/user/user';
-import { useStore } from '../../../store';
 import { ModalAuthStates } from '../types';
 
 interface Props {
@@ -23,23 +15,19 @@ interface Props {
 
 const ResetForm = ({ onChangeType, onChangeIsLoading, isLoading }: Props) => {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
-	const [showConfirmPassword, setShowConfirmPassword] =
-		useState<boolean>(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
 	const { code } = router.query as { code: string };
 
 	const [password, setPassword] = useState<string>('');
-	const [passwordConfirmation, setPasswordConfirmation] =
-		useState<string>('');
+	const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
 
 	const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
 		setPassword(e.target.value);
 	};
 
-	const handleChangePasswordConfirmation = (
-		e: ChangeEvent<HTMLInputElement>
-	) => {
+	const handleChangePasswordConfirmation = (e: ChangeEvent<HTMLInputElement>) => {
 		setPasswordConfirmation(e.target.value);
 	};
 	const handleClickSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -84,11 +72,13 @@ const ResetForm = ({ onChangeType, onChangeIsLoading, isLoading }: Props) => {
 						<IconButton
 							aria-label='toggle password visibility'
 							onClick={handleClickShowPassword}
-							edge='end'>
+							edge='end'
+						>
 							{showPassword ? <VisibilityOff /> : <Visibility />}
 						</IconButton>
 					</InputAdornment>
-				}></OutlinedInput>
+				}
+			></OutlinedInput>
 			<OutlinedInput
 				disabled={isLoading}
 				fullWidth
@@ -104,20 +94,19 @@ const ResetForm = ({ onChangeType, onChangeIsLoading, isLoading }: Props) => {
 						<IconButton
 							aria-label='toggle password visibility'
 							onClick={handleClickShowConfirmPassword}
-							edge='end'>
-							{showConfirmPassword ? (
-								<VisibilityOff />
-							) : (
-								<Visibility />
-							)}
+							edge='end'
+						>
+							{showConfirmPassword ? <VisibilityOff /> : <Visibility />}
 						</IconButton>
 					</InputAdornment>
-				}></OutlinedInput>
+				}
+			></OutlinedInput>
 			<Button
 				disabled={passwordConfirmation !== password || isLoading}
 				variant='contained'
 				type='submit'
-				fullWidth>
+				fullWidth
+			>
 				Изменить
 			</Button>
 		</form>

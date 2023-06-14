@@ -1,21 +1,20 @@
-import type { NextPage } from 'next';
-import { SEO } from 'api/types';
+import { Box } from '@mui/material';
+import { Brand } from 'api/brands/types';
 import { API_MAX_LIMIT } from 'api/constants';
-import { fetchTire, fetchTires } from 'api/tires/tires';
-import { fetchTireBrandBySlug, fetchTireBrands } from 'api/tireBrands/tireBrands';
-import { getPageProps } from 'services/PagePropsService';
-import { TireBrand } from 'api/tireBrands/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageProduct, PageProductTire } from 'api/pages/types';
-import CatalogTires from 'components/CatalogTires';
-import { getProductPageSeo } from 'services/ProductService';
-import Product from 'components/Product';
+import { fetchTireBrandBySlug, fetchTireBrands } from 'api/tireBrands/tireBrands';
+import { TireBrand } from 'api/tireBrands/types';
+import { fetchTire, fetchTires } from 'api/tires/tires';
 import { Tire } from 'api/tires/types';
-import { AxiosError, AxiosHeaders } from 'axios';
-import { Brand } from 'api/brands/types';
-import { ReactElement, useEffect } from 'react';
+import { SEO } from 'api/types';
 import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
-import { Box } from '@mui/material';
+import CatalogTires from 'components/CatalogTires';
+import Product from 'components/Product';
+import type { NextPage } from 'next';
+import { ReactElement, useEffect } from 'react';
+import { getPageProps } from 'services/PagePropsService';
+import { getProductPageSeo } from 'services/ProductService';
 import { getStringByTemplateStr } from 'services/StringService';
 
 interface Props {
@@ -55,7 +54,8 @@ const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brand
 					{ text: 'Сезон', value: data.season }
 				]}
 				page={page as PageProduct & PageProductTire}
-				relatedProducts={relatedProducts}></Product>
+				relatedProducts={relatedProducts}
+			></Product>
 		);
 	}
 	return <CatalogTires page={page} tireBrands={tireBrands}></CatalogTires>;

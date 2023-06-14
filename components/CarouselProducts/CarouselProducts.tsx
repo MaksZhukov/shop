@@ -1,4 +1,4 @@
-import { Box, useTheme, SxProps } from '@mui/material';
+import { Box, SxProps, useTheme } from '@mui/material';
 import { Product } from 'api/types';
 import ProductItem from 'components/ProductItem';
 import { FC, ReactNode } from 'react';
@@ -30,25 +30,25 @@ const CarouselProducts: FC<Props> = ({ title, data, slidesToShow = 4, sx }) => {
 						settings: {
 							slidesToShow: 1,
 							slidesToScroll: 1,
-							infinite: true,
-						},
+							infinite: true
+						}
 					},
 					{
 						breakpoint: breakpoints.values.md,
 						settings: {
 							slidesToShow: data.length < 2 ? data.length : 2,
 							slidesToScroll: 1,
-							infinite: true,
-						},
+							infinite: true
+						}
 					},
 					{
 						breakpoint: breakpoints.values.lg,
 						settings: {
 							slidesToShow: data.length < 3 ? data.length : 3,
 							slidesToScroll: 1,
-							infinite: true,
-						},
-					},
+							infinite: true
+						}
+					}
 				]}
 			>
 				{data.map((item) => {

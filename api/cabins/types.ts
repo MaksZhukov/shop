@@ -25,5 +25,5 @@ export interface Cabin {
 	seo?: SEO;
 	snippets: ProductSnippets;
 	year: string;
-    sold: boolean;
+	sold: boolean;
 }

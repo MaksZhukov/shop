@@ -1,9 +1,8 @@
-import { Box, Link, Rating } from '@mui/material';
+import { Box, CircularProgress, Rating } from '@mui/material';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import { CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect, useState } from 'react';
 import Slider from 'react-slick';
@@ -23,12 +22,12 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 	const fetchData = async () => {
 		try {
 			const {
-				data: { data },
+				data: { data }
 			} = await fetchReviews();
 			setReviews(data);
 		} catch (err) {
 			enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
-				variant: 'error',
+				variant: 'error'
 			});
 		}
 		setIsLoading(false);

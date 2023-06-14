@@ -4,7 +4,7 @@ import { ServiceStation } from './types';
 
 export const fetchServiceStations = (params: CollectionParams) =>
 	api.get<ApiResponse<ServiceStation[]>>('/service-stations', {
-		params,
+		params
 	});
 
 export const fetchServiceStation = (slug: string) => api.get<ApiResponse<ServiceStation>>(`/service-stations/${slug}`);
