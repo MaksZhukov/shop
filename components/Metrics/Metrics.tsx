@@ -20,7 +20,7 @@ const Metrics = () => {
 			  webvisor:true,
 			  ecommerce:"dataLayer"
 		 });
-		`,
+		`
 				}}
 			></script>
 			<noscript>

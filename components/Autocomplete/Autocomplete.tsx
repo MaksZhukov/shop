@@ -50,7 +50,8 @@ const Autocomplete = <
 						placeholder={props.placeholder}
 					/>
 				);
-			}}></MUIAutocomplete>
+			}}
+		></MUIAutocomplete>
 	);
 };
 

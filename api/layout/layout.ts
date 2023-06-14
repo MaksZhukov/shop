@@ -7,5 +7,5 @@ const { publicRuntimeConfig } = getConfig();
 export const fetchLayout = () =>
 	api.get<ApiResponse<Layout>>(`/layout`, {
 		params: { populate: ['footer.socials.image'] },
-		baseURL: publicRuntimeConfig.backendLocalUrl + '/api',
+		baseURL: publicRuntimeConfig.backendLocalUrl + '/api'
 	});

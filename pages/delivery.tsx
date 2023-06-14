@@ -25,7 +25,8 @@ const Delivery: FC<Props> = ({ page }) => {
 		<>
 			<Box
 				display='flex'
-				sx={{ marginBottom: { xs: '1em', md: '4em' }, flexDirection: { xs: 'column', md: 'row' } }}>
+				sx={{ marginBottom: { xs: '1em', md: '4em' }, flexDirection: { xs: 'column', md: 'row' } }}
+			>
 				{renderH1({ display: { xs: 'block', md: 'none' }, typography: 'h4', marginBottom: '1em' })}
 				<Image
 					title={page.mainImageLeft?.caption}
@@ -33,7 +34,8 @@ const Delivery: FC<Props> = ({ page }) => {
 					height={360}
 					src={page.mainImageLeft?.formats?.small.url || page.mainImageLeft?.url}
 					alt={page.mainImageLeft?.alternativeText}
-					style={isTablet ? { height: 'auto' } : {}}></Image>
+					style={isTablet ? { height: 'auto' } : {}}
+				></Image>
 				<Box sx={{ marginLeft: { xs: 0, md: '2.5em' }, marginTop: { xs: '1em', md: 0 } }}>
 					{renderH1({ display: { xs: 'none', md: 'block' }, typography: 'h3' })}
 					<Typography>
@@ -44,7 +46,8 @@ const Delivery: FC<Props> = ({ page }) => {
 			<BlockImages
 				withoutOverlay={isTablet}
 				sx={{ marginY: '0', paddingY: 0 }}
-				images={page.images1}></BlockImages>
+				images={page.images1}
+			></BlockImages>
 			<Typography marginTop='1em' textTransform='uppercase' withSeparator component='h2' variant='h4'>
 				{page.deliveryCitiesTitle}
 			</Typography>
@@ -92,7 +95,8 @@ const Delivery: FC<Props> = ({ page }) => {
 					flexDirection: { xs: 'column', md: 'row' },
 					alignItems: { xs: 'initial', md: 'center' },
 					marginBottom: { xs: '1em', md: '4em' }
-				}}>
+				}}
+			>
 				<Box sx={{ paddingRight: { xs: 0, md: '3em' }, marginBottom: { xs: '1em', md: 0 } }}>
 					<ReactMarkdown content={page.shipmentText}></ReactMarkdown>
 				</Box>
@@ -102,7 +106,8 @@ const Delivery: FC<Props> = ({ page }) => {
 						width={page.shipmentImageRight?.width}
 						height={page.shipmentImageRight?.height}
 						src={page.shipmentImageRight?.url}
-						alt={page.shipmentImageRight?.alternativeText}></Image>
+						alt={page.shipmentImageRight?.alternativeText}
+					></Image>
 				</Box>
 			</Box>
 			<BlockImages
@@ -112,7 +117,8 @@ const Delivery: FC<Props> = ({ page }) => {
 					marginBottom: '-2em',
 					flexDirection: { xs: 'column', md: 'row' },
 					marginTop: { xs: 0, md: '3em' }
-				}}></BlockImages>
+				}}
+			></BlockImages>
 		</>
 	);
 };

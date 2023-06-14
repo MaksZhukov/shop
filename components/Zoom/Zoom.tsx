@@ -59,7 +59,8 @@ const Zoom: FC<Props> = ({ className, zoomScale, height, width, style, src, tran
 			onMouseOver={handleMouseOver}
 			onMouseOut={handleMouseOut}
 			onMouseMove={handleMouseMovement}
-			ref={ref}>
+			ref={ref}
+		>
 			<div
 				style={{
 					...transform,

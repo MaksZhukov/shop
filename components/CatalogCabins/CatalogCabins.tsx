@@ -221,7 +221,8 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 			filtersConfig={filtersConfig}
 			seo={page.seo}
 			fetchData={fetchCabins}
-			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+			generateFiltersByQuery={generateFiltersByQuery}
+		></Catalog>
 	);
 };
 

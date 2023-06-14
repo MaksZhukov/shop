@@ -75,7 +75,8 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
 												isOnSSR={!!images}
 												withoutTitle
 												link={catalogLinks[index]}
-												image={item}></LinkWithImage>
+												image={item}
+											></LinkWithImage>
 										) : (
 											<Image
 												isOnSSR={!(isCatalog && !images)}
@@ -84,7 +85,8 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
 												width={208}
 												height={156}
 												style={{ margin: 'auto', height: 'auto' }}
-												src={item.formats?.small?.url || item.url}></Image>
+												src={item.formats?.small?.url || item.url}
+											></Image>
 										)}
 									</Box>
 								))}
@@ -99,7 +101,8 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
 											isOnSSR={!!images}
 											link={catalogLinks[index]}
 											withoutTitle
-											image={item}></LinkWithImage>
+											image={item}
+										></LinkWithImage>
 									) : (
 										<Image
 											isOnSSR={!(isCatalog && !images)}
@@ -107,7 +110,8 @@ const SEOBox: FC<Props> = ({ images, content, h1 }) => {
 											alt={item.alternativeText}
 											width={208}
 											height={156}
-											src={item.formats?.small?.url || item.url}></Image>
+											src={item.formats?.small?.url || item.url}
+										></Image>
 									)}
 								</Box>
 							))}

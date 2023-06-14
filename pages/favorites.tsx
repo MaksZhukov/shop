@@ -86,14 +86,16 @@ const Favorites = () => {
 									<ListItem
 										sx={{ bgcolor: '#fff', paddingLeft: '0.5em' }}
 										className={classNames(isMobile && styles.list__item_mobile)}
-										key={item.id}>
+										key={item.id}
+									>
 										<Box display='flex'>
 											<Checkbox
 												onChange={handleChangeCheckbox(
 													item.id,
 													selectedFavoritesIDs.includes(item.id)
 												)}
-												checked={selectedFavoritesIDs.includes(item.id)}></Checkbox>
+												checked={selectedFavoritesIDs.includes(item.id)}
+											></Checkbox>
 											{item.product.images &&
 											item.product.images.some((image) => image.formats) ? (
 												<Slider
@@ -104,7 +106,8 @@ const Favorites = () => {
 													arrows={false}
 													autoplay
 													pauseOnHover
-													autoplaySpeed={3000}>
+													autoplaySpeed={3000}
+												>
 													{item.product.images
 														.filter((item) => item.formats)
 														.map((image) => (
@@ -119,7 +122,8 @@ const Favorites = () => {
 																	style={isMobile ? { height: 'auto' } : {}}
 																	alt={image.alternativeText}
 																	width={isMobile ? 500 : 150}
-																	height={isMobile ? 375 : 100}></Image>
+																	height={isMobile ? 375 : 100}
+																></Image>
 															</Box>
 														))}
 												</Slider>
@@ -129,7 +133,8 @@ const Favorites = () => {
 													src={''}
 													alt={item.product.name}
 													width={isMobile ? 500 : 150}
-													height={isMobile ? 375 : 100}></Image>
+													height={isMobile ? 375 : 100}
+												></Image>
 											)}
 										</Box>
 										<Box flex='1' padding='1em'>
@@ -138,9 +143,11 @@ const Favorites = () => {
 												title={item.product.h1}
 												marginBottom='0.5em'
 												variant='h5'
-												component='h2'>
+												component='h2'
+											>
 												<NextLink
-													href={`/${getProductTypeSlug(item.product)}/${item.product.slug}`}>
+													href={`/${getProductTypeSlug(item.product)}/${item.product.slug}`}
+												>
 													<Link component='span' underline='hover'>
 														{item.product.h1}
 													</Link>
@@ -150,7 +157,8 @@ const Favorites = () => {
 												<Typography
 													lineClamp={2}
 													color='text.secondary'
-													className={styles.description}>
+													className={styles.description}
+												>
 													{item.product.description}
 												</Typography>
 											)}
@@ -159,7 +167,8 @@ const Favorites = () => {
 											display={isMobile ? 'flex' : 'block'}
 											{...(isMobile && {
 												justifyContent: 'end'
-											})}>
+											})}
+										>
 											<Box display='flex'>
 												<Box display='flex' marginRight='1em' alignItems='center'>
 													{!!item.product.discountPrice && (
@@ -167,7 +176,8 @@ const Favorites = () => {
 															fontWeight='bold'
 															variant='h4'
 															marginRight='0.5em'
-															color='secondary'>
+															color='secondary'
+														>
 															{item.product.discountPrice} руб{' '}
 														</Typography>
 													)}
@@ -185,7 +195,8 @@ const Favorites = () => {
 														variant='h4'
 														component={item.product.discountPrice ? 's' : 'p'}
 														sx={{ opacity: item.product.discountPrice ? '0.8' : '1' }}
-														color='secondary'>
+														color='secondary'
+													>
 														{item.product.price} руб{' '}
 													</Typography>
 													{!!item.product.priceUSD && (
@@ -219,12 +230,14 @@ const Favorites = () => {
 							flexWrap='wrap'
 							display='flex'
 							justifyContent={{ xs: 'initial', md: 'center' }}
-							gap={{ xs: '0.25em', md: '1em' }}>
+							gap={{ xs: '0.25em', md: '1em' }}
+						>
 							<Buy
 								onSold={handleSold}
 								products={selectedFavoritesIDs.map(
 									(id) => items.find((item) => item.id === id)?.product as Product
-								)}></Buy>
+								)}
+							></Buy>
 							<Button variant='contained' component='a' href='tel:+375297804780'>
 								<PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
 								Позвонить

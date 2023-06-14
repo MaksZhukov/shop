@@ -215,7 +215,8 @@ const Header = observer(({ brands }: Props) => {
 					? {
 							onClick: handleClickLinkTablet
 					  }
-					: {})}>
+					: {})}
+			>
 				{item.name}
 			</LinkComp>
 		);
@@ -234,14 +235,16 @@ const Header = observer(({ brands }: Props) => {
 				padding: 0,
 				maxHeight: { xs: '200px', md: 'initial' },
 				overflow: 'auto'
-			}}>
+			}}
+		>
 			{page.children?.map((item) => (
 				<MenuItem
 					sx={{
 						minHeight: 'initial',
 						padding: '0'
 					}}
-					key={item.id}>
+					key={item.id}
+				>
 					{renderLink(item)}
 				</MenuItem>
 			))}
@@ -255,7 +258,8 @@ const Header = observer(({ brands }: Props) => {
 			sx={{
 				display: type == 'desktop' ? { xs: 'none', md: 'flex' } : { xs: 'flex', md: 'none' }
 			}}
-			{...(type === 'mobile' ? { order: { xs: '2', md: 'initial' } } : {})}>
+			{...(type === 'mobile' ? { order: { xs: '2', md: 'initial' } } : {})}
+		>
 			<NextLink href='/'>
 				<Image
 					title={'Разборка авто'}
@@ -298,7 +302,8 @@ const Header = observer(({ brands }: Props) => {
 					? {
 							endIcon: <ArrowIcon onClick={handleClickButton}></ArrowIcon>
 					  }
-					: {})}>
+					: {})}
+			>
 				{page.path && isTablet ? (
 					<NextLink href={page.path} onClick={handleClickLinkTablet}>
 						{page.name}
@@ -354,7 +359,8 @@ const Header = observer(({ brands }: Props) => {
 						sx: { display: { md: 'flex', xs: 'none' }, justifyContent: { md: 'start', lg: 'center' } },
 						flex: '1',
 						flexWrap: 'wrap'
-				  })}>
+				  })}
+		>
 			{navigation.map((page, index) => {
 				return (
 					<Fragment key={page.id}>
@@ -375,7 +381,8 @@ const Header = observer(({ brands }: Props) => {
 									placement='bottom-start'
 									transition
 									sx={{ zIndex: 1, top: { sm: '-3px !important' } }}
-									disablePortal>
+									disablePortal
+								>
 									{({ TransitionProps, placement }) => (
 										<Grow
 											{...TransitionProps}
@@ -386,7 +393,8 @@ const Header = observer(({ brands }: Props) => {
 												transformOrigin:
 													placement === 'bottom-start' ? 'left top' : 'left bottom'
 											}}
-											timeout={300}>
+											timeout={300}
+										>
 											{renderMenuList(page)}
 										</Grow>
 									)}
@@ -405,7 +413,8 @@ const Header = observer(({ brands }: Props) => {
 			<Container ref={ref}>
 				<Toolbar
 					sx={{ justifyContent: 'space-between', minHeight: { xs: '56px', md: '64px' } }}
-					className={styles.toolbar}>
+					className={styles.toolbar}
+				>
 					{renderLogo('desktop')}
 					<Box
 						color='black'
@@ -415,14 +424,16 @@ const Header = observer(({ brands }: Props) => {
 							flex: { xs: 'initial', md: '1' },
 							order: { xs: '3', md: 'initial' }
 						}}
-						className={styles['mobile-menu']}>
+						className={styles['mobile-menu']}
+					>
 						<ShoppingCartIcon sx={{ color: '#fff' }}></ShoppingCartIcon>
 						<IconButton
 							size='large'
 							aria-controls='header-menu'
 							color='inherit'
 							aria-haspopup='true'
-							onClick={handleToggleMenu}>
+							onClick={handleToggleMenu}
+						>
 							<MenuIcon sx={{ color: '#fff' }} />
 						</IconButton>
 					</Box>

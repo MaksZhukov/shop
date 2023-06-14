@@ -257,7 +257,8 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 			filtersConfig={filtersConfig}
 			seo={page?.seo}
 			fetchData={fetchSpareParts}
-			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+			generateFiltersByQuery={generateFiltersByQuery}
+		></Catalog>
 	);
 };
 

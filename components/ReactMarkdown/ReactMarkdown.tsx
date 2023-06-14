@@ -42,7 +42,8 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 								height: 'auto',
 								...style,
 								...(isMobile ? { width: '100%' } : {})
-							}}></Image>
+							}}
+						></Image>
 					);
 				},
 				video: ({ src }) => {
@@ -52,7 +53,8 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 							height={isTablet ? 360 : 480}
 							controls
 							style={isTablet ? {} : { margin: '1em' }}
-							url={publicRuntimeConfig.backendLocalUrl + src}></ReactPlayer>
+							url={publicRuntimeConfig.backendLocalUrl + src}
+						></ReactPlayer>
 					);
 				},
 				p: (data) => {
@@ -99,7 +101,8 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 						</Box>
 					);
 				}
-			}}>
+			}}
+		>
 			{content}
 		</ReactMarkdownLib>
 	);

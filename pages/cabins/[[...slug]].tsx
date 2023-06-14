@@ -53,7 +53,8 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSpar
 					...(data.seatUpholstery ? [{ text: 'Обивка сидений', value: data.seatUpholstery }] : [])
 				]}
 				page={page as PageProduct & PageProductCabin}
-				relatedProducts={relatedProducts}></Product>
+				relatedProducts={relatedProducts}
+			></Product>
 		);
 	}
 	return <CatalogCabins page={page} brands={brands} kindSparePart={kindSparePart}></CatalogCabins>;

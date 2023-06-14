@@ -54,7 +54,8 @@ const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brand
 					{ text: 'Сезон', value: data.season }
 				]}
 				page={page as PageProduct & PageProductTire}
-				relatedProducts={relatedProducts}></Product>
+				relatedProducts={relatedProducts}
+			></Product>
 		);
 	}
 	return <CatalogTires page={page} tireBrands={tireBrands}></CatalogTires>;

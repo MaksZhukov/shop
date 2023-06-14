@@ -43,7 +43,8 @@ const ForgotForm: FC<Props> = ({ isLoading, onChangeIsLoading }) => {
 				onChange={handleChangeEmail}
 				value={email}
 				required
-				placeholder='Почта'></TextField>
+				placeholder='Почта'
+			></TextField>
 			<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
 				Восстановить
 			</Button>

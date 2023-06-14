@@ -72,11 +72,13 @@ const ResetForm = ({ onChangeType, onChangeIsLoading, isLoading }: Props) => {
 						<IconButton
 							aria-label='toggle password visibility'
 							onClick={handleClickShowPassword}
-							edge='end'>
+							edge='end'
+						>
 							{showPassword ? <VisibilityOff /> : <Visibility />}
 						</IconButton>
 					</InputAdornment>
-				}></OutlinedInput>
+				}
+			></OutlinedInput>
 			<OutlinedInput
 				disabled={isLoading}
 				fullWidth
@@ -92,16 +94,19 @@ const ResetForm = ({ onChangeType, onChangeIsLoading, isLoading }: Props) => {
 						<IconButton
 							aria-label='toggle password visibility'
 							onClick={handleClickShowConfirmPassword}
-							edge='end'>
+							edge='end'
+						>
 							{showConfirmPassword ? <VisibilityOff /> : <Visibility />}
 						</IconButton>
 					</InputAdornment>
-				}></OutlinedInput>
+				}
+			></OutlinedInput>
 			<Button
 				disabled={passwordConfirmation !== password || isLoading}
 				variant='contained'
 				type='submit'
-				fullWidth>
+				fullWidth
+			>
 				Изменить
 			</Button>
 		</form>
