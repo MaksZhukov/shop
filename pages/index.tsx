@@ -1132,7 +1132,8 @@ export const getServerSideProps = getPageProps(
 		]
 	}),
 	async () => ({
-		articles: (await fetchArticles({ populate: 'mainImage', pagination: { limit: 3 } })).data.data
+		articles: (await fetchArticles({ sort: 'createdAt:desc', populate: 'mainImage', pagination: { limit: 3 } }))
+			.data.data
 	}),
 	async () => ({
 		reviews: (await fetchReviews()).data.data

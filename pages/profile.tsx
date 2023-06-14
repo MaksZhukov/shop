@@ -1,13 +1,13 @@
-import { Alert, Box, Button, FormControl, Input, TextField, Typography } from '@mui/material';
-import InputMask from 'react-input-mask';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { observer } from 'mobx-react';
-import { ChangeEvent, FormEvent, FormEventHandler, ReactElement, ReactNode } from 'react';
-import { useStore } from '../store';
-import styles from './profile.module.scss';
 import Head from 'next/head';
 import { useSnackbar } from 'notistack';
+import { ChangeEvent, FormEvent } from 'react';
+import InputMask from 'react-input-mask';
 import { getPageProps } from 'services/PagePropsService';
+import { useStore } from '../store';
+import styles from './profile.module.scss';
 
 const Profile = observer(() => {
 	const store = useStore();
@@ -28,11 +28,11 @@ const Profile = observer(() => {
 		try {
 			await store.user.saveUserInfo();
 			enqueueSnackbar('Данные успешно обновлены', {
-				variant: 'success',
+				variant: 'success'
 			});
 		} catch (err) {
 			enqueueSnackbar('Произошла какая-то ошибка с обновлением данных, обратитесь в поддержку', {
-				variant: 'error',
+				variant: 'error'
 			});
 		}
 	};
@@ -54,22 +54,19 @@ const Profile = observer(() => {
 						disabled
 						variant='standard'
 						margin='normal'
-						fullWidth
-					></TextField>
+						fullWidth></TextField>
 					<TextField
 						value={store.user.username}
 						onChange={handleChangeUsername}
 						label='ФИО'
 						margin='normal'
 						variant='standard'
-						fullWidth
-					></TextField>
+						fullWidth></TextField>
 					<InputMask
 						mask='+375 99 999 99 99'
 						value={store.user.phone}
 						maskChar=' '
-						onChange={handleChangePhone}
-					>
+						onChange={handleChangePhone}>
 						{
 							//@ts-ignore
 							() => <TextField label='Телефон' margin='normal' variant='standard' fullWidth></TextField>
@@ -81,8 +78,7 @@ const Profile = observer(() => {
 						label='Адрес'
 						margin='normal'
 						variant='standard'
-						fullWidth
-					></TextField>
+						fullWidth></TextField>
 					<Button fullWidth type='submit'>
 						Сохранить
 					</Button>

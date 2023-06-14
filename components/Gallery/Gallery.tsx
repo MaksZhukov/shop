@@ -1,15 +1,10 @@
-import { IconButton, Modal, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
-import CloseIcon from '@mui/icons-material/Close';
-import WhiteBox from 'components/WhiteBox';
-import { FC, useState } from 'react';
-import Image from 'components/Image';
-import Typography from 'components/Typography';
-import Slider from 'react-slick';
-import styles from './Gallery.module.scss';
 import { DefaultPage } from 'api/pages/types';
 import { Image as IIamge } from 'api/types';
 import GalleryImages from 'components/GalleryImages/GalleryImages';
+import Image from 'components/Image';
+import Typography from 'components/Typography';
+import { FC, useState } from 'react';
 
 interface Props {
 	page: DefaultPage & { images: IIamge[] };

@@ -1,12 +1,12 @@
+import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Modal, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
-import CloseIcon from '@mui/icons-material/Close';
-import { FC, useState, MouseEventHandler } from 'react';
+import { Image as IIamge } from 'api/types';
+import Zoom from 'components/Zoom';
+import getConfig from 'next/config';
+import { FC } from 'react';
 import Slider from 'react-slick';
 import styles from './GalleryImages.module.scss';
-import { Image as IIamge } from 'api/types';
-import getConfig from 'next/config';
-import Zoom from 'components/Zoom';
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {

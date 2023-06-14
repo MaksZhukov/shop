@@ -1,4 +1,4 @@
-import { Alert, Button, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
@@ -44,11 +44,7 @@ const ForgotForm: FC<Props> = ({ isLoading, onChangeIsLoading }) => {
 				value={email}
 				required
 				placeholder='Почта'></TextField>
-			<Button
-				disabled={isLoading}
-				variant='contained'
-				type='submit'
-				fullWidth>
+			<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
 				Восстановить
 			</Button>
 		</form>

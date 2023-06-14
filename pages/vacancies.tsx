@@ -79,6 +79,7 @@ const Vacancies: NextPage<Props> = ({ page }) => {
                         padding: { xs: '1em 0', md: '2em 0' }
                     }}
                     withoutOverlay={isMobile}
+                    withSlider={isMobile}
                     images={item.images}></BlockImages>
                 <Box sx={{ typography: { xs: 'h6', md: 'h5' } }}>
                     <Typography
