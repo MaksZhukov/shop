@@ -29,14 +29,16 @@ const Gallery: FC<Props> = ({ page }) => {
 						width={{ xs: '100%', md: 500 }}
 						onClick={handleClickImage(i)}
 						sx={{ cursor: 'pointer' }}
-						key={item.id}>
+						key={item.id}
+					>
 						<Image
 							title={item.caption}
 							width={item.width > item.height ? 500 : 375}
 							height={item.width > item.height ? 375 : 500}
 							src={item.formats?.small?.url || item.url}
 							style={{ maxHeight: '100%', height: 'auto', width: '100%' }}
-							alt={item.alternativeText}></Image>
+							alt={item.alternativeText}
+						></Image>
 					</Box>
 				))}
 			</Box>

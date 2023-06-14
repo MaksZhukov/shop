@@ -31,7 +31,8 @@ const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => {
 						opacity: 0.75
 					}}
 					onClick={onClose}
-					aria-label='close'>
+					aria-label='close'
+				>
 					<CloseIcon sx={{ color: '#fff' }} fontSize='large' />
 				</IconButton>
 				<Slider swipe={false} className={styles.slider} slidesToShow={1} initialSlide={selectedIndex as number}>

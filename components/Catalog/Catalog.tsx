@@ -348,7 +348,8 @@ const Catalog = ({
 						{...params}
 						onClick={() => {
 							window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-						}}>
+						}}
+					>
 						{params.page}
 					</PaginationItem>
 				) : (
@@ -358,12 +359,14 @@ const Catalog = ({
 							router.asPath.includes('page=')
 								? `${router.asPath.replace(/page=\d+/, `page=${params.page}`)}`
 								: `${router.asPath}${router.asPath.includes('?') ? '&' : '?'}page=${params.page}`
-						}>
+						}
+					>
 						<PaginationItem
 							{...params}
 							onClick={() => {
 								window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-							}}>
+							}}
+						>
 							{params.page}
 						</PaginationItem>
 					</NextLink>
@@ -386,7 +389,8 @@ const Catalog = ({
 			gap={{ xs: '0.5em', md: 0 }}
 			marginBottom='1em'
 			alignItems={{ xs: 'initial', md: 'center' }}
-			bgcolor={{ xs: 'initial', md: '#fff' }}>
+			bgcolor={{ xs: 'initial', md: '#fff' }}
+		>
 			<Box display='flex' sx={{ order: { xs: 3, md: 0 }, width: { xs: '100%', md: 'auto' } }}>
 				<Button
 					variant='contained'
@@ -395,7 +399,8 @@ const Catalog = ({
 						bgcolor: activeView === 'grid' ? 'primary.main' : '#000',
 						display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
 					}}
-					className={classNames(styles['btn-view'])}>
+					className={classNames(styles['btn-view'])}
+				>
 					<GridViewIcon fontSize='small' sx={{ color: '#fff' }}></GridViewIcon>
 				</Button>
 				<Button
@@ -405,7 +410,8 @@ const Catalog = ({
 						display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
 					}}
 					onClick={handleClickChangeView('list', position)}
-					className={classNames(styles['btn-view'])}>
+					className={classNames(styles['btn-view'])}
+				>
 					<MenuIcon fontSize='small' sx={{ color: '#fff' }}></MenuIcon>
 				</Button>
 			</Box>
@@ -414,7 +420,8 @@ const Catalog = ({
 					sx={{ display: { xs: 'flex', md: 'none' } }}
 					variant='contained'
 					onClick={handleClickOpenFilters}
-					startIcon={<TuneIcon></TuneIcon>}>
+					startIcon={<TuneIcon></TuneIcon>}
+				>
 					Параметры
 				</Button>
 			)}
@@ -424,7 +431,8 @@ const Catalog = ({
 						ref={filtersRef}
 						total={total}
 						config={filtersConfig}
-						onClickFind={handleClickFind}></Filters>
+						onClickFind={handleClickFind}
+					></Filters>
 				</Box>
 			</Modal>
 			<Input
@@ -441,7 +449,8 @@ const Catalog = ({
 				onChange={handleChangeSearch}
 				onKeyDown={handleKeyDown(position)}
 				value={searchValue}
-				placeholder={searchPlaceholder}></Input>
+				placeholder={searchPlaceholder}
+			></Input>
 			<Select
 				variant='standard'
 				MenuProps={{ disableScrollLock: true }}
@@ -452,7 +461,8 @@ const Catalog = ({
 					order: { xs: 1, md: 'initial' }
 				}}
 				className={styles['sort-select']}
-				onChange={handleChangeSort}>
+				onChange={handleChangeSort}
+			>
 				{selectSortItems.map((item) => (
 					<MenuItem key={item.name} value={item.value}>
 						{item.name}
@@ -471,12 +481,14 @@ const Catalog = ({
 					display={{ xs: 'none', md: 'block' }}
 					marginRight='1em'
 					component='aside'
-					sx={{ width: { xs: '100%', md: '250px' } }}>
+					sx={{ width: { xs: '100%', md: '250px' } }}
+				>
 					<Filters
 						ref={filtersRef}
 						total={total}
 						config={filtersConfig}
-						onClickFind={handleClickFind}></Filters>
+						onClickFind={handleClickFind}
+					></Filters>
 				</Box>
 				<Box sx={{ width: { md: 'calc(100% - 250px - 2em)' } }}>
 					<Box
@@ -484,7 +496,8 @@ const Catalog = ({
 						marginTop='0'
 						textTransform='uppercase'
 						component='h1'
-						typography={{ xs: 'h5', md: 'h4' }}>
+						typography={{ xs: 'h5', md: 'h4' }}
+					>
 						{seo?.h1}
 					</Box>
 					{renderBar('top')}
@@ -497,7 +510,8 @@ const Catalog = ({
 							styles.items,
 							isLoading && styles['loading'],
 							!data.length && styles['content-items_no-data']
-						)}>
+						)}
+					>
 						{data.length ? (
 							data.map((item) => (
 								<ProductItem
@@ -506,7 +520,8 @@ const Catalog = ({
 									dataFieldsToShow={dataFieldsToShow || []}
 									activeView={activeView}
 									key={item.id}
-									data={item}></ProductItem>
+									data={item}
+								></ProductItem>
 							))
 						) : isFirstDataLoaded && !isLoading ? (
 							<Typography textAlign='center' variant='h5'>
@@ -528,7 +543,8 @@ const Catalog = ({
 						<Typography withSeparator fontWeight='bold' marginBottom='1em' marginTop='1em' variant='h5'>
 							ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
 						</Typography>
-					}></CarouselProducts>
+					}
+				></CarouselProducts>
 			)}
 			<Box marginTop='2.5em'>
 				<Typography>

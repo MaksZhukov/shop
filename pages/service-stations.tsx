@@ -29,7 +29,8 @@ const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
 					name={item.name}
 					description={item.description}
 					image={item.image}
-					link={`/service-stations/${item.slug}`}></CardItem>
+					link={`/service-stations/${item.slug}`}
+				></CardItem>
 			))}
 		</WhiteBox>
 	);

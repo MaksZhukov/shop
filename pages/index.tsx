@@ -1,23 +1,10 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import {
-	Box,
-	Button,
-	CircularProgress,
-	Input,
-	Link,
-	MenuItem,
-	Modal,
-	Select,
-	SelectChangeEvent,
-	useMediaQuery
-} from '@mui/material';
+import { Box, Button, CircularProgress, Input, Link, Modal, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
 import { API_MAX_LIMIT } from 'api/constants';
-import { fetchGenerations } from 'api/generations/generations';
-import { Generation } from 'api/generations/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchModels } from 'api/models/models';
@@ -39,8 +26,6 @@ import { WheelDiameterCenterHole } from 'api/wheelDiameterCenterHoles/types';
 import { fetchWheelDiameterCenterHoles } from 'api/wheelDiameterCenterHoles/wheelDiameterCenterHoles';
 import { WheelDiameter } from 'api/wheelDiameters/types';
 import { fetchWheelDiameters } from 'api/wheelDiameters/wheelDiameters';
-import { WheelDiskOffset } from 'api/wheelDiskOffsets/types';
-import { fetchWheelDiskOffsets } from 'api/wheelDiskOffsets/wheelWidths';
 import { WheelNumberHole } from 'api/wheelNumberHoles/types';
 import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
 import { WheelWidth } from 'api/wheelWidths/types';
@@ -61,20 +46,11 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
 
-import {
-	ChangeEvent,
-	Dispatch,
-	KeyboardEvent,
-	ReactNode,
-	SetStateAction,
-	UIEventHandler,
-	useRef,
-	useState
-} from 'react';
-import Slider from 'react-slick';
-import { useDebounce, useThrottle } from 'rooks';
-import { getPageProps } from 'services/PagePropsService';
-import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
+import { fetchCabins } from 'api/cabins/cabins';
+import { fetchProducts } from 'api/products/products';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
+import { fetchTires } from 'api/tires/tires';
+import { fetchWheels } from 'api/wheels/wheels';
 import BrandsSlider from 'components/BrandsSlider';
 import {
 	BODY_STYLES_SLUGIFY,
@@ -88,13 +64,22 @@ import {
 	SLUGIFY_TRANSMISSIONS,
 	TRANSMISSIONS_SLUGIFY
 } from 'config';
-import styles from './index.module.scss';
-import { fetchProducts } from 'api/products/products';
-import { fetchTires } from 'api/tires/tires';
-import { fetchWheels } from 'api/wheels/wheels';
-import { fetchCabins } from 'api/cabins/cabins';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
+import {
+	ChangeEvent,
+	Dispatch,
+	KeyboardEvent,
+	ReactNode,
+	SetStateAction,
+	UIEventHandler,
+	useRef,
+	useState
+} from 'react';
+import Slider from 'react-slick';
+import { useDebounce, useThrottle } from 'rooks';
+import { getPageProps } from 'services/PagePropsService';
 import { getParamByRelation } from 'services/ParamsService';
+import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
+import styles from './index.module.scss';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -584,7 +569,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			onChange={handleChangeProductType}
 			value={productTypeOptions.find((item) => item.value === productType)}
 			placeholder='Категория товара'
-			options={productTypeOptions}></Autocomplete>
+			options={productTypeOptions}
+		></Autocomplete>
 	);
 
 	const handleOpenProductAutocomplete = {
@@ -610,7 +596,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 				placeholder='Поиск'
 				value={searchValue}
 				onKeyDown={handleKeyDownSearch}
-				onChange={handleChangeSearch}></Input>
+				onChange={handleChangeSearch}
+			></Input>
 			<Box marginTop='1em'>
 				<Button variant='contained' onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
 					Найти
@@ -626,28 +613,32 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 							onClick={handleClickSearchIn('/spare-parts')}
 							sx={{ marginBottom: '1em' }}
 							fullWidth
-							variant='contained'>
+							variant='contained'
+						>
 							В запчастях
 						</Button>
 						<Button
 							onClick={handleClickSearchIn('/cabins')}
 							sx={{ marginBottom: '1em' }}
 							fullWidth
-							variant='contained'>
+							variant='contained'
+						>
 							В салонах
 						</Button>
 						<Button
 							onClick={handleClickSearchIn('/tires')}
 							sx={{ marginBottom: '1em' }}
 							fullWidth
-							variant='contained'>
+							variant='contained'
+						>
 							В шинах
 						</Button>
 						<Button
 							onClick={handleClickSearchIn('/wheels')}
 							sx={{ marginBottom: '1em' }}
 							fullWidth
-							variant='contained'>
+							variant='contained'
+						>
 							В дисках
 						</Button>
 					</Box>
@@ -675,7 +666,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 											fullWidth
 											onInputChange={item.onInputChange}
 											disabled={item.disabled}
-											value={value || null}></Autocomplete>
+											value={value || null}
+										></Autocomplete>
 									</Box>
 								);
 							})}
@@ -695,7 +687,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			position='absolute'
 			minHeight='76px'
 			bottom='2em'
-			className={styles['head-search']}>
+			className={styles['head-search']}
+		>
 			<Box display='flex' gap='0.5em' flex='1' flexWrap='wrap' className={styles.filters}>
 				<Box width={'calc(25% - 0.5em)'}>
 					<Autocomplete
@@ -720,7 +713,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						options={products.map((item) => ({
 							label: item.h1,
 							value: item.id + '-' + item.type
-						}))}></Autocomplete>
+						}))}
+					></Autocomplete>
 				</Box>
 				<Box width={'calc(25% - 0.5em)'}>{renderProductTypeAutocomplete}</Box>
 				{productType &&
@@ -740,7 +734,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 									fullWidth
 									onInputChange={item.onInputChange}
 									disabled={item.disabled}
-									value={value || null}></Autocomplete>
+									value={value || null}
+								></Autocomplete>
 							</Box>
 						);
 					})}
@@ -755,7 +750,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		<>
 			<Box
 				sx={{ height: { xs: 'calc(100vh - 56px - 60px)', sm: 'calc(100vh - 64px)' } }}
-				className={styles['head-section']}>
+				className={styles['head-section']}
+			>
 				<Image
 					title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
 					width={isMobile ? page.bannerMobile?.width : page.banner?.width}
@@ -776,7 +772,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						...(isMobile ? { objectPosition: '70%' } : {})
 					}}
 					src={isMobile ? page.bannerMobile?.url : page.banner?.url || ''}
-					alt={isMobile ? page.bannerMobile?.alternativeText : page.banner?.alternativeText || ''}></Image>
+					alt={isMobile ? page.bannerMobile?.alternativeText : page.banner?.alternativeText || ''}
+				></Image>
 				<Container sx={{ height: '100%', position: 'relative' }}>
 					<Box maxWidth='650px' paddingTop={{ xs: '1em', sm: '3em' }}>
 						<Typography fontWeight='bold' component='h1' variant={isMobile ? 'h4' : 'h3'}>
@@ -796,7 +793,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 					variant={isMobile ? 'h5' : 'h4'}
 					sx={{ marginBottom: { xs: '0.5em', md: '1.5em' } }}
 					fontWeight='bold'
-					textTransform='uppercase'>
+					textTransform='uppercase'
+				>
 					{page.titleCategories}
 				</Typography>
 				<Box
@@ -806,11 +804,13 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						flexWrap: { xs: 'wrap', md: 'initial' },
 						gap: { xs: '5%', md: 'initial' },
 						marginBottom: { xs: '2em', md: '4em' }
-					}}>
+					}}
+				>
 					{page.categoryImages?.map((item, i) => (
 						<Box
 							key={item.id}
-							className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
+							className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}
+						>
 							<NextLink href={CATEGORIES[i].href}>
 								<Box
 									position='relative'
@@ -818,20 +818,23 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 									display='flex'
 									alignItems='center'
 									justifyContent='center'
-									minHeight='250px'>
+									minHeight='250px'
+								>
 									<Image
 										title={item.caption}
 										src={item.url}
 										width={item.width}
 										height={item.height}
-										alt={item.alternativeText}></Image>
+										alt={item.alternativeText}
+									></Image>
 								</Box>
 								<Typography
 									className={styles['categories__item-name']}
 									marginBottom='0.25em'
 									textAlign='center'
 									component='h3'
-									variant='h4'>
+									variant='h4'
+								>
 									<Link component='span' underline='hover' color='inherit'>
 										{CATEGORIES[i].name}
 									</Link>
@@ -841,14 +844,16 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 					))}
 					<Box
 						position='relative'
-						className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}>
+						className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}
+					>
 						<Image
 							width={260}
 							height={300}
 							alt='Выкуп авто на з/ч'
 							isOnSSR={false}
 							style={isMobile ? { objectFit: 'cover' } : {}}
-							src='/main_buyback.png'></Image>
+							src='/main_buyback.png'
+						></Image>
 						<NextLink href={'/buyback-cars'}>
 							<Link
 								position='absolute'
@@ -860,7 +865,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 								display='block'
 								underline='hover'
 								margin='0.25em 0.125em'
-								color='inherit'>
+								color='inherit'
+							>
 								Выкуп <br /> авто на з/ч
 							</Link>
 						</NextLink>
@@ -876,7 +882,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 										link={item.link}
 										image={item.image}
 										width={200}
-										height={140}></LinkWithImage>
+										height={140}
+									></LinkWithImage>
 								</Box>
 							))}
 						</Slider>
@@ -890,7 +897,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 								link={item.link}
 								image={item.image}
 								width={200}
-								height={140}></LinkWithImage>
+								height={140}
+							></LinkWithImage>
 						))}
 					</Box>
 				)}
@@ -902,7 +910,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						sx={{ marginBottom: { xs: '0.5em', md: '1.5em' } }}
 						fontWeight='bold'
 						maxWidth='700px'
-						textTransform='uppercase'>
+						textTransform='uppercase'
+					>
 						{page.popularBrandsTitle}
 					</Typography>
 				</Box>
@@ -912,7 +921,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 				<Box
 					display='flex'
 					gap='3em'
-					sx={{ marginBottom: { xs: '2em', md: '5em' }, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
+					sx={{ marginBottom: { xs: '2em', md: '5em' }, flexWrap: { xs: 'wrap', md: 'nowrap' } }}
+				>
 					<Box display='flex' alignItems='center'>
 						<Typography color='text.secondary' variant='body1'>
 							<ReactMarkdown content={page.leftSideText}></ReactMarkdown>
@@ -929,20 +939,23 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 					<CarouselReviews
 						marginBottom='1em'
 						data={reviews}
-						slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}></CarouselReviews>
+						slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}
+					></CarouselReviews>
 					<Box gap={{ xs: 2, md: 0 }} flexWrap='wrap' display='flex' justifyContent='center'>
 						<Button
 							sx={{ marginRight: { md: '5em', xs: 0 }, marginLeft: { md: '1em', xs: 0 } }}
 							variant='contained'
 							target='_blank'
-							href='https://g.page/r/CZioQh24913HEB0/review'>
+							href='https://g.page/r/CZioQh24913HEB0/review'
+						>
 							Оставить отзыв гугл
 						</Button>
 						<Button
 							sx={{ marginLeft: { xs: 0, md: '0.5em' } }}
 							variant='contained'
 							target='_blank'
-							href='https://yandex.by/maps/org/magazin_avtozapchastey_i_avtotovarov/1032020244/reviews/?add-review=true&ll=23.853612%2C53.583955&z=16'>
+							href='https://yandex.by/maps/org/magazin_avtozapchastey_i_avtotovarov/1032020244/reviews/?add-review=true&ll=23.853612%2C53.583955&z=16'
+						>
 							Оставить отзыв Яндекс
 						</Button>
 					</Box>
@@ -954,7 +967,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						withSeparator
 						component='h2'
 						variant={isMobile ? 'h5' : 'h4'}
-						marginBottom='1em'>
+						marginBottom='1em'
+					>
 						{page.benefitsTitle}
 					</Typography>
 					<Box display='flex' flexDirection={isMobile ? 'column-reverse' : 'initial'}>
@@ -968,7 +982,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 								style={isMobile ? { maxWidth: '100%', objectFit: 'contain', height: 'auto' } : {}}
 								width={617}
 								height={347}
-								alt={page.benefitsRightImage?.alternativeText}></Image>
+								alt={page.benefitsRightImage?.alternativeText}
+							></Image>
 						</Box>
 					</Box>
 				</Box>
@@ -978,19 +993,22 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						withSeparator
 						component='h2'
 						variant={isMobile ? 'h5' : 'h4'}
-						marginBottom='1em'>
+						marginBottom='1em'
+					>
 						{page.blogTitle}
 					</Typography>
 					<Box
 						padding='0 2.5em'
 						display='flex'
 						flexWrap='wrap'
-						sx={{ flexDirection: { xs: 'column', md: 'initial' }, gap: { xs: '1em', md: '4em' } }}>
+						sx={{ flexDirection: { xs: 'column', md: 'initial' }, gap: { xs: '1em', md: '4em' } }}
+					>
 						<Typography
 							sx={{ paddingBottom: { xs: '0.5em', md: '2em' } }}
 							flex='1'
 							color='text.secondary'
-							variant='body1'>
+							variant='body1'
+						>
 							<ReactMarkdown content={page.blogLeftText}></ReactMarkdown>
 						</Typography>
 						<Box
@@ -1000,12 +1018,14 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 									md: 'none',
 									borderRight: { xs: 'none', md: '1px solid rgba(0, 0, 0, 0.3)' }
 								}
-							}}></Box>
+							}}
+						></Box>
 						<Typography
 							sx={{ paddingBottom: { xs: '0', md: '2em' } }}
 							flex='1'
 							color='text.secondary'
-							variant='body1'>
+							variant='body1'
+						>
 							<ReactMarkdown content={page.blogRightText}></ReactMarkdown>
 						</Typography>
 					</Box>
@@ -1022,7 +1042,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 											width={390}
 											typographyProps={{ width: '100%', variant: 'h6', marginTop: '1em' }}
 											caption={item.name}
-											image={item.mainImage}></LinkWithImage>
+											image={item.mainImage}
+										></LinkWithImage>
 									</Box>
 								))}
 							</Slider>
@@ -1038,7 +1059,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 									width={390}
 									typographyProps={{ maxWidth: 390, variant: 'h6', marginTop: '1em' }}
 									caption={item.name}
-									image={item.mainImage}></LinkWithImage>
+									image={item.mainImage}
+								></LinkWithImage>
 							))}
 						</Box>
 					)}
@@ -1049,7 +1071,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						withSeparator
 						component='h2'
 						variant={isMobile ? 'h5' : 'h4'}
-						marginBottom='1em'>
+						marginBottom='1em'
+					>
 						{page.deliveryTitle}
 					</Typography>
 					<Typography flex='1' color='text.secondary' variant='body1'>
@@ -1068,7 +1091,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 											image={item.image}
 											imageStyle={{ maxWidth: '100%', objectFit: 'contain', margin: 'auto' }}
 											typographyProps={{ minHeight: '64px', variant: 'h6', marginTop: '1em' }}
-											link={`/service-stations/${item.slug}`}></LinkWithImage>
+											link={`/service-stations/${item.slug}`}
+										></LinkWithImage>
 									</WhiteBox>
 								</Box>
 							))}
@@ -1081,7 +1105,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 											width={isMobile ? 150 : 208}
 											image={item.image}
 											typographyProps={{ minHeight: '64px', variant: 'h6', marginTop: '1em' }}
-											link={`/autocomises/${item.slug}`}></LinkWithImage>
+											link={`/autocomises/${item.slug}`}
+										></LinkWithImage>
 									</WhiteBox>
 								</Box>
 							))}
@@ -1096,7 +1121,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 									imageStyle={{ width: '100%', objectFit: 'contain' }}
 									width={264}
 									image={item.image}
-									link={`/service-stations/${item.slug}`}></LinkWithImage>
+									link={`/service-stations/${item.slug}`}
+								></LinkWithImage>
 							</Box>
 						))}
 						{page.autocomises?.map((item) => (
@@ -1106,7 +1132,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 									// height={100}
 									width={264}
 									image={item.image}
-									link={`/autocomises/${item.slug}`}></LinkWithImage>
+									link={`/autocomises/${item.slug}`}
+								></LinkWithImage>
 							</Box>
 						))}
 					</Box>

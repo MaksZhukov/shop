@@ -22,7 +22,8 @@ const Article: NextPage<Props> = ({ page }) => {
 					display={{ xs: 'block', sm: 'none' }}
 					component='h1'
 					marginBottom='0.5em'
-					fontWeight='500'>
+					fontWeight='500'
+				>
 					{page.name}
 				</Typography>
 				<Box maxWidth={{ xs: 'initial', sm: 390 }} width='100%'>
@@ -32,7 +33,8 @@ const Article: NextPage<Props> = ({ page }) => {
 						width={500}
 						style={isMobile ? { height: '100%', width: '100%', objectFit: 'cover' } : {}}
 						height={260}
-						alt={page.mainImage?.alternativeText}></Image>
+						alt={page.mainImage?.alternativeText}
+					></Image>
 				</Box>
 				<Box
 					minWidth={250}
@@ -40,13 +42,15 @@ const Article: NextPage<Props> = ({ page }) => {
 						marginLeft: { xs: '0', sm: '3em' },
 						flex: 1,
 						marginTop: { xs: '0.5em', md: 0 }
-					}}>
+					}}
+				>
 					<Typography
 						display={{ xs: 'none', sm: 'block' }}
 						variant='h4'
 						component='h1'
 						marginBottom='0.5em'
-						fontWeight='500'>
+						fontWeight='500'
+					>
 						{page.name}
 					</Typography>
 					<ReactMarkdown content={page.rightText}></ReactMarkdown>
@@ -60,7 +64,8 @@ const Article: NextPage<Props> = ({ page }) => {
 					marginY: { xs: '1em', md: '3em' },
 					paddingY: { xs: '1em', md: '3em' },
 					flexDirection: { xs: 'column', sm: 'row' }
-				}}></BlockImages>
+				}}
+			></BlockImages>
 			<ReactMarkdown content={page.content1}></ReactMarkdown>
 			<BlockImages
 				withSlider={isMobile}
@@ -70,7 +75,8 @@ const Article: NextPage<Props> = ({ page }) => {
 					marginY: { xs: '1em', md: '3em' },
 					paddingY: { xs: '1em', md: '3em' },
 					flexDirection: { xs: 'column', sm: 'row' }
-				}}></BlockImages>
+				}}
+			></BlockImages>
 			<ReactMarkdown content={page.content2}></ReactMarkdown>
 		</>
 	);

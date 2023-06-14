@@ -71,7 +71,8 @@ const Car: FC<Props> = ({ data }) => {
 										styles.slider_small,
 										isMobile && styles.slider_small_mobile
 									)}
-									asNavFor={sliderBig || undefined}>
+									asNavFor={sliderBig || undefined}
+								>
 									{data.images.map((item) => (
 										<Box marginY='0.5em' key={item.id}>
 											<Image
@@ -79,7 +80,8 @@ const Car: FC<Props> = ({ data }) => {
 												alt={item.alternativeText}
 												width={104}
 												height={78}
-												src={item.formats?.thumbnail.url || item.url}></Image>
+												src={item.formats?.thumbnail.url || item.url}
+											></Image>
 										</Box>
 									))}
 									{data.videoLink && (
@@ -90,7 +92,8 @@ const Car: FC<Props> = ({ data }) => {
 												height={98}
 												display='flex'
 												alignItems='center'
-												justifyContent='center'>
+												justifyContent='center'
+											>
 												Видео
 											</Typography>
 										</Box>
@@ -103,7 +106,8 @@ const Car: FC<Props> = ({ data }) => {
 									asNavFor={sliderSmall || undefined}
 									arrows={false}
 									autoplaySpeed={5000}
-									className={classNames(styles.slider, isMobile && styles.slider_mobile)}>
+									className={classNames(styles.slider, isMobile && styles.slider_mobile)}
+								>
 									{data.images.map((item) => (
 										<Box paddingX={'1em'} key={item.id}>
 											<Image
@@ -112,7 +116,8 @@ const Car: FC<Props> = ({ data }) => {
 												alt={item.alternativeText}
 												width={440}
 												height={isMobile ? 360 : 480}
-												src={item.url}></Image>
+												src={item.url}
+											></Image>
 										</Box>
 									))}
 									{data.videoLink && (
@@ -125,7 +130,8 @@ const Car: FC<Props> = ({ data }) => {
 												style={{ height: '100%' }}
 												width={'100%'}
 												height={isMobile ? '100%' : 480}
-												url={data.videoLink}></ReactPlayer>
+												url={data.videoLink}
+											></ReactPlayer>
 										</Box>
 									)}
 								</Slider>
@@ -138,7 +144,8 @@ const Car: FC<Props> = ({ data }) => {
 								width={540}
 								height={360}
 								style={{ objectFit: 'cover' }}
-								src=''></Image>
+								src=''
+							></Image>
 						)}
 					</Box>
 				</Box>

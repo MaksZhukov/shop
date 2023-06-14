@@ -22,7 +22,8 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
 				padding='0.5em 1em'
 				width={{ xs: 'calc(100% - 150px)', sm: 'initial' }}
 				display='flex'
-				flexDirection='column'>
+				flexDirection='column'
+			>
 				<NextLink href={`/awaiting-cars/` + data.slug}>
 					<Link
 						variant='h6'
@@ -31,7 +32,8 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
 						color='secondary'
 						component='span'
 						underline='hover'
-						fontWeight='500'>
+						fontWeight='500'
+					>
 						{data.name}
 					</Link>
 				</NextLink>
@@ -63,7 +65,8 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
 						fontWeight='500'
 						padding='0.25em'
 						marginTop='0.5em'
-						textAlign='center'>
+						textAlign='center'
+					>
 						{data.name}
 					</Link>
 				</NextLink>
@@ -77,7 +80,8 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
 			bgcolor='#fff'
 			key={data.id}
 			display={activeView === 'list' ? 'flex' : 'initial'}
-			width={width}>
+			width={width}
+		>
 			{data.images ? (
 				<Box width={activeView === 'list' ? (isMobile ? 150 : 200) : '100%'}>
 					<Slider autoplay autoplaySpeed={5000} arrows={false}>
@@ -87,7 +91,8 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
 								width={activeView === 'grid' ? 280 : 200}
 								height={activeView === 'grid' ? 215 : 150}
 								alt={image.alternativeText}
-								src={image.url}></Image>
+								src={image.url}
+							></Image>
 						))}
 					</Slider>
 				</Box>
@@ -99,7 +104,8 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
 						src=''
 						width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
 						height={activeView === 'grid' ? 215 : 150}
-						alt={data.name}></Image>
+						alt={data.name}
+					></Image>
 				</Box>
 			)}
 			{renderContentByView[activeView]}

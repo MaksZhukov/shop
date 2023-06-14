@@ -21,7 +21,8 @@ const Guarantee = ({ page }: Props) => {
 					display={{ xs: 'block', sm: 'none' }}
 					component='h1'
 					marginBottom='0.5em'
-					fontWeight='500'>
+					fontWeight='500'
+				>
 					{page.h1}
 				</Typography>
 				<Box maxWidth={{ xs: 'initial', sm: 390 }} width='100%'>
@@ -31,7 +32,8 @@ const Guarantee = ({ page }: Props) => {
 						width={page.mainLeftImage?.width}
 						style={isMobile ? { height: '100%', width: '100%', objectFit: 'cover' } : {}}
 						height={page.mainLeftImage?.height}
-						alt={page.mainLeftImage?.alternativeText}></Image>
+						alt={page.mainLeftImage?.alternativeText}
+					></Image>
 				</Box>
 				<Box
 					minWidth={250}
@@ -39,13 +41,15 @@ const Guarantee = ({ page }: Props) => {
 						marginLeft: { xs: '0', sm: '3em' },
 						flex: { xs: 1, md: 'initial' },
 						marginTop: { xs: '0.5em', md: 0 }
-					}}>
+					}}
+				>
 					<Typography
 						display={{ xs: 'none', sm: 'block' }}
 						variant='h4'
 						component='h1'
 						marginBottom='0.5em'
-						fontWeight='500'>
+						fontWeight='500'
+					>
 						{page.h1}
 					</Typography>
 					<ReactMarkdown content={page.mainRightText}></ReactMarkdown>
@@ -59,14 +63,16 @@ const Guarantee = ({ page }: Props) => {
 					marginY: { xs: '1em', md: '3em' },
 					paddingY: { xs: '1em', md: '3em' },
 					flexDirection: { xs: 'column', sm: 'row' }
-				}}></BlockImages>
+				}}
+			></BlockImages>
 			<Box sx={{ typography: { xs: 'h5', md: 'h4' } }}>
 				<Typography
 					withSeparator
 					textTransform='uppercase'
 					fontWeight='500'
 					marginBottom='0.5em'
-					variant='inherit'>
+					variant='inherit'
+				>
 					{page.guaranteeNotApplyTitle}
 				</Typography>
 			</Box>
@@ -81,10 +87,12 @@ const Guarantee = ({ page }: Props) => {
 					marginY: { xs: '1em', md: '2em' },
 					padding: { xs: '1em 0', md: '2em 0' },
 					flexDirection: { xs: 'column', sm: 'row' }
-				}}></BlockImages>
+				}}
+			></BlockImages>
 			<Box
 				bgcolor='#FFF5DD'
-				sx={{ marginBottom: { xs: '1em', sm: '4em' }, padding: { xs: '1em 0.5em', sm: '2em 4em' } }}>
+				sx={{ marginBottom: { xs: '1em', sm: '4em' }, padding: { xs: '1em 0.5em', sm: '2em 4em' } }}
+			>
 				<Box display='flex' alignItems='center'>
 					<Box display={{ xs: 'block', sm: 'none' }} marginRight='1em' maxWidth='250px' width='100%'>
 						<Image
@@ -92,7 +100,8 @@ const Guarantee = ({ page }: Props) => {
 							src={page.warningLeftImage?.url}
 							width={page.warningLeftImage?.width}
 							height={page.warningLeftImage?.height}
-							alt={page.warningLeftImage?.alternativeText}></Image>
+							alt={page.warningLeftImage?.alternativeText}
+						></Image>
 					</Box>
 					<Box textTransform='uppercase' fontWeight='500' sx={{ typography: { xs: 'h6', sm: 'h6' } }}>
 						{page.warningTitle}
@@ -105,7 +114,8 @@ const Guarantee = ({ page }: Props) => {
 							src={page.warningLeftImage?.url}
 							width={page.warningLeftImage?.width}
 							height={page.warningLeftImage?.height}
-							alt={page.warningLeftImage?.alternativeText}></Image>
+							alt={page.warningLeftImage?.alternativeText}
+						></Image>
 					</Box>
 					<Box component='ul' textTransform='uppercase'>
 						{page.warningRightText.split('\n').map((item) => (
