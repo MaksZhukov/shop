@@ -20,7 +20,6 @@ import Image from 'components/Image';
 import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
-import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import NextLink from 'next/link';
 import { FC, useState } from 'react';
@@ -28,7 +27,6 @@ import Slider from 'react-slick';
 import { isSparePart, isTire, isTireBrand } from 'services/ProductService';
 import { getStringByTemplateStr } from 'services/StringService';
 import styles from './product.module.scss';
-const { publicRuntimeConfig } = getConfig();
 
 const TYPE_TEXT = {
 	sparePart: 'Запчасти',
@@ -53,7 +51,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 	const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 	const [sold, setSold] = useState<boolean>(data.sold);
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	const handleSold = () => {
 		setSold(true);
@@ -175,6 +172,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 										}}
 										swipeToSlide
 										verticalSwiping
+										autoplay
+										autoplaySpeed={5000}
 										vertical
 										arrows={false}
 										slidesToShow={getSlidesToShow()}
@@ -217,8 +216,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 									}}
 									asNavFor={sliderSmall || undefined}
 									arrows={false}
-									autoplay={false}
-									autoplaySpeed={5000}
 									className={classNames(styles.slider, isMobile && styles.slider_mobile)}>
 									{data.images.map((item, i) => (
 										<Box onClick={handleClickImage(i)} sx={{ paddingX: '0.25em' }} key={item.id}>
@@ -239,6 +236,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 										<Box>
 											<ReactPlayer
 												controls
+												onPlay={() => sliderSmall?.slickPause()}
+												onPause={() => sliderSmall?.slickPlay()}
+												onEnded={() => sliderSmall?.slickPlay()}
 												style={{ height: '100%' }}
 												width={'100%'}
 												height={isMobile ? '100%' : 480}

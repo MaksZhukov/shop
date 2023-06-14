@@ -1,17 +1,16 @@
-import { Card, CardContent, Button, Link, Grid, useMediaQuery, Tooltip } from '@mui/material';
+import { Grid, Link, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState } from 'react';
 import { Product } from '../../api/types';
-import styles from './ProductItem.module.scss';
 // import ShoppingCartButton from 'components/ShoppingCartButton';
+import PercentIcon from '@mui/icons-material/Percent';
+import Buy from 'components/Buy/Buy';
 import FavoriteButton from 'components/FavoriteButton';
+import Image from 'components/Image';
 import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import Slider from 'react-slick';
-import PercentIcon from '@mui/icons-material/Percent';
-import Image from 'components/Image';
 import { getProductTypeSlug } from 'services/ProductService';
-import Buy from 'components/Buy/Buy';
 
 interface Props {
 	dataFieldsToShow?: { id: string; name: string }[];

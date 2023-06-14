@@ -1,22 +1,21 @@
-import type { NextPage } from 'next';
-import { Brand } from 'api/brands/types';
-import { fetchModelBySlug, fetchModels } from 'api/models/models';
-import { getPageProps } from 'services/PagePropsService';
-import { fetchPage } from 'api/pages';
-import { DefaultPage, PageProduct, PageProductSparePart } from 'api/pages/types';
+import { Box } from '@mui/material';
 import { fetchBrandBySlug } from 'api/brands/brands';
-import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
-import CatalogSpareParts from 'components/CatalogSpareParts';
-import Product from 'components/Product';
-import { getProductPageSeo } from 'services/ProductService';
-import { SparePart } from 'api/spareParts/types';
-import { withKindSparePart } from 'services/SEOService';
-import { AxiosError, AxiosHeaders } from 'axios';
+import { Brand } from 'api/brands/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
-import { ReactElement, useEffect } from 'react';
+import { fetchModelBySlug } from 'api/models/models';
+import { fetchPage } from 'api/pages';
+import { DefaultPage, PageProduct, PageProductSparePart } from 'api/pages/types';
+import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
+import { SparePart } from 'api/spareParts/types';
 import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
-import { Box } from '@mui/material';
+import CatalogSpareParts from 'components/CatalogSpareParts';
+import Product from 'components/Product';
+import type { NextPage } from 'next';
+import { ReactElement, useEffect } from 'react';
+import { getPageProps } from 'services/PagePropsService';
+import { getProductPageSeo } from 'services/ProductService';
+import { withKindSparePart } from 'services/SEOService';
 import { getStringByTemplateStr } from 'services/StringService';
 
 interface Props {

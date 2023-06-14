@@ -1,10 +1,9 @@
-import { FC } from 'react';
 import { Typography } from '@mui/material';
-import WhiteBox from 'components/WhiteBox';
-import { getPageProps } from 'services/PagePropsService';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import ReactMarkdown from 'components/ReactMarkdown';
+import { FC } from 'react';
+import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
     page: DefaultPage & { content: string };

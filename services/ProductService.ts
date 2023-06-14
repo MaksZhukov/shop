@@ -1,10 +1,10 @@
+import { Brand } from 'api/brands/types';
 import { SparePart } from 'api/spareParts/types';
+import { TireBrand } from 'api/tireBrands/types';
 import { Tire } from 'api/tires/types';
 import { Product, SEO } from 'api/types';
 import { Wheel } from 'api/wheels/types';
 import { getStringByTemplateStr } from './StringService';
-import { TireBrand } from 'api/tireBrands/types';
-import { Brand } from 'api/brands/types';
 
 let SLUG_PRODUCT_TYPE = {
 	sparePart: 'spare-parts',

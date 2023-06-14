@@ -1,4 +1,4 @@
-import { useRef, useState, FC, CSSProperties, MouseEventHandler } from 'react';
+import { CSSProperties, FC, MouseEventHandler, useRef, useState } from 'react';
 
 interface Props {
 	className?: string;

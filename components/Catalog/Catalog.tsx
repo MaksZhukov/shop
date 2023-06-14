@@ -1,3 +1,4 @@
+import { Tune as TuneIcon } from '@mui/icons-material';
 import GridViewIcon from '@mui/icons-material/GridViewSharp';
 import MenuIcon from '@mui/icons-material/MenuSharp';
 import {
@@ -14,6 +15,8 @@ import {
 	useMediaQuery
 } from '@mui/material';
 import { Box } from '@mui/system';
+import { Brand } from 'api/brands/types';
+import { API_DEFAULT_LIMIT } from 'api/constants';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
 import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
@@ -27,11 +30,6 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useThrottle } from 'rooks';
-
-import { Tune as TuneIcon } from '@mui/icons-material';
-import { Brand } from 'api/brands/types';
-import { API_DEFAULT_LIMIT } from 'api/constants';
-import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
 import { getCatalogAnchor, getCatalogAnchorText } from 'services/AnchorService';
 import styles from './Catalog.module.scss';
 

@@ -1,19 +1,18 @@
-import WhiteBox from 'components/WhiteBox';
-import { getPageProps } from 'services/PagePropsService';
+import { Button, Input, Link, ListItemButton, useMediaQuery } from '@mui/material';
+import { Box } from '@mui/system';
+import { send } from 'api/email';
 import { fetchPage } from 'api/pages';
-import { DefaultPage, PageContacts } from 'api/pages/types';
+import { PageContacts } from 'api/pages/types';
+import { LinkWithImage } from 'api/types';
+import BlockImages from 'components/BlockImages';
+import Image from 'components/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
-import { Box } from '@mui/system';
-import Image from 'components/Image';
-import { Button, Input, Link, ListItemButton, TextareaAutosize, TextField, useMediaQuery } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { ChangeEventHandler, FormEvent, useState } from 'react';
 import ReactInputMask from 'react-input-mask';
 import { useThrottle } from 'rooks';
-import { send } from 'api/email';
-import { useSnackbar } from 'notistack';
-import BlockImages from 'components/BlockImages';
-import { LinkWithImage } from 'api/types';
+import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
     page: PageContacts;

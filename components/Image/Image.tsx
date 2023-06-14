@@ -1,7 +1,7 @@
+import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import getConfig from 'next/config';
 import NextImage, { ImageProps } from 'next/image';
-import { useMediaQuery } from '@mui/material';
 import { useState } from 'react';
 const { publicRuntimeConfig } = getConfig();
 

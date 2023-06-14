@@ -1,7 +1,7 @@
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PhoneIcon from '@mui/icons-material/Phone';
 import ShieldIcon from '@mui/icons-material/Shield';
-import { Button, Checkbox, Divider, IconButton, Link, List, ListItem, Pagination, useMediaQuery } from '@mui/material';
+import { Button, Checkbox, Divider, IconButton, Link, List, ListItem, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import classNames from 'classnames';
 import FavoriteButton from 'components/FavoriteButton';

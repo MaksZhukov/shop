@@ -1,9 +1,8 @@
-import { Box, Link, Rating } from '@mui/material';
+import { Box, CircularProgress, Rating } from '@mui/material';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import { CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect, useState } from 'react';
 import Slider from 'react-slick';
@@ -23,12 +22,12 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 	const fetchData = async () => {
 		try {
 			const {
-				data: { data },
+				data: { data }
 			} = await fetchReviews();
 			setReviews(data);
 		} catch (err) {
 			enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
-				variant: 'error',
+				variant: 'error'
 			});
 		}
 		setIsLoading(false);
@@ -56,8 +55,7 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 								borderRadius='1em'
 								marginX='1em'
 								padding='2em 1em'
-								key={item.id}
-							>
+								key={item.id}>
 								<Typography lineClamp={1} variant='h6'>
 									{item.authorName}
 								</Typography>
@@ -68,8 +66,7 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 									marginTop='0.5em'
 									textAlign='left'
 									variant='body2'
-									color='text.secondary'
-								>
+									color='text.secondary'>
 									{item.description}
 								</Typography>
 							</WhiteBox>

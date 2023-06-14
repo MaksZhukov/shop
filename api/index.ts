@@ -1,8 +1,8 @@
 import axios from 'axios';
-import getConfig from 'next/config';
 import https from 'https';
-import { store } from '../store';
+import getConfig from 'next/config';
 import NotistackService from 'services/NotistackService';
+import { store } from '../store';
 const { publicRuntimeConfig } = getConfig();
 
 export const api = axios.create({

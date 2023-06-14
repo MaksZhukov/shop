@@ -12,12 +12,8 @@ const RouteShield = ({ children }: Props) => {
 	let store = useStore();
 	let router = useRouter();
 	useEffect(() => {
-		if (
-			!store.user.id &&
-			store.isInitialRequestDone &&
-			PRIVATE_PATHS.includes(router.pathname)
-		) {
-			router.push('/', undefined, {shallow: true});
+		if (!store.user.id && store.isInitialRequestDone && PRIVATE_PATHS.includes(router.pathname)) {
+			router.push('/', undefined, { shallow: true });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [store.user.id, store.isInitialRequestDone]);
