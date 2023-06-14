@@ -54,19 +54,22 @@ const Profile = observer(() => {
 						disabled
 						variant='standard'
 						margin='normal'
-						fullWidth></TextField>
+						fullWidth
+					></TextField>
 					<TextField
 						value={store.user.username}
 						onChange={handleChangeUsername}
 						label='ФИО'
 						margin='normal'
 						variant='standard'
-						fullWidth></TextField>
+						fullWidth
+					></TextField>
 					<InputMask
 						mask='+375 99 999 99 99'
 						value={store.user.phone}
 						maskChar=' '
-						onChange={handleChangePhone}>
+						onChange={handleChangePhone}
+					>
 						{
 							//@ts-ignore
 							() => <TextField label='Телефон' margin='normal' variant='standard' fullWidth></TextField>
@@ -78,7 +81,8 @@ const Profile = observer(() => {
 						label='Адрес'
 						margin='normal'
 						variant='standard'
-						fullWidth></TextField>
+						fullWidth
+					></TextField>
 					<Button fullWidth type='submit'>
 						Сохранить
 					</Button>

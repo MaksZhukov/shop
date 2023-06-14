@@ -67,7 +67,7 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 			handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 				fetchModels({
 					filters: { brand: { slug: restQuery.brand } },
-					pagination: { limit: API_MAX_LIMIT },
+					pagination: { limit: API_MAX_LIMIT }
 				})
 			)();
 		}
@@ -90,7 +90,7 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				setIsAutocompleteLoading(true);
 				try {
 					const {
-						data: { data },
+						data: { data }
 					} = await fetchFunc();
 					setState(data);
 				} catch (err) {
@@ -116,8 +116,8 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				type: 'autocomplete',
 				onChange: handleChangeBrandAutocomplete,
 				options: brands.map((item) => ({ label: item.name, value: item.slug })),
-				noOptionsText: noOptionsText,
-			},
+				noOptionsText: noOptionsText
+			}
 		],
 		[
 			{
@@ -130,11 +130,11 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 					handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
 						fetchModels({
 							filters: { brand: { slug: values.brand as string } },
-							pagination: { limit: API_MAX_LIMIT },
+							pagination: { limit: API_MAX_LIMIT }
 						})
 					),
-				noOptionsText: noOptionsText,
-			},
+				noOptionsText: noOptionsText
+			}
 		],
 		[
 			{
@@ -147,11 +147,11 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 					handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
 						fetchGenerations({
 							filters: { model: { slug: values.model as string }, brand: { slug: values.brand } },
-							pagination: { limit: API_MAX_LIMIT },
+							pagination: { limit: API_MAX_LIMIT }
 						})
 					),
-				noOptionsText: noOptionsText,
-			},
+				noOptionsText: noOptionsText
+			}
 		],
 		[
 			{
@@ -162,10 +162,10 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				onOpen: () =>
 					handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
 						fetchEngineVolumes({
-							pagination: { limit: API_MAX_LIMIT },
+							pagination: { limit: API_MAX_LIMIT }
 						})
-					),
-			},
+					)
+			}
 		],
 		[
 			{
@@ -173,8 +173,8 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				placeholder: 'Кузов',
 				type: 'autocomplete',
 				disabled: false,
-				options: BODY_STYLES.map((item) => ({ label: item, value: BODY_STYLES_SLUGIFY[item] })),
-			},
+				options: BODY_STYLES.map((item) => ({ label: item, value: BODY_STYLES_SLUGIFY[item] }))
+			}
 		],
 		[
 			{
@@ -182,8 +182,8 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				placeholder: 'Коробка',
 				type: 'autocomplete',
 				disabled: false,
-				options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] })),
-			},
+				options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] }))
+			}
 		],
 		[
 			{
@@ -191,9 +191,9 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				placeholder: 'Тип топлива',
 				type: 'autocomplete',
 				disabled: false,
-				options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] })),
-			},
-		],
+				options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] }))
+			}
+		]
 	];
 
 	const handleClickFind = (values: any) => {
@@ -217,8 +217,8 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 			const {
 				data: {
 					data,
-					meta: { pagination },
-				},
+					meta: { pagination }
+				}
 			} = await fetchCars({
 				filters: {
 					brand: getParamByRelation(values.brand, 'slug'),
@@ -227,10 +227,10 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 					volume: getParamByRelation(values.volume),
 					transmission: values.transmission,
 					fuel: SLUGIFY_FUELS[values.fuel],
-					bodyStyle: values.bodyStyle,
+					bodyStyle: values.bodyStyle
 				},
 				pagination: { page: +qPage },
-				populate: ['images', 'model', 'brand'],
+				populate: ['images', 'model', 'brand']
 			});
 			setCars(data);
 			if (pagination) {
@@ -241,7 +241,7 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 					router.push(
 						{
 							pathname: router.pathname,
-							query: router.query,
+							query: router.query
 						},
 						undefined,
 						{ shallow: true }
@@ -250,7 +250,7 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 			}
 		} catch (err) {
 			enqueueSnackbar('Произошла какая-то ошибка с загрузкой автомобилей, обратитесь в поддержку', {
-				variant: 'error',
+				variant: 'error'
 			});
 		}
 		setIsFirstDataLoaded(true);
@@ -331,7 +331,7 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				onClick={handleClickChangeView('grid', position)}
 				sx={{
 					bgcolor: activeView === 'grid' ? 'primary.main' : '#000',
-					display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' },
+					display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
 				}}
 				className={classNames(styles['btn-view'])}
 			>
@@ -341,7 +341,7 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 				variant='contained'
 				sx={{
 					bgcolor: activeView === 'list' ? 'primary.main' : '#000',
-					display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' },
+					display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
 				}}
 				onClick={handleClickChangeView('list', position)}
 				className={classNames(styles['btn-view'])}
@@ -392,16 +392,16 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 								dataFieldsToShow={[
 									{
 										name: 'Марка',
-										value: item.brand?.name || '',
+										value: item.brand?.name || ''
 									},
 									{
 										name: 'Модель',
-										value: item.model?.name || '',
+										value: item.model?.name || ''
 									},
 									{
 										name: 'Год',
-										value: new Date(item.manufactureDate).getFullYear().toString(),
-									},
+										value: new Date(item.manufactureDate).getFullYear().toString()
+									}
 								]}
 								activeView={activeView}
 								key={item.id}

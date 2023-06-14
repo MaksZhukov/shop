@@ -26,7 +26,8 @@ const Typography = ({
 				props.className,
 				withSeparator && styles['text_with-separator'],
 				withSeparator && isMobile && styles['text_with-separator_mobile']
-			)}>
+			)}
+		>
 			{children}
 		</UITypography>
 	);

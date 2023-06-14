@@ -26,7 +26,8 @@ const Vacancies: NextPage<Props> = ({ page, autocomises }) => {
 					description={item.description}
 					name={item.name}
 					image={item.image}
-					link={`/autocomises/${item.slug}`}></CardItem>
+					link={`/autocomises/${item.slug}`}
+				></CardItem>
 			))}
 		</WhiteBox>
 	);

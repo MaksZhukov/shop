@@ -192,7 +192,8 @@ const CatalogTires: FC<Props> = ({ page, tireBrands }) => {
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
 			fetchData={fetchTires}
-			generateFiltersByQuery={generateFiltersByQuery}></Catalog>
+			generateFiltersByQuery={generateFiltersByQuery}
+		></Catalog>
 	);
 };
 

@@ -55,7 +55,8 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 								borderRadius='1em'
 								marginX='1em'
 								padding='2em 1em'
-								key={item.id}>
+								key={item.id}
+							>
 								<Typography lineClamp={1} variant='h6'>
 									{item.authorName}
 								</Typography>
@@ -66,7 +67,8 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 									marginTop='0.5em'
 									textAlign='left'
 									variant='body2'
-									color='text.secondary'>
+									color='text.secondary'
+								>
 									{item.description}
 								</Typography>
 							</WhiteBox>

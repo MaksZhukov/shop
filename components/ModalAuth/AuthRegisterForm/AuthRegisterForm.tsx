@@ -96,7 +96,8 @@ const AuthRegisterForm = ({ type, isLoading, onChangeType, onChangeIsLoading, on
 				onChange={handleChangeEmail}
 				value={email}
 				required
-				placeholder='Почта'></TextField>
+				placeholder='Почта'
+			></TextField>
 			<OutlinedInput
 				disabled={isLoading}
 				fullWidth
@@ -112,11 +113,13 @@ const AuthRegisterForm = ({ type, isLoading, onChangeType, onChangeIsLoading, on
 						<IconButton
 							aria-label='toggle password visibility'
 							onClick={handleClickShowPassword}
-							edge='end'>
+							edge='end'
+						>
 							{showPassword ? <VisibilityOff /> : <Visibility />}
 						</IconButton>
 					</InputAdornment>
-				}></OutlinedInput>
+				}
+			></OutlinedInput>
 			<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
 				{type === 'login' ? 'Войти' : 'Зарегистрироваться'}
 			</Button>

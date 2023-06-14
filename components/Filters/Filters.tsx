@@ -93,7 +93,8 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 				onChange={handleChangeNumberInput(item)}
 				value={values[item.id]}
 				placeholder={item.placeholder}
-				type='number'></Input>
+				type='number'
+			></Input>
 		);
 	};
 
@@ -120,7 +121,8 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 				placeholder={item.placeholder}
 				classes={{ input: styles.input }}
 				disabled={item.disabledDependencyId === undefined ? false : !values[item.disabledDependencyId]}
-				value={value || null}></Autocomplete>
+				value={value || null}
+			></Autocomplete>
 		);
 	};
 

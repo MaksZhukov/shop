@@ -27,7 +27,8 @@ const CardItem: FC<Props> = ({ image, description, name, link }) => {
 						? image?.formats?.small.url || image?.url || ''
 						: image?.formats?.thumbnail.url || image?.url || ''
 				}
-				style={isMobile ? { height: 'auto' } : { minWidth: 330, objectFit: 'cover' }}></Image>
+				style={isMobile ? { height: 'auto' } : { minWidth: 330, objectFit: 'cover' }}
+			></Image>
 
 			<Box sx={{ marginLeft: { xs: '0', sm: '1em' }, marginTop: { xs: '1em', sm: '0' } }}>
 				<Typography component='h2' variant={isMobile ? 'h6' : 'h5'} gutterBottom>
@@ -37,7 +38,8 @@ const CardItem: FC<Props> = ({ image, description, name, link }) => {
 							color='secondary.main'
 							textTransform='uppercase'
 							fontWeight='500'
-							underline='hover'>
+							underline='hover'
+						>
 							{name}
 						</Link>
 					</NextLink>

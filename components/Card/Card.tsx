@@ -27,14 +27,16 @@ const Card: FC<Props> = ({ data }) => {
 							marginRight: { xs: 0, sm: '1em' },
 							marginBottom: { xs: '1em', sm: 0 },
 							float: 'left'
-						}}>
+						}}
+					>
 						<Image
 							title={data.image.caption}
 							alt={data.image.alternativeText}
 							width={isMobile ? 500 : 640}
 							height={isMobile ? 375 : 480}
 							src={isMobile ? data.image?.formats?.small.url || '' : data.image?.url || ''}
-							style={{ height: 'auto' }}></Image>
+							style={{ height: 'auto' }}
+						></Image>
 					</Box>
 				)}
 				<ReactMarkdown content={data.description}></ReactMarkdown>

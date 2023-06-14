@@ -24,7 +24,8 @@ const BrandsSlider: FC<Props> = ({ brands, linkType = 'spare-parts' }) => {
 						caption={item.name}
 						link={`/${linkType}/${item.slug}`}
 						image={item.image}
-						typographyProps={{ fontWeight: 'bold', variant: 'body1' }}></LinkWithImage>
+						typographyProps={{ fontWeight: 'bold', variant: 'body1' }}
+					></LinkWithImage>
 				</WhiteBox>
 			))}
 		</Slider>

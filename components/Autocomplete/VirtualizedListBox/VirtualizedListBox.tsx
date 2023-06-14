@@ -10,7 +10,7 @@ function renderRow(props: ListChildComponentProps) {
 	const dataSet = data[index];
 	const inlineStyle = {
 		...style,
-		top: (style.top as number) + LISTBOX_PADDING,
+		top: (style.top as number) + LISTBOX_PADDING
 	};
 
 	return (

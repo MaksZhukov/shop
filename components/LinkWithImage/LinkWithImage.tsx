@@ -41,7 +41,8 @@ const LinkWithImage: FC<Props> = ({
 				width={width}
 				height={height}
 				isOnSSR={isOnSSR}
-				src={width > 200 ? image?.url : image?.formats?.thumbnail.url || ''}></Image>
+				src={width > 200 ? image?.url : image?.formats?.thumbnail.url || ''}
+			></Image>
 			{!withoutTitle && title && (
 				<Typography lineClamp={2} textAlign='center' {...typographyProps}>
 					{title}

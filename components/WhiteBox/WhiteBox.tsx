@@ -33,7 +33,8 @@ const WhiteBox = ({
 			width={width}
 			minHeight={minHeight}
 			maxWidth={maxWidth}
-			justifyContent={justifyContent}>
+			justifyContent={justifyContent}
+		>
 			{children}
 		</Box>
 	);

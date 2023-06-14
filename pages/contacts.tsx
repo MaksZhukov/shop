@@ -15,196 +15,211 @@ import { useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
-    page: PageContacts;
-    socials: LinkWithImage[];
+	page: PageContacts;
+	socials: LinkWithImage[];
 }
 
 const Contacts = ({ page, socials }: Props) => {
-    const [name, setName] = useState<string>('');
-    const [phone, setPhone] = useState<string>('');
-    const [message, setMessage] = useState<string>('');
+	const [name, setName] = useState<string>('');
+	const [phone, setPhone] = useState<string>('');
+	const [message, setMessage] = useState<string>('');
 
-    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
-    const { enqueueSnackbar } = useSnackbar();
+	const { enqueueSnackbar } = useSnackbar();
 
-    const handleChangeName: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setName(e.target.name);
-    };
-    const handleChangePhone: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setPhone(e.target.value);
-    };
-    const handleChangeMessage: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setMessage(e.target.value);
-    };
-    const [throttledSubmit] = useThrottle(async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            await send(
-                'Вопрос',
-                `<b>Телефон</b>: ${phone} <br /><b>Имя</b>: ${name} <br /><b>Сообщение</b>: ${message} <br />`
-            );
-            enqueueSnackbar('Ваш вопрос успешно отправлен', {
-                variant: 'success'
-            });
-            setName('');
-            setPhone('');
-            setMessage('');
-            setPhone('');
-        } catch (err) {
-            enqueueSnackbar('Произошла какая-то ошибка при отправке, обратитесь в поддержку', {
-                variant: 'error'
-            });
-        }
-    }, 300);
-    return (
-        <>
-            <Typography component='h1' marginBottom='1.5em' variant='h4' textTransform='uppercase'>
-                {page.h1}
-            </Typography>
-            <Box display='flex' gap='1em' marginBottom='2em' sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
-                <Box flex='1' display='flex' padding='2em 1em' alignItems='center' bgcolor='#fff'>
-                    <Image
-                        title={'Телефон 1'}
-                        src='/phone.png'
-                        width={50}
-                        isOnSSR={false}
-                        height={50}
-                        alt='Телефон 1'></Image>
-                    <Link
-                        marginLeft='1em'
-                        color='#000'
-                        underline='hover'
-                        href={`tel:${page.phone1.replaceAll(' ', '')}`}>
-                        {page.phone1}
-                    </Link>
-                </Box>
-                <Box flex='1' display='flex' padding='2em 1em' bgcolor='#fff' alignItems='center'>
-                    <Image
-                        title='Телефон 2'
-                        width={50}
-                        height={50}
-                        isOnSSR={false}
-                        src='/phone.png'
-                        alt='Телефон 2'></Image>
-                    <Link
-                        marginLeft='1em'
-                        color='#000'
-                        underline='hover'
-                        href={`tel:${page.phone2.replaceAll(' ', '')}`}>
-                        {page.phone2}
-                    </Link>
-                </Box>
-                <Box flex='1' display='flex' padding='2em 1em' bgcolor='#fff' alignItems='center'>
-                    <Image
-                        title='Расположение '
-                        width={50}
-                        height={50}
-                        isOnSSR={false}
-                        src='/mark.png'
-                        alt='Расположение'></Image>
-                    <Typography marginLeft='1em'>д полотково, Гродно 231710</Typography>
-                </Box>
-            </Box>
-            <Box
-                display='flex'
-                sx={{ flexDirection: { xs: 'column-reverse', md: 'row' }, marginBottom: { xs: '1em', md: '3em' } }}>
-                <iframe
-                    style={{ flex: '1', minHeight: isMobile ? 400 : 500 }}
-                    src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor'
-                    frameBorder='0'></iframe>
-                <Box flex='1' sx={{ marginBottom: { xs: '3em', md: '0' }, marginLeft: { xs: 0, md: '2em' } }}>
-                    <Typography
-                        component='h2'
-                        fontWeight='500'
-                        marginBottom='1em'
-                        variant='h5'
-                        textTransform='uppercase'>
-                        {page.askTitle}
-                    </Typography>
-                    <Typography color='text.secondary' marginBottom='1em'>
-                        <ReactMarkdown content={page.askText}></ReactMarkdown>
-                    </Typography>
-                    <Box component='form' onSubmit={throttledSubmit} sx={{ maxWidth: { xs: 'initial', md: '430px' } }}>
-                        <Box marginBottom='1em'>
-                            <Input
-                                sx={{ background: '#fff', padding: '0.5em 1em', border: 'none' }}
-                                required
-                                onChange={handleChangeName}
-                                placeholder='Ваше имя'
-                                fullWidth></Input>
-                        </Box>
-                        <Box marginBottom='1em'>
-                            <ReactInputMask
-                                required
-                                mask='+375 99 999 99 99'
-                                value={phone}
-                                maskChar=' '
-                                onChange={handleChangePhone}>
-                                {
-                                    //@ts-ignore
-                                    () => (
-                                        <Input
-                                            sx={{ background: '#fff', padding: '0.5em 1em' }}
-                                            required
-                                            placeholder='Ваш телефон'
-                                            fullWidth></Input>
-                                    )
-                                }
-                            </ReactInputMask>
-                        </Box>
-                        <Box marginBottom='1em'>
-                            <Input
-                                required
-                                sx={{ background: '#fff', padding: '0.5em 1em' }}
-                                onChange={handleChangeMessage}
-                                placeholder='Интересуемый вопрос'
-                                multiline
-                                fullWidth
-                                rows={4}></Input>
-                        </Box>
-                        <Button fullWidth={isMobile} variant='contained' sx={{ padding: '0.5em 5em' }} type='submit'>
-                            Отправить
-                        </Button>
-                    </Box>
-                </Box>
-            </Box>
-            <Typography gutterBottom width={'100%'} textTransform='uppercase'>
-                Мы в соц сетях:
-            </Typography>
-            <Box display='flex' gap='1em' flexWrap='wrap' marginBottom='1em'>
-                {socials?.map((item) => (
-                    <ListItemButton
-                        sx={{ padding: '0.5em 0.25em', flex: 'initial' }}
-                        component='a'
-                        key={item.id}
-                        href={item.link}
-                        target='_blank'
-                        color='inherit'>
-                        <Image
-                            title={item.image?.caption}
-                            alt={item.image?.alternativeText}
-                            width={20}
-                            height={20}
-                            src={item.image?.url}></Image>
-                        <Typography marginLeft='0.5em'>{item.image?.caption}</Typography>
-                    </ListItemButton>
-                ))}
-            </Box>
-            <Box>
-                <ReactMarkdown content={page.content}></ReactMarkdown>
-            </Box>
-            <Typography component='h2' variant='h5' textTransform='uppercase' marginBottom='1em'>
-                {page.requisitesTitle}
-            </Typography>
-            <BlockImages
-                withSlider={isMobile}
-                withoutOverlay
-                sx={{ margin: 0, padding: 0 }}
-                images={page.requisites}></BlockImages>
-            <BlockImages sx={{ marginBottom: '-2em' }} images={page.images}></BlockImages>
-        </>
-    );
+	const handleChangeName: ChangeEventHandler<HTMLInputElement> = (e) => {
+		setName(e.target.name);
+	};
+	const handleChangePhone: ChangeEventHandler<HTMLInputElement> = (e) => {
+		setPhone(e.target.value);
+	};
+	const handleChangeMessage: ChangeEventHandler<HTMLInputElement> = (e) => {
+		setMessage(e.target.value);
+	};
+	const [throttledSubmit] = useThrottle(async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		try {
+			await send(
+				'Вопрос',
+				`<b>Телефон</b>: ${phone} <br /><b>Имя</b>: ${name} <br /><b>Сообщение</b>: ${message} <br />`
+			);
+			enqueueSnackbar('Ваш вопрос успешно отправлен', {
+				variant: 'success'
+			});
+			setName('');
+			setPhone('');
+			setMessage('');
+			setPhone('');
+		} catch (err) {
+			enqueueSnackbar('Произошла какая-то ошибка при отправке, обратитесь в поддержку', {
+				variant: 'error'
+			});
+		}
+	}, 300);
+	return (
+		<>
+			<Typography component='h1' marginBottom='1.5em' variant='h4' textTransform='uppercase'>
+				{page.h1}
+			</Typography>
+			<Box display='flex' gap='1em' marginBottom='2em' sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
+				<Box flex='1' display='flex' padding='2em 1em' alignItems='center' bgcolor='#fff'>
+					<Image
+						title={'Телефон 1'}
+						src='/phone.png'
+						width={50}
+						isOnSSR={false}
+						height={50}
+						alt='Телефон 1'
+					></Image>
+					<Link
+						marginLeft='1em'
+						color='#000'
+						underline='hover'
+						href={`tel:${page.phone1.replaceAll(' ', '')}`}
+					>
+						{page.phone1}
+					</Link>
+				</Box>
+				<Box flex='1' display='flex' padding='2em 1em' bgcolor='#fff' alignItems='center'>
+					<Image
+						title='Телефон 2'
+						width={50}
+						height={50}
+						isOnSSR={false}
+						src='/phone.png'
+						alt='Телефон 2'
+					></Image>
+					<Link
+						marginLeft='1em'
+						color='#000'
+						underline='hover'
+						href={`tel:${page.phone2.replaceAll(' ', '')}`}
+					>
+						{page.phone2}
+					</Link>
+				</Box>
+				<Box flex='1' display='flex' padding='2em 1em' bgcolor='#fff' alignItems='center'>
+					<Image
+						title='Расположение '
+						width={50}
+						height={50}
+						isOnSSR={false}
+						src='/mark.png'
+						alt='Расположение'
+					></Image>
+					<Typography marginLeft='1em'>д полотково, Гродно 231710</Typography>
+				</Box>
+			</Box>
+			<Box
+				display='flex'
+				sx={{ flexDirection: { xs: 'column-reverse', md: 'row' }, marginBottom: { xs: '1em', md: '3em' } }}
+			>
+				<iframe
+					style={{ flex: '1', minHeight: isMobile ? 400 : 500 }}
+					src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor'
+					frameBorder='0'
+				></iframe>
+				<Box flex='1' sx={{ marginBottom: { xs: '3em', md: '0' }, marginLeft: { xs: 0, md: '2em' } }}>
+					<Typography
+						component='h2'
+						fontWeight='500'
+						marginBottom='1em'
+						variant='h5'
+						textTransform='uppercase'
+					>
+						{page.askTitle}
+					</Typography>
+					<Typography color='text.secondary' marginBottom='1em'>
+						<ReactMarkdown content={page.askText}></ReactMarkdown>
+					</Typography>
+					<Box component='form' onSubmit={throttledSubmit} sx={{ maxWidth: { xs: 'initial', md: '430px' } }}>
+						<Box marginBottom='1em'>
+							<Input
+								sx={{ background: '#fff', padding: '0.5em 1em', border: 'none' }}
+								required
+								onChange={handleChangeName}
+								placeholder='Ваше имя'
+								fullWidth
+							></Input>
+						</Box>
+						<Box marginBottom='1em'>
+							<ReactInputMask
+								required
+								mask='+375 99 999 99 99'
+								value={phone}
+								maskChar=' '
+								onChange={handleChangePhone}
+							>
+								{
+									//@ts-ignore
+									() => (
+										<Input
+											sx={{ background: '#fff', padding: '0.5em 1em' }}
+											required
+											placeholder='Ваш телефон'
+											fullWidth
+										></Input>
+									)
+								}
+							</ReactInputMask>
+						</Box>
+						<Box marginBottom='1em'>
+							<Input
+								required
+								sx={{ background: '#fff', padding: '0.5em 1em' }}
+								onChange={handleChangeMessage}
+								placeholder='Интересуемый вопрос'
+								multiline
+								fullWidth
+								rows={4}
+							></Input>
+						</Box>
+						<Button fullWidth={isMobile} variant='contained' sx={{ padding: '0.5em 5em' }} type='submit'>
+							Отправить
+						</Button>
+					</Box>
+				</Box>
+			</Box>
+			<Typography gutterBottom width={'100%'} textTransform='uppercase'>
+				Мы в соц сетях:
+			</Typography>
+			<Box display='flex' gap='1em' flexWrap='wrap' marginBottom='1em'>
+				{socials?.map((item) => (
+					<ListItemButton
+						sx={{ padding: '0.5em 0.25em', flex: 'initial' }}
+						component='a'
+						key={item.id}
+						href={item.link}
+						target='_blank'
+						color='inherit'
+					>
+						<Image
+							title={item.image?.caption}
+							alt={item.image?.alternativeText}
+							width={20}
+							height={20}
+							src={item.image?.url}
+						></Image>
+						<Typography marginLeft='0.5em'>{item.image?.caption}</Typography>
+					</ListItemButton>
+				))}
+			</Box>
+			<Box>
+				<ReactMarkdown content={page.content}></ReactMarkdown>
+			</Box>
+			<Typography component='h2' variant='h5' textTransform='uppercase' marginBottom='1em'>
+				{page.requisitesTitle}
+			</Typography>
+			<BlockImages
+				withSlider={isMobile}
+				withoutOverlay
+				sx={{ margin: 0, padding: 0 }}
+				images={page.requisites}
+			></BlockImages>
+			<BlockImages sx={{ marginBottom: '-2em' }} images={page.images}></BlockImages>
+		</>
+	);
 };
 
 export default Contacts;

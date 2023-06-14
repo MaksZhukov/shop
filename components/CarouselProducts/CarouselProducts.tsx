@@ -49,7 +49,8 @@ const CarouselProducts: FC<Props> = ({ title, data, slidesToShow = 4, sx }) => {
 							infinite: true
 						}
 					}
-				]}>
+				]}
+			>
 				{data.map((item) => {
 					return (
 						<ProductItem key={item.id} width={data.length <= 4 ? 244 : '100%'} data={item}></ProductItem>

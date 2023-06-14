@@ -39,7 +39,8 @@ const ProductItem = ({
 				padding='0.5em 1em'
 				display='flex'
 				flexDirection='column'
-				width={{ xs: 'calc(100% - 150px)', sm: 'initial' }}>
+				width={{ xs: 'calc(100% - 150px)', sm: 'initial' }}
+			>
 				<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
 					<Link
 						typography={'h6'}
@@ -55,7 +56,8 @@ const ProductItem = ({
 						color='secondary'
 						component='span'
 						underline='hover'
-						fontWeight='500'>
+						fontWeight='500'
+					>
 						{data.h1}
 					</Link>
 				</NextLink>
@@ -96,7 +98,8 @@ const ProductItem = ({
 						title='При покупке на нашем сайте вы получите скидку до 10%'
 						height={34}
 						marginRight='0.25em'
-						sx={{ borderRadius: '50%' }}>
+						sx={{ borderRadius: '50%' }}
+					>
 						<PercentIcon sx={{ color: '#fff' }}></PercentIcon>
 					</Box>
 					<Typography
@@ -105,7 +108,8 @@ const ProductItem = ({
 						variant='h5'
 						component={data.discountPrice ? 's' : 'p'}
 						sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-						color='secondary'>
+						color='secondary'
+					>
 						{data.price} руб{' '}
 					</Typography>
 					{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
@@ -130,7 +134,8 @@ const ProductItem = ({
 						fontWeight='500'
 						padding='0.25em'
 						marginTop='0.5em'
-						textAlign='center'>
+						textAlign='center'
+					>
 						{data.h1}
 					</Link>
 				</NextLink>
@@ -144,7 +149,8 @@ const ProductItem = ({
 									fontWeight='bold'
 									variant='h5'
 									marginRight='0.5em'
-									color='secondary'>
+									color='secondary'
+								>
 									{data.discountPrice} руб{' '}
 								</Typography>
 							</>
@@ -163,7 +169,8 @@ const ProductItem = ({
 							title='При покупке на нашем сайте вы получите скидку до 10%'
 							height={34}
 							marginRight='0.25em'
-							sx={{ borderRadius: '50%' }}>
+							sx={{ borderRadius: '50%' }}
+						>
 							<PercentIcon sx={{ color: '#fff' }}></PercentIcon>
 						</Box>
 						<Typography
@@ -173,7 +180,8 @@ const ProductItem = ({
 							variant='h5'
 							component={data.discountPrice ? 's' : 'p'}
 							sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-							color='secondary'>
+							color='secondary'
+						>
 							{data.price} руб{' '}
 						</Typography>
 						{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
@@ -193,7 +201,8 @@ const ProductItem = ({
 			bgcolor='#fff'
 			key={data.id}
 			display={activeView === 'list' ? 'flex' : 'initial'}
-			width={width}>
+			width={width}
+		>
 			<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
 				{data.images ? (
 					<Box width={activeView === 'list' ? (isMobile ? 150 : 200) : '100%'}>
@@ -205,7 +214,8 @@ const ProductItem = ({
 									width={activeView === 'grid' ? 280 : 200}
 									height={activeView === 'grid' ? 215 : 150}
 									alt={image.alternativeText}
-									src={image.url}></Image>
+									src={image.url}
+								></Image>
 							))}
 						</Slider>
 					</Box>
@@ -217,7 +227,8 @@ const ProductItem = ({
 							src=''
 							width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
 							height={activeView === 'grid' ? 215 : 150}
-							alt={data.h1}></Image>
+							alt={data.h1}
+						></Image>
 					</Box>
 				)}
 			</NextLink>
