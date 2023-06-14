@@ -28,14 +28,16 @@ const Image = ({
 				display='flex'
 				margin='auto'
 				alignItems='center'
-				justifyContent='center'>
+				justifyContent='center'
+			>
 				<NextImage
 					width={1200}
 					alt={alt}
 					height={props.height || 237}
 					title={props.title}
 					src={'/photo.png'}
-					style={{ objectFit: 'contain', maxWidth: '50%' }}></NextImage>
+					style={{ objectFit: 'contain', maxWidth: '50%' }}
+				></NextImage>
 			</Box>
 		);
 	}
@@ -58,7 +60,8 @@ const Image = ({
 				maxWidth: '100%',
 				...style
 			}}
-			{...props}></NextImage>
+			{...props}
+		></NextImage>
 	);
 };
 

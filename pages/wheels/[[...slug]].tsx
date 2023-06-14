@@ -61,7 +61,8 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRende
 					}
 				]}
 				page={page as PageProduct & PageProductWheel}
-				relatedProducts={relatedProducts}></Product>
+				relatedProducts={relatedProducts}
+			></Product>
 		);
 	}
 	return <CatalogWheels page={page} brands={brands}></CatalogWheels>;

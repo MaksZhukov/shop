@@ -106,13 +106,15 @@ function MyApp({
 							<SEOBox
 								images={restPageProps.page?.seo?.images}
 								content={restPageProps.page?.seo?.content}
-								h1={restPageProps.page?.seo?.h1}></SEOBox>
+								h1={restPageProps.page?.seo?.h1}
+							></SEOBox>
 						</Container>
 					) : (
 						<SEOBox
 							h1={restPageProps.page?.seo?.h1}
 							images={restPageProps.page?.seo?.images}
-							content={restPageProps.page?.seo?.content}></SEOBox>
+							content={restPageProps.page?.seo?.content}
+						></SEOBox>
 					)}
 				</>
 			)}
@@ -177,21 +179,24 @@ function MyApp({
 							NotistackService.setRef(ref);
 						}
 					}}
-					maxSnack={3}>
+					maxSnack={3}
+				>
 					<Layout>
 						{process.env.NODE_ENV === 'production' && <Metrics></Metrics>}
 						<HeadSEO
 							title={restPageProps.page?.seo?.title}
 							description={restPageProps.page?.seo?.description}
 							keywords={restPageProps.page?.seo?.keywords}
-							image={getHeadSEOImage()}></HeadSEO>
+							image={getHeadSEOImage()}
+						></HeadSEO>
 						<Header brands={restPageProps.brands}></Header>
 						<RouteShield>
 							<Content>
 								<ErrorBoundary fallback={<></>} onError={handleRenderError}>
 									<Breadcrumbs
 										exclude={['buyback-cars']}
-										h1={restPageProps.data?.h1 || restPageProps.page?.name}></Breadcrumbs>
+										h1={restPageProps.data?.h1 || restPageProps.page?.name}
+									></Breadcrumbs>
 									{hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
 								</ErrorBoundary>
 							</Content>
@@ -202,7 +207,8 @@ function MyApp({
 								sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
 								variant='contained'
 								component='a'
-								href='tel:+375297804780'>
+								href='tel:+375297804780'
+							>
 								<LocalPhone></LocalPhone>
 							</Button>
 						</Box>

@@ -4,10 +4,10 @@ import { Car } from './types';
 
 export const fetchCars = (params?: CollectionParams) =>
 	api.get<ApiResponse<Car[]>>('/cars', {
-		params,
+		params
 	});
 
 export const fetchCar = (idOrSlug: string) =>
 	api.get<ApiResponse<Car>>(`/cars/${idOrSlug}`, {
-		params: { populate: ['images', 'model', 'brand', 'generation', 'volume', 'seo.images'] },
+		params: { populate: ['images', 'model', 'brand', 'generation', 'volume', 'seo.images'] }
 	});

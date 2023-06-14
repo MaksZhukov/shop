@@ -76,7 +76,7 @@ export default class UserStore implements User {
 		await updateUserInfo({
 			phone: this.phone,
 			address: this.address,
-			username: this.username,
+			username: this.username
 		});
 	}
 }

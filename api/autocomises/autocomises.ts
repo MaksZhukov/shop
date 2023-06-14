@@ -4,7 +4,7 @@ import { Autocomis } from './types';
 
 export const fetchAutocomises = (params: CollectionParams) =>
 	api.get<ApiResponse<Autocomis[]>>('/autocomises', {
-		params,
+		params
 	});
 
 export const fetchAutocomis = (slug: string) => api.get<ApiResponse<Autocomis>>(`/autocomises/${slug}`);

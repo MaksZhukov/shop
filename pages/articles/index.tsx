@@ -57,7 +57,8 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 					textTransform='uppercase'
 					component='h1'
 					marginBottom='1em'
-					fontSize='inherit'>
+					fontSize='inherit'
+				>
 					{page.seo?.h1 || 'Статьи'}
 				</Typography>
 			</Box>
@@ -67,7 +68,8 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 					description={item.rightText}
 					name={item.name}
 					image={item.mainImage}
-					link={`/articles/${item.slug}`}></CardItem>
+					link={`/articles/${item.slug}`}
+				></CardItem>
 			))}
 			{pageCount > 1 && (
 				<Box display='flex' justifyContent='center'>

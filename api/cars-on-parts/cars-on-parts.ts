@@ -4,7 +4,7 @@ import { CarOnParts } from './types';
 
 export const fetchCarsOnParts = (params?: CollectionParams) =>
 	api.get<ApiResponse<CarOnParts[]>>('/cars-on-parts', {
-		params,
+		params
 	});
 
 export const fetchCarOnParts = (idOrSlug: string) => api.get<ApiResponse<CarOnParts>>(`/cars-on-parts/${idOrSlug}`);
