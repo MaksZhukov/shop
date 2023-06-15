@@ -1,12 +1,12 @@
 import { Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
-import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
+import { Box } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { PageVacancies, Vacancy } from 'api/pages/types';
-import { Box } from '@mui/system';
+import BlockImages from 'components/BlockImages';
 import Image from 'components/Image';
 import Typography from 'components/Typography';
-import BlockImages from 'components/BlockImages';
+import { NextPage } from 'next';
+import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
 	page: PageVacancies;
