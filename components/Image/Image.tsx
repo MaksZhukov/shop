@@ -44,7 +44,7 @@ const Image = ({
 	const getSrc = () => {
 		const hasHttps = src.toString().startsWith('https');
 		if (isOnSSR) {
-			return hasHttps ? src : publicRuntimeConfig.backendLocalUrl + src;
+			return hasHttps ? src : publicRuntimeConfig.backendUrl + src;
 		}
 		return src;
 	};
