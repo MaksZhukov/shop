@@ -1036,7 +1036,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 									<Box paddingX='0.5em' key={item.id}>
 										<LinkWithImage
 											link={`/articles/${item.slug}`}
-											height={390}
+											height={290}
 											imageStyle={{ objectFit: 'cover', width: '100%' }}
 											key={item.id}
 											width={390}
@@ -1053,7 +1053,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 							{articles.map((item) => (
 								<LinkWithImage
 									link={`/articles/${item.slug}`}
-									height={390}
+									height={290}
 									imageStyle={{ objectFit: 'cover', maxWidth: '100%' }}
 									key={item.id}
 									width={390}
