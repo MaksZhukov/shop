@@ -41,3 +41,4 @@ check_git_updates.sh
 
 package-lock.json
 sitemap.xml
+/tmp
