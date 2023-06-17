@@ -22,7 +22,7 @@ const CardItem: FC<Props> = ({ image, description, name, link }) => {
 				alt={image?.alternativeText || name}
 				width={isMobile ? 500 : 330}
 				height={isMobile ? 375 : 220}
-				src={image?.formats?.small.url || image?.url || ''}
+				src={image?.formats?.small?.url || image?.url || ''}
 				style={isMobile ? { height: 'auto' } : { minWidth: 330, objectFit: 'cover' }}
 			></Image>
 
