@@ -67,6 +67,7 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 			<IconButton
 				sx={{ order: { xs: '1', md: 'initial' }, display: { xs: 'none', md: 'block' } }}
 				id='account-button'
+                title="Меню"
 				className={styles['button']}
 				aria-controls={isOpened ? 'account-menu' : undefined}
 				aria-haspopup='true'
