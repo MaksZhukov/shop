@@ -431,6 +431,7 @@ const Header = observer(({ brands }: Props) => {
 							size='large'
 							aria-controls='header-menu'
 							color='inherit'
+							title='Меню'
 							aria-haspopup='true'
 							onClick={handleToggleMenu}
 						>
