@@ -33,6 +33,7 @@ const Autocomplete = <
 				className: props.loadingMore ? classNames(styles.list, styles['list_loading-more']) : styles.list
 			}}
 			fullWidth
+            inputValue={props.inputValue}
 			onInputChange={props.onInputChange}
 			classes={{ noOptions: styles['autocomplete__no-options'] }}
 			disabled={props.disabled}
