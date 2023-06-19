@@ -207,6 +207,7 @@ function MyApp({
 								sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
 								variant='contained'
 								component='a'
+								title='Позвонить'
 								href='tel:+375297804780'
 							>
 								<LocalPhone></LocalPhone>

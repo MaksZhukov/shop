@@ -685,12 +685,11 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			display='flex'
 			width='calc(100% - 48px)'
 			position='absolute'
-			minHeight='76px'
 			bottom='2em'
 			className={styles['head-search']}
 		>
 			<Box display='flex' gap='0.5em' flex='1' flexWrap='wrap' className={styles.filters}>
-				<Box width={'calc(25% - 0.5em)'}>
+				<Box width={productType ? 'calc(25% - 0.5em)' : 'calc(50% - 0.5em)'}>
 					<Autocomplete
 						noOptionsText={noOptionsText}
 						onOpen={
@@ -716,7 +715,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						}))}
 					></Autocomplete>
 				</Box>
-				<Box width={'calc(25% - 0.5em)'}>{renderProductTypeAutocomplete}</Box>
+				<Box width={productType ? 'calc(25% - 0.5em)' : 'calc(50% - 0.5em)'}>
+					{renderProductTypeAutocomplete}
+				</Box>
 				{productType &&
 					filtersConfig[productType].map((item) => {
 						let value = (item.options as any[]).every((option: any) => typeof option === 'string')
@@ -1036,7 +1037,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 									<Box paddingX='0.5em' key={item.id}>
 										<LinkWithImage
 											link={`/articles/${item.slug}`}
-											height={390}
+											height={290}
 											imageStyle={{ objectFit: 'cover', width: '100%' }}
 											key={item.id}
 											width={390}
@@ -1053,7 +1054,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 							{articles.map((item) => (
 								<LinkWithImage
 									link={`/articles/${item.slug}`}
-									height={390}
+									height={290}
 									imageStyle={{ objectFit: 'cover', maxWidth: '100%' }}
 									key={item.id}
 									width={390}
