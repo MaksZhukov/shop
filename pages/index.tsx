@@ -4,6 +4,7 @@ import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
+import { fetchCabins } from 'api/cabins/cabins';
 import { API_MAX_LIMIT } from 'api/constants';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
@@ -11,8 +12,10 @@ import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
 import { fetchPage } from 'api/pages';
 import { PageMain } from 'api/pages/types';
+import { fetchProducts } from 'api/products/products';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { TireBrand } from 'api/tireBrands/types';
 import { fetchTireDiameters } from 'api/tireDiameters/tireDiameters';
@@ -21,6 +24,7 @@ import { fetchTireHeights } from 'api/tireHeights/tireHeights';
 import { TireHeight } from 'api/tireHeights/types';
 import { fetchTireWidths } from 'api/tireWidths/tireWidths';
 import { TireWidth } from 'api/tireWidths/types';
+import { fetchTires } from 'api/tires/tires';
 import { ApiResponse, Product, ProductType } from 'api/types';
 import { WheelDiameterCenterHole } from 'api/wheelDiameterCenterHoles/types';
 import { fetchWheelDiameterCenterHoles } from 'api/wheelDiameterCenterHoles/wheelDiameterCenterHoles';
@@ -30,28 +34,15 @@ import { WheelNumberHole } from 'api/wheelNumberHoles/types';
 import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
 import { WheelWidth } from 'api/wheelWidths/types';
 import { fetchWheelWidths } from 'api/wheelWidths/wheelWidths';
+import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
 import Autocomplete from 'components/Autocomplete';
-import CarouselReviews from 'components/CarouselReviews';
 import Image from 'components/Image';
 import LinkWithImage from 'components/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import type { NextPage } from 'next';
-import dynamic from 'next/dynamic';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { useSnackbar } from 'notistack';
-import qs from 'qs';
-
-import { fetchCabins } from 'api/cabins/cabins';
-import { fetchProducts } from 'api/products/products';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { fetchTires } from 'api/tires/tires';
-import { fetchWheels } from 'api/wheels/wheels';
-import BrandsCarousel from 'components/BrandsCarousel';
 import {
 	BODY_STYLES_SLUGIFY,
 	FUELS_SLUGIFY,
@@ -64,6 +55,12 @@ import {
 	SLUGIFY_TRANSMISSIONS,
 	TRANSMISSIONS_SLUGIFY
 } from 'config';
+import type { NextPage } from 'next';
+import dynamic from 'next/dynamic';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import qs from 'qs';
 import {
 	ChangeEvent,
 	Dispatch,
@@ -82,6 +79,8 @@ import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRAN
 import styles from './index.module.scss';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
+const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
+const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
 
 const CATEGORIES = [
 	{ name: 'Диски', href: '/wheels' },
