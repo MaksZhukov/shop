@@ -74,7 +74,7 @@ const Favorites = () => {
 				<meta name='description' content='Избранные товары'></meta>
 				<meta name='keywords' content='авто, ожидаемые авто, автомобили, ожидаемые автомобили' />
 			</Head>
-			<Typography textTransform='uppercase' variant='h4' component='h1' marginBottom='1em' textAlign='center'>
+			<Typography textTransform='uppercase' variant='h4' component='h1' gutterBottom textAlign='center'>
 				Избранные
 			</Typography>
 			{!!items.length ? (
@@ -84,11 +84,15 @@ const Favorites = () => {
 							return (
 								<Fragment key={item.id}>
 									<ListItem
-										sx={{ bgcolor: '#fff', paddingLeft: '0.5em' }}
+										sx={{
+											bgcolor: '#fff',
+											paddingLeft: '0.5em',
+											flexWrap: { xs: 'wrap', sm: 'initial' }
+										}}
 										className={classNames(isMobile && styles.list__item_mobile)}
 										key={item.id}
 									>
-										<Box display='flex'>
+										<Box display='flex' width={{ xs: '100%', sm: 'initial' }}>
 											<Checkbox
 												onChange={handleChangeCheckbox(
 													item.id,
@@ -119,10 +123,10 @@ const Favorites = () => {
 																			? image.formats?.small?.url || image.url
 																			: image.formats?.thumbnail?.url || image.url
 																	}`}
-																	style={isMobile ? { height: 'auto' } : {}}
+																	// style={isMobile ? { height: 'auto' } : {}}
 																	alt={image.alternativeText}
 																	width={isMobile ? 500 : 150}
-																	height={isMobile ? 375 : 100}
+																	height={isMobile ? 250 : 100}
 																></Image>
 															</Box>
 														))}
@@ -131,13 +135,19 @@ const Favorites = () => {
 												<Image
 													title={item.product.name}
 													src={''}
+													style={{ width: '100%' }}
 													alt={item.product.name}
 													width={isMobile ? 500 : 150}
-													height={isMobile ? 375 : 100}
+													height={isMobile ? 250 : 100}
 												></Image>
 											)}
 										</Box>
-										<Box flex='1' padding='1em'>
+										<Box
+											flex='1'
+											width={{ xs: '100%', sm: 'initial' }}
+											flexWrap={{ xs: 'wrap', sm: 'initial' }}
+											padding='1em'
+										>
 											<Typography
 												lineClamp={isMobile ? 5 : 2}
 												title={item.product.h1}
@@ -165,6 +175,7 @@ const Favorites = () => {
 										</Box>
 										<Box
 											display={isMobile ? 'flex' : 'block'}
+											width={{ xs: '100%', sm: 'initial' }}
 											{...(isMobile && {
 												justifyContent: 'end'
 											})}
@@ -223,7 +234,7 @@ const Favorites = () => {
 					<Typography textAlign='center' marginY='0.5em'>
 						При покупке на нашем сайте вы получите скидку до 10%
 					</Typography>
-					<Box display='flex' alignItems={{ xs: 'initial', md: 'center' }} gap={'1em'}>
+					<Box display='flex' alignItems={{ xs: 'initial', md: 'center' }} gap={{ xs: 0, sm: '1em' }}>
 						<Box
 							marginLeft={{ xs: 0, md: '150px' }}
 							flex='1'
@@ -242,16 +253,18 @@ const Favorites = () => {
 								<PhoneIcon sx={{ marginRight: '0.5em' }}></PhoneIcon>
 								Позвонить
 							</Button>
-							<NextLink href={'/delivery'}>
-								<IconButton>
-									<LocalShippingIcon titleAccess='Доставка' color='primary'></LocalShippingIcon>
-								</IconButton>
-							</NextLink>
-							<NextLink href='/guarantee'>
-								<IconButton>
-									<ShieldIcon titleAccess='Гарантия' color='primary'></ShieldIcon>
-								</IconButton>
-							</NextLink>
+							<Box>
+								<NextLink href={'/delivery'}>
+									<IconButton>
+										<LocalShippingIcon titleAccess='Доставка' color='primary'></LocalShippingIcon>
+									</IconButton>
+								</NextLink>
+								<NextLink href='/guarantee'>
+									<IconButton>
+										<ShieldIcon titleAccess='Гарантия' color='primary'></ShieldIcon>
+									</IconButton>
+								</NextLink>
+							</Box>
 						</Box>
 						<Typography width='150px' textAlign='center' variant='h6'>
 							Итого: {totalPrice} руб
