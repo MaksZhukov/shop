@@ -6,7 +6,7 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage, PageProduct, PageProductWheel } from 'api/pages/types';
 import { Wheel } from 'api/wheels/types';
 import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
-import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import BrandsCarousel from 'components/BrandsCarousel';
 import CatalogWheels from 'components/CatalogWheels';
 import Product from 'components/Product';
 import type { NextPage } from 'next';
@@ -28,7 +28,7 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRende
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
-				<BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
+				<BrandsCarousel linkType='cabins' brands={brands}></BrandsCarousel>
 			</Box>
 		);
 		return () => {
