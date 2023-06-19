@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { fetchBrandBySlug } from 'api/brands/brands';
 import { Brand } from 'api/brands/types';
 import { fetchModelBySlug } from 'api/models/models';
@@ -6,15 +6,19 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage, PageProduct, PageProductWheel } from 'api/pages/types';
 import { Wheel } from 'api/wheels/types';
 import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
-import BrandsCarousel from 'components/BrandsCarousel';
 import CatalogWheels from 'components/CatalogWheels';
 import Product from 'components/Product';
+import Typography from 'components/Typography/Typography';
 import type { NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import { ReactElement, useEffect } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
 import { withKindSparePart } from 'services/SEOService';
 import { getStringByTemplateStr } from 'services/StringService';
+
+const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
+const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
 
 interface Props {
 	data?: Wheel;
@@ -25,10 +29,16 @@ interface Props {
 }
 
 const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRenderBeforeFooter }) => {
+	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
 				<BrandsCarousel linkType='cabins' brands={brands}></BrandsCarousel>
+				<Typography component='h3' marginTop='1em' variant={isMobile ? 'h6' : 'h5'}>
+					Отзывы о нас
+				</Typography>
+				<CarouselReviews marginBottom='1em' slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}></CarouselReviews>
 			</Box>
 		);
 		return () => {

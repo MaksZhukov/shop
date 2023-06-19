@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Rating } from '@mui/material';
+import { Box, Button, CircularProgress, Rating } from '@mui/material';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
 import Typography from 'components/Typography';
@@ -39,7 +39,7 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 	}, []);
 
 	return (
-		<Box paddingX='1.5em' marginBottom={marginBottom} minHeight={212}>
+		<Box paddingX='1.5em' marginBottom={marginBottom}>
 			{isLoading ? (
 				<Box display='flex' alignItems='center' justifyContent='center' height={212}>
 					<CircularProgress></CircularProgress>
@@ -50,14 +50,14 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 						{reviews.map((item) => (
 							<WhiteBox
 								boxShadow='0px 5px 15px rgba(0, 0, 0, 0.15)'
-								minHeight='360px'
 								textAlign='center'
 								borderRadius='1em'
+								minHeight={200}
 								marginX='1em'
 								padding='2em 1em'
 								key={item.id}
 							>
-								<Typography lineClamp={1} variant='h6' component="div">
+								<Typography lineClamp={1} variant='h6' component='div'>
 									{item.authorName}
 								</Typography>
 								<Rating readOnly value={item.rating}></Rating>
@@ -74,6 +74,25 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 							</WhiteBox>
 						))}
 					</Slider>
+
+					<Box gap={{ xs: 2, md: 0 }} flexWrap='wrap' display='flex' justifyContent='center'>
+						<Button
+							sx={{ marginRight: { md: '5em', xs: 0 }, marginLeft: { md: '1em', xs: 0 } }}
+							variant='contained'
+							target='_blank'
+							href='https://g.page/r/CZioQh24913HEB0/review'
+						>
+							Оставить отзыв гугл
+						</Button>
+						<Button
+							sx={{ marginLeft: { xs: 0, md: '0.5em' } }}
+							variant='contained'
+							target='_blank'
+							href='https://yandex.by/maps/org/magazin_avtozapchastey_i_avtotovarov/1032020244/reviews/?add-review=true&ll=23.853612%2C53.583955&z=16'
+						>
+							Оставить отзыв Яндекс
+						</Button>
+					</Box>
 				</>
 			)}
 		</Box>
