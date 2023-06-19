@@ -11,13 +11,20 @@ interface Props {
 	linkType?: 'spare-parts' | 'wheels' | 'cabins' | 'tires';
 }
 
-const BrandsSlider: FC<Props> = ({ brands, linkType = 'spare-parts' }) => {
+const BrandsCarousel: FC<Props> = ({ brands, linkType = 'spare-parts' }) => {
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<Slider rows={isMobile ? 1 : 2} slidesToShow={isMobile ? 2 : isTablet ? 4 : 7}>
 			{brands.map((item) => (
-				<WhiteBox marginX='auto' marginBottom={{ xs: 0, sm: '1em' }} width={137} padding='1em 0' key={item.id}>
+				<WhiteBox
+					aria-hidden='true'
+					marginX='auto'
+					marginBottom={{ xs: 0, sm: '1em' }}
+					width={137}
+					padding='1em 0'
+					key={item.id}
+				>
 					<LinkWithImage
 						width={100}
 						height={40}
@@ -32,4 +39,4 @@ const BrandsSlider: FC<Props> = ({ brands, linkType = 'spare-parts' }) => {
 	);
 };
 
-export default BrandsSlider;
+export default BrandsCarousel;

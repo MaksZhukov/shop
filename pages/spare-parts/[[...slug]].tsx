@@ -8,7 +8,7 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage, PageProduct, PageProductSparePart } from 'api/pages/types';
 import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
-import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import BrandsCarousel from 'components/BrandsCarousel';
 import CatalogSpareParts from 'components/CatalogSpareParts';
 import Product from 'components/Product';
 import type { NextPage } from 'next';
@@ -31,7 +31,7 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
-				<BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
+				<BrandsCarousel linkType='cabins' brands={brands}></BrandsCarousel>
 			</Box>
 		);
 		return () => {
