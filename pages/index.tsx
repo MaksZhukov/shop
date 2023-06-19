@@ -942,24 +942,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						data={reviews}
 						slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}
 					></CarouselReviews>
-					<Box gap={{ xs: 2, md: 0 }} flexWrap='wrap' display='flex' justifyContent='center'>
-						<Button
-							sx={{ marginRight: { md: '5em', xs: 0 }, marginLeft: { md: '1em', xs: 0 } }}
-							variant='contained'
-							target='_blank'
-							href='https://g.page/r/CZioQh24913HEB0/review'
-						>
-							Оставить отзыв гугл
-						</Button>
-						<Button
-							sx={{ marginLeft: { xs: 0, md: '0.5em' } }}
-							variant='contained'
-							target='_blank'
-							href='https://yandex.by/maps/org/magazin_avtozapchastey_i_avtotovarov/1032020244/reviews/?add-review=true&ll=23.853612%2C53.583955&z=16'
-						>
-							Оставить отзыв Яндекс
-						</Button>
-					</Box>
 				</Box>
 				<Box marginBottom='1em'>
 					<Typography
