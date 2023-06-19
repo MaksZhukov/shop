@@ -27,7 +27,6 @@ interface Props {
 }
 
 const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brands, setRenderBeforeFooter }) => {
-	console.log(tireBrands);
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
