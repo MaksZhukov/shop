@@ -51,7 +51,7 @@ import { fetchProducts } from 'api/products/products';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchTires } from 'api/tires/tires';
 import { fetchWheels } from 'api/wheels/wheels';
-import BrandsSlider from 'components/BrandsSlider';
+import BrandsCarousel from 'components/BrandsCarousel';
 import {
 	BODY_STYLES_SLUGIFY,
 	FUELS_SLUGIFY,
@@ -754,7 +754,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 				className={styles['head-section']}
 			>
 				<Image
-					loading="lazy"
+					loading='lazy'
 					title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
 					width={isMobile ? page.bannerMobile?.width : page.banner?.width}
 					height={isMobile ? page.bannerMobile?.height : page.banner?.height}
@@ -918,7 +918,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 					</Typography>
 				</Box>
 				<Box paddingX='1em' marginBottom='2em'>
-					<BrandsSlider brands={brands}></BrandsSlider>
+					<BrandsCarousel brands={brands}></BrandsCarousel>
 				</Box>
 				<Box
 					display='flex'

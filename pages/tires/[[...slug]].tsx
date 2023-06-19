@@ -8,7 +8,7 @@ import { TireBrand } from 'api/tireBrands/types';
 import { fetchTire, fetchTires } from 'api/tires/tires';
 import { Tire } from 'api/tires/types';
 import { SEO } from 'api/types';
-import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import BrandsCarousel from 'components/BrandsCarousel';
 import CatalogTires from 'components/CatalogTires';
 import Product from 'components/Product';
 import type { NextPage } from 'next';
@@ -30,7 +30,7 @@ const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brand
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
-				<BrandsSlider linkType='tires' brands={tireBrands}></BrandsSlider>
+				<BrandsCarousel linkType='tires' brands={tireBrands}></BrandsCarousel>
 			</Box>
 		);
 		return () => {
