@@ -57,7 +57,7 @@ const CarouselReviews: FC<Props> = ({ data = [], slidesToShow = 2, marginBottom 
 								padding='2em 1em'
 								key={item.id}
 							>
-								<Typography lineClamp={1} variant='h6'>
+								<Typography lineClamp={1} variant='h6' component="div">
 									{item.authorName}
 								</Typography>
 								<Rating readOnly value={item.rating}></Rating>

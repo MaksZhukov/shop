@@ -8,7 +8,7 @@ import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchModelBySlug } from 'api/models/models';
 import { fetchPage } from 'api/pages';
 import { DefaultPage, PageProduct, PageProductCabin } from 'api/pages/types';
-import BrandsSlider from 'components/BrandsSlider/BrandsSlider';
+import BrandsCarousel from 'components/BrandsCarousel';
 import CatalogCabins from 'components/CatalogCabins/CatalogCabins';
 import Product from 'components/Product/Product';
 import { NextPage } from 'next';
@@ -31,7 +31,7 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSpar
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
-				<BrandsSlider linkType='cabins' brands={brands}></BrandsSlider>
+				<BrandsCarousel linkType='cabins' brands={brands}></BrandsCarousel>
 			</Box>
 		);
 		return () => {
