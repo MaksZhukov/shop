@@ -9,6 +9,7 @@ import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
 import { DefaultPage } from 'api/pages/types';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, Filters } from 'api/types';
 import { AxiosResponse } from 'axios';
 import Catalog from 'components/Catalog';
@@ -202,7 +203,6 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 
 	return (
 		<Catalog
-			brands={brands}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
@@ -220,6 +220,7 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
 			seo={page.seo}
+			fetchDataForSearch={fetchSpareParts}
 			fetchData={fetchCabins}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>

@@ -169,7 +169,6 @@ const CatalogTires: FC<Props> = ({ page, tireBrands }) => {
 
 	return (
 		<Catalog
-			brands={[]}
 			seo={page.seo}
 			dataFieldsToShow={[
 				{

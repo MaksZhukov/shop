@@ -244,7 +244,6 @@ const CatalogWheels: FC<Props> = ({ page, brands }) => {
 
 	return (
 		<Catalog
-			brands={brands}
 			seo={page.seo}
 			dataFieldsToShow={[
 				{

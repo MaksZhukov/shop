@@ -1,5 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import { Brand } from 'api/brands/types';
+import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'api/constants';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
@@ -207,38 +208,44 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 		onOpenAutoCompleteVolume: handleOpenAutocompleteVolume
 	});
 
-	const generateFiltersByQuery = ({
-		brand,
-		model,
-		generation,
-		kindSparePart,
-		brandName,
-		modelName,
-		generationName,
-		volume,
-		fuel,
-		bodyStyle,
-		transmission,
-		...others
-	}: {
-		[key: string]: string;
-	}): Filters => {
+	const generateFiltersByQuery = (
+		{
+			brand,
+			model,
+			generation,
+			kindSparePart,
+			brandName,
+			modelName,
+			generationName,
+			volume,
+			fuel,
+			bodyStyle,
+			transmission,
+			...others
+		}: {
+			[key: string]: string;
+		},
+		fetchFunc?: () => void
+	): Filters => {
 		let filters: Filters = {
 			brand: getParamByRelation(brand, 'slug'),
 			model: getParamByRelation(model, 'slug'),
 			generation: getParamByRelation(generation, 'slug'),
 			kindSparePart: getParamByRelation(kindSparePart, 'slug'),
-			volume: getParamByRelation(volume),
-			fuel: SLUGIFY_FUELS[fuel],
-			bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
-			transmission: SLUGIFY_TRANSMISSIONS[transmission]
+			...(fetchFunc === fetchSpareParts
+				? {
+						volume: getParamByRelation(volume),
+						fuel: SLUGIFY_FUELS[fuel],
+						bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
+						transmission: SLUGIFY_TRANSMISSIONS[transmission]
+				  }
+				: {})
 		};
 		return { ...filters, ...others };
 	};
 
 	return (
 		<Catalog
-			brands={brands}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
@@ -256,6 +263,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
 			seo={page?.seo}
+			fetchDataForSearch={fetchCabins}
 			fetchData={fetchSpareParts}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>

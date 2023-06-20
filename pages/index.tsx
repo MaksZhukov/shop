@@ -1,11 +1,13 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import { Box, Button, CircularProgress, Input, Link, Modal, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, Link, Modal, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
 import { fetchCabins } from 'api/cabins/cabins';
 import { API_MAX_LIMIT } from 'api/constants';
+import { fetchGenerations } from 'api/generations/generations';
+import { Generation } from 'api/generations/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchModels } from 'api/models/models';
@@ -45,7 +47,6 @@ import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import {
 	BODY_STYLES_SLUGIFY,
-	FUELS_SLUGIFY,
 	KIND_WHEELS_SLUGIFY,
 	SEASONS_SLUGIFY,
 	SLUGIFY_BODY_STYLES,
@@ -61,21 +62,12 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
-import {
-	ChangeEvent,
-	Dispatch,
-	KeyboardEvent,
-	ReactNode,
-	SetStateAction,
-	UIEventHandler,
-	useRef,
-	useState
-} from 'react';
+import { Dispatch, ReactNode, SetStateAction, UIEventHandler, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
 import { getParamByRelation } from 'services/ParamsService';
-import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
+import { BODY_STYLES, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -139,15 +131,14 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 	const [tireDiameters, setTireDiameters] = useState<TireDiameter[]>([]);
 
 	const [models, setModels] = useState<Model[]>([]);
+	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 	const [selectedProduct, setSelectedProduct] = useState<{ label: string; value: string } | null>(null);
-	const [productType, setProductType] = useState<ProductType | null>(isMobile ? 'sparePart' : null);
+	const [productType, setProductType] = useState<ProductType | null>(null);
 	const [isOpenedModal, setIsOpenModal] = useState<boolean>(false);
-	const [isOpenedProductTypeModal, setIsOpenedProductTypeModal] = useState<boolean>(false);
-	const [searchValue, setSearchValue] = useState<string>('');
 
 	const [products, setProducts] = useState<Product[]>([]);
 
@@ -215,7 +206,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			sold: false,
 			$and: [...value.split(' ').map((word) => ({ h1: { $contains: word } }))]
 		};
-		if (productType) {
+		if (productType && !isMobile) {
 			fetchFunc = fetchByType[productType];
 			apiFilters = { ...apiFilters, ...filters[productType] };
 		}
@@ -265,6 +256,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		updateValue('generation', null);
 		setModels([]);
 		setProducts([]);
+		setGenerations([]);
 	};
 
 	const handleChangeModelAutocomplete = (_: any, selected: { value: string; label: string } | null) => {
@@ -279,6 +271,16 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			filters: { brand: { slug: values.brand } },
 			pagination: { limit: API_MAX_LIMIT }
 		})
+	);
+
+	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
+		!!generations.length,
+		setGenerations,
+		() =>
+			fetchGenerations({
+				filters: { brand: { slug: values.brand }, model: { slug: values.model } },
+				pagination: { limit: API_MAX_LIMIT }
+			})
 	);
 
 	const handleOpenAutocompleteKindSparePart = async () => {
@@ -342,10 +344,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		router.push(url);
 	};
 
-	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-		setSearchValue(e.target.value);
-	};
-
 	const handleClickOpenFilters = () => {
 		setIsOpenModal(true);
 	};
@@ -354,26 +352,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		setIsOpenModal(false);
 	};
 
-	const handleCloseProductTypeModal = () => {
-		setIsOpenedProductTypeModal(false);
-	};
-
-	const handleKeyDownSearch = (e: KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter' && searchValue) {
-			setIsOpenedProductTypeModal(true);
-		}
-	};
-
 	const handleChangeProductType = (_: any, selected: { label: string; value: ProductType } | null) => {
 		setProductType(selected?.value || null);
 		setValues({});
 		setProducts([]);
 		setSelectedProduct(null);
 		setKindSpareParts({ data: [], meta: {} });
-	};
-
-	const handleClickSearchIn = (catalogUrl: string) => () => {
-		router.push(`${catalogUrl}?searchValue=${searchValue}`);
 	};
 
 	const brandAutocompleteConfig = {
@@ -394,19 +378,35 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		noOptionsText: noOptionsText
 	};
 
-	const sparePartsAndCabinsFiltersConfig = [
+	const generationAutocompleteConfig = {
+		id: 'generation',
+		disabled: !values.model,
+		placeholder: 'Поколение',
+		options: generations.map((item) => ({ label: item.name, value: item.slug })),
+		onOpen: handleOpenAutocompleteGeneration,
+		noOptionsText: noOptionsText
+	};
+
+	const kindSparePartAutocompleteConfig = {
+		id: 'kindSparePart',
+		placeholder: 'Вид запчасти',
+		options: kindSpareParts.data.map((item) => ({ label: item.name, value: item.slug })),
+		loadingMore: isLoadingMore,
+		onScroll: handleScrollKindSparePartAutocomplete,
+		onOpen: handleOpenAutocompleteKindSparePart,
+		onInputChange: handleInputChangeKindSparePart,
+		noOptionsText: noOptionsText
+	};
+
+	const cabinsFiltersConfig = [
 		brandAutocompleteConfig,
 		modelAutocompleteConfig,
-		{
-			id: 'kindSparePart',
-			placeholder: 'Вид запчасти',
-			options: kindSpareParts.data.map((item) => ({ label: item.name, value: item.slug })),
-			loadingMore: isLoadingMore,
-			onScroll: handleScrollKindSparePartAutocomplete,
-			onOpen: handleOpenAutocompleteKindSparePart,
-			onInputChange: handleInputChangeKindSparePart,
-			noOptionsText: noOptionsText
-		},
+		generationAutocompleteConfig,
+		kindSparePartAutocompleteConfig
+	];
+
+	const sparePartsFiltersConfig = [
+		...cabinsFiltersConfig,
 		{
 			id: 'bodyStyle',
 			placeholder: 'Кузов',
@@ -417,12 +417,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			id: 'transmission',
 			placeholder: 'Коробка',
 			options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] }))
-		},
-
-		{
-			id: 'fuel',
-			placeholder: 'Тип топлива',
-			options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] }))
 		}
 	];
 
@@ -446,8 +440,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			noOptionsText?: ReactNode;
 		}[];
 	} = {
-		sparePart: sparePartsAndCabinsFiltersConfig,
-		cabin: sparePartsAndCabinsFiltersConfig,
+		sparePart: sparePartsFiltersConfig,
+		cabin: cabinsFiltersConfig,
 		wheel: [
 			{
 				id: 'kind',
@@ -589,60 +583,40 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
 	const renderMobileFilters = (
 		<Box marginTop='1em'>
-			<Input
-				sx={{ bgcolor: '#fff', maxWidth: 300, padding: '0.25em 1em' }}
-				fullWidth
-				placeholder='Поиск'
-				value={searchValue}
-				onKeyDown={handleKeyDownSearch}
-				onChange={handleChangeSearch}
-			></Input>
-			<Box marginTop='1em'>
-				<Button variant='contained' onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
+			<Box display='flex' gap={'0.5em'} alignItems='center'>
+				<Autocomplete
+					noOptionsText={noOptionsText}
+					onOpen={
+						productType
+							? handleOpenProductAutocomplete[productType]
+							: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
+									fetchProducts({ filters: { sold: false } })
+							  )
+					}
+					filterOptions={(options) => options}
+					value={selectedProduct}
+					onInputChange={handleInputChangeProducts}
+					onChange={handleChangeAutocompleteProduct}
+					placeholder='Поиск товара'
+					renderOption={(props, option) => (
+						<li {...props} key={option.value}>
+							{option.label}
+						</li>
+					)}
+					options={products.map((item) => ({
+						label: item.h1,
+						value: item.id + '-' + item.type
+					}))}
+				></Autocomplete>
+				<Button onClick={handleClickFind} variant='contained' className={styles['btn-search']}>
 					Найти
 				</Button>
 			</Box>
-			<Modal open={isOpenedProductTypeModal} onClose={handleCloseProductTypeModal}>
-				<Container>
-					<Box padding='1em' borderRadius='1em' marginY='2em' bgcolor='#fff'>
-						<Typography textAlign='center' variant='h6' gutterBottom>
-							Где искать?
-						</Typography>
-						<Button
-							onClick={handleClickSearchIn('/spare-parts')}
-							sx={{ marginBottom: '1em' }}
-							fullWidth
-							variant='contained'
-						>
-							В запчастях
-						</Button>
-						<Button
-							onClick={handleClickSearchIn('/cabins')}
-							sx={{ marginBottom: '1em' }}
-							fullWidth
-							variant='contained'
-						>
-							В салонах
-						</Button>
-						<Button
-							onClick={handleClickSearchIn('/tires')}
-							sx={{ marginBottom: '1em' }}
-							fullWidth
-							variant='contained'
-						>
-							В шинах
-						</Button>
-						<Button
-							onClick={handleClickSearchIn('/wheels')}
-							sx={{ marginBottom: '1em' }}
-							fullWidth
-							variant='contained'
-						>
-							В дисках
-						</Button>
-					</Box>
-				</Container>
-			</Modal>
+			<Box marginTop='0.5em'>
+				<Button variant='contained' onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
+					Фильтры
+				</Button>
+			</Box>
 			<Modal open={isOpenedModal} onClose={handleCloseModal}>
 				<Container>
 					<Box marginY='2em' bgcolor='#fff'>
@@ -753,7 +727,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 				className={styles['head-section']}
 			>
 				<Image
-					loading='lazy'
+					loading='eager'
 					title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
 					width={isMobile ? page.bannerMobile?.width : page.banner?.width}
 					height={isMobile ? page.bannerMobile?.height : page.banner?.height}
