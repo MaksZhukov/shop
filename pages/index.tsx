@@ -1,5 +1,5 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import { Box, Button, CircularProgress, Input, Link, Modal, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, Link, Modal, useMediaQuery } from '@mui/material';
 import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
@@ -61,16 +61,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
-import {
-	ChangeEvent,
-	Dispatch,
-	KeyboardEvent,
-	ReactNode,
-	SetStateAction,
-	UIEventHandler,
-	useRef,
-	useState
-} from 'react';
+import { Dispatch, ReactNode, SetStateAction, UIEventHandler, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
@@ -144,10 +135,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 	const [selectedProduct, setSelectedProduct] = useState<{ label: string; value: string } | null>(null);
-	const [productType, setProductType] = useState<ProductType | null>(isMobile ? 'sparePart' : null);
+	const [productType, setProductType] = useState<ProductType | null>(null);
 	const [isOpenedModal, setIsOpenModal] = useState<boolean>(false);
-	const [isOpenedProductTypeModal, setIsOpenedProductTypeModal] = useState<boolean>(false);
-	const [searchValue, setSearchValue] = useState<string>('');
 
 	const [products, setProducts] = useState<Product[]>([]);
 
@@ -215,7 +204,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			sold: false,
 			$and: [...value.split(' ').map((word) => ({ h1: { $contains: word } }))]
 		};
-		if (productType) {
+		if (productType && !isMobile) {
 			fetchFunc = fetchByType[productType];
 			apiFilters = { ...apiFilters, ...filters[productType] };
 		}
@@ -342,10 +331,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		router.push(url);
 	};
 
-	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-		setSearchValue(e.target.value);
-	};
-
 	const handleClickOpenFilters = () => {
 		setIsOpenModal(true);
 	};
@@ -354,26 +339,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		setIsOpenModal(false);
 	};
 
-	const handleCloseProductTypeModal = () => {
-		setIsOpenedProductTypeModal(false);
-	};
-
-	const handleKeyDownSearch = (e: KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter' && searchValue) {
-			setIsOpenedProductTypeModal(true);
-		}
-	};
-
 	const handleChangeProductType = (_: any, selected: { label: string; value: ProductType } | null) => {
 		setProductType(selected?.value || null);
 		setValues({});
 		setProducts([]);
 		setSelectedProduct(null);
 		setKindSpareParts({ data: [], meta: {} });
-	};
-
-	const handleClickSearchIn = (catalogUrl: string) => () => {
-		router.push(`${catalogUrl}?searchValue=${searchValue}`);
 	};
 
 	const brandAutocompleteConfig = {
@@ -589,60 +560,40 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
 	const renderMobileFilters = (
 		<Box marginTop='1em'>
-			<Input
-				sx={{ bgcolor: '#fff', maxWidth: 300, padding: '0.25em 1em' }}
-				fullWidth
-				placeholder='Поиск'
-				value={searchValue}
-				onKeyDown={handleKeyDownSearch}
-				onChange={handleChangeSearch}
-			></Input>
-			<Box marginTop='1em'>
-				<Button variant='contained' onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
+			<Box display='flex' gap={'0.5em'} alignItems='center'>
+				<Autocomplete
+					noOptionsText={noOptionsText}
+					onOpen={
+						productType
+							? handleOpenProductAutocomplete[productType]
+							: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
+									fetchProducts({ filters: { sold: false } })
+							  )
+					}
+					filterOptions={(options) => options}
+					value={selectedProduct}
+					onInputChange={handleInputChangeProducts}
+					onChange={handleChangeAutocompleteProduct}
+					placeholder='Поиск товара'
+					renderOption={(props, option) => (
+						<li {...props} key={option.value}>
+							{option.label}
+						</li>
+					)}
+					options={products.map((item) => ({
+						label: item.h1,
+						value: item.id + '-' + item.type
+					}))}
+				></Autocomplete>
+				<Button onClick={handleClickFind} variant='contained' className={styles['btn-search']}>
 					Найти
 				</Button>
 			</Box>
-			<Modal open={isOpenedProductTypeModal} onClose={handleCloseProductTypeModal}>
-				<Container>
-					<Box padding='1em' borderRadius='1em' marginY='2em' bgcolor='#fff'>
-						<Typography textAlign='center' variant='h6' gutterBottom>
-							Где искать?
-						</Typography>
-						<Button
-							onClick={handleClickSearchIn('/spare-parts')}
-							sx={{ marginBottom: '1em' }}
-							fullWidth
-							variant='contained'
-						>
-							В запчастях
-						</Button>
-						<Button
-							onClick={handleClickSearchIn('/cabins')}
-							sx={{ marginBottom: '1em' }}
-							fullWidth
-							variant='contained'
-						>
-							В салонах
-						</Button>
-						<Button
-							onClick={handleClickSearchIn('/tires')}
-							sx={{ marginBottom: '1em' }}
-							fullWidth
-							variant='contained'
-						>
-							В шинах
-						</Button>
-						<Button
-							onClick={handleClickSearchIn('/wheels')}
-							sx={{ marginBottom: '1em' }}
-							fullWidth
-							variant='contained'
-						>
-							В дисках
-						</Button>
-					</Box>
-				</Container>
-			</Modal>
+			<Box marginTop='0.5em'>
+				<Button variant='contained' onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
+					Фильтры
+				</Button>
+			</Box>
 			<Modal open={isOpenedModal} onClose={handleCloseModal}>
 				<Container>
 					<Box marginY='2em' bgcolor='#fff'>
