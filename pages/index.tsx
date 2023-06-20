@@ -6,6 +6,8 @@ import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
 import { fetchCabins } from 'api/cabins/cabins';
 import { API_MAX_LIMIT } from 'api/constants';
+import { fetchGenerations } from 'api/generations/generations';
+import { Generation } from 'api/generations/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchModels } from 'api/models/models';
@@ -45,7 +47,6 @@ import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import {
 	BODY_STYLES_SLUGIFY,
-	FUELS_SLUGIFY,
 	KIND_WHEELS_SLUGIFY,
 	SEASONS_SLUGIFY,
 	SLUGIFY_BODY_STYLES,
@@ -66,7 +67,7 @@ import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
 import { getParamByRelation } from 'services/ParamsService';
-import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
+import { BODY_STYLES, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -130,6 +131,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 	const [tireDiameters, setTireDiameters] = useState<TireDiameter[]>([]);
 
 	const [models, setModels] = useState<Model[]>([]);
+	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -254,6 +256,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		updateValue('generation', null);
 		setModels([]);
 		setProducts([]);
+		setGenerations([]);
 	};
 
 	const handleChangeModelAutocomplete = (_: any, selected: { value: string; label: string } | null) => {
@@ -268,6 +271,16 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			filters: { brand: { slug: values.brand } },
 			pagination: { limit: API_MAX_LIMIT }
 		})
+	);
+
+	const handleOpenAutocompleteGeneration = handleOpenAutocomplete<Generation>(
+		!!generations.length,
+		setGenerations,
+		() =>
+			fetchGenerations({
+				filters: { brand: { slug: values.brand }, model: { slug: values.model } },
+				pagination: { limit: API_MAX_LIMIT }
+			})
 	);
 
 	const handleOpenAutocompleteKindSparePart = async () => {
@@ -365,19 +378,35 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		noOptionsText: noOptionsText
 	};
 
-	const sparePartsAndCabinsFiltersConfig = [
+	const generationAutocompleteConfig = {
+		id: 'generation',
+		disabled: !values.model,
+		placeholder: 'Поколение',
+		options: generations.map((item) => ({ label: item.name, value: item.slug })),
+		onOpen: handleOpenAutocompleteGeneration,
+		noOptionsText: noOptionsText
+	};
+
+	const kindSparePartAutocompleteConfig = {
+		id: 'kindSparePart',
+		placeholder: 'Вид запчасти',
+		options: kindSpareParts.data.map((item) => ({ label: item.name, value: item.slug })),
+		loadingMore: isLoadingMore,
+		onScroll: handleScrollKindSparePartAutocomplete,
+		onOpen: handleOpenAutocompleteKindSparePart,
+		onInputChange: handleInputChangeKindSparePart,
+		noOptionsText: noOptionsText
+	};
+
+	const cabinsFiltersConfig = [
 		brandAutocompleteConfig,
 		modelAutocompleteConfig,
-		{
-			id: 'kindSparePart',
-			placeholder: 'Вид запчасти',
-			options: kindSpareParts.data.map((item) => ({ label: item.name, value: item.slug })),
-			loadingMore: isLoadingMore,
-			onScroll: handleScrollKindSparePartAutocomplete,
-			onOpen: handleOpenAutocompleteKindSparePart,
-			onInputChange: handleInputChangeKindSparePart,
-			noOptionsText: noOptionsText
-		},
+		generationAutocompleteConfig,
+		kindSparePartAutocompleteConfig
+	];
+
+	const sparePartsFiltersConfig = [
+		...cabinsFiltersConfig,
 		{
 			id: 'bodyStyle',
 			placeholder: 'Кузов',
@@ -388,12 +417,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			id: 'transmission',
 			placeholder: 'Коробка',
 			options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] }))
-		},
-
-		{
-			id: 'fuel',
-			placeholder: 'Тип топлива',
-			options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] }))
 		}
 	];
 
@@ -417,8 +440,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			noOptionsText?: ReactNode;
 		}[];
 	} = {
-		sparePart: sparePartsAndCabinsFiltersConfig,
-		cabin: sparePartsAndCabinsFiltersConfig,
+		sparePart: sparePartsFiltersConfig,
+		cabin: cabinsFiltersConfig,
 		wheel: [
 			{
 				id: 'kind',
