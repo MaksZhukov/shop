@@ -422,7 +422,7 @@ const Catalog = ({
 					onClick={handleClickOpenFilters}
 					startIcon={<TuneIcon></TuneIcon>}
 				>
-					Параметры
+					Фильтры
 				</Button>
 			)}
 			<Modal open={isOpenFilters} onClose={handleCloseFilters}>
