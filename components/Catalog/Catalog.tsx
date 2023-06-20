@@ -15,8 +15,8 @@ import {
 	useMediaQuery
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT } from 'api/constants';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
 import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
@@ -53,14 +53,16 @@ interface Props {
 	searchPlaceholder?: string;
 	dataFieldsToShow?: { id: string; name: string }[];
 	filtersConfig: (AutocompleteType | NumberType)[][];
-	generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
-	fetchsData?: ((params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>)[];
+	generateFiltersByQuery?: (filter: { [key: string]: string }, fetchFunc: any) => any;
+	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
+	fetchDataForSearch?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
 }
 
 let date = new Date();
 
 const Catalog = ({
-	fetchsData,
+	fetchData,
+	fetchDataForSearch,
 	searchPlaceholder,
 	dataFieldsToShow = [],
 	filtersConfig,
@@ -80,7 +82,6 @@ const Catalog = ({
 	const filtersRef = useRef<any>(null);
 	const leaveRef = useRef<boolean>(false);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
-
 	const router = useRouter();
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -115,8 +116,12 @@ const Catalog = ({
 		withRouterPush: boolean = true
 	) => {
 		setIsLoading(true);
-		if (fetchsData) {
+		if (fetchData) {
 			try {
+				const fetchsData = [fetchData];
+				if (fetchDataForSearch && searchValue) {
+					fetchsData.push(fetchDataForSearch);
+				}
 				const [
 					{
 						data: {
@@ -124,10 +129,10 @@ const Catalog = ({
 							meta: { pagination }
 						}
 					},
-					nextData
+					dataForSearch
 				] = await Promise.all(
-					fetchsData.map((fetchData) =>
-						fetchData({
+					fetchsData.map((fetchFunc) =>
+						fetchFunc({
 							filters: {
 								sold: { $eq: false },
 								...(searchValue
@@ -137,7 +142,7 @@ const Catalog = ({
 												.map((word: string) => ({ h1: { $contains: word } }))
 									  }
 									: {}),
-								...(generateFiltersByQuery ? generateFiltersByQuery(values) : {})
+								...(generateFiltersByQuery ? generateFiltersByQuery(values, fetchFunc) : {})
 							},
 							pagination: searchValue
 								? {}
@@ -147,9 +152,26 @@ const Catalog = ({
 						})
 					)
 				);
-				const shouldSwitchCatalog = nextData && responseData.length === 0 && nextData.data.data.length;
-				const toSpareParts = fetchsData[0] === fetchCabins;
-				setData(shouldSwitchCatalog ? nextData.data.data : responseData);
+
+				const shouldSwitchCatalog =
+					dataForSearch && responseData.length === 0 && !!dataForSearch.data.data.length;
+				const toSpareParts = fetchDataForSearch === fetchSpareParts;
+				if (shouldSwitchCatalog) {
+					router.push(
+						{
+							pathname: router.pathname.replace(
+								toSpareParts ? 'cabins' : 'spare-parts',
+								toSpareParts ? 'spare-parts' : 'cabins'
+							),
+							query: router.query
+						},
+						undefined,
+						{ shallow: true }
+					);
+					return;
+				} else {
+					setData(responseData);
+				}
 				if (pagination) {
 					setPageCount(Math.ceil(pagination.total / API_DEFAULT_LIMIT));
 					if (paramPage) {
@@ -157,15 +179,10 @@ const Catalog = ({
 					} else if (router.query.page && Math.ceil(pagination.total / API_DEFAULT_LIMIT) < +page) {
 						router.query.page = (Math.ceil(pagination.total / API_DEFAULT_LIMIT) || 1).toString();
 					}
-					if (shouldSwitchCatalog || (withRouterPush && !leaveRef.current)) {
+					if (withRouterPush && !leaveRef.current) {
 						router.push(
 							{
-								pathname: shouldSwitchCatalog
-									? router.pathname.replace(
-											toSpareParts ? 'cabins' : 'spare-parts',
-											toSpareParts ? 'spare-parts' : 'cabins'
-									  )
-									: router.pathname,
+								pathname: router.pathname,
 								query: router.query
 							},
 							undefined,
@@ -196,9 +213,9 @@ const Catalog = ({
 	useEffect(() => {
 		if (router.isReady) {
 			const fetchNewProducts = async () => {
-				if (fetchsData) {
+				if (fetchData) {
 					try {
-						const response = await fetchsData[0]({
+						const response = await fetchData({
 							sort: 'createdAt:desc',
 							populate: ['images', 'brand'],
 							pagination: { limit: API_DEFAULT_LIMIT / 2 },
@@ -292,6 +309,7 @@ const Catalog = ({
 		}
 
 		throttledFetchProducts(newValues, 1, false);
+
 		// It needs to avoid the same seo data for the page
 		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
 		// router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });

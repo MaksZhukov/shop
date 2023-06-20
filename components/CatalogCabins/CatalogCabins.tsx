@@ -220,7 +220,8 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
 			seo={page.seo}
-			fetchsData={[fetchCabins, fetchSpareParts]}
+			fetchDataForSearch={fetchSpareParts}
+			fetchData={fetchCabins}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>
 	);
