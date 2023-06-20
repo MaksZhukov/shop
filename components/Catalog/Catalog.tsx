@@ -15,8 +15,8 @@ import {
 	useMediaQuery
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { Brand } from 'api/brands/types';
 import { API_DEFAULT_LIMIT } from 'api/constants';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
 import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
@@ -51,18 +51,18 @@ const anchorText = {
 interface Props {
 	seo: SEO | null;
 	searchPlaceholder?: string;
-	brands: Brand[];
 	dataFieldsToShow?: { id: string; name: string }[];
 	filtersConfig: (AutocompleteType | NumberType)[][];
-	generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
+	generateFiltersByQuery?: (filter: { [key: string]: string }, fetchFunc: any) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
+	fetchDataForSearch?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
 }
 
 let date = new Date();
 
 const Catalog = ({
 	fetchData,
-	brands,
+	fetchDataForSearch,
 	searchPlaceholder,
 	dataFieldsToShow = [],
 	filtersConfig,
@@ -82,7 +82,6 @@ const Catalog = ({
 	const filtersRef = useRef<any>(null);
 	const leaveRef = useRef<boolean>(false);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
-
 	const router = useRouter();
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -119,26 +118,60 @@ const Catalog = ({
 		setIsLoading(true);
 		if (fetchData) {
 			try {
-				const {
-					data: {
-						data: responseData,
-						meta: { pagination }
-					}
-				} = await fetchData({
-					filters: {
-						sold: { $eq: false },
-						...(searchValue
-							? { $and: searchValue.split(' ').map((word: string) => ({ h1: { $contains: word } })) }
-							: {}),
-						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {})
+				const fetchsData = [fetchData];
+				if (fetchDataForSearch && searchValue) {
+					fetchsData.push(fetchDataForSearch);
+				}
+				const [
+					{
+						data: {
+							data: responseData,
+							meta: { pagination }
+						}
 					},
-					pagination: searchValue
-						? {}
-						: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
-					populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
-					sort
-				});
-				setData(responseData);
+					dataForSearch
+				] = await Promise.all(
+					fetchsData.map((fetchFunc) =>
+						fetchFunc({
+							filters: {
+								sold: { $eq: false },
+								...(searchValue
+									? {
+											$and: searchValue
+												.split(' ')
+												.map((word: string) => ({ h1: { $contains: word } }))
+									  }
+									: {}),
+								...(generateFiltersByQuery ? generateFiltersByQuery(values, fetchFunc) : {})
+							},
+							pagination: searchValue
+								? {}
+								: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
+							populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
+							sort
+						})
+					)
+				);
+
+				const shouldSwitchCatalog =
+					dataForSearch && responseData.length === 0 && !!dataForSearch.data.data.length;
+				const toSpareParts = fetchDataForSearch === fetchSpareParts;
+				if (shouldSwitchCatalog) {
+					router.push(
+						{
+							pathname: router.pathname.replace(
+								toSpareParts ? 'cabins' : 'spare-parts',
+								toSpareParts ? 'spare-parts' : 'cabins'
+							),
+							query: router.query
+						},
+						undefined,
+						{ shallow: true }
+					);
+					return;
+				} else {
+					setData(responseData);
+				}
 				if (pagination) {
 					setPageCount(Math.ceil(pagination.total / API_DEFAULT_LIMIT));
 					if (paramPage) {
@@ -276,6 +309,7 @@ const Catalog = ({
 		}
 
 		throttledFetchProducts(newValues, 1, false);
+
 		// It needs to avoid the same seo data for the page
 		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
 		// router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
@@ -422,7 +456,7 @@ const Catalog = ({
 					onClick={handleClickOpenFilters}
 					startIcon={<TuneIcon></TuneIcon>}
 				>
-					Параметры
+					Фильтры
 				</Button>
 			)}
 			<Modal open={isOpenFilters} onClose={handleCloseFilters}>
