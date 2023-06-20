@@ -15,7 +15,7 @@ import {
 	useMediaQuery
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { Brand } from 'api/brands/types';
+import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT } from 'api/constants';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
 import { AxiosResponse } from 'axios';
@@ -51,18 +51,16 @@ const anchorText = {
 interface Props {
 	seo: SEO | null;
 	searchPlaceholder?: string;
-	brands: Brand[];
 	dataFieldsToShow?: { id: string; name: string }[];
 	filtersConfig: (AutocompleteType | NumberType)[][];
 	generateFiltersByQuery?: (filter: { [key: string]: string }) => any;
-	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
+	fetchsData?: ((params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>)[];
 }
 
 let date = new Date();
 
 const Catalog = ({
-	fetchData,
-	brands,
+	fetchsData,
 	searchPlaceholder,
 	dataFieldsToShow = [],
 	filtersConfig,
@@ -117,28 +115,41 @@ const Catalog = ({
 		withRouterPush: boolean = true
 	) => {
 		setIsLoading(true);
-		if (fetchData) {
+		if (fetchsData) {
 			try {
-				const {
-					data: {
-						data: responseData,
-						meta: { pagination }
-					}
-				} = await fetchData({
-					filters: {
-						sold: { $eq: false },
-						...(searchValue
-							? { $and: searchValue.split(' ').map((word: string) => ({ h1: { $contains: word } })) }
-							: {}),
-						...(generateFiltersByQuery ? generateFiltersByQuery(values) : {})
+				const [
+					{
+						data: {
+							data: responseData,
+							meta: { pagination }
+						}
 					},
-					pagination: searchValue
-						? {}
-						: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
-					populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
-					sort
-				});
-				setData(responseData);
+					nextData
+				] = await Promise.all(
+					fetchsData.map((fetchData) =>
+						fetchData({
+							filters: {
+								sold: { $eq: false },
+								...(searchValue
+									? {
+											$and: searchValue
+												.split(' ')
+												.map((word: string) => ({ h1: { $contains: word } }))
+									  }
+									: {}),
+								...(generateFiltersByQuery ? generateFiltersByQuery(values) : {})
+							},
+							pagination: searchValue
+								? {}
+								: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
+							populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
+							sort
+						})
+					)
+				);
+				const shouldSwitchCatalog = nextData && responseData.length === 0 && nextData.data.data.length;
+				const toSpareParts = fetchsData[0] === fetchCabins;
+				setData(shouldSwitchCatalog ? nextData.data.data : responseData);
 				if (pagination) {
 					setPageCount(Math.ceil(pagination.total / API_DEFAULT_LIMIT));
 					if (paramPage) {
@@ -146,10 +157,15 @@ const Catalog = ({
 					} else if (router.query.page && Math.ceil(pagination.total / API_DEFAULT_LIMIT) < +page) {
 						router.query.page = (Math.ceil(pagination.total / API_DEFAULT_LIMIT) || 1).toString();
 					}
-					if (withRouterPush && !leaveRef.current) {
+					if (shouldSwitchCatalog || (withRouterPush && !leaveRef.current)) {
 						router.push(
 							{
-								pathname: router.pathname,
+								pathname: shouldSwitchCatalog
+									? router.pathname.replace(
+											toSpareParts ? 'cabins' : 'spare-parts',
+											toSpareParts ? 'spare-parts' : 'cabins'
+									  )
+									: router.pathname,
 								query: router.query
 							},
 							undefined,
@@ -180,9 +196,9 @@ const Catalog = ({
 	useEffect(() => {
 		if (router.isReady) {
 			const fetchNewProducts = async () => {
-				if (fetchData) {
+				if (fetchsData) {
 					try {
-						const response = await fetchData({
+						const response = await fetchsData[0]({
 							sort: 'createdAt:desc',
 							populate: ['images', 'brand'],
 							pagination: { limit: API_DEFAULT_LIMIT / 2 },
