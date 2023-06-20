@@ -1,5 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import { Brand } from 'api/brands/types';
+import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'api/constants';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
@@ -238,7 +239,6 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 
 	return (
 		<Catalog
-			brands={brands}
 			dataFieldsToShow={[
 				{
 					id: 'brand',
@@ -256,7 +256,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
 			seo={page?.seo}
-			fetchData={fetchSpareParts}
+			fetchsData={[fetchSpareParts, fetchCabins]}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>
 	);

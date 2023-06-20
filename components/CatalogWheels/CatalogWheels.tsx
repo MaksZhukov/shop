@@ -244,7 +244,6 @@ const CatalogWheels: FC<Props> = ({ page, brands }) => {
 
 	return (
 		<Catalog
-			brands={brands}
 			seo={page.seo}
 			dataFieldsToShow={[
 				{
@@ -266,7 +265,7 @@ const CatalogWheels: FC<Props> = ({ page, brands }) => {
 			]}
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
-			fetchData={fetchWheels}
+			fetchsData={[fetchWheels]}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>
 	);

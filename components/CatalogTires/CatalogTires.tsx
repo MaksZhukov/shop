@@ -169,7 +169,6 @@ const CatalogTires: FC<Props> = ({ page, tireBrands }) => {
 
 	return (
 		<Catalog
-			brands={[]}
 			seo={page.seo}
 			dataFieldsToShow={[
 				{
@@ -191,7 +190,7 @@ const CatalogTires: FC<Props> = ({ page, tireBrands }) => {
 			]}
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
-			fetchData={fetchTires}
+			fetchsData={[fetchTires]}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>
 	);
