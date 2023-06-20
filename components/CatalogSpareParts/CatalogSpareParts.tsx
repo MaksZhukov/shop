@@ -208,31 +208,38 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 		onOpenAutoCompleteVolume: handleOpenAutocompleteVolume
 	});
 
-	const generateFiltersByQuery = ({
-		brand,
-		model,
-		generation,
-		kindSparePart,
-		brandName,
-		modelName,
-		generationName,
-		volume,
-		fuel,
-		bodyStyle,
-		transmission,
-		...others
-	}: {
-		[key: string]: string;
-	}): Filters => {
+	const generateFiltersByQuery = (
+		{
+			brand,
+			model,
+			generation,
+			kindSparePart,
+			brandName,
+			modelName,
+			generationName,
+			volume,
+			fuel,
+			bodyStyle,
+			transmission,
+			...others
+		}: {
+			[key: string]: string;
+		},
+		fetchFunc?: () => void
+	): Filters => {
 		let filters: Filters = {
 			brand: getParamByRelation(brand, 'slug'),
 			model: getParamByRelation(model, 'slug'),
 			generation: getParamByRelation(generation, 'slug'),
 			kindSparePart: getParamByRelation(kindSparePart, 'slug'),
-			volume: getParamByRelation(volume),
-			fuel: SLUGIFY_FUELS[fuel],
-			bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
-			transmission: SLUGIFY_TRANSMISSIONS[transmission]
+			...(fetchFunc === fetchSpareParts
+				? {
+						volume: getParamByRelation(volume),
+						fuel: SLUGIFY_FUELS[fuel],
+						bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
+						transmission: SLUGIFY_TRANSMISSIONS[transmission]
+				  }
+				: {})
 		};
 		return { ...filters, ...others };
 	};
@@ -256,7 +263,8 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
 			seo={page?.seo}
-			fetchsData={[fetchSpareParts, fetchCabins]}
+			fetchDataForSearch={fetchCabins}
+			fetchData={fetchSpareParts}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>
 	);

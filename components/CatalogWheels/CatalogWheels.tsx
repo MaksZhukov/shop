@@ -265,7 +265,7 @@ const CatalogWheels: FC<Props> = ({ page, brands }) => {
 			]}
 			searchPlaceholder='Поиск ...'
 			filtersConfig={filtersConfig}
-			fetchsData={[fetchWheels]}
+			fetchData={fetchWheels}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>
 	);
