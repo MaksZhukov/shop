@@ -906,8 +906,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 							<ReactMarkdown content={page.leftSideText}></ReactMarkdown>
 						</Typography>
 					</Box>
-					<Box width={'100%'}>
-						<ReactPlayer width={isMobile ? '100%' : 600} height={300} url={page.videoUrl}></ReactPlayer>
+					<Box width='100%' marginRight={{ xs: 0, sm: '2em' }}>
+						<ReactPlayer width={isMobile ? '100%' : 350} height={400} url={page.videoUrl}></ReactPlayer>
 					</Box>
 				</Box>
 				<Typography withSeparator component='h2' variant={isMobile ? 'h5' : 'h4'} fontWeight='bold'>
