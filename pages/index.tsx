@@ -109,8 +109,6 @@ const productTypeOptions = [
 	{ label: 'Диски', value: 'wheel' }
 ] as { label: string; value: ProductType }[];
 
-const PRODUCT_API_FIELDS = ['id', 'h1', 'type'];
-
 interface Props {
 	page: PageMain;
 	reviews: Review[];
@@ -215,8 +213,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		const {
 			data: { data }
 		} = await fetchFunc({
-			filters: apiFilters,
-			fields: PRODUCT_API_FIELDS
+			filters: apiFilters
 		});
 		setProducts(data);
 		setIsLoading(false);
@@ -571,16 +568,16 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
 	const handleOpenProductAutocomplete = {
 		tire: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-			fetchTires({ filters: filters.tire, fields: PRODUCT_API_FIELDS })
+			fetchTires({ filters: filters.tire })
 		),
 		wheel: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-			fetchWheels({ filters: filters.wheel, fields: PRODUCT_API_FIELDS })
+			fetchWheels({ filters: filters.wheel })
 		),
 		cabin: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-			fetchCabins({ filters: filtersCabinsAndSpareParts, fields: PRODUCT_API_FIELDS })
+			fetchCabins({ filters: filtersCabinsAndSpareParts })
 		),
 		sparePart: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-			fetchSpareParts({ filters: filtersCabinsAndSpareParts, fields: PRODUCT_API_FIELDS })
+			fetchSpareParts({ filters: filtersCabinsAndSpareParts })
 		)
 	};
 
@@ -593,7 +590,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 						productType
 							? handleOpenProductAutocomplete[productType]
 							: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-									fetchProducts({ filters: { sold: false }, fields: PRODUCT_API_FIELDS })
+									fetchProducts({ filters: { sold: false } })
 							  )
 					}
 					filterOptions={(options) => options}
@@ -672,7 +669,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 							productType
 								? handleOpenProductAutocomplete[productType]
 								: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-										fetchProducts({ filters: { sold: false }, fields: PRODUCT_API_FIELDS })
+										fetchProducts({ filters: { sold: false } })
 								  )
 						}
 						filterOptions={(options) => options}
@@ -906,8 +903,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 							<ReactMarkdown content={page.leftSideText}></ReactMarkdown>
 						</Typography>
 					</Box>
-					<Box width='100%' marginRight={{ xs: 0, sm: '2em' }}>
-						<ReactPlayer width={isMobile ? '100%' : 350} height={400} url={page.videoUrl}></ReactPlayer>
+					<Box width={'100%'}>
+						<ReactPlayer width={isMobile ? '100%' : 600} height={300} url={page.videoUrl}></ReactPlayer>
 					</Box>
 				</Box>
 				<Typography withSeparator component='h2' variant={isMobile ? 'h5' : 'h4'} fontWeight='bold'>
