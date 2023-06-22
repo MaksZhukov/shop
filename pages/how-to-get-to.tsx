@@ -1,19 +1,20 @@
-import { Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { Image } from 'api/types';
-import getConfig from 'next/config';
-import dynamic from 'next/dynamic';
 import ReactMarkdown from 'components/ReactMarkdown';
+import getConfig from 'next/config';
 import { FC } from 'react';
+import ReactPlayer from 'react-player';
 import { getPageProps } from 'services/PagePropsService';
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
-	page: DefaultPage & { content: string };
+	page: DefaultPage & { content: string; text: string; video: Image };
 }
 
 const HowToGetTo: FC<Props> = ({ page }) => {
+    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<>
 			<Typography marginBottom='1em' component='h1' textTransform='uppercase' variant='h4' textAlign='center'>
