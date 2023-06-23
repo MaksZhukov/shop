@@ -148,7 +148,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 
 	const loadKindSpareParts = async () => {
 		const { data } = await fetchKindSpareParts({
-			filters: { type: productType === 'cabin' ? 'cabin' : 'regular' },
 			pagination: { start: kindSpareParts.data.length }
 		});
 		setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
@@ -334,7 +333,14 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 			const query = qs.stringify(sanitazedValues, { encode: false });
 			const formattedQuery = `${query ? `?${query}` : ''}`;
 			if (productType === 'sparePart' || productType === 'cabin') {
-				url = `/${productType === 'sparePart' ? 'spare-parts' : 'cabins'}/${
+				const kindSparePart = kindSpareParts.data.find((item) => item.slug === values.kindSparePart);
+				let productTypeSlug = '';
+				if (kindSparePart) {
+					productTypeSlug = kindSparePart.type === 'regular' ? 'spare-parts' : 'cabins';
+				} else {
+					productTypeSlug = productType === 'sparePart' ? 'spare-parts' : 'cabins';
+				}
+				url = `/${productTypeSlug}/${
 					model ? `${brand}/model-${model}` : brand ? `${brand}` : ''
 				}${formattedQuery}`;
 			} else if (productType === 'wheel') {
