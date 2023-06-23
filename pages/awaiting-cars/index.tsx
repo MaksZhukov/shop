@@ -108,92 +108,78 @@ const AwaitingCars: NextPage<Props> = ({ page, brands }) => {
 		setGenerations([]);
 	};
 	const filtersConfig = [
-		[
-			{
-				id: 'brand',
-				placeholder: 'Марка',
-				disabled: false,
-				type: 'autocomplete',
-				onChange: handleChangeBrandAutocomplete,
-				options: brands.map((item) => ({ label: item.name, value: item.slug })),
-				noOptionsText: noOptionsText
-			}
-		],
-		[
-			{
-				id: 'model',
-				placeholder: 'Модель',
-				type: 'autocomplete',
-				disabledDependencyId: 'brand',
-				options: models.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: (values: { [key: string]: string | null }) =>
-					handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-						fetchModels({
-							filters: { brand: { slug: values.brand as string } },
-							pagination: { limit: API_MAX_LIMIT }
-						})
-					),
-				noOptionsText: noOptionsText
-			}
-		],
-		[
-			{
-				id: 'generation',
-				placeholder: 'Поколение',
-				type: 'autocomplete',
-				disabledDependencyId: 'model',
-				options: generations.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: (values: { [key: string]: string | null }) =>
-					handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
-						fetchGenerations({
-							filters: { model: { slug: values.model as string }, brand: { slug: values.brand } },
-							pagination: { limit: API_MAX_LIMIT }
-						})
-					),
-				noOptionsText: noOptionsText
-			}
-		],
-		[
-			{
-				id: 'volume',
-				placeholder: 'Обьем 2.0',
-				type: 'autocomplete',
-				options: volumes.map((item) => item.name),
-				onOpen: () =>
-					handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
-						fetchEngineVolumes({
-							pagination: { limit: API_MAX_LIMIT }
-						})
-					)
-			}
-		],
-		[
-			{
-				id: 'bodyStyle',
-				placeholder: 'Кузов',
-				type: 'autocomplete',
-				disabled: false,
-				options: BODY_STYLES.map((item) => ({ label: item, value: BODY_STYLES_SLUGIFY[item] }))
-			}
-		],
-		[
-			{
-				id: 'transmission',
-				placeholder: 'Коробка',
-				type: 'autocomplete',
-				disabled: false,
-				options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] }))
-			}
-		],
-		[
-			{
-				id: 'fuel',
-				placeholder: 'Тип топлива',
-				type: 'autocomplete',
-				disabled: false,
-				options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] }))
-			}
-		]
+		{
+			id: 'brand',
+			placeholder: 'Марка',
+			disabled: false,
+			type: 'autocomplete',
+			onChange: handleChangeBrandAutocomplete,
+			options: brands.map((item) => ({ label: item.name, value: item.slug })),
+			noOptionsText: noOptionsText
+		},
+		{
+			id: 'model',
+			placeholder: 'Модель',
+			type: 'autocomplete',
+			disabledDependencyId: 'brand',
+			options: models.map((item) => ({ label: item.name, value: item.slug })),
+			onOpen: (values: { [key: string]: string | null }) =>
+				handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
+					fetchModels({
+						filters: { brand: { slug: values.brand as string } },
+						pagination: { limit: API_MAX_LIMIT }
+					})
+				),
+			noOptionsText: noOptionsText
+		},
+		{
+			id: 'generation',
+			placeholder: 'Поколение',
+			type: 'autocomplete',
+			disabledDependencyId: 'model',
+			options: generations.map((item) => ({ label: item.name, value: item.slug })),
+			onOpen: (values: { [key: string]: string | null }) =>
+				handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
+					fetchGenerations({
+						filters: { model: { slug: values.model as string }, brand: { slug: values.brand } },
+						pagination: { limit: API_MAX_LIMIT }
+					})
+				),
+			noOptionsText: noOptionsText
+		},
+		{
+			id: 'volume',
+			placeholder: 'Обьем 2.0',
+			type: 'autocomplete',
+			options: volumes.map((item) => item.name),
+			onOpen: () =>
+				handleOpenAutocomplete<EngineVolume>(!!volumes.length, setVolumes, () =>
+					fetchEngineVolumes({
+						pagination: { limit: API_MAX_LIMIT }
+					})
+				)
+		},
+		{
+			id: 'bodyStyle',
+			placeholder: 'Кузов',
+			type: 'autocomplete',
+			disabled: false,
+			options: BODY_STYLES.map((item) => ({ label: item, value: BODY_STYLES_SLUGIFY[item] }))
+		},
+		{
+			id: 'transmission',
+			placeholder: 'Коробка',
+			type: 'autocomplete',
+			disabled: false,
+			options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] }))
+		},
+		{
+			id: 'fuel',
+			placeholder: 'Тип топлива',
+			type: 'autocomplete',
+			disabled: false,
+			options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] }))
+		}
 	];
 
 	const handleClickFind = (values: any) => {

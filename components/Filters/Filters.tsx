@@ -8,16 +8,16 @@ import { AutocompleteType, NumberType } from './types';
 interface Props {
 	onClickFind?: (values: { [key: string]: string | null }) => void;
 	total: number | null;
-	config: (AutocompleteType | NumberType)[][];
+	config: (AutocompleteType | NumberType)[];
 }
 
 const getDependencyItemIds = (
-	config: (AutocompleteType | NumberType)[][],
+	config: (AutocompleteType | NumberType)[],
 	item: AutocompleteType | NumberType
 ): string[] => {
-	let dependencyItem = config.find((el) => el.find((child) => child.disabledDependencyId === item.id));
+	let dependencyItem = config.find((child) => child.disabledDependencyId === child.id);
 	if (dependencyItem) {
-		return [dependencyItem[0].id, ...getDependencyItemIds(config, dependencyItem[0])];
+		return [dependencyItem.id, ...getDependencyItemIds(config, dependencyItem)];
 	}
 	return [];
 };
@@ -28,16 +28,14 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 	useEffect(() => {
 		let newValues: any = {};
 		let [brand, model] = router.query.slug || [];
-		config.forEach((item) => {
-			item.forEach((child) => {
-				if (child.id === 'brand') {
-					newValues[child.id] = brand || router.query.brand || null;
-				} else if (child.id === 'model') {
-					newValues[child.id] = model ? model.replace('model-', '') : router.query.model || null;
-				} else if (router.query[child.id]) {
-					newValues[child.id] = router.query[child.id];
-				}
-			});
+		config.forEach((child) => {
+			if (child.id === 'brand') {
+				newValues[child.id] = brand || router.query.brand || null;
+			} else if (child.id === 'model') {
+				newValues[child.id] = model ? model.replace('model-', '') : router.query.model || null;
+			} else if (router.query[child.id]) {
+				newValues[child.id] = router.query[child.id];
+			}
 		});
 		setValues(newValues);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,20 +126,12 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 
 	return (
 		<>
-			{config.map((items) => {
-				return (
-					<Box key={items.map((item) => item.id).toString()} display='flex' marginBottom='1em'>
-						{items.map((item) => {
-							if (item.type === 'autocomplete') {
-								return renderAutocomplete(item as AutocompleteType);
-							}
-							if (item.type === 'number') {
-								return renderInput(item as NumberType);
-							}
-						})}
-					</Box>
-				);
-			})}
+			{config.map((item) => (
+				<Box key={item.id.toString()} display='flex' marginBottom='1em'>
+					{item.type === 'autocomplete' && renderAutocomplete(item as AutocompleteType)}
+					{item.type === 'number' && renderInput(item as NumberType)}
+				</Box>
+			))}
 			<Box marginY='1em' textAlign='center'>
 				<Button onClick={handleClickFind} fullWidth variant='contained'>
 					Найти
