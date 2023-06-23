@@ -65,7 +65,6 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 
 	const loadKindSpareParts = async () => {
 		const { data } = await fetchKindSpareParts({
-			filters: { type: 'regular' },
 			pagination: { start: kindSpareParts.data.length }
 		});
 		setKindSpareParts({
@@ -101,7 +100,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
 		setIsLoading(true);
-		const { data } = await fetchKindSpareParts({ filters: { type: 'regular', name: { $contains: value } } });
+		const { data } = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
 		setKindSpareParts(data);
 		setIsLoading(false);
 	});
@@ -170,7 +169,9 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 		debouncedFetchKindSparePartsRef(value);
 	};
 
-	const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLUListElement> = (event) => {
+	const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLDivElement> & UIEventHandler<HTMLUListElement> = (
+		event
+	) => {
 		if (
 			event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
 			event.currentTarget.scrollHeight
@@ -200,10 +201,10 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 		isLoadingMoreKindSpareParts: isLoadingMore,
 		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
 		onChangeModelAutocomplete: handleChangeModelAutocomplete,
-		onScrollKindSparePartAutocomplete: handleScrollKindSparePartAutocomplete,
 		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
+		onScrollKindSparePartAutocomplete: handleScrollKindSparePartAutocomplete,
 		onInputChangeKindSparePart: handleInputChangeKindSparePart,
 		onOpenAutoCompleteVolume: handleOpenAutocompleteVolume
 	});
@@ -261,6 +262,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 				}
 			]}
 			searchPlaceholder='Поиск ...'
+			kindSpareParts={kindSpareParts.data}
 			filtersConfig={filtersConfig}
 			seo={page?.seo}
 			fetchDataForSearch={fetchCabins}
