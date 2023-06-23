@@ -3,6 +3,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig = {
+    productionBrowserSourceMaps: true,
     reactStrictMode: false,
     ...(process.env.PAGES ? { pageExtensions: ['dev.tsx'] } : {}),
     publicRuntimeConfig: {
