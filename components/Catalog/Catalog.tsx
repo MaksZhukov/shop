@@ -15,7 +15,9 @@ import {
 	useMediaQuery
 } from '@mui/material';
 import { Box } from '@mui/system';
+import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT } from 'api/constants';
+import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
 import { AxiosResponse } from 'axios';
@@ -52,10 +54,11 @@ interface Props {
 	seo: SEO | null;
 	searchPlaceholder?: string;
 	dataFieldsToShow?: { id: string; name: string }[];
-	filtersConfig: (AutocompleteType | NumberType)[][];
+	filtersConfig: (AutocompleteType | NumberType)[];
+	kindSpareParts?: KindSparePart[];
 	generateFiltersByQuery?: (filter: { [key: string]: string }, fetchFunc: any) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
-	fetchDataForSearch?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
+	fetchDataForSearch?: typeof fetchSpareParts | typeof fetchCabins;
 }
 
 let date = new Date();
@@ -65,6 +68,7 @@ const Catalog = ({
 	fetchDataForSearch,
 	searchPlaceholder,
 	dataFieldsToShow = [],
+	kindSpareParts = [],
 	filtersConfig,
 	generateFiltersByQuery,
 	seo
@@ -153,8 +157,12 @@ const Catalog = ({
 					)
 				);
 
+				const kindSparePart = kindSpareParts.find((item) => item.slug === values.kindSparePart);
 				const shouldSwitchCatalog =
-					dataForSearch && responseData.length === 0 && !!dataForSearch.data.data.length;
+					(dataForSearch && responseData.length === 0 && !!dataForSearch.data.data.length) ||
+					(kindSparePart?.type === 'cabin' && fetchDataForSearch === fetchCabins) ||
+					(kindSparePart?.type === 'regular' && fetchDataForSearch === fetchSpareParts);
+
 				const toSpareParts = fetchDataForSearch === fetchSpareParts;
 				if (shouldSwitchCatalog) {
 					router.push(
