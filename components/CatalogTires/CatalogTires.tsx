@@ -60,91 +60,81 @@ const CatalogTires: FC<Props> = ({ page, tireBrands }) => {
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
 
 	const filtersConfig = [
-		[
-			{
-				id: 'brand',
-				placeholder: 'Марка',
-				type: 'autocomplete',
-				options: brands.map((item) => ({ label: item.name, value: item.slug })),
-				onOpen: () =>
-					handleOpenAutocomplete<TireBrand>(
-						!!brands.length,
-						setBrands,
+		{
+			id: 'brand',
+			placeholder: 'Марка',
+			type: 'autocomplete',
+			options: brands.map((item) => ({ label: item.name, value: item.slug })),
+			onOpen: () =>
+				handleOpenAutocomplete<TireBrand>(
+					!!brands.length,
+					setBrands,
 
-						() =>
-							fetchTireBrands({
-								pagination: { limit: API_MAX_LIMIT }
-							})
-					),
-				noOptionsText: noOptionsText
-			}
-		],
-		[
-			{
-				id: 'width',
-				placeholder: 'Ширина',
-				type: 'autocomplete',
-				options: widths.map((item) => item.name),
-				onOpen: () =>
-					handleOpenAutocomplete<TireWidth>(
-						!!widths.length,
-						setWidths,
+					() =>
+						fetchTireBrands({
+							pagination: { limit: API_MAX_LIMIT }
+						})
+				),
+			noOptionsText: noOptionsText
+		},
+		{
+			id: 'width',
+			placeholder: 'Ширина',
+			type: 'autocomplete',
+			options: widths.map((item) => item.name),
+			onOpen: () =>
+				handleOpenAutocomplete<TireWidth>(
+					!!widths.length,
+					setWidths,
 
-						() =>
-							fetchTireWidths({
-								pagination: { limit: API_MAX_LIMIT }
-							})
-					),
-				noOptionsText: noOptionsText
-			}
-		],
-		[
-			{
-				id: 'height',
-				placeholder: 'Высота',
-				type: 'autocomplete',
-				options: heights.map((item) => item.name),
-				onOpen: () =>
-					handleOpenAutocomplete<TireHeight>(
-						!!heights.length,
-						setHeights,
+					() =>
+						fetchTireWidths({
+							pagination: { limit: API_MAX_LIMIT }
+						})
+				),
+			noOptionsText: noOptionsText
+		},
+		{
+			id: 'height',
+			placeholder: 'Высота',
+			type: 'autocomplete',
+			options: heights.map((item) => item.name),
+			onOpen: () =>
+				handleOpenAutocomplete<TireHeight>(
+					!!heights.length,
+					setHeights,
 
-						() =>
-							fetchTireHeights({
-								pagination: { limit: API_MAX_LIMIT }
-							})
-					),
-				noOptionsText: noOptionsText
-			}
-		],
-		[
-			{
-				id: 'diameter',
-				placeholder: 'Диаметр',
-				type: 'autocomplete',
-				options: diameters.map((item) => item.name),
-				onOpen: () =>
-					handleOpenAutocomplete<TireDiameter>(
-						!!diameters.length,
-						setDiameters,
+					() =>
+						fetchTireHeights({
+							pagination: { limit: API_MAX_LIMIT }
+						})
+				),
+			noOptionsText: noOptionsText
+		},
+		{
+			id: 'diameter',
+			placeholder: 'Диаметр',
+			type: 'autocomplete',
+			options: diameters.map((item) => item.name),
+			onOpen: () =>
+				handleOpenAutocomplete<TireDiameter>(
+					!!diameters.length,
+					setDiameters,
 
-						() =>
-							fetchTireDiameters({
-								pagination: { limit: API_MAX_LIMIT }
-							})
-					),
-				noOptionsText: noOptionsText
-			}
-		],
-		[
-			{
-				id: 'season',
-				placeholder: 'Сезон',
-				type: 'autocomplete',
-				options: SEASONS.map((item) => ({ label: item, value: SEASONS_SLUGIFY[item] })),
-				noOptionsText: ''
-			}
-		]
+					() =>
+						fetchTireDiameters({
+							pagination: { limit: API_MAX_LIMIT }
+						})
+				),
+			noOptionsText: noOptionsText
+		},
+		{
+			id: 'season',
+			placeholder: 'Сезон',
+			type: 'autocomplete',
+			options: SEASONS.map((item) => ({ label: item, value: SEASONS_SLUGIFY[item] })),
+			noOptionsText: ''
+		}
 	];
 
 	const generateFiltersByQuery = ({
