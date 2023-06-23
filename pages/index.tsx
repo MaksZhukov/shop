@@ -46,15 +46,15 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import {
-    BODY_STYLES_SLUGIFY,
-    KIND_WHEELS_SLUGIFY,
-    SEASONS_SLUGIFY,
-    SLUGIFY_BODY_STYLES,
-    SLUGIFY_FUELS,
-    SLUGIFY_KIND_WHEELS,
-    SLUGIFY_SEASONS,
-    SLUGIFY_TRANSMISSIONS,
-    TRANSMISSIONS_SLUGIFY
+	BODY_STYLES_SLUGIFY,
+	KIND_WHEELS_SLUGIFY,
+	SEASONS_SLUGIFY,
+	SLUGIFY_BODY_STYLES,
+	SLUGIFY_FUELS,
+	SLUGIFY_KIND_WHEELS,
+	SLUGIFY_SEASONS,
+	SLUGIFY_TRANSMISSIONS,
+	TRANSMISSIONS_SLUGIFY
 } from 'config';
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
@@ -353,7 +353,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
 		router.push(url);
 	};
 
-    
 	const handleClickOpenFilters = () => {
 		setIsOpenModal(true);
 	};
