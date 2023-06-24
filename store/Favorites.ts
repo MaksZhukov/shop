@@ -42,7 +42,12 @@ export default class FavoritesStore implements Favorites {
 		} else {
 			const favorites = getFavorites();
 			try {
-				const [spareParts, wheels, tires, cabins] = await Promise.all([
+				const [
+					{ data: spareParts, irrelevantFavoriteIDs: irrelevantFavoritesSparePartIDs },
+					{ data: wheels, irrelevantFavoriteIDs: irrelevantFavoritesWheelsIDs },
+					{ data: tires, irrelevantFavoriteIDs: irrelevantFavoritesTiresIDs },
+					{ data: cabins, irrelevantFavoriteIDs: irrelevantFavoritesCabinsIDs }
+				] = await Promise.all([
 					this.getFavoritesByTypes(
 						favorites.filter((item) => item.product.type === 'sparePart'),
 						fetchSpareParts
@@ -61,6 +66,13 @@ export default class FavoritesStore implements Favorites {
 					)
 				]);
 
+				removeFavoritesLS([
+					...irrelevantFavoritesSparePartIDs,
+					...irrelevantFavoritesCabinsIDs,
+					...irrelevantFavoritesTiresIDs,
+					...irrelevantFavoritesWheelsIDs
+				]);
+
 				runInAction(() => {
 					this.items = [...spareParts, ...wheels, ...tires, ...cabins];
 				});
@@ -74,7 +86,7 @@ export default class FavoritesStore implements Favorites {
 		favorites: StorageFavorite[],
 		fetchFunc: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>
 	) {
-		let result: Favorite[] = [];
+		let result: { data: Favorite[]; irrelevantFavoriteIDs: number[] } = { data: [], irrelevantFavoriteIDs: [] };
 		if (favorites.length) {
 			const {
 				data: { data }
@@ -82,10 +94,15 @@ export default class FavoritesStore implements Favorites {
 				filters: { id: favorites.map((item) => item.product.id), sold: { $eq: false } },
 				populate: ['images', 'brand']
 			});
-			result = favorites.map((item) => ({
-				...item,
-				product: data.find((el) => el.id === item.product.id) as Product
-			}));
+			result.irrelevantFavoriteIDs = favorites
+				.filter((favorite) => !data.some((item) => favorite.product.id === item.id))
+				.map((item) => item.id);
+			result.data = favorites
+				.filter((favorite) => data.some((item) => favorite.product.id === item.id))
+				.map((item) => ({
+					...item,
+					product: data.find((el) => el.id === item.product.id) as Product
+				}));
 		}
 		return result;
 	}
