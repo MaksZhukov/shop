@@ -34,7 +34,7 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRende
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
-				<BrandsCarousel linkType='cabins' brands={brands}></BrandsCarousel>
+				<BrandsCarousel linkType='wheels' brands={brands}></BrandsCarousel>
 				<Typography component='h3' marginTop='1em' variant={isMobile ? 'h6' : 'h5'}>
 					Отзывы о нас
 				</Typography>
