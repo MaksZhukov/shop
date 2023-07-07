@@ -16,9 +16,9 @@ const catalogLinks = ['/delivery', '/guarantee', '/', '/reviews', '/how-to-get-t
 interface Props {
 	images?: IImage[];
 	content?: string;
-	h1: string;
+	h1?: string;
 }
-const SEOBox: FC<Props> = ({ images, content, h1 }) => {
+const SEOBox: FC<Props> = ({ images, content, h1 = '' }) => {
 	const router = useRouter();
 	const path = router.asPath.split('/');
 	const isCatalog =
