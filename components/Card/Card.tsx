@@ -14,7 +14,6 @@ interface Props {
 
 const Card: FC<Props> = ({ data }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-    console.log(data)
 	return (
 		<WhiteBox>
 			<Typography component='h1' variant='h4' gutterBottom>
