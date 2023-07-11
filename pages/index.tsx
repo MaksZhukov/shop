@@ -118,7 +118,7 @@ interface Props {
 	brands: Brand[];
 }
 
-const Home: NextPage<Props> = ({ page, brands = [], reviews, articles }) => {
+const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) => {
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const isLaptop = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
