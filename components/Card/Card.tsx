@@ -14,7 +14,6 @@ interface Props {
 
 const Card: FC<Props> = ({ data }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-
 	return (
 		<WhiteBox>
 			<Typography component='h1' variant='h4' gutterBottom>
@@ -34,7 +33,7 @@ const Card: FC<Props> = ({ data }) => {
 							alt={data.image.alternativeText}
 							width={isMobile ? 500 : 640}
 							height={isMobile ? 375 : 480}
-							src={isMobile ? data.image?.formats?.small.url || '' : data.image?.url || ''}
+							src={data.image.url}
 							style={{ height: 'auto' }}
 						></Image>
 					</Box>
