@@ -106,6 +106,7 @@ export const getServerSideProps = getPageProps(fetchPage('article'), async (cont
 					start,
 					limit: LIMIT
 				},
+				sort: 'createdAt:desc',
 				populate: 'mainImage'
 			})
 		).data
