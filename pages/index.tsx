@@ -4,7 +4,6 @@ import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
-import { fetchCabins } from 'api/cabins/cabins';
 import { API_MAX_LIMIT } from 'api/constants';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
@@ -14,10 +13,8 @@ import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
 import { fetchPage } from 'api/pages';
 import { PageMain } from 'api/pages/types';
-import { fetchProducts } from 'api/products/products';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { TireBrand } from 'api/tireBrands/types';
 import { fetchTireDiameters } from 'api/tireDiameters/tireDiameters';
@@ -26,8 +23,7 @@ import { fetchTireHeights } from 'api/tireHeights/tireHeights';
 import { TireHeight } from 'api/tireHeights/types';
 import { fetchTireWidths } from 'api/tireWidths/tireWidths';
 import { TireWidth } from 'api/tireWidths/types';
-import { fetchTires } from 'api/tires/tires';
-import { ApiResponse, Product, ProductType } from 'api/types';
+import { ApiResponse, ProductType } from 'api/types';
 import { WheelDiameterCenterHole } from 'api/wheelDiameterCenterHoles/types';
 import { fetchWheelDiameterCenterHoles } from 'api/wheelDiameterCenterHoles/wheelDiameterCenterHoles';
 import { WheelDiameter } from 'api/wheelDiameters/types';
@@ -36,7 +32,6 @@ import { WheelNumberHole } from 'api/wheelNumberHoles/types';
 import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
 import { WheelWidth } from 'api/wheelWidths/types';
 import { fetchWheelWidths } from 'api/wheelWidths/wheelWidths';
-import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
 import Autocomplete from 'components/Autocomplete';
@@ -45,17 +40,7 @@ import LinkWithImage from 'components/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import {
-	BODY_STYLES_SLUGIFY,
-	KIND_WHEELS_SLUGIFY,
-	SEASONS_SLUGIFY,
-	SLUGIFY_BODY_STYLES,
-	SLUGIFY_FUELS,
-	SLUGIFY_KIND_WHEELS,
-	SLUGIFY_SEASONS,
-	SLUGIFY_TRANSMISSIONS,
-	TRANSMISSIONS_SLUGIFY
-} from 'config';
+import { BODY_STYLES_SLUGIFY, KIND_WHEELS_SLUGIFY, SEASONS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'config';
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import NextLink from 'next/link';
@@ -66,7 +51,6 @@ import { Dispatch, ReactNode, SetStateAction, UIEventHandler, useRef, useState }
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
-import { getParamByRelation } from 'services/ParamsService';
 import { BODY_STYLES, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
 
@@ -81,35 +65,12 @@ const CATEGORIES = [
 	{ name: 'Колеса', href: '/tires' }
 ];
 
-const nameByProductType = {
-	sparePart: 'Запчасти',
-	cabin: 'Салоны',
-	wheel: 'Диски',
-	tire: 'Шины'
-};
-
-const productTypeToSlug = {
-	sparePart: 'spare-parts',
-	wheel: 'wheels',
-	cabin: 'cabins',
-	tire: 'tires'
-};
-
-const fetchByType = {
-	tire: fetchTires,
-	wheel: fetchWheels,
-	cabin: fetchCabins,
-	sparePart: fetchSpareParts
-};
-
 const productTypeOptions = [
 	{ label: 'Запчасти', value: 'sparePart' },
 	{ label: 'Салоны', value: 'cabin' },
 	{ label: 'Шины', value: 'tire' },
 	{ label: 'Диски', value: 'wheel' }
 ] as { label: string; value: ProductType }[];
-
-const PRODUCT_API_FIELDS = ['id', 'h1', 'type'];
 
 interface Props {
 	page: PageMain;
@@ -138,11 +99,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-	const [selectedProduct, setSelectedProduct] = useState<{ label: string; value: string } | null>(null);
-	const [productType, setProductType] = useState<ProductType | null>(null);
+	const [productType, setProductType] = useState<ProductType>('sparePart');
 	const [isOpenedModal, setIsOpenModal] = useState<boolean>(false);
-
-	const [products, setProducts] = useState<Product[]>([]);
 
 	const router = useRouter();
 
@@ -161,67 +119,14 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 
 	const { enqueueSnackbar } = useSnackbar();
 
-	const filtersCabinsAndSpareParts = {
-		sold: false,
-		brand: getParamByRelation(values.brand, 'slug'),
-		model: getParamByRelation(values.model, 'slug'),
-		generation: getParamByRelation(values.generation, 'slug'),
-		kindSparePart: getParamByRelation(values.kindSparePart, 'slug'),
-		fuel: values.fuel ? SLUGIFY_FUELS[values.fuel] : undefined,
-		bodyStyle: values.bodyStyle ? SLUGIFY_BODY_STYLES[values.bodyStyle] : undefined,
-		transmission: values.transmission ? SLUGIFY_TRANSMISSIONS[values.transmission] : undefined
-	};
-
-	const filters = {
-		tire: {
-			sold: false,
-			brand: getParamByRelation(values.brand, 'slug'),
-			width: getParamByRelation(values.width),
-			height: getParamByRelation(values.height),
-			diameter: getParamByRelation(values.diameter),
-			season: values.season ? SLUGIFY_SEASONS[values.season] : undefined
-		},
-		wheel: {
-			sold: false,
-			brand: getParamByRelation(values.brand, 'slug'),
-			diameterCenterHole: getParamByRelation(values.diameterCenterHole),
-			numberHoles: getParamByRelation(values.numberHoles),
-			diameter: getParamByRelation(values.diameter),
-			width: getParamByRelation(values.width),
-			kind: values.kind ? SLUGIFY_KIND_WHEELS[values.kind] : undefined
-		},
-		sparePart: filtersCabinsAndSpareParts,
-		cabin: filtersCabinsAndSpareParts
-	};
-
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
 		setIsLoading(true);
 		const { data } = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
 		setKindSpareParts(data);
 		setIsLoading(false);
 	});
-	const fetchProductsRef = useRef(async (value: string, filters: any, productType: ProductType) => {
-		setIsLoading(true);
-		let fetchFunc = fetchProducts;
-		let apiFilters = {
-			sold: false,
-			$and: [...value.split(' ').map((word) => ({ h1: { $contains: word } }))]
-		};
-		if (productType && !isMobile) {
-			fetchFunc = fetchByType[productType];
-			apiFilters = { ...apiFilters, ...filters[productType] };
-		}
-		const {
-			data: { data }
-		} = await fetchFunc({
-			filters: apiFilters,
-			fields: PRODUCT_API_FIELDS
-		});
-		setProducts(data);
-		setIsLoading(false);
-	});
+
 	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
-	const debouncedFetchProductsRef = useDebounce(fetchProductsRef.current, 300);
 
 	const updateValue = (id: string, selected: { value: string } | string | null) => {
 		let value = typeof selected === 'string' ? selected : selected?.value || null;
@@ -257,14 +162,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 		updateValue('model', null);
 		updateValue('generation', null);
 		setModels([]);
-		setProducts([]);
 		setGenerations([]);
 	};
 
 	const handleChangeModelAutocomplete = (_: any, selected: { value: string; label: string } | null) => {
 		updateValue('model', selected);
 		updateValue('generation', null);
-		setProducts([]);
 	};
 
 	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
@@ -297,10 +200,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 		debouncedFetchKindSparePartsRef(value);
 	};
 
-	const handleInputChangeProducts = (_: any, value: string) => {
-		debouncedFetchProductsRef(value, filters, productType);
-	};
-
 	const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLDivElement> & UIEventHandler<HTMLUListElement> = (
 		event
 	) => {
@@ -315,39 +214,31 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	const handleChangeAutocomplete =
 		(id: string) => (_: any, selected: { value: string; label: string } | string | null) => {
 			updateValue(id, selected);
-			setProducts([]);
 		};
 
 	const handleClickFind = () => {
 		let url = '/';
-		if (selectedProduct && !Object.keys(values).length) {
-			const [, productType] = selectedProduct.value.split('-') as [string, ProductType];
-			url = `/${productTypeToSlug[productType]}?searchValue=${selectedProduct.label}`;
-		} else {
-			let { brand, model, ...restValues } = values;
-			let sanitazedValues = Object.keys(restValues).reduce(
-				(prev, curr) => (restValues[curr] ? { ...prev, [curr]: restValues[curr] } : prev),
-				selectedProduct ? { searchValue: selectedProduct.label } : {}
-			);
+		let { brand, model, ...restValues } = values;
+		let sanitazedValues = Object.keys(restValues).reduce(
+			(prev, curr) => (restValues[curr] ? { ...prev, [curr]: restValues[curr] } : prev),
+			{}
+		);
 
-			const query = qs.stringify(sanitazedValues, { encode: false });
-			const formattedQuery = `${query ? `?${query}` : ''}`;
-			if (productType === 'sparePart' || productType === 'cabin') {
-				const kindSparePart = kindSpareParts.data.find((item) => item.slug === values.kindSparePart);
-				let productTypeSlug = '';
-				if (kindSparePart) {
-					productTypeSlug = kindSparePart.type === 'regular' ? 'spare-parts' : 'cabins';
-				} else {
-					productTypeSlug = productType === 'sparePart' ? 'spare-parts' : 'cabins';
-				}
-				url = `/${productTypeSlug}/${
-					model ? `${brand}/model-${model}` : brand ? `${brand}` : ''
-				}${formattedQuery}`;
-			} else if (productType === 'wheel') {
-				url = `/wheels/${brand ? `${brand}` : ''}${formattedQuery}`;
-			} else if (productType === 'tire') {
-				url = `/tires/${brand ? `${brand}` : ''}${formattedQuery}`;
+		const query = qs.stringify(sanitazedValues, { encode: false });
+		const formattedQuery = `${query ? `?${query}` : ''}`;
+		if (productType === 'sparePart' || productType === 'cabin') {
+			const kindSparePart = kindSpareParts.data.find((item) => item.slug === values.kindSparePart);
+			let productTypeSlug = '';
+			if (kindSparePart) {
+				productTypeSlug = kindSparePart.type === 'regular' ? 'spare-parts' : 'cabins';
+			} else {
+				productTypeSlug = productType === 'sparePart' ? 'spare-parts' : 'cabins';
 			}
+			url = `/${productTypeSlug}/${model ? `${brand}/model-${model}` : brand ? `${brand}` : ''}${formattedQuery}`;
+		} else if (productType === 'wheel') {
+			url = `/wheels/${brand ? `${brand}` : ''}${formattedQuery}`;
+		} else if (productType === 'tire') {
+			url = `/tires/${brand ? `${brand}` : ''}${formattedQuery}`;
 		}
 
 		router.push(url);
@@ -361,11 +252,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 		setIsOpenModal(false);
 	};
 
-	const handleChangeProductType = (_: any, selected: { label: string; value: ProductType } | null) => {
-		setProductType(selected?.value || null);
+	const handleChangeProductType = (_: any, selected: { label: string; value: ProductType }) => {
+		setProductType(selected.value);
 		setValues({});
-		setProducts([]);
-		setSelectedProduct(null);
 		setKindSpareParts({ data: [], meta: {} });
 	};
 
@@ -562,12 +451,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 		]
 	};
 
-	const handleChangeAutocompleteProduct = (_: any, selected: { value: string; label: string } | null) => {
-		setSelectedProduct(selected);
-	};
-
 	const renderProductTypeAutocomplete = (
 		<Autocomplete
+			disableClearable
 			onChange={handleChangeProductType}
 			value={productTypeOptions.find((item) => item.value === productType)}
 			placeholder='Категория товара'
@@ -575,84 +461,39 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 		></Autocomplete>
 	);
 
-	const handleOpenProductAutocomplete = {
-		tire: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-			fetchTires({ filters: filters.tire, fields: PRODUCT_API_FIELDS })
-		),
-		wheel: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-			fetchWheels({ filters: filters.wheel, fields: PRODUCT_API_FIELDS })
-		),
-		cabin: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-			fetchCabins({ filters: filtersCabinsAndSpareParts, fields: PRODUCT_API_FIELDS })
-		),
-		sparePart: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-			fetchSpareParts({ filters: filtersCabinsAndSpareParts, fields: PRODUCT_API_FIELDS })
-		)
-	};
-
 	const renderMobileFilters = (
 		<Box marginTop='1em'>
-			<Box display='flex' gap={'0.5em'} alignItems='center'>
-				<Autocomplete
-					noOptionsText={noOptionsText}
-					onOpen={
-						productType
-							? handleOpenProductAutocomplete[productType]
-							: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-									fetchProducts({ filters: { sold: false }, fields: PRODUCT_API_FIELDS })
-							  )
-					}
-					filterOptions={(options) => options}
-					value={selectedProduct}
-					onInputChange={handleInputChangeProducts}
-					onChange={handleChangeAutocompleteProduct}
-					placeholder='Поиск товара'
-					renderOption={(props, option) => (
-						<li {...props} key={option.value}>
-							{option.label}
-						</li>
-					)}
-					options={products.map((item) => ({
-						label: item.h1,
-						value: item.id + '-' + item.type
-					}))}
-				></Autocomplete>
-				<Button onClick={handleClickFind} variant='contained' className={styles['btn-search']}>
-					Найти
-				</Button>
-			</Box>
 			<Box marginTop='0.5em'>
 				<Button variant='contained' onClick={handleClickOpenFilters} startIcon={<TuneIcon></TuneIcon>}>
-					Фильтры
+					Найти товары
 				</Button>
 			</Box>
 			<Modal open={isOpenedModal} onClose={handleCloseModal}>
 				<Container>
 					<Box marginY='2em' bgcolor='#fff'>
 						<Box>{renderProductTypeAutocomplete}</Box>
-						{productType &&
-							filtersConfig[productType].map((item) => {
-								let value = (item.options as any[]).every((option: any) => typeof option === 'string')
-									? values[item.id]
-									: (item.options as any[]).find((option) => option.value === values[item.id]);
-								return (
-									<Box key={item.id}>
-										<Autocomplete
-											sx={{ paddingY: '2em' }}
-											options={item.options}
-											noOptionsText={item.noOptionsText}
-											onOpen={item.onOpen}
-											placeholder={item.placeholder}
-											onScroll={item.onScroll}
-											onChange={item.onChange || handleChangeAutocomplete(item.id)}
-											fullWidth
-											onInputChange={item.onInputChange}
-											disabled={item.disabled}
-											value={value || null}
-										></Autocomplete>
-									</Box>
-								);
-							})}
+						{filtersConfig[productType].map((item) => {
+							let value = (item.options as any[]).every((option: any) => typeof option === 'string')
+								? values[item.id]
+								: (item.options as any[]).find((option) => option.value === values[item.id]);
+							return (
+								<Box key={item.id}>
+									<Autocomplete
+										sx={{ paddingY: '2em' }}
+										options={item.options}
+										noOptionsText={item.noOptionsText}
+										onOpen={item.onOpen}
+										placeholder={item.placeholder}
+										onScroll={item.onScroll}
+										onChange={item.onChange || handleChangeAutocomplete(item.id)}
+										fullWidth
+										onInputChange={item.onInputChange}
+										disabled={item.disabled}
+										value={value || null}
+									></Autocomplete>
+								</Box>
+							);
+						})}
 						<Button onClick={handleClickFind} variant='contained' fullWidth>
 							Найти
 						</Button>
@@ -671,57 +512,28 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 			className={styles['head-search']}
 		>
 			<Box display='flex' gap='0.5em' flex='1' flexWrap='wrap' className={styles.filters}>
-				<Box width={productType ? 'calc(25% - 0.5em)' : 'calc(50% - 0.5em)'}>
-					<Autocomplete
-						noOptionsText={noOptionsText}
-						onOpen={
-							productType
-								? handleOpenProductAutocomplete[productType]
-								: handleOpenAutocomplete<Product>(!!products.length, setProducts, () =>
-										fetchProducts({ filters: { sold: false }, fields: PRODUCT_API_FIELDS })
-								  )
-						}
-						filterOptions={(options) => options}
-						value={selectedProduct}
-						onInputChange={handleInputChangeProducts}
-						onChange={handleChangeAutocompleteProduct}
-						placeholder='Поиск товара'
-						renderOption={(props, option) => (
-							<li {...props} key={option.value}>
-								{option.label}
-							</li>
-						)}
-						options={products.map((item) => ({
-							label: item.h1,
-							value: item.id + '-' + item.type
-						}))}
-					></Autocomplete>
-				</Box>
-				<Box width={productType ? 'calc(25% - 0.5em)' : 'calc(50% - 0.5em)'}>
-					{renderProductTypeAutocomplete}
-				</Box>
-				{productType &&
-					filtersConfig[productType].map((item) => {
-						let value = (item.options as any[]).every((option: any) => typeof option === 'string')
-							? values[item.id]
-							: (item.options as any[]).find((option) => option.value === values[item.id]);
-						return (
-							<Box width={'calc(25% - 0.5em)'} key={item.id}>
-								<Autocomplete
-									options={item.options}
-									noOptionsText={item.noOptionsText}
-									onOpen={item.onOpen}
-									placeholder={item.placeholder}
-									onScroll={item.onScroll}
-									onChange={item.onChange || handleChangeAutocomplete(item.id)}
-									fullWidth
-									onInputChange={item.onInputChange}
-									disabled={item.disabled}
-									value={value || null}
-								></Autocomplete>
-							</Box>
-						);
-					})}
+				<Box width={'calc(25% - 0.5em)'}>{renderProductTypeAutocomplete}</Box>
+				{filtersConfig[productType].map((item) => {
+					let value = (item.options as any[]).every((option: any) => typeof option === 'string')
+						? values[item.id]
+						: (item.options as any[]).find((option) => option.value === values[item.id]);
+					return (
+						<Box width={'calc(25% - 0.5em)'} key={item.id}>
+							<Autocomplete
+								options={item.options}
+								noOptionsText={item.noOptionsText}
+								onOpen={item.onOpen}
+								placeholder={item.placeholder}
+								onScroll={item.onScroll}
+								onChange={item.onChange || handleChangeAutocomplete(item.id)}
+								fullWidth
+								onInputChange={item.onInputChange}
+								disabled={item.disabled}
+								value={value || null}
+							></Autocomplete>
+						</Box>
+					);
+				})}
 			</Box>
 			<Button onClick={handleClickFind} variant='contained' className={styles['btn-search']}>
 				Найти
