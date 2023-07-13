@@ -23,6 +23,7 @@ const Autocomplete = <
 			options={props.options}
 			noOptionsText={props.noOptionsText || 'Совпадений нет'}
 			onOpen={props.onOpen}
+            disableClearable={props.disableClearable}
 			renderOption={props.renderOption}
 			filterOptions={props.filterOptions}
 			className={classNames(styles.autocomplete, props.className)}
