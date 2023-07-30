@@ -11,10 +11,11 @@ import { FC, useState } from 'react';
 interface Props {
 	sx?: SxProps;
 	products: Product[];
+	paymentMethodType?: string;
 	onSold?: () => void;
 }
 
-const Buy: FC<Props> = ({ sx, products, onSold = () => {} }) => {
+const Buy: FC<Props> = ({ sx, products, paymentMethodType = 'credit_card', onSold = () => {} }) => {
 	const [token, setToken] = useState<string>('');
 	const [isLoadingToken, setIsLoadingToken] = useState<boolean>(false);
 	const { enqueueSnackbar } = useSnackbar();
@@ -26,7 +27,10 @@ const Buy: FC<Props> = ({ sx, products, onSold = () => {} }) => {
 			try {
 				const {
 					data: { data }
-				} = await fetchOrderCheckout(products.map((item) => ({ id: item.id, type: item.type })));
+				} = await fetchOrderCheckout(
+					products.map((item) => ({ id: item.id, type: item.type })),
+					paymentMethodType
+				);
 				newToken = data.token;
 				setToken(newToken);
 			} catch (err) {
@@ -47,7 +51,10 @@ const Buy: FC<Props> = ({ sx, products, onSold = () => {} }) => {
 					setIsLoadingToken(true);
 					const {
 						data: { data }
-					} = await fetchOrderCheckout(products.map((item) => ({ id: item.id, type: item.type })));
+					} = await fetchOrderCheckout(
+						products.map((item) => ({ id: item.id, type: item.type })),
+						paymentMethodType
+					);
 					setToken(data.token);
 					setIsLoadingToken(false);
 				}
