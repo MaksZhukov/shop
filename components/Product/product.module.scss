@@ -1,23 +1,35 @@
 .slider {
-    width: 440px;
-    &_mobile {
-        width: calc(100% - 100px);
-        :global {
-            .slick-track,
-            .slick-list {
-                height: 100% !important;
-            }
-            .slick-slide div {
-                height: 100%;
-            }
-        }
-    }
-    &_small {
-        width: 100px;
-        :global{
-            .slick-track {
-                height: auto !important;
-            }
-        }
-    }
+	width: 440px;
+	&_mobile {
+		width: calc(100% - 100px);
+		:global {
+			.slick-track,
+			.slick-list {
+				height: 100% !important;
+			}
+			.slick-slide div {
+				height: 100%;
+			}
+		}
+	}
+	&_small {
+		width: 100px;
+		:global {
+			.slick-track {
+				height: auto !important;
+			}
+		}
+	}
+}
+
+.installment-plan-slider {
+	:global {
+		.slick-dots {
+			bottom: 0;
+		}
+	}
+}
+
+.slider-range-value {
+	background-color: #fdb819 !important;
 }
