@@ -43,21 +43,21 @@ const CONFIG_INSTALLMENT_PLAN = [
 		imgSrc: '/credit_shopping_card_halva.png',
 		paymentMethodType: 'halva',
 		months: 4
-	},
-	{
-		id: 'turtle',
-		imgSrc: '/credit_shopping_card_turtle.png',
-		alt: 'Карта черепаха',
-		paymentMethodType: 'halva',
-		months: 3
-	},
-	{
-		id: 'card-buy',
-		imgSrc: '/credit_shopping_card.png',
-		alt: 'Карта покупок',
-		paymentMethodType: 'halva',
-		months: 3
 	}
+	// {
+	// 	id: 'turtle',
+	// 	imgSrc: '/credit_shopping_card_turtle.png',
+	// 	alt: 'Карта черепаха',
+	// 	paymentMethodType: 'halva',
+	// 	months: 3
+	// },
+	// {
+	// 	id: 'card-buy',
+	// 	imgSrc: '/credit_shopping_card.png',
+	// 	alt: 'Карта покупок',
+	// 	paymentMethodType: 'halva',
+	// 	months: 3
+	// }
 ];
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -193,9 +193,11 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 
 	const handleClickBuyInstallments = () => {
 		const headerHeight = 64;
+		const titleInstallmentPlanHeight = 64;
 		const offsetPosition =
 			(installmentPlanBlockRef.current as HTMLDivElement).getBoundingClientRect().top +
 			window.scrollY -
+			titleInstallmentPlanHeight -
 			headerHeight;
 		window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
 	};
@@ -419,19 +421,20 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 			</Typography>
 			<Box
 				ref={installmentPlanBlockRef}
-				margin='0 2em'
+				margin={{ xs: 0, sm: '0 2em' }}
 				padding='1em'
 				border='1px solid'
 				borderColor='primary.main'
 				borderRadius='10px'
 			>
-				<Box paddingX='1.5em'>
-					<Slider swipe={false}>
+				<Box paddingX='1.5em' marginBottom='1em'>
+					<Slider className={styles['installment-plan-slider']} dots={!isMobile} swipe={false}>
 						{CONFIG_INSTALLMENT_PLAN.map((item, index) => (
-							<Box gap='10px' key={item.id} display='flex!important'>
+							<Box gap='10px' key={item.id} display={{ xs: 'initial', sm: 'flex!important' }}>
 								<Image
 									src={item.imgSrc}
 									alt={item.alt}
+									style={isMobile ? { margin: 'auto', height: 'auto' } : {}}
 									isOnSSR={false}
 									width={300}
 									height={250}
@@ -441,44 +444,53 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 									display='flex'
 									flexDirection='column'
 									justifyContent='center'
+									paddingX='0.25em'
 									flex={1}
 								>
 									<Typography>Срок рассрочки в месяцах</Typography>
-									<Box paddingRight='1.5em'>
+									<Box paddingRight='1.5em' paddingLeft='0.5em'>
 										<SliderRange
-											onChange={handleChangeSliderRange(index)}
-											marks={new Array(item.months)
+											marks={new Array(12)
 												.fill(null)
 												.map((_, index) => ({ label: index + 1, value: index + 1 }))}
 											step={1}
-											defaultValue={item.months}
-											value={sliderRangeValues[index]}
+											value={item.months}
 											min={1}
-											max={item.months}
+											max={12}
 										></SliderRange>
 									</Box>
-									<Box display={'flex'} marginBottom='1em'>
-										<Typography>Сумма платежа в месяц:</Typography>
-										<Typography
-											marginRight='0.5em'
-											marginLeft='0.5em'
-											textAlign='center'
-											fontWeight='bold'
-											component={data.discountPrice ? 's' : 'p'}
-											sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-											color='secondary'
-										>
-											{data.price / sliderRangeValues[index]} руб{' '}
-										</Typography>
-										{!!data.priceUSD && (
-											<Typography color='text.secondary'>
-												~{(data.priceUSD / sliderRangeValues[index]).toFixed()}$
-											</Typography>
-										)}
+									<Typography>Сумма платежа в месяц</Typography>
+									<Box paddingRight='1.5em' marginTop='2em' paddingLeft='0.5em'>
+										<SliderRange
+											classes={{ valueLabel: styles['slider-range-value'] }}
+											marks={[
+												{
+													value: 1,
+													label: '1'
+												},
+												{
+													value: 1000,
+													label: '1000'
+												},
+												{
+													value: 2000,
+													label: '2000'
+												},
+												{
+													value: 3000,
+													label: '3000'
+												}
+											]}
+											valueLabelDisplay='on'
+											value={Math.ceil(data.price / item.months)}
+											min={1}
+											max={3000}
+										></SliderRange>
 									</Box>
 									{!sold && (
 										<Box>
 											<Buy
+												title='Купить в рассрочку'
 												onSold={handleSold}
 												paymentMethodType={item.paymentMethodType}
 												products={[data]}

@@ -11,11 +11,18 @@ import { FC, useState } from 'react';
 interface Props {
 	sx?: SxProps;
 	products: Product[];
+	title?: string;
 	paymentMethodType?: string;
 	onSold?: () => void;
 }
 
-const Buy: FC<Props> = ({ sx, products, paymentMethodType = 'credit_card', onSold = () => {} }) => {
+const Buy: FC<Props> = ({
+	sx,
+	products,
+	paymentMethodType = 'credit_card',
+	title = 'Купить в 1 клик',
+	onSold = () => {}
+}) => {
 	const [token, setToken] = useState<string>('');
 	const [isLoadingToken, setIsLoadingToken] = useState<boolean>(false);
 	const { enqueueSnackbar } = useSnackbar();
@@ -67,7 +74,7 @@ const Buy: FC<Props> = ({ sx, products, paymentMethodType = 'credit_card', onSol
 		<>
 			<Script src='https://js.bepaid.by/widget/be_gateway.js'></Script>
 			<Button disabled={!products.length} sx={sx} onClick={handleClickBuy} variant='contained'>
-				Купить в 1 клик
+				{title}
 				<ShoppingCartIcon sx={{ color: '#fff', marginLeft: '0.25em' }}></ShoppingCartIcon>
 			</Button>
 			<Modal open={isLoadingToken}>
