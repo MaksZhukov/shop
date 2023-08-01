@@ -4,7 +4,6 @@ import { Container } from '@mui/system';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
-import { fetchCabins } from 'api/cabins/cabins';
 import { API_MAX_LIMIT } from 'api/constants';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
@@ -16,7 +15,6 @@ import { fetchPage } from 'api/pages';
 import { PageMain } from 'api/pages/types';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
 import { TireBrand } from 'api/tireBrands/types';
 import { fetchTireDiameters } from 'api/tireDiameters/tireDiameters';
@@ -25,7 +23,6 @@ import { fetchTireHeights } from 'api/tireHeights/tireHeights';
 import { TireHeight } from 'api/tireHeights/types';
 import { fetchTireWidths } from 'api/tireWidths/tireWidths';
 import { TireWidth } from 'api/tireWidths/types';
-import { fetchTires } from 'api/tires/tires';
 import { ApiResponse, ProductType } from 'api/types';
 import { WheelDiameterCenterHole } from 'api/wheelDiameterCenterHoles/types';
 import { fetchWheelDiameterCenterHoles } from 'api/wheelDiameterCenterHoles/wheelDiameterCenterHoles';
@@ -35,7 +32,6 @@ import { WheelNumberHole } from 'api/wheelNumberHoles/types';
 import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
 import { WheelWidth } from 'api/wheelWidths/types';
 import { fetchWheelWidths } from 'api/wheelWidths/wheelWidths';
-import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import classNames from 'classnames';
 import Autocomplete from 'components/Autocomplete';
@@ -44,17 +40,7 @@ import LinkWithImage from 'components/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import {
-	BODY_STYLES_SLUGIFY,
-	KIND_WHEELS_SLUGIFY,
-	SEASONS_SLUGIFY,
-	SLUGIFY_BODY_STYLES,
-	SLUGIFY_FUELS,
-	SLUGIFY_KIND_WHEELS,
-	SLUGIFY_SEASONS,
-	SLUGIFY_TRANSMISSIONS,
-	TRANSMISSIONS_SLUGIFY
-} from 'config';
+import { BODY_STYLES_SLUGIFY, KIND_WHEELS_SLUGIFY, SEASONS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'config';
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import NextLink from 'next/link';
@@ -65,7 +51,6 @@ import { Dispatch, ReactNode, SetStateAction, UIEventHandler, useRef, useState }
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
-import { getParamByRelation } from 'services/ParamsService';
 import { BODY_STYLES, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
 
@@ -80,35 +65,12 @@ const CATEGORIES = [
 	{ name: 'Колеса', href: '/tires' }
 ];
 
-const nameByProductType = {
-	sparePart: 'Запчасти',
-	cabin: 'Салоны',
-	wheel: 'Диски',
-	tire: 'Шины'
-};
-
-const productTypeToSlug = {
-	sparePart: 'spare-parts',
-	wheel: 'wheels',
-	cabin: 'cabins',
-	tire: 'tires'
-};
-
-const fetchByType = {
-	tire: fetchTires,
-	wheel: fetchWheels,
-	cabin: fetchCabins,
-	sparePart: fetchSpareParts
-};
-
 const productTypeOptions = [
 	{ label: 'Запчасти', value: 'sparePart' },
 	{ label: 'Салоны', value: 'cabin' },
 	{ label: 'Шины', value: 'tire' },
 	{ label: 'Диски', value: 'wheel' }
 ] as { label: string; value: ProductType }[];
-
-const PRODUCT_API_FIELDS = ['id', 'h1', 'type'];
 
 interface Props {
 	page: PageMain;
@@ -137,7 +99,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-	const [productType, setProductType] = useState<ProductType | null>('sparePart');
+	const [productType, setProductType] = useState<ProductType>('sparePart');
 	const [isOpenedModal, setIsOpenModal] = useState<boolean>(false);
 
 	const router = useRouter();
@@ -156,39 +118,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	});
 
 	const { enqueueSnackbar } = useSnackbar();
-
-	const filtersCabinsAndSpareParts = {
-		sold: false,
-		brand: getParamByRelation(values.brand, 'slug'),
-		model: getParamByRelation(values.model, 'slug'),
-		generation: getParamByRelation(values.generation, 'slug'),
-		kindSparePart: getParamByRelation(values.kindSparePart, 'slug'),
-		fuel: values.fuel ? SLUGIFY_FUELS[values.fuel] : undefined,
-		bodyStyle: values.bodyStyle ? SLUGIFY_BODY_STYLES[values.bodyStyle] : undefined,
-		transmission: values.transmission ? SLUGIFY_TRANSMISSIONS[values.transmission] : undefined
-	};
-
-	const filters = {
-		tire: {
-			sold: false,
-			brand: getParamByRelation(values.brand, 'slug'),
-			width: getParamByRelation(values.width),
-			height: getParamByRelation(values.height),
-			diameter: getParamByRelation(values.diameter),
-			season: values.season ? SLUGIFY_SEASONS[values.season] : undefined
-		},
-		wheel: {
-			sold: false,
-			brand: getParamByRelation(values.brand, 'slug'),
-			diameterCenterHole: getParamByRelation(values.diameterCenterHole),
-			numberHoles: getParamByRelation(values.numberHoles),
-			diameter: getParamByRelation(values.diameter),
-			width: getParamByRelation(values.width),
-			kind: values.kind ? SLUGIFY_KIND_WHEELS[values.kind] : undefined
-		},
-		sparePart: filtersCabinsAndSpareParts,
-		cabin: filtersCabinsAndSpareParts
-	};
 
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
 		setIsLoading(true);
@@ -323,8 +252,8 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 		setIsOpenModal(false);
 	};
 
-	const handleChangeProductType = (_: any, selected: { label: string; value: ProductType } | null) => {
-		setProductType(selected?.value || null);
+	const handleChangeProductType = (_: any, selected: { label: string; value: ProductType }) => {
+		setProductType(selected.value);
 		setValues({});
 		setKindSpareParts({ data: [], meta: {} });
 	};
@@ -524,7 +453,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 
 	const renderProductTypeAutocomplete = (
 		<Autocomplete
-            disableClearable
+			disableClearable
 			onChange={handleChangeProductType}
 			value={productTypeOptions.find((item) => item.value === productType)}
 			placeholder='Категория товара'
@@ -543,29 +472,28 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 				<Container>
 					<Box marginY='2em' bgcolor='#fff'>
 						<Box>{renderProductTypeAutocomplete}</Box>
-						{productType &&
-							filtersConfig[productType].map((item) => {
-								let value = (item.options as any[]).every((option: any) => typeof option === 'string')
-									? values[item.id]
-									: (item.options as any[]).find((option) => option.value === values[item.id]);
-								return (
-									<Box key={item.id}>
-										<Autocomplete
-											sx={{ paddingY: '2em' }}
-											options={item.options}
-											noOptionsText={item.noOptionsText}
-											onOpen={item.onOpen}
-											placeholder={item.placeholder}
-											onScroll={item.onScroll}
-											onChange={item.onChange || handleChangeAutocomplete(item.id)}
-											fullWidth
-											onInputChange={item.onInputChange}
-											disabled={item.disabled}
-											value={value || null}
-										></Autocomplete>
-									</Box>
-								);
-							})}
+						{filtersConfig[productType].map((item) => {
+							let value = (item.options as any[]).every((option: any) => typeof option === 'string')
+								? values[item.id]
+								: (item.options as any[]).find((option) => option.value === values[item.id]);
+							return (
+								<Box key={item.id}>
+									<Autocomplete
+										sx={{ paddingY: '2em' }}
+										options={item.options}
+										noOptionsText={item.noOptionsText}
+										onOpen={item.onOpen}
+										placeholder={item.placeholder}
+										onScroll={item.onScroll}
+										onChange={item.onChange || handleChangeAutocomplete(item.id)}
+										fullWidth
+										onInputChange={item.onInputChange}
+										disabled={item.disabled}
+										value={value || null}
+									></Autocomplete>
+								</Box>
+							);
+						})}
 						<Button onClick={handleClickFind} variant='contained' fullWidth>
 							Найти
 						</Button>
@@ -585,28 +513,27 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 		>
 			<Box display='flex' gap='0.5em' flex='1' flexWrap='wrap' className={styles.filters}>
 				<Box width={'calc(25% - 0.5em)'}>{renderProductTypeAutocomplete}</Box>
-				{productType &&
-					filtersConfig[productType].map((item) => {
-						let value = (item.options as any[]).every((option: any) => typeof option === 'string')
-							? values[item.id]
-							: (item.options as any[]).find((option) => option.value === values[item.id]);
-						return (
-							<Box width={'calc(25% - 0.5em)'} key={item.id}>
-								<Autocomplete
-									options={item.options}
-									noOptionsText={item.noOptionsText}
-									onOpen={item.onOpen}
-									placeholder={item.placeholder}
-									onScroll={item.onScroll}
-									onChange={item.onChange || handleChangeAutocomplete(item.id)}
-									fullWidth
-									onInputChange={item.onInputChange}
-									disabled={item.disabled}
-									value={value || null}
-								></Autocomplete>
-							</Box>
-						);
-					})}
+				{filtersConfig[productType].map((item) => {
+					let value = (item.options as any[]).every((option: any) => typeof option === 'string')
+						? values[item.id]
+						: (item.options as any[]).find((option) => option.value === values[item.id]);
+					return (
+						<Box width={'calc(25% - 0.5em)'} key={item.id}>
+							<Autocomplete
+								options={item.options}
+								noOptionsText={item.noOptionsText}
+								onOpen={item.onOpen}
+								placeholder={item.placeholder}
+								onScroll={item.onScroll}
+								onChange={item.onChange || handleChangeAutocomplete(item.id)}
+								fullWidth
+								onInputChange={item.onInputChange}
+								disabled={item.disabled}
+								value={value || null}
+							></Autocomplete>
+						</Box>
+					);
+				})}
 			</Box>
 			<Button onClick={handleClickFind} variant='contained' className={styles['btn-search']}>
 				Найти

@@ -2,6 +2,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PhoneIcon from '@mui/icons-material/Phone';
 import ShieldIcon from '@mui/icons-material/Shield';
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
+import SliderRange from '@mui/material/Slider';
 import { Brand, ProductBrandTexts } from 'api/brands/types';
 import {
 	PageProduct,
@@ -22,7 +23,7 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import dynamic from 'next/dynamic';
 import NextLink from 'next/link';
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { isSparePart, isTire, isTireBrand } from 'services/ProductService';
 import { getStringByTemplateStr } from 'services/StringService';
@@ -34,6 +35,30 @@ const TYPE_TEXT = {
 	cabin: 'Салоны',
 	tire: 'Шины'
 };
+
+const CONFIG_INSTALLMENT_PLAN = [
+	{
+		id: 'halva',
+		alt: 'Карта халва',
+		imgSrc: '/credit_shopping_card_halva.png',
+		paymentMethodType: 'halva',
+		months: 4
+	}
+	// {
+	// 	id: 'turtle',
+	// 	imgSrc: '/credit_shopping_card_turtle.png',
+	// 	alt: 'Карта черепаха',
+	// 	paymentMethodType: 'halva',
+	// 	months: 3
+	// },
+	// {
+	// 	id: 'card-buy',
+	// 	imgSrc: '/credit_shopping_card.png',
+	// 	alt: 'Карта покупок',
+	// 	paymentMethodType: 'halva',
+	// 	months: 3
+	// }
+];
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -51,6 +76,10 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 	const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 	const [sold, setSold] = useState<boolean>(data.sold);
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	const [sliderRangeValues, setSliderRangeValues] = useState<number[]>(
+		CONFIG_INSTALLMENT_PLAN.map((item) => item.months)
+	);
+	const installmentPlanBlockRef = useRef<HTMLDivElement>();
 
 	const handleSold = () => {
 		setSold(true);
@@ -161,6 +190,24 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 			)}
 		</>
 	);
+
+	const handleClickBuyInstallments = () => {
+		const headerHeight = 64;
+		const titleInstallmentPlanHeight = 64;
+		const offsetPosition =
+			(installmentPlanBlockRef.current as HTMLDivElement).getBoundingClientRect().top +
+			window.scrollY -
+			titleInstallmentPlanHeight -
+			headerHeight;
+		window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+	};
+
+	const handleChangeSliderRange =
+		(index: number) => (event: Event, value: number | number[], activeThumb: number) => {
+			if (typeof value === 'number') {
+				setSliderRangeValues(sliderRangeValues.map((item, i) => (i === index ? value : item)));
+			}
+		};
 
 	return (
 		<>
@@ -314,6 +361,15 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 					</Box>
 					<Typography marginY='0.5em'>При покупке на нашем сайте вы получите скидку до 10%</Typography>
 					{renderActionBtns}
+					<Button
+						variant='contained'
+						onClick={handleClickBuyInstallments}
+						sx={{ maxWidth: 438, fontSize: '1em' }}
+						fullWidth
+					>
+						купить в рассрочку
+					</Button>
+
 					<Table sx={{ marginY: '1em' }}>
 						<TableBody>
 							{printOptions.map((item) => (
@@ -360,6 +416,104 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 					<ReactMarkdown content={page.textAfterDescription}></ReactMarkdown>
 				</Box>
 			)}
+			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
+				{data.h1} вы можете купить в рассрочку
+			</Typography>
+			<Box
+				ref={installmentPlanBlockRef}
+				margin={{ xs: 0, sm: '0 2em' }}
+				padding='1em'
+				border='1px solid'
+				borderColor='primary.main'
+				borderRadius='10px'
+			>
+				<Box paddingX='1.5em' marginBottom='1em'>
+					<Slider className={styles['installment-plan-slider']} dots={!isMobile} swipe={false}>
+						{CONFIG_INSTALLMENT_PLAN.map((item, index) => (
+							<Box gap='10px' key={item.id} display={{ xs: 'initial', sm: 'flex!important' }}>
+								<Image
+									src={item.imgSrc}
+									alt={item.alt}
+									style={isMobile ? { margin: 'auto', height: 'auto' } : {}}
+									isOnSSR={false}
+									width={300}
+									height={250}
+								></Image>
+								<Box
+									marginBottom='1em'
+									display='flex'
+									flexDirection='column'
+									justifyContent='center'
+									paddingX='0.25em'
+									flex={1}
+								>
+									<Typography>Срок рассрочки в месяцах</Typography>
+									<Box paddingRight='1.5em' paddingLeft='0.5em'>
+										<SliderRange
+											marks={new Array(12)
+												.fill(null)
+												.map((_, index) => ({ label: index + 1, value: index + 1 }))}
+											step={1}
+											value={item.months}
+											min={1}
+											max={12}
+										></SliderRange>
+									</Box>
+									<Typography>Сумма платежа в месяц</Typography>
+									<Box paddingRight='1.5em' marginTop='2em' paddingLeft='0.5em'>
+										<SliderRange
+											classes={{ valueLabel: styles['slider-range-value'] }}
+											marks={[
+												{
+													value: 1,
+													label: '1'
+												},
+												{
+													value: 1000,
+													label: '1000'
+												},
+												{
+													value: 2000,
+													label: '2000'
+												},
+												{
+													value: 3000,
+													label: '3000'
+												}
+											]}
+											valueLabelDisplay='on'
+											value={Math.ceil(data.price / item.months)}
+											min={1}
+											max={3000}
+										></SliderRange>
+									</Box>
+									{!sold && (
+										<Box>
+											<Buy
+												title='Купить в рассрочку'
+												onSold={handleSold}
+												paymentMethodType={item.paymentMethodType}
+												products={[data]}
+											></Buy>
+										</Box>
+									)}
+								</Box>
+							</Box>
+						))}
+					</Slider>
+				</Box>
+				<Box>
+					<Typography>
+						Уважаемые друзья, У нас есть отличная новость для вас! Теперь вы можете приобрести {data.h1} в
+						рассрочку, что сделает покупку удобной и выгодной для вас. Рассрочка - это прекрасная
+						возможность распределить стоимость товара на несколько месяцев, не нагружая ваш бюджет. Вы
+						сможете наслаждаться всеми преимуществами товара уже сейчас, не откладывая его покупку на потом.
+						Удобные условия рассрочки сделают вашу покупку еще более привлекательной. Так что не упустите
+						шанс. не переживайте о финансах - выбирайте рассрочку и пользуйтесь нашим {data.h1} прямо
+						сейчас!
+					</Typography>
+				</Box>
+			</Box>
 			<CarouselProducts
 				sx={{ paddingX: { xs: '1em', md: '0' } }}
 				data={relatedProducts}
