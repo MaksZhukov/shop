@@ -43,21 +43,21 @@ const CONFIG_INSTALLMENT_PLAN = [
 		imgSrc: '/credit_shopping_card_halva.png',
 		paymentMethodType: 'halva',
 		months: 4
+	},
+	{
+		id: 'turtle',
+		imgSrc: '/credit_shopping_card_turtle.png',
+		alt: 'Карта черепаха',
+		paymentMethodType: 'halva',
+		months: 3
+	},
+	{
+		id: 'card-buy',
+		imgSrc: '/credit_shopping_card.png',
+		alt: 'Карта покупок',
+		paymentMethodType: 'halva',
+		months: 3
 	}
-	// {
-	// 	id: 'turtle',
-	// 	imgSrc: '/credit_shopping_card_turtle.png',
-	// 	alt: 'Карта черепаха',
-	// 	paymentMethodType: 'halva',
-	// 	months: 3
-	// },
-	// {
-	// 	id: 'card-buy',
-	// 	imgSrc: '/credit_shopping_card.png',
-	// 	alt: 'Карта покупок',
-	// 	paymentMethodType: 'halva',
-	// 	months: 3
-	// }
 ];
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
@@ -487,7 +487,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 											max={3000}
 										></SliderRange>
 									</Box>
-									{!sold && (
+									{!sold && item.id === 'halva' && (
 										<Box>
 											<Buy
 												title='Купить в рассрочку'
