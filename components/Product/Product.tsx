@@ -451,7 +451,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 									flex={1}
 								>
 									<Typography component={'h3'} variant='h5'>
-										Купить {data.h1} карте {item.name}
+										Купить {data.h1} по карте {item.name}
 									</Typography>
 									<Typography>Срок рассрочки в месяцах</Typography>
 									<Box paddingRight='1.5em' paddingLeft='0.5em'>
