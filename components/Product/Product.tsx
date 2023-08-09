@@ -40,6 +40,7 @@ const CONFIG_INSTALLMENT_PLAN = [
 	{
 		id: 'halva',
 		alt: 'Карта халва',
+		name: 'халва',
 		imgSrc: '/credit_shopping_card_halva.png',
 		paymentMethodType: 'halva',
 		months: 4
@@ -48,6 +49,7 @@ const CONFIG_INSTALLMENT_PLAN = [
 		id: 'turtle',
 		imgSrc: '/credit_shopping_card_turtle.png',
 		alt: 'Карта черепаха',
+		name: 'черепаха',
 		paymentMethodType: 'halva',
 		months: 3
 	},
@@ -55,6 +57,7 @@ const CONFIG_INSTALLMENT_PLAN = [
 		id: 'card-buy',
 		imgSrc: '/credit_shopping_card.png',
 		alt: 'Карта покупок',
+		name: 'покупок',
 		paymentMethodType: 'halva',
 		months: 3
 	}
@@ -447,6 +450,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 									paddingX='0.25em'
 									flex={1}
 								>
+									<Typography component={'h3'} variant='h5'>
+										Купить {data.h1} карте {item.name}
+									</Typography>
 									<Typography>Срок рассрочки в месяцах</Typography>
 									<Box paddingRight='1.5em' paddingLeft='0.5em'>
 										<SliderRange
