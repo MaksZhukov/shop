@@ -12,6 +12,7 @@ interface Props {
 }
 
 const Guarantee = ({ page }: Props) => {
+	console.log(page.mainLeftImage);
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<>
@@ -28,10 +29,10 @@ const Guarantee = ({ page }: Props) => {
 				<Box maxWidth={{ xs: 'initial', sm: 390 }} width='100%'>
 					<Image
 						title={page.mainLeftImage?.caption}
-						src={page.mainLeftImage?.url}
-						width={page.mainLeftImage?.width}
-						style={isMobile ? { height: '100%', width: '100%', objectFit: 'cover' } : {}}
-						height={page.mainLeftImage?.height}
+						src={page.mainLeftImage?.formats?.small?.url || page.mainLeftImage.url}
+						width={390}
+						style={isMobile ? { height: '100%', width: '100%', objectFit: 'cover' } : { height: 'auto' }}
+						height={320}
 						alt={page.mainLeftImage?.alternativeText}
 					></Image>
 				</Box>
