@@ -83,7 +83,7 @@ const Guarantee = ({ page }: Props) => {
 			<BlockImages
 				withSlider={isMobile}
 				withoutOverlay={isMobile}
-				images={page.images1}
+				images={page.images2}
 				sx={{
 					marginY: { xs: '1em', md: '2em' },
 					padding: { xs: '1em 0', md: '2em 0' },
