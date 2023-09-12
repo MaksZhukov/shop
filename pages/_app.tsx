@@ -29,6 +29,7 @@ import RouteShield from '../components/RouteShield/RouteShield';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import { store } from '../store';
 import './app.scss';
+import VideoWidget from 'components/VideoWidget';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -202,6 +203,7 @@ function MyApp({
 							</Content>
 						</RouteShield>
 						<Footer footer={layout.footer}></Footer>
+						{layout.videoWidget?.show && <VideoWidget video={layout.videoWidget?.video}></VideoWidget>}
 						<Box bottom={10} right={10} zIndex={10} position='fixed'>
 							<Button
 								sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
