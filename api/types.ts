@@ -26,6 +26,12 @@ export type Image = {
 	};
 };
 
+export type Video = {
+	id: number;
+	url: string;
+	size: number;
+};
+
 export type MetaResponse = {
 	pagination?: {
 		page: number;
