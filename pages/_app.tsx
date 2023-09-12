@@ -20,6 +20,7 @@ import { ReactElement } from 'react-markdown/lib/react-markdown';
 import NotistackService from 'services/NotistackService';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import dynamic from 'next/dynamic';
 import parser from 'ua-parser-js';
 import Content from '../components/Content';
 import Footer from '../components/Footer';
@@ -29,7 +30,8 @@ import RouteShield from '../components/RouteShield/RouteShield';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import { store } from '../store';
 import './app.scss';
-import VideoWidget from 'components/VideoWidget';
+
+const VideoWidget = dynamic(() => import('components/VideoWidget'));
 
 const { publicRuntimeConfig } = getConfig();
 

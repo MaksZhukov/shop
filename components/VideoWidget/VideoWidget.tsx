@@ -1,10 +1,11 @@
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { useState, FC } from 'react';
 import styles from './VideoWidget.module.scss';
 import classNames from 'classnames';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import dynamic from 'next/dynamic';
 import { Image, Video } from 'api/types';
 import getConfig from 'next/config';
@@ -18,19 +19,25 @@ interface Props {
 }
 
 const VideoWidget: FC<Props> = ({ video }) => {
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const [isPreview, setIsPreview] = useState<boolean>(false);
+	const [show, setShow] = useState<boolean>(true);
 	const [isMuted, setIsMuted] = useState<boolean>(true);
 	const handleClick = () => {
 		setIsPreview(!isPreview);
 		setIsMuted(false);
 	};
-	return (
+
+	const handleClose = () => {
+		setShow(false);
+	};
+	return show ? (
 		<Box
 			className={classNames(styles.wrapper, !isPreview && styles['wrapper_no-preview'])}
-			left={30}
-			bottom={30}
+			left={40}
+			bottom={20}
 			zIndex={10}
-			width={isPreview ? 320 : 130}
+			width={isPreview ? (isMobile ? 250 : 320) : 130}
 			height={isPreview ? 500 : 180}
 			position='fixed'
 			bgcolor='#fff'
@@ -38,7 +45,10 @@ const VideoWidget: FC<Props> = ({ video }) => {
 			border='3px solid #fff'
 			boxShadow='0px 5px 15px rgba(0,0,0,0.2)'
 		>
-			<IconButton size={'small'} className={styles.btn} onClick={handleClick}>
+			<IconButton color='primary' size={'small'} className={styles['btn-close']} onClick={handleClose}>
+				<CloseIcon></CloseIcon>
+			</IconButton>
+			<IconButton color='primary' size={'small'} className={styles.btn} onClick={handleClick}>
 				{isPreview ? <FullscreenExitIcon></FullscreenExitIcon> : <FullscreenIcon></FullscreenIcon>}
 			</IconButton>
 			<ReactPlayer
@@ -58,6 +68,8 @@ const VideoWidget: FC<Props> = ({ video }) => {
 				url={publicRuntimeConfig.backendUrl + video.url}
 			></ReactPlayer>
 		</Box>
+	) : (
+		<></>
 	);
 };
 
