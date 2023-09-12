@@ -1,0 +1,25 @@
+.wrapper {
+	transition: all 0.3s ease-in-out;
+	&_no-preview {
+		&:hover {
+			transform: scale(1.1);
+		}
+	}
+}
+
+.btn {
+	position: absolute !important;
+	z-index: 5;
+	right: 0px;
+	top: 0px;
+}
+
+.player {
+	border-radius: 5px;
+	:global {
+		video {
+			object-fit: cover;
+			border-radius: 18px;
+		}
+	}
+}

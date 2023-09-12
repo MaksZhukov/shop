@@ -1,7 +1,7 @@
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-import { Image } from 'api/types';
+import { Video } from 'api/types';
 import ReactMarkdown from 'components/ReactMarkdown';
 import getConfig from 'next/config';
 import { FC } from 'react';
@@ -10,11 +10,11 @@ import { getPageProps } from 'services/PagePropsService';
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
-	page: DefaultPage & { content: string; text: string; video: Image };
+	page: DefaultPage & { content: string; text: string; video: Video };
 }
 
 const HowToGetTo: FC<Props> = ({ page }) => {
-    const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<>
 			<Typography marginBottom='1em' component='h1' textTransform='uppercase' variant='h4' textAlign='center'>
