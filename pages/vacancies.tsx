@@ -105,7 +105,7 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 							Обязаности
 						</Typography>
 						<Box component='ul' paddingLeft={{ xs: '2em', md: '0' }}>
-							{item.responsibilities.split('\n').map((val) => (
+							{item.responsibilities?.split('\n').map((val) => (
 								<Typography marginBottom='1em' key={val} component='li'>
 									{val}
 								</Typography>
@@ -127,7 +127,7 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 							Требования
 						</Typography>
 						<Box component='ul' paddingLeft={{ xs: '2em', md: '0' }}>
-							{item.requirements.split('\n').map((val) => (
+							{item.requirements?.split('\n').map((val) => (
 								<Typography marginBottom='1em' key={val} component='li'>
 									{val}
 								</Typography>
