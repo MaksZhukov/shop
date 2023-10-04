@@ -5,6 +5,7 @@ import BlockImages from 'components/BlockImages';
 import Image from 'components/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
+import { getUrlByMinFormat } from 'services/ImageService';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
@@ -29,7 +30,7 @@ const Guarantee = ({ page }: Props) => {
 				<Box maxWidth={{ xs: 'initial', sm: 390 }} width='100%'>
 					<Image
 						title={page.mainLeftImage?.caption}
-						src={page.mainLeftImage?.formats?.small?.url || page.mainLeftImage.url}
+						src={getUrlByMinFormat(page.mainLeftImage, 'small')}
 						width={390}
 						style={isMobile ? { height: '100%', width: '100%', objectFit: 'cover' } : { height: 'auto' }}
 						height={320}
