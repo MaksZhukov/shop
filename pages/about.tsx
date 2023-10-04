@@ -1,12 +1,13 @@
-import { getPageProps } from 'services/PagePropsService';
+import { useMediaQuery } from '@mui/material';
+import { Box } from '@mui/system';
 import { fetchPage } from 'api/pages';
 import { PageAbout } from 'api/pages/types';
-import Typography from 'components/Typography';
-import { Box } from '@mui/system';
-import Image from 'components/Image';
 import BlockImages from 'components/BlockImages';
+import Image from 'components/Image';
 import ReactMarkdown from 'components/ReactMarkdown/ReactMarkdown';
-import { useMediaQuery } from '@mui/material';
+import Typography from 'components/Typography';
+import { getUrlByMinFormat } from 'services/ImageService';
+import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
 	page: PageAbout;
@@ -30,12 +31,13 @@ const About = ({ page }: Props) => {
 
 				<Image
 					title={page.mainImageLeft?.caption}
-					width={page.mainImageLeft?.width}
-					height={page.mainImageLeft?.height}
+					width={500}
+					height={360}
 					style={isTablet ? { height: 'auto' } : {}}
-					src={page.mainImageLeft?.url}
+					src={getUrlByMinFormat(page.mainImageLeft, 'small')}
 					alt={page.mainImageLeft.alternativeText}
 				></Image>
+
 				<Box sx={{ marginLeft: { xs: 0, md: '3em' } }}>
 					<Typography
 						sx={{ display: { xs: 'none', md: 'block' } }}
@@ -99,9 +101,9 @@ const About = ({ page }: Props) => {
 					</Typography>
 					<Image
 						title={page.mainPrinciplesImageRight?.caption}
-						width={page.mainPrinciplesImageRight?.width}
-						height={page.mainPrinciplesImageRight?.height}
-						src={page.mainPrinciplesImageRight?.url}
+						width={500}
+						height={360}
+						src={getUrlByMinFormat(page.mainPrinciplesImageRight, 'small')}
 						alt={page.mainPrinciplesImageRight.alternativeText}
 						style={isTablet ? { height: 'auto' } : {}}
 					></Image>
@@ -109,10 +111,10 @@ const About = ({ page }: Props) => {
 				<Box display={{ xs: 'none', md: 'block' }} minWidth='500px'>
 					<Image
 						title={page.mainPrinciplesImageRight?.caption}
-						width={page.mainPrinciplesImageRight?.width}
-						height={page.mainPrinciplesImageRight?.height}
+						width={500}
+						height={360}
 						style={isTablet ? { height: 'auto' } : {}}
-						src={page.mainPrinciplesImageRight?.url}
+						src={getUrlByMinFormat(page.mainPrinciplesImageRight, 'small')}
 						alt={page.mainPrinciplesImageRight.alternativeText}
 					></Image>
 				</Box>
@@ -140,9 +142,9 @@ const About = ({ page }: Props) => {
 				</Typography>
 				<Image
 					title={page.pricesLeftImage?.caption}
-					width={page.pricesLeftImage?.width}
-					height={page.pricesLeftImage?.height}
-					src={page.pricesLeftImage?.url}
+					width={500}
+					height={360}
+					src={getUrlByMinFormat(page.pricesLeftImage, 'small')}
 					style={isTablet ? { height: 'auto' } : {}}
 					alt={page.pricesLeftImage.alternativeText}
 				></Image>
