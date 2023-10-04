@@ -8,6 +8,7 @@ import BlockImages from 'components/BlockImages';
 import Image from 'components/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
+import { getUrlByMinFormat } from 'services/ImageService';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {
@@ -32,7 +33,7 @@ const Delivery: FC<Props> = ({ page }) => {
 					title={page.mainImageLeft?.caption}
 					width={500}
 					height={360}
-					src={page.mainImageLeft?.formats?.small.url || page.mainImageLeft?.url}
+					src={getUrlByMinFormat(page.mainImageLeft, 'small')}
 					alt={page.mainImageLeft?.alternativeText}
 					style={isTablet ? { height: 'auto' } : {}}
 				></Image>
@@ -97,15 +98,21 @@ const Delivery: FC<Props> = ({ page }) => {
 					marginBottom: { xs: '1em', md: '4em' }
 				}}
 			>
-				<Box sx={{ paddingRight: { xs: 0, md: '3em' }, marginBottom: { xs: '1em', md: 0 } }}>
+				<Box
+					sx={{
+						paddingRight: { xs: 0, md: '3em' },
+						maxWidth: { xs: '100%', md: 'calc(100% - 300px)' },
+						marginBottom: { xs: '1em', md: 0 }
+					}}
+				>
 					<ReactMarkdown content={page.shipmentText}></ReactMarkdown>
 				</Box>
 				<Box>
 					<Image
 						title={page.shipmentImageRight?.caption}
-						width={page.shipmentImageRight?.width}
-						height={page.shipmentImageRight?.height}
-						src={page.shipmentImageRight?.url}
+						width={300}
+						height={210}
+						src={getUrlByMinFormat(page.shipmentImageRight, 'small')}
 						alt={page.shipmentImageRight?.alternativeText}
 					></Image>
 				</Box>
