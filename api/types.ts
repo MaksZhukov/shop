@@ -11,6 +11,8 @@ export type Product = Wheel | Tire | SparePart | Cabin;
 
 export type ProductType = 'sparePart' | 'tire' | 'wheel' | 'cabin';
 
+export type ImageFormat = 'thumbnail' | 'small' | 'medium' | 'large';
+
 export type Image = {
 	id: number;
 	url: string;
@@ -18,12 +20,7 @@ export type Image = {
 	caption: string;
 	width: number;
 	height: number;
-	formats?: {
-		thumbnail: { url: string };
-		small: { url: string };
-		medium: { url: string };
-		large: { url: string };
-	};
+	formats?: Record<ImageFormat, { url: string }>;
 };
 
 export type Video = {
