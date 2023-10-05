@@ -13,7 +13,6 @@ interface Props {
 }
 
 const Guarantee = ({ page }: Props) => {
-	console.log(page.mainLeftImage);
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<>
@@ -95,13 +94,20 @@ const Guarantee = ({ page }: Props) => {
 				bgcolor='#FFF5DD'
 				sx={{ marginBottom: { xs: '1em', sm: '4em' }, padding: { xs: '1em 0.5em', sm: '2em 4em' } }}
 			>
-				<Box display='flex' alignItems='center'>
-					<Box display={{ xs: 'block', sm: 'none' }} marginRight='1em' maxWidth='250px' width='100%'>
+				<Box display='flex' alignItems='center' flexDirection={{ xs: 'column', md: 'row' }}>
+					<Box
+						display={{ xs: 'block', sm: 'none' }}
+						marginRight='1em'
+						maxWidth='250px'
+						maxHeight='250px'
+						width='100%'
+					>
 						<Image
 							title={page.warningLeftImage?.caption}
 							src={page.warningLeftImage?.url}
-							width={page.warningLeftImage?.width}
-							height={page.warningLeftImage?.height}
+							width={190}
+							style={{ height: 'auto' }}
+							height={190}
 							alt={page.warningLeftImage?.alternativeText}
 						></Image>
 					</Box>
