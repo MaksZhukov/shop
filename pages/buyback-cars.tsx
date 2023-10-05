@@ -239,8 +239,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 			<Box className={styles.head} marginBottom='2em' minHeight={{ xs: 350, md: 744 }} display='flex'>
 				<Image
 					title={page.mainBackgroundImage?.caption}
-					width={page.mainBackgroundImage?.width}
-					height={page.mainBackgroundImage?.height}
+					width={1400}
+					height={563}
 					style={{ position: 'absolute', top: 0, height: '100%', objectFit: 'cover', width: '100%' }}
 					src={page.mainBackgroundImage?.url}
 					alt={page.mainBackgroundImage?.alternativeText}
@@ -257,8 +257,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				>
 					<Image
 						title={page.mainBackgroundLeftImage?.caption}
-						width={page.mainBackgroundLeftImage?.width}
-						height={page.mainBackgroundLeftImage?.height}
+						width={786}
+						height={580}
 						style={{ maxHeight: '100%', width: 'auto' }}
 						src={page.mainBackgroundLeftImage?.url}
 						alt={page.mainBackgroundLeftImage?.alternativeText}
@@ -332,8 +332,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 									title={item.image?.caption}
 									src={item.image?.url}
 									alt={item.image?.alternativeText}
-									width={item.image?.width || 100}
-									height={item.image?.height || 100}
+									width={100}
+									height={100}
 								></Image>
 								<Typography variant='h6' marginBottom='0.5em'>
 									{item.title}
@@ -480,8 +480,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				>
 					<Image
 						title={page.advantagesRightImage?.caption}
-						width={page.advantagesRightImage?.width}
-						height={page.advantagesRightImage?.height}
+						width={316}
+						height={413}
 						style={{ height: 'auto' }}
 						src={page.advantagesRightImage?.url}
 						alt={page.advantagesRightImage?.alternativeText}
@@ -510,8 +510,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 								<Box display='flex' alignItems='center' width={115} height={115} margin='auto'>
 									<Image
 										title={item.image?.caption}
-										width={item.image?.width || 100}
-										height={item.image?.height || 100}
+										width={100}
+										height={100}
 										alt={item.image?.alternativeText}
 										src={item.image?.url}
 									></Image>
@@ -536,9 +536,9 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				>
 					<Image
 						title={page.sellImage?.caption}
-						width={page.sellImage?.width}
-						// style={{ height: 'auto' }}
-						height={page.sellImage?.height}
+						width={567}
+						style={{ height: 'auto' }}
+						height={376}
 						src={page.sellImage?.url}
 						alt={page.sellImage?.alternativeText}
 					></Image>
@@ -607,8 +607,8 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				>
 					<Image
 						title={page.whyWeLeftImage?.caption}
-						width={page.whyWeLeftImage?.width}
-						height={page.whyWeLeftImage?.height}
+						width={352}
+						height={435}
 						src={page.whyWeLeftImage?.url}
 						alt={page.whyWeLeftImage?.alternativeText}
 					></Image>
