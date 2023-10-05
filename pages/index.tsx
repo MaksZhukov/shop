@@ -614,7 +614,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 									display='flex'
 									alignItems='center'
 									justifyContent='center'
-									minHeight='250px'
+									height='250px'
 								>
 									<Image
 										title={item.caption}
