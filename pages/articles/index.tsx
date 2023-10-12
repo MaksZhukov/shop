@@ -40,6 +40,7 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 						start: qPage === '1' ? 0 : (+qPage - 1) * LIMIT,
 						limit: LIMIT
 					},
+                    sort: 'createdAt:desc',
 					populate: 'mainImage'
 				});
 				setData(data);
