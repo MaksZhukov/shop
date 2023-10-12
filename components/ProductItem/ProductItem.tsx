@@ -76,20 +76,22 @@ const ProductItem = ({
 					))}
 				</Grid>
 				<Box display='flex' marginTop='0.5em' flexWrap='wrap' alignItems='center' gap={'0.5em'}>
-					{!!data.discountPrice && (
-						<>
-							<Typography variant='h6'>Скидка:</Typography>
-							<Typography fontWeight='bold' variant='h5' color='secondary'>
-								{data.discountPrice} руб{' '}
-							</Typography>
-						</>
-					)}
-					{!!data.discountPriceUSD && (
-						<Typography marginRight='1em' color='text.primary'>
-							~{data.discountPriceUSD.toFixed()}$
-						</Typography>
-					)}
 					<Box display='flex' flexDirection='column'>
+						<Box display="flex" gap={1}>
+							{!!data.discountPrice && (
+								<>
+									<Typography variant='h6'>Скидка:</Typography>
+									<Typography fontWeight='bold' variant='h5' color='secondary'>
+										{data.discountPrice} руб{' '}
+									</Typography>
+								</>
+							)}
+							{!!data.discountPriceUSD && (
+								<Typography marginRight='1em' color='text.primary'>
+									~{data.discountPriceUSD.toFixed()}$
+								</Typography>
+							)}
+						</Box>
 						<Box display='flex' gap={1} alignItems='center'>
 							<Box
 								bgcolor='primary.main'
@@ -124,8 +126,7 @@ const ProductItem = ({
 								textAlign='center'
 								fontWeight='bold'
 								variant='h6'
-								component={data.discountPrice ? 's' : 'p'}
-								sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+								component={'p'}
 								color='secondary'
 							>
 								{data.price * (data.price > 500 ? 0.95 : 0.9)} руб{' '}
@@ -213,8 +214,7 @@ const ProductItem = ({
 						textAlign='center'
 						fontWeight='bold'
 						variant='h6'
-						component={data.discountPrice ? 's' : 'p'}
-						sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+						component={'p'}
 						color='secondary'
 					>
 						{data.price * (data.price > 500 ? 0.95 : 0.9)} руб{' '}
