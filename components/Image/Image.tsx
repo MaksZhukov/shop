@@ -11,7 +11,13 @@ const Image = ({
 	isOnSSR = true,
 	style,
 	...props
-}: Omit<ImageProps, 'src' | 'alt'> & { src?: string; alt?: string; isOnSSR?: boolean; withZoom?: boolean }) => {
+}: Omit<ImageProps, 'src' | 'alt'> & {
+	src?: string;
+	alt?: string;
+	isOnSSR?: boolean;
+	withZoom?: boolean;
+	minWidth?: number;
+}) => {
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const [key, setKey] = useState<number>(0);
 
@@ -24,6 +30,7 @@ const Image = ({
 		return (
 			<Box
 				maxWidth={props.width}
+				minWidth={props.minWidth}
 				bgcolor='primary.main'
 				display='flex'
 				margin='auto'

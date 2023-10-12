@@ -62,7 +62,7 @@ const CATEGORIES = [
 	{ name: 'Диски', href: '/wheels' },
 	{ name: 'Салоны', href: '/cabins ' },
 	{ name: 'Запчасти', href: '/spare-parts' },
-	{ name: 'Колеса', href: '/tires' }
+	{ name: 'Шины', href: '/tires' }
 ];
 
 const productTypeOptions = [
