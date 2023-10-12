@@ -89,30 +89,49 @@ const ProductItem = ({
 							~{data.discountPriceUSD.toFixed()}$
 						</Typography>
 					)}
-					<Box
-						bgcolor='primary.main'
-						justifyContent='center'
-						alignItems='center'
-						display='flex'
-						width={34}
-						title='При покупке на нашем сайте вы получите скидку до 10%'
-						height={34}
-						marginRight='0.25em'
-						sx={{ borderRadius: '50%' }}
-					>
-						<PercentIcon sx={{ color: '#fff' }}></PercentIcon>
+					<Box display='flex' flexDirection='column'>
+						<Box display='flex' gap={1} alignItems='center'>
+							<Box
+								bgcolor='primary.main'
+								justifyContent='center'
+								alignItems='center'
+								display='flex'
+								width={34}
+								title='При покупке на нашем сайте вы получите скидку до 10%'
+								height={34}
+								sx={{ borderRadius: '50%' }}
+							>
+								<PercentIcon sx={{ color: '#fff' }}></PercentIcon>
+							</Box>
+							<Typography
+								textAlign='center'
+								fontWeight='bold'
+								variant='h5'
+								component={data.discountPrice ? 's' : 'p'}
+								sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+								color='secondary'
+							>
+								{data.price} руб{' '}
+							</Typography>
+							{!!data.priceUSD && (
+								<Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>
+							)}
+						</Box>
+						<Box display='flex' gap={1} justifyContent='center' alignItems='center'>
+							<Typography color='primary.main'>Цена со скидкой</Typography>
+							<Typography
+								marginRight='0.5em'
+								textAlign='center'
+								fontWeight='bold'
+								variant='h6'
+								component={data.discountPrice ? 's' : 'p'}
+								sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+								color='secondary'
+							>
+								{data.price * (data.price > 500 ? 0.95 : 0.9)} руб{' '}
+							</Typography>
+						</Box>
 					</Box>
-					<Typography
-						textAlign='center'
-						fontWeight='bold'
-						variant='h5'
-						component={data.discountPrice ? 's' : 'p'}
-						sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
-						color='secondary'
-					>
-						{data.price} руб{' '}
-					</Typography>
-					{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
 					{!sold && <Buy onSold={handleSold} products={[data]}></Buy>}
 					<FavoriteButton product={data}></FavoriteButton>
 				</Box>
@@ -187,6 +206,20 @@ const ProductItem = ({
 						{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
 					</Box>
 				</Box>
+				<Box display='flex' gap={1} justifyContent='center' alignItems='center'>
+					<Typography color='primary.main'>Цена со скидкой</Typography>
+					<Typography
+						marginRight='0.5em'
+						textAlign='center'
+						fontWeight='bold'
+						variant='h6'
+						component={data.discountPrice ? 's' : 'p'}
+						sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+						color='secondary'
+					>
+						{data.price * (data.price > 500 ? 0.95 : 0.9)} руб{' '}
+					</Typography>
+				</Box>
 				<Box display='flex' gap={'1em'} justifyContent='center' marginY='0.5em'>
 					{!sold && <Buy onSold={handleSold} products={[data]}></Buy>}
 					<FavoriteButton product={data}></FavoriteButton>
@@ -223,8 +256,12 @@ const ProductItem = ({
 					<Box>
 						<Image
 							title={data.h1}
-							style={{ objectFit: 'cover', maxWidth: '100%', margin: 'auto' }}
+							style={{
+								objectFit: 'cover',
+								margin: 'auto'
+							}}
 							src=''
+							minWidth={activeView === 'list' ? (isMobile ? 150 : 200) : undefined}
 							width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
 							height={activeView === 'grid' ? 215 : 150}
 							alt={data.h1}
