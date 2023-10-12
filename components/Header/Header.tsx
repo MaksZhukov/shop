@@ -251,6 +251,14 @@ const Header = observer(({ brands }: Props) => {
 		</MenuList>
 	);
 
+	const renderShoppingCartBtn = (
+		<NextLink href='/favorites'>
+			<IconButton size='small'>
+				<ShoppingCartIcon sx={{ color: '#fff' }}></ShoppingCartIcon>
+			</IconButton>
+		</NextLink>
+	);
+
 	const navigation = getNavigation(brands, router.asPath.split('/')[1]);
 
 	const renderLogo = (type: 'mobile' | 'desktop') => (
@@ -426,9 +434,9 @@ const Header = observer(({ brands }: Props) => {
 						}}
 						className={styles['mobile-menu']}
 					>
-						<ShoppingCartIcon sx={{ color: '#fff' }}></ShoppingCartIcon>
+						{renderShoppingCartBtn}
 						<IconButton
-							size='large'
+							size='small'
 							aria-controls='header-menu'
 							color='inherit'
 							title='Меню'
@@ -442,7 +450,7 @@ const Header = observer(({ brands }: Props) => {
 					{!isTablet && renderMenu('desktop')}
 					{!isTablet && (
 						<>
-							<ShoppingCartIcon sx={{ color: '#fff' }}></ShoppingCartIcon>
+							{renderShoppingCartBtn}
 							<Profile onClickLogout={handleClickLogout} onClickSignIn={handleClick}></Profile>
 						</>
 					)}

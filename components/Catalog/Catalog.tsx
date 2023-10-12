@@ -38,10 +38,10 @@ import styles from './Catalog.module.scss';
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
 const selectSortItems = [
-	{ name: 'Новые', value: 'createdAt:desc' },
-	{ name: 'Старые', value: 'createdAt:asc' },
-	{ name: 'Дешевые', value: 'price:asc' },
-	{ name: 'Дорогие', value: 'price:desc' }
+	{ name: 'Сначала свежие', value: 'createdAt:desc' },
+	{ name: 'Сначала старые', value: 'createdAt:asc' },
+	{ name: 'Сначала дешёвые', value: 'price:asc' },
+	{ name: 'Сначала дорогие', value: 'price:desc' }
 ];
 
 const anchorText = {

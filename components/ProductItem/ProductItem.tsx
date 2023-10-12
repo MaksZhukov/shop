@@ -187,6 +187,20 @@ const ProductItem = ({
 						{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
 					</Box>
 				</Box>
+				<Box display='flex' gap={1} justifyContent='center' alignItems='center'>
+					<Typography color='primary.main'>Цена со скидкой</Typography>
+					<Typography
+						marginRight='0.5em'
+						textAlign='center'
+						fontWeight='bold'
+						variant='h6'
+						component={data.discountPrice ? 's' : 'p'}
+						sx={{ opacity: data.discountPrice ? '0.8' : '1' }}
+						color='secondary'
+					>
+						{data.price * 0.9} руб{' '}
+					</Typography>
+				</Box>
 				<Box display='flex' gap={'1em'} justifyContent='center' marginY='0.5em'>
 					{!sold && <Buy onSold={handleSold} products={[data]}></Buy>}
 					<FavoriteButton product={data}></FavoriteButton>

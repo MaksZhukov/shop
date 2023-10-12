@@ -1,3 +1,4 @@
+import MenuIcon from '@mui/icons-material/Menu';
 import {
 	Badge,
 	ClickAwayListener,
@@ -10,14 +11,12 @@ import {
 	Popper,
 	Typography
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import classNames from 'classnames';
+import { observer } from 'mobx-react';
 import { useRouter } from 'next/router';
-import MenuIcon from '@mui/icons-material/Menu';
+import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../../../store';
 import styles from './Profile.module.scss';
-import { observer } from 'mobx-react';
-import classNames from 'classnames';
-import { useSnackbar } from 'notistack';
 
 interface Props {
 	onClickSignIn: () => void;
@@ -65,9 +64,10 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 	return (
 		<>
 			<IconButton
-				sx={{ order: { xs: '1', md: 'initial' }, display: { xs: 'none', md: 'block' } }}
+				sx={{ order: { xs: '1', md: 'initial' }, display: { xs: 'none', md: 'flex' } }}
 				id='account-button'
-                title="Меню"
+				title='Меню'
+				size='small'
 				className={styles['button']}
 				aria-controls={isOpened ? 'account-menu' : undefined}
 				aria-haspopup='true'
