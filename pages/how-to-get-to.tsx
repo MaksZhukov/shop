@@ -37,6 +37,7 @@ const HowToGetTo: FC<Props> = ({ page }) => {
 			<iframe
 				src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&source=constructor'
 				width='100%'
+                loading='lazy'
 				height='400px'
 				frameBorder={0}
 			></iframe>

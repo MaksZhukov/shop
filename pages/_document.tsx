@@ -1,3 +1,4 @@
+import Metrics from 'components/Metrics';
 import { roboto } from 'fonts';
 import { Head, Html, Main, NextScript } from 'next/document';
 
@@ -13,6 +14,7 @@ export default function Document() {
 			<body className={roboto.className}>
 				<Main />
 				<NextScript />
+				{process.env.NODE_ENV === 'production' && <Metrics></Metrics>}
 			</body>
 		</Html>
 	);

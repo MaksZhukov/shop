@@ -54,7 +54,7 @@ import { getPageProps } from 'services/PagePropsService';
 import { BODY_STYLES, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
 
-const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
+const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
 const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
 
@@ -548,6 +548,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 				className={styles['head-section']}
 			>
 				<Image
+					priority
 					loading='eager'
 					title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
 					width={isMobile ? page.bannerMobile?.width : page.banner?.width}
