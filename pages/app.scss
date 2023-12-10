@@ -40,6 +40,14 @@ a {
 	}
 }
 
+
+// IT NEEDS FOR "Ensure text remains visible during webfont load"
+.slick-next:before,
+.slick-prev:before {
+	font-family: 'slick', Roboto;
+	font-display: swap;
+}
+
 .slick-slide div {
 	outline: none;
 }

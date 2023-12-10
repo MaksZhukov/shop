@@ -206,6 +206,7 @@ const Header = observer(({ brands }: Props) => {
 		let LinkComp = item.target ? Link : NextLink;
 		return (
 			<LinkComp
+                prefetch={false}
 				className={styles.link}
 				underline='none'
 				style={{ color: '#000' }}
@@ -252,7 +253,7 @@ const Header = observer(({ brands }: Props) => {
 	);
 
 	const renderShoppingCartBtn = (
-		<NextLink href='/favorites'>
+		<NextLink prefetch={false} href='/favorites'>
 			<IconButton size='small'>
 				<ShoppingCartIcon sx={{ color: '#fff' }}></ShoppingCartIcon>
 			</IconButton>
@@ -268,7 +269,7 @@ const Header = observer(({ brands }: Props) => {
 			}}
 			{...(type === 'mobile' ? { order: { xs: '2', md: 'initial' } } : {})}
 		>
-			<NextLink href='/'>
+			<NextLink prefetch={false} href='/'>
 				<Image
 					title={'Разборка авто'}
 					style={{ cursor: 'pointer' }}
@@ -313,7 +314,7 @@ const Header = observer(({ brands }: Props) => {
 					: {})}
 			>
 				{page.path && isTablet ? (
-					<NextLink href={page.path} onClick={handleClickLinkTablet}>
+					<NextLink href={page.path} prefetch={false} onClick={handleClickLinkTablet}>
 						{page.name}
 					</NextLink>
 				) : (
@@ -374,7 +375,7 @@ const Header = observer(({ brands }: Props) => {
 					<Fragment key={page.id}>
 						<>
 							{page.path && !isTablet ? (
-								<NextLink href={page.path} passHref>
+								<NextLink prefetch={false} href={page.path} passHref>
 									{renterRootMenuBtn(page, type, anchorEl?.textContent === page.name)}
 								</NextLink>
 							) : (

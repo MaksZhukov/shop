@@ -4,7 +4,6 @@ import { Container } from '@mui/system';
 import { send } from 'api/email';
 import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
-import Metrics from 'components/Metrics';
 import SEOBox from 'components/SEOBox';
 import mediaQuery from 'css-mediaquery';
 import { roboto } from 'fonts';
@@ -23,7 +22,6 @@ import 'slick-carousel/slick/slick.css';
 import dynamic from 'next/dynamic';
 import parser from 'ua-parser-js';
 import Content from '../components/Content';
-import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Layout from '../components/Layout';
 import RouteShield from '../components/RouteShield/RouteShield';
@@ -32,6 +30,7 @@ import { store } from '../store';
 import './app.scss';
 
 const VideoWidget = dynamic(() => import('components/VideoWidget'));
+const Footer = dynamic(() => import('components/Footer'));
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -185,7 +184,6 @@ function MyApp({
 					maxSnack={3}
 				>
 					<Layout>
-						{process.env.NODE_ENV === 'production' && <Metrics></Metrics>}
 						<HeadSEO
 							title={restPageProps.page?.seo?.title}
 							description={restPageProps.page?.seo?.description}
