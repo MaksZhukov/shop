@@ -3,19 +3,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig = {
-	headers: async () => [
-		{
-			// list more extensions here if needed; these are all the resources in the `public` folder including the subfolders
-			source: '/:all*(svg|jpg|png|webp)',
-			locale: false,
-			headers: [
-				{
-					key: 'Cache-Control',
-					value: 'public, max-age=31536000, stale-while-revalidate'
-				}
-			]
-		}
-	],
 	productionBrowserSourceMaps: true,
 	reactStrictMode: false,
 	...(process.env.PAGES ? { pageExtensions: ['dev.tsx'] } : {}),
@@ -31,7 +18,8 @@ const nextConfig = {
 				protocol: 'https',
 				hostname: '**'
 			}
-		]
+		],
+		minimumCacheTTL: 60000
 	},
 	experimental: {
 		largePageDataBytes: 200 * 1000,
