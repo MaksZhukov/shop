@@ -117,6 +117,7 @@ const Contacts = ({ page, socials }: Props) => {
 			>
 				<iframe
 					style={{ flex: '1', minHeight: isMobile ? 400 : 500 }}
+                    loading='lazy'
 					src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor'
 					frameBorder='0'
 				></iframe>
