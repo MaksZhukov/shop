@@ -5,6 +5,7 @@ const Metrics = () => {
 	return (
 		<>
 			<Script
+				async
 				id='yandex-metrica'
 				strategy='afterInteractive'
 			>{`(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
