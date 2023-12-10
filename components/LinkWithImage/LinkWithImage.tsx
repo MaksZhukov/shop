@@ -33,7 +33,7 @@ const LinkWithImage: FC<Props> = ({
 	let title = caption || image?.caption;
 
 	return (
-		<NextLink className={styles.link} href={link} target={targetLink}>
+		<NextLink prefetch={false} className={styles.link} href={link} target={targetLink}>
 			<Image
 				title={image?.caption}
 				style={imageStyle}

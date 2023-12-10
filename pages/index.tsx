@@ -608,7 +608,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 							key={item.id}
 							className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}
 						>
-							<NextLink href={CATEGORIES[i].href}>
+							<NextLink prefetch={false} href={CATEGORIES[i].href}>
 								<Box
 									position='relative'
 									zIndex={1}
@@ -651,7 +651,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 							style={isMobile ? { objectFit: 'cover' } : {}}
 							src='/main_buyback.png'
 						></Image>
-						<NextLink href={'/buyback-cars'}>
+						<NextLink prefetch={false} href={'/buyback-cars'}>
 							<Link
 								position='absolute'
 								top={'5px'}
