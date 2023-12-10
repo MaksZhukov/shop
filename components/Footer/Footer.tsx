@@ -51,7 +51,7 @@ const Footer: FC<Props> = ({ footer }) => {
 						}}
 					>
 						<ReactMarkdown content={footer.firstBlock}></ReactMarkdown>
-						<NextLink href={'/privacy'}>
+						<NextLink prefetch={false} href={'/privacy'}>
 							<Link color='#fff' component='span'>
 								Политика конфиденциальности
 							</Link>
@@ -126,7 +126,7 @@ const Footer: FC<Props> = ({ footer }) => {
 								<LivejournalIcon size={25}></LivejournalIcon>
 							</LivejournalShareButton>
 						</Box>
-						<NextLink href={'/sitemap'}>
+						<NextLink prefetch={false} href={'/sitemap'}>
 							<Link color='#fff' component='span'>
 								Карта сайта
 							</Link>
