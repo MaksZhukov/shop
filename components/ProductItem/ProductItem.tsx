@@ -41,7 +41,7 @@ const ProductItem = ({
 				flexDirection='column'
 				width={{ xs: 'calc(100% - 150px)', sm: 'initial' }}
 			>
-				<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
+				<NextLink prefetch={false} href={`/${getProductTypeSlug(data)}/` + data.slug}>
 					<Link
 						typography={'h6'}
 						alignItems='center'
@@ -140,7 +140,7 @@ const ProductItem = ({
 		),
 		grid: (
 			<>
-				<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
+				<NextLink prefetch={false} href={`/${getProductTypeSlug(data)}/` + data.slug}>
 					<Link
 						height={60}
 						variant='body2'
@@ -236,7 +236,7 @@ const ProductItem = ({
 			display={activeView === 'list' ? 'flex' : 'initial'}
 			width={width}
 		>
-			<NextLink href={`/${getProductTypeSlug(data)}/` + data.slug}>
+			<NextLink prefetch={false} href={`/${getProductTypeSlug(data)}/` + data.slug}>
 				{data.images ? (
 					<Box width={activeView === 'list' ? (isMobile ? 150 : 200) : '100%'}>
 						<Slider autoplay autoplaySpeed={5000} arrows={false}>

@@ -80,7 +80,7 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 							params.disabled ? (
 								<PaginationItem {...params} />
 							) : (
-								<NextLink shallow href={`${router.pathname}?page=${params.page}`}>
+								<NextLink prefetch={false} shallow href={`${router.pathname}?page=${params.page}`}>
 									<PaginationItem {...params} />
 								</NextLink>
 							)
