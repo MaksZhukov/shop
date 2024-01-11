@@ -349,7 +349,11 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 						>
 							{data.price} руб{' '}
 						</Typography>
-						{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
+						{!!data.priceUSD && (
+							<Typography mr='0.25em' color='text.secondary'>
+								~{data.priceUSD.toFixed()}$
+							</Typography>
+						)}
 						{!!data.priceRUB && <Typography color='text.secondary'>~{data.priceRUB.toFixed()}₽</Typography>}
 						<NextLink href={'/delivery'}>
 							<IconButton>
