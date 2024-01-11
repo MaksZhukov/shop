@@ -77,7 +77,7 @@ const ProductItem = ({
 				</Grid>
 				<Box display='flex' marginTop='0.5em' flexWrap='wrap' alignItems='center' gap={'0.5em'}>
 					<Box display='flex' flexDirection='column'>
-						<Box display="flex" gap={1}>
+						<Box display='flex' gap={1}>
 							{!!data.discountPrice && (
 								<>
 									<Typography variant='h6'>Скидка:</Typography>
@@ -93,18 +93,6 @@ const ProductItem = ({
 							)}
 						</Box>
 						<Box display='flex' gap={1} alignItems='center'>
-							<Box
-								bgcolor='primary.main'
-								justifyContent='center'
-								alignItems='center'
-								display='flex'
-								width={34}
-								title='При покупке на нашем сайте вы получите скидку до 10%'
-								height={34}
-								sx={{ borderRadius: '50%' }}
-							>
-								<PercentIcon sx={{ color: '#fff' }}></PercentIcon>
-							</Box>
 							<Typography
 								textAlign='center'
 								fontWeight='bold'
@@ -116,21 +104,13 @@ const ProductItem = ({
 								{data.price} руб{' '}
 							</Typography>
 							{!!data.priceUSD && (
-								<Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>
+								<Typography mr='0.25em' color='text.secondary'>
+									~{data.priceUSD.toFixed()}$
+								</Typography>
 							)}
-						</Box>
-						<Box display='flex' gap={1} justifyContent='center' alignItems='center'>
-							<Typography color='primary.main'>Цена со скидкой</Typography>
-							<Typography
-								marginRight='0.5em'
-								textAlign='center'
-								fontWeight='bold'
-								variant='h6'
-								component={'p'}
-								color='secondary'
-							>
-								{data.price * (data.price > 500 ? 0.95 : 0.9)} руб{' '}
-							</Typography>
+							{!!data.priceRUB && (
+								<Typography color='text.secondary'>~{data.priceRUB.toFixed()}₽</Typography>
+							)}
 						</Box>
 					</Box>
 					{!sold && <Buy onSold={handleSold} products={[data]}></Buy>}
@@ -180,19 +160,6 @@ const ProductItem = ({
 						)}
 					</Box>
 					<Box display='flex' alignItems='center'>
-						<Box
-							bgcolor='primary.main'
-							justifyContent='center'
-							alignItems='center'
-							display='flex'
-							width={34}
-							title='При покупке на нашем сайте вы получите скидку до 10%'
-							height={34}
-							marginRight='0.25em'
-							sx={{ borderRadius: '50%' }}
-						>
-							<PercentIcon sx={{ color: '#fff' }}></PercentIcon>
-						</Box>
 						<Typography
 							marginRight='0.5em'
 							textAlign='center'
@@ -204,21 +171,14 @@ const ProductItem = ({
 						>
 							{data.price} руб{' '}
 						</Typography>
-						{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
+						{!!data.priceUSD && (
+							<Typography mr='0.25em' color='text.secondary'>
+								~{data.priceUSD.toFixed()}$
+							</Typography>
+						)}
+
+						{!!data.priceRUB && <Typography color='text.secondary'>~{data.priceRUB.toFixed()}₽</Typography>}
 					</Box>
-				</Box>
-				<Box display='flex' gap={1} justifyContent='center' alignItems='center'>
-					<Typography color='primary.main'>Цена со скидкой</Typography>
-					<Typography
-						marginRight='0.5em'
-						textAlign='center'
-						fontWeight='bold'
-						variant='h6'
-						component={'p'}
-						color='secondary'
-					>
-						{data.price * (data.price > 500 ? 0.95 : 0.9)} руб{' '}
-					</Typography>
 				</Box>
 				<Box display='flex' gap={'1em'} justifyContent='center' marginY='0.5em'>
 					{!sold && <Buy onSold={handleSold} products={[data]}></Buy>}

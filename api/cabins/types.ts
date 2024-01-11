@@ -15,6 +15,7 @@ export interface Cabin {
 	seatUpholstery: string;
 	price: number;
 	priceUSD?: number;
+    priceRUB: number;
 	discountPrice: number;
 	discountPriceUSD: number;
 	model?: Model;
