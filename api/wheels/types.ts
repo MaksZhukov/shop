@@ -26,6 +26,7 @@ export interface Wheel {
 	model: Model;
 	price: number;
 	priceUSD: number;
+    priceRUB: number;
 	discountPrice: number;
 	discountPriceUSD: number;
 	count: number;
