@@ -20,6 +20,7 @@ export interface Tire {
 	brand: TireBrand;
 	price: number;
 	priceUSD: number;
+    priceRUB: number;
 	discountPrice: number;
 	discountPriceUSD: number;
 	count: number;

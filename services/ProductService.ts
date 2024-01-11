@@ -24,7 +24,7 @@ export const getProductTypeSlug = (data: Product) => `${SLUG_PRODUCT_TYPE[data.t
 export const getProductPageSeo = (pageSeo: SEO, product: Product) => {
 	return {
 		title: product.seo?.title || getStringByTemplateStr(pageSeo.title, product),
-		description: `Стоимость ${getPriceWithSale(product.discountPrice || product.price)} руб(цена со скидкой) ${
+		description: `Стоимость ${product.discountPrice || product.price} руб ${
 			product.seo?.description || getStringByTemplateStr(pageSeo.description, product)
 		}`,
 		keywords: product.seo?.keywords || getStringByTemplateStr(pageSeo.keywords, product)
