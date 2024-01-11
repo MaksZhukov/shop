@@ -350,6 +350,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 							{data.price} руб{' '}
 						</Typography>
 						{!!data.priceUSD && <Typography color='text.secondary'>~{data.priceUSD.toFixed()}$</Typography>}
+						{!!data.priceRUB && <Typography color='text.secondary'>~{data.priceRUB.toFixed()}₽</Typography>}
 						<NextLink href={'/delivery'}>
 							<IconButton>
 								<LocalShippingIcon titleAccess='Доставка' color='primary'></LocalShippingIcon>
@@ -362,7 +363,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 						</NextLink>
 						<FavoriteButton product={data}></FavoriteButton>
 					</Box>
-					<Typography marginY='0.5em'>При покупке на нашем сайте вы получите скидку до 10%</Typography>
 					{renderActionBtns}
 					<Button
 						variant='contained'

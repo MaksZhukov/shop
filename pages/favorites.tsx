@@ -211,8 +211,13 @@ const Favorites = () => {
 														{item.product.price} руб{' '}
 													</Typography>
 													{!!item.product.priceUSD && (
-														<Typography color='text.secondary'>
+														<Typography mr='0.25em' color='text.secondary'>
 															~{item.product.priceUSD.toFixed()}$
+														</Typography>
+													)}
+													{!!item.product.priceRUB && (
+														<Typography color='text.secondary'>
+															~{item.product.priceRUB.toFixed()}₽
 														</Typography>
 													)}
 												</Box>
@@ -231,9 +236,6 @@ const Favorites = () => {
 							);
 						})}
 					</List>
-					<Typography textAlign='center' marginY='0.5em'>
-						При покупке на нашем сайте вы получите скидку до 10%
-					</Typography>
 					<Box display='flex' alignItems={{ xs: 'initial', md: 'center' }} gap={{ xs: 0, sm: '1em' }}>
 						<Box
 							marginLeft={{ xs: 0, md: '150px' }}

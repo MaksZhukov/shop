@@ -17,6 +17,7 @@ export interface SparePart {
 	description: string;
 	price: number;
 	priceUSD?: number;
+    priceRUB: number;
 	discountPrice: number;
 	discountPriceUSD: number;
 	model?: Model;
