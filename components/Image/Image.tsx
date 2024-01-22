@@ -5,6 +5,8 @@ import NextImage, { ImageProps } from 'next/image';
 import { useState } from 'react';
 const { publicRuntimeConfig } = getConfig();
 
+const MAX_LOADING_IMAGES_ERRORS = 1;
+
 const Image = ({
 	src,
 	alt = '',
@@ -22,11 +24,11 @@ const Image = ({
 	const [key, setKey] = useState<number>(0);
 
 	const handleError = () => {
-		if (key < 3) {
+		if (key < MAX_LOADING_IMAGES_ERRORS) {
 			setKey(key + 1);
 		}
 	};
-	if (!src) {
+	if (!src || key === MAX_LOADING_IMAGES_ERRORS) {
 		return (
 			<Box
 				maxWidth={props.width}
