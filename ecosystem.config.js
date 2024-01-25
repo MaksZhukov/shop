@@ -24,7 +24,7 @@ module.exports = {
 				NODE_ENV: 'production',
                 BACKEND_LOCAL_URL: 'http://127.0.0.1:1337'
 			},
-			instances: 'max',
+			instances: '4',
 			exec_mode: 'cluster',
 			max_memory_restart: '500M',
 			restart_delay: 5000,
