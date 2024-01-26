@@ -138,7 +138,7 @@ const Catalog = ({
 					fetchsData.map((fetchFunc) =>
 						fetchFunc({
 							filters: {
-								sold: { $eq: false },
+								sold: false,
 								...(searchValue
 									? {
 											$and: searchValue

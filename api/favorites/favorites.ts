@@ -3,7 +3,7 @@ import { ApiResponse } from '../types';
 import { Favorite } from './types';
 
 export const fetchFavorites = () =>
-	api.get<ApiResponse<Favorite[]>>('favorites', { params: { filters: { product: { sold: { $eq: false } } } } });
+	api.get<ApiResponse<Favorite[]>>('favorites', { params: { filters: { product: { sold: false } } } });
 
 export const addFavorite = (productId: number, type: 'sparePart' | 'wheel' | 'tire' | 'cabin') =>
 	api.post<ApiResponse<Favorite>>('favorites', {
