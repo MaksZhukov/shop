@@ -91,7 +91,7 @@ export default class FavoritesStore implements Favorites {
 			const {
 				data: { data }
 			} = await fetchFunc({
-				filters: { id: favorites.map((item) => item.product.id), sold: { $eq: false } },
+				filters: { id: favorites.map((item) => item.product.id), sold: false },
 				populate: ['images', 'brand']
 			});
 			result.irrelevantFavoriteIDs = favorites

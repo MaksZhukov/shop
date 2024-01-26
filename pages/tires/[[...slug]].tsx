@@ -115,7 +115,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 			data: { data: relatedProducts }
 		} = await fetchTires({
 			filters: {
-				sold: { $eq: false },
+				sold: false,
 				id: {
 					$ne: data.id
 				},
