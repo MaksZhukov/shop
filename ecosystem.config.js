@@ -22,14 +22,14 @@ module.exports = {
 			env: {
 				PORT: 3000,
 				NODE_ENV: 'production',
-                BACKEND_LOCAL_URL: 'http://127.0.0.1:1337'
+				BACKEND_LOCAL_URL: 'http://127.0.0.1:1337'
 			},
 			instances: '4',
 			exec_mode: 'cluster',
-			max_memory_restart: '500M',
+			max_memory_restart: '900M',
 			restart_delay: 5000,
-            min_uptime: 300,
-			max_restarts: 3,
-		},
-	],
+			min_uptime: 30000,
+			max_restarts: 2
+		}
+	]
 };
