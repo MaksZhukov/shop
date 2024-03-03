@@ -8,7 +8,7 @@ const hostname = 'localhost';
 const port = 3000;
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname, port });
-wqffqwfqw;
+
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
