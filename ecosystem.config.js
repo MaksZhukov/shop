@@ -26,10 +26,10 @@ module.exports = {
 			},
 			instances: '4',
 			exec_mode: 'cluster',
-			max_memory_restart: '500M',
+			max_memory_restart: '900M',
 			restart_delay: 5000,
-			min_uptime: 10000,
-			max_restarts: 3
+			min_uptime: 30000,
+			max_restarts: 2
 		}
 	]
 };
