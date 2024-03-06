@@ -8,6 +8,6 @@ export const fetchPage =
 	<T = DefaultPage>(pageUrl: string, params: CollectionParams = { populate: 'seo.images' }) =>
 	() =>
 		api.get<ApiResponse<T>>(`/page-${pageUrl}`, {
-			params
-			// baseURL: publicRuntimeConfig.backendLocalUrl + '/api'
+			params,
+			baseURL: publicRuntimeConfig.backendLocalUrl + '/api'
 		});
