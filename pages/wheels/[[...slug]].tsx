@@ -10,12 +10,15 @@ import CatalogWheels from 'components/CatalogWheels';
 import Product from 'components/Product';
 import Typography from 'components/Typography/Typography';
 import type { NextPage } from 'next';
+import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import { ReactElement, useEffect } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
 import { withKindSparePart } from 'services/SEOService';
 import { getStringByTemplateStr } from 'services/StringService';
+import qs from 'query-string';
+const { publicRuntimeConfig } = getConfig();
 
 const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
@@ -98,10 +101,33 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		//         status: 404
 		//     });
 		// } else {
+		const response = await fetch(
+			qs.stringifyUrl({
+				url: publicRuntimeConfig.backendUrl + `/api/wheels/${productParam}`,
+				query: {
+					populate: [
+						'images',
+						'model',
+						'brand.productBrandTexts.wheelTextBrand',
+						'seo.images',
+						'snippets',
+						'diskOffset',
+						'width',
+						'numberHoles',
+						'diameter',
+						'diameterCenterHole',
+						'distanceBetweenCenters',
+						'order'
+					]
+				}
+			}),
+			{ cache: 'no-store' }
+		);
+		const { data } = await response.json();
 		const [
-			{
-				data: { data }
-			},
+			// {
+			// 	data: { data }
+			// },
 			{
 				data: { data: page }
 			},
@@ -109,7 +135,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 				data: { data: pageWheel }
 			}
 		] = await Promise.all([
-			fetchWheel(productParam),
+			// fetchWheel(productParam),
 			fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
 			fetchPage<PageProductWheel>('product-wheel', { populate: ['seo'] })()
 		]);
