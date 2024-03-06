@@ -13,7 +13,7 @@ export const api = axios.create({
 
 // THIS FETCH IS FOR CALLING ON SERVER SIDE ON NEXTJS
 export const fetchApi = <T>(url: string, params: any) =>
-	fetch(qs.stringifyUrl({ url: publicRuntimeConfig.backendUrl + '/api' + url, query: params }), {
+	fetch(qs.stringifyUrl({ url: publicRuntimeConfig.backendLocalUrl + '/api' + url, query: params }), {
 		next: { revalidate: 0 }
 	}).then(async (res) => {
 		const result = (await res.json()) as ApiResponse<T>;
