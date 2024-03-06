@@ -1,21 +1,10 @@
-import { api } from '..';
+import { api, fetchApi } from '..';
 import { ApiResponse, CollectionParams } from '../types';
 import { Tire } from './types';
 
 export const fetchTires = (params?: CollectionParams) => api.get<ApiResponse<Tire[]>>('/tires', { params });
 
 export const fetchTire = (idOrSlug: string) =>
-	api.get<ApiResponse<Tire>>(`/tires/${idOrSlug}`, {
-		params: {
-			populate: [
-				'images',
-				'brand.productBrandText',
-				'seo.images',
-				'snippets',
-				'width',
-				'height',
-				'diameter',
-				'order'
-			]
-		}
+	fetchApi<Tire>(`/tires/${idOrSlug}`, {
+		populate: ['images', 'brand.productBrandText', 'seo.images', 'snippets', 'width', 'height', 'diameter', 'order']
 	});
