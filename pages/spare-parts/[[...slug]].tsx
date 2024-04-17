@@ -55,6 +55,7 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
 				brands={brands}
 				data={data}
 				printOptions={[
+                    { text: 'Артикул', value: data.id },
 					{ text: 'Поколение', value: data.generation?.name },
 					...(data.engineNumber ? [{ text: 'Маркировка двигателя', value: data.engineNumber }] : []),
 					...(data.engine ? [{ text: 'Двигатель', value: data.engine }] : []),
