@@ -40,35 +40,37 @@ const Buy: FC<Props> = ({
 				);
 				newToken = data.token;
 				setToken(newToken);
+				const params = {
+					checkout_url: 'https://checkout.bepaid.by',
+					token: newToken,
+					closeWidget: async (status: string | null | undefined) => {
+						if (status === 'successful') {
+							onSold();
+							enqueueSnackbar('Спасибо за заказ, вам прийдет уведомление на почту', {
+								variant: 'success'
+							});
+						}
+						// Close after expired
+						if (status === undefined) {
+							setIsLoadingToken(true);
+							const {
+								data: { data }
+							} = await fetchOrderCheckout(
+								products.map((item) => ({ id: item.id, type: item.type })),
+								paymentMethodType
+							);
+							setToken(data.token);
+							setIsLoadingToken(false);
+						}
+						setToken('');
+					}
+				};
+				new BeGateway(params).createWidget();
 			} catch (err) {
 				console.log(err);
 			}
 			setIsLoadingToken(false);
 		}
-		const params = {
-			checkout_url: 'https://checkout.bepaid.by',
-			token: newToken,
-			closeWidget: async (status: string | null | undefined) => {
-				if (status === 'successful') {
-					onSold();
-					enqueueSnackbar('Спасибо за заказ, вам прийдет уведомление на почту', { variant: 'success' });
-				}
-				// Close after expired
-				if (status === undefined) {
-					setIsLoadingToken(true);
-					const {
-						data: { data }
-					} = await fetchOrderCheckout(
-						products.map((item) => ({ id: item.id, type: item.type })),
-						paymentMethodType
-					);
-					setToken(data.token);
-					setIsLoadingToken(false);
-				}
-				setToken('');
-			}
-		};
-		new BeGateway(params).createWidget();
 	};
 	return (
 		<>
