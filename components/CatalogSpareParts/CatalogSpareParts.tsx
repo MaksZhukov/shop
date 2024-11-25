@@ -13,7 +13,7 @@ import { Model } from 'api/models/types';
 import { DefaultPage } from 'api/pages/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, Filters } from 'api/types';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import Catalog from 'components/Catalog';
 import { getSparePartsFiltersConfig } from 'components/Filters/config';
 import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'config';
@@ -39,6 +39,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 	});
 	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const abortControllerRef = useRef<AbortController | null>(null);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -64,16 +65,33 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 	}, [router.query.generation]);
 
 	const loadKindSpareParts = async () => {
-		const { data } = await fetchKindSpareParts({
-			pagination: { start: kindSpareParts.data.length }
-		});
-		setKindSpareParts({
-			data: [
-				...kindSpareParts.data,
-				...(kindSparePart ? data.data.filter((item) => item.id !== kindSparePart.id) : data.data)
-			],
-			meta: data.meta
-		});
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortControllerRef.current = controller;
+		try {
+			const { data } = await fetchKindSpareParts(
+				{
+					pagination: { start: kindSpareParts.data.length }
+				},
+				{ abortController: controller }
+			);
+			setKindSpareParts({
+				data: [
+					...kindSpareParts.data,
+					...(kindSparePart ? data.data.filter((item) => item.id !== kindSparePart.id) : data.data)
+				],
+				meta: data.meta
+			});
+		} catch (err) {
+			if (!axios.isCancel(err)) {
+				enqueueSnackbar(
+					'Произошла какая-то ошибка при загрузке данных для автозаполнения, попробуйте снова или обратитесь в поддержку',
+					{ variant: 'error' }
+				);
+			}
+		}
 	};
 
 	const [throttledLoadMoreKindSpareParts] = useThrottle(async () => {
@@ -99,9 +117,25 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 	}, [model]);
 
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
-		setIsLoading(true);
-		const { data } = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
-		setKindSpareParts(data);
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortControllerRef.current = controller;
+		try {
+			const { data } = await fetchKindSpareParts(
+				{ filters: { name: { $contains: value } } },
+				{ abortController: controller }
+			);
+			setKindSpareParts(data);
+		} catch (err) {
+			if (!axios.isCancel(err)) {
+				enqueueSnackbar(
+					'Произошла какая-то ошибка при загрузке данных для автозаполнения, попробуйте снова или обратитесь в поддержку',
+					{ variant: 'error' }
+				);
+			}
+		}
 		setIsLoading(false);
 	});
 
@@ -166,6 +200,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 		);
 
 	const handleInputChangeKindSparePart = (_: any, value: string) => {
+		setIsLoading(true);
 		debouncedFetchKindSparePartsRef(value);
 	};
 

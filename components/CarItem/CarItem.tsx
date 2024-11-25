@@ -90,7 +90,7 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
 								key={image.id}
 								width={activeView === 'grid' ? 280 : 200}
 								height={activeView === 'grid' ? 215 : 150}
-								alt={image.alternativeText}
+								alt={image.alternativeText || image.name}
 								src={image.url}
 							></Image>
 						))}

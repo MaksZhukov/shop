@@ -15,6 +15,7 @@ export type ImageFormat = 'thumbnail' | 'small' | 'medium' | 'large';
 
 export type Image = {
 	id: number;
+	name: string;
 	url: string;
 	alternativeText: string;
 	caption: string;
