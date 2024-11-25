@@ -1,4 +1,4 @@
-import { Box, Button, Input, Typography } from '@mui/material';
+import { AutocompleteInputChangeReason, Box, Button, Input, Typography } from '@mui/material';
 import Autocomplete from 'components/Autocomplete';
 import { useRouter } from 'next/router';
 import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
@@ -107,6 +107,7 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 				value = item.options.find((option) => option.value === values[item.id]);
 			}
 		}
+
 		return (
 			<Autocomplete
 				key={item.id}
