@@ -32,7 +32,7 @@ import { WheelNumberHole } from 'api/wheelNumberHoles/types';
 import { fetchWheelNumberHoles } from 'api/wheelNumberHoles/wheelNumberHoles';
 import { WheelWidth } from 'api/wheelWidths/types';
 import { fetchWheelWidths } from 'api/wheelWidths/wheelWidths';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import classNames from 'classnames';
 import Autocomplete from 'components/Autocomplete';
 import Image from 'components/Image';
@@ -101,14 +101,32 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 	const [productType, setProductType] = useState<ProductType>('sparePart');
 	const [isOpenedModal, setIsOpenModal] = useState<boolean>(false);
+	const abortControllerRef = useRef<AbortController | null>(null);
 
 	const router = useRouter();
 
 	const loadKindSpareParts = async () => {
-		const { data } = await fetchKindSpareParts({
-			pagination: { start: kindSpareParts.data.length }
-		});
-		setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortControllerRef.current = controller;
+		try {
+			const { data } = await fetchKindSpareParts(
+				{
+					pagination: { start: kindSpareParts.data.length }
+				},
+				{ abortController: controller }
+			);
+			setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
+		} catch (err) {
+			if (!axios.isCancel(err)) {
+				enqueueSnackbar(
+					'Произошла какая-то ошибка при загрузке данных для автозаполнения, попробуйте снова или обратитесь в поддержку',
+					{ variant: 'error' }
+				);
+			}
+		}
 	};
 
 	const [throttledLoadMoreKindSpareParts] = useThrottle(async () => {
@@ -120,9 +138,25 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	const { enqueueSnackbar } = useSnackbar();
 
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
-		setIsLoading(true);
-		const { data } = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
-		setKindSpareParts(data);
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortControllerRef.current = controller;
+		try {
+			const { data } = await fetchKindSpareParts(
+				{ filters: { name: { $contains: value } } },
+				{ abortController: controller }
+			);
+			setKindSpareParts(data);
+		} catch (err) {
+			if (!axios.isCancel(err)) {
+				enqueueSnackbar(
+					'Произошла какая-то ошибка при загрузке данных для автозаполнения, попробуйте снова или обратитесь в поддержку',
+					{ variant: 'error' }
+				);
+			}
+		}
 		setIsLoading(false);
 	});
 
@@ -197,6 +231,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	};
 
 	const handleInputChangeKindSparePart = (_: any, value: string) => {
+		setIsLoading(true);
 		debouncedFetchKindSparePartsRef(value);
 	};
 
