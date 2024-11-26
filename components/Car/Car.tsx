@@ -77,7 +77,7 @@ const Car: FC<Props> = ({ data }) => {
 										<Box marginY='0.5em' key={item.id}>
 											<Image
 												title={item.caption}
-												alt={item.alternativeText}
+												alt={item.alternativeText || item.name}
 												width={104}
 												height={78}
 												src={item.formats?.thumbnail.url || item.url}
@@ -113,7 +113,7 @@ const Car: FC<Props> = ({ data }) => {
 											<Image
 												// style={{ height: '100%' }}
 												title={item.caption}
-												alt={item.alternativeText}
+												alt={item.alternativeText || item.name}
 												width={440}
 												height={isMobile ? 360 : 480}
 												src={item.url}

@@ -11,7 +11,7 @@ import { Model } from 'api/models/types';
 import { DefaultPage } from 'api/pages/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, Filters } from 'api/types';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import Catalog from 'components/Catalog';
 import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'config';
 import { useRouter } from 'next/router';
@@ -42,11 +42,28 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 	const router = useRouter();
 	const [brand, model] = router.query.slug || [];
 	const prevBrand = usePreviousDifferent(brand);
+	const abortControllerRef = useRef<AbortController | null>(null);
 
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
-		setIsLoading(true);
-		const { data } = await fetchKindSpareParts({ filters: { name: { $contains: value } } });
-		setKindSpareParts(data);
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortControllerRef.current = controller;
+		try {
+			const { data } = await fetchKindSpareParts(
+				{ filters: { name: { $contains: value } } },
+				{ abortController: controller }
+			);
+			setKindSpareParts(data);
+		} catch (err) {
+			if (!axios.isCancel(err)) {
+				enqueueSnackbar(
+					'Произошла какая-то ошибка при загрузке данных для автозаполнения, попробуйте снова или обратитесь в поддержку',
+					{ variant: 'error' }
+				);
+			}
+		}
 		setIsLoading(false);
 	});
 
@@ -93,16 +110,33 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 	}, [model]);
 
 	const loadKindSpareParts = async () => {
-		const { data } = await fetchKindSpareParts({
-			pagination: { start: kindSpareParts.data.length }
-		});
-		setKindSpareParts({
-			data: [
-				...kindSpareParts.data,
-				...(kindSparePart ? data.data.filter((item) => item.id !== kindSparePart.id) : data.data)
-			],
-			meta: data.meta
-		});
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortControllerRef.current = controller;
+		try {
+			const { data } = await fetchKindSpareParts(
+				{
+					pagination: { start: kindSpareParts.data.length }
+				},
+				{ abortController: controller }
+			);
+			setKindSpareParts({
+				data: [
+					...kindSpareParts.data,
+					...(kindSparePart ? data.data.filter((item) => item.id !== kindSparePart.id) : data.data)
+				],
+				meta: data.meta
+			});
+		} catch (err) {
+			if (!axios.isCancel(err)) {
+				enqueueSnackbar(
+					'Произошла какая-то ошибка при загрузке данных для автозаполнения, попробуйте снова или обратитесь в поддержку',
+					{ variant: 'error' }
+				);
+			}
+		}
 	};
 
 	const handleOpenAutocomplete =
@@ -176,6 +210,7 @@ const CatalogCabins: FC<Props> = ({ page, brands, kindSparePart }) => {
 	};
 
 	const handleInputChangeKindSparePart = (_: any, value: string) => {
+		setIsLoading(true);
 		debouncedFetchKindSparePartsRef(value);
 	};
 
