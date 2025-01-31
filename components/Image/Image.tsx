@@ -1,6 +1,5 @@
 import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
-import { send } from 'api/email';
 import getConfig from 'next/config';
 import NextImage, { ImageProps } from 'next/image';
 import { useState } from 'react';
@@ -25,11 +24,11 @@ const Image = ({
 	const [key, setKey] = useState<number>(0);
 
 	const handleError = () => {
-		send(
-			'Nextjs FE Error',
-			`<b>SRC</b>: ${src} <br /><b>Alt</b>: ${alt} <br />`,
-			publicRuntimeConfig.emailFEErrors
-		);
+		// send(
+		// 	'Nextjs FE Error',
+		// 	`<b>SRC</b>: ${src} <br /><b>Alt</b>: ${alt} <br />`,
+		// 	publicRuntimeConfig.emailFEErrors
+		// );
 		if (key < MAX_LOADING_IMAGES_ERRORS) {
 			setKey(key + 1);
 		}
