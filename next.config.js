@@ -12,19 +12,17 @@ const nextConfig = {
 		emailFEErrors: process.env.EMAIL_FE_ERRORS
 	},
 	images: {
-		domains: process.env.IMAGES_DOMAINS.split(','),
-		remotePatterns: [
-			{
-				protocol: 'https',
-				hostname: '**'
-			}
-		],
+		remotePatterns: process.env.IMAGES_DOMAINS.split(',').map((item) => ({
+			protocol: 'https',
+			hostname: item,
+			pathname: '/**'
+		})),
 		minimumCacheTTL: 60000
 	},
+	// IT NEEDS FOR DISABLING CACHE FOR EACH CLUSTER INDEPENDENTLY
+	cacheMaxMemorySize: 0,
 	experimental: {
-		largePageDataBytes: 200 * 1000,
-		// IT NEEDS FOR DISABLING CACHE FOR EACH CLUSTER INDEPENDENTLY
-		isrMemoryCacheSize: 0
+		largePageDataBytes: 200 * 1000
 	}
 };
 
