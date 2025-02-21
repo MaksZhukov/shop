@@ -32,9 +32,9 @@ api.interceptors.response.use(
 				store.user.logout();
 			}
 		}
-		if (error.response?.status === 429) {
-			NotistackService.ref?.enqueueSnackbar('Слишком много запросов, попробуйте позже');
-		}
+		// if (error.response?.status === 429) {
+		// 	NotistackService.ref?.enqueueSnackbar('Слишком много запросов, попробуйте позже');
+		// }
 		error.config.retries = error.config.retries ? error.config.retries + 1 : 1;
 		if (error.config.retries > 2) {
 			return Promise.reject(error);

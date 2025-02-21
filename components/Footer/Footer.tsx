@@ -5,18 +5,20 @@ import Image from 'components/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
 import NextLink from 'next/link';
 import { FC } from 'react';
-import { TwitterShareButton } from 'react-share';
-import FacebookIcon from 'react-share/lib/FacebookIcon';
-import FacebookShareButton from 'react-share/lib/FacebookShareButton';
-import LivejournalIcon from 'react-share/lib/LivejournalIcon';
-import LivejournalShareButton from 'react-share/lib/LivejournalShareButton';
-import OKIcon from 'react-share/lib/OKIcon';
-import OKShareButton from 'react-share/lib/OKShareButton';
-import PinterestIcon from 'react-share/lib/PinterestIcon';
-import PinterestShareButton from 'react-share/lib/PinterestShareButton';
-import TwitterIcon from 'react-share/lib/TwitterIcon';
-import VKIcon from 'react-share/lib/VKIcon';
-import VKShareButton from 'react-share/lib/VKShareButton';
+import {
+	TwitterShareButton,
+	FacebookIcon,
+	FacebookShareButton,
+	LivejournalIcon,
+	LivejournalShareButton,
+	OKIcon,
+	OKShareButton,
+	PinterestIcon,
+	PinterestShareButton,
+	TwitterIcon,
+	VKIcon,
+	VKShareButton
+} from 'react-share';
 import styles from './Footer.module.scss';
 
 interface Props {
@@ -93,7 +95,7 @@ const Footer: FC<Props> = ({ footer }) => {
 							<FacebookShareButton
 								className={styles.share}
 								url={'http://www.facebook.com/sharer.php'}
-								quote={title}
+								hashtag={title}
 							>
 								<FacebookIcon size={25}></FacebookIcon>
 							</FacebookShareButton>

@@ -1,7 +1,6 @@
 import { LocalPhone } from '@mui/icons-material';
 import { Box, Button, createTheme, ThemeProvider } from '@mui/material';
 import { Container } from '@mui/system';
-import { send } from 'api/email';
 import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
@@ -160,11 +159,11 @@ function MyApp({
 	};
 	const handleRenderError = (error: Error) => {
 		if (process.env.NODE_ENV === 'production') {
-			send(
-				'Nextjs FE Error',
-				`<b>URL</b>: ${router.asPath} <br /><b>Name</b>: ${error.name} <br /> <b>Message</b>: ${error.message} <br /> <b>Stack</b>: ${error.stack} <br />`,
-				publicRuntimeConfig.emailFEErrors
-			);
+			// send(
+			// 	'Nextjs FE Error',
+			// 	`<b>URL</b>: ${router.asPath} <br /><b>Name</b>: ${error.name} <br /> <b>Message</b>: ${error.message} <br /> <b>Stack</b>: ${error.stack} <br />`,
+			// 	publicRuntimeConfig.emailFEErrors
+			// );
 			router.push('/500', undefined, { shallow: true });
 		} else {
 			console.error(error);
