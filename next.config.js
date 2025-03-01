@@ -12,11 +12,8 @@ const nextConfig = {
 		emailFEErrors: process.env.EMAIL_FE_ERRORS
 	},
 	images: {
-		remotePatterns: process.env.IMAGES_DOMAINS.split(',').map((item) => ({
-			protocol: 'https',
-			hostname: item,
-			pathname: '/**'
-		})),
+		// domains: process.env.IMAGES_DOMAINS.split(','),
+		remotePatterns: JSON.parse(process.env.REMOTE_PATTERNS),
 		minimumCacheTTL: 60000
 	},
 	// IT NEEDS FOR DISABLING CACHE FOR EACH CLUSTER INDEPENDENTLY
