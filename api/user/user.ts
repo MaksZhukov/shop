@@ -7,8 +7,7 @@ export const login = (email: string, password: string) =>
 		{
 			identifier: email,
 			password
-		},
-		{}
+		}
 	);
 
 export const register = (email: string, password: string) =>

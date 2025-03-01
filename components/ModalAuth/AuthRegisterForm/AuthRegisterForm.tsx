@@ -4,7 +4,6 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { ErrorTypes } from '../../../api/types';
 import { register } from '../../../api/user/user';
 import { useStore } from '../../../store';
 import { ModalAuthStates } from '../types';
@@ -46,8 +45,9 @@ const AuthRegisterForm = ({ type, isLoading, onChangeType, onChangeIsLoading, on
 					variant: 'success'
 				});
 			} catch (err) {
+				debugger;
 				if (axios.isAxiosError(err)) {
-					if (err.response?.data.error.name === ErrorTypes.ValidationError || err.response?.status === 500) {
+					if (err.response?.data.error?.status === 400 || err.response?.status === 500) {
 						enqueueSnackbar('Неверные данные', {
 							variant: 'error'
 						});
