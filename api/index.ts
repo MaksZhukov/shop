@@ -1,5 +1,6 @@
 import axios from 'axios';
 import https from 'https';
+import axiosRetry from 'axios-retry';
 import getConfig from 'next/config';
 import NotistackService from 'services/NotistackService';
 import { store } from '../store';
@@ -8,6 +9,8 @@ const { publicRuntimeConfig } = getConfig();
 export const api = axios.create({
 	baseURL: publicRuntimeConfig.backendUrl + '/api'
 });
+
+axiosRetry(api, { retries: 3 });
 
 const httpsAgent = new https.Agent({ keepAlive: true });
 
@@ -32,13 +35,9 @@ api.interceptors.response.use(
 				store.user.logout();
 			}
 		}
-		// if (error.response?.status === 429) {
-		// 	NotistackService.ref?.enqueueSnackbar('Слишком много запросов, попробуйте позже');
-		// }
-		error.config.retries = error.config.retries ? error.config.retries + 1 : 1;
-		if (error.config.retries > 2) {
-			return Promise.reject(error);
+		if (error.response?.status === 429 && process.env.NODE_ENV === 'production') {
+			NotistackService.ref?.enqueueSnackbar('Слишком много запросов, попробуйте позже', { variant: 'warning' });
 		}
-		return Promise.resolve(api(error.config));
+		return Promise.reject(error);
 	}
 );
