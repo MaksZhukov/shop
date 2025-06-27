@@ -32,12 +32,13 @@ app.prepare().then(() => {
 			res.end('internal server error');
 		}
 	}).listen(port, (err) => {
-		if (process.env.NODE_APP_INSTANCE === '0') {
-			axios.post(process.env.BACKEND_LOCAL_URL + '/api/email', {
-				to: 'maks_zhukov_97@mail.ru',
-				subject: 'Start Nextjs FE Successful'
-			});
-		}
+		const backendLocalUrls = JSON.parse(process.env.BACKEND_LOCAL_URLS);
+		axios.post(backendLocalUrls[0] + '/api/email', {
+			to: 'maks_zhukov_97@mail.ru',
+			subject: 'Start Nextjs FE Successful',
+			text: `NODE_APP_INSTANCE: ${process.env.NODE_APP_INSTANCE}`
+		});
+
 		if (err) throw err;
 		console.log(`> Ready on http://${hostname}:${port}`);
 	});
