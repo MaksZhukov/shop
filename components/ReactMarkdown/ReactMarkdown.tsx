@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import { FC } from 'react';
 import ReactMarkdownLib from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import { getRandomBackendLocalUrl } from 'services/BackendUrlService';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
@@ -53,7 +54,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 							height={isTablet ? 360 : 480}
 							controls
 							style={isTablet ? {} : { margin: '1em' }}
-							url={publicRuntimeConfig.backendLocalUrl + src}
+							url={getRandomBackendLocalUrl() + src}
 						></ReactPlayer>
 					);
 				},

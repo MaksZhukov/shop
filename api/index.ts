@@ -3,6 +3,7 @@ import https from 'https';
 import axiosRetry from 'axios-retry';
 import getConfig from 'next/config';
 import NotistackService from 'services/NotistackService';
+import { getRandomBackendLocalUrl } from 'services/BackendUrlService';
 import { store } from '../store';
 const { publicRuntimeConfig } = getConfig();
 
@@ -19,7 +20,7 @@ api.interceptors.request.use((config) => {
 		config.headers.Authorization = 'Bearer ' + store.user.jwt;
 	}
 	if (typeof window === 'undefined') {
-		config.baseURL = publicRuntimeConfig.backendLocalUrl + '/api';
+		config.baseURL = getRandomBackendLocalUrl() + '/api';
 		config.httpsAgent = httpsAgent;
 		config.timeout = 60000;
 	}
