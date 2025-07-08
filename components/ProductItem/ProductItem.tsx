@@ -1,5 +1,5 @@
 import { Grid, Link, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { useState } from 'react';
 import { Product } from '../../api/types';
 // import ShoppingCartButton from 'components/ShoppingCartButton';
@@ -63,7 +63,7 @@ const ProductItem = ({
 				</NextLink>
 				<Grid sx={{ display: { xs: 'none', md: 'flex' } }} columnSpacing={2} container>
 					{dataFieldsToShow.map((item) => (
-						<Grid key={item.id} item>
+						<Grid key={item.id}>
 							<Typography fontWeight='500' component='div' variant='subtitle1'>
 								{item.name}
 							</Typography>

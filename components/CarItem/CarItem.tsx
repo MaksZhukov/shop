@@ -1,5 +1,5 @@
 import { Grid, Link, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { Car } from 'api/cars/types';
 import Image from 'components/Image';
 import Typography from 'components/Typography';
@@ -39,7 +39,7 @@ const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '10
 				</NextLink>
 				<Grid columnSpacing={2} container>
 					{dataFieldsToShow.map((item) => (
-						<Grid key={item.value} item>
+						<Grid key={item.value}>
 							<Typography fontWeight='500' component='div' variant='subtitle1'>
 								{item.name}
 							</Typography>

@@ -1,5 +1,5 @@
 import { CircularProgress, Divider, Link, Rating } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { fetchReviews } from 'api/reviews/reviews';

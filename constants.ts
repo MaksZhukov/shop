@@ -17,7 +17,7 @@ export const BODY_STYLES = [
 	'кабриолет',
 	'фургон',
 	'бортовой',
-	'тягач',
+	'тягач'
 ] as const;
 
 export const SEASONS = ['зимние', 'летние', 'всесезонные'] as const;

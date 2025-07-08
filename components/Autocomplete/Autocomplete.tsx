@@ -17,6 +17,7 @@ const Autocomplete = <
 		required?: boolean;
 		// virtualized?: boolean;
 		onScroll?: UIEventHandler<HTMLUListElement>;
+		placeholder?: string;
 	}
 ) => {
 	const [isDefaultSet, setIsDefaultSet] = useState(false);

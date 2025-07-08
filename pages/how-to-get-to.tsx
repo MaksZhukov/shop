@@ -30,14 +30,14 @@ const HowToGetTo: FC<Props> = ({ page }) => {
 						style={{ margin: 'auto' }}
 						width={isMobile ? '100%' : 230}
 						height={isMobile ? 'auto' : 400}
-						url={publicRuntimeConfig.backendUrl + page.video.url}
+						src={publicRuntimeConfig.backendUrl + page.video.url}
 					></ReactPlayer>
 				</Box>
 			</Box>
 			<iframe
 				src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&source=constructor'
 				width='100%'
-                loading='lazy'
+				loading='lazy'
 				height='400px'
 				frameBorder={0}
 			></iframe>

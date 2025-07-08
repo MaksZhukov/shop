@@ -4,6 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import {
 	AppBar,
+	Box,
 	Button,
 	Collapse,
 	Container,
@@ -17,7 +18,6 @@ import {
 	Toolbar
 } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Box } from '@mui/system';
 import { Brand } from 'api/brands/types';
 import classNames from 'classnames';
 import Image from 'components/Image';
@@ -115,7 +115,7 @@ interface Props {
 
 const Header = observer(({ brands }: Props) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const timeoutRef = useRef<number>();
+	const timeoutRef = useRef<number>(0);
 	const router = useRouter();
 	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();

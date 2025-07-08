@@ -2,7 +2,7 @@ import { Tune as TuneIcon } from '@mui/icons-material';
 import GridViewIcon from '@mui/icons-material/GridViewSharp';
 import MenuIcon from '@mui/icons-material/MenuSharp';
 import { Button, CircularProgress, Modal, Pagination, PaginationItem, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { Brand } from 'api/brands/types';
 import { fetchCars } from 'api/cars/cars';
 import { Car } from 'api/cars/types';

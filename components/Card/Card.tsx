@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import Image from 'components/Image';

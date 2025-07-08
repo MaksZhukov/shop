@@ -1,7 +1,7 @@
 import { Tune as TuneIcon } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, CircularProgress, Container, Input, Modal, useMediaQuery, useTheme } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { Brand } from 'api/brands/types';
 import { fetchCarsOnParts } from 'api/cars-on-parts/cars-on-parts';
 import { CarOnParts } from 'api/cars-on-parts/types';
@@ -18,7 +18,6 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import InputMask from 'react-input-mask';
 import Slider from 'react-slick';
 import reactStringReplace from 'react-string-replace';
 import { useThrottle } from 'rooks';
@@ -188,34 +187,23 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				onChange={handleChangeAutocomplete(setYear)}
 				options={YEARS.map((item) => item.toString())}
 			></Autocomplete>
-			<InputMask
-				required
-				mask='+375 99 999 99 99'
+			<Input
 				value={phone}
-				disabled={isEmailSending}
-				maskChar=' '
 				onChange={handleChangePhone}
-			>
-				{
-					//@ts-ignore
-					(inputProps) => {
-						return (
-							<Input
-								{...inputProps}
-								inputRef={(ref) => {
-									if (ref) {
-										ref.disabled = isEmailSending;
-									}
-								}}
-								className={styles.input}
-								sx={{ color: isEmailSending ? 'rgba(0,0,0,0.4)' : 'initial' }}
-								placeholder='Ваш телефон'
-								fullWidth
-							></Input>
-						);
-					}
-				}
-			</InputMask>
+				disabled={isEmailSending}
+				required
+				placeholder='Ваш телефон'
+				className={styles.input}
+				sx={{
+					color: isEmailSending ? 'rgba(0,0,0,0.4)' : 'initial',
+					width: '100%'
+				}}
+				fullWidth
+				inputProps={{
+					mask: '+375 00 000 00 00',
+					unmask: true
+				}}
+			/>
 			<LoadingButton
 				loading={isEmailSending}
 				sx={{

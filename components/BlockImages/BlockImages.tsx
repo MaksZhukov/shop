@@ -1,4 +1,4 @@
-import { Box, SxProps } from '@mui/system';
+import { Box, SxProps } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import Image from 'components/Image';
 import { FC } from 'react';

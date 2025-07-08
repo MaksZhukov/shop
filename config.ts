@@ -35,3 +35,8 @@ export const KIND_WHEELS_SLUGIFY = KIND_WHEELS.reduce(
 );
 
 export const SLUGIFY_KIND_WHEELS = Object.fromEntries(Object.entries(KIND_WHEELS_SLUGIFY).map((a) => a.reverse()));
+
+export const COLORS = {
+	Primary: '#17181C',
+	Secondary: '#0C1555'
+};
