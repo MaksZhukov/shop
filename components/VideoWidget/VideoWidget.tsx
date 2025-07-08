@@ -12,7 +12,7 @@ import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
 
-const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 interface Props {
 	video: Video;
@@ -53,19 +53,13 @@ const VideoWidget: FC<Props> = ({ video }) => {
 			</IconButton>
 			<ReactPlayer
 				playing
-				config={{
-					file: {
-						attributes: {
-							controlslist: 'nofullscreen'
-						}
-					}
-				}}
+				controlsList='nofullscreen'
 				muted={isMuted}
 				className={styles.player}
 				controls
 				width={'100%'}
 				height={'100%'}
-				url={publicRuntimeConfig.backendUrl + video.url}
+				src={publicRuntimeConfig.backendUrl + video.url}
 			></ReactPlayer>
 		</Box>
 	) : (

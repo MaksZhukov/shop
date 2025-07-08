@@ -1,10 +1,9 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { Container } from '@mui/system';
+import { Container } from '@mui/material';
 import { observer } from 'mobx-react';
 import Head from 'next/head';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent } from 'react';
-import InputMask from 'react-input-mask';
 import { getPageProps } from 'services/PagePropsService';
 import { useStore } from '../store';
 import styles from './profile.module.scss';
@@ -64,17 +63,20 @@ const Profile = observer(() => {
 						variant='standard'
 						fullWidth
 					></TextField>
-					<InputMask
-						mask='+375 99 999 99 99'
+					<TextField
+						label='Телефон'
+						margin='normal'
+						variant='standard'
+						fullWidth
 						value={store.user.phone}
-						maskChar=' '
 						onChange={handleChangePhone}
-					>
-						{
-							//@ts-ignore
-							() => <TextField label='Телефон' margin='normal' variant='standard' fullWidth></TextField>
-						}
-					</InputMask>
+						InputProps={{
+							inputProps: {
+								mask: '+375 00 000 00 00',
+								unmask: true
+							}
+						}}
+					/>
 					<TextField
 						value={store.user.address}
 						onChange={handleChangeAddress}

@@ -1,5 +1,5 @@
 import { Button, Input, Link, ListItemButton, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { send } from 'api/email';
 import { fetchPage } from 'api/pages';
 import { PageContacts } from 'api/pages/types';
@@ -10,7 +10,6 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import { useSnackbar } from 'notistack';
 import { ChangeEventHandler, FormEvent, useState } from 'react';
-import ReactInputMask from 'react-input-mask';
 import { useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
 
@@ -117,7 +116,7 @@ const Contacts = ({ page, socials }: Props) => {
 			>
 				<iframe
 					style={{ flex: '1', minHeight: isMobile ? 400 : 500 }}
-                    loading='lazy'
+					loading='lazy'
 					src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor'
 					frameBorder='0'
 				></iframe>
@@ -145,25 +144,18 @@ const Contacts = ({ page, socials }: Props) => {
 							></Input>
 						</Box>
 						<Box marginBottom='1em'>
-							<ReactInputMask
-								required
-								mask='+375 99 999 99 99'
+							<Input
 								value={phone}
-								maskChar=' '
 								onChange={handleChangePhone}
-							>
-								{
-									//@ts-ignore
-									() => (
-										<Input
-											sx={{ background: '#fff', padding: '0.5em 1em' }}
-											required
-											placeholder='Ваш телефон'
-											fullWidth
-										></Input>
-									)
-								}
-							</ReactInputMask>
+								required
+								placeholder='Ваш телефон'
+								sx={{ background: '#fff', padding: '0.5em 1em' }}
+								fullWidth
+								inputProps={{
+									mask: '+375 00 000 00 00',
+									unmask: true
+								}}
+							/>
 						</Box>
 						<Box marginBottom='1em'>
 							<Input

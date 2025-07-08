@@ -1,37 +1,30 @@
 import { LocalPhone } from '@mui/icons-material';
-import { Box, Button, createTheme, ThemeProvider } from '@mui/material';
-import { Container } from '@mui/system';
+import { Box, Button, createTheme, ThemeProvider, Container } from '@mui/material';
 import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
-import mediaQuery from 'css-mediaquery';
-import { roboto } from 'fonts';
 import { Provider } from 'mobx-react';
 import type { AppProps } from 'next/app';
 import NextApp from 'next/app';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { SnackbarProvider } from 'notistack';
-import { useEffect, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { ReactElement } from 'react-markdown/lib/react-markdown';
 import NotistackService from 'services/NotistackService';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import dynamic from 'next/dynamic';
-import parser from 'ua-parser-js';
+import { UAParser } from 'ua-parser-js';
 import Content from '../components/Content';
 import Header from '../components/Header';
 import Layout from '../components/Layout';
 import RouteShield from '../components/RouteShield/RouteShield';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import { store } from '../store';
+import { createCustomTheme } from 'services/ThemeService';
 import './app.scss';
 
-const VideoWidget = dynamic(() => import('components/VideoWidget'));
 const Footer = dynamic(() => import('components/Footer'));
-
-const { publicRuntimeConfig } = getConfig();
 
 function MyApp({
 	Component,
@@ -40,35 +33,8 @@ function MyApp({
 }: AppProps & { deviceType: 'desktop' | 'mobile' }) {
 	const router = useRouter();
 	const [renderBeforeFooter, setRenderBeforeFooter] = useState<ReactElement | null>(null);
-	let theme = useMemo(
-		() =>
-			createTheme({
-				typography: {
-					fontFamily: roboto.style.fontFamily
-				},
-				palette: {
-					primary: {
-						main: '#fdb819',
-						contrastText: '#fff'
-					},
-					secondary: {
-						main: '#0C1555'
-					}
-				},
-				components: {
-					MuiUseMediaQuery: {
-						defaultProps: {
-							ssrMatchMedia: (query) => ({
-								matches: mediaQuery.match(query, {
-									width: deviceType === 'mobile' ? '0px' : '1024px'
-								})
-							})
-						}
-					}
-				}
-			}),
-		[]
-	);
+
+	const theme = useMemo(() => createCustomTheme(deviceType), [deviceType]);
 
 	useEffect(() => {
 		const tryFetchData = async () => {
@@ -202,7 +168,6 @@ function MyApp({
 							</Content>
 						</RouteShield>
 						<Footer footer={layout.footer}></Footer>
-						{layout.videoWidget?.show && <VideoWidget video={layout.videoWidget?.video}></VideoWidget>}
 						<Box bottom={10} right={10} zIndex={10} position='fixed'>
 							<Button
 								sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
@@ -223,7 +188,7 @@ function MyApp({
 
 MyApp.getInitialProps = (context: any) => ({
 	...NextApp.getInitialProps(context),
-	deviceType: context.ctx.req ? parser(context.ctx.req.headers['user-agent']).device.type || 'desktop' : 'desktop'
+	deviceType: context.ctx.req ? UAParser(context.ctx.req.headers['user-agent']).device.type || 'desktop' : 'desktop'
 });
 
 export default MyApp;

@@ -1,4 +1,4 @@
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { DefaultPage } from 'api/pages/types';
 import { Image as IIamge } from 'api/types';
 import GalleryImages from 'components/GalleryImages/GalleryImages';

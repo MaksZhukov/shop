@@ -1,5 +1,5 @@
 import { Link, Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { Car as ICar } from 'api/cars/types';
 import classNames from 'classnames';
 import Image from 'components/Image';
@@ -130,7 +130,7 @@ const Car: FC<Props> = ({ data }) => {
 												style={{ height: '100%' }}
 												width={'100%'}
 												height={isMobile ? '100%' : 480}
-												url={data.videoLink}
+												src={data.videoLink}
 											></ReactPlayer>
 										</Box>
 									)}

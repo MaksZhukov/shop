@@ -1,5 +1,5 @@
 import Metrics from 'components/Metrics';
-import { roboto } from 'fonts';
+import { golos } from 'fonts';
 import { Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document() {
@@ -11,10 +11,10 @@ export default function Document() {
 				<link rel='icon' type='image/png' sizes='32x32' href='/favicons/favicon-32x32.png' />
 				<link rel='manifest' href='/favicons/site.webmanifest' />
 			</Head>
-			<body className={roboto.className}>
+			<body className={golos.className}>
 				<Main />
 				<NextScript />
-				{process.env.NODE_ENV === 'production' && <Metrics></Metrics>}
+				{process.env.NODE_ENV === 'production' && <Metrics />}
 			</body>
 		</Html>
 	);

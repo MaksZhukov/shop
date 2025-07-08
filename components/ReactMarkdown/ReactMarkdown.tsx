@@ -37,7 +37,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 							alt={alt}
 							width={isMobile ? 500 : 640}
 							height={isMobile ? 375 : 480}
-							src={src || ''}
+							src={src}
 							style={{
 								margin: isMobile ? 0 : '0 1.5em',
 								height: 'auto',
@@ -54,7 +54,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 							height={isTablet ? 360 : 480}
 							controls
 							style={isTablet ? {} : { margin: '1em' }}
-							url={getRandomBackendLocalUrl() + src}
+							src={getRandomBackendLocalUrl() + src}
 						></ReactPlayer>
 					);
 				},
@@ -86,8 +86,10 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 					);
 				},
 				code: (data) => {
+					// Handle different types of children
+					const childrenArray = Array.isArray(data.children) ? data.children : [data.children];
 					let snippet = Object.keys(blockImagesSnippets).find((key) =>
-						data.children.some((item) => item === `{${key}}`)
+						childrenArray.some((item: any) => item === `{${key}}`)
 					);
 					if (snippet) {
 						return <></>;

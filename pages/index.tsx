@@ -1,6 +1,6 @@
 import TuneIcon from '@mui/icons-material/Tune';
 import { Box, Button, CircularProgress, Link, Modal, useMediaQuery } from '@mui/material';
-import { Container } from '@mui/system';
+import { Container } from '@mui/material';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
@@ -54,7 +54,7 @@ import { getPageProps } from 'services/PagePropsService';
 import { BODY_STYLES, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
 
-const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
 
@@ -761,7 +761,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 						</Typography>
 					</Box>
 					<Box width='100%' marginRight={{ xs: 0, sm: '2em' }}>
-						<ReactPlayer width={isMobile ? '100%' : 350} height={400} url={page.videoUrl}></ReactPlayer>
+						<ReactPlayer width={isMobile ? '100%' : 350} height={400} src={page.videoUrl}></ReactPlayer>
 					</Box>
 				</Box>
 				<Typography withSeparator component='h2' variant={isMobile ? 'h5' : 'h4'} fontWeight='bold'>

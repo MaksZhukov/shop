@@ -82,7 +82,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 	const [sliderRangeValues, setSliderRangeValues] = useState<number[]>(
 		CONFIG_INSTALLMENT_PLAN.map((item) => item.months)
 	);
-	const installmentPlanBlockRef = useRef<HTMLDivElement>();
+	const installmentPlanBlockRef = useRef<HTMLDivElement>(null);
 
 	const handleSold = () => {
 		setSold(true);
@@ -302,7 +302,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 												style={{ height: '100%' }}
 												width={'100%'}
 												height={isMobile ? '100%' : 480}
-												url={data.videoLink}
+												src={data.videoLink}
 											></ReactPlayer>
 										</Box>
 									)}

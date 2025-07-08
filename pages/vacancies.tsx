@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { PageVacancies, Vacancy } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';

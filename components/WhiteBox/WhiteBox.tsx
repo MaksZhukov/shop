@@ -1,5 +1,4 @@
-import { BoxProps } from '@mui/material';
-import { Box } from '@mui/system';
+import { BoxProps, Box } from '@mui/material';
 
 const WhiteBox = ({
 	children,
@@ -11,7 +10,7 @@ const WhiteBox = ({
 	padding,
 	maxWidth,
 	width,
-	component,
+	component = 'div',
 	borderRadius,
 	minHeight,
 	marginBottom,
@@ -24,10 +23,10 @@ const WhiteBox = ({
 			className={className}
 			marginBottom={marginBottom}
 			marginX={marginX}
+			component={component}
 			padding={padding || '1em'}
 			borderRadius={borderRadius}
 			textAlign={textAlign}
-			component={component}
 			sx={{ backgroundColor: '#fff' }}
 			display={display}
 			width={width}

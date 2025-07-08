@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { SxProps, Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { PageDelivery } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';

@@ -1,5 +1,4 @@
-import { Box, Link, Typography, useMediaQuery } from '@mui/material';
-import { Container } from '@mui/system';
+import { Box, Link, Typography, useMediaQuery, Container } from '@mui/material';
 import { Footer as IFooter } from 'api/layout/types';
 import Image from 'components/Image';
 import ReactMarkdown from 'components/ReactMarkdown';

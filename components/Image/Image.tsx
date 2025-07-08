@@ -1,5 +1,4 @@
-import { useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
+import { useMediaQuery, Box } from '@mui/material';
 import getConfig from 'next/config';
 import NextImage, { ImageProps } from 'next/image';
 import { useState } from 'react';
@@ -14,7 +13,7 @@ const Image = ({
 	style,
 	...props
 }: Omit<ImageProps, 'src' | 'alt'> & {
-	src?: string;
+	src?: string | Blob;
 	alt?: string;
 	isOnSSR?: boolean;
 	withZoom?: boolean;
