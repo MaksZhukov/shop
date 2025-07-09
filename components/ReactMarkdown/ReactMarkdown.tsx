@@ -16,11 +16,12 @@ const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	content: string;
+	variant?: 'body1' | 'body2';
 	inline?: boolean;
 	blockImagesSnippets?: { [key: string]: IImage[] };
 }
 
-const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} }) => {
+const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {}, variant = 'body1' }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	return (
@@ -60,7 +61,12 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {} })
 				},
 				p: (data) => {
 					return (
-						<Typography component='span' display={inline ? 'inline' : 'block'} gutterBottom>
+						<Typography
+							variant={variant}
+							component='span'
+							display={inline ? 'inline' : 'block'}
+							gutterBottom
+						>
 							{data.children}
 						</Typography>
 					);
