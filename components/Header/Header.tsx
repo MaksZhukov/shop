@@ -36,6 +36,7 @@ import Profile from './Profile';
 import { Link } from 'components/ui';
 import { CartIcon, DashboardIcon, HeartIcon, PhoneCallIcon, SearchIcon } from 'components/Icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
+import { WorkTimetable } from 'components/features/WorkTimetable';
 
 interface NavigationChild {
 	name: string;
@@ -459,6 +460,8 @@ const Header = observer(({ brands }: Props) => {
 						color={'text.primary'}
 						display={'flex'}
 						justifyContent='space-between'
+						flexWrap='wrap'
+						gap={1}
 						sx={{ display: { xs: 'none', sm: 'flex' } }}
 					>
 						<Box display={'flex'} gap={2}>
@@ -470,7 +473,8 @@ const Header = observer(({ brands }: Props) => {
 							<Link href='/delivery'>Доставка и оплата</Link>
 							<Link href='/contacts'>Контакты</Link>
 						</Box>
-						<Box display={'flex'} gap={1} alignItems='center'>
+						<Box display={'flex'} gap={2} alignItems='center'>
+							<WorkTimetable />
 							<Typography display={'flex'} alignItems='center' gap={1}>
 								<Image
 									isOnSSR={false}

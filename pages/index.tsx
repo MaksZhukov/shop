@@ -742,12 +742,24 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 			</Box>
 			<Box mb={5}>
 				<Carousel
-					autoPlay
+					autoPlay={true}
 					arrows={false}
 					responsive={{
 						desktop: {
-							breakpoint: { max: 3000, min: 0 },
+							breakpoint: { max: 3000, min: 1450 },
 							items: 4
+						},
+						laptop: {
+							breakpoint: { max: 1450, min: 1024 },
+							items: 3
+						},
+						tablet: {
+							breakpoint: { max: 1024, min: 768 },
+							items: 2
+						},
+						mobile: {
+							breakpoint: { max: 768, min: 0 },
+							items: 1
 						}
 					}}
 				>
@@ -783,6 +795,118 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 					Все запчасти, представленные в каталоге, находятся на складе и готовы к оперативной отправке
 				</Typography>
 			</Box>
+			<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} mb={5} gap={1}>
+				{/* Column 1 - 2 WhiteBox */}
+				<Box display='flex' flex='1' flexDirection={{ xs: 'row', md: 'column' }} gap={1} flexWrap={'wrap'}>
+					<WhiteBox
+						p={2}
+						height={{ xs: 120, md: 200 }}
+						display='flex'
+						flex='1'
+						flexDirection='column'
+						justifyContent='end'
+						alignItems='center'
+					>
+						<Typography variant='body1' fontWeight='600'>
+							Автозапчасти
+						</Typography>
+						<Typography color='custom.text-muted' variant='body2'>
+							Без пробега по РБ
+						</Typography>
+					</WhiteBox>
+					<WhiteBox
+						p={2}
+						height={{ xs: 120, md: 200 }}
+						display='flex'
+						flex='1'
+						flexDirection='column'
+						justifyContent='end'
+						alignItems='center'
+					>
+						<Typography variant='body1' fontWeight='600'>
+							Автозапчасти
+						</Typography>
+						<Typography color='custom.text-muted' variant='body2'>
+							Без пробега по РБ
+						</Typography>
+					</WhiteBox>
+				</Box>
+
+				{/* Column 2 - 1 WhiteBox */}
+				<Box display='flex' flex='1' flexDirection={{ xs: 'row', md: 'column' }} gap={1} flexWrap={'wrap'}>
+					<WhiteBox
+						p={2}
+						height={{ xs: 120, md: 416 }}
+						display='flex'
+						flex='1'
+						flexDirection='column'
+						justifyContent='end'
+						alignItems='center'
+					>
+						<Typography variant='body1' fontWeight='600'>
+							Автозапчасти
+						</Typography>
+						<Typography color='custom.text-muted' variant='body2'>
+							Без пробега по РБ
+						</Typography>
+					</WhiteBox>
+				</Box>
+
+				{/* Column 3 - 2 WhiteBox */}
+				<Box display='flex' flex='1' flexDirection={{ xs: 'row', md: 'column' }} gap={1} flexWrap={'wrap'}>
+					<WhiteBox
+						p={2}
+						height={{ xs: 120, md: 200 }}
+						display='flex'
+						flexDirection='column'
+						justifyContent='end'
+						alignItems='center'
+					>
+						<Typography variant='body1' fontWeight='600'>
+							Автозапчасти
+						</Typography>
+						<Typography color='custom.text-muted' variant='body2'>
+							Без пробега по РБ
+						</Typography>
+					</WhiteBox>
+					<WhiteBox
+						p={2}
+						height={{ xs: 120, md: 200 }}
+						display='flex'
+						flex='1'
+						flexDirection='column'
+						justifyContent='end'
+						alignItems='center'
+					>
+						<Typography variant='body1' fontWeight='600'>
+							Автозапчасти
+						</Typography>
+						<Typography color='custom.text-muted' variant='body2'>
+							Без пробега по РБ
+						</Typography>
+					</WhiteBox>
+				</Box>
+
+				{/* Column 4 - 1 WhiteBox */}
+				<Box display='flex' flex='1' flexDirection={{ xs: 'row', md: 'column' }} gap={1} flexWrap={'wrap'}>
+					<WhiteBox
+						p={2}
+						height={{ xs: 120, md: 416 }}
+						display='flex'
+						flex='1'
+						flexDirection='column'
+						justifyContent='end'
+						alignItems='center'
+					>
+						<Typography variant='body1' fontWeight='600'>
+							Автозапчасти
+						</Typography>
+						<Typography color='custom.text-muted' variant='body2'>
+							Без пробега по РБ
+						</Typography>
+					</WhiteBox>
+				</Box>
+			</Box>
 			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>
 				<Box>
 					<Typography variant='h6'>Машины на разбор</Typography>
@@ -799,8 +923,20 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 					arrows={false}
 					responsive={{
 						desktop: {
-							breakpoint: { max: 3000, min: 0 },
+							breakpoint: { max: 3000, min: 1450 },
 							items: 4
+						},
+						laptop: {
+							breakpoint: { max: 1450, min: 1024 },
+							items: 3
+						},
+						tablet: {
+							breakpoint: { max: 1024, min: 768 },
+							items: 2
+						},
+						mobile: {
+							breakpoint: { max: 768, min: 0 },
+							items: 1
 						}
 					}}
 				>
