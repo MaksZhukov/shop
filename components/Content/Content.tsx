@@ -7,7 +7,7 @@ interface Props {
 
 const Content = ({ children }: Props) => {
 	return (
-		<Box flex='1' paddingTop={{ xs: '3.5em', md: '4em' }} paddingBottom='2em'>
+		<Box pb={4} pt={4} flex='1'>
 			{children}
 		</Box>
 	);

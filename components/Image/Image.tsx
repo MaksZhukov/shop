@@ -37,7 +37,7 @@ const Image = ({
 			<Box
 				maxWidth={props.width}
 				minWidth={props.minWidth}
-				bgcolor='primary.main'
+				bgcolor='primary.secondary'
 				display='flex'
 				margin='auto'
 				alignItems='center'

@@ -5,6 +5,8 @@ import { UIEventHandler, useEffect, useRef, useState } from 'react';
 // import VirtualizedListBox from './VirtualizedListBox';
 import styles from './Autocomplete.module.scss';
 import { usePreviousImmediate } from 'rooks';
+import { CustomChevronIcon } from './CustomChevronIcon';
+import { ChevronDownIcon } from 'components/Icons';
 
 const Autocomplete = <
 	T,
@@ -15,7 +17,6 @@ const Autocomplete = <
 	props: Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, 'renderInput'> & {
 		loadingMore?: boolean;
 		required?: boolean;
-		// virtualized?: boolean;
 		onScroll?: UIEventHandler<HTMLUListElement>;
 		placeholder?: string;
 	}
@@ -48,10 +49,13 @@ const Autocomplete = <
 			filterOptions={props.filterOptions}
 			className={classNames(styles.autocomplete, props.className)}
 			onChange={props.onChange}
-			ListboxProps={{
-				role: 'list-box',
-				onScroll: props.onScroll,
-				className: props.loadingMore ? classNames(styles.list, styles['list_loading-more']) : styles.list
+			popupIcon={<ChevronDownIcon />}
+			slotProps={{
+				listbox: {
+					role: 'list-box',
+					onScroll: props.onScroll,
+					className: props.loadingMore ? classNames(styles.list, styles['list_loading-more']) : styles.list
+				}
 			}}
 			fullWidth
 			inputValue={inputValue}
@@ -79,10 +83,6 @@ const Autocomplete = <
 						{...params}
 						required={props.required}
 						variant='standard'
-						inputProps={{
-							...params.inputProps,
-							className: classNames(params.inputProps.className, styles.input, props.classes?.input)
-						}}
 						placeholder={props.placeholder}
 					/>
 				);

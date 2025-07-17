@@ -5,6 +5,7 @@ import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import { CSSProperties, FC, HTMLAttributeAnchorTarget } from 'react';
 import styles from './LinkWithImage.module.scss';
+import { Link } from 'components/ui';
 
 interface Props {
 	link: string;
@@ -27,13 +28,12 @@ const LinkWithImage: FC<Props> = ({
 	withoutTitle = false,
 	isOnSSR = true,
 	imageStyle = { objectFit: 'contain', margin: 'auto' },
-	targetLink = '_self',
-	typographyProps = { variant: 'h6', marginTop: '1em' }
+	targetLink = '_self'
 }) => {
 	let title = caption || image?.caption;
 
 	return (
-		<NextLink prefetch={false} className={styles.link} href={link} target={targetLink}>
+		<Link href={link} target={targetLink}>
 			<Image
 				title={image?.caption}
 				style={imageStyle}
@@ -44,11 +44,11 @@ const LinkWithImage: FC<Props> = ({
 				src={width > 200 ? image?.url : image?.formats?.thumbnail.url || ''}
 			></Image>
 			{!withoutTitle && title && (
-				<Typography lineClamp={2} textAlign='center' {...typographyProps}>
+				<Typography variant='body2' color='text.primary' lineClamp={2} textAlign='center'>
 					{title}
 				</Typography>
 			)}
-		</NextLink>
+		</Link>
 	);
 };
 

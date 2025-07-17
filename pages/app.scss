@@ -51,6 +51,35 @@ a {
 	outline: none;
 }
 
+.react-multiple-carousel__arrow {
+	border-radius: 6px;
+	min-width: 32px;
+	min-height: 32px;
+	background-color: rgba(255, 255, 255, 0.4);
+	&::before {
+		color: #1d1f23;
+	}
+	&--left {
+		left: 8px;
+	}
+	&--right {
+		right: 8px;
+	}
+}
+
+.react-multi-carousel-dot-list {
+	margin-bottom: 8px;
+}
+
+.react-multi-carousel-dot {
+	button {
+		background-color: rgba(0, 0, 0, 0.4);
+	}
+	&--active button {
+		background-color: #000;
+	}
+}
+
 /* custom scrollbar */
 ::-webkit-scrollbar {
 	width: 18px;

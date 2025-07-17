@@ -26,7 +26,7 @@ const Delivery: FC<Props> = ({ page }) => {
 		<>
 			<Box
 				display='flex'
-				sx={{ marginBottom: { xs: '1em', md: '4em' }, flexDirection: { xs: 'column', md: 'row' } }}
+				sx={{ marginBottom: { xs: '1em', md: '' }, flexDirection: { xs: 'column', md: 'row' } }}
 			>
 				{renderH1({ display: { xs: 'block', md: 'none' }, typography: 'h4', marginBottom: '1em' })}
 				<Image
@@ -95,7 +95,7 @@ const Delivery: FC<Props> = ({ page }) => {
 				sx={{
 					flexDirection: { xs: 'column', md: 'row' },
 					alignItems: { xs: 'initial', md: 'center' },
-					marginBottom: { xs: '1em', md: '4em' }
+					marginBottom: { xs: '1em', md: '' }
 				}}
 			>
 				<Box

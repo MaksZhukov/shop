@@ -13,6 +13,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import NotistackService from 'services/NotistackService';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import "react-multi-carousel/lib/styles.css";
 import dynamic from 'next/dynamic';
 import { UAParser } from 'ua-parser-js';
 import Content from '../components/Content';

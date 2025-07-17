@@ -11,26 +11,31 @@ import {
 	Divider,
 	Grow,
 	IconButton,
-	Link,
+	Input,
 	MenuItem,
 	MenuList,
 	Popper,
-	Toolbar
+	Toolbar,
+	Typography,
+	useTheme
 } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Brand } from 'api/brands/types';
 import classNames from 'classnames';
 import Image from 'components/Image';
 import { observer } from 'mobx-react';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
+import NextLink from 'next/link';
 import React, { Fragment, HTMLAttributeAnchorTarget, useEffect, useRef, useState } from 'react';
 import { useOutsideClick } from 'rooks';
 import { useStore } from 'store';
 import ModalAuth from '../ModalAuth';
 import styles from './Header.module.scss';
 import Profile from './Profile';
+import { Link } from 'components/ui';
+import { CartIcon, DashboardIcon, HeartIcon, PhoneCallIcon, SearchIcon } from 'components/Icons';
+import { NavbarButton } from 'components/ui/NavbarButton';
 
 interface NavigationChild {
 	name: string;
@@ -117,6 +122,7 @@ const Header = observer(({ brands }: Props) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const timeoutRef = useRef<number>(0);
 	const router = useRouter();
+	const theme = useTheme();
 	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();
 	const { code } = router.query;
@@ -203,24 +209,7 @@ const Header = observer(({ brands }: Props) => {
 	};
 
 	const renderLink = (item: NavigationChild) => {
-		let LinkComp = item.target ? Link : NextLink;
-		return (
-			<LinkComp
-                prefetch={false}
-				className={styles.link}
-				underline='none'
-				style={{ color: '#000' }}
-				target={item.target}
-				href={item.path}
-				{...(isTablet
-					? {
-							onClick: handleClickLinkTablet
-					  }
-					: {})}
-			>
-				{item.name}
-			</LinkComp>
-		);
+		return <div></div>;
 	};
 
 	const renderMenuList = (page: Navigation) => (
@@ -250,14 +239,6 @@ const Header = observer(({ brands }: Props) => {
 				</MenuItem>
 			))}
 		</MenuList>
-	);
-
-	const renderShoppingCartBtn = (
-		<NextLink prefetch={false} href='/favorites'>
-			<IconButton size='small'>
-				<ShoppingCartIcon sx={{ color: '#fff' }}></ShoppingCartIcon>
-			</IconButton>
-		</NextLink>
 	);
 
 	const navigation = getNavigation(brands, router.asPath.split('/')[1]);
@@ -418,54 +399,131 @@ const Header = observer(({ brands }: Props) => {
 	);
 
 	return (
-		<AppBar position='fixed'>
-			<Container ref={ref}>
-				<Toolbar
-					sx={{ justifyContent: 'space-between', minHeight: { xs: '56px', md: '64px' } }}
-					className={styles.toolbar}
-				>
-					{renderLogo('desktop')}
+		<>
+			<AppBar sx={{ py: theme.spacing(2) }} color='secondary' position='fixed'>
+				<Container>
 					<Box
-						color='black'
+						display='flex'
+						mb={{ xs: 0, md: 1 }}
+						gap={2}
 						alignItems='center'
-						sx={{
-							display: { xs: 'flex', md: 'none' },
-							flex: { xs: 'initial', md: '1' },
-							order: { xs: '3', md: 'initial' }
-						}}
-						className={styles['mobile-menu']}
+						justifyContent={{ xs: 'space-between', sm: 'initial' }}
 					>
-						{renderShoppingCartBtn}
-						<IconButton
-							size='small'
-							aria-controls='header-menu'
-							color='inherit'
-							title='Меню'
-							aria-haspopup='true'
-							onClick={handleToggleMenu}
+						<Link href='/'>
+							<Box
+								width={170}
+								height={40}
+								bgcolor='gray'
+								display='flex'
+								alignItems='center'
+								justifyContent='center'
+							>
+								Logo
+							</Box>
+						</Link>
+						<Button
+							size='medium'
+							startIcon={<DashboardIcon />}
+							variant='contained'
+							color='primary'
+							sx={{ display: { xs: 'none', sm: 'flex' } }}
 						>
-							<MenuIcon sx={{ color: '#fff' }} />
-						</IconButton>
+							Каталог
+						</Button>
+						<Input
+							sx={{ flex: 1, display: { xs: 'none', sm: 'flex' } }}
+							size='medium'
+							startAdornment={<SearchIcon />}
+							placeholder='Поиск запчастей'
+						></Input>
+						<Box display={'flex'} sx={{ display: { xs: 'none', sm: 'flex' } }}>
+							<Profile onClickSignIn={handleClick} onClickLogout={handleClickLogout}></Profile>
+							<Link href='/favorites'>
+								<NavbarButton icon={<HeartIcon />}>Избранное</NavbarButton>
+							</Link>
+							<Link href='/cart'>
+								<NavbarButton icon={<CartIcon />}>Корзина</NavbarButton>
+							</Link>
+						</Box>
+						{/* Mobile phone link */}
+						<Box alignItems={'center'} gap={0.5} sx={{ display: { xs: 'flex', sm: 'none' } }}>
+							<IconButton sx={{ padding: '0' }}>
+								<SearchIcon />
+							</IconButton>
+							<Link href='tel:+375297804780'>
+								<PhoneCallIcon />
+							</Link>
+						</Box>
 					</Box>
-					{renderLogo('mobile')}
-					{!isTablet && renderMenu('desktop')}
-					{!isTablet && (
-						<>
-							{renderShoppingCartBtn}
-							<Profile onClickLogout={handleClickLogout} onClickSignIn={handleClick}></Profile>
-						</>
-					)}
-					{isOpenedModal && (
-						<ModalAuth isResetPassword={!!code} onChangeModalOpened={setIsOpenedModal}></ModalAuth>
-					)}
-				</Toolbar>
-				{isTablet && (
-					<Collapse in={isOpenedTabletMenu}>
-						<Toolbar className={styles.toolbar}>{renderMenu('mobile')}</Toolbar>
-					</Collapse>
-				)}
-			</Container>
-		</AppBar>
+					<Box
+						color={'text.primary'}
+						display={'flex'}
+						justifyContent='space-between'
+						sx={{ display: { xs: 'none', sm: 'flex' } }}
+					>
+						<Box display={'flex'} gap={2}>
+							<Link href='/spare-parts?kindSparePart=dvigatel'>Двигатели</Link>
+							<Link href='/spare-parts?kindSparePart=kpp-avtomaticheskaya-akpp'>Коробки АКПП</Link>
+							<Link href='/spare-parts?kindSparePart=kpp-mehanicheskaya-mkpp'>МКПП</Link>
+							<Link href='/tires'>Шины</Link>
+							<Link href='/wheels'>Диски</Link>
+							<Link href='/delivery'>Доставка и оплата</Link>
+							<Link href='/contacts'>Контакты</Link>
+						</Box>
+						<Box display={'flex'} gap={1} alignItems='center'>
+							<Typography display={'flex'} alignItems='center' gap={1}>
+								<Image
+									isOnSSR={false}
+									src='/mts_icon.png'
+									alt='phone'
+									quality={100}
+									width={20}
+									height={20}
+								/>{' '}
+								<Link href='tel:+375297804780'>+375297804780</Link>
+							</Typography>
+							<Typography display={'flex'} alignItems='center' gap={1}>
+								<Image
+									isOnSSR={false}
+									src='/a1_icon.png'
+									alt='phone'
+									quality={100}
+									width={24}
+									height={24}
+								/>{' '}
+								<Link href='tel:+375296011602'>+375296011602</Link>
+							</Typography>
+						</Box>
+					</Box>
+				</Container>
+			</AppBar>
+
+			{/* Mobile Bottom Navigation Bar */}
+			<Box
+				sx={{
+					display: { xs: 'flex', sm: 'none' },
+					position: 'fixed',
+					bottom: 0,
+					left: 0,
+					right: 0,
+					zIndex: 1000,
+					bgcolor: 'background.paper',
+					borderTop: 1,
+					borderColor: 'divider',
+					padding: 1,
+					justifyContent: 'space-around',
+					alignItems: 'center'
+				}}
+			>
+				<Profile onClickSignIn={handleClick} onClickLogout={handleClickLogout}></Profile>
+				<Link href='/favorites'>
+					<NavbarButton icon={<HeartIcon />}>Избранное</NavbarButton>
+				</Link>
+				<Link href='/cart'>
+					<NavbarButton icon={<CartIcon />}>Корзина</NavbarButton>
+				</Link>
+			</Box>
+		</>
 	);
 });
 
