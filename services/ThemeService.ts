@@ -238,6 +238,14 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 						borderBottom: '1px solid #E2E2E2'
 					}
 				}
+			},
+			MuiPopover: {
+				styleOverrides: {
+					paper: {
+						backgroundColor: 'transparent',
+						boxShadow: 'none'
+					}
+				}
 			}
 		}
 	});

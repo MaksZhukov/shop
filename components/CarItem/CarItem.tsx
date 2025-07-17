@@ -10,6 +10,7 @@ import FavoriteButton from 'components/FavoriteButton';
 import WhiteBox from 'components/WhiteBox';
 import Carousel from 'react-multi-carousel';
 import styles from './CarItem.module.scss';
+import { Product } from 'api/types';
 
 interface Props {
 	dataFieldsToShow?: { name: string; value: string }[];
@@ -20,9 +21,17 @@ interface Props {
 
 const CarItem = ({ data, width = 342 }: Props) => {
 	return (
-		<WhiteBox overflow={'hidden'} width={width} marginBottom='1em' bgcolor='#fff' position='relative' key={data.id}>
+		<WhiteBox
+			margin='auto'
+			overflow={'hidden'}
+			width={width}
+			marginBottom='1em'
+			bgcolor='#fff'
+			position='relative'
+			key={data.id}
+		>
 			<Box position='absolute' zIndex={1} right={1} top={1}>
-				<FavoriteButton product={data}></FavoriteButton>
+				<FavoriteButton product={data as unknown as Product}></FavoriteButton>
 			</Box>
 			{data.images ? (
 				<Box>

@@ -12,3 +12,4 @@ export { ChevronDownIcon } from './ChevronDownIcon';
 export { ChevronRightIcon } from './ChevronRightIcon';
 export { FavoriteAddIcon } from './FavoriteAddIcon';
 export { FavoriteAddedIcon } from './FavoriteAddedIcon';
+export { ClockIcon } from './ClockIcon';

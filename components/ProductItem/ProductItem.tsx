@@ -18,7 +18,7 @@ const ProductItem = ({ data, width = 280 }: Props) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
 	return (
-		<WhiteBox overflow={'hidden'} width={width} bgcolor='#fff' position='relative' key={data.id}>
+		<WhiteBox margin='auto' overflow={'hidden'} width={width} bgcolor='#fff' position='relative' key={data.id}>
 			<Box position='absolute' zIndex={1} right={1} top={1}>
 				<FavoriteButton product={data}></FavoriteButton>
 			</Box>
