@@ -1,38 +1,16 @@
-import { BoxProps, Box } from '@mui/material';
+import { BoxProps, Box, useTheme } from '@mui/material';
 
-const WhiteBox = ({
-	children,
-	display,
-	justifyContent,
-	className,
-	marginX,
-	textAlign,
-	padding,
-	maxWidth,
-	width,
-	component = 'div',
-	borderRadius,
-	minHeight,
-	marginBottom,
-	boxShadow
-}: BoxProps) => {
+type WhiteBoxProps = BoxProps & { withShadow?: boolean };
+
+const WhiteBox = ({ children, withShadow, ...props }: WhiteBoxProps) => {
+	const theme = useTheme();
 	return (
-		//@ts-ignore
 		<Box
-			boxShadow={boxShadow}
-			className={className}
-			marginBottom={marginBottom}
-			marginX={marginX}
-			component={component}
-			padding={padding || '1em'}
-			borderRadius={borderRadius}
-			textAlign={textAlign}
-			sx={{ backgroundColor: '#fff' }}
-			display={display}
-			width={width}
-			minHeight={minHeight}
-			maxWidth={maxWidth}
-			justifyContent={justifyContent}
+			borderRadius={4}
+			border={`1px solid ${theme.palette.custom.divider}`}
+			boxShadow={withShadow ? '0px 10px 25px 0px #1018281F' : undefined}
+			bgcolor={'background.paper'}
+			{...props}
 		>
 			{children}
 		</Box>

@@ -1,43 +1,52 @@
 .head-section {
-    position: relative;
-    margin-bottom: 2em;
+	position: relative;
+	margin-bottom: 2em;
 }
 
 .filters {
-    &__item {
-        width: 25%;
-    }
+	&__item {
+		width: 25%;
+	}
 }
 
 .select {
-    :global {
-        .MuiSelect-select:focus {
-            background-color: transparent;
-        }
-    }
+	:global {
+		.MuiSelect-select:focus {
+			background-color: transparent;
+		}
+	}
+}
+
+.carousel {
+	height: 100%;
+	:global {
+		.react-multi-carousel-track {
+			height: 100%;
+		}
+	}
 }
 
 .categories {
-    position: relative;
-    &__item {
-        position: relative;
-        background-color: #fff;
-        width: 20%;
-        &:not(:last-child) {
-            border-right: 1px solid #e6e6e6;
-        }
-        &:last-child {
-            position: relative;
-            background-color: transparent;
-        }
-        &_mobile {
-            width: 47.5%;
-            margin-bottom: 1em;
-            &:last-child {
-                height: 300px;
-                padding-top: 1em;
-                width: 100%;
-            }
-        }
-    }
+	position: relative;
+	&__item {
+		position: relative;
+		background-color: #fff;
+		width: 20%;
+		&:not(:last-child) {
+			border-right: 1px solid #e6e6e6;
+		}
+		&:last-child {
+			position: relative;
+			background-color: transparent;
+		}
+		&_mobile {
+			width: 47.5%;
+			margin-bottom: 1em;
+			&:last-child {
+				height: 300px;
+				padding-top: 1em;
+				width: 100%;
+			}
+		}
+	}
 }

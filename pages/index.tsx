@@ -1,8 +1,6 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import { Box, Button, CircularProgress, Link, Modal, useMediaQuery } from '@mui/material';
+import { Box, CircularProgress, Input, Link, Modal, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
 import { Container } from '@mui/material';
-import { fetchArticles } from 'api/articles/articles';
-import { Article } from 'api/articles/types';
 import { Brand } from 'api/brands/types';
 import { API_MAX_LIMIT } from 'api/constants';
 import { fetchGenerations } from 'api/generations/generations';
@@ -16,6 +14,7 @@ import { PageMain } from 'api/pages/types';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
 import { fetchTireBrands } from 'api/tireBrands/tireBrands';
+import Carousel from 'react-multi-carousel';
 import { TireBrand } from 'api/tireBrands/types';
 import { fetchTireDiameters } from 'api/tireDiameters/tireDiameters';
 import { TireDiameter } from 'api/tireDiameters/types';
@@ -53,8 +52,16 @@ import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
 import { BODY_STYLES, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
+import { SparePart } from 'api/spareParts/types';
+import { ChevronRightIcon } from 'components/Icons';
+import { Button } from 'components/ui';
+import ProductItem from 'components/ProductItem';
+import { ShareButtons } from 'components/features/ShareButtons';
+import { fetchCarOnParts, fetchCarsOnParts } from 'api/cars-on-parts/cars-on-parts';
+import { CarOnParts } from 'api/cars-on-parts/types';
+import CarItem from 'components/CarItem';
 
-const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
 
@@ -75,12 +82,15 @@ const productTypeOptions = [
 interface Props {
 	page: PageMain;
 	reviews: Review[];
-	articles: Article[];
 	brands: Brand[];
+	newSpareParts: SparePart[];
+	carsOnParts: CarOnParts[];
 }
 
-const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) => {
-	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, carsOnParts }) => {
+	console.log(carsOnParts);
+	const theme = useTheme();
+	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const isLaptop = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 	const [wheelWidths, setWheelWidths] = useState<WheelWidth[]>([]);
@@ -102,6 +112,9 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	const [productType, setProductType] = useState<ProductType>('sparePart');
 	const [isOpenedModal, setIsOpenModal] = useState<boolean>(false);
 	const abortControllerRef = useRef<AbortController | null>(null);
+
+	const origin = typeof window !== 'undefined' ? window.location.origin : '';
+	const title = typeof window !== 'undefined' ? document.title : '';
 
 	const router = useRouter();
 
@@ -292,7 +305,6 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 		setValues({});
 		setKindSpareParts({ data: [], meta: {} });
 	};
-
 	const brandAutocompleteConfig = {
 		id: 'brand',
 		placeholder: 'Марка',
@@ -322,7 +334,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 
 	const kindSparePartAutocompleteConfig = {
 		id: 'kindSparePart',
-		placeholder: 'Вид запчасти',
+		placeholder: 'Выбрать запчасть',
 		options: kindSpareParts.data.map((item) => ({ label: item.name, value: item.slug })),
 		loadingMore: isLoadingMore,
 		onScroll: handleScrollKindSparePartAutocomplete,
@@ -577,383 +589,263 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, articles = [] }) =>
 	);
 
 	return (
-		<>
+		<Container>
 			<Box
-				sx={{ height: { xs: 'calc(100vh - 56px - 60px)', sm: 'calc(100vh - 64px)' } }}
-				className={styles['head-section']}
+				mb={5}
+				height={{ xs: 'auto', md: 446 }}
+				display={'flex'}
+				flexDirection={{ xs: 'column', md: 'row' }}
+				gap={2}
 			>
-				<Image
-					priority
-					loading='eager'
-					title={isMobile ? page.bannerMobile?.caption : page.banner?.caption}
-					width={isMobile ? page.bannerMobile?.width : page.banner?.width}
-					height={isMobile ? page.bannerMobile?.height : page.banner?.height}
-					style={{
-						position: 'absolute',
-						top: 0,
-						objectFit: isMobile
-							? 'fill'
-							: isLaptop &&
-							  typeof window !== 'undefined' &&
-							  ((window.innerHeight - 64) / (page.banner?.height || 1)) * (page.banner?.width || 1) <
-									window.innerWidth
-							? 'cover'
-							: 'fill',
-						width: '100vw',
-						height: '100%',
-						...(isMobile ? { objectPosition: '70%' } : {})
-					}}
-					src={isMobile ? page.bannerMobile?.url : page.banner?.url || ''}
-					alt={isMobile ? page.bannerMobile?.alternativeText : page.banner?.alternativeText || ''}
-				></Image>
-				<Container sx={{ height: '100%', position: 'relative' }}>
-					<Box maxWidth='650px' paddingTop={{ xs: '1em', sm: '3em' }}>
-						<Typography fontWeight='bold' component='h1' variant={isMobile ? 'h4' : 'h3'}>
-							{page.h1}
-						</Typography>
-						<Typography component='h2' variant={isMobile ? 'h5' : 'h4'}>
-							{page.subH1}
-						</Typography>
-					</Box>
-					{isMobile ? renderMobileFilters : renderDesktopFilters}
-				</Container>
+				<Box width={{ xs: '100%', md: 360 }}>
+					<Typography mb={1} textAlign={'center'} color='textSecondary' variant='h6'>
+						Поиск автозапчастей
+					</Typography>
+					<WhiteBox px={2} py={1} gap={1} withShadow>
+						<Tabs sx={{ mb: 2 }} value={'brand'}>
+							<Tab label='По марке авто' value={'brand'} />
+						</Tabs>
+						<Box gap={1} display={'flex'} flexDirection={'column'}>
+							<Box display={'flex'} gap={1}>
+								<Autocomplete
+									options={brandAutocompleteConfig.options}
+									noOptionsText={brandAutocompleteConfig.noOptionsText}
+									placeholder={brandAutocompleteConfig.placeholder}
+									onChange={handleChangeBrandAutocomplete}
+									fullWidth
+								></Autocomplete>
+								<Autocomplete
+									options={modelAutocompleteConfig.options}
+									noOptionsText={modelAutocompleteConfig.noOptionsText}
+									placeholder={modelAutocompleteConfig.placeholder}
+									onChange={handleChangeModelAutocomplete}
+									onOpen={handleOpenAutocompleteModel}
+									disabled={modelAutocompleteConfig.disabled}
+									fullWidth
+								></Autocomplete>
+							</Box>
+							<Autocomplete
+								options={generationAutocompleteConfig.options}
+								noOptionsText={generationAutocompleteConfig.noOptionsText}
+								placeholder={generationAutocompleteConfig.placeholder}
+								onOpen={handleOpenAutocompleteGeneration}
+								onChange={handleChangeAutocomplete('generation')}
+								fullWidth
+								disabled={generationAutocompleteConfig.disabled}
+							></Autocomplete>
+							<Autocomplete
+								options={kindSparePartAutocompleteConfig.options}
+								noOptionsText={kindSparePartAutocompleteConfig.noOptionsText}
+								placeholder={kindSparePartAutocompleteConfig.placeholder}
+								onChange={handleChangeAutocomplete('kindSparePart')}
+								onOpen={handleOpenAutocompleteKindSparePart}
+								onInputChange={kindSparePartAutocompleteConfig.onInputChange}
+								onScroll={kindSparePartAutocompleteConfig.onScroll}
+								fullWidth
+							></Autocomplete>
+							<Button onClick={handleClickFind} variant='contained'>
+								Показать : 150000
+							</Button>
+							<Button>Сбросить</Button>
+						</Box>
+					</WhiteBox>
+				</Box>
+				<Box
+					flex={{ xs: 'none', md: '1' }}
+					height={{ xs: 234, md: 'auto' }}
+					overflow={'hidden'}
+					borderRadius={2}
+				>
+					<Carousel
+						className={styles.carousel}
+						showDots
+						responsive={{
+							desktop: {
+								breakpoint: { max: 3000, min: 0 },
+								items: 1
+							}
+						}}
+					>
+						<Box bgcolor={'gray'} width={'100%'} height={'100%'}></Box>
+						<Box bgcolor={'gray'} width={'100%'} height={'100%'}></Box>
+						<Box bgcolor={'gray'} width={'100%'} height={'100%'}></Box>
+					</Carousel>
+					;
+				</Box>
 			</Box>
-			<Container>
-				<Typography
-					withSeparator
-					component='h2'
-					variant={isMobile ? 'h5' : 'h4'}
-					sx={{ marginBottom: { xs: '0.5em', md: '1.5em' } }}
-					fontWeight='bold'
-					textTransform='uppercase'
+			<Box mb={5} display={'flex'} gap={1} flexWrap={'wrap'}>
+				<WhiteBox
+					height={120}
+					display={'flex'}
+					justifyContent={'end'}
+					flexDirection={'column'}
+					alignItems={'center'}
+					p={1.5}
+					flex={{ xs: `calc(50% - ${theme.spacing(1)})`, md: '1' }}
 				>
-					{page.titleCategories}
-				</Typography>
-				<Box
-					className={styles.categories}
-					display='flex'
-					sx={{
-						flexWrap: { xs: 'wrap', md: 'initial' },
-						gap: { xs: '5%', md: 'initial' },
-						marginBottom: { xs: '2em', md: '4em' }
+					<Typography>Автозапчасти</Typography>
+					<Typography color='custom.text-muted'>Без пробега по РБ</Typography>
+				</WhiteBox>
+				<WhiteBox
+					height={120}
+					display={'flex'}
+					flexDirection={'column'}
+					alignItems={'center'}
+					justifyContent='end'
+					p={1.5}
+					flex={{ xs: `calc(50% - ${theme.spacing(1)})`, md: '1' }}
+				>
+					<Typography variant='body1'>Доставка</Typography>
+					<Typography variant='body2' color='custom.text-muted'>
+						Во все регионы РБ
+					</Typography>
+				</WhiteBox>
+				<WhiteBox
+					height={120}
+					display={'flex'}
+					flexDirection={'column'}
+					alignItems={'center'}
+					justifyContent={'end'}
+					p={1.5}
+					flex={{ xs: `calc(50% - ${theme.spacing(1)})`, md: '1' }}
+				>
+					<Typography variant='body1'>Гарантия</Typography>
+					<Typography variant='body2' color='custom.text-muted'>
+						На весь ассортимент
+					</Typography>
+				</WhiteBox>
+				<WhiteBox
+					height={120}
+					display={'flex'}
+					flexDirection={'column'}
+					justifyContent={'end'}
+					alignItems={'center'}
+					p={1.5}
+					flex={{ xs: `calc(50% - ${theme.spacing(1)})`, md: '1' }}
+				>
+					<Typography variant='body1'>149.000 запчастей</Typography>
+					<Typography variant='body2' color='custom.text-muted'>
+						В наличии на складе
+					</Typography>
+				</WhiteBox>
+			</Box>
+			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>
+				<Box>
+					<Typography variant='h6'>Новое поступление</Typography>
+					<Typography color='text.primary' variant='body2'>
+						Смотреть все Все запчасти находятся на складе и готовы к оперативной отправке
+					</Typography>
+				</Box>
+				<Button variant='link' href='/spare-parts' endIcon={<ChevronRightIcon />}>
+					Смотреть все
+				</Button>
+			</Box>
+			<Box mb={5}>
+				<Carousel
+					autoPlay
+					arrows={false}
+					responsive={{
+						desktop: {
+							breakpoint: { max: 3000, min: 0 },
+							items: 4
+						}
 					}}
 				>
-					{page.categoryImages?.map((item, i) => (
-						<Box
-							key={item.id}
-							className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}
-						>
-							<NextLink prefetch={false} href={CATEGORIES[i].href}>
-								<Box
-									position='relative'
-									zIndex={1}
-									display='flex'
-									alignItems='center'
-									justifyContent='center'
-									height='250px'
-								>
-									<Image
-										title={item.caption}
-										src={item.url}
-										width={item.width}
-										height={item.height}
-										alt={item.alternativeText}
-									></Image>
-								</Box>
-								<Typography
-									className={styles['categories__item-name']}
-									marginBottom='0.25em'
-									textAlign='center'
-									component='h3'
-									variant='h4'
-								>
-									<Link component='span' underline='hover' color='inherit'>
-										{CATEGORIES[i].name}
-									</Link>
-								</Typography>
-							</NextLink>
-						</Box>
+					{newSpareParts.map((item) => (
+						<ProductItem key={item.id} data={item} width={342}></ProductItem>
 					))}
-					<Box
-						position='relative'
-						className={classNames(styles.categories__item, isMobile && styles.categories__item_mobile)}
-					>
-						<Image
-							width={260}
-							height={300}
-							alt='Выкуп авто на з/ч'
-							isOnSSR={false}
-							style={isMobile ? { objectFit: 'cover' } : {}}
-							src='/main_buyback.png'
-						></Image>
-						<NextLink prefetch={false} href={'/buyback-cars'}>
-							<Link
-								position='absolute'
-								top={'5px'}
-								variant={isMobile ? 'h5' : 'h4'}
-								textTransform='uppercase'
-								fontWeight='bold'
-								component='span'
-								display='block'
-								underline='hover'
-								margin='0.25em 0.125em'
-								color='inherit'
-							>
-								Выкуп <br /> авто на з/ч
-							</Link>
-						</NextLink>
-					</Box>
-				</Box>
-				{isMobile ? (
-					<Box paddingX='1em'>
-						<Slider slidesToShow={2}>
-							{page.benefits?.map((item) => (
-								<Box paddingX='0.5em' key={item.id}>
-									<LinkWithImage
-										withoutTitle
-										link={item.link}
-										image={item.image}
-										width={200}
-										height={140}
-									></LinkWithImage>
-								</Box>
-							))}
-						</Slider>
-					</Box>
-				) : (
-					<Box flexWrap='wrap' marginBottom='4em' justifyContent='space-between' display='flex'>
-						{page.benefits?.map((item) => (
+				</Carousel>
+			</Box>
+
+			<Box mb={5}>
+				<Typography variant='h6'>Выберите марку авто</Typography>
+				<Typography color='text.primary' variant='body2'>
+					Автозапчасти б/у на авторазборке в наличии
+				</Typography>
+				<Box mt={1} display={'flex'} flexWrap={'wrap'} gap={1}>
+					{brands.map((item) => (
+						<WhiteBox key={item.id} p={1} height={128} width={110}>
 							<LinkWithImage
-								key={item.id}
-								withoutTitle
-								link={item.link}
+								width={110}
+								height={80}
+								caption={item.name}
+								link={`/spare-parts/${item.slug}`}
 								image={item.image}
-								width={200}
-								height={140}
+								typographyProps={{ fontWeight: 'bold', variant: 'body1' }}
 							></LinkWithImage>
-						))}
-					</Box>
-				)}
-				<Box marginBottom='4em'>
-					<Typography
-						withSeparator
-						component='h2'
-						variant={isMobile ? 'h5' : 'h4'}
-						sx={{ marginBottom: { xs: '0.5em', md: '1.5em' } }}
-						fontWeight='bold'
-						maxWidth='700px'
-						textTransform='uppercase'
-					>
-						{page.popularBrandsTitle}
+						</WhiteBox>
+					))}
+				</Box>
+			</Box>
+			<Box mb={1}>
+				<Typography variant='h6'>Популярные категории</Typography>
+				<Typography color='text.primary' variant='body2'>
+					Все запчасти, представленные в каталоге, находятся на складе и готовы к оперативной отправке
+				</Typography>
+			</Box>
+			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>
+				<Box>
+					<Typography variant='h6'>Машины на разбор</Typography>
+					<Typography color='text.primary' variant='body2'>
+						Новые поступление машин на разбор
 					</Typography>
 				</Box>
-				<Box paddingX='1em' marginBottom='2em'>
-					<BrandsCarousel brands={brands}></BrandsCarousel>
+				<Button variant='link' href='/awaiting-cars' endIcon={<ChevronRightIcon />}>
+					Смотреть все
+				</Button>
+			</Box>
+			<Box mb={5}>
+				<Carousel
+					arrows={false}
+					responsive={{
+						desktop: {
+							breakpoint: { max: 3000, min: 0 },
+							items: 4
+						}
+					}}
+				>
+					{carsOnParts.map((item) => (
+						<CarItem key={item.id} data={item} width={342}></CarItem>
+					))}
+				</Carousel>
+			</Box>
+			<Box
+				minHeight={284}
+				display={'flex'}
+				gap={{ xs: 0, md: 5 }}
+				py={4}
+				px={2}
+				width={{ xs: '110%', md: 'auto' }}
+				ml={{ xs: '-5%', md: 0 }}
+				flexDirection={{ xs: 'column', md: 'row' }}
+				alignItems={'center'}
+				justifyContent={'center'}
+				bgcolor={'custom.bg-surface-4'}
+			>
+				<Box maxWidth={340} textAlign={{ xs: 'center', md: 'left' }}>
+					<Typography color='text.secondary' variant='h6'>
+						Выкуп авто
+					</Typography>
+					<Typography color='text.primary' mb={2}>
+						Оставьте заявку и мы с вами свяжемся для покупки вашего автомобиля{' '}
+					</Typography>
+					{isTablet ? <ShareButtons origin={origin} title={title} /> : null}
 				</Box>
 				<Box
-					display='flex'
-					gap='3em'
-					sx={{ marginBottom: { xs: '2em', md: '5em' }, flexWrap: { xs: 'wrap', md: 'nowrap' } }}
+					maxWidth={300}
+					display={'flex'}
+					flexDirection={'column'}
+					gap={1}
+					textAlign={{ xs: 'center', md: 'left' }}
 				>
-					<Box display='flex' alignItems='center'>
-						<Typography color='text.secondary' variant='body1'>
-							<ReactMarkdown content={page.leftSideText}></ReactMarkdown>
-						</Typography>
-					</Box>
-					<Box width='100%' marginRight={{ xs: 0, sm: '2em' }}>
-						<ReactPlayer width={isMobile ? '100%' : 350} height={400} src={page.videoUrl}></ReactPlayer>
-					</Box>
-				</Box>
-				<Typography withSeparator component='h2' variant={isMobile ? 'h5' : 'h4'} fontWeight='bold'>
-					{page.reviewsTitle}
-				</Typography>
-				<Box marginBottom={isMobile ? '3em' : '5em'}>
-					<CarouselReviews
-						marginBottom='1em'
-						data={reviews}
-						slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}
-					></CarouselReviews>
-				</Box>
-				<Box marginBottom='1em'>
-					<Typography
-						fontWeight='bold'
-						maxWidth='500px'
-						withSeparator
-						component='h2'
-						variant={isMobile ? 'h5' : 'h4'}
-						marginBottom='1em'
-					>
-						{page.benefitsTitle}
-					</Typography>
-					<Box display='flex' flexDirection={isMobile ? 'column-reverse' : 'initial'}>
-						<Typography flex='1' color='text.secondary' variant='body1'>
-							<ReactMarkdown content={page.benefitsLeftText}></ReactMarkdown>
-						</Typography>
-						<Box marginTop={isMobile ? '0' : '-2em'}>
-							<Image
-								title={page.benefitsRightImage?.caption}
-								src={page.benefitsRightImage?.url}
-								style={isMobile ? { maxWidth: '100%', objectFit: 'contain', height: 'auto' } : {}}
-								width={617}
-								height={347}
-								alt={page.benefitsRightImage?.alternativeText}
-							></Image>
-						</Box>
-					</Box>
-				</Box>
-				<Box>
-					<Typography
-						fontWeight='bold'
-						withSeparator
-						component='h2'
-						variant={isMobile ? 'h5' : 'h4'}
-						marginBottom='1em'
-					>
-						{page.blogTitle}
-					</Typography>
-					<Box
-						padding='0 2.5em'
-						display='flex'
-						flexWrap='wrap'
-						sx={{ flexDirection: { xs: 'column', md: 'initial' }, gap: { xs: '1em', md: '4em' } }}
-					>
-						<Typography
-							sx={{ paddingBottom: { xs: '0.5em', md: '2em' } }}
-							flex='1'
-							color='text.secondary'
-							variant='body1'
-						>
-							<ReactMarkdown content={page.blogLeftText}></ReactMarkdown>
-						</Typography>
-						<Box
-							sx={{
-								borderBottom: {
-									xs: '1px solid rgba(0, 0, 0, 0.3)',
-									md: 'none',
-									borderRight: { xs: 'none', md: '1px solid rgba(0, 0, 0, 0.3)' }
-								}
-							}}
-						></Box>
-						<Typography
-							sx={{ paddingBottom: { xs: '0', md: '2em' } }}
-							flex='1'
-							color='text.secondary'
-							variant='body1'
-						>
-							<ReactMarkdown content={page.blogRightText}></ReactMarkdown>
-						</Typography>
-					</Box>
-					{isTablet ? (
-						<Box marginBottom='1em' paddingX='1em'>
-							<Slider slidesToShow={1}>
-								{articles.map((item) => (
-									<Box paddingX='0.5em' key={item.id}>
-										<LinkWithImage
-											link={`/articles/${item.slug}`}
-											height={290}
-											imageStyle={{ objectFit: 'cover', width: '100%' }}
-											key={item.id}
-											width={390}
-											typographyProps={{ width: '100%', variant: 'h6', marginTop: '1em' }}
-											caption={item.name}
-											image={item.mainImage}
-										></LinkWithImage>
-									</Box>
-								))}
-							</Slider>
-						</Box>
-					) : (
-						<Box display='flex' gap={'1em'} marginBottom='3.5em'>
-							{articles.map((item) => (
-								<LinkWithImage
-									link={`/articles/${item.slug}`}
-									height={290}
-									imageStyle={{ objectFit: 'cover', maxWidth: '100%' }}
-									key={item.id}
-									width={390}
-									typographyProps={{ maxWidth: 390, variant: 'h6', marginTop: '1em' }}
-									caption={item.name}
-									image={item.mainImage}
-								></LinkWithImage>
-							))}
-						</Box>
-					)}
-				</Box>
-				<Box marginBottom='2em'>
-					<Typography
-						fontWeight='bold'
-						withSeparator
-						component='h2'
-						variant={isMobile ? 'h5' : 'h4'}
-						marginBottom='1em'
-					>
-						{page.deliveryTitle}
-					</Typography>
-					<Typography flex='1' color='text.secondary' variant='body1'>
-						<ReactMarkdown content={page.deliveryText}></ReactMarkdown>
+					<Input size='medium' placeholder='Номер телефона'></Input>
+					<Button variant='contained'>Оставить заявку</Button>
+					<Typography variant='body2' color='custom.text-muted'>
+						Нажимая на кнопку вы соглашаетесь на обработку персональных данных
 					</Typography>
 				</Box>
-				{isTablet ? (
-					<Box paddingX='1em' marginBottom='2em'>
-						<Slider slidesToShow={2}>
-							{page.serviceStations?.map((item) => (
-								<Box key={item.id} paddingX='0.5em'>
-									<WhiteBox>
-										<LinkWithImage
-											height={100}
-											width={isMobile ? 150 : 264}
-											image={item.image}
-											imageStyle={{ maxWidth: '100%', objectFit: 'contain', margin: 'auto' }}
-											typographyProps={{ minHeight: '64px', variant: 'h6', marginTop: '1em' }}
-											link={`/service-stations/${item.slug}`}
-										></LinkWithImage>
-									</WhiteBox>
-								</Box>
-							))}
-							{page.autocomises?.map((item) => (
-								<Box key={item.id} paddingX='0.5em'>
-									<WhiteBox>
-										<LinkWithImage
-											imageStyle={{ maxWidth: '100%', objectFit: 'contain', margin: 'auto' }}
-											height={100}
-											width={isMobile ? 150 : 208}
-											image={item.image}
-											typographyProps={{ minHeight: '64px', variant: 'h6', marginTop: '1em' }}
-											link={`/autocomises/${item.slug}`}
-										></LinkWithImage>
-									</WhiteBox>
-								</Box>
-							))}
-						</Slider>
-					</Box>
-				) : (
-					<Box display='flex' gap={'2em'} marginBottom='4em' justifyContent='space-between'>
-						{page.serviceStations?.map((item) => (
-							<Box bgcolor='#fff' padding='1em' sx={{ width: { xs: 'auto', md: '22.5%' } }} key={item.id}>
-								<LinkWithImage
-									// height={100}
-									imageStyle={{ width: '100%', objectFit: 'contain' }}
-									width={264}
-									image={item.image}
-									link={`/service-stations/${item.slug}`}
-								></LinkWithImage>
-							</Box>
-						))}
-						{page.autocomises?.map((item) => (
-							<Box bgcolor='#fff' padding='1em' sx={{ width: { xs: 'auto', md: '22.5%' } }} key={item.id}>
-								<LinkWithImage
-									imageStyle={{ width: '100%', objectFit: 'contain' }}
-									// height={100}
-									width={264}
-									image={item.image}
-									link={`/autocomises/${item.slug}`}
-								></LinkWithImage>
-							</Box>
-						))}
-					</Box>
-				)}
-			</Container>
-		</>
+			</Box>
+		</Container>
 	);
 };
 
@@ -973,11 +865,18 @@ export const getServerSideProps = getPageProps(
 		]
 	}),
 	async () => ({
-		articles: (await fetchArticles({ sort: 'createdAt:desc', populate: 'mainImage', pagination: { limit: 3 } }))
-			.data.data
+		reviews: (await fetchReviews()).data.data
 	}),
 	async () => ({
-		reviews: (await fetchReviews()).data.data
+		newSpareParts: (
+			await fetchSpareParts({
+				populate: ['images', 'brand', 'volume']
+			})
+		).data.data
+	}),
+	async () => ({
+		carsOnParts: (await fetchCarsOnParts({ populate: ['images', 'volume', 'brand', 'model', 'generation'] })).data
+			.data
 	}),
 	() => ({ hasGlobalContainer: false, hideSEOBox: true })
 );

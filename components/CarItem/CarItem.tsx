@@ -1,115 +1,85 @@
-import { Grid, Link, useMediaQuery } from '@mui/material';
+import { Button, Grid, Link, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import { Car } from 'api/cars/types';
 import Image from 'components/Image';
 import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import Slider from 'react-slick';
+import { CarOnParts } from 'api/cars-on-parts/types';
+import FavoriteButton from 'components/FavoriteButton';
+import WhiteBox from 'components/WhiteBox';
+import Carousel from 'react-multi-carousel';
+import styles from './CarItem.module.scss';
 
 interface Props {
 	dataFieldsToShow?: { name: string; value: string }[];
 	activeView?: 'grid' | 'list';
-	data: Car;
-	width?: number | string;
-	minHeight?: number | string;
+	data: CarOnParts;
+	width?: number;
 }
 
-const CarItem = ({ data, dataFieldsToShow = [], activeView = 'grid', width = '100%', minHeight = 'auto' }: Props) => {
-	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-	const renderContentByView = {
-		list: (
-			<Box
-				padding='0.5em 1em'
-				width={{ xs: 'calc(100% - 150px)', sm: 'initial' }}
-				display='flex'
-				flexDirection='column'
-			>
-				<NextLink href={`/awaiting-cars/` + data.slug}>
-					<Link
-						variant='h6'
-						alignItems='center'
-						sx={{ color: '#000' }}
-						color='secondary'
-						component='span'
-						underline='hover'
-						fontWeight='500'
-					>
-						{data.name}
-					</Link>
-				</NextLink>
-				<Grid columnSpacing={2} container>
-					{dataFieldsToShow.map((item) => (
-						<Grid key={item.value}>
-							<Typography fontWeight='500' component='div' variant='subtitle1'>
-								{item.name}
-							</Typography>
-							{item.value}
-						</Grid>
-					))}
-				</Grid>
-			</Box>
-		),
-		grid: (
-			<>
-				<NextLink href={`/awaiting-cars/` + data.slug}>
-					<Link
-						height={60}
-						variant='body2'
-						display='flex'
-						alignItems='center'
-						sx={{ color: '#000' }}
-						justifyContent='center'
-						color='secondary'
-						component='span'
-						underline='hover'
-						fontWeight='500'
-						padding='0.25em'
-						marginTop='0.5em'
-						textAlign='center'
-					>
-						{data.name}
-					</Link>
-				</NextLink>
-			</>
-		)
-	};
+const CarItem = ({ data, width = 342 }: Props) => {
 	return (
-		<Box
-			marginBottom='1em'
-			minHeight={minHeight}
-			bgcolor='#fff'
-			key={data.id}
-			display={activeView === 'list' ? 'flex' : 'initial'}
-			width={width}
-		>
+		<WhiteBox overflow={'hidden'} width={width} marginBottom='1em' bgcolor='#fff' position='relative' key={data.id}>
+			<Box position='absolute' zIndex={1} right={1} top={1}>
+				<FavoriteButton product={data}></FavoriteButton>
+			</Box>
 			{data.images ? (
-				<Box width={activeView === 'list' ? (isMobile ? 150 : 200) : '100%'}>
-					<Slider autoplay autoplaySpeed={5000} arrows={false}>
+				<Box>
+					<Carousel
+						dotListClass={styles['dot-list']}
+						responsive={{
+							desktop: {
+								breakpoint: { max: 3000, min: 0 },
+								items: 1
+							}
+						}}
+						infinite={true}
+						autoPlay
+						showDots
+						arrows={false}
+					>
 						{data.images?.map((image) => (
-							<Image
-								key={image.id}
-								width={activeView === 'grid' ? 280 : 200}
-								height={activeView === 'grid' ? 215 : 150}
-								alt={image.alternativeText || image.name}
-								src={image.url}
-							></Image>
+							<Box key={image.id} height={290}>
+								<Image
+									title={image.caption}
+									width={width}
+									height={270}
+									style={{
+										objectFit: 'cover'
+									}}
+									alt={image.alternativeText}
+									src={image.url}
+								></Image>
+							</Box>
 						))}
-					</Slider>
+					</Carousel>
 				</Box>
 			) : (
-				<Box width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}>
+				<Box>
 					<Image
-						title={data.name}
-						style={{ objectFit: 'cover' }}
+						title={data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name}
+						style={{
+							objectFit: 'cover',
+							margin: 'auto'
+						}}
 						src=''
-						width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
-						height={activeView === 'grid' ? 215 : 150}
-						alt={data.name}
+						width={width}
+						height={290}
+						alt={data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name}
 					></Image>
 				</Box>
 			)}
-			{renderContentByView[activeView]}
-		</Box>
+
+			<Box p={1.5}>
+				<Typography variant='h6' fontSize='20px' color='text.secondary'>
+					{data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name}
+				</Typography>
+				<Typography mb={1} color='custom.text-muted'>
+					{[data.volume?.name, data.fuel, data.transmission].filter(Boolean).join(', ')}
+				</Typography>
+			</Box>
+		</WhiteBox>
 	);
 };
 

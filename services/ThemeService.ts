@@ -12,6 +12,8 @@ declare module '@mui/material/styles' {
 			'medium-gray': string;
 			'text-inverse': string;
 			'text-muted': string;
+			divider: string;
+			'bg-surface-4': string;
 		};
 	}
 	interface PaletteOptions {
@@ -22,6 +24,8 @@ declare module '@mui/material/styles' {
 			'medium-gray'?: string;
 			'text-inverse'?: string;
 			'text-muted'?: string;
+			divider?: string;
+			'bg-surface-4'?: string;
 		};
 	}
 }
@@ -44,7 +48,8 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 			},
 			body2: {
 				fontSize: '12px'
-			}
+			},
+			h6: { fontSize: '22px' }
 		},
 		palette: {
 			primary: {
@@ -59,7 +64,7 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 			},
 			// Add custom colors for backgrounds
 			background: {
-				default: '#f1f2f6',
+				default: '#EEEEEE',
 				paper: '#fff'
 			},
 			// Add custom text colors
@@ -94,7 +99,9 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 			custom: {
 				black: '#000',
 				'text-inverse': '#fff',
-				'text-muted': '#7A7F89'
+				'text-muted': '#7A7F89',
+				divider: '#D0D5DD',
+				'bg-surface-4': '#CECECE'
 			}
 		},
 		// Add custom component styles
@@ -106,6 +113,130 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 							width: deviceType === 'mobile' ? '0px' : '1024px'
 						})
 					})
+				}
+			},
+			MuiContainer: {},
+			MuiButton: {
+				variants: [
+					{
+						props: { size: 'small' },
+						style: {
+							height: '32px',
+							padding: '8px 16px',
+							fontSize: '14px'
+						}
+					},
+					{
+						props: { size: 'medium' },
+						style: {
+							height: '40px',
+							padding: '10px 16px',
+							fontSize: '16px'
+						}
+					},
+					{
+						props: { size: 'large' },
+						style: {
+							height: '48px',
+							padding: '14px 16px',
+							fontSize: '16px'
+						}
+					}
+				],
+				styleOverrides: {
+					root: {
+						textTransform: 'none',
+						borderRadius: '6px',
+						fontWeight: 500
+					}
+				}
+			},
+			MuiTab: {
+				styleOverrides: {
+					root: { textTransform: 'initial' }
+				}
+			},
+			MuiAutocomplete: {
+				styleOverrides: {
+					inputRoot: {
+						paddingBottom: '10px'
+					},
+					popupIndicator: {
+						right: '6px'
+					}
+				}
+			},
+			MuiLink: {
+				styleOverrides: {
+					root: {
+						textDecoration: 'none',
+						color: '#40444D',
+						fontWeight: 500,
+						'&:hover': {
+							color: '#7A7F89'
+						},
+						'&:focus': {
+							color: '#1D1F23'
+						},
+						'&:disabled': {
+							color: '#7A7F89A3'
+						}
+					}
+				}
+			},
+			MuiInputBase: {
+				variants: [
+					{
+						props: { size: 'small' },
+						style: {
+							height: '32px',
+							padding: '8px 12px',
+							fontSize: '14px'
+						}
+					},
+					{
+						props: { size: 'medium' },
+						style: {
+							height: '40px',
+							padding: '10px 12px',
+							fontSize: '16px'
+						}
+					}
+				],
+				styleOverrides: {
+					root: {
+						border: '1px solid #E2E2E2',
+						borderRadius: '6px',
+						background: '#fff',
+						'&:hover': {
+							borderColor: '#7A7F89'
+						},
+						'&.Mui-focused': {
+							boxShadow: '0px 0px 0px 2px #FCFCFD, 0px 0px 0px 4px #121212'
+						},
+						'&.Mui-disabled': {
+							backgroundColor: '#F5F5F5',
+							border: '1px solid #D0D5DD'
+						},
+						'&::before': {
+							borderBottom: 'none!important'
+						},
+						'&::after': {
+							borderBottom: 'none!important'
+						}
+					},
+					input: {
+						paddingLeft: '8px',
+						paddingRight: '8px'
+					}
+				}
+			},
+			MuiAppBar: {
+				styleOverrides: {
+					root: {
+						boxShadow: 'none',
+						borderBottom: '1px solid #E2E2E2'
+					}
 				}
 			}
 		}

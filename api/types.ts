@@ -1,4 +1,5 @@
 import { Cabin } from './cabins/types';
+import { CarOnParts } from './cars-on-parts/types';
 import { SparePart } from './spareParts/types';
 import { Tire } from './tires/types';
 import { Wheel } from './wheels/types';
@@ -7,9 +8,9 @@ export const enum ErrorTypes {
 	ValidationError = 'ValidationError'
 }
 
-export type Product = Wheel | Tire | SparePart | Cabin;
+export type Product = Wheel | Tire | SparePart | Cabin | CarOnParts;
 
-export type ProductType = 'sparePart' | 'tire' | 'wheel' | 'cabin';
+export type ProductType = 'sparePart' | 'tire' | 'wheel' | 'cabin' | 'carOnParts';
 
 export type ImageFormat = 'thumbnail' | 'small' | 'medium' | 'large';
 

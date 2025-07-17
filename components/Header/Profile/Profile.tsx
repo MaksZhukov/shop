@@ -1,6 +1,7 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import {
 	Badge,
+	Button,
 	ClickAwayListener,
 	Divider,
 	Grow,
@@ -17,6 +18,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../../../store';
 import styles from './Profile.module.scss';
+import { PersonIcon } from 'components/Icons/PersonIcon';
+import { NavbarButton } from 'components/ui/NavbarButton';
 
 interface Props {
 	onClickSignIn: () => void;
@@ -63,21 +66,19 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 
 	return (
 		<>
-			<IconButton
-				sx={{ order: { xs: '1', md: 'initial' }, display: { xs: 'none', md: 'flex' } }}
+			<NavbarButton
 				id='account-button'
 				title='Меню'
 				size='small'
 				className={styles['button']}
 				aria-controls={isOpened ? 'account-menu' : undefined}
 				aria-haspopup='true'
+				icon={<PersonIcon />}
 				aria-expanded={isOpened ? 'true' : undefined}
 				onClick={handleClick}
 			>
-				<Badge color='warning' variant='dot' invisible={isInvisibleBadge}>
-					<MenuIcon sx={{ color: 'white' }}></MenuIcon>
-				</Badge>
-			</IconButton>
+				Профиль
+			</NavbarButton>
 			<Popper
 				open={isOpened}
 				anchorEl={anchorEl}

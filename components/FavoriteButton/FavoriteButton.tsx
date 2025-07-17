@@ -2,6 +2,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { IconButton } from '@mui/material';
 import { Product } from 'api/types';
+import { FavoriteAddedIcon, FavoriteAddIcon } from 'components/Icons';
 import { observer } from 'mobx-react';
 import { useSnackbar } from 'notistack';
 import { useStore } from 'store';
@@ -45,15 +46,7 @@ const FavoriteButton = ({ product }: Props) => {
 			}
 		}
 	};
-	return (
-		<IconButton onClick={handleClick}>
-			{favorite ? (
-				<FavoriteIcon titleAccess='Удалить избранное' color='primary'></FavoriteIcon>
-			) : (
-				<FavoriteBorderIcon titleAccess='Добавить в избранное' color='primary'></FavoriteBorderIcon>
-			)}
-		</IconButton>
-	);
+	return <IconButton onClick={handleClick}>{favorite ? <FavoriteAddedIcon /> : <FavoriteAddIcon />}</IconButton>;
 };
 
 export default observer(FavoriteButton);
