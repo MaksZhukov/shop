@@ -5,6 +5,7 @@ export interface Article {
 	name: string;
 	slug: string;
 	mainImage: Image;
+	createdAt: string;
 	rightText: string;
 	images1: Image[];
 	content1: string;

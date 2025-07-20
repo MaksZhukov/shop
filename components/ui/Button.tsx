@@ -8,7 +8,7 @@ interface CustomButtonProps extends Omit<ButtonProps, 'variant'> {
 export const Button = (props: CustomButtonProps) => {
 	if (props.variant === 'link' && props.href) {
 		return (
-			<Link size={props.size} href={props.href} sx={{ display: 'flex', gap: 1 }}>
+			<Link size={props.size} href={props.href} sx={{ display: 'flex', gap: 1, ...props.sx }}>
 				{props.children} {props.endIcon}
 			</Link>
 		);

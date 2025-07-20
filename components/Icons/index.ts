@@ -13,3 +13,5 @@ export { ChevronRightIcon } from './ChevronRightIcon';
 export { FavoriteAddIcon } from './FavoriteAddIcon';
 export { FavoriteAddedIcon } from './FavoriteAddedIcon';
 export { ClockIcon } from './ClockIcon';
+export { ChevronUpIcon } from './ChevronUpIcon';
+export { GeoIcon } from './GeoIcon';

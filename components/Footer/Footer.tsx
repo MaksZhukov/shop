@@ -4,11 +4,12 @@ import ReactMarkdown from 'components/ReactMarkdown';
 import NextLink from 'next/link';
 import { FC } from 'react';
 import ContactInfo from './ContactInfo';
-import { ShareButtons } from '../features/ShareButtons';
+import { SocialButtons } from '../features/SocialsButtons';
 import NavigationLinks from './NavigationLinks';
 import CompanyInfo from './CompanyInfo';
 import PaymentMethods from './PaymentMethods';
 import { NAVIGATION_LINKS } from './constants';
+import { SOCIAL_BUTTONS } from 'components/features/SocialsButtons/constants';
 
 interface Props {
 	footer: IFooter;
@@ -16,9 +17,6 @@ interface Props {
 
 const Footer: FC<Props> = ({ footer }) => {
 	const theme = useTheme();
-
-	const origin = typeof window !== 'undefined' ? window.location.origin : '';
-	const title = typeof window !== 'undefined' ? document.title : '';
 
 	const currentYear = new Date().getFullYear();
 
@@ -45,7 +43,7 @@ const Footer: FC<Props> = ({ footer }) => {
 					{/* Contact Information */}
 					<Box mb={3}>
 						<ContactInfo theme={theme} />
-						<ShareButtons origin={origin} title={title} />
+						<SocialButtons />
 					</Box>
 
 					{/* Product Navigation */}
