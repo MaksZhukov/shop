@@ -3,10 +3,17 @@ import { API_UN_LIMIT } from 'api/constants';
 import { fetchLayout } from 'api/layout/layout';
 import { ApiResponse } from 'api/types';
 import axios, { AxiosResponse } from 'axios';
+import { UAParser } from 'ua-parser-js';
 
 export const getPageProps =
-	<T>(fetchPage?: () => Promise<AxiosResponse<ApiResponse<T>>>, ...functions: ((context: any) => any)[]) =>
+	<T>(
+		fetchPage?: (context: any, deviceType: 'desktop' | 'mobile') => Promise<AxiosResponse<ApiResponse<T>>>,
+		...functions: ((context: any, deviceType: 'desktop' | 'mobile') => any)[]
+	) =>
 	async (context: any) => {
+		const ua = context?.req?.headers['user-agent'];
+		const deviceType = ua ? UAParser(ua).device.type : 'desktop';
+		const deviceTypeResult = deviceType === 'mobile' || deviceType === 'tablet' ? 'mobile' : 'desktop';
 		let props = { brands: [], page: { seo: {} }, layout: { footer: {} } } as {
 			layout: { footer: any };
 			[key: string]: any;
@@ -26,8 +33,8 @@ export const getPageProps =
 					}
 				}),
 				fetchLayout(),
-				...(fetchPage ? [fetchPage()] : []),
-				...functions.map((func) => func(context))
+				...(fetchPage ? [fetchPage(context, deviceTypeResult)] : []),
+				...functions.map((func) => func(context, deviceTypeResult))
 			]);
 			[...(fetchPage ? restResponses : response ? [response, ...restResponses] : [...restResponses])].forEach(
 				(item) => {

@@ -91,7 +91,7 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 			},
 			// Add custom colors for specific use cases
 			info: {
-				main: '#2196f3',
+				main: '#0081FF',
 				light: '#64b5f6',
 				dark: '#1976d2'
 			},
@@ -101,7 +101,7 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 				'text-inverse': '#fff',
 				'text-muted': '#7A7F89',
 				divider: '#D0D5DD',
-				'bg-surface-4': '#CECECE'
+				'bg-surface-4': '#CECECE',
 			}
 		},
 		// Add custom component styles

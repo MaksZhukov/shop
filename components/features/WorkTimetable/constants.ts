@@ -1,0 +1,1 @@
+export const CLOSED_MINUTES_BEFORE_CLOSE = 15;

@@ -1,5 +1,5 @@
-import { LocalPhone } from '@mui/icons-material';
-import { Box, Button, createTheme, ThemeProvider, Container } from '@mui/material';
+import { ArrowUpward, LocalPhone } from '@mui/icons-material';
+import { Box, Button, createTheme, ThemeProvider, Container, IconButton } from '@mui/material';
 import Breadcrumbs from 'components/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
@@ -13,7 +13,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import NotistackService from 'services/NotistackService';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import "react-multi-carousel/lib/styles.css";
+import 'react-multi-carousel/lib/styles.css';
 import dynamic from 'next/dynamic';
 import { UAParser } from 'ua-parser-js';
 import Content from '../components/Content';
@@ -24,6 +24,7 @@ import { getJwt, saveJwt } from '../services/LocalStorageService';
 import { store } from '../store';
 import { createCustomTheme } from 'services/ThemeService';
 import './app.scss';
+import { ScrollUp } from 'components/features/ScrollUp';
 
 const Footer = dynamic(() => import('components/Footer'));
 
@@ -169,17 +170,7 @@ function MyApp({
 							</Content>
 						</RouteShield>
 						<Footer footer={layout.footer}></Footer>
-						<Box bottom={10} right={10} zIndex={10} position='fixed'>
-							<Button
-								sx={{ minWidth: '50px', height: '50px', borderRadius: ' 50%', padding: '0' }}
-								variant='contained'
-								component='a'
-								title='Позвонить'
-								href='tel:+375297804780'
-							>
-								<LocalPhone></LocalPhone>
-							</Button>
-						</Box>
+						<ScrollUp />
 					</Layout>
 				</SnackbarProvider>
 			</Provider>
@@ -187,9 +178,13 @@ function MyApp({
 	);
 }
 
-MyApp.getInitialProps = (context: any) => ({
-	...NextApp.getInitialProps(context),
-	deviceType: context.ctx.req ? UAParser(context.ctx.req.headers['user-agent']).device.type || 'desktop' : 'desktop'
-});
+MyApp.getInitialProps = (context: any) => {
+	const deviceType = context.ctx.req ? UAParser(context.ctx.req.headers['user-agent']).device.type : 'desktop';
+	const deviceTypeResult = deviceType === 'mobile' || deviceType === 'tablet' ? 'mobile' : 'desktop';
+	return {
+		...NextApp.getInitialProps(context),
+		deviceType: deviceTypeResult
+	};
+};
 
 export default MyApp;

@@ -1,5 +1,5 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import { Box, CircularProgress, Input, Link, Modal, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
+import { Box, CircularProgress, Input, Modal, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
 import { Container } from '@mui/material';
 import { Brand } from 'api/brands/types';
 import { API_MAX_LIMIT } from 'api/constants';
@@ -42,7 +42,6 @@ import WhiteBox from 'components/WhiteBox';
 import { BODY_STYLES_SLUGIFY, KIND_WHEELS_SLUGIFY, SEASONS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'config';
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
@@ -55,12 +54,14 @@ import styles from './index.module.scss';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
 import { ChevronRightIcon } from 'components/Icons';
-import { Button } from 'components/ui';
+import { Button, Link } from 'components/ui';
 import ProductItem from 'components/ProductItem';
-import { ShareButtons } from 'components/features/ShareButtons';
+import { ShareButtons, SocialButtons } from 'components/features/SocialsButtons';
 import { fetchCarOnParts, fetchCarsOnParts } from 'api/cars-on-parts/cars-on-parts';
 import { CarOnParts } from 'api/cars-on-parts/types';
 import CarItem from 'components/CarItem';
+import { fetchArticles } from 'api/articles/articles';
+import { Article } from 'api/articles/types';
 
 const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
@@ -85,12 +86,12 @@ interface Props {
 	brands: Brand[];
 	newSpareParts: SparePart[];
 	carsOnParts: CarOnParts[];
+	articles: Article[];
 }
 
-const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, carsOnParts }) => {
-	console.log(carsOnParts);
+const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, carsOnParts, articles }) => {
 	const theme = useTheme();
-	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
+	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const isLaptop = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 	const [wheelWidths, setWheelWidths] = useState<WheelWidth[]>([]);
@@ -858,6 +859,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 						p={2}
 						height={{ xs: 120, md: 200 }}
 						display='flex'
+						flex='1'
 						flexDirection='column'
 						justifyContent='end'
 						alignItems='center'
@@ -947,6 +949,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 			</Box>
 			<Box
 				minHeight={284}
+				mb={5}
 				display={'flex'}
 				gap={{ xs: 0, md: 5 }}
 				py={4}
@@ -956,6 +959,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 				flexDirection={{ xs: 'column', md: 'row' }}
 				alignItems={'center'}
 				justifyContent={'center'}
+				borderRadius={4}
 				bgcolor={'custom.bg-surface-4'}
 			>
 				<Box maxWidth={340} textAlign={{ xs: 'center', md: 'left' }}>
@@ -965,7 +969,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 					<Typography color='text.primary' mb={2}>
 						Оставьте заявку и мы с вами свяжемся для покупки вашего автомобиля{' '}
 					</Typography>
-					{isTablet ? <ShareButtons origin={origin} title={title} /> : null}
+					{isTablet ? <SocialButtons /> : null}
 				</Box>
 				<Box
 					maxWidth={300}
@@ -980,6 +984,80 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 						Нажимая на кнопку вы соглашаетесь на обработку персональных данных
 					</Typography>
 				</Box>
+			</Box>
+			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={{ xs: 2, md: 1 }}>
+				<Box flex={1} textAlign={{ xs: 'center', md: 'left' }}>
+					<Typography variant='h6'>Новости авторазборки</Typography>
+					<Typography color='text.primary' variant='body1'>
+						Все самое актуальное от нашей компании
+					</Typography>
+				</Box>
+				<Button
+					sx={{ display: { xs: 'none', md: 'block' } }}
+					variant='link'
+					href='/articles'
+					endIcon={<ChevronRightIcon />}
+				>
+					Смотреть все
+				</Button>
+			</Box>
+			<Box
+				display={'flex'}
+				gap={{ xs: 1, md: 2 }}
+				flexWrap={'wrap'}
+				justifyContent={'center'}
+				alignItems={'center'}
+				flexDirection={{ xs: 'column', md: 'row' }}
+			>
+				{articles.map((item, index) => (
+					<Box
+						width={{ xs: '100%', md: 340 }}
+						key={item.id}
+						overflow={'hidden'}
+						display={{ xs: index === 0 ? 'block' : 'flex', md: 'block' }}
+						bgcolor='background.paper'
+						borderRadius={4}
+						border={2}
+						borderColor='background.paper'
+					>
+						<Image
+							src={item.mainImage?.formats?.small.url || item.mainImage?.url}
+							alt={item.name}
+							style={{
+								objectFit: 'cover',
+								borderRadius: '16px',
+								width: index === 0 ? '100%' : undefined
+							}}
+							width={!isTablet || index === 0 ? 336 : 92}
+							height={!isTablet || index === 0 ? 190 : 92}
+						></Image>
+						<Box py={{ xs: 0.25, md: 1.75 }} px={{ xs: 1, md: 1.75 }}>
+							<Link href={`/articles/${item.slug}`}>
+								<Typography variant='h6' fontSize={{ xs: '18px', md: '22px' }} lineClamp={1}>
+									{item.name}
+								</Typography>
+							</Link>
+							<Typography mb={{ xs: 0, md: 1 }} height={42} variant='body1' lineClamp={2}>
+								{item.name}
+							</Typography>
+							<Typography variant='body2' color='custom.text-muted'>
+								{new Date(item.createdAt).toLocaleDateString('ru-RU', {
+									day: 'numeric',
+									month: 'long',
+									year: 'numeric'
+								})}
+							</Typography>
+						</Box>
+					</Box>
+				))}
+				<Button
+					sx={{ display: { xs: 'flex', md: 'none' } }}
+					variant='link'
+					href='/articles'
+					endIcon={<ChevronRightIcon />}
+				>
+					Смотреть все новости
+				</Button>
 			</Box>
 		</Container>
 	);
@@ -1007,6 +1085,15 @@ export const getServerSideProps = getPageProps(
 		newSpareParts: (
 			await fetchSpareParts({
 				populate: ['images', 'brand', 'volume']
+			})
+		).data.data
+	}),
+	async (ctx: any, deviceType: 'desktop' | 'mobile') => ({
+		articles: (
+			await fetchArticles({
+				populate: ['mainImage'],
+				sort: ['createdAt:desc'],
+				pagination: { limit: deviceType === 'mobile' ? 5 : 8 }
 			})
 		).data.data
 	}),

@@ -14,6 +14,7 @@ import {
 	Input,
 	MenuItem,
 	MenuList,
+	Modal,
 	Popper,
 	Toolbar,
 	Typography,
@@ -33,10 +34,24 @@ import { useStore } from 'store';
 import ModalAuth from '../ModalAuth';
 import styles from './Header.module.scss';
 import Profile from './Profile';
-import { Link } from 'components/ui';
-import { CartIcon, DashboardIcon, HeartIcon, PhoneCallIcon, SearchIcon } from 'components/Icons';
+import { Link, ModalContainer } from 'components/ui';
+import {
+	CartIcon,
+	DashboardIcon,
+	GeoIcon,
+	HeartIcon,
+	PhoneCallIcon,
+	SearchIcon,
+	TelegramIcon,
+	ViberIcon,
+	WhatsAppIcon
+} from 'components/Icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
 import { WorkTimetable } from 'components/features/WorkTimetable';
+import { SocialButtons } from 'components/features/SocialsButtons';
+import { SOCIAL_BUTTONS } from 'components/features/SocialsButtons/constants';
+
+const SOCIAL_BUTTONS_MOBILE = SOCIAL_BUTTONS.filter((item) => ['Telegram', 'WhatsApp', 'Viber'].includes(item.name));
 
 interface NavigationChild {
 	name: string;
@@ -129,6 +144,7 @@ const Header = observer(({ brands }: Props) => {
 	const { code } = router.query;
 
 	const [isOpenedModal, setIsOpenedModal] = useState<boolean>(false);
+	const [isOpenedMobileContacts, setIsOpenedMobileContacts] = useState<boolean>(false);
 	const [isOpenedTabletMenu, setIsOpenedTabletMenu] = useState<boolean>(false);
 	const ref = useRef<HTMLDivElement>(null);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
@@ -207,6 +223,19 @@ const Header = observer(({ brands }: Props) => {
 			});
 		}
 		router.push('/', undefined, { shallow: true });
+	};
+
+	const handleOpenYandexMaps = () => {
+		// Coordinates for Полотково, Гродненская область, Беларусь
+		const latitude = 53.584958;
+		const longitude = 23.861179;
+		const address = 'Полотково, Гродненская область, Беларусь';
+
+		// Open Yandex Maps with coordinates
+		const yandexMapsUrl = `https://yandex.ru/maps/?pt=${longitude},${latitude}&z=15&l=map&text=${encodeURIComponent(
+			address
+		)}`;
+		window.open(yandexMapsUrl, '_blank');
 	};
 
 	const renderLink = (item: NavigationChild) => {
@@ -451,9 +480,81 @@ const Header = observer(({ brands }: Props) => {
 							<IconButton sx={{ padding: '0' }}>
 								<SearchIcon />
 							</IconButton>
-							<Link href='tel:+375297804780'>
-								<PhoneCallIcon />
-							</Link>
+							<IconButton onClick={() => setIsOpenedMobileContacts(true)} sx={{ padding: '0' }}>
+								<GeoIcon />
+							</IconButton>
+							<Modal open={isOpenedMobileContacts} onClose={() => setIsOpenedMobileContacts(false)}>
+								<ModalContainer
+									px={1}
+									py={1}
+									onClose={() => setIsOpenedMobileContacts(false)}
+									title='Контакты'
+									width='344px'
+									sx={{
+										position: 'absolute',
+										top: '50%',
+										left: '50%',
+										maxHeight: '95vh',
+										overflow: 'auto',
+										transform: 'translate(-50%, -50%)'
+									}}
+								>
+									<Box
+										mb={1.5}
+										display={'flex'}
+										alignItems={'center'}
+										flexDirection={'column'}
+										gap={1.5}
+									>
+										<WorkTimetable />
+										<Typography display={'flex'} alignItems='center' gap={1}>
+											<Image
+												isOnSSR={false}
+												src='/mts_icon.png'
+												alt='phone'
+												quality={100}
+												width={20}
+												height={20}
+											/>{' '}
+											<Link href='tel:+375297804780'>+375297804780</Link>
+										</Typography>
+										<Typography display={'flex'} alignItems='center' gap={1}>
+											<Image
+												isOnSSR={false}
+												src='/a1_icon.png'
+												alt='phone'
+												quality={100}
+												width={24}
+												height={24}
+											/>{' '}
+											<Link href='tel:+375296011602'>+375296011602</Link>
+										</Typography>
+									</Box>
+									<SocialButtons sx={{ justifyContent: 'center' }} data={SOCIAL_BUTTONS_MOBILE} />
+									<Box mt={1.5} bgcolor='#F5F5F5' p={1.5} py={1} borderRadius={4}>
+										<Typography variant='h6' fontSize={18}>
+											Авторазборка Полотково ООО "Дриблинг"
+										</Typography>
+										<Typography mb={1} variant='body2'>
+											Гродненская область, Гродненский район, с/с Коптевский, д. Полотково
+										</Typography>
+										<iframe
+											src='https://yandex.com/map-widget/v1/?um=constructor%3A8e4478010012318b78f66dc37db42cd1a6247bbea253e93b24602e1ac041c3c0&amp;source=constructor'
+											width='100%'
+											height='304'
+											frameBorder='0'
+										></iframe>
+										<Button
+											variant='contained'
+											fullWidth
+											onClick={handleOpenYandexMaps}
+											sx={{ mt: 1 }}
+										>
+											Проложить маршрут
+										</Button>
+									</Box>
+								</ModalContainer>
+							</Modal>
 						</Box>
 					</Box>
 					<Box
