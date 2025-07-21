@@ -285,7 +285,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 	};
 
 	return (
-		<Container>
+		<Container sx={{ my: 4 }}>
 			<Box
 				mb={5}
 				minHeight={{ xs: 'auto', md: 446 }}

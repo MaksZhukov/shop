@@ -26,6 +26,7 @@ declare module '@mui/material/styles' {
 			'text-muted'?: string;
 			divider?: string;
 			'bg-surface-4'?: string;
+			'muted-foreground'?: string;
 		};
 	}
 }
@@ -101,7 +102,8 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 				'text-inverse': '#fff',
 				'text-muted': '#7A7F89',
 				divider: '#D0D5DD',
-				'bg-surface-4': '#CECECE'
+				'bg-surface-4': '#CECECE',
+				'muted-foreground': '#64748B'
 			}
 		},
 		// Add custom component styles

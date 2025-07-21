@@ -1,5 +1,5 @@
-import { Container, Link, Breadcrumbs as MUIBreadcrumbs, Typography } from '@mui/material';
-import NextLink from 'next/link';
+import { Box, Container, Breadcrumbs as MUIBreadcrumbs, Typography } from '@mui/material';
+import { Link } from 'components/ui/Link';
 import { useRouter } from 'next/router';
 import { FC, useMemo } from 'react';
 
@@ -74,9 +74,13 @@ const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
 		return <></>;
 	}
 
+	const renderSeparator = (
+		<Box sx={{ width: 3, height: 3, borderRadius: '50%', backgroundColor: 'custom.muted-foreground' }} />
+	);
+
 	return (
 		<Container>
-			<MUIBreadcrumbs sx={{ marginY: '1em' }} aria-label='breadcrumb'>
+			<MUIBreadcrumbs separator={renderSeparator} sx={{ marginY: '1em' }} aria-label='breadcrumb'>
 				{breadcrumbs.length > 1 &&
 					breadcrumbs.map((crumb, idx) =>
 						idx === breadcrumbs.length - 1 ? (
@@ -84,11 +88,14 @@ const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
 								{crumb.text}
 							</Typography>
 						) : (
-							<NextLink key={crumb.text} href={crumb.href}>
-								<Link component='span' underline='hover' color='primary.main'>
-									<Typography textTransform='capitalize'>{crumb.text}</Typography>
-								</Link>
-							</NextLink>
+							<Link
+								key={crumb.text}
+								href={crumb.href}
+								color='custom.text-muted'
+								sx={{ textTransform: 'capitalize' }}
+							>
+								{crumb.text}
+							</Link>
 						)
 					)}
 			</MUIBreadcrumbs>

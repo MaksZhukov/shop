@@ -29,33 +29,14 @@ a {
 	float: left;
 }
 
-.slick-arrow::before {
-	color: #fdb819;
-}
-
-.slick-slider {
-	touch-action: auto !important;
-	div[aria-hidden='true'] a[href] {
-		visibility: hidden;
-	}
-}
-
-// IT NEEDS FOR "Ensure text remains visible during webfont load"
-.slick-next:before,
-.slick-prev:before {
-	font-family: 'slick', Roboto;
-	font-display: swap;
-}
-
-.slick-slide div {
-	outline: none;
-}
-
 .react-multiple-carousel__arrow {
 	border-radius: 6px;
 	min-width: 32px;
 	min-height: 32px;
 	background-color: rgba(255, 255, 255, 0.4);
+	&:hover {
+		background-color: rgba(255, 255, 255, 0.8);
+	}
 	&::before {
 		color: #1d1f23;
 	}
