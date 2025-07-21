@@ -1,0 +1,8 @@
+.carousel {
+	height: 100%;
+	:global {
+		.react-multi-carousel-track {
+			height: 100%;
+		}
+	}
+}

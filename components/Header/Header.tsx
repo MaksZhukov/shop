@@ -166,7 +166,7 @@ const Header = observer(({ brands }: Props) => {
 				filters: { h1: { $contains: debouncedSearchValue } }
 			})
 	});
-	console.log(isLoading);
+
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	const handleOutsideClick = () => {

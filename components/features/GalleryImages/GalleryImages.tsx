@@ -5,8 +5,8 @@ import { Image as IIamge } from 'api/types';
 import Zoom from 'components/Zoom';
 import getConfig from 'next/config';
 import { FC } from 'react';
-import Slider from 'react-slick';
 import styles from './GalleryImages.module.scss';
+import Carousel from 'react-multi-carousel';
 const { publicRuntimeConfig } = getConfig();
 
 interface Props {
@@ -35,7 +35,17 @@ const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => {
 				>
 					<CloseIcon sx={{ color: '#fff' }} fontSize='large' />
 				</IconButton>
-				<Slider swipe={false} className={styles.slider} slidesToShow={1} initialSlide={selectedIndex as number}>
+				<Carousel
+					className={styles.carousel}
+					infinite={true}
+					responsive={{
+						desktop: {
+							breakpoint: { max: 3000, min: 0 },
+							items: 1,
+							slidesToSlide: 1
+						}
+					}}
+				>
 					{images?.map((item) => (
 						<Box key={item.id} height={'100%'} sx={{ display: 'flex !important' }}>
 							<Zoom
@@ -47,7 +57,7 @@ const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => {
 							/>
 						</Box>
 					))}
-				</Slider>
+				</Carousel>
 			</Box>
 		</Modal>
 	);

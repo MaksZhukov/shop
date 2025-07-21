@@ -1,4 +1,3 @@
-import { Box, useMediaQuery } from '@mui/material';
 import { fetchBrandBySlug } from 'api/brands/brands';
 import { Brand } from 'api/brands/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
@@ -13,7 +12,6 @@ import Product from 'components/Product';
 import Typography from 'components/Typography/Typography';
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
-import { ReactElement, useEffect } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
 import { withKindSparePart } from 'services/SEOService';
@@ -28,27 +26,9 @@ interface Props {
 	page: DefaultPage;
 	brands: Brand[];
 	kindSparePart?: KindSparePart;
-	setRenderBeforeFooter: (element: ReactElement | null) => void;
 }
 
-const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts, setRenderBeforeFooter }) => {
-	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
-	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-	useEffect(() => {
-		setRenderBeforeFooter(
-			<Box marginY='1em' paddingX='1em'>
-				<BrandsCarousel linkType='spare-parts' brands={brands}></BrandsCarousel>
-				<Typography component='h3' marginTop='1em' variant={isMobile ? 'h6' : 'h5'}>
-					Отзывы о нас
-				</Typography>
-				<CarouselReviews marginBottom='1em' slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}></CarouselReviews>
-			</Box>
-		);
-		return () => {
-			setRenderBeforeFooter(null);
-		};
-	}, []);
-
+const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts }) => {
 	if (data && relatedProducts) {
 		return (
 			<Product

@@ -1,6 +1,6 @@
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { IconButton } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import { Product } from 'api/types';
 import { FavoriteAddedIcon, FavoriteAddIcon } from 'components/Icons';
 import { observer } from 'mobx-react';
@@ -9,9 +9,10 @@ import { useStore } from 'store';
 
 interface Props {
 	product: Product;
+	title: string;
 }
 
-const FavoriteButton = ({ product }: Props) => {
+const FavoriteButton = ({ product, title }: Props) => {
 	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();
 	const favorite = store.favorites.items.find(
@@ -46,6 +47,16 @@ const FavoriteButton = ({ product }: Props) => {
 			}
 		}
 	};
+	if (title) {
+		return (
+			<Button onClick={handleClick} sx={{ gap: 0.5, px: 0.5 }} size='small'>
+				{favorite ? <FavoriteAddedIcon /> : <FavoriteAddIcon />}
+				<Typography variant='body1' color='text.primary'>
+					{title}
+				</Typography>
+			</Button>
+		);
+	}
 	return <IconButton onClick={handleClick}>{favorite ? <FavoriteAddedIcon /> : <FavoriteAddIcon />}</IconButton>;
 };
 

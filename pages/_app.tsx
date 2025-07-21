@@ -1,31 +1,26 @@
-import { ArrowUpward, LocalPhone } from '@mui/icons-material';
-import { Box, Button, createTheme, ThemeProvider, Container, IconButton } from '@mui/material';
-import Breadcrumbs from 'components/Breadcrumbs';
+import { Container } from '@mui/material';
+import Breadcrumbs from 'components/features/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
 import SEOBox from 'components/SEOBox';
-import { Provider } from 'mobx-react';
 import type { AppProps } from 'next/app';
 import NextApp from 'next/app';
 import { useRouter } from 'next/router';
-import { SnackbarProvider } from 'notistack';
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import NotistackService from 'services/NotistackService';
-import 'slick-carousel/slick/slick-theme.css';
-import 'slick-carousel/slick/slick.css';
 import 'react-multi-carousel/lib/styles.css';
 import dynamic from 'next/dynamic';
 import { UAParser } from 'ua-parser-js';
-import Content from '../components/Content';
 import Header from '../components/Header';
 import Layout from '../components/Layout';
 import RouteShield from '../components/RouteShield/RouteShield';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import { store } from '../store';
-import { createCustomTheme } from 'services/ThemeService';
-import './app.scss';
 import { ScrollUp } from 'components/features/ScrollUp';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryProvider } from 'components/providers/QueryProvider';
+import { ThemeProvider } from 'components/providers/ThemeProvider';
+import { StoreProvider } from 'components/providers/StoreProvider';
+import { SnackbarProvider } from 'components/providers/SnackbarProvider';
+import './app.scss';
 
 const Footer = dynamic(() => import('components/Footer'));
 
@@ -36,18 +31,6 @@ function MyApp({
 }: AppProps & { deviceType: 'desktop' | 'mobile' }) {
 	const router = useRouter();
 	const [renderBeforeFooter, setRenderBeforeFooter] = useState<ReactElement | null>(null);
-	const [queryClient] = useState(
-		() =>
-			new QueryClient({
-				defaultOptions: {
-					queries: {
-						staleTime: 6000
-					}
-				}
-			})
-	);
-
-	const theme = useMemo(() => createCustomTheme(deviceType), [deviceType]);
 
 	useEffect(() => {
 		const tryFetchData = async () => {
@@ -69,7 +52,6 @@ function MyApp({
 			store.setIsInitialRequestDone();
 		};
 		tryFetchData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const renderContent = (
@@ -150,18 +132,10 @@ function MyApp({
 	};
 
 	return (
-		<ThemeProvider theme={theme}>
-			<QueryClientProvider client={queryClient}>
-				<Provider store={store}>
-					<SnackbarProvider
-						autoHideDuration={3000}
-						ref={(ref) => {
-							if (ref) {
-								NotistackService.setRef(ref);
-							}
-						}}
-						maxSnack={3}
-					>
+		<ThemeProvider deviceType={deviceType}>
+			<QueryProvider>
+				<StoreProvider>
+					<SnackbarProvider>
 						<Layout>
 							<HeadSEO
 								title={restPageProps.page?.seo?.title}
@@ -171,22 +145,20 @@ function MyApp({
 							></HeadSEO>
 							<Header brands={restPageProps.brands}></Header>
 							<RouteShield>
-								<Content>
-									<ErrorBoundary fallback={<></>} onError={handleRenderError}>
-										<Breadcrumbs
-											exclude={['buyback-cars']}
-											h1={restPageProps.data?.h1 || restPageProps.page?.name}
-										></Breadcrumbs>
-										{hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
-									</ErrorBoundary>
-								</Content>
+								<ErrorBoundary fallback={<></>} onError={handleRenderError}>
+									<Breadcrumbs
+										exclude={['buyback-cars']}
+										h1={restPageProps.data?.h1 || restPageProps.page?.name}
+									></Breadcrumbs>
+									{hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
+								</ErrorBoundary>
 							</RouteShield>
 							<Footer footer={layout.footer}></Footer>
 							<ScrollUp />
 						</Layout>
 					</SnackbarProvider>
-				</Provider>
-			</QueryClientProvider>
+				</StoreProvider>
+			</QueryProvider>
 		</ThemeProvider>
 	);
 }
