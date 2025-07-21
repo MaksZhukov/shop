@@ -39,7 +39,13 @@ import LinkWithImage from 'components/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import { BODY_STYLES_SLUGIFY, KIND_WHEELS_SLUGIFY, SEASONS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'config';
+import {
+	BODY_STYLES_SLUGIFY,
+	FUELS_SLUGIFY,
+	KIND_WHEELS_SLUGIFY,
+	SEASONS_SLUGIFY,
+	TRANSMISSIONS_SLUGIFY
+} from 'config';
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -49,11 +55,11 @@ import { Dispatch, ReactNode, SetStateAction, UIEventHandler, useRef, useState }
 import Slider from 'react-slick';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
-import { BODY_STYLES, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
+import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import styles from './index.module.scss';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
-import { ChevronRightIcon } from 'components/Icons';
+import { ChevronDownIcon, ChevronRightIcon, ChevronUpIcon } from 'components/Icons';
 import { Button, Link } from 'components/ui';
 import ProductItem from 'components/ProductItem';
 import { ShareButtons, SocialButtons } from 'components/features/SocialsButtons';
@@ -62,6 +68,8 @@ import { CarOnParts } from 'api/cars-on-parts/types';
 import CarItem from 'components/CarItem';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
+import { fetchEngineVolumes } from 'api/engineVolumes/engineVolumes';
+import { EngineVolume } from 'api/engineVolumes/types';
 
 const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
@@ -95,6 +103,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const isLaptop = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 	const [wheelWidths, setWheelWidths] = useState<WheelWidth[]>([]);
+	const [isMoreFilters, setIsMoreFilters] = useState<boolean>(false);
 	const [numberHoles, setNumberHoles] = useState<WheelNumberHole[]>([]);
 	const [diameterCenterHoles, setDiameterCenterHoles] = useState<WheelDiameterCenterHole[]>([]);
 	const [wheelDiameters, setWheelDiameters] = useState<WheelDiameter[]>([]);
@@ -107,6 +116,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
+	const [engineVolumes, setEngineVolumes] = useState<EngineVolume[]>([]);
 	const [values, setValues] = useState<{ [key: string]: string | null }>({});
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
@@ -212,6 +222,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 		setModels([]);
 		setGenerations([]);
 	};
+
+	const handleOpenEngineVolumeAutocomplete = handleOpenAutocomplete<EngineVolume>(
+		!!engineVolumes.length,
+		setEngineVolumes,
+		() => fetchEngineVolumes({ pagination: { limit: API_MAX_LIMIT } })
+	);
 
 	const handleChangeModelAutocomplete = (_: any, selected: { value: string; label: string } | null) => {
 		updateValue('model', selected);
@@ -593,7 +609,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 		<Container>
 			<Box
 				mb={5}
-				height={{ xs: 'auto', md: 446 }}
+				minHeight={{ xs: 'auto', md: 446 }}
 				display={'flex'}
 				flexDirection={{ xs: 'column', md: 'row' }}
 				gap={2}
@@ -644,6 +660,59 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 								onScroll={kindSparePartAutocompleteConfig.onScroll}
 								fullWidth
 							></Autocomplete>
+							<Button
+								size='small'
+								sx={{ alignSelf: 'flex-start' }}
+								onClick={() => setIsMoreFilters(!isMoreFilters)}
+								endIcon={isMoreFilters ? <ChevronUpIcon /> : <ChevronDownIcon />}
+							>
+								{isMoreFilters ? 'Меньше параметров' : 'Больше параметров поиска'}
+							</Button>
+							{isMoreFilters && (
+								<>
+									<Autocomplete
+										options={engineVolumes.map((item) => ({
+											label: item.name,
+											value: item.name
+										}))}
+										noOptionsText={noOptionsText}
+										placeholder='Объем двигателя'
+										onChange={handleChangeAutocomplete('engineVolume')}
+										onOpen={handleOpenEngineVolumeAutocomplete}
+										fullWidth
+									></Autocomplete>
+									<Autocomplete
+										options={FUELS.map((item) => ({
+											label: item,
+											value: FUELS_SLUGIFY[item]
+										}))}
+										noOptionsText={noOptionsText}
+										placeholder='Тип топлива'
+										onChange={handleChangeAutocomplete('fuel')}
+										fullWidth
+									></Autocomplete>
+									<Autocomplete
+										options={BODY_STYLES.map((item) => ({
+											label: item,
+											value: BODY_STYLES_SLUGIFY[item]
+										}))}
+										noOptionsText={noOptionsText}
+										placeholder='Кузов'
+										onChange={handleChangeAutocomplete('bodyStyle')}
+										fullWidth
+									></Autocomplete>
+									<Autocomplete
+										options={TRANSMISSIONS.map((item) => ({
+											label: item,
+											value: TRANSMISSIONS_SLUGIFY[item]
+										}))}
+										noOptionsText={noOptionsText}
+										placeholder='Коробка'
+										onChange={handleChangeAutocomplete('transmission')}
+										fullWidth
+									></Autocomplete>
+								</>
+							)}
 							<Button onClick={handleClickFind} variant='contained'>
 								Показать : 150000
 							</Button>
@@ -653,7 +722,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 				</Box>
 				<Box
 					flex={{ xs: 'none', md: '1' }}
-					height={{ xs: 234, md: 'auto' }}
+					height={{ xs: 234, md: '446px' }}
 					overflow={'hidden'}
 					borderRadius={2}
 				>
@@ -731,13 +800,18 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 				</WhiteBox>
 			</Box>
 			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>
-				<Box>
+				<Box textAlign={{ xs: 'center', md: 'left' }}>
 					<Typography variant='h6'>Новое поступление</Typography>
 					<Typography color='text.primary' variant='body2'>
 						Смотреть все Все запчасти находятся на складе и готовы к оперативной отправке
 					</Typography>
 				</Box>
-				<Button variant='link' href='/spare-parts' endIcon={<ChevronRightIcon />}>
+				<Button
+					sx={{ display: { xs: 'none', md: 'flex' } }}
+					variant='link'
+					href='/spare-parts'
+					endIcon={<ChevronRightIcon />}
+				>
 					Смотреть все
 				</Button>
 			</Box>
@@ -771,11 +845,19 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 			</Box>
 
 			<Box mb={5}>
-				<Typography variant='h6'>Выберите марку авто</Typography>
-				<Typography color='text.primary' variant='body2'>
+				<Typography textAlign={{ xs: 'center', md: 'left' }} variant='h6'>
+					Выберите марку авто
+				</Typography>
+				<Typography textAlign={{ xs: 'center', md: 'left' }} color='text.primary' variant='body2'>
 					Автозапчасти б/у на авторазборке в наличии
 				</Typography>
-				<Box mt={1} display={'flex'} flexWrap={'wrap'} gap={1}>
+				<Box
+					mt={1}
+					display={'flex'}
+					justifyContent={{ xs: 'center', md: 'flex-start' }}
+					flexWrap={'wrap'}
+					gap={1}
+				>
 					{brands.map((item) => (
 						<WhiteBox key={item.id} p={1} height={128} width={110}>
 							<LinkWithImage
@@ -790,7 +872,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 					))}
 				</Box>
 			</Box>
-			<Box mb={1}>
+			<Box textAlign={{ xs: 'center', md: 'left' }} mb={1}>
 				<Typography variant='h6'>Популярные категории</Typography>
 				<Typography color='text.primary' variant='body2'>
 					Все запчасти, представленные в каталоге, находятся на складе и готовы к оперативной отправке
@@ -910,13 +992,18 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 				</Box>
 			</Box>
 			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>
-				<Box>
+				<Box flex={1} textAlign={{ xs: 'center', md: 'left' }}>
 					<Typography variant='h6'>Машины на разбор</Typography>
-					<Typography color='text.primary' variant='body2'>
+					<Typography textAlign={{ xs: 'center', md: 'left' }} color='text.primary' variant='body2'>
 						Новые поступление машин на разбор
 					</Typography>
 				</Box>
-				<Button variant='link' href='/awaiting-cars' endIcon={<ChevronRightIcon />}>
+				<Button
+					sx={{ display: { xs: 'none', md: 'flex' } }}
+					variant='link'
+					href='/awaiting-cars'
+					endIcon={<ChevronRightIcon />}
+				>
 					Смотреть все
 				</Button>
 			</Box>
@@ -969,7 +1056,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 					<Typography color='text.primary' mb={2}>
 						Оставьте заявку и мы с вами свяжемся для покупки вашего автомобиля{' '}
 					</Typography>
-					{isTablet ? <SocialButtons /> : null}
+					{!isTablet && <SocialButtons />}
 				</Box>
 				<Box
 					maxWidth={300}
@@ -993,7 +1080,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 					</Typography>
 				</Box>
 				<Button
-					sx={{ display: { xs: 'none', md: 'block' } }}
+					sx={{ display: { xs: 'none', md: 'flex' } }}
 					variant='link'
 					href='/articles'
 					endIcon={<ChevronRightIcon />}
