@@ -101,7 +101,7 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 				'text-inverse': '#fff',
 				'text-muted': '#7A7F89',
 				divider: '#D0D5DD',
-				'bg-surface-4': '#CECECE',
+				'bg-surface-4': '#CECECE'
 			}
 		},
 		// Add custom component styles
