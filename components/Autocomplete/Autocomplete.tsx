@@ -5,8 +5,7 @@ import { UIEventHandler, useEffect, useRef, useState } from 'react';
 // import VirtualizedListBox from './VirtualizedListBox';
 import styles from './Autocomplete.module.scss';
 import { usePreviousImmediate } from 'rooks';
-import { CustomChevronIcon } from './CustomChevronIcon';
-import { ChevronDownIcon } from 'components/Icons';
+import { ChevronDownIcon, SearchIcon } from 'components/Icons';
 
 const Autocomplete = <
 	T,
@@ -19,6 +18,8 @@ const Autocomplete = <
 		required?: boolean;
 		onScroll?: UIEventHandler<HTMLUListElement>;
 		placeholder?: string;
+		withSearchIcon?: boolean;
+		disableDropdown?: boolean;
 	}
 ) => {
 	const [isDefaultSet, setIsDefaultSet] = useState(false);
@@ -50,6 +51,10 @@ const Autocomplete = <
 			className={classNames(styles.autocomplete, props.className)}
 			onChange={props.onChange}
 			popupIcon={<ChevronDownIcon />}
+			open={props.open}
+			loading={props.loading}
+			loadingText={props.loadingText}
+			sx={props.sx}
 			slotProps={{
 				listbox: {
 					role: 'list-box',
@@ -83,6 +88,20 @@ const Autocomplete = <
 						{...params}
 						required={props.required}
 						variant='standard'
+						InputProps={{
+							...params.InputProps,
+							startAdornment: props.withSearchIcon ? <SearchIcon /> : undefined,
+							endAdornment: props.withSearchIcon ? undefined : params.InputProps?.endAdornment,
+							...(props.withSearchIcon
+								? {
+										sx: {
+											input: {
+												paddingLeft: '8px !important'
+											}
+										}
+								  }
+								: {})
+						}}
 						placeholder={props.placeholder}
 					/>
 				);

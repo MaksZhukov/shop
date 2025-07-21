@@ -25,6 +25,7 @@ import { store } from '../store';
 import { createCustomTheme } from 'services/ThemeService';
 import './app.scss';
 import { ScrollUp } from 'components/features/ScrollUp';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const Footer = dynamic(() => import('components/Footer'));
 
@@ -35,6 +36,16 @@ function MyApp({
 }: AppProps & { deviceType: 'desktop' | 'mobile' }) {
 	const router = useRouter();
 	const [renderBeforeFooter, setRenderBeforeFooter] = useState<ReactElement | null>(null);
+	const [queryClient] = useState(
+		() =>
+			new QueryClient({
+				defaultOptions: {
+					queries: {
+						staleTime: 6000
+					}
+				}
+			})
+	);
 
 	const theme = useMemo(() => createCustomTheme(deviceType), [deviceType]);
 
@@ -140,40 +151,42 @@ function MyApp({
 
 	return (
 		<ThemeProvider theme={theme}>
-			<Provider store={store}>
-				<SnackbarProvider
-					autoHideDuration={3000}
-					ref={(ref) => {
-						if (ref) {
-							NotistackService.setRef(ref);
-						}
-					}}
-					maxSnack={3}
-				>
-					<Layout>
-						<HeadSEO
-							title={restPageProps.page?.seo?.title}
-							description={restPageProps.page?.seo?.description}
-							keywords={restPageProps.page?.seo?.keywords}
-							image={getHeadSEOImage()}
-						></HeadSEO>
-						<Header brands={restPageProps.brands}></Header>
-						<RouteShield>
-							<Content>
-								<ErrorBoundary fallback={<></>} onError={handleRenderError}>
-									<Breadcrumbs
-										exclude={['buyback-cars']}
-										h1={restPageProps.data?.h1 || restPageProps.page?.name}
-									></Breadcrumbs>
-									{hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
-								</ErrorBoundary>
-							</Content>
-						</RouteShield>
-						<Footer footer={layout.footer}></Footer>
-						<ScrollUp />
-					</Layout>
-				</SnackbarProvider>
-			</Provider>
+			<QueryClientProvider client={queryClient}>
+				<Provider store={store}>
+					<SnackbarProvider
+						autoHideDuration={3000}
+						ref={(ref) => {
+							if (ref) {
+								NotistackService.setRef(ref);
+							}
+						}}
+						maxSnack={3}
+					>
+						<Layout>
+							<HeadSEO
+								title={restPageProps.page?.seo?.title}
+								description={restPageProps.page?.seo?.description}
+								keywords={restPageProps.page?.seo?.keywords}
+								image={getHeadSEOImage()}
+							></HeadSEO>
+							<Header brands={restPageProps.brands}></Header>
+							<RouteShield>
+								<Content>
+									<ErrorBoundary fallback={<></>} onError={handleRenderError}>
+										<Breadcrumbs
+											exclude={['buyback-cars']}
+											h1={restPageProps.data?.h1 || restPageProps.page?.name}
+										></Breadcrumbs>
+										{hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
+									</ErrorBoundary>
+								</Content>
+							</RouteShield>
+							<Footer footer={layout.footer}></Footer>
+							<ScrollUp />
+						</Layout>
+					</SnackbarProvider>
+				</Provider>
+			</QueryClientProvider>
 		</ThemeProvider>
 	);
 }

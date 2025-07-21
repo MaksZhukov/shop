@@ -29,7 +29,7 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import NextLink from 'next/link';
 import React, { Fragment, HTMLAttributeAnchorTarget, useEffect, useRef, useState } from 'react';
-import { useOutsideClick } from 'rooks';
+import { useDebouncedValue, useOutsideClick } from 'rooks';
 import { useStore } from 'store';
 import ModalAuth from '../ModalAuth';
 import styles from './Header.module.scss';
@@ -50,6 +50,11 @@ import { NavbarButton } from 'components/ui/NavbarButton';
 import { WorkTimetable } from 'components/features/WorkTimetable';
 import { SocialButtons } from 'components/features/SocialsButtons';
 import { SOCIAL_BUTTONS } from 'components/features/SocialsButtons/constants';
+import Autocomplete from 'components/Autocomplete';
+import { fetchSpareParts } from 'api/spareParts/spareParts';
+import { SparePart } from 'api/spareParts/types';
+import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
+import { useQuery } from '@tanstack/react-query';
 
 const SOCIAL_BUTTONS_MOBILE = SOCIAL_BUTTONS.filter((item) => ['Telegram', 'WhatsApp', 'Viber'].includes(item.name));
 
@@ -141,13 +146,27 @@ const Header = observer(({ brands }: Props) => {
 	const theme = useTheme();
 	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();
-	const { code } = router.query;
 
 	const [isOpenedModal, setIsOpenedModal] = useState<boolean>(false);
+
+	const [searchValue, setSearchValue] = useState<string>('');
+	const [debouncedSearchValue] = useDebouncedValue(searchValue, 300);
 	const [isOpenedMobileContacts, setIsOpenedMobileContacts] = useState<boolean>(false);
 	const [isOpenedTabletMenu, setIsOpenedTabletMenu] = useState<boolean>(false);
 	const [isScrolled, setIsScrolled] = useState<boolean>(false);
 	const ref = useRef<HTMLDivElement>(null);
+
+	const { data: searchedSpareParts, isLoading } = useQuery({
+		queryKey: ['spareParts', debouncedSearchValue],
+		enabled: debouncedSearchValue.length > 2,
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			fetchSpareParts({
+				pagination: { limit: 10 },
+				filters: { h1: { $contains: debouncedSearchValue } }
+			})
+	});
+	console.log(isLoading);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	const handleOutsideClick = () => {
@@ -157,12 +176,6 @@ const Header = observer(({ brands }: Props) => {
 	};
 
 	useOutsideClick(ref as any, handleOutsideClick);
-
-	useEffect(() => {
-		if (code) {
-			setIsOpenedModal(true);
-		}
-	}, [code]);
 
 	useEffect(() => {
 		if (!isTablet) {
@@ -439,6 +452,14 @@ const Header = observer(({ brands }: Props) => {
 		</Box>
 	);
 
+	const handleInputChange = async (event: React.SyntheticEvent, value: string) => {
+		setSearchValue(value);
+	};
+
+	const handleChange = (event: React.SyntheticEvent, value: any) => {
+		router.push(`/spare-parts/${value.brand.slug}/${value.slug}`);
+	};
+
 	return (
 		<>
 			<AppBar sx={{ py: theme.spacing(2) }} color='secondary' position='fixed'>
@@ -471,12 +492,28 @@ const Header = observer(({ brands }: Props) => {
 						>
 							Каталог
 						</Button>
-						<Input
-							sx={{ flex: 1, display: { xs: 'none', sm: 'flex' } }}
-							size='medium'
-							startAdornment={<SearchIcon />}
+						<Autocomplete
+							options={
+								searchedSpareParts?.data?.data.map((item) => ({
+									label: item.h1,
+									slug: item.slug,
+									brand: item.brand,
+									value: item.id
+								})) || []
+							}
+							loadingText='Загрузка...'
+							loading={isLoading}
+							inputValue={searchValue}
+							withSearchIcon
+							sx={{ flex: 1 }}
+							fullWidth
+							open={searchValue.length > 2}
+							noOptionsText='Нет результатов'
+							onChange={handleChange}
+							onInputChange={handleInputChange}
 							placeholder='Поиск запчастей'
-						></Input>
+						></Autocomplete>
+
 						<Box display={'flex'} sx={{ display: { xs: 'none', sm: 'flex' } }}>
 							<Profile onClickSignIn={handleClick} onClickLogout={handleClickLogout}></Profile>
 							<Link href='/favorites'>
