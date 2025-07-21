@@ -3,7 +3,7 @@ import { Brand } from 'api/brands/types';
 import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'api/constants';
 import { EngineVolume } from 'api/engineVolumes/types';
-import { fetchEngineVolumes } from 'api/engineVolumes/wheelWidths';
+import { fetchEngineVolumes } from 'api/engineVolumes/engineVolumes';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';

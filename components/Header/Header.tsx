@@ -146,6 +146,7 @@ const Header = observer(({ brands }: Props) => {
 	const [isOpenedModal, setIsOpenedModal] = useState<boolean>(false);
 	const [isOpenedMobileContacts, setIsOpenedMobileContacts] = useState<boolean>(false);
 	const [isOpenedTabletMenu, setIsOpenedTabletMenu] = useState<boolean>(false);
+	const [isScrolled, setIsScrolled] = useState<boolean>(false);
 	const ref = useRef<HTMLDivElement>(null);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
@@ -168,6 +169,16 @@ const Header = observer(({ brands }: Props) => {
 			setIsOpenedTabletMenu(false);
 		}
 	}, [isTablet]);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+			setIsScrolled(scrollTop > 0);
+		};
+
+		window.addEventListener('scroll', handleScroll);
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
 
 	const handleClick = () => {
 		setIsOpenedModal(true);
@@ -434,7 +445,7 @@ const Header = observer(({ brands }: Props) => {
 				<Container>
 					<Box
 						display='flex'
-						mb={{ xs: 0, md: 1 }}
+						mb={{ xs: 0, md: isScrolled ? 0 : 1 }}
 						gap={2}
 						alignItems='center'
 						justifyContent={{ xs: 'space-between', sm: 'initial' }}
@@ -563,7 +574,13 @@ const Header = observer(({ brands }: Props) => {
 						justifyContent='space-between'
 						flexWrap='wrap'
 						gap={1}
-						sx={{ display: { xs: 'none', sm: 'flex' } }}
+						sx={{
+							display: { xs: 'none', sm: isScrolled ? 'none' : 'flex' },
+							transition: 'opacity 0.3s ease-in-out',
+							opacity: isScrolled ? 0 : 1,
+							height: isScrolled ? 0 : 'auto',
+							overflow: 'hidden'
+						}}
 					>
 						<Box display={'flex'} gap={2}>
 							<Link href='/spare-parts?kindSparePart=dvigatel'>Двигатели</Link>

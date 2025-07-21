@@ -10,7 +10,8 @@ export const ScrollUp: React.FC = () => {
 				bottom: '10px',
 				right: '10px',
 				bgcolor: 'custom.bg-surface-4',
-				color: 'primary.contrastText'
+				color: 'primary.contrastText',
+				borderRadius: '16px'
 			}}
 			onClick={() => {
 				window.scrollTo({ top: 0, behavior: 'smooth' });
