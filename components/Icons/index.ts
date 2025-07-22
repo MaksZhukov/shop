@@ -9,6 +9,7 @@ export { PhoneCallIcon } from './PhoneCallIcon';
 export { HeartIcon } from './HeartIcon';
 export { SearchIcon } from './SearchIcon';
 export { ChevronDownIcon } from './ChevronDownIcon';
+export { ChevronLeftIcon } from './ChevronLeftIcon';
 export { ChevronRightIcon } from './ChevronRightIcon';
 export { FavoriteAddIcon } from './FavoriteAddIcon';
 export { FavoriteAddedIcon } from './FavoriteAddedIcon';
