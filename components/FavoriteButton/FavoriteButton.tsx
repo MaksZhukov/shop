@@ -9,7 +9,7 @@ import { useStore } from 'store';
 
 interface Props {
 	product: Product;
-	title: string;
+	title?: string;
 }
 
 const FavoriteButton = ({ product, title }: Props) => {

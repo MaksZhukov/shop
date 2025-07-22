@@ -1,4 +1,4 @@
-import { Button, Grid, Link, useMediaQuery } from '@mui/material';
+import { Button, Grid, Link, SxProps, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import { Car } from 'api/cars/types';
 import Image from 'components/Image';
@@ -21,15 +21,7 @@ interface Props {
 
 const CarItem = ({ data, width = 342 }: Props) => {
 	return (
-		<WhiteBox
-			margin='auto'
-			overflow={'hidden'}
-			width={width}
-			marginBottom='1em'
-			bgcolor='#fff'
-			position='relative'
-			key={data.id}
-		>
+		<WhiteBox margin='auto' overflow={'hidden'} width={width} marginBottom='1em' bgcolor='#fff' position='relative'>
 			<Box position='absolute' zIndex={1} right={1} top={1}>
 				<FavoriteButton product={data as unknown as Product}></FavoriteButton>
 			</Box>

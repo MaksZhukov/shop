@@ -43,19 +43,18 @@ import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/engineVolumes';
 import { EngineVolume } from 'api/engineVolumes/types';
-import Carousel from 'react-multi-carousel';
 import { Articles } from 'components/features/main/Articles/Articles';
+import { Carousel } from 'components/Carousel';
 
 interface Props {
 	page: PageMain;
-	reviews: Review[];
 	brands: Brand[];
 	newSpareParts: SparePart[];
 	carsOnParts: CarOnParts[];
 	articles: Article[];
 }
 
-const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, carsOnParts, articles }) => {
+const Home: NextPage<Props> = ({ page, brands = [], newSpareParts, carsOnParts, articles }) => {
 	const theme = useTheme();
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const [isMoreFilters, setIsMoreFilters] = useState<boolean>(false);
@@ -404,21 +403,11 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 					overflow={'hidden'}
 					borderRadius={2}
 				>
-					<Carousel
-						className={styles.carousel}
-						showDots
-						responsive={{
-							desktop: {
-								breakpoint: { max: 3000, min: 0 },
-								items: 1
-							}
-						}}
-					>
-						<Box bgcolor={'gray'} width={'100%'} height={'100%'}></Box>
-						<Box bgcolor={'gray'} width={'100%'} height={'100%'}></Box>
-						<Box bgcolor={'gray'} width={'100%'} height={'100%'}></Box>
+					<Carousel showArrows={true} showDots={true}>
+						<Box bgcolor={'gray'} width={'50%'} height={'100%'}></Box>
+						<Box bgcolor={'gray'} width={'50%'} height={'100%'}></Box>
+						<Box bgcolor={'gray'} width={'50%'} height={'100%'}></Box>
 					</Carousel>
-					;
 				</Box>
 			</Box>
 			<Box mb={5} display={'flex'} gap={1} flexWrap={'wrap'}>
@@ -478,7 +467,7 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 				</WhiteBox>
 			</Box>
 			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>
-				<Box textAlign={{ xs: 'center', md: 'left' }}>
+				<Box flex={1} textAlign={{ xs: 'center', md: 'left' }}>
 					<Typography variant='h6'>Новое поступление</Typography>
 					<Typography color='text.primary' variant='body2'>
 						Смотреть все Все запчасти находятся на складе и готовы к оперативной отправке
@@ -494,30 +483,11 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 				</Button>
 			</Box>
 			<Box mb={5}>
-				<Carousel
-					autoPlay={true}
-					arrows={false}
-					responsive={{
-						desktop: {
-							breakpoint: { max: 3000, min: 1450 },
-							items: 4
-						},
-						laptop: {
-							breakpoint: { max: 1450, min: 1024 },
-							items: 3
-						},
-						tablet: {
-							breakpoint: { max: 1024, min: 768 },
-							items: 2
-						},
-						mobile: {
-							breakpoint: { max: 768, min: 0 },
-							items: 1
-						}
-					}}
-				>
+				<Carousel carouselContainerSx={{ ml: -1 }} showDots={false}>
 					{newSpareParts.map((item) => (
-						<ProductItem key={item.id} data={item} width={342}></ProductItem>
+						<Box key={item.id} width={{ xs: '100%', md: '50%', lg: '25%' }} sx={{ pl: 1 }}>
+							<ProductItem data={item} width={342}></ProductItem>
+						</Box>
 					))}
 				</Carousel>
 			</Box>
@@ -685,30 +655,12 @@ const Home: NextPage<Props> = ({ page, brands = [], reviews, newSpareParts, cars
 					Смотреть все
 				</Button>
 			</Box>
-			<Box mb={5}>
-				<Carousel
-					arrows={false}
-					responsive={{
-						desktop: {
-							breakpoint: { max: 3000, min: 1450 },
-							items: 4
-						},
-						laptop: {
-							breakpoint: { max: 1450, min: 1024 },
-							items: 3
-						},
-						tablet: {
-							breakpoint: { max: 1024, min: 768 },
-							items: 2
-						},
-						mobile: {
-							breakpoint: { max: 768, min: 0 },
-							items: 1
-						}
-					}}
-				>
+			<Box display={'flex'} flexWrap={'wrap'} gap={1} mb={5}>
+				<Carousel carouselContainerSx={{ ml: -1 }} showDots={false}>
 					{carsOnParts.map((item) => (
-						<CarItem key={item.id} data={item} width={342}></CarItem>
+						<Box key={item.id} width={{ xs: '100%', md: '50%', lg: '25%' }} sx={{ pl: 1 }}>
+							<CarItem data={item}></CarItem>
+						</Box>
 					))}
 				</Carousel>
 			</Box>
@@ -771,12 +723,10 @@ export const getServerSideProps = getPageProps(
 		]
 	}),
 	async () => ({
-		reviews: (await fetchReviews()).data.data
-	}),
-	async () => ({
 		newSpareParts: (
 			await fetchSpareParts({
-				populate: ['images', 'brand', 'volume']
+				populate: ['images', 'brand', 'volume'],
+				pagination: { limit: 10 }
 			})
 		).data.data
 	}),
@@ -790,8 +740,12 @@ export const getServerSideProps = getPageProps(
 		).data.data
 	}),
 	async () => ({
-		carsOnParts: (await fetchCarsOnParts({ populate: ['images', 'volume', 'brand', 'model', 'generation'] })).data
-			.data
+		carsOnParts: (
+			await fetchCarsOnParts({
+				populate: ['images', 'volume', 'brand', 'model', 'generation'],
+				pagination: { limit: 10 }
+			})
+		).data.data
 	}),
 	() => ({ hasGlobalContainer: false, hideSEOBox: true })
 );
