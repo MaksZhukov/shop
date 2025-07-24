@@ -1,21 +1,26 @@
-import { Button, Grid, Link, useMediaQuery } from '@mui/material';
+import { Button, Grid, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteButton from 'components/FavoriteButton';
 import Image from 'components/Image';
 import Typography from 'components/Typography';
-import Carousel from 'react-multi-carousel';
 import WhiteBox from 'components/WhiteBox';
 import { CartFilledIcon } from 'components/Icons/CartFilledIcon';
 import { SparePart } from 'api/spareParts/types';
+import { Product } from 'api/types';
+import { isSparePart } from 'services/ProductService';
 import styles from './ProductItem.module.scss';
+import { Carousel } from 'components/Carousel';
+import { Link } from 'components/ui';
 
 interface Props {
-	data: SparePart;
+	data: Product;
 	width?: number;
+	imageHeight?: number;
 }
 
-const ProductItem = ({ data, width = 280 }: Props) => {
+const ProductItem = ({ data, width = 280, imageHeight = 290 }: Props) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	const imageHeightOffset = 20;
 
 	return (
 		<WhiteBox margin='auto' overflow={'hidden'} width={width} bgcolor='#fff' position='relative' key={data.id}>
@@ -24,25 +29,13 @@ const ProductItem = ({ data, width = 280 }: Props) => {
 			</Box>
 			{data.images ? (
 				<Box>
-					<Carousel
-						dotListClass={styles['dot-list']}
-						responsive={{
-							desktop: {
-								breakpoint: { max: 3000, min: 0 },
-								items: 1
-							}
-						}}
-						infinite={true}
-						autoPlay
-						showDots
-						arrows={false}
-					>
+					<Carousel options={{ axis: 'x', loop: false }} showArrows={false} showDots={true}>
 						{data.images?.map((image) => (
-							<Box key={image.id} height={290}>
+							<Box key={image.id} height={imageHeight + imageHeightOffset}>
 								<Image
 									title={image.caption}
 									width={width}
-									height={270}
+									height={imageHeight}
 									style={{
 										objectFit: 'cover'
 									}}
@@ -63,7 +56,7 @@ const ProductItem = ({ data, width = 280 }: Props) => {
 						}}
 						src=''
 						width={width}
-						height={290}
+						height={imageHeight + imageHeightOffset}
 						alt={data.h1}
 					></Image>
 				</Box>
@@ -85,15 +78,17 @@ const ProductItem = ({ data, width = 280 }: Props) => {
 						</>
 					) : null}
 				</Box>
-				<Typography mb={1} lineClamp={2} color='text.primary' minHeight={42}>
+				<Link href={`/spare-parts/${data.brand?.slug}/${data.id}`} lineClamp={2} sx={{ height: 34 }}>
 					{data.h1}
-				</Typography>
+				</Link>
 				<Typography mb={1} color='custom.text-muted'>
-					{[data.volume?.name, data.fuel, data.transmission].filter(Boolean).join(', ')}
+					{isSparePart(data) && [data.volume?.name, data.fuel, data.transmission].filter(Boolean).join(', ')}
 				</Typography>
-				<Button fullWidth variant='contained' startIcon={<CartFilledIcon />}>
-					В корзину
-				</Button>
+				{!isMobile && (
+					<Button fullWidth variant='contained' startIcon={<CartFilledIcon />}>
+						В корзину
+					</Button>
+				)}
 			</Box>
 		</WhiteBox>
 	);

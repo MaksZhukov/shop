@@ -1,4 +1,4 @@
-import { Button, Typography } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import { ShareIcon } from 'components/Icons';
 import { useSnackbar } from 'notistack';
 
@@ -6,9 +6,10 @@ interface Props {
 	title: string;
 	text: string;
 	url: string;
+	withText?: boolean;
 }
 
-export const ShareButton = ({ title, text, url }: Props) => {
+export const ShareButton = ({ title, text, url, withText = true }: Props) => {
 	const { enqueueSnackbar } = useSnackbar();
 	const handleShare = async () => {
 		const shareData = {
@@ -32,12 +33,20 @@ export const ShareButton = ({ title, text, url }: Props) => {
 		}
 	};
 
+	if (withText) {
+		return (
+			<Button onClick={handleShare} size='small' sx={{ gap: 0.5, px: 0.5 }}>
+				<ShareIcon />
+				<Typography variant='body1' color='text.primary'>
+					Поделиться
+				</Typography>
+			</Button>
+		);
+	}
+
 	return (
-		<Button onClick={handleShare} size='small' sx={{ gap: 0.5, px: 0.5 }}>
+		<IconButton onClick={handleShare} size='small'>
 			<ShareIcon />
-			<Typography variant='body1' color='text.primary'>
-				Поделиться
-			</Typography>
-		</Button>
+		</IconButton>
 	);
 };
