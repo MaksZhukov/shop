@@ -1,4 +1,16 @@
-import { Box, Button, IconButton, Tab, Table, TableBody, TableCell, TableRow, Tabs } from '@mui/material';
+import {
+	Box,
+	Button,
+	IconButton,
+	Tab,
+	Table,
+	TableBody,
+	TableCell,
+	TableRow,
+	Tabs,
+	useMediaQuery,
+	useTheme
+} from '@mui/material';
 import { Brand } from 'api/brands/types';
 import {
 	PageProduct,
@@ -13,11 +25,13 @@ import GalleryImages from 'components/features/GalleryImages/GalleryImages';
 import Image from 'components/Image';
 import Typography from 'components/Typography';
 import { FC, useState } from 'react';
-import { isSparePart } from 'services/ProductService';
+import { isSparePart, isTire, isWheel } from 'services/ProductService';
 import WhiteBox from 'components/WhiteBox';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { ChevronDownIcon, ChevronUpIcon, ShareIcon } from 'components/Icons';
 import { ShareButton } from 'components/features/ShareButton';
+import { Carousel } from 'components/Carousel';
+import ProductItem from 'components/ProductItem';
 
 interface Props {
 	page: PageProduct & (PageProductCabin | PageProductSparePart | PageProductTire | PageProductWheel);
@@ -32,6 +46,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 	const [activeTab, setActiveTab] = useState('description');
 	const [isMoreFilters, setIsMoreFilters] = useState(false);
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 	const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
 		setActiveTab(newValue);
@@ -133,76 +149,106 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 		guarantee: <Typography>Гарантия</Typography>,
 		payment: <Typography>Оплата</Typography>
 	};
-
+	console.log(relatedProducts);
 	return (
-		<>
-			<Box display='flex' gap={1}>
-				<Box display='flex' flex={1} gap={1}>
-					<Box>
-						<Box width={56} height={250} overflow='hidden' position='relative'>
-							<Box
-								sx={{
-									transform: `translateY(-${Math.max(0, (currentImageIndex - 4) * 44)}px)`,
-									transition: 'transform 0.3s ease-in-out',
-									display: 'flex',
-									flexDirection: 'column',
-									gap: '4px'
-								}}
-							>
-								{data.images?.map((item, index) => (
-									<Box
+		<Box
+			bgcolor={{ xs: '#fff', md: 'transparent' }}
+			ml={{ xs: -2, md: 0 }}
+			pl={{ xs: 1, md: 0 }}
+			pr={{ xs: 1, md: 0 }}
+			width={{ xs: 'calc(100% + 2em)', md: '100%' }}
+		>
+			<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} gap={1}>
+				<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} flex={1} gap={1}>
+					<Box display={{ xs: 'flex', md: 'none' }} alignItems='center' gap={1}>
+						<Box display='flex' flex={1} alignItems='center' gap={1}>
+							<Typography variant='body1' color='custom.text-muted'>
+								Артикул:
+							</Typography>
+							<Typography variant='body1' color='text.primary'>
+								{data.id}
+							</Typography>
+						</Box>
+						<Box display='flex' alignItems='center'>
+							<ShareButton
+								title={data.h1}
+								text={`Посмотрите на этот товар: ${data.h1}`}
+								url={typeof window !== 'undefined' ? window.location.href : ''}
+								withText={!isMobile}
+							/>
+							<FavoriteButton product={data} title={isMobile ? '' : 'В избранное'}></FavoriteButton>
+						</Box>
+					</Box>
+					<Box width={56} display={{ xs: 'none', md: 'block' }} height={255}>
+						<Carousel
+							showNextArrow={data.images?.length && data.images.length > 5 ? true : false}
+							showPrevArrow={false}
+							options={{ axis: 'y' }}
+							carouselContainerSx={{ mt: -1 }}
+							showDots={false}
+							arrowNextSx={{ bottom: -48 }}
+							arrowNextButtonSx={{ width: 56 }}
+						>
+							{data.images?.map((item, i) => (
+								<Box
+									borderRadius={'6px'}
+									onClick={() => handleImageClick(i)}
+									key={item.id}
+									width={56}
+									height={52}
+									pt={1}
+								>
+									<Image
+										src={item.url}
+										alt={item.alternativeText}
 										width={56}
 										height={44}
-										key={item.id}
-										onClick={() => handleImageClick(index)}
-										sx={{
-											cursor: 'pointer',
-											border:
-												index === currentImageIndex
-													? '2px solid #1D1F23'
-													: '2px solid transparent',
+										style={{
 											borderRadius: '4px',
-											overflow: 'hidden'
+											objectFit: 'cover',
+											border:
+												currentImageIndex === i
+													? `2px solid ${theme.palette.text.primary}`
+													: 'none'
 										}}
-									>
-										<Image
-											src={item.formats?.thumbnail.url || item.url}
-											alt={item.alternativeText}
-											width={56}
-											height={44}
-											style={{ objectFit: 'cover', borderRadius: '4px' }}
-										></Image>
-									</Box>
-								))}
-							</Box>
-						</Box>
-						<IconButton
-							onClick={handleScrollDown}
-							size='small'
-							sx={{
-								mt: 1,
-								borderRadius: '6px',
-								width: '100%',
-								backgroundColor: 'rgba(255, 255, 255, 0.8)'
-							}}
-						>
-							<KeyboardArrowDownIcon sx={{ fontSize: 25 }} />
-						</IconButton>
+									></Image>
+								</Box>
+							))}
+						</Carousel>
 					</Box>
 
-					<Box onClick={handleClickImage(currentImageIndex)}>
-						<Image
-							src={data.images?.[currentImageIndex]?.url}
-							alt={data.images?.[currentImageIndex]?.alternativeText}
-							width={632}
-							height={505}
-							style={{ borderRadius: '16px', objectFit: 'cover' }}
-						></Image>
-					</Box>
+					{isMobile ? (
+						<Carousel carouselContainerSx={{ ml: -1 }} showArrows={false} showDots={true}>
+							{data.images?.map((item, i) => (
+								<Box pl={1} width={'90%'} height={280} key={item.id}>
+									<Image
+										src={item.url}
+										alt={item.alternativeText}
+										width={300}
+										height={256}
+										style={{ borderRadius: '16px', objectFit: 'cover', width: '100%' }}
+									></Image>
+								</Box>
+							))}
+						</Carousel>
+					) : (
+						<Box onClick={handleClickImage(currentImageIndex)}>
+							<Image
+								src={data.images?.[currentImageIndex]?.url}
+								alt={data.images?.[currentImageIndex]?.alternativeText}
+								width={632}
+								height={505}
+								style={{
+									borderRadius: '16px',
+									objectFit: 'cover'
+								}}
+							></Image>
+						</Box>
+					)}
 				</Box>
 				<Box flex={1}>
-					<WhiteBox px={2} py={1.5} mb={1} border={0}>
-						<Box mb={1.5} display='flex' alignItems='center' gap={1}>
+					<WhiteBox px={{ xs: 0, md: 2 }} py={{ xs: 0, md: 1.5 }} mb={1} border={0}>
+						<Box mb={1.5} display={{ xs: 'none', md: 'flex' }} alignItems='center' gap={1}>
 							<Box display='flex' flex={1} alignItems='center' gap={1}>
 								<Typography variant='body1' color='custom.text-muted'>
 									Артикул:
@@ -220,18 +266,18 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 								<FavoriteButton product={data} title='В избранное'></FavoriteButton>
 							</Box>
 						</Box>
-						<Typography variant='h6' mb={1.5}>
+						<Typography px={{ xs: 1, md: 0 }} fontWeight='bold' variant='h6' mb={1.5}>
 							{data.h1}
 						</Typography>
 						<Box
 							bgcolor='#F5F5F5'
 							borderRadius={3}
-							padding={1.5}
-							mb={1.5}
+							p={1.5}
+							mb={{ xs: 0, md: 1.5 }}
 							display='flex'
 							gap={1}
 							alignItems='baseline'
-							width='fit-content'
+							width={{ xs: '100%', md: 'fit-content' }}
 						>
 							{data.discountPrice ? (
 								<>
@@ -252,9 +298,11 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 								</Typography>
 							)}
 						</Box>
-						<Button variant='contained'>Добавить в корзину</Button>
+						<Button sx={{ display: { xs: 'none', md: 'block' } }} variant='contained'>
+							Добавить в корзину
+						</Button>
 					</WhiteBox>
-					<WhiteBox border={0} px={2} py={1.5}>
+					<WhiteBox border={0} mb={{ xs: 3, md: 0 }} px={{ xs: 1, md: 2 }} py={{ xs: 0, md: 1.5 }}>
 						<Tabs value={activeTab} onChange={handleTabChange}>
 							<Tab label='Описание' value='description'></Tab>
 							<Tab label='Доставка' value='delivery'></Tab>
@@ -265,12 +313,52 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 					</WhiteBox>
 				</Box>
 			</Box>
+			<Typography mb={1} variant='h6' fontWeight='bold'>
+				{isSparePart(data) && 'Другие запчасти для'}
+				{isTire(data) && 'Другие шины для'}
+				{isWheel(data) && 'Другие диски для'}
+				{data.type === 'cabin' && 'Другие кабины для'} {data.brand?.name}{' '}
+				{isSparePart(data) && data.model?.name} {isSparePart(data) && data.generation?.name}
+			</Typography>
+			<Carousel
+				sx={{ mb: 3 }}
+				options={{ axis: 'x', watchDrag: false, loop: true }}
+				showArrows={true}
+				showDots={false}
+				carouselContainerSx={{ ml: -1 }}
+			>
+				{relatedProducts.map((item) => (
+					<Box pl={1} key={item.id}>
+						<ProductItem
+							data={item}
+							width={isMobile ? 155 : 228}
+							imageHeight={isMobile ? 120 : 180}
+						></ProductItem>
+					</Box>
+				))}
+			</Carousel>
 			<GalleryImages
 				images={data.images}
 				selectedIndex={selectedImageIndex}
 				onClose={handleClose}
 			></GalleryImages>
-		</>
+			<Box
+				position='fixed'
+				bottom={50}
+				display={{ xs: 'flex', md: 'none' }}
+				zIndex={2}
+				bgcolor='#F5F5F5'
+				left={0}
+				right={0}
+				px={2}
+				borderTop='1px solid #D0D5DD'
+				py={1}
+			>
+				<Button fullWidth variant='contained'>
+					Добавить в корзину
+				</Button>
+			</Box>
+		</Box>
 	);
 
 	// return (
