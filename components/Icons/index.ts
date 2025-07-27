@@ -17,3 +17,4 @@ export { ClockIcon } from './ClockIcon';
 export { ChevronUpIcon } from './ChevronUpIcon';
 export { GeoIcon } from './GeoIcon';
 export { ShareIcon } from './ShareIcon';
+export { PhoneCallFilledIcon } from './PhoneCallFilledIcon';

@@ -150,7 +150,11 @@ function MyApp({
 										exclude={['buyback-cars']}
 										h1={restPageProps.data?.h1 || restPageProps.page?.name}
 									></Breadcrumbs>
-									{hasGlobalContainer ? <Container>{renderContent}</Container> : renderContent}
+									{hasGlobalContainer ? (
+										<Container sx={{ pb: { xs: 2, md: 4 } }}>{renderContent}</Container>
+									) : (
+										renderContent
+									)}
 								</ErrorBoundary>
 							</RouteShield>
 							<Footer footer={layout.footer}></Footer>

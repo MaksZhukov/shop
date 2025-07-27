@@ -45,6 +45,7 @@ import { fetchEngineVolumes } from 'api/engineVolumes/engineVolumes';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { Articles } from 'components/features/main/Articles/Articles';
 import { Carousel } from 'components/Carousel';
+import { formatNumberWithSeparators } from 'services/NumberService';
 
 interface Props {
 	page: PageMain;
@@ -52,9 +53,10 @@ interface Props {
 	newSpareParts: SparePart[];
 	carsOnParts: CarOnParts[];
 	articles: Article[];
+	sparePartsTotal: number;
 }
 
-const Home: NextPage<Props> = ({ page, brands = [], newSpareParts, carsOnParts, articles }) => {
+const Home: NextPage<Props> = ({ page, brands, newSpareParts, carsOnParts, articles, sparePartsTotal }) => {
 	const theme = useTheme();
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const [isMoreFilters, setIsMoreFilters] = useState<boolean>(false);
@@ -392,7 +394,7 @@ const Home: NextPage<Props> = ({ page, brands = [], newSpareParts, carsOnParts, 
 								</>
 							)}
 							<Button onClick={handleClickFind} variant='contained'>
-								Показать : 150000
+								Показать : {sparePartsTotal}
 							</Button>
 						</Box>
 					</WhiteBox>
@@ -460,7 +462,7 @@ const Home: NextPage<Props> = ({ page, brands = [], newSpareParts, carsOnParts, 
 					p={1.5}
 					flex={{ xs: `calc(50% - ${theme.spacing(1)})`, md: '1' }}
 				>
-					<Typography variant='body1'>149.000 запчастей</Typography>
+					<Typography variant='body1'>{formatNumberWithSeparators(sparePartsTotal)} запчастей</Typography>
 					<Typography variant='body2' color='custom.text-muted'>
 						В наличии на складе
 					</Typography>
@@ -746,6 +748,14 @@ export const getServerSideProps = getPageProps(
 				pagination: { limit: 10 }
 			})
 		).data.data
+	}),
+	async () => ({
+		sparePartsTotal:
+			(
+				await fetchSpareParts({
+					pagination: { limit: 0 }
+				})
+			).data.meta?.pagination?.total || 0
 	}),
 	() => ({ hasGlobalContainer: false, hideSEOBox: true })
 );
