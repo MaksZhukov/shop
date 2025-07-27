@@ -27,6 +27,7 @@ declare module '@mui/material/styles' {
 			divider?: string;
 			'bg-surface-4'?: string;
 			'muted-foreground'?: string;
+			'bg-surface-1'?: string;
 		};
 	}
 }
@@ -76,7 +77,7 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 			},
 			// Add custom colors for different states
 			success: {
-				main: '#4caf50',
+				main: '#00A110',
 				light: '#81c784',
 				dark: '#388e3c'
 			},
@@ -103,7 +104,8 @@ export const createCustomTheme = (deviceType: 'desktop' | 'mobile') =>
 				'text-muted': '#7A7F89',
 				divider: '#D0D5DD',
 				'bg-surface-4': '#CECECE',
-				'muted-foreground': '#64748B'
+				'muted-foreground': '#64748B',
+				'bg-surface-1': '#F5F5F5'
 			}
 		},
 		// Add custom component styles

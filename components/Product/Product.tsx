@@ -28,7 +28,7 @@ import { FC, useState } from 'react';
 import { isSparePart, isTire, isWheel } from 'services/ProductService';
 import WhiteBox from 'components/WhiteBox';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { ChevronDownIcon, ChevronUpIcon, ShareIcon } from 'components/Icons';
+import { ChevronDownIcon, ChevronUpIcon, PhoneCallFilledIcon, PhoneCallIcon, ShareIcon } from 'components/Icons';
 import { ShareButton } from 'components/features/ShareButton';
 import { Carousel } from 'components/Carousel';
 import ProductItem from 'components/ProductItem';
@@ -149,7 +149,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 		guarantee: <Typography>Гарантия</Typography>,
 		payment: <Typography>Оплата</Typography>
 	};
-	console.log(relatedProducts);
+
 	return (
 		<Box
 			bgcolor={{ xs: '#fff', md: 'transparent' }}
@@ -337,6 +337,66 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 					</Box>
 				))}
 			</Carousel>
+			<WhiteBox
+				width={{ xs: '100%', md: 'fit-content' }}
+				alignItems='center'
+				borderRadius={4}
+				gap={1}
+				p={1.5}
+				py={2}
+				mb={2}
+				bgcolor={{ xs: 'custom.bg-surface-1', md: 'white' }}
+				display='flex'
+				border={0}
+			>
+				<Box
+					bgcolor={'success.main'}
+					width={40}
+					borderRadius={'50%'}
+					height={40}
+					display='flex'
+					alignItems='center'
+					justifyContent='center'
+					color='white'
+				>
+					<PhoneCallFilledIcon></PhoneCallFilledIcon>
+				</Box>
+				<Box>
+					<Typography variant='body1' fontSize={'16px'} fontWeight={500} color='text.secondary'>
+						Остались вопросы?
+					</Typography>
+					<Typography variant='body1' color='text.primary'>
+						Мы можем с вами связаться
+					</Typography>
+				</Box>
+			</WhiteBox>
+			<Typography color='text.secondary' fontSize='18px' variant='h6' fontWeight='700'>
+				Б/у патрубок интеркулера для Audi A4 B6 – надёжное решение от Авторазборка Полотково ООО "Дриблинг"
+			</Typography>
+			<Typography variant='body1' color='text.primary' mb={1}>
+				Ищете исправный и проверенный патрубок интеркулера для Audi A4 B6 года? В наличии оригинальные б/у
+				патрубки интеркулера, прошедшие диагностику и контроль качества. Все запчасти тщательно проверяются на
+				герметичность, целостность и соответствие заводским стандартам. Указываются оригинальные номера и
+				маркировка производителя, что упрощает подбор и установку
+			</Typography>
+			<Typography color='text.secondary' fontSize='18px' variant='h6' fontWeight='700'>
+				Доставка патрубок интеркулера для Audi A4 B6по Гродно и всей Беларуси
+			</Typography>
+			<Typography variant='body1' color='text.primary' mb={1}>
+				Авторазборка Полотково ООО "Дриблинг" предлагает удобные варианты доставки в Гродно и любые регионы
+				Беларуси. Мы отправляем заказы транспортом компании в областные центры, такие как Гродно, Гомель, Брест,
+				Витебск, Могилев, а также по области. Также доступна доставка через почтоматы АвтолайтЭкспресс и выдача
+				в магазинах-партнёрах
+			</Typography>
+			<Typography color='text.secondary' fontSize='18px' variant='h6' fontWeight='700'>
+				Качественные б/у автозапчасти с гарантией
+			</Typography>
+			<Typography variant='body1' color='text.primary' mb={1}>
+				Все детали с нашей авторазборки поступают из Европы, имеют прозрачную историю эксплуатации и проходят
+				проверку на работоспособность. Мы гарантируем высокое качество, совместимость и отличное состояние
+				каждой запчасти. Обращаясь в Авторазборку Полотково ООО "Дриблинг", вы получаете профессиональный подход
+				и честный сервис при покупке патрубок интеркулера для Audi A4 B6
+			</Typography>
 			<GalleryImages
 				images={data.images}
 				selectedIndex={selectedImageIndex}
