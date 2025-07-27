@@ -54,7 +54,10 @@ import Autocomplete from 'components/Autocomplete';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import Loader from 'components/Loader';
+import reactStringReplace from 'react-string-replace';
+import { highlightSearchTerms } from 'services/StringService';
 
 const SOCIAL_BUTTONS_MOBILE = SOCIAL_BUTTONS.filter((item) => ['Telegram', 'WhatsApp', 'Viber'].includes(item.name));
 
@@ -154,9 +157,10 @@ const Header = observer(({ brands }: Props) => {
 	const [isOpenedMobileContacts, setIsOpenedMobileContacts] = useState<boolean>(false);
 	const [isOpenedTabletMenu, setIsOpenedTabletMenu] = useState<boolean>(false);
 	const [isScrolled, setIsScrolled] = useState<boolean>(false);
+	const [isOpenedMobileSearch, setIsOpenedMobileSearch] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
 
-	const { data: searchedSpareParts, isLoading } = useQuery({
+	const { data: searchedSpareParts, isFetching } = useQuery({
 		queryKey: ['spareParts', debouncedSearchValue],
 		enabled: debouncedSearchValue.length > 2,
 		placeholderData: (prev) => prev,
@@ -238,6 +242,7 @@ const Header = observer(({ brands }: Props) => {
 	const handleClickLogout = async () => {
 		try {
 			await store.user.logout();
+
 			enqueueSnackbar('Вы успешно вышли из аккаунта', {
 				variant: 'success'
 			});
@@ -460,6 +465,11 @@ const Header = observer(({ brands }: Props) => {
 		router.push(`/spare-parts/${value.brand.slug}/${value.slug}`);
 	};
 
+	const handleCloseMobileSearch = () => {
+		setIsOpenedMobileSearch(false);
+		setSearchValue('');
+	};
+
 	return (
 		<>
 			<AppBar sx={{ py: theme.spacing(2) }} color='secondary' position='fixed'>
@@ -502,16 +512,29 @@ const Header = observer(({ brands }: Props) => {
 								})) || []
 							}
 							loadingText='Загрузка...'
-							loading={isLoading}
+							loading={isFetching}
 							inputValue={searchValue}
 							withSearchIcon
-							sx={{ flex: 1 }}
+							sx={{ flex: 1, display: { xs: 'none', sm: 'flex' } }}
 							fullWidth
 							open={searchValue.length > 2}
 							noOptionsText='Нет результатов'
 							onChange={handleChange}
 							onInputChange={handleInputChange}
 							placeholder='Поиск запчастей'
+							renderOption={(props, option) => (
+								<li {...props}>
+									{reactStringReplace(
+										option.label,
+										highlightSearchTerms(option.label, searchValue),
+										(match, i) => (
+											<Typography key={i} component='span' color='text.primary'>
+												{match}
+											</Typography>
+										)
+									)}
+								</li>
+							)}
 						></Autocomplete>
 
 						<Box display={'flex'} sx={{ display: { xs: 'none', sm: 'flex' } }}>
@@ -525,7 +548,7 @@ const Header = observer(({ brands }: Props) => {
 						</Box>
 						{/* Mobile phone link */}
 						<Box alignItems={'center'} gap={0.5} sx={{ display: { xs: 'flex', sm: 'none' } }}>
-							<IconButton sx={{ padding: '0' }}>
+							<IconButton sx={{ padding: '0' }} onClick={() => setIsOpenedMobileSearch(true)}>
 								<SearchIcon />
 							</IconButton>
 							<IconButton onClick={() => setIsOpenedMobileContacts(true)} sx={{ padding: '0' }}>
@@ -656,6 +679,87 @@ const Header = observer(({ brands }: Props) => {
 					</Box>
 				</Container>
 			</AppBar>
+
+			<Modal open={isOpenedMobileSearch} onClose={handleCloseMobileSearch}>
+				<ModalContainer
+					px={1}
+					py={1}
+					onClose={handleCloseMobileSearch}
+					title={
+						<Input
+							sx={{ pl: 1 }}
+							size='medium'
+							startAdornment={<SearchIcon />}
+							value={searchValue}
+							placeholder='Быстрый поиск'
+							fullWidth
+							onChange={(event) => handleInputChange(event, event.target.value)}
+						/>
+					}
+					width={'calc(100% - 1em)'}
+					sx={{ mx: 1, my: 1, height: 'calc(100vh - 1em)', position: 'relative' }}
+				>
+					<Box position='relative'>
+						{isFetching && <Loader />}
+						{searchValue.length > 2 &&
+							(
+								searchedSpareParts?.data?.data.map((item) => ({
+									label: item.h1,
+									slug: item.slug,
+									brand: item.brand,
+									value: item.id
+								})) || []
+							).map((item) => (
+								<Link
+									color='custom.text-muted'
+									sx={{
+										height: '37px',
+										p: 1,
+										display: 'block',
+										pointerEvents: isFetching ? 'none' : 'auto',
+										opacity: isFetching ? 0.5 : 1
+									}}
+									href={`/spare-parts/${item.brand?.slug}/${item.slug}`}
+								>
+									{reactStringReplace(
+										item.label,
+										highlightSearchTerms(item.label, searchValue),
+										(match, i) => (
+											<Typography key={i} component='span' color='text.primary'>
+												{match}
+											</Typography>
+										)
+									)}
+								</Link>
+							))}
+					</Box>
+					<Button
+						sx={{
+							position: 'absolute',
+							bottom: '1em',
+							left: '1em',
+							zIndex: 1,
+							width: 'calc(100% - 2em)'
+						}}
+						size='large'
+						startIcon={
+							searchedSpareParts?.data?.data.length && searchValue.length > 2 ? <SearchIcon /> : undefined
+						}
+						variant='contained'
+						color='primary'
+						onClick={() => {
+							if (searchedSpareParts?.data?.data.length) {
+								router.push(`/spare-parts?searchValue=${searchValue}`);
+								handleCloseMobileSearch();
+							} else {
+								handleCloseMobileSearch();
+							}
+						}}
+					>
+						{searchedSpareParts?.data?.data.length && searchValue.length > 2 ? 'Найти' : 'Закрыть'}
+					</Button>
+				</ModalContainer>
+			</Modal>
 
 			{/* Mobile Bottom Navigation Bar */}
 			<Box

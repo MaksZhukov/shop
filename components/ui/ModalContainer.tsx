@@ -5,19 +5,20 @@ import { FC } from 'react';
 
 interface ModalContainerProps {
 	onClose: () => void;
-	title: string;
+	title: string | React.ReactNode;
 	width: string;
 	children: React.ReactNode;
 	py?: number;
 	px?: number;
 	sx?: SxProps;
+	height?: string;
 }
 
 export const ModalContainer: FC<ModalContainerProps> = ({ onClose, title, width, children, py = 1, px = 2, sx }) => {
 	return (
 		<WhiteBox color='text.primary' withShadow width={width} px={px} py={py} sx={sx}>
-			<Box display={'flex'} alignItems={'center'} mb={1} justifyContent={'space-between'}>
-				<Typography variant='body1' fontWeight={'500'} fontSize={'16px'}>
+			<Box gap={1} display={'flex'} alignItems={'center'} mb={1} justifyContent={'space-between'}>
+				<Typography flex={1} variant='body1' fontWeight={'500'} fontSize={'16px'}>
 					{title}
 				</Typography>
 				<IconButton

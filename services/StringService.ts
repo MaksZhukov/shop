@@ -9,3 +9,23 @@ export const getStringByTemplateStr = (value: string, data: any) => {
 	}
 	return newValue;
 };
+
+export const highlightSearchTerms = (text: string, searchValue: string) => {
+	if (!searchValue || !text) {
+		return text;
+	}
+
+	// Split search value into individual terms
+	const searchTerms = searchValue
+		.toLowerCase()
+		.split(/\s+/)
+		.filter((term) => term.length > 0);
+
+	// Create a regex pattern that matches any of the search terms (case insensitive)
+	const pattern = new RegExp(
+		`(${searchTerms.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`,
+		'gi'
+	);
+
+	return pattern;
+};
