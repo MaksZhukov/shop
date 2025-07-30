@@ -4,10 +4,14 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
+import WhiteBox from 'components/WhiteBox';
+import { ChevronUpIcon, ChevronDownIcon } from 'components/Icons';
 
 interface Props {
 	onClickFind?: (values: { [key: string]: string | null }) => void;
 	total: number | null;
+	values: { [key: string]: string | null };
+	setValues: (values: { [key: string]: string | null }) => void;
 	config: (AutocompleteType | NumberType)[];
 }
 
@@ -22,9 +26,10 @@ const getDependencyItemIds = (
 	return [];
 };
 
-const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
-	const [values, setValues] = useState<{ [key: string]: string | null }>({});
+const Filters = ({ onClickFind, config, total, values, setValues }: Props, ref: any) => {
+	console.log(values);
 	const router = useRouter();
+	const [isMoreFilters, setIsMoreFilters] = useState(false);
 	useEffect(() => {
 		let newValues: any = {};
 		let [brand, model] = router.query.slug || [];
@@ -98,6 +103,7 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 
 	const renderAutocomplete = (item: AutocompleteType) => {
 		let value = null;
+
 		if (values[item.id]) {
 			if ((item.id === 'kindSparePart' || item.id === 'generation') && !item.options.length) {
 				value = null;
@@ -124,26 +130,32 @@ const Filters = ({ onClickFind, config, total }: Props, ref: any) => {
 			></Autocomplete>
 		);
 	};
+	const mainFiltersConfig = config.filter((item) => item.category === 'main');
+	const additionalFiltersConfig = config.filter((item) => item.category === 'additional');
+
+	const renderFilterItem = (item: AutocompleteType | NumberType) => (
+		<Box key={item.id} display='flex' marginBottom={1}>
+			{item.type === 'autocomplete' && renderAutocomplete(item as AutocompleteType)}
+			{item.type === 'number' && renderInput(item as NumberType)}
+		</Box>
+	);
 
 	return (
-		<>
-			{config.map((item) => (
-				<Box key={item.id.toString()} display='flex' marginBottom='1em'>
-					{item.type === 'autocomplete' && renderAutocomplete(item as AutocompleteType)}
-					{item.type === 'number' && renderInput(item as NumberType)}
-				</Box>
-			))}
-			<Box marginY='1em' textAlign='center'>
-				<Button onClick={handleClickFind} fullWidth variant='contained'>
-					Найти
-				</Button>
-			</Box>
-			{total !== null && (
-				<Typography textAlign='center' variant='subtitle1' color='primary'>
-					Найдено: {total}
-				</Typography>
-			)}
-		</>
+		<WhiteBox p={2} withShadow>
+			{mainFiltersConfig.map(renderFilterItem)}
+			{isMoreFilters && additionalFiltersConfig.map(renderFilterItem)}
+			<Button
+				size='small'
+				sx={{ alignSelf: 'flex-start', mb: 2, px: 1 }}
+				onClick={() => setIsMoreFilters(!isMoreFilters)}
+				endIcon={isMoreFilters ? <ChevronUpIcon /> : <ChevronDownIcon />}
+			>
+				{isMoreFilters ? 'Меньше параметров' : 'Больше параметров'}
+			</Button>
+			<Button onClick={handleClickFind} fullWidth variant='contained'>
+				Показать {total}
+			</Button>
+		</WhiteBox>
 	);
 };
 

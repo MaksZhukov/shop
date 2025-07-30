@@ -1,7 +1,10 @@
 import { ChangeEvent, ReactNode, UIEventHandler } from 'react';
 
+export type FilterCategory = 'main' | 'additional';
+
 export type NumberType = {
 	id: string;
+	category: FilterCategory;
 	placeholder: string;
 	disabledDependencyId?: string;
 	type: string;
@@ -12,6 +15,7 @@ export type NumberType = {
 export type AutocompleteType = {
 	id: string;
 	name?: string;
+	category: FilterCategory;
 	placeholder: string;
 	value?: string;
 	type: string;
