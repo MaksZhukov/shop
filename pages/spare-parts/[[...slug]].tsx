@@ -17,9 +17,6 @@ import { getProductPageSeo } from 'services/ProductService';
 import { withKindSparePart } from 'services/SEOService';
 import { getStringByTemplateStr } from 'services/StringService';
 
-const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
-const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
-
 interface Props {
 	data: SparePart;
 	relatedProducts: SparePart[];

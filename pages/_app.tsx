@@ -15,7 +15,6 @@ import Layout from '../components/Layout';
 import RouteShield from '../components/RouteShield/RouteShield';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
 import { store } from '../store';
-import { ScrollUp } from 'components/features/ScrollUp';
 import { QueryProvider } from 'components/providers/QueryProvider';
 import { ThemeProvider } from 'components/providers/ThemeProvider';
 import { StoreProvider } from 'components/providers/StoreProvider';
@@ -23,6 +22,10 @@ import { SnackbarProvider } from 'components/providers/SnackbarProvider';
 import './app.scss';
 
 const Footer = dynamic(() => import('components/Footer'));
+
+const ScrollUp = dynamic(() => import('components/features/ScrollUp').then((mod) => ({ default: mod.ScrollUp })), {
+	ssr: false
+});
 
 function MyApp({
 	Component,

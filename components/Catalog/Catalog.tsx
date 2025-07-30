@@ -5,8 +5,8 @@ import {
 	Button,
 	CircularProgress,
 	Input,
-	Link,
 	MenuItem,
+	Menu,
 	Modal,
 	Pagination,
 	PaginationItem,
@@ -17,6 +17,8 @@ import {
 import { Box } from '@mui/material';
 import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT } from 'api/constants';
+import { Generation } from 'api/generations/types';
+import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
@@ -33,15 +35,20 @@ import { useSnackbar } from 'notistack';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useThrottle } from 'rooks';
 import { getCatalogAnchor, getCatalogAnchorText } from 'services/AnchorService';
-import styles from './Catalog.module.scss';
+const styles = {};
 
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
+type SortItem = {
+	value: string;
+	name: string;
+};
+
 const selectSortItems = [
-	{ name: 'Сначала свежие', value: 'createdAt:desc' },
-	{ name: 'Сначала старые', value: 'createdAt:asc' },
-	{ name: 'Сначала дешёвые', value: 'price:asc' },
-	{ name: 'Сначала дорогие', value: 'price:desc' }
+	{ value: 'createdAt:desc', name: 'Новые' },
+	{ value: 'createdAt:asc', name: 'Старые' },
+	{ value: 'price:asc', name: 'Дешёвые' },
+	{ value: 'price:desc', name: 'Дорогие' }
 ];
 
 const anchorText = {
@@ -49,6 +56,10 @@ const anchorText = {
 	cabins: 'салон',
 	wheels: 'диск'
 };
+
+import { ChevronDownIcon } from 'components/Icons';
+import { Brand } from 'api/brands/types';
+import { Link } from 'components/ui';
 
 interface Props {
 	seo: SEO | null;
@@ -59,6 +70,9 @@ interface Props {
 	generateFiltersByQuery?: (filter: { [key: string]: string }, fetchFunc: any) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
 	fetchDataForSearch?: typeof fetchSpareParts | typeof fetchCabins;
+	brands: Brand[];
+	models: Model[];
+	generations: Generation[];
 }
 
 let date = new Date();
@@ -71,7 +85,10 @@ const Catalog = ({
 	kindSpareParts = [],
 	filtersConfig,
 	generateFiltersByQuery,
-	seo
+	seo,
+	brands,
+	models,
+	generations
 }: Props) => {
 	const [newProducts, setNewProducts] = useState<Product[]>([]);
 	const [data, setData] = useState<Product[]>([]);
@@ -83,7 +100,9 @@ const Catalog = ({
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [activeView, setActiveView] = useState<'grid' | 'list'>('grid');
 	const [isOpenFilters, setIsOpenFilters] = useState<boolean>(false);
+	const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
 	const filtersRef = useRef<any>(null);
+	const [filtersValues, setFiltersValues] = useState<{ [key: string]: string | null }>({});
 	const leaveRef = useRef<boolean>(false);
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const router = useRouter();
@@ -268,13 +287,18 @@ const Catalog = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sort, page, brand, router.isReady]);
 
-	const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-		setSearchValue(e.target.value);
+	const handleSortMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+		setSortMenuAnchor(event.currentTarget);
 	};
 
-	const handleChangeSort = (e: SelectChangeEvent<HTMLInputElement>) => {
-		router.query.sort = e.target.value as string;
+	const handleSortMenuClose = () => {
+		setSortMenuAnchor(null);
+	};
+
+	const handleSortItemClick = (item: SortItem) => {
+		router.query.sort = item.value;
 		router.push({ pathname: router.pathname, query: router.query });
+		setSortMenuAnchor(null);
 	};
 
 	const handleClickFind = (values: { [key: string]: string | null }) => {
@@ -347,14 +371,6 @@ const Catalog = ({
 		}
 	};
 
-	const handleClickOpenFilters = () => {
-		setIsOpenFilters(true);
-	};
-
-	const handleCloseFilters = () => {
-		setIsOpenFilters(false);
-	};
-
 	const handleClickAnchor = () => {
 		let newQuery = {};
 		if (brand && model && kindSparePart) {
@@ -423,126 +439,94 @@ const Catalog = ({
 		/>
 	);
 
-	const renderBar = (position: 'top' | 'bottom') => (
-		<Box
-			display='flex'
-			flexWrap={{ xs: 'wrap', md: 'nowrap' }}
-			padding={{ xs: 0, md: '0.5em 0 0.5em 0.5em' }}
-			gap={{ xs: '0.5em', md: 0 }}
-			marginBottom='1em'
-			alignItems={{ xs: 'initial', md: 'center' }}
-			bgcolor={{ xs: 'initial', md: '#fff' }}
-		>
-			<Box display='flex' sx={{ order: { xs: 3, md: 0 }, width: { xs: '100%', md: 'auto' } }}>
-				<Button
-					variant='contained'
-					onClick={handleClickChangeView('grid', position)}
-					sx={{
-						bgcolor: activeView === 'grid' ? 'primary.main' : '#000',
-						display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
-					}}
-					className={classNames(styles['btn-view'])}
-				>
-					<GridViewIcon fontSize='small' sx={{ color: '#fff' }}></GridViewIcon>
-				</Button>
-				<Button
-					variant='contained'
-					sx={{
-						bgcolor: activeView === 'list' ? 'primary.main' : '#000',
-						display: { xs: position === 'bottom' ? 'none' : 'flex', md: 'flex' }
-					}}
-					onClick={handleClickChangeView('list', position)}
-					className={classNames(styles['btn-view'])}
-				>
-					<MenuIcon fontSize='small' sx={{ color: '#fff' }}></MenuIcon>
-				</Button>
-			</Box>
-			{position === 'top' && (
-				<Button
-					sx={{ display: { xs: 'flex', md: 'none' } }}
-					variant='contained'
-					onClick={handleClickOpenFilters}
-					startIcon={<TuneIcon></TuneIcon>}
-				>
-					Фильтры
-				</Button>
-			)}
-			<Modal open={isOpenFilters} onClose={handleCloseFilters}>
-				<Box padding='1em' bgcolor='#f1f2f6'>
-					<Filters
-						ref={filtersRef}
-						total={total}
-						config={filtersConfig}
-						onClickFind={handleClickFind}
-					></Filters>
-				</Box>
-			</Modal>
-			<Input
-				className={styles['search']}
-				sx={{
-					bgcolor: '#fff',
-					maxWidth: 200,
-					minWidth: 100,
-					marginRight: { xs: 0, md: '1em' },
-					paddingLeft: '0.5em',
-					display: { xs: position === 'bottom' ? 'none' : 'initial', md: 'initial' },
-					order: { xs: 2, md: 'initial' }
-				}}
-				onChange={handleChangeSearch}
-				onKeyDown={handleKeyDown(position)}
-				value={searchValue}
-				placeholder={searchPlaceholder}
-			></Input>
-			<Select
-				variant='standard'
-				MenuProps={{ disableScrollLock: true }}
-				value={sort as any}
-				sx={{
-					maxWidth: 150,
-					display: { xs: position === 'bottom' ? 'none' : 'initial', md: 'initial' },
-					order: { xs: 1, md: 'initial' }
-				}}
-				className={styles['sort-select']}
-				onChange={handleChangeSort}
-			>
-				{selectSortItems.map((item) => (
-					<MenuItem key={item.name} value={item.value}>
-						{item.name}
-					</MenuItem>
-				))}
-			</Select>
-			{renderPagination(position)}
-		</Box>
-	);
+	const handleClickBrand = (brandId: string) => {
+		router.query.brand = brandId;
+		router.push({ pathname: router.pathname, query: router.query });
+	};
 
 	return (
 		<>
-			<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'initial' } }}>
-				<Box
-					marginTop='3.7em'
-					display={{ xs: 'none', md: 'block' }}
-					marginRight='1em'
-					component='aside'
-					sx={{ width: { xs: '100%', md: '250px' } }}
+			<Box display='flex' justifyContent='space-between' alignItems='center'>
+				<Typography mb={1} variant='h6'>
+					{seo?.h1}
+				</Typography>{' '}
+				<Button variant='text' endIcon={<ChevronDownIcon />} color='primary' onClick={handleSortMenuOpen}>
+					{selectSortItems.find((item) => item.value === sort)?.name}
+				</Button>
+				<Menu
+					disableScrollLock
+					sx={{
+						'& .MuiPaper-root': {
+							bgcolor: '#fff',
+							mt: -0.5
+						}
+					}}
+					anchorEl={sortMenuAnchor}
+					open={Boolean(sortMenuAnchor)}
+					onClose={handleSortMenuClose}
 				>
+					{selectSortItems.map((item) => (
+						<MenuItem
+							key={item.name}
+							onClick={() => handleSortItemClick(item)}
+							selected={sort === item.value}
+						>
+							{item.name}
+						</MenuItem>
+					))}
+				</Menu>
+			</Box>
+
+			<Box display='flex' gap={2}>
+				<Box width={256} component='aside'>
 					<Filters
 						ref={filtersRef}
 						total={total}
 						config={filtersConfig}
 						onClickFind={handleClickFind}
+						values={filtersValues}
+						setValues={setFiltersValues}
 					></Filters>
 				</Box>
-				<Box sx={{ width: { md: 'calc(100% - 250px - 2em)' } }}>
-					<Box
-						marginBottom='0.5em'
-						marginTop='0'
-						textTransform='uppercase'
-						component='h1'
-						typography={{ xs: 'h5', md: 'h4' }}
-					>
-						{seo?.h1}
-					</Box>
-					{renderBar('top')}
+				<Box flex={1}>
+					{(!brand || !model) && (
+						<Box
+							mb={2}
+							boxShadow='0px 10px 25px 0px #1018281F'
+							px={2}
+							py={4}
+							minHeight={360}
+							display='flex'
+							flexDirection='column'
+							flexWrap='wrap'
+							height={360}
+							gap={2}
+							borderRadius={4}
+							border='1px solid #D0D5DD'
+							bgcolor='#EEEEEE'
+						>
+							{!brand &&
+								brands.map((brand) => (
+									<Box py={1} key={brand.id}>
+										<Link href={`/spare-parts/${brand.slug}`}>{brand.name}</Link>
+									</Box>
+								))}
+							{!model &&
+								models.map((model) => (
+									<>
+										{model.generations?.map((generation) => (
+											<Box py={1} key={generation.id}>
+												<Link
+													href={`/spare-parts/${brand}/model-${model.slug}?generation=${generation.slug}`}
+												>
+													{model.name} {generation.name}
+												</Link>
+											</Box>
+										))}
+									</>
+								))}
+						</Box>
+					)}
 					<Box
 						display='flex'
 						flexWrap='wrap'
@@ -573,21 +557,9 @@ const Catalog = ({
 							<CircularProgress></CircularProgress>
 						)}
 					</Box>
-					{renderBar('bottom')}
 				</Box>
 			</Box>
 
-			{!!newProducts.length && (
-				<CarouselProducts
-					sx={{ paddingX: '1em' }}
-					data={newProducts}
-					title={
-						<Typography withSeparator fontWeight='bold' marginBottom='1em' marginTop='1em' variant='h5'>
-							ВАМ СТОИТ ОБРАТИТЬ ВНИМАНИЕ
-						</Typography>
-					}
-				></CarouselProducts>
-			)}
 			<Box marginTop='2.5em'>
 				<Typography>
 					Возникла необходимость купить {seo?.h1} для Вашего «железного друга»? Затрудняетесь сделать
@@ -610,18 +582,6 @@ const Catalog = ({
 					со всеми городами и деревнями, просто доставка займет немного больше времени. Будьте уверены, мы
 					приложим все силы, что бы ваш товар был доставлен максимально быстро.
 				</Typography>
-				{((brand && kindSparePart) || (brand && model)) && (
-					<Typography>
-						Если вы не смогли найти {catalogType === 'spare-parts' ? 'нужную' : 'нужный'} вам{' '}
-						{anchorText[catalogType as keyof typeof anchorText]}, просто позвоните нам и мы попробуем
-						подобрать нужную именно вам деталь от{' '}
-						<NextLink href={getCatalogAnchor(router.pathname, brand, model, kindSparePart)}>
-							<Link component='span' textTransform='capitalize' onClick={handleClickAnchor}>
-								{getCatalogAnchorText(brand, model, kindSparePart)}
-							</Link>
-						</NextLink>
-					</Typography>
-				)}
 			</Box>
 		</>
 	);

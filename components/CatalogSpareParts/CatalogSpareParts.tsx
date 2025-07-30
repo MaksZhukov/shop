@@ -99,10 +99,16 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 		await loadKindSpareParts();
 		setIsLoadingMore(false);
 	});
-	useEffect(() => {
+	useEffect(async () => {
 		if (brand !== prevBrand && !model) {
 			setModels([]);
 		}
+		const models = await fetchModels({
+			filters: { brand: { slug: brand } },
+			pagination: { limit: API_MAX_LIMIT },
+			populate: ['generations']
+		});
+		setModels(models.data.data);
 	}, [brand]);
 
 	useEffect(() => {
@@ -297,6 +303,8 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 				}
 			]}
 			searchPlaceholder='Поиск ...'
+			brands={brands}
+			models={models}
 			kindSpareParts={kindSpareParts.data}
 			filtersConfig={filtersConfig}
 			seo={page?.seo}

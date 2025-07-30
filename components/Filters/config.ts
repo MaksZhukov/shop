@@ -51,6 +51,7 @@ export const getSparePartsFiltersConfig = ({
 }: Params) => [
 	{
 		id: 'brand',
+		category: 'main',
 		placeholder: 'Марка',
 		storeInUrl: storeInUrlIds.includes('brand'),
 		type: 'autocomplete',
@@ -61,6 +62,7 @@ export const getSparePartsFiltersConfig = ({
 	},
 	{
 		id: 'model',
+		category: 'main',
 		storeInUrl: storeInUrlIds.includes('model'),
 		placeholder: 'Модель',
 		type: 'autocomplete',
@@ -72,6 +74,7 @@ export const getSparePartsFiltersConfig = ({
 	},
 	{
 		id: 'generation',
+		category: 'main',
 		storeInUrl: storeInUrlIds.includes('generation'),
 		placeholder: 'Поколение',
 		type: 'autocomplete',
@@ -83,6 +86,7 @@ export const getSparePartsFiltersConfig = ({
 	},
 	{
 		id: 'kindSparePart',
+		category: 'main',
 		storeInUrl: storeInUrlIds.includes('kindSparePart'),
 		placeholder: 'Вид запчасти',
 		type: 'autocomplete',
@@ -95,6 +99,7 @@ export const getSparePartsFiltersConfig = ({
 	},
 	{
 		id: 'volume',
+		category: 'additional',
 		storeInUrl: storeInUrlIds.includes('volume'),
 		placeholder: 'Обьем 2.0',
 		type: 'autocomplete',
@@ -104,6 +109,7 @@ export const getSparePartsFiltersConfig = ({
 	},
 	{
 		id: 'bodyStyle',
+		category: 'additional',
 		storeInUrl: storeInUrlIds.includes('bodyStyle'),
 		placeholder: 'Кузов',
 		type: 'autocomplete',
@@ -113,6 +119,7 @@ export const getSparePartsFiltersConfig = ({
 	},
 	{
 		id: 'transmission',
+		category: 'additional',
 		storeInUrl: storeInUrlIds.includes('transmission'),
 		placeholder: 'Коробка',
 		type: 'autocomplete',
@@ -122,6 +129,7 @@ export const getSparePartsFiltersConfig = ({
 	},
 	{
 		id: 'fuel',
+		category: 'additional',
 		storeInUrl: storeInUrlIds.includes('fuel'),
 		placeholder: 'Тип топлива',
 		type: 'autocomplete',

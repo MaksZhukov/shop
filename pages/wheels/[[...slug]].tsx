@@ -18,7 +18,6 @@ import { withKindSparePart } from 'services/SEOService';
 import { getStringByTemplateStr } from 'services/StringService';
 
 const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
-const CarouselReviews = dynamic(() => import('components/CarouselReviews'));
 
 interface Props {
 	data?: Wheel;
@@ -38,7 +37,6 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRende
 				<Typography component='h3' marginTop='1em' variant={isMobile ? 'h6' : 'h5'}>
 					Отзывы о нас
 				</Typography>
-				<CarouselReviews marginBottom='1em' slidesToShow={isMobile ? 1 : isTablet ? 2 : 4}></CarouselReviews>
 			</Box>
 		);
 		return () => {

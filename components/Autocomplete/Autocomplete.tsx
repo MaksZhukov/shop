@@ -26,7 +26,6 @@ const Autocomplete = <
 	const [inputValue, setInputValue] = useState<string>('');
 	const prevValue = usePreviousImmediate(props.value);
 	const previousInputValBeforeReset = useRef<string>('');
-
 	useEffect(() => {
 		const value = props.value as { label: string } | string;
 		// IT NEEDS TO HANDLE SETUP INPUT VALUE WHEN OPTIONS WERE LOADED AND ONE WAS SELECTED
@@ -39,6 +38,18 @@ const Autocomplete = <
 			setIsDefaultSet(true);
 		}
 	}, [prevValue, props.value, isDefaultSet]);
+
+	useEffect(() => {
+		if (!props.value) {
+			return;
+		}
+		const value = props.value as { label: string } | string;
+		if (value instanceof Object) {
+			setInputValue(value.label);
+		} else {
+			setInputValue(value);
+		}
+	}, [props.value]);
 
 	return (
 		<MUIAutocomplete
