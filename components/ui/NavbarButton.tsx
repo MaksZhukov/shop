@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@mui/material';
+import { Button, ButtonProps } from './Button';
 
 interface NavbarButtonProps extends ButtonProps {
 	icon: React.ReactNode;
@@ -16,7 +16,7 @@ export const NavbarButton = (props: NavbarButtonProps) => {
 				flexDirection: 'column',
 				height: '48px',
 				fontSize: '10px',
-				padding: '4px 8px',
+				padding: '2px 8px',
 				color: props.isActive ? 'text.secondary' : 'custom.text-muted'
 			}}
 		>

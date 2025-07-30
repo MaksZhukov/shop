@@ -1,8 +1,6 @@
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Button, IconButton, Typography } from '@mui/material';
 import { Product } from 'api/types';
-import { FavoriteAddedIcon, FavoriteAddIcon } from 'components/Icons';
+import { HeartFilledIcon, FavoriteAddIcon } from 'components/Icons';
 import { observer } from 'mobx-react';
 import { useSnackbar } from 'notistack';
 import { useStore } from 'store';
@@ -50,14 +48,18 @@ const FavoriteButton = ({ product, title }: Props) => {
 	if (title) {
 		return (
 			<Button onClick={handleClick} sx={{ gap: 0.5, px: 0.5 }} size='small'>
-				{favorite ? <FavoriteAddedIcon /> : <FavoriteAddIcon />}
+				{favorite ? <HeartFilledIcon color='error' /> : <FavoriteAddIcon />}
 				<Typography variant='body1' color='text.primary'>
 					{title}
 				</Typography>
 			</Button>
 		);
 	}
-	return <IconButton onClick={handleClick}>{favorite ? <FavoriteAddedIcon /> : <FavoriteAddIcon />}</IconButton>;
+	return (
+		<IconButton onClick={handleClick}>
+			{favorite ? <HeartFilledIcon color='error' /> : <FavoriteAddIcon />}
+		</IconButton>
+	);
 };
 
 export default observer(FavoriteButton);
