@@ -37,14 +37,19 @@ import Profile from './Profile';
 import { Link, ModalContainer } from 'components/ui';
 import {
 	CartIcon,
+	CartFilledIcon,
+	DashboardFilledIcon,
 	DashboardIcon,
 	GeoIcon,
 	HeartIcon,
+	HomeFilledIcon,
+	HomeIcon,
 	PhoneCallIcon,
 	SearchIcon,
 	TelegramIcon,
 	ViberIcon,
-	WhatsAppIcon
+	WhatsAppIcon,
+	HeartFilledIcon
 } from 'components/Icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
 import { WorkTimetable } from 'components/features/WorkTimetable';
@@ -469,7 +474,7 @@ const Header = observer(({ brands }: Props) => {
 		setIsOpenedMobileSearch(false);
 		setSearchValue('');
 	};
-
+	console.log(router.pathname.startsWith('/spare-parts'));
 	return (
 		<>
 			<AppBar sx={{ py: theme.spacing(2) }} color='secondary' position='fixed'>
@@ -494,11 +499,12 @@ const Header = observer(({ brands }: Props) => {
 							</Box>
 						</Link>
 						<Button
+							sx={{ display: { xs: 'none', sm: 'flex' } }}
+							href='/spare-parts'
 							size='medium'
-							startIcon={<DashboardIcon />}
+							startIcon={<DashboardFilledIcon />}
 							variant='contained'
 							color='primary'
-							sx={{ display: { xs: 'none', sm: 'flex' } }}
 						>
 							Каталог
 						</Button>
@@ -539,12 +545,24 @@ const Header = observer(({ brands }: Props) => {
 
 						<Box display={'flex'} sx={{ display: { xs: 'none', sm: 'flex' } }}>
 							<Profile onClickSignIn={handleClick} onClickLogout={handleClickLogout}></Profile>
-							<Link href='/favorites'>
-								<NavbarButton icon={<HeartIcon />}>Избранное</NavbarButton>
-							</Link>
-							<Link href='/cart'>
-								<NavbarButton icon={<CartIcon />}>Корзина</NavbarButton>
-							</Link>
+
+							<NavbarButton
+								variant='link'
+								href='/favorites'
+								icon={router.pathname.startsWith('/favorites') ? <HeartFilledIcon /> : <HeartIcon />}
+								isActive={router.pathname.startsWith('/favorites')}
+							>
+								Избранное
+							</NavbarButton>
+
+							<NavbarButton
+								variant='link'
+								href='/cart'
+								icon={router.pathname.startsWith('/cart') ? <CartFilledIcon /> : <CartIcon />}
+								isActive={router.pathname.startsWith('/cart')}
+							>
+								Корзина
+							</NavbarButton>
 						</Box>
 						{/* Mobile phone link */}
 						<Box alignItems={'center'} gap={0.5} sx={{ display: { xs: 'flex', sm: 'none' } }}>
@@ -778,13 +796,41 @@ const Header = observer(({ brands }: Props) => {
 					alignItems: 'center'
 				}}
 			>
+				<NavbarButton
+					href='/'
+					variant='link'
+					icon={router.pathname === '/' ? <HomeFilledIcon /> : <HomeIcon />}
+					isActive={router.pathname === '/'}
+				>
+					Главная
+				</NavbarButton>
+
+				<NavbarButton
+					href='/spare-parts'
+					variant='link'
+					icon={router.pathname.startsWith('/spare-parts') ? <DashboardFilledIcon /> : <DashboardIcon />}
+					isActive={router.pathname.startsWith('/spare-parts')}
+				>
+					Каталог
+				</NavbarButton>
+
 				<Profile onClickSignIn={handleClick} onClickLogout={handleClickLogout}></Profile>
-				<Link href='/favorites'>
-					<NavbarButton icon={<HeartIcon />}>Избранное</NavbarButton>
-				</Link>
-				<Link href='/cart'>
-					<NavbarButton icon={<CartIcon />}>Корзина</NavbarButton>
-				</Link>
+				<NavbarButton
+					href='/favorites'
+					variant='link'
+					icon={router.pathname.startsWith('/favorites') ? <HeartFilledIcon /> : <HeartIcon />}
+					isActive={router.pathname.startsWith('/favorites')}
+				>
+					Избранное
+				</NavbarButton>
+				<NavbarButton
+					href='/cart'
+					variant='link'
+					icon={router.pathname.startsWith('/cart') ? <CartFilledIcon /> : <CartIcon />}
+					isActive={router.pathname.startsWith('/cart')}
+				>
+					Корзина
+				</NavbarButton>
 			</Box>
 		</>
 	);

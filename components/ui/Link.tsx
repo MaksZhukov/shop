@@ -1,4 +1,4 @@
-import { SxProps, Theme, TypographyProps } from '@mui/material';
+import { SxProps, Theme } from '@mui/material';
 import MuiLink from '@mui/material/Link';
 import NextLink from 'next/link';
 import { FC, HTMLAttributeAnchorTarget, ReactNode } from 'react';
