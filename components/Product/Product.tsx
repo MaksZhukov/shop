@@ -123,10 +123,10 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 			gutterBottom={device === 'desktop'}
 			variant='h4'
 			fontWeight='500'
-			title={data.h1}
+			title={data.h1 || data.name}
 			component='h1'
 		>
-			{data.h1}
+			{data.h1 || data.name}
 		</Typography>
 	);
 
@@ -416,7 +416,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 			</Box>
 
 			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
-				Характеристики для {data.h1}
+				Характеристики для {data.h1 || data.name}
 			</Typography>
 			{page.textAfterDescription && (
 				<Box paddingLeft='35px'>
@@ -424,7 +424,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				</Box>
 			)}
 			<Typography withSeparator gutterBottom marginY='1em' component='h2' variant='h5' fontWeight='500'>
-				{data.h1} вы можете купить в рассрочку
+				{data.h1 || data.name} вы можете купить в рассрочку
 			</Typography>
 			<Box
 				ref={installmentPlanBlockRef}
@@ -455,7 +455,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 									flex={1}
 								>
 									<Typography component={'h3'} variant='h5'>
-										Купить {data.h1} по карте {item.name}
+										Купить {data.h1 || data.name} по карте {item.name}
 									</Typography>
 									<Typography>Срок рассрочки в месяцах</Typography>
 									<Box paddingRight='1.5em' paddingLeft='0.5em'>
@@ -514,13 +514,13 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				</Box>
 				<Box>
 					<Typography>
-						Уважаемые друзья, У нас есть отличная новость для вас! Теперь вы можете приобрести {data.h1} в
-						рассрочку, что сделает покупку удобной и выгодной для вас. Рассрочка - это прекрасная
-						возможность распределить стоимость товара на несколько месяцев, не нагружая ваш бюджет. Вы
-						сможете наслаждаться всеми преимуществами товара уже сейчас, не откладывая его покупку на потом.
-						Удобные условия рассрочки сделают вашу покупку еще более привлекательной. Так что не упустите
-						шанс. не переживайте о финансах - выбирайте рассрочку и пользуйтесь нашим {data.h1} прямо
-						сейчас!
+						Уважаемые друзья, У нас есть отличная новость для вас! Теперь вы можете приобрести{' '}
+						{data.h1 || data.name} в рассрочку, что сделает покупку удобной и выгодной для вас. Рассрочка -
+						это прекрасная возможность распределить стоимость товара на несколько месяцев, не нагружая ваш
+						бюджет. Вы сможете наслаждаться всеми преимуществами товара уже сейчас, не откладывая его
+						покупку на потом. Удобные условия рассрочки сделают вашу покупку еще более привлекательной. Так
+						что не упустите шанс. не переживайте о финансах - выбирайте рассрочку и пользуйтесь нашим{' '}
+						{data.h1 || data.name} прямо сейчас!
 					</Typography>
 				</Box>
 			</Box>
@@ -568,7 +568,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 				Наши {TYPE_TEXT[data.type]} б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в
 				следующих городах Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем что
 				работаем во всех городах и деревнях, просто доставка займет немного больше времени. Будьте уверены, мы
-				приложим все силы, что бы ваш товар - {data.h1} был доставлен максимально быстро.
+				приложим все силы, что бы ваш товар - {data.h1 || data.name} был доставлен максимально быстро.
 			</Typography>
 			{renderWhyWeBest(whyWeBest2)}
 			{brandText && <ReactMarkdown content={brandText}></ReactMarkdown>}
@@ -579,8 +579,9 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands 
 					по РБ в течение суток-двух, в зависимости от места расположения. Огромный каталог товаров запчастей
 					на сайте! Выбирайте и заказывайте! У нас в ассортименте представлены автозапчасти б/у на все
 					известные иномарки. Являясь первыми импортерами, мы предоставляем отличные цены поставляемых
-					контрактных деталей. При заказе {data.h1} наша курьерская служба поможет организовать доставку во
-					все населенные пункты нашей родины. Для постоянных клиентов предоставляем бонусы и скидки.
+					контрактных деталей. При заказе {data.h1 || data.name} наша курьерская служба поможет организовать
+					доставку во все населенные пункты нашей родины. Для постоянных клиентов предоставляем бонусы и
+					скидки.
 				</Typography>
 			)}
 			<Typography
