@@ -34,6 +34,7 @@ const Autocomplete = <
 				(typeof prevValue === 'string' && value instanceof Object)) &&
 			!isDefaultSet
 		) {
+			console.log('set');
 			setInputValue(value.label);
 			setIsDefaultSet(true);
 		}
@@ -41,6 +42,7 @@ const Autocomplete = <
 
 	useEffect(() => {
 		if (!props.value) {
+			setInputValue('');
 			return;
 		}
 		const value = props.value as { label: string } | string;

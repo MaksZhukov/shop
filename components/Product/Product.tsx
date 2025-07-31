@@ -36,12 +36,11 @@ import ProductItem from 'components/ProductItem';
 interface Props {
 	page: PageProduct & (PageProductCabin | PageProductSparePart | PageProductTire | PageProductWheel);
 	data: IProduct;
-	brands: Brand[];
 	relatedProducts: IProduct[];
 	printOptions: { text: string; value?: string | number }[];
 }
 
-const Product: FC<Props> = ({ data, printOptions, page, relatedProducts, brands }) => {
+const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 	const [activeTab, setActiveTab] = useState('description');

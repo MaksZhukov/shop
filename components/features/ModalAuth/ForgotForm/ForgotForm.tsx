@@ -32,6 +32,9 @@ const ForgotForm: FC<Props> = ({ isLoading, onChangeIsLoading }) => {
 	};
 	return (
 		<form onSubmit={handleClickSubmit}>
+			<Typography textAlign='center' variant='h4'>
+				Восстановление пароля
+			</Typography>
 			<TextField
 				fullWidth
 				disabled={isLoading}

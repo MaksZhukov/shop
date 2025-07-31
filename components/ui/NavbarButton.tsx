@@ -12,6 +12,8 @@ export const NavbarButton = (props: NavbarButtonProps) => {
 			color='inherit'
 			sx={{
 				display: 'flex',
+				gap: 1,
+				lineHeight: 1,
 				alignItems: 'center',
 				flexDirection: 'column',
 				height: '48px',

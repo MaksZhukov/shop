@@ -1,6 +1,6 @@
 import { Box, Link, SxProps } from '@mui/material';
 import { FC } from 'react';
-import { SOCIAL_BUTTONS } from './constants';
+import { SOCIAL_BUTTONS } from '../../../constants';
 import { SocialButton } from './types';
 
 interface SocialButtonsProps {

@@ -10,26 +10,19 @@ import { fetchModels } from 'api/models/models';
 import { Model } from 'api/models/types';
 import { fetchPage } from 'api/pages';
 import { PageMain } from 'api/pages/types';
-import { fetchReviews } from 'api/reviews/reviews';
-import { Review } from 'api/reviews/types';
 import { ApiResponse, ProductType } from 'api/types';
 import axios, { AxiosResponse } from 'axios';
 import Autocomplete from 'components/Autocomplete';
-import Image from 'components/Image';
-import LinkWithImage from 'components/LinkWithImage';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
-import { BODY_STYLES_SLUGIFY, FUELS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'config';
 import type { NextPage } from 'next';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
 import { Dispatch, ReactNode, SetStateAction, UIEventHandler, useRef, useState } from 'react';
 import { useDebounce, useThrottle } from 'rooks';
 import { getPageProps } from 'services/PagePropsService';
-import { BODY_STYLES, FUELS, KIND_WHEELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
-import styles from './index.module.scss';
+import { BODY_STYLES, FUELS, OFFSET_SCROLL_LOAD_MORE, SEASONS, TRANSMISSIONS } from '../constants';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
 import { ChevronDownIcon, ChevronRightIcon, ChevronUpIcon } from 'components/Icons';
@@ -46,6 +39,9 @@ import { EngineVolume } from 'api/engineVolumes/types';
 import { Articles } from 'components/features/main/Articles/Articles';
 import { Carousel } from 'components/Carousel';
 import { formatNumberWithSeparators } from 'services/NumberService';
+import { fetchBrands } from 'api/brands/brands';
+import { BODY_STYLES_SLUGIFY, FUELS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'config';
+import LinkWithImage from 'components/LinkWithImage';
 
 interface Props {
 	page: PageMain;
@@ -723,6 +719,22 @@ export const getServerSideProps = getPageProps(
 			'autocomises.image',
 			'serviceStations.image'
 		]
+	}),
+	async () => ({
+		brands: (
+			await fetchBrands({
+				populate: ['image'],
+				sort: 'name',
+				filters: {
+					spareParts: {
+						id: {
+							$notNull: true
+						}
+					}
+				},
+				pagination: { limit: API_MAX_LIMIT }
+			})
+		).data.data
 	}),
 	async () => ({
 		newSpareParts: (

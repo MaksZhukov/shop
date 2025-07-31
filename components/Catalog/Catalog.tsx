@@ -1,30 +1,12 @@
-import { Tune as TuneIcon } from '@mui/icons-material';
-import GridViewIcon from '@mui/icons-material/GridViewSharp';
-import MenuIcon from '@mui/icons-material/MenuSharp';
-import {
-	Button,
-	CircularProgress,
-	Input,
-	MenuItem,
-	Menu,
-	Modal,
-	Pagination,
-	PaginationItem,
-	Select,
-	SelectChangeEvent,
-	useMediaQuery
-} from '@mui/material';
+import { Button, CircularProgress, MenuItem, Menu, Pagination, PaginationItem } from '@mui/material';
 import { Box } from '@mui/material';
 import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT } from 'api/constants';
-import { Generation } from 'api/generations/types';
 import { Model } from 'api/models/types';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
 import { AxiosResponse } from 'axios';
-import classNames from 'classnames';
-import CarouselProducts from 'components/CarouselProducts';
 import Filters from 'components/Filters';
 import { AutocompleteType, NumberType } from 'components/Filters/types';
 import ProductItem from 'components/ProductItem';
@@ -32,10 +14,8 @@ import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useThrottle } from 'rooks';
-import { getCatalogAnchor, getCatalogAnchorText } from 'services/AnchorService';
-const styles = {};
 
 const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
@@ -51,19 +31,12 @@ const selectSortItems = [
 	{ value: 'price:desc', name: 'Дорогие' }
 ];
 
-const anchorText = {
-	'spare-parts': 'запчасть',
-	cabins: 'салон',
-	wheels: 'диск'
-};
-
 import { ChevronDownIcon } from 'components/Icons';
 import { Brand } from 'api/brands/types';
 import { Link } from 'components/ui';
 
 interface Props {
 	seo: SEO | null;
-	searchPlaceholder?: string;
 	dataFieldsToShow?: { id: string; name: string }[];
 	filtersConfig: (AutocompleteType | NumberType)[];
 	kindSpareParts?: KindSparePart[];
@@ -72,7 +45,8 @@ interface Props {
 	fetchDataForSearch?: typeof fetchSpareParts | typeof fetchCabins;
 	brands: Brand[];
 	models: Model[];
-	generations: Generation[];
+	filtersValues: { [key: string]: string | null };
+	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
 }
 
 let date = new Date();
@@ -80,7 +54,6 @@ let date = new Date();
 const Catalog = ({
 	fetchData,
 	fetchDataForSearch,
-	searchPlaceholder,
 	dataFieldsToShow = [],
 	kindSpareParts = [],
 	filtersConfig,
@@ -88,9 +61,9 @@ const Catalog = ({
 	seo,
 	brands,
 	models,
-	generations
+	filtersValues,
+	onChangeFilterValues
 }: Props) => {
-	const [newProducts, setNewProducts] = useState<Product[]>([]);
 	const [data, setData] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -98,13 +71,10 @@ const Catalog = ({
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const [searchValue, setSearchValue] = useState<string>('');
 	const [pageCount, setPageCount] = useState<number>(0);
-	const [activeView, setActiveView] = useState<'grid' | 'list'>('grid');
-	const [isOpenFilters, setIsOpenFilters] = useState<boolean>(false);
 	const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
 	const filtersRef = useRef<any>(null);
-	const [filtersValues, setFiltersValues] = useState<{ [key: string]: string | null }>({});
+	console.log(data);
 	const leaveRef = useRef<boolean>(false);
-	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const router = useRouter();
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -170,7 +140,7 @@ const Catalog = ({
 							pagination: searchValue
 								? {}
 								: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
-							populate: [...dataFieldsToShow?.map((item) => item.id), 'images'],
+							populate: { images: true, volume: true },
 							sort
 						})
 					)
@@ -301,95 +271,25 @@ const Catalog = ({
 		setSortMenuAnchor(null);
 	};
 
-	const handleClickFind = (values: { [key: string]: string | null }) => {
-		let newValues: { [key: string]: string } = { ...values, searchValue };
-
-		let hasNoBrandChanges =
-			(newValues.brand && brand && newValues.brand === brand) || (!newValues.brand && !brand) ? true : false;
-		let hasNoModelChanges =
-			(newValues.model && model && newValues.model === model.replace('model-', '')) ||
-			(!newValues.model && !model)
-				? true
-				: false;
-		let hasNoKindSparePartChanges = newValues.kindSparePart === kindSparePart;
-		let shallow = hasNoBrandChanges && hasNoModelChanges && hasNoKindSparePartChanges;
-		Object.keys(newValues).forEach((key) => {
-			if (!newValues[key]) {
-				if (key === 'brand' && !newValues['model']) {
-					delete router.query.slug;
-				} else {
-					delete router.query[key];
-				}
-			}
-		});
-		Object.keys(newValues).forEach((key) => {
-			if (newValues[key]) {
+	const handleClickFind = () => {
+		const slug: string[] = [];
+		Object.keys(filtersValues).forEach((key) => {
+			if (filtersValues[key]) {
 				if (key === 'brand') {
-					router.query['slug'] = [newValues[key]];
-					delete router.query[key];
+					slug.push(filtersValues[key]);
 				} else if (key === 'model') {
-					(router.query['slug'] as string[]).push('model-' + newValues[key]);
-					delete router.query[key];
+					slug.push('model-' + filtersValues[key]);
 				} else {
-					router.query[key] = newValues[key];
+					router.query[key] = filtersValues[key];
 				}
+			} else {
+				delete router.query[key];
 			}
 		});
+		router.query['slug'] = slug;
+		fetchProducts(filtersValues, 1, false);
 
-		if (router.query.page) {
-			delete router.query.page;
-		}
-
-		throttledFetchProducts(newValues, 1, false);
-
-		// It needs to avoid the same seo data for the page
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
-		// router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: shallow });
-		setTimeout(() => {
-			setIsClickedFind(false);
-		}, 100);
-		setIsClickedFind(true);
-
-		if (isTablet) {
-			setIsOpenFilters(false);
-		}
-	};
-
-	const handleClickChangeView = (view: 'grid' | 'list', position: 'top' | 'bottom') => () => {
-		if (position === 'bottom') {
-			window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-		}
-		setActiveView(view);
-	};
-
-	const handleKeyDown = (position: 'top' | 'bottom') => (e: KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			filtersRef.current.onClickFind();
-			if (position === 'bottom') {
-				window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-			}
-		}
-	};
-
-	const handleClickAnchor = () => {
-		let newQuery = {};
-		if (brand && model && kindSparePart) {
-			newQuery = { brand, model };
-		} else if (brand && (model || kindSparePart)) {
-			newQuery = { brand };
-		}
-		delete router.query.kindSparePart;
-		throttledFetchProducts(
-			Object.keys(othersQueryByFilters).reduce(
-				(prev, key) => ({
-					...prev,
-					[key]: othersQueryByFilters[key]
-				}),
-				{ searchValue: querySearchValue, ...newQuery }
-			),
-			undefined,
-			false
-		);
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 	};
 
 	const renderPagination = (position: 'bottom' | 'top') => (
@@ -443,7 +343,7 @@ const Catalog = ({
 		router.query.brand = brandId;
 		router.push({ pathname: router.pathname, query: router.query });
 	};
-
+	console.log(brands);
 	return (
 		<>
 			<Box display='flex' justifyContent='space-between' alignItems='center'>
@@ -477,7 +377,7 @@ const Catalog = ({
 				</Menu>
 			</Box>
 
-			<Box display='flex' gap={2}>
+			<Box display='flex' overflow='auto' gap={2}>
 				<Box width={256} component='aside'>
 					<Filters
 						ref={filtersRef}
@@ -485,11 +385,11 @@ const Catalog = ({
 						config={filtersConfig}
 						onClickFind={handleClickFind}
 						values={filtersValues}
-						setValues={setFiltersValues}
+						onChangeFilterValues={onChangeFilterValues}
 					></Filters>
 				</Box>
 				<Box flex={1}>
-					{(!brand || !model) && (
+					{(!filtersValues.brand || !filtersValues.model) && (
 						<Box
 							mb={2}
 							boxShadow='0px 10px 25px 0px #1018281F'
@@ -505,22 +405,27 @@ const Catalog = ({
 							border='1px solid #D0D5DD'
 							bgcolor='#EEEEEE'
 						>
-							{!brand &&
+							{!filtersValues.brand &&
 								brands.map((brand) => (
-									<Box py={1} key={brand.id}>
+									<Box py={1} display='flex' gap={0.5} key={brand.id}>
 										<Link href={`/spare-parts/${brand.slug}`}>{brand.name}</Link>
+										<Typography color='custom.text-muted'>{brand.spareParts?.count}</Typography>
 									</Box>
 								))}
-							{!model &&
+							{filtersValues.brand &&
+								!filtersValues.model &&
 								models.map((model) => (
 									<>
 										{model.generations?.map((generation) => (
-											<Box py={1} key={generation.id}>
+											<Box display='flex' gap={0.5} py={1} key={generation.id}>
 												<Link
 													href={`/spare-parts/${brand}/model-${model.slug}?generation=${generation.slug}`}
 												>
 													{model.name} {generation.name}
 												</Link>
+												<Typography color='custom.text-muted'>
+													{generation.spareParts?.count}
+												</Typography>
 											</Box>
 										))}
 									</>
@@ -532,23 +437,9 @@ const Catalog = ({
 						flexWrap='wrap'
 						gap={{ xs: '1em', md: 0 }}
 						justifyContent={{ xs: 'center', md: 'space-between' }}
-						className={classNames(
-							styles.items,
-							isLoading && styles['loading'],
-							!data.length && styles['content-items_no-data']
-						)}
 					>
 						{data.length ? (
-							data.map((item) => (
-								<ProductItem
-									width={activeView === 'grid' ? 280 : '100%'}
-									minHeight={activeView === 'grid' ? 390 : 150}
-									dataFieldsToShow={dataFieldsToShow || []}
-									activeView={activeView}
-									key={item.id}
-									data={item}
-								></ProductItem>
-							))
+							data.map((item) => <ProductItem key={item.id} data={item}></ProductItem>)
 						) : isFirstDataLoaded && !isLoading ? (
 							<Typography textAlign='center' variant='h5'>
 								Данных не найдено

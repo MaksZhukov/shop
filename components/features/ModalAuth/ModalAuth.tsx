@@ -5,7 +5,6 @@ import ForgotForm from './ForgotForm/ForgotForm';
 import styles from './ModalAuth.module.scss';
 import ResetForm from './ResetForm';
 import { ModalAuthStates } from './types';
-import { ModalContainer } from 'components/ui';
 
 interface Props {
 	onChangeModalOpened: (value: boolean) => void;
@@ -44,27 +43,9 @@ const ModalAuth = ({ onChangeModalOpened, isResetPassword }: Props) => {
 		['register']: renderAuthRegisterForm
 	};
 
-	const title = {
-		['forgot']: 'Восстановление пароля',
-		['reset']: 'Изменение пароля',
-		['login']: 'Авторизация',
-		['register']: 'Регистрация'
-	};
-
 	return (
 		<Modal open onClose={handleModalClose}>
-			<ModalContainer
-				sx={{
-					position: 'absolute',
-					top: '50%',
-					left: '50%',
-					overflow: 'auto',
-					transform: 'translate(-50%, -50%)'
-				}}
-				width={'500px'}
-				title={title[type]}
-				onClose={handleModalClose}
-			>
+			<div className={styles.container}>
 				{formElement[type]}
 				{type !== 'reset' && (
 					<>
@@ -81,7 +62,7 @@ const ModalAuth = ({ onChangeModalOpened, isResetPassword }: Props) => {
 						</Box>
 					</>
 				)}
-			</ModalContainer>
+			</div>
 		</Modal>
 	);
 };

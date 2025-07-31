@@ -1,23 +1,9 @@
-import MenuIcon from '@mui/icons-material/Menu';
-import {
-	Badge,
-	Button,
-	ClickAwayListener,
-	Divider,
-	Grow,
-	IconButton,
-	MenuItem,
-	MenuList,
-	Paper,
-	Popper,
-	Typography
-} from '@mui/material';
+import { ClickAwayListener, Divider, Grow, MenuItem, MenuList, Paper, Popper, Typography } from '@mui/material';
 import classNames from 'classnames';
 import { observer } from 'mobx-react';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import { useStore } from '../../../store';
-import styles from './Profile.module.scss';
+import { useState } from 'react';
+import { useStore } from '../../../../store';
 import { PersonIcon } from 'components/Icons/PersonIcon';
 import { NavbarButton } from 'components/ui/NavbarButton';
 
@@ -29,32 +15,12 @@ interface Props {
 const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const isOpened = !!anchorEl;
-	const [isInvisibleBadge, setIsInvisibleBadge] = useState<boolean>(true);
-	const isMountedAndLoadedData = useRef<boolean>(false);
 
 	const store = useStore();
 	const router = useRouter();
 
-	useEffect(() => {
-		if (store.isInitialRequestDone) {
-			setTimeout(() => {
-				isMountedAndLoadedData.current = true;
-			}, 0);
-		}
-	}, [store.isInitialRequestDone]);
-
-	useEffect(() => {
-		if (isMountedAndLoadedData.current) {
-			setIsInvisibleBadge(false);
-		}
-	}, [
-		// store.cart.items.length
-		store.favorites.items.length
-	]);
-
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
-		setIsInvisibleBadge(true);
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
@@ -66,17 +32,7 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 
 	return (
 		<>
-			<NavbarButton
-				id='account-button'
-				title='Меню'
-				size='small'
-				className={styles['button']}
-				aria-controls={isOpened ? 'account-menu' : undefined}
-				aria-haspopup='true'
-				icon={<PersonIcon />}
-				aria-expanded={isOpened ? 'true' : undefined}
-				onClick={handleClick}
-			>
+			<NavbarButton title='Меню' size='small' icon={<PersonIcon />} onClick={handleClick}>
 				Профиль
 			</NavbarButton>
 			<Popper
@@ -98,23 +54,11 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 							<ClickAwayListener onClickAway={handleClose}>
 								<MenuList id='composition-menu' aria-labelledby='composition-button'>
 									{store.user.id ? (
-										<MenuItem
-											className={classNames({
-												[styles['account-menu__item_active']]: router.pathname === '/profile'
-											})}
-											onClick={handleClickLink('/profile')}
-										>
-											Профиль
-										</MenuItem>
+										<MenuItem onClick={handleClickLink('/profile')}>Профиль</MenuItem>
 									) : (
 										<MenuItem onClick={onClickSignIn}>Войти</MenuItem>
 									)}
-									<MenuItem
-										className={classNames({
-											[styles['account-menu__item_active']]: router.pathname === '/favorites'
-										})}
-										onClick={handleClickLink('/favorites')}
-									>
+									<MenuItem onClick={handleClickLink('/favorites')}>
 										Избранные{' '}
 										<Typography component='span' color='primary' paddingLeft='5px'>
 											({store.favorites.items.length})
