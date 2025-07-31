@@ -11,7 +11,7 @@ interface Props {
 	onClickFind?: (values: { [key: string]: string | null }) => void;
 	total: number | null;
 	values: { [key: string]: string | null };
-	setValues: (values: { [key: string]: string | null }) => void;
+	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
 	config: (AutocompleteType | NumberType)[];
 }
 
@@ -26,8 +26,7 @@ const getDependencyItemIds = (
 	return [];
 };
 
-const Filters = ({ onClickFind, config, total, values, setValues }: Props, ref: any) => {
-	console.log(values);
+const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: Props, ref: any) => {
 	const router = useRouter();
 	const [isMoreFilters, setIsMoreFilters] = useState(false);
 	useEffect(() => {
@@ -42,7 +41,8 @@ const Filters = ({ onClickFind, config, total, values, setValues }: Props, ref: 
 				newValues[child.id] = router.query[child.id];
 			}
 		});
-		setValues(newValues);
+		console.log(newValues);
+		onChangeFilterValues(newValues);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.query.slug]);
 
@@ -57,7 +57,7 @@ const Filters = ({ onClickFind, config, total, values, setValues }: Props, ref: 
 	}));
 
 	const handleChangeNumberInput = (item: NumberType) => (e: ChangeEvent<HTMLInputElement>) => {
-		setValues({ ...values, [item.id]: e.target.value });
+		onChangeFilterValues({ ...values, [item.id]: e.target.value });
 		if (item.storeInUrl) {
 			router.query[item.id] = e.target.value;
 			router.push({ pathname: router.pathname, query: router.query }, undefined, {
@@ -75,7 +75,7 @@ const Filters = ({ onClickFind, config, total, values, setValues }: Props, ref: 
 				typeof selected === 'string' || typeof selected === 'number' ? selected : selected?.value || null;
 			let dependencyItemIds = getDependencyItemIds(config, item);
 			let depValues = dependencyItemIds.reduce((prev, key) => ({ ...prev, [key]: null }), {});
-			setValues({ ...values, ...depValues, [item.id]: selectedValue });
+			onChangeFilterValues({ ...values, ...depValues, [item.id]: selectedValue });
 			if (item.storeInUrl) {
 				(router.query as any)[item.id] = selectedValue;
 				router.push({ pathname: router.pathname, query: router.query }, undefined, {

@@ -6,7 +6,7 @@ import { FC } from 'react';
 interface ModalContainerProps {
 	onClose: () => void;
 	title: string | React.ReactNode;
-	width: string;
+	width?: string;
 	children: React.ReactNode;
 	py?: number;
 	px?: number;

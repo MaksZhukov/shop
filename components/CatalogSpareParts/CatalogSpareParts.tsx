@@ -30,7 +30,7 @@ interface Props {
 	kindSparePart?: KindSparePart;
 }
 
-const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
+const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({
@@ -41,6 +41,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+	const [filtersValues, setFiltersValues] = useState<{ [key: string]: string | null }>({});
 	const { enqueueSnackbar } = useSnackbar();
 
 	const router = useRouter();
@@ -99,29 +100,25 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 		await loadKindSpareParts();
 		setIsLoadingMore(false);
 	});
-	useEffect(async () => {
-		if (brand !== prevBrand && !model) {
-			setModels([]);
-		}
-		const models = await fetchModels({
-			filters: { brand: { slug: brand } },
-			pagination: { limit: API_MAX_LIMIT },
-			populate: ['generations']
-		});
-		setModels(models.data.data);
-	}, [brand]);
-
 	useEffect(() => {
-		if (!models.length && model) {
-			handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-				fetchModels({
-					filters: { brand: { slug: brand } },
-					pagination: { limit: API_MAX_LIMIT }
-				})
-			)();
+		const fetch = async () => {
+			const models = await fetchModels({
+				filters: { brand: { slug: brand || filtersValues.brand } },
+				pagination: { limit: API_MAX_LIMIT },
+				populate: { generations: { populate: { spareParts: { count: true } } } }
+			});
+			setModels(models.data.data);
+		};
+		if (brand || filtersValues.brand) {
+			fetch();
 		}
-	}, [model]);
-
+		if (!brand || !filtersValues.brand) {
+			setFiltersValues({ ...filtersValues, model: null, generation: null });
+			setModels([]);
+			setGenerations([]);
+		}
+	}, [brand, filtersValues.brand]);
+	console.log(filtersValues);
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
 		if (abortControllerRef.current) {
 			abortControllerRef.current.abort();
@@ -170,14 +167,6 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 				setIsLoading(false);
 			}
 		};
-
-	const handleOpenAutocompleteModel = (values: any) =>
-		handleOpenAutocomplete<Model>(!!models.length, setModels, () =>
-			fetchModels({
-				filters: { brand: { slug: values.brand } },
-				pagination: { limit: API_MAX_LIMIT }
-			})
-		);
 
 	const handleOpenAutocompleteGeneration = (values: { [key: string]: string | null }) =>
 		handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
@@ -242,7 +231,6 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 		isLoadingMoreKindSpareParts: isLoadingMore,
 		onChangeBrandAutocomplete: handleChangeBrandAutocomplete,
 		onChangeModelAutocomplete: handleChangeModelAutocomplete,
-		onOpenAutocompleteModel: handleOpenAutocompleteModel,
 		onOpenAutocompleteGeneration: handleOpenAutocompleteGeneration,
 		onOpenAutoCompleteKindSparePart: handleOpenAutocompleteKindSparePart,
 		onScrollKindSparePartAutocomplete: handleScrollKindSparePartAutocomplete,
@@ -305,6 +293,8 @@ const CatalogSpareParts: FC<Props> = ({ page, brands, kindSparePart }) => {
 			searchPlaceholder='Поиск ...'
 			brands={brands}
 			models={models}
+			filtersValues={filtersValues}
+			onChangeFilterValues={setFiltersValues}
 			kindSpareParts={kindSpareParts.data}
 			filtersConfig={filtersConfig}
 			seo={page?.seo}

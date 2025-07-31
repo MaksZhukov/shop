@@ -1,5 +1,6 @@
 import { generateArrayOfYears } from 'services/DateService';
 import { WorkingHour } from './types';
+import { InstagramIcon, TelegramIcon, WhatsAppIcon, SkypeIcon, ViberIcon } from 'components/Icons';
 
 export const PRIVATE_PATHS = ['/profile'];
 export const OFFSET_SCROLL_LOAD_MORE = 100;
@@ -36,3 +37,22 @@ export const WORKING_HOURS: WorkingHour[] = [
 	{ day: 'Суббота', hours: '10:00 - 14:00', dayIndex: 6 },
 	{ day: 'Воскресенье', hours: '10:00 - 14:00', dayIndex: 0 }
 ];
+
+export const SOCIAL_BUTTONS = [
+	{ Component: TelegramIcon, name: 'Telegram', href: 'https://t.me/+375297804780' },
+	{ Component: WhatsAppIcon, name: 'WhatsApp', href: 'https://wa.me/375297804780' },
+	{ Component: ViberIcon, name: 'Viber', href: 'viber://chat?number=375297804780' },
+	{ Component: SkypeIcon, name: 'Skype', href: 'skype:+375297804780?call' },
+	{
+		Component: InstagramIcon,
+		name: 'Instagram',
+		href: 'https://instagram.com/razbor_auto'
+	}
+] as const;
+
+export const COMPANY_COORDINATES = {
+	latitude: 53.584958,
+	longitude: 23.861179
+};
+
+export const COMPANY_ADDRESS = 'Полотково, Гродненская область, Беларусь';

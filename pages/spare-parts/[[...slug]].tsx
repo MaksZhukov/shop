@@ -1,5 +1,6 @@
-import { fetchBrandBySlug } from 'api/brands/brands';
+import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
 import { Brand } from 'api/brands/types';
+import { API_MAX_LIMIT } from 'api/constants';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchModelBySlug } from 'api/models/models';
@@ -9,9 +10,7 @@ import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
 import CatalogSpareParts from 'components/CatalogSpareParts';
 import Product from 'components/Product';
-import Typography from 'components/Typography/Typography';
 import type { NextPage } from 'next';
-import dynamic from 'next/dynamic';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
 import { withKindSparePart } from 'services/SEOService';
@@ -29,7 +28,6 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
 	if (data && relatedProducts) {
 		return (
 			<Product
-				brands={brands}
 				data={data}
 				printOptions={[
 					{ text: 'Артикул', value: data.id },
@@ -60,7 +58,24 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 	const productParam =
 		modelOrProductParam && !modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
 	const modelParam = modelOrProductParam && modelOrProductParam.includes('model-') ? modelOrProductParam : undefined;
-	let props: any = {};
+
+	const {
+		data: { data: brands }
+	} = await fetchBrands({
+		populate: { image: true, spareParts: { count: true } },
+		sort: 'name',
+		pagination: { limit: API_MAX_LIMIT },
+		filters: {
+			spareParts: {
+				id: {
+					$notNull: true
+				}
+			}
+		}
+	});
+	let props: any = {
+		brands: brands
+	};
 
 	if (productParam) {
 		// if (brand.toLowerCase() === 'undefined') {
@@ -102,6 +117,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
 		let randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
 		props = {
+			...props,
 			data,
 			page: {
 				...page,
@@ -129,6 +145,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		]);
 		const kindSparePart = resultKindSpareParts?.data?.data[0];
 		props = {
+			...props,
 			page: { seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart?.name) },
 			...(kindSparePart ? { kindSparePart } : {})
 		};
@@ -146,6 +163,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		]);
 		const kindSparePart = resultKindSpareParts?.data?.data[0];
 		props = {
+			...props,
 			page: { seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart?.name) },
 			...(kindSparePart ? { kindSparePart } : {})
 		};
@@ -162,6 +180,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		const kindSparePart = resultKindSpareParts?.data?.data[0];
 
 		props = {
+			...props,
 			page: { seo: withKindSparePart(data.seo, 'запчасти', kindSparePart?.name) },
 			...(kindSparePart ? { kindSparePart } : {})
 		};

@@ -10,7 +10,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import 'react-multi-carousel/lib/styles.css';
 import dynamic from 'next/dynamic';
 import { UAParser } from 'ua-parser-js';
-import Header from '../components/Header';
+import Header from '../components/features/Header';
 import Layout from '../components/Layout';
 import RouteShield from '../components/RouteShield/RouteShield';
 import { getJwt, saveJwt } from '../services/LocalStorageService';

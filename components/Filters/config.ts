@@ -21,7 +21,6 @@ interface Params {
 	onChangeBrandAutocomplete?: (_: any, value: string | null) => void;
 	onChangeModelAutocomplete?: (_: any, value: string | null) => void;
 	onOpenAutoCompleteBrand?: (values: { [key: string]: string | null }) => () => void;
-	onOpenAutocompleteModel: (values: { [key: string]: string | null }) => () => void;
 	onOpenAutocompleteGeneration: (values: { [key: string]: string | null }) => () => void;
 	onOpenAutoCompleteKindSparePart: (values: { [key: string]: string | null }) => () => void;
 	onOpenAutoCompleteVolume: (values: { [key: string]: string | null }) => () => void;
@@ -39,7 +38,6 @@ export const getSparePartsFiltersConfig = ({
 	isLoadingMoreKindSpareParts,
 	onChangeBrandAutocomplete,
 	onOpenAutoCompleteBrand,
-	onOpenAutocompleteModel,
 	onOpenAutocompleteGeneration,
 	onOpenAutoCompleteKindSparePart,
 	onOpenAutoCompleteVolume,
@@ -69,7 +67,6 @@ export const getSparePartsFiltersConfig = ({
 		disabledDependencyId: 'brand',
 		options: models.map((item) => ({ label: item.name, value: item.slug })),
 		onChange: onChangeModelAutocomplete,
-		onOpen: onOpenAutocompleteModel,
 		noOptionsText: noOptionsText
 	},
 	{

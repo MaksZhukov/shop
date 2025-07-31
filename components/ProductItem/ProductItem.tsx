@@ -82,7 +82,8 @@ const ProductItem = ({ data, width = 280, imageHeight = 290 }: Props) => {
 					{data.h1}
 				</Link>
 				<Typography mb={1} color='custom.text-muted'>
-					{isSparePart(data) && [data.volume?.name, data.fuel, data.transmission].filter(Boolean).join(', ')}
+					{isSparePart(data) &&
+						[data.volume?.name, data.fuel, data.transmission, data.year].filter(Boolean).join(', ')}
 				</Typography>
 				{!isMobile && (
 					<Button fullWidth variant='contained' startIcon={<CartFilledIcon />}>

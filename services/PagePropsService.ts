@@ -1,5 +1,3 @@
-import { fetchBrands } from 'api/brands/brands';
-import { API_MAX_LIMIT } from 'api/constants';
 import { fetchLayout } from 'api/layout/layout';
 import { ApiResponse } from 'api/types';
 import axios, { AxiosResponse } from 'axios';
@@ -14,24 +12,12 @@ export const getPageProps =
 		const ua = context?.req?.headers['user-agent'];
 		const deviceType = ua ? UAParser(ua).device.type : 'desktop';
 		const deviceTypeResult = deviceType === 'mobile' || deviceType === 'tablet' ? 'mobile' : 'desktop';
-		let props = { brands: [], page: { seo: {} }, layout: { footer: {} } } as {
+		let props = { page: { seo: {} }, layout: { footer: {} } } as {
 			layout: { footer: any };
 			[key: string]: any;
 		};
 		try {
-			const [brandsResponse, layoutResponse, response, ...restResponses] = await Promise.all([
-				fetchBrands({
-					populate: ['image'],
-					sort: 'name',
-					pagination: { limit: API_MAX_LIMIT },
-					filters: {
-						spareParts: {
-							id: {
-								$notNull: true
-							}
-						}
-					}
-				}),
+			const [layoutResponse, response, ...restResponses] = await Promise.all([
 				fetchLayout(),
 				...(fetchPage ? [fetchPage(context, deviceTypeResult)] : []),
 				...functions.map((func) => func(context, deviceTypeResult))
@@ -48,7 +34,6 @@ export const getPageProps =
 				props.page = response.data.data;
 			}
 
-			props.brands = brandsResponse.data.data;
 			props.layout = layoutResponse.data.data;
 		} catch (err: any) {
 			console.log('ERROR', err);

@@ -84,6 +84,9 @@ const AuthRegisterForm = ({ type, isLoading, onChangeType, onChangeIsLoading, on
 
 	return (
 		<form onSubmit={handleClickSubmit}>
+			<Typography textAlign='center' variant='h5' sx={{ marginBottom: 1 }}>
+				{type === 'login' ? 'Авторизация' : 'Регистрация'}
+			</Typography>
 			<Input
 				fullWidth
 				disabled={isLoading}
