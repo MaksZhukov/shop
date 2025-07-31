@@ -58,7 +58,7 @@ const ProductItem = ({
 						underline='hover'
 						fontWeight='500'
 					>
-						{data.h1}
+						{data.h1 || data.name}
 					</Link>
 				</NextLink>
 				<Grid sx={{ display: { xs: 'none', md: 'flex' } }} columnSpacing={2} container>
@@ -136,7 +136,7 @@ const ProductItem = ({
 						marginTop='0.5em'
 						textAlign='center'
 					>
-						{data.h1}
+						{data.h1 || data.name}
 					</Link>
 				</NextLink>
 				<Box display='flex' height={65} flexDirection='column' alignItems='center' justifyContent='center'>
@@ -215,7 +215,7 @@ const ProductItem = ({
 				) : (
 					<Box>
 						<Image
-							title={data.h1}
+							title={data.h1 || data.name}
 							style={{
 								objectFit: 'cover',
 								margin: 'auto'
@@ -224,7 +224,7 @@ const ProductItem = ({
 							minWidth={activeView === 'list' ? (isMobile ? 150 : 200) : undefined}
 							width={activeView === 'grid' ? 280 : isMobile ? 150 : 200}
 							height={activeView === 'grid' ? 215 : 150}
-							alt={data.h1}
+							alt={data.h1 || data.name}
 						></Image>
 					</Box>
 				)}

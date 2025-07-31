@@ -150,7 +150,7 @@ const Favorites = () => {
 										>
 											<Typography
 												lineClamp={isMobile ? 5 : 2}
-												title={item.product.h1}
+												title={item.product.h1 || item.product.name}
 												marginBottom='0.5em'
 												variant='h5'
 												component='h2'
@@ -159,7 +159,7 @@ const Favorites = () => {
 													href={`/${getProductTypeSlug(item.product)}/${item.product.slug}`}
 												>
 													<Link component='span' underline='hover'>
-														{item.product.h1}
+														{item.product.h1 || item.product.name}
 													</Link>
 												</NextLink>
 											</Typography>
