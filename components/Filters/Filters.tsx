@@ -29,22 +29,6 @@ const getDependencyItemIds = (
 const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: Props, ref: any) => {
 	const router = useRouter();
 	const [isMoreFilters, setIsMoreFilters] = useState(false);
-	useEffect(() => {
-		let newValues: any = {};
-		let [brand, model] = router.query.slug || [];
-		config.forEach((child) => {
-			if (child.id === 'brand') {
-				newValues[child.id] = brand || router.query.brand || null;
-			} else if (child.id === 'model') {
-				newValues[child.id] = model ? model.replace('model-', '') : router.query.model || null;
-			} else if (router.query[child.id]) {
-				newValues[child.id] = router.query[child.id];
-			}
-		});
-		console.log(newValues);
-		onChangeFilterValues(newValues);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.query.slug]);
 
 	const handleClickFind = () => {
 		if (onClickFind) {
@@ -153,7 +137,7 @@ const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: P
 				{isMoreFilters ? 'Меньше параметров' : 'Больше параметров'}
 			</Button>
 			<Button onClick={handleClickFind} fullWidth variant='contained'>
-				Показать {total}
+				Показать {total?.toLocaleString()}
 			</Button>
 		</WhiteBox>
 	);

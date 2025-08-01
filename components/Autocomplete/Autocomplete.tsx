@@ -34,7 +34,6 @@ const Autocomplete = <
 				(typeof prevValue === 'string' && value instanceof Object)) &&
 			!isDefaultSet
 		) {
-			console.log('set');
 			setInputValue(value.label);
 			setIsDefaultSet(true);
 		}

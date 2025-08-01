@@ -768,6 +768,5 @@ export const getServerSideProps = getPageProps(
 					pagination: { limit: 0 }
 				})
 			).data.meta?.pagination?.total || 0
-	}),
-	() => ({ hasGlobalContainer: false, hideSEOBox: true })
+	})
 );

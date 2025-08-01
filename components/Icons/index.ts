@@ -22,3 +22,4 @@ export { PhoneCallFilledIcon } from './PhoneCallFilledIcon';
 export { HomeIcon } from './HomeIcon';
 export { HomeFilledIcon } from './HomeFilledIcon';
 export { DashboardIcon } from './DashboardIcon';
+export { CloseIcon } from './CloseIcon';

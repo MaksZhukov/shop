@@ -1,6 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { Brand } from 'api/brands/types';
-import { fetchCabins } from 'api/cabins/cabins';
+import { BrandWithSparePartsCount } from 'api/brands/types';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'api/constants';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { fetchEngineVolumes } from 'api/engineVolumes/engineVolumes';
@@ -9,7 +8,7 @@ import { Generation } from 'api/generations/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
 import { fetchModels } from 'api/models/models';
-import { Model } from 'api/models/types';
+import { ModelSparePartsCountWithGenerationsSparePartsCount } from 'api/models/types';
 import { DefaultPage } from 'api/pages/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, Filters } from 'api/types';
@@ -20,18 +19,18 @@ import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'confi
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, UIEventHandler, useEffect, useRef, useState } from 'react';
-import { useDebounce, usePreviousDifferent, useThrottle } from 'rooks';
+import { useDebounce, useThrottle } from 'rooks';
 import { getParamByRelation } from 'services/ParamsService';
 import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
 
 interface Props {
 	page: DefaultPage;
-	brands: Brand[];
+	brands: BrandWithSparePartsCount[];
 	kindSparePart?: KindSparePart;
 }
 
 const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
-	const [models, setModels] = useState<Model[]>([]);
+	const [models, setModels] = useState<ModelSparePartsCountWithGenerationsSparePartsCount[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({
 		data: kindSparePart ? [kindSparePart] : [],
@@ -41,18 +40,21 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+	const [total, setTotal] = useState<number | null>(null);
 	const [filtersValues, setFiltersValues] = useState<{ [key: string]: string | null }>({});
 	const { enqueueSnackbar } = useSnackbar();
 
 	const router = useRouter();
 	const [brand, model] = router.query.slug || [];
-	const prevBrand = usePreviousDifferent(brand);
 
 	useEffect(() => {
-		if (router.query.kindSparePart) {
-			loadKindSpareParts();
+		if (kindSparePart) {
+			setKindSpareParts({
+				data: [kindSparePart],
+				meta: {}
+			});
 		}
-	}, [router.query.kindSparePart]);
+	}, [kindSparePart]);
 
 	useEffect(() => {
 		if (router.query.generation) {
@@ -102,23 +104,40 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 	});
 	useEffect(() => {
 		const fetch = async () => {
-			const models = await fetchModels({
-				filters: { brand: { slug: brand || filtersValues.brand } },
+			const models = await fetchModels<ModelSparePartsCountWithGenerationsSparePartsCount>({
+				filters: { brand: { slug: filtersValues.brand || brand } },
 				pagination: { limit: API_MAX_LIMIT },
-				populate: { generations: { populate: { spareParts: { count: true } } } }
+				populate: { generations: { populate: { spareParts: { count: true, filters: { sold: false } } } } }
 			});
 			setModels(models.data.data);
 		};
 		if (brand || filtersValues.brand) {
 			fetch();
 		}
-		if (!brand || !filtersValues.brand) {
-			setFiltersValues({ ...filtersValues, model: null, generation: null });
-			setModels([]);
-			setGenerations([]);
-		}
 	}, [brand, filtersValues.brand]);
-	console.log(filtersValues);
+
+	useEffect(() => {
+		setFiltersValues((prev) => ({ ...prev, brand: brand ? brand : null }));
+	}, [brand]);
+
+	useEffect(() => {
+		setFiltersValues((prev) => ({ ...prev, model: model ? model.replace('model-', '') : null }));
+	}, [model]);
+
+	useEffect(() => {
+		setFiltersValues((prev) => ({
+			...prev,
+			generation: router.query.generation ? (router.query.generation as string) : null
+		}));
+	}, [router.query.generation]);
+
+	useEffect(() => {
+		setFiltersValues((prev) => ({
+			...prev,
+			kindSparePart: router.query.kindSparePart ? (router.query.kindSparePart as string) : null
+		}));
+	}, [router.query.kindSparePart]);
+
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
 		if (abortControllerRef.current) {
 			abortControllerRef.current.abort();
@@ -253,7 +272,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 			transmission,
 			...others
 		}: {
-			[key: string]: string;
+			[key: string]: string | null;
 		},
 		fetchFunc?: () => void
 	): Filters => {
@@ -265,13 +284,33 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 			...(fetchFunc === fetchSpareParts
 				? {
 						volume: getParamByRelation(volume),
-						fuel: SLUGIFY_FUELS[fuel],
-						bodyStyle: SLUGIFY_BODY_STYLES[bodyStyle],
-						transmission: SLUGIFY_TRANSMISSIONS[transmission]
+						fuel: fuel ? SLUGIFY_FUELS[fuel] : null,
+						bodyStyle: bodyStyle ? SLUGIFY_BODY_STYLES[bodyStyle] : null,
+						transmission: transmission ? SLUGIFY_TRANSMISSIONS[transmission] : null
 				  }
 				: {})
 		};
 		return { ...filters, ...others };
+	};
+
+	const handleChangeFilterValues = async (values: { [key: string]: string | null }) => {
+		let newFilterValues = values;
+		if (!values.brand) {
+			newFilterValues = { ...newFilterValues, model: null, generation: null };
+			setModels([]);
+			setGenerations([]);
+		}
+		if (!values.model) {
+			newFilterValues = { ...newFilterValues, generation: null };
+			setGenerations([]);
+		}
+		setFiltersValues(newFilterValues);
+		const { data } = await fetchSpareParts({
+			filters: { ...generateFiltersByQuery(newFilterValues, fetchSpareParts), sold: false },
+			pagination: { limit: 0 }
+		});
+
+		setTotal(data.meta.pagination?.total || 0);
 	};
 
 	return (
@@ -290,15 +329,14 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 					name: 'Запчасть'
 				}
 			]}
-			searchPlaceholder='Поиск ...'
 			brands={brands}
 			models={models}
 			filtersValues={filtersValues}
-			onChangeFilterValues={setFiltersValues}
-			kindSpareParts={kindSpareParts.data}
+			onChangeFilterValues={handleChangeFilterValues}
 			filtersConfig={filtersConfig}
 			seo={page?.seo}
-			fetchDataForSearch={fetchCabins}
+			total={total}
+			onChangeTotal={setTotal}
 			fetchData={fetchSpareParts}
 			generateFiltersByQuery={generateFiltersByQuery}
 		></Catalog>

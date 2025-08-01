@@ -17,3 +17,9 @@ export interface Brand {
 	seoWheels: SEO;
 	productBrandTexts?: ProductBrandTexts;
 }
+
+export type BrandWithSparePartsCount = Brand & {
+	spareParts: {
+		count: number;
+	};
+};

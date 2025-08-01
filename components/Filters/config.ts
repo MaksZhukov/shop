@@ -7,6 +7,7 @@ import { ReactNode, UIEventHandler } from 'react';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { BODY_STYLES_SLUGIFY, FUELS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'config';
 import { BODY_STYLES, FUELS, TRANSMISSIONS } from '../../constants';
+import { AutocompleteType, NumberType } from './types';
 
 interface Params {
 	storeInUrlIds?: string[];
@@ -46,7 +47,7 @@ export const getSparePartsFiltersConfig = ({
 	onScrollKindSparePartAutocomplete,
 	onChangeGenerationAutocomplete,
 	noOptionsText
-}: Params) => [
+}: Params): (AutocompleteType | NumberType)[] => [
 	{
 		id: 'brand',
 		category: 'main',
@@ -111,7 +112,6 @@ export const getSparePartsFiltersConfig = ({
 		placeholder: 'Кузов',
 		type: 'autocomplete',
 		options: BODY_STYLES.map((item) => ({ label: item, value: BODY_STYLES_SLUGIFY[item] })),
-		onOpen: () => {},
 		noOptionsText: ''
 	},
 	{
@@ -121,7 +121,6 @@ export const getSparePartsFiltersConfig = ({
 		placeholder: 'Коробка',
 		type: 'autocomplete',
 		options: TRANSMISSIONS.map((item) => ({ label: item, value: TRANSMISSIONS_SLUGIFY[item] })),
-		onOpen: () => {},
 		noOptionsText: ''
 	},
 	{
@@ -131,7 +130,6 @@ export const getSparePartsFiltersConfig = ({
 		placeholder: 'Тип топлива',
 		type: 'autocomplete',
 		options: FUELS.map((item) => ({ label: item, value: FUELS_SLUGIFY[item] })),
-		onOpen: () => {},
 		noOptionsText: ''
 	}
 ];

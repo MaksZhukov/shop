@@ -1,4 +1,4 @@
-import { Button, Grid, useMediaQuery } from '@mui/material';
+import { Button, Grid, SxProps, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteButton from 'components/FavoriteButton';
 import Image from 'components/Image';
@@ -16,14 +16,15 @@ interface Props {
 	data: Product;
 	width?: number;
 	imageHeight?: number;
+	sx?: SxProps;
 }
 
-const ProductItem = ({ data, width = 280, imageHeight = 290 }: Props) => {
+const ProductItem = ({ data, width = 280, imageHeight = 290, sx = { margin: 'auto' } }: Props) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const imageHeightOffset = 20;
 
 	return (
-		<WhiteBox margin='auto' overflow={'hidden'} width={width} bgcolor='#fff' position='relative' key={data.id}>
+		<WhiteBox overflow={'hidden'} width={width} bgcolor='#fff' position='relative' key={data.id} sx={sx}>
 			<Box position='absolute' zIndex={1} right={1} top={1}>
 				<FavoriteButton product={data}></FavoriteButton>
 			</Box>

@@ -638,6 +638,5 @@ export const getStaticProps = getPageProps(
 	}),
 	async () => ({
 		cars: (await fetchCarsOnParts({ pagination: { limit: 10 }, populate: ['brand', 'model', 'images'] })).data.data
-	}),
-	() => ({ hasGlobalContainer: false })
+	})
 );

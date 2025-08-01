@@ -1,21 +1,14 @@
-import { Box, Button, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'components/ui';
-import {
-	CartIcon,
-	CartFilledIcon,
-	DashboardFilledIcon,
-	HeartIcon,
-	HeartFilledIcon,
-	SearchIcon,
-	GeoIcon
-} from 'components/Icons';
+import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'components/Icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
 import Autocomplete from 'components/Autocomplete';
 import Profile from '../Profile';
 import reactStringReplace from 'react-string-replace';
 import { highlightSearchTerms } from 'services/StringService';
+import { CatalogCategories } from './CatalogCategories';
 
 interface HeaderTopProps {
 	isScrolled: boolean;
@@ -64,16 +57,7 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 				</Box>
 			</Link>
 
-			<Button
-				sx={{ display: { xs: 'none', sm: 'flex' } }}
-				href='/spare-parts'
-				size='medium'
-				startIcon={<DashboardFilledIcon />}
-				variant='contained'
-				color='primary'
-			>
-				Каталог
-			</Button>
+			<CatalogCategories />
 
 			<Autocomplete
 				options={

@@ -9,7 +9,6 @@ interface HeaderBottomProps {
 }
 
 export const HeaderBottom: React.FC<HeaderBottomProps> = ({ isScrolled }) => {
-	console.log(isScrolled);
 	return (
 		<Box
 			color={'text.primary'}

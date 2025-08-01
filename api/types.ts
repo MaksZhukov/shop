@@ -62,10 +62,12 @@ export type Filters = {
 		| any[];
 };
 
+export type Populate = string[] | string | { [key: string]: boolean | { count: boolean } | Populate };
+
 export type CollectionParams = {
 	sort?: string[] | string;
 	filters?: Filters;
-	populate?: string[] | string;
+	populate?: Populate;
 	fields?: string[];
 	pagination?: {
 		page?: number;
