@@ -1,10 +1,7 @@
-import { Button, CircularProgress, MenuItem, Menu, Pagination, PaginationItem } from '@mui/material';
+import { Button, CircularProgress, MenuItem, Menu, Pagination, PaginationItem, List, ListItem } from '@mui/material';
 import { Box } from '@mui/material';
-import { fetchCabins } from 'api/cabins/cabins';
 import { API_DEFAULT_LIMIT } from 'api/constants';
-import { Model } from 'api/models/types';
-import { KindSparePart } from 'api/kindSpareParts/types';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
+import { ModelSparePartsCountWithGenerationsSparePartsCount } from 'api/models/types';
 import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
 import { AxiosResponse } from 'axios';
 import Filters from 'components/Filters';
@@ -16,8 +13,6 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import { useThrottle } from 'rooks';
-
-const COUNT_DAYS_FOR_NEW_PRODUCT = 70;
 
 type SortItem = {
 	value: string;
@@ -32,49 +27,42 @@ const selectSortItems = [
 ];
 
 import { ChevronDownIcon } from 'components/Icons';
-import { Brand } from 'api/brands/types';
+import { BrandWithSparePartsCount } from 'api/brands/types';
 import { Link } from 'components/ui';
 
 interface Props {
 	seo: SEO | null;
 	dataFieldsToShow?: { id: string; name: string }[];
 	filtersConfig: (AutocompleteType | NumberType)[];
-	kindSpareParts?: KindSparePart[];
 	generateFiltersByQuery?: (filter: { [key: string]: string }, fetchFunc: any) => any;
 	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
-	fetchDataForSearch?: typeof fetchSpareParts | typeof fetchCabins;
-	brands: Brand[];
-	models: Model[];
+	brands: BrandWithSparePartsCount[];
+	models: ModelSparePartsCountWithGenerationsSparePartsCount[];
 	filtersValues: { [key: string]: string | null };
+	total: number | null;
 	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
+	onChangeTotal: (total: number) => void;
 }
-
-let date = new Date();
 
 const Catalog = ({
 	fetchData,
-	fetchDataForSearch,
-	dataFieldsToShow = [],
-	kindSpareParts = [],
 	filtersConfig,
 	generateFiltersByQuery,
 	seo,
 	brands,
 	models,
 	filtersValues,
+	total,
+	onChangeTotal,
 	onChangeFilterValues
 }: Props) => {
 	const [data, setData] = useState<Product[]>([]);
-	const [total, setTotal] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [isClickedFind, setIsClickedFind] = useState<boolean>(false);
 	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
 	const [searchValue, setSearchValue] = useState<string>('');
 	const [pageCount, setPageCount] = useState<number>(0);
 	const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
 	const filtersRef = useRef<any>(null);
-	console.log(data);
-	const leaveRef = useRef<boolean>(false);
 	const router = useRouter();
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -101,92 +89,38 @@ const Catalog = ({
 
 	const [brand, modelParam] = slug || [];
 	const model = modelParam ? modelParam.replace('model-', '') : modelParam;
-	const catalogType = router.pathname.split('/')[1];
 
-	const fetchProducts = async (
-		{ searchValue, ...values }: any,
-		paramPage?: number,
-		withRouterPush: boolean = true
-	) => {
+	const fetchProducts = async ({ searchValue, ...values }: any, paramPage?: number) => {
 		setIsLoading(true);
 		if (fetchData) {
 			try {
-				const fetchsData = [fetchData];
-				if (fetchDataForSearch && searchValue) {
-					fetchsData.push(fetchDataForSearch);
-				}
-				const [
-					{
-						data: {
-							data: responseData,
-							meta: { pagination }
-						}
+				const { data } = await fetchData({
+					filters: {
+						sold: false,
+						...(searchValue
+							? {
+									$and: searchValue.split(' ').map((word: string) => ({ h1: { $contains: word } }))
+							  }
+							: {}),
+						...(generateFiltersByQuery ? generateFiltersByQuery(values, fetchData) : {})
 					},
-					dataForSearch
-				] = await Promise.all(
-					fetchsData.map((fetchFunc) =>
-						fetchFunc({
-							filters: {
-								sold: false,
-								...(searchValue
-									? {
-											$and: searchValue
-												.split(' ')
-												.map((word: string) => ({ h1: { $contains: word } }))
-									  }
-									: {}),
-								...(generateFiltersByQuery ? generateFiltersByQuery(values, fetchFunc) : {})
-							},
-							pagination: searchValue
-								? {}
-								: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
-							populate: { images: true, volume: true },
-							sort
-						})
-					)
-				);
+					pagination: searchValue
+						? {}
+						: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
+					populate: { images: true, volume: true, brand: true },
+					sort
+				});
 
-				const kindSparePart = kindSpareParts.find((item) => item.slug === values.kindSparePart);
-				const shouldSwitchCatalog =
-					(dataForSearch && responseData.length === 0 && !!dataForSearch.data.data.length) ||
-					(kindSparePart?.type === 'cabin' && fetchDataForSearch === fetchCabins) ||
-					(kindSparePart?.type === 'regular' && fetchDataForSearch === fetchSpareParts);
+				setData(data.data);
 
-				const toSpareParts = fetchDataForSearch === fetchSpareParts;
-				if (shouldSwitchCatalog) {
-					router.push(
-						{
-							pathname: router.pathname.replace(
-								toSpareParts ? 'cabins' : 'spare-parts',
-								toSpareParts ? 'spare-parts' : 'cabins'
-							),
-							query: router.query
-						},
-						undefined,
-						{ shallow: true }
-					);
-					return;
-				} else {
-					setData(responseData);
-				}
-				if (pagination) {
-					setPageCount(Math.ceil(pagination.total / API_DEFAULT_LIMIT));
+				if (data.meta.pagination) {
+					setPageCount(Math.ceil(data.meta.pagination.total / API_DEFAULT_LIMIT));
 					if (paramPage) {
 						router.query.page = '1';
-					} else if (router.query.page && Math.ceil(pagination.total / API_DEFAULT_LIMIT) < +page) {
-						router.query.page = (Math.ceil(pagination.total / API_DEFAULT_LIMIT) || 1).toString();
+					} else if (router.query.page && Math.ceil(data.meta.pagination.total / API_DEFAULT_LIMIT) < +page) {
+						router.query.page = (Math.ceil(data.meta.pagination.total / API_DEFAULT_LIMIT) || 1).toString();
 					}
-					if (withRouterPush && !leaveRef.current) {
-						router.push(
-							{
-								pathname: router.pathname,
-								query: router.query
-							},
-							undefined,
-							{ shallow: true }
-						);
-					}
-					setTotal(pagination.total);
+					onChangeTotal(data.meta.pagination.total);
 				}
 				setIsFirstDataLoaded(true);
 			} catch (err) {
@@ -202,47 +136,7 @@ const Catalog = ({
 	const [throttledFetchProducts] = useThrottle(fetchProducts, 300);
 
 	useEffect(() => {
-		return () => {
-			leaveRef.current = true;
-		};
-	}, []);
-
-	useEffect(() => {
 		if (router.isReady) {
-			const fetchNewProducts = async () => {
-				if (fetchData) {
-					try {
-						const response = await fetchData({
-							sort: 'createdAt:desc',
-							populate: ['images', 'brand'],
-							pagination: { limit: API_DEFAULT_LIMIT / 2 },
-							filters: {
-								sold: {
-									$eq: false
-								},
-								createdAt: {
-									$gte: date.setDate(date.getDate() - COUNT_DAYS_FOR_NEW_PRODUCT)
-								}
-							}
-						});
-						setNewProducts(response.data.data);
-					} catch (err) {
-						enqueueSnackbar(
-							'Произошла какая-то ошибка при загрузке новых продуктов, обратитесь в поддержку',
-							{
-								variant: 'error'
-							}
-						);
-					}
-				}
-			};
-			fetchNewProducts();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.isReady]);
-
-	useEffect(() => {
-		if (router.isReady && !isClickedFind) {
 			throttledFetchProducts(
 				Object.keys(othersQueryByFilters).reduce(
 					(prev, key) => ({
@@ -254,8 +148,7 @@ const Catalog = ({
 			);
 			setSearchValue(querySearchValue);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sort, page, brand, router.isReady]);
+	}, [sort, page, brand, model, router.isReady, kindSparePart]);
 
 	const handleSortMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
 		setSortMenuAnchor(event.currentTarget);
@@ -273,77 +166,26 @@ const Catalog = ({
 
 	const handleClickFind = () => {
 		const slug: string[] = [];
-		Object.keys(filtersValues).forEach((key) => {
-			if (filtersValues[key]) {
-				if (key === 'brand') {
-					slug.push(filtersValues[key]);
-				} else if (key === 'model') {
-					slug.push('model-' + filtersValues[key]);
-				} else {
-					router.query[key] = filtersValues[key];
-				}
+		const { brand: brandValue, model: modelValue, ...restFiltersValues } = filtersValues;
+		if (brandValue) {
+			slug.push(brandValue);
+		}
+		if (modelValue) {
+			slug.push('model-' + modelValue);
+		}
+		Object.keys(restFiltersValues).forEach((key) => {
+			if (restFiltersValues[key]) {
+				router.query[key] = restFiltersValues[key];
 			} else {
 				delete router.query[key];
 			}
 		});
 		router.query['slug'] = slug;
-		fetchProducts(filtersValues, 1, false);
+		fetchProducts(filtersValues, 1);
 
 		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 	};
 
-	const renderPagination = (position: 'bottom' | 'top') => (
-		<Pagination
-			sx={{
-				flex: 1,
-				display: { xs: position === 'top' ? 'none' : 'flex', md: 'flex' },
-				justifyContent: { xs: 'center', md: 'right' }
-			}}
-			classes={{}}
-			renderItem={(params) =>
-				params.page === null ? (
-					<PaginationItem
-						{...params}
-						onClick={() => {
-							window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-						}}
-					>
-						{params.page}
-					</PaginationItem>
-				) : (
-					<NextLink
-						shallow
-						href={
-							router.asPath.includes('page=')
-								? `${router.asPath.replace(/page=\d+/, `page=${params.page}`)}`
-								: `${router.asPath}${router.asPath.includes('?') ? '&' : '?'}page=${params.page}`
-						}
-					>
-						<PaginationItem
-							{...params}
-							onClick={() => {
-								window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-							}}
-						>
-							{params.page}
-						</PaginationItem>
-					</NextLink>
-				)
-			}
-			boundaryCount={1}
-			page={+page}
-			siblingCount={1}
-			color='primary'
-			count={pageCount}
-			variant='text'
-		/>
-	);
-
-	const handleClickBrand = (brandId: string) => {
-		router.query.brand = brandId;
-		router.push({ pathname: router.pathname, query: router.query });
-	};
-	console.log(brands);
 	return (
 		<>
 			<Box display='flex' justifyContent='space-between' alignItems='center'>
@@ -419,7 +261,7 @@ const Catalog = ({
 										{model.generations?.map((generation) => (
 											<Box display='flex' gap={0.5} py={1} key={generation.id}>
 												<Link
-													href={`/spare-parts/${brand}/model-${model.slug}?generation=${generation.slug}`}
+													href={`/spare-parts/${filtersValues.brand}/model-${model.slug}?generation=${generation.slug}`}
 												>
 													{model.name} {generation.name}
 												</Link>
@@ -432,14 +274,17 @@ const Catalog = ({
 								))}
 						</Box>
 					)}
-					<Box
-						display='flex'
-						flexWrap='wrap'
-						gap={{ xs: '1em', md: 0 }}
-						justifyContent={{ xs: 'center', md: 'space-between' }}
-					>
+					<Box display='flex' flexWrap='wrap' gap={1} mb={2}>
 						{data.length ? (
-							data.map((item) => <ProductItem key={item.id} data={item}></ProductItem>)
+							data.map((item) => (
+								<ProductItem
+									sx={{ margin: 'initial' }}
+									width={278}
+									imageHeight={220}
+									key={item.id}
+									data={item}
+								></ProductItem>
+							))
 						) : isFirstDataLoaded && !isLoading ? (
 							<Typography textAlign='center' variant='h5'>
 								Данных не найдено
@@ -448,32 +293,132 @@ const Catalog = ({
 							<CircularProgress></CircularProgress>
 						)}
 					</Box>
+					<Pagination
+						sx={{
+							display: 'flex',
+							justifyContent: 'center'
+						}}
+						renderItem={(params) =>
+							params.page === null ? (
+								<PaginationItem
+									{...params}
+									onClick={() => {
+										window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+									}}
+								>
+									{params.page}
+								</PaginationItem>
+							) : (
+								<NextLink
+									shallow
+									href={
+										router.asPath.includes('page=')
+											? `${router.asPath.replace(/page=\d+/, `page=${params.page}`)}`
+											: `${router.asPath}${router.asPath.includes('?') ? '&' : '?'}page=${
+													params.page
+											  }`
+									}
+								>
+									<PaginationItem
+										{...params}
+										onClick={() => {
+											window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+										}}
+									>
+										{params.page}
+									</PaginationItem>
+								</NextLink>
+							)
+						}
+						boundaryCount={1}
+						page={+page}
+						siblingCount={1}
+						color='primary'
+						count={pageCount}
+						variant='text'
+					/>
 				</Box>
 			</Box>
 
-			<Box marginTop='2.5em'>
-				<Typography>
-					Возникла необходимость купить {seo?.h1} для Вашего «железного друга»? Затрудняетесь сделать
-					правильный выбор между оригинальными запчастями или их аналогами? Мы предложим надежные,
-					качественные бу запчасти для вашего авто. Покупку можно совершить прямо на нашем сайте в один клик.
-					Наши менеджеры всегда на связи и помогут вам как с выбором, так и с консультацией.
-				</Typography>
-				<Typography marginTop='1em' gutterBottom component='h2' variant='h5'>
-					{seo?.h1} купить с доставкой
-				</Typography>
-				<Typography gutterBottom>
-					Авто разборка Дриблинг готова предложить вам качественный товар по доступной цене.
-					<br />
-					Товар снят с б/у автомобиля, проверен. На данный момент деталь отвечает техническим и эстетическим
-					требованиям. Если хотите получить более детальную информацию - свяжитесь с нашим менеджером.{' '}
-				</Typography>
-				<Typography gutterBottom>
-					Наши Запчасти б/у вы можете заказать с доставкой. Идеальна наша доставка отлажена в следующих
-					городах Беларуси - Гродно, Минск, Брест, Гомель, Могилев, Витебск. Так же мы сообщаем, что работаем
-					со всеми городами и деревнями, просто доставка займет немного больше времени. Будьте уверены, мы
-					приложим все силы, что бы ваш товар был доставлен максимально быстро.
-				</Typography>
-			</Box>
+			<Typography variant='h6' fontWeight={700} fontSize={18}>
+				Заказать Б/У запчасти в Гродно и Беларуси
+			</Typography>
+			<Typography variant='body1' mb={2} sx={{ lineHeight: 2.5 }}>
+				Оригинальные Б/У автозапчасти BMW в Гродно и по всей Беларуси <br />
+				Ищете качественные автозапчасти? У нас — большой выбор оригинальных Б/У запчастей с разборок Европы и
+				США. <br />
+				Мы предлагаем надежные и доступные комплектующие, которые помогут сэкономить без потери качества. Почему
+				выбирают нас? <br />
+				Специализация на Б/У запчастях BMW и других марок <br />
+				Проверенные детали с европейских и американских разборок <br />
+				Доставка по Гродно и всей Беларуси <br />
+				Помощь в подборе, честные цены, гарантия <br />
+				Обеспечьте свой автомобиль надежными и оригинальными деталями — без лишних затрат! <br />
+				Б/У запчасти в отличном состоянии — это разумный выбор
+			</Typography>
+			<Typography variant='h6' fontWeight={700} fontSize={18}>
+				Покупка Б/У запчастей в Гродно и Беларуси по хорошим ценам
+			</Typography>
+			<List sx={{ listStyleType: 'disc', pl: 2, fontSize: 14, mb: 2 }}>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Экономия бюджета: Покупая Б/У автозапчасти, вы значительно сокращаете расходы. Стоимость
+					оригинальных подержанных деталей существенно ниже новых, при этом вы получаете надежные и
+					совместимые комплектующие — без переплат
+				</ListItem>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Оригинальные комплектующие: Мы поставляем Б/У запчасти с минимальным пробегом, снятые с автомобилей
+					с разборок Европы и США. Это 100% оригинальные детали от производителя — полная совместимость и
+					высокое качество гарантированы
+				</ListItem>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Быстрый ремонт — без ожидания: Не нужно ждать поставок неделями — у нас вы можете купить нужные Б/У
+					автозапчасти в Гродно с доставкой по всей Беларуси. Быстрая обработка заказов и доставка позволяют
+					вам приступить к ремонту сразу
+				</ListItem>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Широкий ассортимент запчастей: В наличии — большой выбор подержанных запчастей различных годов
+					выпуска и модификаций. Вы легко подберёте нужную деталь под конкретную модель
+				</ListItem>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Уверенность и удобство: Мы предоставляем гарантийный срок на проверку определённых категорий
+					запчастей (4 дней на КПП, редукторы, раздатки, форсунки и 30 дней на ДВС (в сборе и без навесного
+					оборудования)
+				</ListItem>
+			</List>
+			<Typography variant='h6' fontWeight={700} fontSize={18}>
+				Б/У запчасти в Гродно и Беларуси – продажа с гарантией качества и по выгодным ценам
+			</Typography>
+			<Typography mb={2}>
+				Ищете надёжные Б/У запчасти в Гродно или других городах Беларуси? В интернет-магазине Авторазборка
+				Полотково ООО "Дриблинг" вы найдёте широкий выбор оригинальных запасных частей с минимальным пробегом.
+				Мы предлагаем высококачественные комплектующие по доступным ценам – как для популярных моделей, так и
+				для редких комплектаций. <br />
+			</Typography>
+			<Typography variant='h6' fontWeight={700} fontSize={18}>
+				Почему выбирают нас:
+			</Typography>
+			<List sx={{ listStyleType: 'disc', pl: 2, fontSize: 14 }}>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Все запчасти извлечены из автомобилей с низким пробегом и прошли проверку технического состояния.
+				</ListItem>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Подбор деталей по VIN-номеру, году выпуска и комплектации кузова – точно и быстро.
+				</ListItem>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Постоянное обновление ассортимента и возможность заранее узнать о наличии нужной позиции.
+				</ListItem>
+				<ListItem sx={{ display: 'list-item', p: 0 }}>
+					Профессиональная консультация и поддержка на всех этапах покупки.
+				</ListItem>
+			</List>
+			<Typography lineHeight={2.5}>
+				Доставка по Гродно и всей Беларуси. <br />
+				Наш магазин работает ежедневно: <br />
+				Будние дни – с 10:00 до 18:00 <br />
+				Выходные – с 10:00 до 14:00 <br />
+				Связаться с нами можно через сайт, мессенджеры или социальные сети. <br />
+				Авторазборка Полотково ООО "Дриблинг" – ваш проверенный поставщик оригинальных Б/У автозапчастей
+			</Typography>
 		</>
 	);
 };

@@ -1,7 +1,6 @@
 import { Container } from '@mui/material';
 import Breadcrumbs from 'components/features/Breadcrumbs';
 import HeadSEO from 'components/HeadSEO';
-import SEOBox from 'components/SEOBox';
 import type { AppProps } from 'next/app';
 import NextApp from 'next/app';
 import { useRouter } from 'next/router';
@@ -11,6 +10,7 @@ import 'react-multi-carousel/lib/styles.css';
 import dynamic from 'next/dynamic';
 import { UAParser } from 'ua-parser-js';
 import Header from '../components/features/Header';
+import Footer from '../components/Footer';
 import Layout from '../components/Layout';
 import RouteShield from '../components/RouteShield/RouteShield';
 import { getJwt, saveJwt } from '../services/LocalStorageService';
@@ -21,19 +21,16 @@ import { StoreProvider } from 'components/providers/StoreProvider';
 import { SnackbarProvider } from 'components/providers/SnackbarProvider';
 import './app.scss';
 
-const Footer = dynamic(() => import('components/Footer'));
-
 const ScrollUp = dynamic(() => import('components/features/ScrollUp').then((mod) => ({ default: mod.ScrollUp })), {
 	ssr: false
 });
 
 function MyApp({
 	Component,
-	pageProps: { hasGlobalContainer = true, hideSEOBox = false, layout, ...restPageProps },
+	pageProps: { layout, ...restPageProps },
 	deviceType
 }: AppProps & { deviceType: 'desktop' | 'mobile' }) {
 	const router = useRouter();
-	const [renderBeforeFooter, setRenderBeforeFooter] = useState<ReactElement | null>(null);
 
 	useEffect(() => {
 		const tryFetchData = async () => {
@@ -56,36 +53,6 @@ function MyApp({
 		};
 		tryFetchData();
 	}, []);
-
-	const renderContent = (
-		<>
-			<Component
-				{...restPageProps}
-				socials={layout.footer?.socials}
-				setRenderBeforeFooter={setRenderBeforeFooter}
-			/>
-			{!hideSEOBox && (
-				<>
-					{!hasGlobalContainer ? (
-						<Container>
-							<SEOBox
-								images={restPageProps.page?.seo?.images}
-								content={restPageProps.page?.seo?.content}
-								h1={restPageProps.page?.seo?.h1}
-							></SEOBox>
-						</Container>
-					) : (
-						<SEOBox
-							h1={restPageProps.page?.seo?.h1}
-							images={restPageProps.page?.seo?.images}
-							content={restPageProps.page?.seo?.content}
-						></SEOBox>
-					)}
-				</>
-			)}
-			{renderBeforeFooter}
-		</>
-	);
 
 	const getHeadSEOImage = () => {
 		let image = null;
@@ -146,18 +113,16 @@ function MyApp({
 								keywords={restPageProps.page?.seo?.keywords}
 								image={getHeadSEOImage()}
 							></HeadSEO>
-							<Header brands={restPageProps.brands}></Header>
+							<Header />
 							<RouteShield>
 								<ErrorBoundary fallback={<></>} onError={handleRenderError}>
 									<Breadcrumbs
 										exclude={['buyback-cars']}
 										h1={restPageProps.data?.h1 || restPageProps.page?.name}
 									></Breadcrumbs>
-									{hasGlobalContainer ? (
-										<Container sx={{ pb: { xs: 2, md: 4 } }}>{renderContent}</Container>
-									) : (
-										renderContent
-									)}
+									<Container>
+										<Component {...restPageProps} socials={layout.footer?.socials} />
+									</Container>
 								</ErrorBoundary>
 							</RouteShield>
 							<Footer footer={layout.footer}></Footer>

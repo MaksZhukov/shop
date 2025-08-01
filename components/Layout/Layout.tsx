@@ -6,7 +6,6 @@ interface Props {
 }
 
 const Layout = ({ children }: Props) => {
-	const theme = useTheme();
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const headerHeight = isMobile ? 72 : 112;
 	return (

@@ -1,5 +1,5 @@
 import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
-import { Brand } from 'api/brands/types';
+import { Brand, BrandWithSparePartsCount } from 'api/brands/types';
 import { API_MAX_LIMIT } from 'api/constants';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart } from 'api/kindSpareParts/types';
@@ -20,7 +20,7 @@ interface Props {
 	data: SparePart;
 	relatedProducts: SparePart[];
 	page: DefaultPage;
-	brands: Brand[];
+	brands: BrandWithSparePartsCount[];
 	kindSparePart?: KindSparePart;
 }
 
@@ -78,15 +78,6 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 	};
 
 	if (productParam) {
-		// if (brand.toLowerCase() === 'undefined') {
-		//     throw new AxiosError(undefined, undefined, undefined, undefined, {
-		//         statusText: '',
-		//         config: { headers: new AxiosHeaders() },
-		//         headers: {},
-		//         data: {},
-		//         status: 404
-		//     });
-		// } else {
 		const [
 			{
 				data: { data }
