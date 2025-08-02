@@ -4,13 +4,7 @@ import { Link } from 'components/ui';
 import { DashboardFilledIcon, ChevronRightIcon, CloseIcon } from 'components/Icons';
 import { useQuery } from '@tanstack/react-query';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { KindSparePart } from 'api/kindSpareParts/types';
-
-type KindSparePartWithSpareParts = KindSparePart & {
-	spareParts: {
-		count: number;
-	};
-};
+import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
 
 export const CatalogCategories: React.FC = () => {
 	const [hoveredCategory, setHoveredCategory] = useState<any | null>(null);
@@ -26,11 +20,11 @@ export const CatalogCategories: React.FC = () => {
 	};
 
 	const { data: kindSpareParts } = useQuery({
-		queryKey: ['kindSpareParts'],
+		queryKey: ['catalogCategories'],
 		enabled: catalogOpen,
 		placeholderData: (prev) => prev,
 		queryFn: () =>
-			fetchKindSpareParts<KindSparePartWithSpareParts>({
+			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
 				pagination: { limit: 10 },
 				populate: { spareParts: { count: true } }
 			})
@@ -38,7 +32,7 @@ export const CatalogCategories: React.FC = () => {
 
 	const index = kindSpareParts?.data.data.findIndex((item: any) => item.id === hoveredCategory?.id) || 0;
 	const { data: relatedKindSpareParts } = useQuery({
-		queryKey: ['relatedKindSpareParts', index],
+		queryKey: ['relatedCatalogCategories', index],
 		enabled: !!hoveredCategory,
 		placeholderData: (prev) => prev,
 		queryFn: () =>

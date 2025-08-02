@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link } from 'components/ui';
 import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'components/Icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
-import Autocomplete from 'components/Autocomplete';
+import Autocomplete from 'components/ui/Autocomplete';
 import Profile from '../Profile';
 import reactStringReplace from 'react-string-replace';
 import { highlightSearchTerms } from 'services/StringService';

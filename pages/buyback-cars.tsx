@@ -12,7 +12,7 @@ import { Model } from 'api/models/types';
 import { fetchPage } from 'api/pages';
 import { PageBuybackCars } from 'api/pages/types';
 import classNames from 'classnames';
-import Autocomplete from 'components/Autocomplete';
+import Autocomplete from 'components/ui/Autocomplete';
 import Image from 'components/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
 import Typography from 'components/Typography';

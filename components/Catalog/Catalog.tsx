@@ -1,23 +1,45 @@
 import { Button, CircularProgress, MenuItem, Menu, Pagination, PaginationItem, List, ListItem } from '@mui/material';
 import { Box } from '@mui/material';
-import { API_DEFAULT_LIMIT } from 'api/constants';
 import { ModelSparePartsCountWithGenerationsSparePartsCount } from 'api/models/types';
-import { ApiResponse, CollectionParams, Product, SEO } from 'api/types';
-import { AxiosResponse } from 'axios';
+import { Product, SEO } from 'api/types';
 import Filters from 'components/Filters';
 import { AutocompleteType, NumberType } from 'components/Filters/types';
 import ProductItem from 'components/ProductItem';
 import Typography from 'components/Typography';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useSnackbar } from 'notistack';
-import { useEffect, useRef, useState } from 'react';
-import { useThrottle } from 'rooks';
+import { useState } from 'react';
+import { ChevronDownIcon, ChevronRightIcon } from 'components/Icons';
+import { BrandWithSparePartsCount } from 'api/brands/types';
+import { Link } from 'components/ui';
+import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
+import WhiteBox from 'components/WhiteBox';
 
 type SortItem = {
 	value: string;
 	name: string;
 };
+
+interface Props {
+	seo: SEO | null;
+	filtersConfig: (AutocompleteType | NumberType)[];
+	brands: BrandWithSparePartsCount[];
+	models: ModelSparePartsCountWithGenerationsSparePartsCount[];
+	filtersValues: { [key: string]: string | null };
+	total: number | null;
+	data: Product[];
+	isLoading: boolean;
+	pageCount: number;
+	page: number;
+	sort: string;
+	onClickFind: () => void;
+	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
+	onChangeSort: (sort: string) => void;
+	onChangeHoveredCategory: (category: KindSparePartWithSparePartsCount | null) => void;
+	catalogCategories: KindSparePartWithSparePartsCount[];
+	relatedCatalogCategories: KindSparePartWithSparePartsCount[];
+	hoveredCategory: KindSparePartWithSparePartsCount | null;
+}
 
 const selectSortItems = [
 	{ value: 'createdAt:desc', name: 'Новые' },
@@ -26,130 +48,28 @@ const selectSortItems = [
 	{ value: 'price:desc', name: 'Дорогие' }
 ];
 
-import { ChevronDownIcon } from 'components/Icons';
-import { BrandWithSparePartsCount } from 'api/brands/types';
-import { Link } from 'components/ui';
-
-interface Props {
-	seo: SEO | null;
-	dataFieldsToShow?: { id: string; name: string }[];
-	filtersConfig: (AutocompleteType | NumberType)[];
-	generateFiltersByQuery?: (filter: { [key: string]: string }, fetchFunc: any) => any;
-	fetchData?: (params: CollectionParams) => Promise<AxiosResponse<ApiResponse<Product[]>>>;
-	brands: BrandWithSparePartsCount[];
-	models: ModelSparePartsCountWithGenerationsSparePartsCount[];
-	filtersValues: { [key: string]: string | null };
-	total: number | null;
-	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
-	onChangeTotal: (total: number) => void;
-}
-
 const Catalog = ({
-	fetchData,
 	filtersConfig,
-	generateFiltersByQuery,
 	seo,
 	brands,
 	models,
 	filtersValues,
 	total,
-	onChangeTotal,
-	onChangeFilterValues
+	onClickFind,
+	onChangeFilterValues,
+	data,
+	isLoading,
+	pageCount,
+	page,
+	sort,
+	onChangeSort,
+	catalogCategories,
+	relatedCatalogCategories,
+	hoveredCategory,
+	onChangeHoveredCategory
 }: Props) => {
-	const [data, setData] = useState<Product[]>([]);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [isFirstDataLoaded, setIsFirstDataLoaded] = useState<boolean>(false);
-	const [searchValue, setSearchValue] = useState<string>('');
-	const [pageCount, setPageCount] = useState<number>(0);
-	const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
-	const filtersRef = useRef<any>(null);
 	const router = useRouter();
-
-	const { enqueueSnackbar } = useSnackbar();
-
-	const {
-		searchValue: querySearchValue = '',
-		sort = 'createdAt:desc',
-		page = '1',
-		kindSparePart,
-		slug,
-		...othersQuery
-	} = router.query as {
-		searchValue: string;
-		sort: string;
-		page: string;
-		[key: string]: string;
-	};
-	const flatFiltersConfig = filtersConfig.flat();
-	const othersQueryByFilters = Object.keys(othersQuery).reduce(
-		(prev, curr) =>
-			flatFiltersConfig.find((item) => item.id === curr) ? { ...prev, [curr]: othersQuery[curr] } : prev,
-		{} as { [key: string]: string }
-	);
-
-	const [brand, modelParam] = slug || [];
-	const model = modelParam ? modelParam.replace('model-', '') : modelParam;
-
-	const fetchProducts = async ({ searchValue, ...values }: any, paramPage?: number) => {
-		setIsLoading(true);
-		if (fetchData) {
-			try {
-				const { data } = await fetchData({
-					filters: {
-						sold: false,
-						...(searchValue
-							? {
-									$and: searchValue.split(' ').map((word: string) => ({ h1: { $contains: word } }))
-							  }
-							: {}),
-						...(generateFiltersByQuery ? generateFiltersByQuery(values, fetchData) : {})
-					},
-					pagination: searchValue
-						? {}
-						: { start: (paramPage ? paramPage - 1 : +page - 1) * API_DEFAULT_LIMIT },
-					populate: { images: true, volume: true, brand: true },
-					sort
-				});
-
-				setData(data.data);
-
-				if (data.meta.pagination) {
-					setPageCount(Math.ceil(data.meta.pagination.total / API_DEFAULT_LIMIT));
-					if (paramPage) {
-						router.query.page = '1';
-					} else if (router.query.page && Math.ceil(data.meta.pagination.total / API_DEFAULT_LIMIT) < +page) {
-						router.query.page = (Math.ceil(data.meta.pagination.total / API_DEFAULT_LIMIT) || 1).toString();
-					}
-					onChangeTotal(data.meta.pagination.total);
-				}
-				setIsFirstDataLoaded(true);
-			} catch (err) {
-				enqueueSnackbar(
-					'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку',
-					{ variant: 'error' }
-				);
-			}
-		}
-		setIsLoading(false);
-	};
-
-	const [throttledFetchProducts] = useThrottle(fetchProducts, 300);
-
-	useEffect(() => {
-		if (router.isReady) {
-			throttledFetchProducts(
-				Object.keys(othersQueryByFilters).reduce(
-					(prev, key) => ({
-						...prev,
-						[key]: othersQueryByFilters[key]
-					}),
-					{ searchValue: querySearchValue, brand, model, kindSparePart }
-				)
-			);
-			setSearchValue(querySearchValue);
-		}
-	}, [sort, page, brand, model, router.isReady, kindSparePart]);
-
+	const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
 	const handleSortMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
 		setSortMenuAnchor(event.currentTarget);
 	};
@@ -159,31 +79,8 @@ const Catalog = ({
 	};
 
 	const handleSortItemClick = (item: SortItem) => {
-		router.query.sort = item.value;
-		router.push({ pathname: router.pathname, query: router.query });
 		setSortMenuAnchor(null);
-	};
-
-	const handleClickFind = () => {
-		const slug: string[] = [];
-		const { brand: brandValue, model: modelValue, ...restFiltersValues } = filtersValues;
-		if (brandValue) {
-			slug.push(brandValue);
-		}
-		if (modelValue) {
-			slug.push('model-' + modelValue);
-		}
-		Object.keys(restFiltersValues).forEach((key) => {
-			if (restFiltersValues[key]) {
-				router.query[key] = restFiltersValues[key];
-			} else {
-				delete router.query[key];
-			}
-		});
-		router.query['slug'] = slug;
-		fetchProducts(filtersValues, 1);
-
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+		onChangeSort(item.value);
 	};
 
 	return (
@@ -219,16 +116,83 @@ const Catalog = ({
 				</Menu>
 			</Box>
 
-			<Box display='flex' overflow='auto' gap={2}>
+			<Box display='flex' gap={2}>
 				<Box width={256} component='aside'>
 					<Filters
-						ref={filtersRef}
 						total={total}
 						config={filtersConfig}
-						onClickFind={handleClickFind}
+						onClickFind={onClickFind}
 						values={filtersValues}
 						onChangeFilterValues={onChangeFilterValues}
 					></Filters>
+					<WhiteBox mt={2} p={1} withShadow sx={{ position: 'relative' }}>
+						<Typography pl={1} variant='h6' fontWeight={700} fontSize={18}>
+							Категории
+						</Typography>
+						{catalogCategories.map((item) => (
+							<Box key={item.id}>
+								<Box
+									bgcolor={hoveredCategory === item ? '#E2E2E2' : 'transparent'}
+									position='relative'
+									sx={{ cursor: 'pointer', ':hover': { bgcolor: '#E2E2E2' } }}
+									p={1}
+									borderRadius={2}
+									display='flex'
+									gap={0.5}
+									alignItems='center'
+									onMouseLeave={() => {
+										onChangeHoveredCategory(null);
+									}}
+									onMouseEnter={() => {
+										onChangeHoveredCategory(item);
+									}}
+								>
+									<Typography variant='body1' fontWeight={500}>
+										{item.name}
+									</Typography>
+									<Typography flex={1} variant='body1' color='custom.text-muted'>
+										{item.spareParts.count?.toLocaleString()}
+									</Typography>
+									<Box>
+										<ChevronRightIcon></ChevronRightIcon>
+									</Box>
+									{hoveredCategory === item && relatedCatalogCategories.length > 0 && (
+										<Box position='absolute' zIndex={1} top={0} left='100%' pl={1.5}>
+											<WhiteBox minWidth={256} p={1} withShadow>
+												{relatedCatalogCategories.map((category) => (
+													<Box
+														key={category.id}
+														bgcolor={
+															hoveredCategory === category ? '#E2E2E2' : 'transparent'
+														}
+														sx={{
+															cursor: 'pointer',
+															':hover': { bgcolor: '#E2E2E2' },
+															borderRadius: 2
+														}}
+														p={1}
+													>
+														<Box display='flex' gap={0.5} alignItems='center'>
+															<Typography variant='body2' fontWeight={500}>
+																{category.name}
+															</Typography>
+															<Typography
+																flex={1}
+																variant='body2'
+																color='custom.text-muted'
+															>
+																{category.spareParts.count?.toLocaleString()}
+															</Typography>
+														</Box>
+													</Box>
+												))}
+											</WhiteBox>
+										</Box>
+									)}
+								</Box>
+							</Box>
+						))}
+					</WhiteBox>
 				</Box>
 				<Box flex={1}>
 					{(!filtersValues.brand || !filtersValues.model) && (
@@ -274,7 +238,7 @@ const Catalog = ({
 								))}
 						</Box>
 					)}
-					<Box display='flex' flexWrap='wrap' gap={1} mb={2}>
+					<Box display='flex' flexWrap='wrap' sx={{ opacity: isLoading ? 0.5 : 1 }} gap={1} mb={2}>
 						{data.length ? (
 							data.map((item) => (
 								<ProductItem
@@ -285,12 +249,12 @@ const Catalog = ({
 									data={item}
 								></ProductItem>
 							))
-						) : isFirstDataLoaded && !isLoading ? (
+						) : !isLoading ? (
 							<Typography textAlign='center' variant='h5'>
 								Данных не найдено
 							</Typography>
 						) : (
-							<CircularProgress></CircularProgress>
+							<CircularProgress sx={{ margin: 'auto' }}></CircularProgress>
 						)}
 					</Box>
 					<Pagination
@@ -311,13 +275,10 @@ const Catalog = ({
 							) : (
 								<NextLink
 									shallow
-									href={
-										router.asPath.includes('page=')
-											? `${router.asPath.replace(/page=\d+/, `page=${params.page}`)}`
-											: `${router.asPath}${router.asPath.includes('?') ? '&' : '?'}page=${
-													params.page
-											  }`
-									}
+									href={`${router.asPath.split('?')[0]}?${new URLSearchParams({
+										...router.query,
+										page: params.page.toString()
+									}).toString()}`}
 								>
 									<PaginationItem
 										{...params}

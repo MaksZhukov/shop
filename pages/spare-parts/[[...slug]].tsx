@@ -47,7 +47,7 @@ const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relate
 			></Product>
 		);
 	}
-	return <CatalogSpareParts page={page} brands={brands} kindSparePart={kindSparePart}></CatalogSpareParts>;
+	return <CatalogSpareParts pageData={page} brands={brands} kindSparePart={kindSparePart}></CatalogSpareParts>;
 };
 
 export default SpareParts;

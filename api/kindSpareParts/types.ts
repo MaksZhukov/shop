@@ -4,3 +4,9 @@ export interface KindSparePart {
 	slug: string;
 	type: 'regular' | 'cabin';
 }
+
+export type KindSparePartWithSparePartsCount = KindSparePart & {
+	spareParts: {
+		count: number;
+	};
+};
