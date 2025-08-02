@@ -12,7 +12,7 @@ import { fetchPage } from 'api/pages';
 import { PageMain } from 'api/pages/types';
 import { ApiResponse, ProductType } from 'api/types';
 import axios, { AxiosResponse } from 'axios';
-import Autocomplete from 'components/Autocomplete';
+import Autocomplete from 'components/ui/Autocomplete';
 import Typography from 'components/Typography';
 import WhiteBox from 'components/WhiteBox';
 import type { NextPage } from 'next';
@@ -282,7 +282,7 @@ const Home: NextPage<Props> = ({ page, brands, newSpareParts, carsOnParts, artic
 	};
 
 	return (
-		<Container sx={{ my: 4 }}>
+		<Box sx={{ my: 4 }}>
 			<Box
 				mb={5}
 				minHeight={{ xs: 'auto', md: 446 }}
@@ -701,7 +701,7 @@ const Home: NextPage<Props> = ({ page, brands, newSpareParts, carsOnParts, artic
 				</Box>
 			</Box>
 			<Articles articles={articles} />
-		</Container>
+		</Box>
 	);
 };
 

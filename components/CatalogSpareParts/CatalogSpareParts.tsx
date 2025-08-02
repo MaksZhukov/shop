@@ -6,10 +6,9 @@ import { fetchEngineVolumes } from 'api/engineVolumes/engineVolumes';
 import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { KindSparePart } from 'api/kindSpareParts/types';
+import { KindSparePart, KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
 import { fetchModels } from 'api/models/models';
 import { ModelSparePartsCountWithGenerationsSparePartsCount } from 'api/models/types';
-import { DefaultPage } from 'api/pages/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, Filters } from 'api/types';
 import axios, { AxiosResponse } from 'axios';
@@ -22,14 +21,28 @@ import { Dispatch, FC, SetStateAction, UIEventHandler, useEffect, useRef, useSta
 import { useDebounce, useThrottle } from 'rooks';
 import { getParamByRelation } from 'services/ParamsService';
 import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
+import { useQuery } from '@tanstack/react-query';
+import { DefaultPage } from 'api/pages/types';
+
+type QueryParams = {
+	sort: string;
+	page: string;
+	slug: [string, string];
+	generation: string;
+	kindSparePart: string;
+	volume: string;
+	fuel: string;
+	bodyStyle: string;
+	transmission: string;
+};
 
 interface Props {
-	page: DefaultPage;
 	brands: BrandWithSparePartsCount[];
 	kindSparePart?: KindSparePart;
+	pageData: DefaultPage;
 }
 
-const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
+const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) => {
 	const [models, setModels] = useState<ModelSparePartsCountWithGenerationsSparePartsCount[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({
@@ -40,12 +53,101 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-	const [total, setTotal] = useState<number | null>(null);
-	const [filtersValues, setFiltersValues] = useState<{ [key: string]: string | null }>({});
+	const [hoveredCategory, setHoveredCategory] = useState<any | null>(null);
 	const { enqueueSnackbar } = useSnackbar();
-
 	const router = useRouter();
-	const [brand, model] = router.query.slug || [];
+	const {
+		sort = 'createdAt:desc',
+		page: pageParam = '1',
+		generation,
+		kindSparePart: kindSparePartSlug,
+		volume,
+		fuel,
+		bodyStyle,
+		transmission,
+		slug
+	} = router.query as unknown as QueryParams;
+	const page = +pageParam;
+	const [brand, modelParam] = slug || [];
+	const model = modelParam ? modelParam.replace('model-', '') : '';
+
+	const [filtersValues, setFiltersValues] = useState<{ [key: string]: string | null }>({
+		brand: brand,
+		model: model,
+		kindSparePart: kindSparePartSlug,
+		volume: volume,
+		fuel: fuel,
+		bodyStyle: bodyStyle,
+		transmission: transmission
+	});
+
+	const { data: spareParts, isFetching } = useQuery({
+		queryKey: ['spare-parts', sort, page, brand, model, kindSparePartSlug, volume, fuel, bodyStyle, transmission],
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			fetchSpareParts({
+				filters: {
+					...generateFiltersByQuery({
+						brand,
+						model,
+						kindSparePart: kindSparePartSlug,
+						volume,
+						fuel,
+						bodyStyle,
+						transmission
+					}),
+					sold: false
+				},
+				pagination: { start: (page - 1) * API_DEFAULT_LIMIT }
+			})
+	});
+
+	const { data: totalSpareParts } = useQuery({
+		queryKey: [
+			'total-spare-parts',
+			filtersValues.brand,
+			filtersValues.model,
+			filtersValues.kindSparePart,
+			filtersValues.volume,
+			filtersValues.fuel,
+			filtersValues.bodyStyle,
+			filtersValues.transmission
+		],
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			fetchSpareParts({
+				filters: { ...generateFiltersByQuery(filtersValues), sold: false },
+				pagination: { limit: 0 }
+			})
+	});
+	const pageCount = Math.ceil((spareParts?.data?.meta?.pagination?.total || 0) / API_DEFAULT_LIMIT);
+	const total = totalSpareParts?.data?.meta?.pagination?.total || null;
+
+	const { data: catalogCategories } = useQuery({
+		queryKey: ['catalogCategories'],
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
+				pagination: { limit: 10 },
+				filters: {
+					id: [12, 13, 14, 15, 16, 17, 18, 21, 23, 25, 26]
+				},
+				populate: { spareParts: { count: true } }
+			})
+	});
+
+	const index = catalogCategories?.data.data.findIndex((item: any) => item.id === hoveredCategory?.id) || 0;
+
+	const { data: relatedCatalogCategories } = useQuery({
+		queryKey: ['relatedCatalogCategories', index],
+		enabled: !!hoveredCategory,
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
+				pagination: { limit: index * 5 },
+				populate: { spareParts: { count: true } }
+			})
+	});
 
 	useEffect(() => {
 		if (kindSparePart) {
@@ -57,15 +159,15 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 	}, [kindSparePart]);
 
 	useEffect(() => {
-		if (router.query.generation) {
+		if (generation) {
 			handleOpenAutocomplete<Generation>(!!generations.length, setGenerations, () =>
 				fetchGenerations({
-					filters: { model: { slug: model.replace('model-', '') as string }, brand: { slug: brand } },
+					filters: { model: { slug: model }, brand: { slug: brand } },
 					pagination: { limit: API_MAX_LIMIT }
 				})
 			)();
 		}
-	}, [router.query.generation]);
+	}, [generation]);
 
 	const loadKindSpareParts = async () => {
 		if (abortControllerRef.current) {
@@ -102,6 +204,7 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 		await loadKindSpareParts();
 		setIsLoadingMore(false);
 	});
+
 	useEffect(() => {
 		const fetch = async () => {
 			const models = await fetchModels<ModelSparePartsCountWithGenerationsSparePartsCount>({
@@ -117,26 +220,26 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 	}, [brand, filtersValues.brand]);
 
 	useEffect(() => {
-		setFiltersValues((prev) => ({ ...prev, brand: brand ? brand : null }));
+		setFiltersValues((prev) => ({ ...prev, brand: brand }));
 	}, [brand]);
 
 	useEffect(() => {
-		setFiltersValues((prev) => ({ ...prev, model: model ? model.replace('model-', '') : null }));
+		setFiltersValues((prev) => ({ ...prev, model: model }));
 	}, [model]);
 
 	useEffect(() => {
 		setFiltersValues((prev) => ({
 			...prev,
-			generation: router.query.generation ? (router.query.generation as string) : null
+			generation: generation
 		}));
-	}, [router.query.generation]);
+	}, [generation]);
 
 	useEffect(() => {
 		setFiltersValues((prev) => ({
 			...prev,
-			kindSparePart: router.query.kindSparePart ? (router.query.kindSparePart as string) : null
+			kindSparePart: kindSparePartSlug
 		}));
-	}, [router.query.kindSparePart]);
+	}, [kindSparePartSlug]);
 
 	const fetchKindSparePartsRef = useRef(async (value: string) => {
 		if (abortControllerRef.current) {
@@ -257,40 +360,29 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 		onOpenAutoCompleteVolume: handleOpenAutocompleteVolume
 	});
 
-	const generateFiltersByQuery = (
-		{
-			brand,
-			model,
-			generation,
-			kindSparePart,
-			brandName,
-			modelName,
-			generationName,
-			volume,
-			fuel,
-			bodyStyle,
-			transmission,
-			...others
-		}: {
-			[key: string]: string | null;
-		},
-		fetchFunc?: () => void
-	): Filters => {
-		let filters: Filters = {
+	const generateFiltersByQuery = ({
+		brand,
+		model,
+		generation,
+		kindSparePart,
+		volume,
+		fuel,
+		bodyStyle,
+		transmission
+	}: {
+		[key: string]: string | null;
+	}): Filters => {
+		const filters: Filters = {
 			brand: getParamByRelation(brand, 'slug'),
 			model: getParamByRelation(model, 'slug'),
 			generation: getParamByRelation(generation, 'slug'),
 			kindSparePart: getParamByRelation(kindSparePart, 'slug'),
-			...(fetchFunc === fetchSpareParts
-				? {
-						volume: getParamByRelation(volume),
-						fuel: fuel ? SLUGIFY_FUELS[fuel] : null,
-						bodyStyle: bodyStyle ? SLUGIFY_BODY_STYLES[bodyStyle] : null,
-						transmission: transmission ? SLUGIFY_TRANSMISSIONS[transmission] : null
-				  }
-				: {})
+			volume: getParamByRelation(volume),
+			fuel: fuel ? SLUGIFY_FUELS[fuel] : null,
+			bodyStyle: bodyStyle ? SLUGIFY_BODY_STYLES[bodyStyle] : null,
+			transmission: transmission ? SLUGIFY_TRANSMISSIONS[transmission] : null
 		};
-		return { ...filters, ...others };
+		return filters;
 	};
 
 	const handleChangeFilterValues = async (values: { [key: string]: string | null }) => {
@@ -305,40 +397,55 @@ const CatalogSpareParts: FC<Props> = ({ page, brands = [], kindSparePart }) => {
 			setGenerations([]);
 		}
 		setFiltersValues(newFilterValues);
-		const { data } = await fetchSpareParts({
-			filters: { ...generateFiltersByQuery(newFilterValues, fetchSpareParts), sold: false },
-			pagination: { limit: 0 }
-		});
+	};
 
-		setTotal(data.meta.pagination?.total || 0);
+	const handleClickFind = () => {
+		const slug: string[] = [];
+		const { brand: brandValue, model: modelValue, ...restFiltersValues } = filtersValues;
+		if (brandValue) {
+			slug.push(brandValue);
+		}
+		if (modelValue) {
+			slug.push('model-' + modelValue);
+		}
+		Object.keys(restFiltersValues).forEach((key) => {
+			if (restFiltersValues[key]) {
+				router.query[key] = restFiltersValues[key];
+			} else {
+				delete router.query[key];
+			}
+		});
+		router.query['slug'] = slug;
+		router.query['page'] = '1';
+
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+	};
+
+	const handleChangeSort = (sort: string) => {
+		router.query.sort = sort;
+		router.push({ pathname: router.pathname, query: router.query });
 	};
 
 	return (
 		<Catalog
-			dataFieldsToShow={[
-				{
-					id: 'brand',
-					name: 'Марка'
-				},
-				{
-					id: 'model',
-					name: 'Модель'
-				},
-				{
-					id: 'kindSparePart',
-					name: 'Запчасть'
-				}
-			]}
 			brands={brands}
 			models={models}
 			filtersValues={filtersValues}
 			onChangeFilterValues={handleChangeFilterValues}
 			filtersConfig={filtersConfig}
-			seo={page?.seo}
+			seo={pageData.seo}
 			total={total}
-			onChangeTotal={setTotal}
-			fetchData={fetchSpareParts}
-			generateFiltersByQuery={generateFiltersByQuery}
+			onClickFind={handleClickFind}
+			data={spareParts?.data?.data || []}
+			isLoading={isFetching}
+			pageCount={pageCount}
+			page={page}
+			sort={sort}
+			onChangeSort={handleChangeSort}
+			catalogCategories={catalogCategories?.data.data || []}
+			relatedCatalogCategories={relatedCatalogCategories?.data.data || []}
+			hoveredCategory={hoveredCategory}
+			onChangeHoveredCategory={setHoveredCategory}
 		></Catalog>
 	);
 };
