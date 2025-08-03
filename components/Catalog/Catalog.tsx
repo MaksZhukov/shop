@@ -9,11 +9,6 @@ import {
 	ListItem,
 	useMediaQuery,
 	useTheme,
-	Dialog,
-	DialogTitle,
-	DialogContent,
-	DialogActions,
-	IconButton,
 	Modal
 } from '@mui/material';
 import { Box } from '@mui/material';
@@ -26,7 +21,7 @@ import Typography from 'components/ui/Typography';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { ChevronDownIcon, ChevronRightIcon, CloseIcon } from 'components/icons';
+import { ChevronDownIcon, ChevronRightIcon } from 'components/icons';
 import { BrandWithSparePartsCount } from 'api/brands/types';
 import { Link, ModalContainer } from 'components/ui';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
@@ -66,7 +61,7 @@ const selectSortItems = [
 	{ value: 'price:desc', name: 'Дорогие' }
 ];
 
-const Catalog = ({
+const Catalog: React.FC<Props> = ({
 	filtersConfig,
 	seo,
 	brands,
@@ -85,7 +80,7 @@ const Catalog = ({
 	relatedCatalogCategories,
 	hoveredCategory,
 	onChangeHoveredCategory
-}: Props) => {
+}) => {
 	const router = useRouter();
 	const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
 	const [filtersModalOpen, setFiltersModalOpen] = useState(false);

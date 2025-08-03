@@ -1,0 +1,9 @@
+export { SearchForm } from './MainSection/SearchForm';
+export { Benefits } from './Benefits';
+export { NewArrivals } from './NewArrivals';
+export { BrandSelection } from './BrandSelection';
+export { PopularCategories } from './PopularCategories';
+export { CarsOnParts } from './CarsOnParts';
+export { CarBuyback } from './CarBuyback';
+export { MainSection } from './MainSection';
+export { Articles } from './Articles';
