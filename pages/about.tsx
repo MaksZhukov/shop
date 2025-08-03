@@ -3,9 +3,9 @@ import { Box } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { PageAbout } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
-import Image from 'components/Image';
+import Image from 'components/features/Image';
 import ReactMarkdown from 'components/ReactMarkdown/ReactMarkdown';
-import Typography from 'components/Typography';
+import Typography from 'components/ui/Typography';
 import { getUrlByMinFormat } from 'services/ImageService';
 import { getPageProps } from 'services/PagePropsService';
 

@@ -1,6 +1,6 @@
 import { Link, List, ListItem } from '@mui/material';
 import { getNavigation } from 'components/features/Header/Header';
-import Typography from 'components/Typography';
+import Typography from 'components/ui/Typography';
 import NextLink from 'next/link';
 import { getPageProps } from 'services/PagePropsService';
 

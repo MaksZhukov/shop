@@ -1,6 +1,6 @@
 import { Box, IconButton, SxProps, Typography } from '@mui/material';
-import { CloseIcon } from 'components/Icons/CloseIcon';
-import WhiteBox from 'components/WhiteBox';
+import { CloseIcon } from 'components/icons/CloseIcon';
+import WhiteBox from 'components/ui/WhiteBox';
 import { FC } from 'react';
 
 interface ModalContainerProps {

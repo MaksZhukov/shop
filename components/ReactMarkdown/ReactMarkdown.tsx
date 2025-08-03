@@ -1,8 +1,8 @@
 import { Box, Link, useMediaQuery } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import classNames from 'classnames';
-import Image from 'components/Image';
-import Typography from 'components/Typography';
+import Image from 'components/features/Image';
+import Typography from 'components/ui/Typography';
 import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import { FC } from 'react';

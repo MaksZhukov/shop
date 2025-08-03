@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useStore } from '../../../../store';
-import { PersonIcon } from 'components/Icons/PersonIcon';
+import { PersonIcon } from 'components/icons/PersonIcon';
 import { NavbarButton } from 'components/ui/NavbarButton';
 
 interface Props {

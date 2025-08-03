@@ -1,6 +1,6 @@
 import { Box, SxProps } from '@mui/material';
 import { Image as IImage } from 'api/types';
-import Image from 'components/Image';
+import Image from 'components/features/Image';
 import { FC } from 'react';
 import Slider from 'react-slick';
 import styles from './BlockImages.module.scss';

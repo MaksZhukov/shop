@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useHeaderScroll, useSearchSpareParts, useAuthModal, useMobileModals } from './hooks';
 import { HeaderTop, HeaderBottom, MobileBottomNav, MobileSearchModal, MobileContactsModal } from './components';
-import ModalAuth from 'components/ModalAuth';
+import ModalAuth from 'components/features/ModalAuth';
 
 interface Props {}
 

@@ -2,8 +2,8 @@ import { Link, Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui
 import { Box } from '@mui/material';
 import { Car as ICar } from 'api/cars/types';
 import classNames from 'classnames';
-import Image from 'components/Image';
-import Typography from 'components/Typography';
+import Image from 'components/features/Image';
+import Typography from 'components/ui/Typography';
 import dynamic from 'next/dynamic';
 import { FC, useState } from 'react';
 import Slider from 'react-slick';

@@ -3,8 +3,8 @@ import { Box } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { PageVacancies, Vacancy } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
-import Image from 'components/Image';
-import Typography from 'components/Typography';
+import Image from 'components/features/Image';
+import Typography from 'components/ui/Typography';
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 

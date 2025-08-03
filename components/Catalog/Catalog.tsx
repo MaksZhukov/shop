@@ -1,19 +1,37 @@
-import { Button, CircularProgress, MenuItem, Menu, Pagination, PaginationItem, List, ListItem } from '@mui/material';
+import {
+	Button,
+	CircularProgress,
+	MenuItem,
+	Menu,
+	Pagination,
+	PaginationItem,
+	List,
+	ListItem,
+	useMediaQuery,
+	useTheme,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	IconButton,
+	Modal
+} from '@mui/material';
 import { Box } from '@mui/material';
 import { ModelSparePartsCountWithGenerationsSparePartsCount } from 'api/models/types';
 import { Product, SEO } from 'api/types';
-import Filters from 'components/Filters';
-import { AutocompleteType, NumberType } from 'components/Filters/types';
-import ProductItem from 'components/ProductItem';
-import Typography from 'components/Typography';
+import Filters from 'components/features/Filters';
+import { AutocompleteType, NumberType } from 'components/features/Filters/types';
+import ProductItem from 'components/features/ProductItem';
+import Typography from 'components/ui/Typography';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { ChevronDownIcon, ChevronRightIcon } from 'components/Icons';
+import { ChevronDownIcon, ChevronRightIcon, CloseIcon } from 'components/icons';
 import { BrandWithSparePartsCount } from 'api/brands/types';
-import { Link } from 'components/ui';
+import { Link, ModalContainer } from 'components/ui';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
-import WhiteBox from 'components/WhiteBox';
+import WhiteBox from 'components/ui/WhiteBox';
+import { OptionsIcon } from 'components/icons';
 
 type SortItem = {
 	value: string;
@@ -70,9 +88,12 @@ const Catalog = ({
 }: Props) => {
 	const router = useRouter();
 	const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
+	const [filtersModalOpen, setFiltersModalOpen] = useState(false);
 	const handleSortMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
 		setSortMenuAnchor(event.currentTarget);
 	};
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 	const handleSortMenuClose = () => {
 		setSortMenuAnchor(null);
@@ -83,119 +104,159 @@ const Catalog = ({
 		onChangeSort(item.value);
 	};
 
+	const handleFiltersModalOpen = () => {
+		setFiltersModalOpen(true);
+	};
+
+	const handleFiltersModalClose = () => {
+		setFiltersModalOpen(false);
+	};
+
 	return (
 		<>
-			<Box display='flex' justifyContent='space-between' alignItems='center'>
+			<Box
+				display='flex'
+				flexDirection={{ xs: 'column', md: 'row' }}
+				justifyContent='space-between'
+				mb={{ xs: 2, md: 0 }}
+				alignItems={{ xs: 'flex-start', md: 'center' }}
+			>
 				<Typography mb={1} variant='h6'>
 					{seo?.h1}
-				</Typography>{' '}
-				<Button variant='text' endIcon={<ChevronDownIcon />} color='primary' onClick={handleSortMenuOpen}>
-					{selectSortItems.find((item) => item.value === sort)?.name}
-				</Button>
-				<Menu
-					disableScrollLock
-					sx={{
-						'& .MuiPaper-root': {
-							bgcolor: '#fff',
-							mt: -0.5
-						}
-					}}
-					anchorEl={sortMenuAnchor}
-					open={Boolean(sortMenuAnchor)}
-					onClose={handleSortMenuClose}
+				</Typography>
+				<Button
+					sx={{ display: { xs: 'flex', md: 'none' } }}
+					fullWidth
+					startIcon={<OptionsIcon />}
+					variant='outlined'
+					color='primary'
+					onClick={handleFiltersModalOpen}
 				>
-					{selectSortItems.map((item) => (
-						<MenuItem
-							key={item.name}
-							onClick={() => handleSortItemClick(item)}
-							selected={sort === item.value}
-						>
-							{item.name}
-						</MenuItem>
-					))}
-				</Menu>
+					Параметры поиска
+				</Button>
+				<Box
+					mt={{ xs: 1, md: 0 }}
+					display='flex'
+					justifyContent='space-between'
+					alignItems='center'
+					width={{ xs: '100%', md: 'auto' }}
+				>
+					<Box display={{ xs: 'flex', md: 'none' }} gap={0.5}>
+						<Typography color='custom.text-muted'> Всего запчастей: </Typography>
+						<Typography fontWeight={500}>{total?.toLocaleString()}</Typography>
+					</Box>
+					<Button variant='text' endIcon={<ChevronDownIcon />} color='primary' onClick={handleSortMenuOpen}>
+						{selectSortItems.find((item) => item.value === sort)?.name}
+					</Button>
+					<Menu
+						disableScrollLock
+						sx={{
+							'& .MuiPaper-root': {
+								bgcolor: '#fff',
+								mt: -0.5
+							}
+						}}
+						anchorEl={sortMenuAnchor}
+						open={Boolean(sortMenuAnchor)}
+						onClose={handleSortMenuClose}
+					>
+						{selectSortItems.map((item) => (
+							<MenuItem
+								key={item.name}
+								onClick={() => handleSortItemClick(item)}
+								selected={sort === item.value}
+							>
+								{item.name}
+							</MenuItem>
+						))}
+					</Menu>
+				</Box>
 			</Box>
 
 			<Box display='flex' gap={2}>
-				<Box width={256} component='aside'>
-					<Filters
-						total={total}
-						config={filtersConfig}
-						onClickFind={onClickFind}
-						values={filtersValues}
-						onChangeFilterValues={onChangeFilterValues}
-					></Filters>
-					<WhiteBox mt={2} p={1} withShadow sx={{ position: 'relative' }}>
-						<Typography pl={1} variant='h6' fontWeight={700} fontSize={18}>
-							Категории
-						</Typography>
-						{catalogCategories.map((item) => (
-							<Box key={item.id}>
-								<Box
-									bgcolor={hoveredCategory === item ? '#E2E2E2' : 'transparent'}
-									position='relative'
-									sx={{ cursor: 'pointer', ':hover': { bgcolor: '#E2E2E2' } }}
-									p={1}
-									borderRadius={2}
-									display='flex'
-									gap={0.5}
-									alignItems='center'
-									onMouseLeave={() => {
-										onChangeHoveredCategory(null);
-									}}
-									onMouseEnter={() => {
-										onChangeHoveredCategory(item);
-									}}
-								>
-									<Typography variant='body1' fontWeight={500}>
-										{item.name}
-									</Typography>
-									<Typography flex={1} variant='body1' color='custom.text-muted'>
-										{item.spareParts.count?.toLocaleString()}
-									</Typography>
-									<Box>
-										<ChevronRightIcon></ChevronRightIcon>
-									</Box>
-									{hoveredCategory === item && relatedCatalogCategories.length > 0 && (
-										<Box position='absolute' zIndex={1} top={0} left='100%' pl={1.5}>
-											<WhiteBox minWidth={256} p={1} withShadow>
-												{relatedCatalogCategories.map((category) => (
-													<Box
-														key={category.id}
-														bgcolor={
-															hoveredCategory === category ? '#E2E2E2' : 'transparent'
-														}
-														sx={{
-															cursor: 'pointer',
-															':hover': { bgcolor: '#E2E2E2' },
-															borderRadius: 2
-														}}
-														p={1}
-													>
-														<Box display='flex' gap={0.5} alignItems='center'>
-															<Typography variant='body2' fontWeight={500}>
-																{category.name}
-															</Typography>
-															<Typography
-																flex={1}
-																variant='body2'
-																color='custom.text-muted'
-															>
-																{category.spareParts.count?.toLocaleString()}
-															</Typography>
-														</Box>
-													</Box>
-												))}
-											</WhiteBox>
-										</Box>
-									)}
-								</Box>
-							</Box>
-						))}
+				<Box display={{ xs: 'none', md: 'block' }} width={256} component='aside'>
+					<WhiteBox p={2} withShadow>
+						<Filters
+							total={total}
+							config={filtersConfig}
+							onClickFind={onClickFind}
+							values={filtersValues}
+							onChangeFilterValues={onChangeFilterValues}
+						></Filters>
 					</WhiteBox>
+					{catalogCategories.length > 0 && (
+						<WhiteBox mt={2} p={1} withShadow sx={{ position: 'relative' }}>
+							<Typography pl={1} variant='h6' fontWeight={700} fontSize={18}>
+								Категории
+							</Typography>
+							{catalogCategories.map((item) => (
+								<Box key={item.id}>
+									<Box
+										bgcolor={hoveredCategory === item ? '#E2E2E2' : 'transparent'}
+										position='relative'
+										sx={{ cursor: 'pointer', ':hover': { bgcolor: '#E2E2E2' } }}
+										p={1}
+										borderRadius={2}
+										display='flex'
+										gap={0.5}
+										alignItems='center'
+										onMouseLeave={() => {
+											onChangeHoveredCategory(null);
+										}}
+										onMouseEnter={() => {
+											onChangeHoveredCategory(item);
+										}}
+									>
+										<Typography variant='body1' fontWeight={500}>
+											{item.name}
+										</Typography>
+										<Typography flex={1} variant='body1' color='custom.text-muted'>
+											{item.spareParts.count?.toLocaleString()}
+										</Typography>
+										<Box>
+											<ChevronRightIcon></ChevronRightIcon>
+										</Box>
+										{hoveredCategory === item && relatedCatalogCategories.length > 0 && (
+											<Box position='absolute' zIndex={1} top={0} left='100%' pl={1.5}>
+												<WhiteBox minWidth={256} p={1} withShadow>
+													{relatedCatalogCategories.map((category) => (
+														<Box
+															key={category.id}
+															bgcolor={
+																hoveredCategory === category ? '#E2E2E2' : 'transparent'
+															}
+															sx={{
+																cursor: 'pointer',
+																':hover': { bgcolor: '#E2E2E2' },
+																borderRadius: 2
+															}}
+															p={1}
+														>
+															<Box display='flex' gap={0.5} alignItems='center'>
+																<Typography variant='body2' fontWeight={500}>
+																	{category.name}
+																</Typography>
+																<Typography
+																	flex={1}
+																	variant='body2'
+																	color='custom.text-muted'
+																>
+																	{category.spareParts.count?.toLocaleString()}
+																</Typography>
+															</Box>
+														</Box>
+													))}
+												</WhiteBox>
+											</Box>
+										)}
+									</Box>
+								</Box>
+							))}
+						</WhiteBox>
+					)}
 				</Box>
 				<Box flex={1}>
-					{(!filtersValues.brand || !filtersValues.model) && (
+					{(!filtersValues.brand || !filtersValues.model) && !isMobile && (
 						<Box
 							mb={2}
 							boxShadow='0px 10px 25px 0px #1018281F'
@@ -238,7 +299,14 @@ const Catalog = ({
 								))}
 						</Box>
 					)}
-					<Box display='flex' flexWrap='wrap' sx={{ opacity: isLoading ? 0.5 : 1 }} gap={1} mb={2}>
+					<Box
+						display='flex'
+						flexWrap='wrap'
+						justifyContent={{ xs: 'center', md: 'flex-start' }}
+						sx={{ opacity: isLoading ? 0.5 : 1 }}
+						gap={1}
+						mb={2}
+					>
 						{data.length ? (
 							data.map((item) => (
 								<ProductItem
@@ -380,6 +448,39 @@ const Catalog = ({
 				Связаться с нами можно через сайт, мессенджеры или социальные сети. <br />
 				Авторазборка Полотково ООО "Дриблинг" – ваш проверенный поставщик оригинальных Б/У автозапчастей
 			</Typography>
+
+			<Modal
+				sx={{
+					overflow: 'auto'
+				}}
+				open={filtersModalOpen}
+				onClose={handleFiltersModalClose}
+			>
+				<ModalContainer
+					width={'calc(100% - 1em)'}
+					sx={{
+						m: 1,
+						position: 'relative',
+						top: '50%',
+						transform: 'translateY(-50%)'
+					}}
+					onClose={handleFiltersModalClose}
+					title='Параметры поиска'
+				>
+					<Box pt={2}>
+						<Filters
+							total={total}
+							config={filtersConfig}
+							onClickFind={() => {
+								onClickFind();
+								handleFiltersModalClose();
+							}}
+							values={filtersValues}
+							onChangeFilterValues={onChangeFilterValues}
+						/>
+					</Box>
+				</ModalContainer>
+			</Modal>
 		</>
 	);
 };

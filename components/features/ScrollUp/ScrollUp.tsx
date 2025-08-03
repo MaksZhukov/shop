@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/material';
-import { ChevronUpIcon } from 'components/Icons';
+import { ChevronUpIcon } from 'components/icons';
 
 export const ScrollUp: React.FC = () => {
 	return (

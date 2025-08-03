@@ -1,6 +1,6 @@
 import { generateArrayOfYears } from 'services/DateService';
 import { WorkingHour } from './types';
-import { InstagramIcon, TelegramIcon, WhatsAppIcon, SkypeIcon, ViberIcon } from 'components/Icons';
+import { InstagramIcon, TelegramIcon, WhatsAppIcon, SkypeIcon, ViberIcon } from 'components/icons';
 
 export const PRIVATE_PATHS = ['/profile'];
 export const OFFSET_SCROLL_LOAD_MORE = 100;

@@ -1,6 +1,6 @@
 import { Box, useMediaQuery } from '@mui/material';
 import { Image as IImage } from 'api/types';
-import Image from 'components/Image';
+import Image from 'components/features/Image';
 import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
 import ReactMarkdown from 'components/ReactMarkdown';
 import getConfig from 'next/config';

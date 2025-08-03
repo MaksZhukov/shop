@@ -9,7 +9,7 @@ import { DefaultPage, PageProduct, PageProductSparePart } from 'api/pages/types'
 import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
 import { SparePart } from 'api/spareParts/types';
 import CatalogSpareParts from 'components/CatalogSpareParts';
-import Product from 'components/Product';
+import Product from 'components/features/Product';
 import type { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';

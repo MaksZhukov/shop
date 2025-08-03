@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { resetPassword } from '../../../api/user/user';
+import { resetPassword } from 'api/user/user';
 import { ModalAuthStates } from '../types';
 
 interface Props {

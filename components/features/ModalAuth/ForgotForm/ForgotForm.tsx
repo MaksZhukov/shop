@@ -2,8 +2,8 @@ import { Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { forgotPassword } from '../../../api/user/user';
-import { useStore } from '../../../store';
+import { forgotPassword } from 'api/user/user';
+import { useStore } from 'store';
 
 interface Props {
 	isLoading: boolean;

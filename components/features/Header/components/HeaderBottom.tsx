@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { Link } from 'components/ui';
 import { WorkTimetable } from 'components/features/WorkTimetable';
-import Image from 'components/Image';
+import Image from 'components/features/Image';
 
 interface HeaderBottomProps {
 	isScrolled: boolean;
@@ -16,7 +16,7 @@ export const HeaderBottom: React.FC<HeaderBottomProps> = ({ isScrolled }) => {
 			flexWrap='wrap'
 			gap={1}
 			sx={{
-				display: { xs: 'none', sm: isScrolled ? 'none' : 'flex' },
+				display: { xs: 'none', md: isScrolled ? 'none' : 'flex' },
 				transition: 'opacity 0.3s ease-in-out',
 				opacity: isScrolled ? 0 : 1,
 				height: isScrolled ? 0 : 'auto',

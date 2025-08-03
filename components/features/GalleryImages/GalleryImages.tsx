@@ -2,7 +2,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Modal, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import { Image as IIamge } from 'api/types';
-import Zoom from 'components/Zoom';
+import Zoom from './Zoom';
 import getConfig from 'next/config';
 import { FC } from 'react';
 import styles from './GalleryImages.module.scss';

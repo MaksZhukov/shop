@@ -1,13 +1,13 @@
 import { Button, Grid, Link, SxProps, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import { Car } from 'api/cars/types';
-import Image from 'components/Image';
-import Typography from 'components/Typography';
+import Image from 'components/features/Image';
+import Typography from 'components/ui/Typography';
 import NextLink from 'next/link';
 import Slider from 'react-slick';
 import { CarOnParts } from 'api/cars-on-parts/types';
-import FavoriteButton from 'components/FavoriteButton';
-import WhiteBox from 'components/WhiteBox';
+import FavoriteButton from 'components/features/FavoriteButton';
+import WhiteBox from 'components/ui/WhiteBox';
 import Carousel from 'react-multi-carousel';
 import styles from './CarItem.module.scss';
 import { Product } from 'api/types';

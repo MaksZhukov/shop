@@ -1,5 +1,5 @@
 import { Container, Typography } from '@mui/material';
-import WhiteBox from 'components/WhiteBox';
+import WhiteBox from 'components/ui/WhiteBox';
 import { getPageProps } from 'services/PagePropsService';
 
 const PageNotFound = () => {

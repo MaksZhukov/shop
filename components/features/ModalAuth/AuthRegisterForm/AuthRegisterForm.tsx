@@ -3,8 +3,8 @@ import { Button, IconButton, Input, InputAdornment, TextField, Typography } from
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { register } from '../../../api/user/user';
-import { useStore } from '../../../store';
+import { register } from 'api/user/user';
+import { useStore } from 'store';
 import { ModalAuthStates } from '../types';
 interface Props {
 	type: ModalAuthStates;

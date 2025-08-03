@@ -2,7 +2,7 @@ import { useMediaQuery } from '@mui/material';
 import { Brand } from 'api/brands/types';
 import { TireBrand } from 'api/tireBrands/types';
 import LinkWithImage from 'components/LinkWithImage/LinkWithImage';
-import WhiteBox from 'components/WhiteBox/WhiteBox';
+import WhiteBox from 'components/ui/WhiteBox/WhiteBox';
 import { FC } from 'react';
 import Slider from 'react-slick';
 

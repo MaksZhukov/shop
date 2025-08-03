@@ -10,7 +10,7 @@ import {
 	HeartFilledIcon,
 	HomeFilledIcon,
 	HomeIcon
-} from 'components/Icons';
+} from 'components/icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
 import Profile from '../Profile';
 

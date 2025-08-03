@@ -3,7 +3,7 @@ import { Modal, SxProps } from '@mui/material';
 import Button from '@mui/material/Button';
 import { fetchOrderCheckout } from 'api/orders';
 import { Product } from 'api/types';
-import Loader from 'components/Loader';
+import Loader from 'components/ui/Loader';
 import Script from 'next/script';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';

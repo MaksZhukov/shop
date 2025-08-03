@@ -5,7 +5,7 @@ import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { ServiceStation } from 'api/serviceStations/types';
 import { ApiResponse } from 'api/types';
 import CardItem from 'components/CardItem';
-import WhiteBox from 'components/WhiteBox';
+import WhiteBox from 'components/ui/WhiteBox';
 import { NextPage } from 'next';
 import getConfig from 'next/config';
 import { getPageProps } from 'services/PagePropsService';
