@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import Image from 'components/Image';
+import Image from 'components/features/Image';
 
 const PaymentMethods: FC = () => (
 	<Box height={100} width={340} overflow='auto'>

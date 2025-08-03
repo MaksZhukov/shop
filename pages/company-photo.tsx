@@ -1,7 +1,7 @@
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { Image as IImage } from 'api/types';
-import Gallery from 'components/Gallery';
+import Gallery from 'components/features/Gallery';
 import type { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 interface Props {

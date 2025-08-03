@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, ModalContainer } from 'components/ui';
 import { WorkTimetable } from 'components/features/WorkTimetable';
 import { SocialButtons } from 'components/features/SocialsButtons';
-import Image from 'components/Image';
+import Image from 'components/features/Image';
 import { SOCIAL_BUTTONS_MOBILE } from '../constants';
 import { COMPANY_COORDINATES, COMPANY_ADDRESS } from '../../../../constants';
 

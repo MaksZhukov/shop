@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
-import { PRIVATE_PATHS } from '../../constants';
-import { useStore } from '../../store';
-import Loader from '../Loader/Loader';
+import { PRIVATE_PATHS } from '../../../constants';
+import { useStore } from '../../../store';
+import Loader from '../../ui/Loader/Loader';
 interface Props {
 	children: ReactNode;
 }
@@ -15,7 +15,6 @@ const RouteShield = ({ children }: Props) => {
 		if (!store.user.id && store.isInitialRequestDone && PRIVATE_PATHS.includes(router.pathname)) {
 			router.push('/', undefined, { shallow: true });
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [store.user.id, store.isInitialRequestDone]);
 
 	if (PRIVATE_PATHS.includes(router.pathname)) {

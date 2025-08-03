@@ -1,5 +1,5 @@
 import { Button, IconButton, Typography } from '@mui/material';
-import { ShareIcon } from 'components/Icons';
+import { ShareIcon } from 'components/icons';
 import { useSnackbar } from 'notistack';
 
 interface Props {

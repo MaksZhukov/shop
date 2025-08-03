@@ -23,3 +23,4 @@ export { HomeIcon } from './HomeIcon';
 export { HomeFilledIcon } from './HomeFilledIcon';
 export { DashboardIcon } from './DashboardIcon';
 export { CloseIcon } from './CloseIcon';
+export { OptionsIcon } from './OptionsIcons';

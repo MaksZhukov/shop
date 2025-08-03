@@ -19,17 +19,17 @@ import {
 	PageProductWheel
 } from 'api/pages/types';
 import { Product as IProduct } from 'api/types';
-import FavoriteButton from 'components/FavoriteButton';
+import FavoriteButton from 'components/features/FavoriteButton';
 import GalleryImages from 'components/features/GalleryImages/GalleryImages';
-import Image from 'components/Image';
-import Typography from 'components/Typography';
+import Image from 'components/features/Image';
+import Typography from 'components/ui/Typography';
 import { FC, useState } from 'react';
 import { isSparePart, isTire, isWheel } from 'services/ProductService';
-import WhiteBox from 'components/WhiteBox';
-import { ChevronDownIcon, ChevronUpIcon, PhoneCallFilledIcon, PhoneCallIcon, ShareIcon } from 'components/Icons';
+import WhiteBox from 'components/ui/WhiteBox';
+import { ChevronDownIcon, ChevronUpIcon, PhoneCallFilledIcon, PhoneCallIcon, ShareIcon } from 'components/icons';
 import { ShareButton } from 'components/features/ShareButton';
-import { Carousel } from 'components/Carousel';
-import ProductItem from 'components/ProductItem';
+import { Carousel } from 'components/ui/Carousel';
+import ProductItem from 'components/features/ProductItem';
 
 interface Props {
 	page: PageProduct & (PageProductCabin | PageProductSparePart | PageProductTire | PageProductWheel);

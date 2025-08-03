@@ -2,7 +2,7 @@ import { Box, IconButton, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { Link } from 'components/ui';
-import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'components/Icons';
+import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'components/icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
 import Autocomplete from 'components/ui/Autocomplete';
 import Profile from '../Profile';
@@ -49,7 +49,7 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 			mb={{ xs: 0, md: isScrolled ? 0 : 1 }}
 			gap={2}
 			alignItems='center'
-			justifyContent={{ xs: 'space-between', sm: 'initial' }}
+			justifyContent={{ xs: 'space-between', md: 'initial' }}
 		>
 			<Link href='/'>
 				<Box width={170} height={40} bgcolor='gray' display='flex' alignItems='center' justifyContent='center'>
@@ -72,7 +72,7 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 				loading={isFetching}
 				inputValue={searchValue}
 				withSearchIcon
-				sx={{ flex: 1, display: { xs: 'none', sm: 'flex' } }}
+				sx={{ flex: 1, display: { xs: 'none', md: 'flex' } }}
 				fullWidth
 				open={searchValue.length > 2}
 				noOptionsText='Нет результатов'
@@ -94,7 +94,7 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 				)}
 			/>
 
-			<Box display={'flex'} sx={{ display: { xs: 'none', sm: 'flex' } }}>
+			<Box display={'flex'} sx={{ display: { xs: 'none', md: 'flex' } }}>
 				<Profile onClickSignIn={onClickSignIn} onClickLogout={onClickLogout} />
 
 				<NavbarButton
@@ -117,7 +117,7 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 			</Box>
 
 			{/* Mobile phone link */}
-			<Box alignItems={'center'} gap={0.5} sx={{ display: { xs: 'flex', sm: 'none' } }}>
+			<Box alignItems={'center'} gap={0.5} sx={{ display: { xs: 'flex', md: 'none' } }}>
 				<IconButton sx={{ padding: '0' }} onClick={onOpenMobileSearch}>
 					<SearchIcon />
 				</IconButton>

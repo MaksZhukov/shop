@@ -5,7 +5,7 @@ import { UIEventHandler, useEffect, useRef, useState } from 'react';
 // import VirtualizedListBox from './VirtualizedListBox';
 import styles from './Autocomplete.module.scss';
 import { usePreviousImmediate } from 'rooks';
-import { ChevronDownIcon, SearchIcon } from 'components/Icons';
+import { ChevronDownIcon, SearchIcon } from 'components/icons';
 
 const Autocomplete = <
 	T,

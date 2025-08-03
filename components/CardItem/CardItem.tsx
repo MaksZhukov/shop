@@ -1,9 +1,9 @@
 import { Box, useMediaQuery } from '@mui/material';
 import Link from '@mui/material/Link';
 import { Image as IImage } from 'api/types';
-import Image from 'components/Image';
+import Image from 'components/features/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
-import Typography from 'components/Typography';
+import Typography from 'components/ui/Typography';
 import NextLink from 'next/link';
 import { FC } from 'react';
 interface Props {

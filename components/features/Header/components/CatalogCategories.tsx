@@ -1,7 +1,7 @@
 import { Box, Button, Popover, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'components/ui';
-import { DashboardFilledIcon, ChevronRightIcon, CloseIcon } from 'components/Icons';
+import { DashboardFilledIcon, ChevronRightIcon, CloseIcon } from 'components/icons';
 import { useQuery } from '@tanstack/react-query';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
@@ -48,7 +48,7 @@ export const CatalogCategories: React.FC = () => {
 	return (
 		<>
 			<Button
-				sx={{ display: { xs: 'none', sm: 'flex' } }}
+				sx={{ display: { xs: 'none', md: 'flex' } }}
 				size='medium'
 				startIcon={catalogOpen ? <CloseIcon /> : <DashboardFilledIcon />}
 				variant='contained'

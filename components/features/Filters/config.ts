@@ -6,7 +6,7 @@ import { ReactNode, UIEventHandler } from 'react';
 
 import { EngineVolume } from 'api/engineVolumes/types';
 import { BODY_STYLES_SLUGIFY, FUELS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'config';
-import { BODY_STYLES, FUELS, TRANSMISSIONS } from '../../constants';
+import { BODY_STYLES, FUELS, TRANSMISSIONS } from '../../../constants';
 import { AutocompleteType, NumberType } from './types';
 
 interface Params {

@@ -1,6 +1,6 @@
 import { Button, IconButton, Typography } from '@mui/material';
 import { Product } from 'api/types';
-import { HeartFilledIcon, FavoriteAddIcon } from 'components/Icons';
+import { HeartFilledIcon, FavoriteAddIcon } from 'components/icons';
 import { observer } from 'mobx-react';
 import { useSnackbar } from 'notistack';
 import { useStore } from 'store';

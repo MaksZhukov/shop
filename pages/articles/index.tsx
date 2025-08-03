@@ -5,7 +5,7 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { ApiResponse } from 'api/types';
 import CardItem from 'components/CardItem';
-import Typography from 'components/Typography';
+import Typography from 'components/ui/Typography';
 import { NextPage } from 'next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -40,7 +40,7 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 						start: qPage === '1' ? 0 : (+qPage - 1) * LIMIT,
 						limit: LIMIT
 					},
-                    sort: 'createdAt:desc',
+					sort: 'createdAt:desc',
 					populate: 'mainImage'
 				});
 				setData(data);

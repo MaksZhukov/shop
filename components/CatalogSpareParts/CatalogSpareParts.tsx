@@ -13,7 +13,7 @@ import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { ApiResponse, Filters } from 'api/types';
 import axios, { AxiosResponse } from 'axios';
 import Catalog from 'components/Catalog';
-import { getSparePartsFiltersConfig } from 'components/Filters/config';
+import { getSparePartsFiltersConfig } from 'components/features/Filters/config';
 import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'config';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -98,6 +98,7 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 					}),
 					sold: false
 				},
+				populate: ['brand', 'images'],
 				pagination: { start: (page - 1) * API_DEFAULT_LIMIT }
 			})
 	});

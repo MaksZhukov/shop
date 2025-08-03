@@ -2,8 +2,8 @@ import { Box, Button, Input, Modal, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { ModalContainer } from 'components/ui';
-import { SearchIcon } from 'components/Icons';
-import Loader from 'components/Loader';
+import { SearchIcon } from 'components/icons';
+import Loader from 'components/ui/Loader';
 import reactStringReplace from 'react-string-replace';
 import { highlightSearchTerms } from 'services/StringService';
 

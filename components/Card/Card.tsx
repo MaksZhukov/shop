@@ -2,10 +2,10 @@ import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
-import Image from 'components/Image';
+import Image from 'components/features/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
-import Typography from 'components/Typography';
-import WhiteBox from 'components/WhiteBox';
+import Typography from 'components/ui/Typography';
+import WhiteBox from 'components/ui/WhiteBox';
 import { FC } from 'react';
 
 interface Props {

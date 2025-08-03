@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
-import WhiteBox from 'components/WhiteBox';
-import { ChevronUpIcon, ChevronDownIcon } from 'components/Icons';
+import WhiteBox from 'components/ui/WhiteBox';
+import { ChevronUpIcon, ChevronDownIcon } from 'components/icons';
 
 interface Props {
 	onClickFind?: (values: { [key: string]: string | null }) => void;
@@ -125,7 +125,7 @@ const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: P
 	);
 
 	return (
-		<WhiteBox p={2} withShadow>
+		<>
 			{mainFiltersConfig.map(renderFilterItem)}
 			{isMoreFilters && additionalFiltersConfig.map(renderFilterItem)}
 			<Button
@@ -139,7 +139,7 @@ const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: P
 			<Button onClick={handleClickFind} fullWidth variant='contained'>
 				Показать {total?.toLocaleString()}
 			</Button>
-		</WhiteBox>
+		</>
 	);
 };
 

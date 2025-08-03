@@ -1,15 +1,15 @@
 import { Button, Grid, SxProps, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import FavoriteButton from 'components/FavoriteButton';
-import Image from 'components/Image';
-import Typography from 'components/Typography';
-import WhiteBox from 'components/WhiteBox';
-import { CartFilledIcon } from 'components/Icons/CartFilledIcon';
+import FavoriteButton from 'components/features/FavoriteButton';
+import Image from 'components/features/Image';
+import Typography from 'components/ui/Typography';
+import WhiteBox from 'components/ui/WhiteBox';
+import { CartFilledIcon } from 'components/icons/CartFilledIcon';
 import { SparePart } from 'api/spareParts/types';
 import { Product } from 'api/types';
 import { isSparePart } from 'services/ProductService';
 import styles from './ProductItem.module.scss';
-import { Carousel } from 'components/Carousel';
+import { Carousel } from 'components/ui/Carousel';
 import { Link } from 'components/ui';
 
 interface Props {

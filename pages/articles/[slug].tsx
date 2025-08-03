@@ -2,7 +2,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 import { fetchArticle } from 'api/articles/articles';
 import { Article as IArticle } from 'api/articles/types';
 import BlockImages from 'components/BlockImages/BlockImages';
-import Image from 'components/Image/Image';
+import Image from 'components/features/Image/Image';
 import ReactMarkdown from 'components/ReactMarkdown/ReactMarkdown';
 
 import { NextPage } from 'next';
