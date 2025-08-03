@@ -6,7 +6,12 @@ export const PRIVATE_PATHS = ['/profile'];
 export const OFFSET_SCROLL_LOAD_MORE = 100;
 export const FUELS = ['бензин', 'дизель', 'гибрид', 'электро'] as const;
 
+export const FUELS_OPTIONS = FUELS.map((item) => ({ label: item, value: item }));
+
 export const TRANSMISSIONS = ['акпп', 'мкпп', 'робот', 'вариатор'] as const;
+
+export const TRANSMISSIONS_OPTIONS = TRANSMISSIONS.map((item) => ({ label: item, value: item }));
+
 export const BODY_STYLES = [
 	'седан',
 	'хэтчбек',
@@ -21,6 +26,8 @@ export const BODY_STYLES = [
 	'бортовой',
 	'тягач'
 ] as const;
+
+export const BODY_STYLES_OPTIONS = BODY_STYLES.map((item) => ({ label: item, value: item }));
 
 export const SEASONS = ['зимние', 'летние', 'всесезонные'] as const;
 

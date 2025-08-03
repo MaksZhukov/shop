@@ -10,7 +10,7 @@ interface ArticleCardProps {
 }
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article, index }) => {
-	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+	const isMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
 	const isFirstArticle = index === 0;
 	const imageWidth = !isMobile || isFirstArticle ? 336 : 92;
 	const imageHeight = !isMobile || isFirstArticle ? 190 : 92;

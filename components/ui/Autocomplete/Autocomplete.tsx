@@ -2,7 +2,6 @@ import { AutocompleteProps, Autocomplete as MUIAutocomplete, TextField } from '@
 import classNames from 'classnames';
 import { UIEventHandler, useEffect, useRef, useState } from 'react';
 
-// import VirtualizedListBox from './VirtualizedListBox';
 import styles from './Autocomplete.module.scss';
 import { usePreviousImmediate } from 'rooks';
 import { ChevronDownIcon, SearchIcon } from 'components/icons';

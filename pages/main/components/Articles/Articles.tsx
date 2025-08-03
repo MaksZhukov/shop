@@ -1,4 +1,3 @@
-import { useMediaQuery } from '@mui/material';
 import { Article } from 'api/articles/types';
 import { ArticlesHeader } from './ArticlesHeader';
 import { ArticlesGrid } from './ArticlesGrid';
