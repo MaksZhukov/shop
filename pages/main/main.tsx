@@ -62,9 +62,9 @@ export const getServerSideProps = getPageProps(
 			'serviceStations.image'
 		]
 	}),
-	async () => ({
-		brands: (
-			await fetchBrands({
+	async (context, deviceType) => {
+		const [brands, newSpareParts, articles, carsOnParts, sparePartsTotal] = await Promise.all([
+			fetchBrands({
 				populate: ['image'],
 				sort: 'name',
 				filters: {
@@ -75,43 +75,36 @@ export const getServerSideProps = getPageProps(
 					}
 				},
 				pagination: { limit: API_MAX_LIMIT }
-			})
-		).data.data
-	}),
-	async () => ({
-		newSpareParts: (
-			await fetchSpareParts({
+			}),
+			fetchSpareParts({
 				populate: ['images', 'brand', 'volume'],
 				pagination: { limit: 10 }
-			})
-		).data.data
-	}),
-	async (ctx: any, deviceType: 'desktop' | 'mobile') => ({
-		articles: (
-			await fetchArticles({
+			}),
+			fetchArticles({
 				populate: ['mainImage'],
 				sort: ['createdAt:desc'],
 				pagination: { limit: deviceType === 'mobile' ? 5 : 8 }
-			})
-		).data.data
-	}),
-	async () => ({
-		carsOnParts: (
-			await fetchCarsOnParts({
+			}),
+			fetchCarsOnParts({
 				populate: ['images', 'volume', 'brand', 'model', 'generation'],
 				pagination: { limit: 10 }
+			}),
+			fetchSpareParts({
+				pagination: { limit: 0 },
+				filters: {
+					sold: false
+				}
 			})
-		).data.data
-	}),
-	async () => ({
-		sparePartsTotal:
-			(
-				await fetchSpareParts({
-					pagination: { limit: 0 },
-					filters: {
-						sold: false
-					}
-				})
-			).data.meta?.pagination?.total || 0
-	})
+		]);
+
+		return {
+			props: {
+				brands: brands.data.data,
+				newSpareParts: newSpareParts.data.data,
+				articles: articles.data.data,
+				carsOnParts: carsOnParts.data.data,
+				sparePartsTotal: sparePartsTotal.data.meta?.pagination?.total || 0
+			}
+		};
+	}
 );

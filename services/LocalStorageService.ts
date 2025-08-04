@@ -34,3 +34,16 @@ export const removeFavorites = (favoritesIDs: number[]) => {
 		JSON.stringify(favoritesLS.filter((item) => !favoritesIDs.includes(item.id)))
 	);
 };
+
+export const getSearchHistory = (): string[] => {
+	if (typeof window === 'undefined' || !window.localStorage) {
+		return [];
+	}
+
+	let result = localStorage.getItem('searchHistory');
+	return result ? JSON.parse(result) : [];
+};
+
+export const saveSearchHistory = (searchHistory: string[]) => {
+	localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+};

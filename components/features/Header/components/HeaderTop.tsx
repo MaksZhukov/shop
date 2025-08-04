@@ -1,46 +1,72 @@
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Input } from '@mui/material';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'components/ui';
 import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'components/icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
-import Autocomplete from 'components/ui/Autocomplete';
 import Profile from '../Profile';
-import reactStringReplace from 'react-string-replace';
-import { highlightSearchTerms } from 'services/StringService';
 import { CatalogCategories } from './CatalogCategories';
+import { SearchHistoryChips, SearchResults } from './';
+import WhiteBox from 'components/ui/WhiteBox';
+import Loader from 'components/ui/Loader';
+import { SparePart } from 'api/spareParts/types';
+import { useOutsideClick } from 'rooks';
 
 interface HeaderTopProps {
 	isScrolled: boolean;
 	searchValue: string;
-	setSearchValue: (value: string) => void;
-	searchedSpareParts: any;
+	onChangeSearchValue: (value: string) => void;
+	searchHistory: string[];
+	searchedSpareParts: SparePart[];
 	isFetching: boolean;
+	setSearchHistory: (value: string[]) => void;
 	onClickSignIn: () => void;
 	onClickLogout: () => void;
 	onOpenMobileSearch: () => void;
+	onSearchSelect: (item: SparePart) => void;
 	onOpenMobileContacts: () => void;
+	onDeleteSearchHistory: (value: string) => void;
+	onClearSearchHistory: () => void;
 }
 
 export const HeaderTop: React.FC<HeaderTopProps> = ({
 	isScrolled,
 	searchValue,
-	setSearchValue,
+	onChangeSearchValue,
+	searchHistory,
 	searchedSpareParts,
 	isFetching,
+	setSearchHistory,
 	onClickSignIn,
 	onClickLogout,
 	onOpenMobileSearch,
-	onOpenMobileContacts
+	onOpenMobileContacts,
+	onSearchSelect,
+	onDeleteSearchHistory,
+	onClearSearchHistory
 }) => {
 	const router = useRouter();
+	const [open, setOpen] = useState(false);
 
-	const handleInputChange = async (_: React.SyntheticEvent, value: string) => {
-		setSearchValue(value);
+	const searchRefContainer = useRef<HTMLDivElement>(null);
+
+	useOutsideClick(searchRefContainer, () => setOpen(false));
+
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		onChangeSearchValue(value);
+		setOpen(value.length > 2);
 	};
 
-	const handleChange = (_: React.SyntheticEvent, value: any) => {
-		router.push(`/spare-parts/${value.brand.slug}/${value.slug}`);
+	const handleInputFocus = () => {
+		if (searchValue.length > 2) {
+			setOpen(true);
+		}
+	};
+
+	const handleSearchSelect = (item: SparePart) => {
+		onSearchSelect(item);
+		setOpen(false);
 	};
 
 	return (
@@ -59,40 +85,43 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 
 			<CatalogCategories />
 
-			<Autocomplete
-				options={
-					searchedSpareParts?.data?.data.map((item: any) => ({
-						label: item.h1,
-						slug: item.slug,
-						brand: item.brand,
-						value: item.id
-					})) || []
-				}
-				loadingText='Загрузка...'
-				loading={isFetching}
-				inputValue={searchValue}
-				withSearchIcon
-				sx={{ flex: 1, display: { xs: 'none', md: 'flex' } }}
-				fullWidth
-				open={searchValue.length > 2}
-				noOptionsText='Нет результатов'
-				onChange={handleChange}
-				onInputChange={handleInputChange}
-				placeholder='Поиск запчастей'
-				renderOption={(props, option) => (
-					<li {...props}>
-						{reactStringReplace(
-							option.label,
-							highlightSearchTerms(option.label, searchValue),
-							(match, i) => (
-								<Typography key={i} component='span' color='text.primary'>
-									{match}
-								</Typography>
-							)
+			<Box ref={searchRefContainer} display={{ xs: 'none', md: 'flex' }} flex={1} position='relative'>
+				<Input
+					sx={{ pl: 1 }}
+					onFocus={handleInputFocus}
+					size='medium'
+					startAdornment={<SearchIcon />}
+					value={searchValue}
+					placeholder='Поиск запчастей'
+					fullWidth
+					onChange={handleInputChange}
+				/>
+
+				{open && (
+					<WhiteBox
+						borderRadius={1}
+						px={2}
+						py={1}
+						sx={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 1000 }}
+					>
+						<SearchHistoryChips
+							searchHistory={searchHistory}
+							onSearchHistoryClick={onChangeSearchValue}
+							onDeleteSearchHistory={onDeleteSearchHistory}
+							onClearSearchHistory={onClearSearchHistory}
+						/>
+						{isFetching && <Loader />}
+						{searchValue.length > 2 && (
+							<SearchResults
+								searchedSpareParts={searchedSpareParts}
+								searchValue={searchValue}
+								isFetching={isFetching}
+								onSearchSelect={handleSearchSelect}
+							/>
 						)}
-					</li>
+					</WhiteBox>
 				)}
-			/>
+			</Box>
 
 			<Box display={'flex'} sx={{ display: { xs: 'none', md: 'flex' } }}>
 				<Profile onClickSignIn={onClickSignIn} onClickLogout={onClickLogout} />
