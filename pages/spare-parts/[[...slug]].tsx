@@ -176,5 +176,5 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 			...(kindSparePart ? { kindSparePart } : {})
 		};
 	}
-	return props;
+	return { props };
 });

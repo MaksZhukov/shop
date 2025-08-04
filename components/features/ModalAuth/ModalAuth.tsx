@@ -2,9 +2,9 @@ import { Box, Modal, Link } from '@mui/material';
 import { useState } from 'react';
 import AuthRegisterForm from './AuthRegisterForm';
 import ForgotForm from './ForgotForm/ForgotForm';
-import styles from './ModalAuth.module.scss';
 import ResetForm from './ResetForm';
 import { ModalAuthStates } from './types';
+import { ModalContainer } from 'components/ui';
 
 interface Props {
 	onChangeModalOpened: (value: boolean) => void;
@@ -42,14 +42,29 @@ const ModalAuth = ({ onChangeModalOpened, isResetPassword }: Props) => {
 		['login']: renderAuthRegisterForm,
 		['register']: renderAuthRegisterForm
 	};
+	const title = {
+		['forgot']: 'Восстановление пароля',
+		['reset']: 'Сброс пароля',
+		['login']: 'Авторизация',
+		['register']: 'Регистрация'
+	};
 
 	return (
 		<Modal open onClose={handleModalClose}>
-			<div className={styles.container}>
+			<ModalContainer
+				sx={{
+					maxWidth: '400px',
+					position: 'absolute',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)'
+				}}
+				onClose={handleModalClose}
+				title={title[type]}
+			>
 				{formElement[type]}
 				{type !== 'reset' && (
 					<>
-						{' '}
 						<Box textAlign='center' marginTop='10px'>
 							<Link onClick={handleClickToggleType(type === 'login' ? 'register' : 'login')}>
 								{type === 'login' ? 'Зарегистрироваться' : 'Войти'}
@@ -62,7 +77,7 @@ const ModalAuth = ({ onChangeModalOpened, isResetPassword }: Props) => {
 						</Box>
 					</>
 				)}
-			</div>
+			</ModalContainer>
 		</Modal>
 	);
 };

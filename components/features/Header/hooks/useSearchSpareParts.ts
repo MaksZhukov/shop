@@ -12,6 +12,7 @@ export const useSearchSpareParts = (searchValue: string) => {
 		queryFn: () =>
 			fetchSpareParts({
 				pagination: { limit: 10 },
+				populate: ['brand'],
 				filters: { h1: { $contains: debouncedSearchValue } }
 			})
 	});

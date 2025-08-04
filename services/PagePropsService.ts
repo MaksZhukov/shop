@@ -1,51 +1,80 @@
 import { fetchLayout } from 'api/layout/layout';
 import { ApiResponse } from 'api/types';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { UAParser } from 'ua-parser-js';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
-export const getPageProps =
-	<T>(
-		fetchPage?: (context: any, deviceType: 'desktop' | 'mobile') => Promise<AxiosResponse<ApiResponse<T>>>,
-		...functions: ((context: any, deviceType: 'desktop' | 'mobile') => any)[]
-	) =>
-	async (context: any) => {
-		const ua = context?.req?.headers['user-agent'];
-		const deviceType = ua ? UAParser(ua).device.type : 'desktop';
-		const deviceTypeResult = deviceType === 'mobile' || deviceType === 'tablet' ? 'mobile' : 'desktop';
-		let props = { page: { seo: {} }, layout: { footer: {} } } as {
-			layout: { footer: any };
-			[key: string]: any;
-		};
+type DeviceType = 'desktop' | 'mobile';
+
+type FetchFunction<T> = (
+	context: GetServerSidePropsContext,
+	deviceType: DeviceType
+) => Promise<GetServerSidePropsResult<T>>;
+
+const getDeviceType = (userAgent?: string): DeviceType => {
+	if (!userAgent) return 'desktop';
+
+	const parser = new UAParser(userAgent);
+	const deviceType = parser.getDevice().type;
+
+	return deviceType === 'mobile' || deviceType === 'tablet' ? 'mobile' : 'desktop';
+};
+
+const handleErrorRedirect = (status: number): GetServerSidePropsResult<Record<string, object>> | null => {
+	switch (status) {
+		case 404:
+			return { redirect: { destination: '/404', permanent: false } };
+		case 500:
+			return { redirect: { destination: '/500', permanent: false } };
+		case 301:
+		case 302:
+			return { redirect: { destination: '/', permanent: status === 301 } };
+		default:
+			return null;
+	}
+};
+
+export const getPageProps = (
+	fetchPage?: FetchFunction<AxiosResponse<ApiResponse<Record<string, object>>>>,
+	fetchAdditional?: FetchFunction<GetServerSidePropsResult<Record<string, object>>>
+) => {
+	return async (context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Record<string, object>>> => {
+		const deviceType = getDeviceType(context?.req?.headers['user-agent']);
+
+		let result: any = { props: {} };
+
 		try {
-			const [layoutResponse, response, ...restResponses] = await Promise.all([
+			const fetchFunctions = [
 				fetchLayout(),
-				...(fetchPage ? [fetchPage(context, deviceTypeResult)] : []),
-				...functions.map((func) => func(context, deviceTypeResult))
-			]);
-			[...(fetchPage ? restResponses : response ? [response, ...restResponses] : [...restResponses])].forEach(
-				(item) => {
-					Object.keys(item).forEach((key) => {
-						props[key] = item[key];
-					});
+				fetchPage ? fetchPage(context, deviceType) : Promise.resolve({ props: {} }),
+				...(fetchAdditional ? [fetchAdditional(context, deviceType)] : [])
+			];
+
+			const responses = await Promise.all(fetchFunctions);
+			const [layoutResponse, pageResponse, additionalResponse] = responses;
+
+			if (additionalResponse && additionalResponse) {
+				result = additionalResponse;
+			}
+
+			if (fetchPage && pageResponse && 'data' in pageResponse && pageResponse.data.data) {
+				result.props.page = pageResponse.data.data;
+			}
+
+			if (layoutResponse && 'data' in layoutResponse && layoutResponse.data?.data) {
+				result.props.layout = layoutResponse.data.data;
+			}
+
+			return result;
+		} catch (error) {
+			if (error instanceof AxiosError && error.response?.status) {
+				const redirect = handleErrorRedirect(error.response.status);
+				if (redirect) {
+					return redirect;
 				}
-			);
-
-			if (fetchPage) {
-				props.page = response.data.data;
 			}
 
-			props.layout = layoutResponse.data.data;
-		} catch (err: any) {
-			console.log('ERROR', err);
-			if (!axios.isAxiosError(err)) {
-				console.log(err);
-			}
-			if (err?.response?.status === 404) {
-				return { redirect: { destination: '/404' } };
-			}
-			if (err?.response?.status === 500) {
-				return { redirect: { destination: '/500' } };
-			}
+			return { redirect: { destination: '/500', permanent: false } };
 		}
-		return { props };
 	};
+};

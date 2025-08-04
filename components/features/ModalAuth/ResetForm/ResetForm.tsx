@@ -54,9 +54,6 @@ const ResetForm = ({ onChangeType, onChangeIsLoading, isLoading }: Props) => {
 	};
 	return (
 		<form onSubmit={handleClickSubmit}>
-			<Typography textAlign='center' variant='h4'>
-				Изменение пароля
-			</Typography>
 			<OutlinedInput
 				fullWidth
 				disabled={isLoading}

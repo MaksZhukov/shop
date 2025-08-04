@@ -121,7 +121,7 @@ function MyApp({
 										h1={restPageProps.data?.h1 || restPageProps.page?.name}
 									></Breadcrumbs>
 									<Container>
-										<Component {...restPageProps} socials={layout.footer?.socials} />
+										<Component {...restPageProps} />
 									</Container>
 								</ErrorBoundary>
 							</RouteShield>

@@ -1,18 +1,22 @@
 import { AppBar, Container, useTheme } from '@mui/material';
-import { observer } from 'mobx-react';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { useHeaderScroll, useSearchSpareParts, useAuthModal, useMobileModals } from './hooks';
+import React, { FC, useState } from 'react';
+import {
+	useHeaderScroll,
+	useSearchSpareParts,
+	useAuthModal,
+	useMobileModals,
+	useSearchHistory,
+	useSearchNavigation
+} from './hooks';
 import { HeaderTop, HeaderBottom, MobileBottomNav, MobileSearchModal, MobileContactsModal } from './components';
 import ModalAuth from 'components/features/ModalAuth';
+import { SparePart } from 'api/spareParts/types';
 
-interface Props {}
-
-const Header = observer(({}: Props) => {
+const Header: FC = () => {
 	const theme = useTheme();
 	const { code } = useRouter().query;
 	const [searchValue, setSearchValue] = useState<string>('');
-
 	const { isScrolled } = useHeaderScroll();
 	const { searchedSpareParts, isFetching } = useSearchSpareParts(searchValue);
 	const { isOpenedAuthModal, setIsOpenedAuthModal, handleClickSignIn, handleClickLogout } = useAuthModal();
@@ -23,6 +27,31 @@ const Header = observer(({}: Props) => {
 		setIsOpenedMobileSearch,
 		handleCloseMobileSearch
 	} = useMobileModals();
+	const { searchHistory, setSearchHistory, deleteSearchHistory, addToSearchHistory, clearSearchHistory } =
+		useSearchHistory();
+	const { handleSearchSelect } = useSearchNavigation(addToSearchHistory);
+
+	const handleDeleteSearchHistory = (value: string) => {
+		deleteSearchHistory(value);
+	};
+
+	const handleSearchSelectWithValue = (item: SparePart) => {
+		handleSearchSelect(item, searchValue);
+	};
+
+	const handleCloseMobileContacts = () => {
+		setIsOpenedMobileContacts(false);
+	};
+
+	const handleOpenMobileSearch = () => {
+		setIsOpenedMobileSearch(true);
+	};
+
+	const handleOpenMobileContacts = () => {
+		setIsOpenedMobileContacts(true);
+	};
+
+	const searchedSparePartsData = searchedSpareParts?.data?.data || [];
 
 	return (
 		<>
@@ -31,13 +60,18 @@ const Header = observer(({}: Props) => {
 					<HeaderTop
 						isScrolled={isScrolled}
 						searchValue={searchValue}
-						setSearchValue={setSearchValue}
-						searchedSpareParts={searchedSpareParts}
+						onChangeSearchValue={setSearchValue}
+						searchHistory={searchHistory}
+						setSearchHistory={setSearchHistory}
+						searchedSpareParts={searchedSparePartsData}
 						isFetching={isFetching}
 						onClickSignIn={handleClickSignIn}
 						onClickLogout={handleClickLogout}
-						onOpenMobileSearch={() => setIsOpenedMobileSearch(true)}
-						onOpenMobileContacts={() => setIsOpenedMobileContacts(true)}
+						onDeleteSearchHistory={handleDeleteSearchHistory}
+						onClearSearchHistory={clearSearchHistory}
+						onSearchSelect={handleSearchSelectWithValue}
+						onOpenMobileSearch={handleOpenMobileSearch}
+						onOpenMobileContacts={handleOpenMobileContacts}
 					/>
 
 					<HeaderBottom isScrolled={isScrolled} />
@@ -48,18 +82,23 @@ const Header = observer(({}: Props) => {
 				isOpened={isOpenedMobileSearch}
 				onClose={handleCloseMobileSearch}
 				searchValue={searchValue}
-				setSearchValue={setSearchValue}
-				searchedSpareParts={searchedSpareParts}
+				onChangeSearchValue={setSearchValue}
+				searchHistory={searchHistory}
+				onSearchSelect={handleSearchSelectWithValue}
+				setSearchHistory={setSearchHistory}
+				searchedSpareParts={searchedSparePartsData}
 				isFetching={isFetching}
+				onDeleteSearchHistory={handleDeleteSearchHistory}
+				onClearSearchHistory={clearSearchHistory}
 			/>
 
-			<MobileContactsModal isOpened={isOpenedMobileContacts} onClose={() => setIsOpenedMobileContacts(false)} />
+			<MobileContactsModal isOpened={isOpenedMobileContacts} onClose={handleCloseMobileContacts} />
 
 			<MobileBottomNav onClickSignIn={handleClickSignIn} onClickLogout={handleClickLogout} />
 
 			{isOpenedAuthModal && <ModalAuth isResetPassword={!!code} onChangeModalOpened={setIsOpenedAuthModal} />}
 		</>
 	);
-});
+};
 
 export default Header;
