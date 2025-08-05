@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 import { PRIVATE_PATHS } from '../../../constants';
 import { useStore } from '../../../store';
-import Loader from '../../ui/Loader/Loader';
+import { Loader } from 'components/ui';
 interface Props {
 	children: ReactNode;
 }

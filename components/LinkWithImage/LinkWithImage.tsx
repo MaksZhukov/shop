@@ -1,10 +1,8 @@
 import { LinkProps } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import Image from 'components/features/Image';
-import Typography from 'components/ui/Typography';
-import NextLink from 'next/link';
+import { Typography } from 'components/ui';
 import { CSSProperties, FC, HTMLAttributeAnchorTarget } from 'react';
-import styles from './LinkWithImage.module.scss';
 import { Link } from 'components/ui';
 
 interface Props {

@@ -1,10 +1,9 @@
-import { AutocompleteInputChangeReason, Box, Button, Input, Typography } from '@mui/material';
+import { Box, Button, Input } from '@mui/material';
 import Autocomplete from 'components/ui/Autocomplete';
 import { useRouter } from 'next/router';
 import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
-import WhiteBox from 'components/ui/WhiteBox';
 import { ChevronUpIcon, ChevronDownIcon } from 'components/icons';
 
 interface Props {
@@ -76,7 +75,7 @@ const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: P
 			<Input
 				key={item.id}
 				fullWidth
-				sx={{ bgcolor: '#fff', padding: '0 1em' }}
+				sx={{ bgcolor: 'background.paper', padding: '0 1em' }}
 				onChange={handleChangeNumberInput(item)}
 				value={values[item.id]}
 				placeholder={item.placeholder}

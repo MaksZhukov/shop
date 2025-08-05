@@ -2,8 +2,7 @@ import { Box, Input, Modal } from '@mui/material';
 import React from 'react';
 import { ModalContainer } from 'components/ui';
 import { SearchIcon } from 'components/icons';
-import Loader from 'components/ui/Loader';
-import { saveSearchHistory } from 'services/LocalStorageService';
+import { Loader } from 'components/ui';
 import { SearchHistoryChips, SearchResults } from './';
 import { SparePart } from 'api/spareParts/types';
 

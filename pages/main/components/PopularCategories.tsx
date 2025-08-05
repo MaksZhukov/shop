@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
-import Typography from 'components/ui/Typography';
-import WhiteBox from 'components/ui/WhiteBox';
+import { Typography, WhiteBox } from 'components/ui';
 
 export const PopularCategories: React.FC = () => {
 	return (

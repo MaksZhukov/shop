@@ -17,7 +17,7 @@ import { Product, SEO } from 'api/types';
 import Filters from 'components/features/Filters';
 import { AutocompleteType, NumberType } from 'components/features/Filters/types';
 import ProductItem from 'components/features/ProductItem';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ import { ChevronDownIcon, ChevronRightIcon } from 'components/icons';
 import { BrandWithSparePartsCount } from 'api/brands/types';
 import { Link, ModalContainer } from 'components/ui';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
-import WhiteBox from 'components/ui/WhiteBox';
+import { WhiteBox } from 'components/ui';
 import { OptionsIcon } from 'components/icons';
 
 type SortItem = {
@@ -187,9 +187,9 @@ const Catalog: React.FC<Props> = ({
 							{catalogCategories.map((item) => (
 								<Box key={item.id}>
 									<Box
-										bgcolor={hoveredCategory === item ? '#E2E2E2' : 'transparent'}
+										bgcolor={hoveredCategory === item ? 'custom.bg-surface-3' : 'transparent'}
 										position='relative'
-										sx={{ cursor: 'pointer', ':hover': { bgcolor: '#E2E2E2' } }}
+										sx={{ cursor: 'pointer', ':hover': { bgcolor: 'custom.bg-surface-3' } }}
 										p={1}
 										borderRadius={2}
 										display='flex'
@@ -218,11 +218,13 @@ const Catalog: React.FC<Props> = ({
 														<Box
 															key={category.id}
 															bgcolor={
-																hoveredCategory === category ? '#E2E2E2' : 'transparent'
+																hoveredCategory === category
+																	? 'custom.bg-surface-3'
+																	: 'transparent'
 															}
 															sx={{
 																cursor: 'pointer',
-																':hover': { bgcolor: '#E2E2E2' },
+																':hover': { bgcolor: 'custom.bg-surface-3' },
 																borderRadius: 2
 															}}
 															p={1}
@@ -254,7 +256,7 @@ const Catalog: React.FC<Props> = ({
 					{(!filtersValues.brand || !filtersValues.model) && !isMobile && (
 						<Box
 							mb={2}
-							boxShadow='0px 10px 25px 0px #1018281F'
+							boxShadow={`0px 10px 25px 0px ${theme.palette.custom.shadow}`}
 							px={2}
 							py={4}
 							minHeight={360}
@@ -264,8 +266,8 @@ const Catalog: React.FC<Props> = ({
 							height={360}
 							gap={2}
 							borderRadius={4}
-							border='1px solid #D0D5DD'
-							bgcolor='#EEEEEE'
+							border='1px solid custom.divider'
+							bgcolor='custom.bg-surface-1'
 						>
 							{!filtersValues.brand &&
 								brands.map((brand) => (

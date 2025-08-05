@@ -23,7 +23,6 @@ export const ShareButton = ({ title, text, url, withText = true }: Props) => {
 				await navigator.share(shareData);
 				enqueueSnackbar('Ссылка успешно отправлена', { variant: 'success' });
 			} else {
-				// Fallback for browsers that don't support Web Share API
 				await navigator.clipboard.writeText(window.location.href);
 				enqueueSnackbar('Ссылка скопирована в буфер обмена', { variant: 'success' });
 			}

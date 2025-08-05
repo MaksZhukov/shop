@@ -33,7 +33,7 @@ const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => {
 					onClick={onClose}
 					aria-label='close'
 				>
-					<CloseIcon sx={{ color: '#fff' }} fontSize='large' />
+					<CloseIcon sx={{ color: 'secondary.main' }} fontSize='large' />
 				</IconButton>
 				<Carousel
 					className={styles.carousel}

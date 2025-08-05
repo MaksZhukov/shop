@@ -1,16 +1,11 @@
-import { Button, Grid, Link, SxProps, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import { Car } from 'api/cars/types';
-import Image from 'components/features/Image';
-import Typography from 'components/ui/Typography';
-import NextLink from 'next/link';
-import Slider from 'react-slick';
+import { Typography } from 'components/ui';
 import { CarOnParts } from 'api/cars-on-parts/types';
 import FavoriteButton from 'components/features/FavoriteButton';
-import WhiteBox from 'components/ui/WhiteBox';
-import Carousel from 'react-multi-carousel';
-import styles from './CarItem.module.scss';
+import { WhiteBox, Carousel } from 'components/ui';
 import { Product } from 'api/types';
+import Image from 'components/features/Image';
 
 interface Props {
 	dataFieldsToShow?: { name: string; value: string }[];
@@ -27,19 +22,7 @@ const CarItem = ({ data, width = 342 }: Props) => {
 			</Box>
 			{data.images ? (
 				<Box>
-					<Carousel
-						dotListClass={styles['dot-list']}
-						responsive={{
-							desktop: {
-								breakpoint: { max: 3000, min: 0 },
-								items: 1
-							}
-						}}
-						infinite={true}
-						autoPlay
-						showDots
-						arrows={false}
-					>
+					<Carousel showArrows={false} showDots={false}>
 						{data.images?.map((image) => (
 							<Box key={image.id} height={290}>
 								<Image

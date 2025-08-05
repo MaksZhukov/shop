@@ -2,9 +2,8 @@ import { Box } from '@mui/material';
 import { SparePart } from 'api/spareParts/types';
 import { Button } from 'components/ui';
 import { ChevronRightIcon } from 'components/icons';
-import Typography from 'components/ui/Typography';
+import { Typography, Carousel } from 'components/ui';
 import ProductItem from 'components/features/ProductItem';
-import { Carousel } from 'components/ui/Carousel';
 
 interface NewArrivalsProps {
 	newSpareParts: SparePart[];

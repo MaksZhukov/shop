@@ -1,11 +1,12 @@
 import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material';
 import { Link } from './Link';
+import { FC } from 'react';
 
 export interface ButtonProps extends Omit<MuiButtonProps, 'variant'> {
 	variant?: MuiButtonProps['variant'] | 'link';
 }
 
-export const Button = (props: ButtonProps) => {
+export const Button: FC<ButtonProps> = (props) => {
 	const { variant, ...restProps } = props;
 
 	if (variant === 'link' && props.href) {

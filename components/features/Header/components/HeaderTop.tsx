@@ -7,8 +7,7 @@ import { NavbarButton } from 'components/ui/NavbarButton';
 import Profile from '../Profile';
 import { CatalogCategories } from './CatalogCategories';
 import { SearchHistoryChips, SearchResults } from './';
-import WhiteBox from 'components/ui/WhiteBox';
-import Loader from 'components/ui/Loader';
+import { WhiteBox, Loader } from 'components/ui';
 import { SparePart } from 'api/spareParts/types';
 import { useOutsideClick } from 'rooks';
 
@@ -19,7 +18,6 @@ interface HeaderTopProps {
 	searchHistory: string[];
 	searchedSpareParts: SparePart[];
 	isFetching: boolean;
-	setSearchHistory: (value: string[]) => void;
 	onClickSignIn: () => void;
 	onClickLogout: () => void;
 	onOpenMobileSearch: () => void;
@@ -36,7 +34,6 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 	searchHistory,
 	searchedSpareParts,
 	isFetching,
-	setSearchHistory,
 	onClickSignIn,
 	onClickLogout,
 	onOpenMobileSearch,
@@ -145,7 +142,6 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 				</NavbarButton>
 			</Box>
 
-			{/* Mobile phone link */}
 			<Box alignItems={'center'} gap={0.5} sx={{ display: { xs: 'flex', md: 'none' } }}>
 				<IconButton sx={{ padding: '0' }} onClick={onOpenMobileSearch}>
 					<SearchIcon />

@@ -2,7 +2,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import { Article } from 'api/articles/types';
 import Image from 'components/features/Image';
 import { Link } from 'components/ui';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 
 interface ArticleCardProps {
 	article: Article;

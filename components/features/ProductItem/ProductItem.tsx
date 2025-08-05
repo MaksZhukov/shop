@@ -1,16 +1,11 @@
-import { Button, Grid, SxProps, useMediaQuery } from '@mui/material';
-import { Box } from '@mui/material';
+import { SxProps, useMediaQuery, Box } from '@mui/material';
 import FavoriteButton from 'components/features/FavoriteButton';
 import Image from 'components/features/Image';
-import Typography from 'components/ui/Typography';
-import WhiteBox from 'components/ui/WhiteBox';
+import { Typography, WhiteBox, Button, Link } from 'components/ui';
 import { CartFilledIcon } from 'components/icons/CartFilledIcon';
-import { SparePart } from 'api/spareParts/types';
 import { Product } from 'api/types';
 import { isSparePart } from 'services/ProductService';
-import styles from './ProductItem.module.scss';
 import { Carousel } from 'components/ui/Carousel';
-import { Link } from 'components/ui';
 
 interface Props {
 	data: Product;
@@ -24,7 +19,14 @@ const ProductItem = ({ data, width = 280, imageHeight = 290, sx = { margin: 'aut
 	const imageHeightOffset = 20;
 
 	return (
-		<WhiteBox overflow={'hidden'} width={width} bgcolor='#fff' position='relative' key={data.id} sx={sx}>
+		<WhiteBox
+			overflow={'hidden'}
+			width={width}
+			bgcolor='background.paper'
+			position='relative'
+			key={data.id}
+			sx={sx}
+		>
 			<Box position='absolute' zIndex={1} right={1} top={1}>
 				<FavoriteButton product={data}></FavoriteButton>
 			</Box>

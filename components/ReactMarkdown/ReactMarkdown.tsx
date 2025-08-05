@@ -1,18 +1,17 @@
-import { Box, Link, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import classNames from 'classnames';
 import Image from 'components/features/Image';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import { FC } from 'react';
 import ReactMarkdownLib from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { getRandomBackendLocalUrl } from 'services/BackendUrlService';
+import { Link } from 'components/ui';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
-
-const { publicRuntimeConfig } = getConfig();
 
 interface Props {
 	content: string;
@@ -72,7 +71,7 @@ const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets = {}, v
 					);
 				},
 				a: (data) => {
-					return <Link href={data.href}>{data.children}</Link>;
+					return <Link href={data.href || ''}>{data.children}</Link>;
 				},
 				h3: (data) => (
 					<Typography component='h3' gutterBottom variant='h6'>
