@@ -136,16 +136,13 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 				populate: { spareParts: { count: true } }
 			})
 	});
-
-	const index = catalogCategories?.data.data.findIndex((item: any) => item.id === hoveredCategory?.id) || 0;
-
 	const { data: relatedCatalogCategories } = useQuery({
-		queryKey: ['relatedCatalogCategories', index],
+		queryKey: ['relatedCatalogCategories', hoveredCategory?.id],
 		enabled: !!hoveredCategory,
 		placeholderData: (prev) => prev,
 		queryFn: () =>
 			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
-				pagination: { limit: index * 5 },
+				pagination: { limit: Math.floor(Math.random() * 15), start: Math.floor(Math.random() * 100) },
 				populate: { spareParts: { count: true } }
 			})
 	});
