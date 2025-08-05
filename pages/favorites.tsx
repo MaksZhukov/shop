@@ -14,7 +14,6 @@ import { observer } from 'mobx-react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
-import Slider from 'react-slick';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductTypeSlug } from 'services/ProductService';
 import { useStore } from 'store';
@@ -99,7 +98,7 @@ const Favorites = () => {
 												)}
 												checked={selectedFavoritesIDs.includes(item.id)}
 											></Checkbox>
-											{item.product.images &&
+											{/* {item.product.images &&
 											item.product.images.some((image) => image.formats) ? (
 												<Slider
 													className={classNames(
@@ -139,7 +138,7 @@ const Favorites = () => {
 													width={isMobile ? 500 : 150}
 													height={isMobile ? 250 : 100}
 												></Image>
-											)}
+											)} */}
 										</Box>
 										<Box
 											flex='1'

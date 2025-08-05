@@ -1,5 +1,4 @@
 import { Tune as TuneIcon } from '@mui/icons-material';
-import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, CircularProgress, Container, Input, Modal, useMediaQuery, useTheme } from '@mui/material';
 import { Box } from '@mui/material';
 import { Brand } from 'api/brands/types';
@@ -15,7 +14,7 @@ import classNames from 'classnames';
 import Autocomplete from 'components/ui/Autocomplete';
 import Image from 'components/features/Image';
 import ReactMarkdown from 'components/ReactMarkdown';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import Slider from 'react-slick';
@@ -204,7 +203,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 					unmask: true
 				}}
 			/>
-			<LoadingButton
+			<Button
 				loading={isEmailSending}
 				sx={{
 					padding: '1.25em',
@@ -218,7 +217,7 @@ const BuybackCars = ({ page, cars = [], brands }: Props) => {
 				variant='contained'
 			>
 				Оставить заявку
-			</LoadingButton>
+			</Button>
 		</Box>
 	);
 
@@ -636,7 +635,15 @@ export const getStaticProps = getPageProps(
 			'whyWeLeftImage'
 		]
 	}),
-	async () => ({
-		cars: (await fetchCarsOnParts({ pagination: { limit: 10 }, populate: ['brand', 'model', 'images'] })).data.data
-	})
+	async (context, deviceType) => {
+		const { data } = await fetchCarsOnParts({
+			pagination: { limit: 10 },
+			populate: ['brand', 'model', 'images']
+		});
+		return {
+			props: {
+				cars: data.data
+			}
+		};
+	}
 );
