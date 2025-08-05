@@ -1,6 +1,6 @@
 import { Box, Input, useMediaQuery } from '@mui/material';
 import { Button } from 'components/ui';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import { SocialButtons } from 'components/features/SocialsButtons';
 
 export const CarBuyback: React.FC = () => {

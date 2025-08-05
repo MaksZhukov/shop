@@ -29,7 +29,7 @@ export const Link: FC<LinkProps> = ({ href, children, target, color, size = 'med
 		  }
 		: {};
 	return (
-		<NextLink href={href} style={{ pointerEvents: sx?.pointerEvents }} target={target}>
+		<NextLink href={href} target={target}>
 			<MuiLink color={color} component='span' sx={{ ...sizeStyles[size], ...sx }} style={lineClampStyles}>
 				{children}
 			</MuiLink>

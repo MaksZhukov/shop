@@ -22,13 +22,12 @@ import { Product as IProduct } from 'api/types';
 import FavoriteButton from 'components/features/FavoriteButton';
 import GalleryImages from 'components/features/GalleryImages/GalleryImages';
 import Image from 'components/features/Image';
-import Typography from 'components/ui/Typography';
+import { Typography, WhiteBox } from 'components/ui';
 import { FC, useState } from 'react';
 import { isSparePart, isTire, isWheel } from 'services/ProductService';
-import WhiteBox from 'components/ui/WhiteBox';
 import { ChevronDownIcon, ChevronUpIcon, PhoneCallFilledIcon, PhoneCallIcon, ShareIcon } from 'components/icons';
 import { ShareButton } from 'components/features/ShareButton';
-import { Carousel } from 'components/ui/Carousel';
+import { Carousel } from 'components/ui';
 import ProductItem from 'components/features/ProductItem';
 
 interface Props {
@@ -60,13 +59,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 
 	const handleImageClick = (index: number) => {
 		setCurrentImageIndex(index);
-	};
-
-	const handleScrollDown = () => {
-		if (data.images && data.images.length > 0) {
-			const nextIndex = Math.min(currentImageIndex + 1, data.images.length - 1);
-			setCurrentImageIndex(nextIndex);
-		}
 	};
 
 	const descriptions = isSparePart(data)
@@ -116,7 +108,10 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				<Table sx={{ mt: 1 }}>
 					<TableBody>
 						{descriptions.slice(0, isMoreFilters ? descriptions.length : 5).map((item, index) => (
-							<TableRow sx={{ backgroundColor: index % 2 === 0 ? '#F5F5F5' : 'initial' }} key={data.id}>
+							<TableRow
+								sx={{ backgroundColor: index % 2 === 0 ? 'custom.bg-surface-1' : 'initial' }}
+								key={data.id}
+							>
 								<TableCell sx={{ minWidth: '200px', p: 1, border: 'none' }} padding='none'>
 									<Typography>{item.title}</Typography>
 								</TableCell>
@@ -267,7 +262,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 							{data.h1}
 						</Typography>
 						<Box
-							bgcolor='#F5F5F5'
+							bgcolor='custom.bg-surface-1'
 							borderRadius={3}
 							p={1.5}
 							mb={{ xs: 0, md: 1.5 }}
@@ -404,11 +399,11 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				bottom={50}
 				display={{ xs: 'flex', md: 'none' }}
 				zIndex={2}
-				bgcolor='#F5F5F5'
+				bgcolor='custom.bg-surface-1'
 				left={0}
 				right={0}
 				px={2}
-				borderTop='1px solid #D0D5DD'
+				borderTop='1px solid custom.divider'
 				py={1}
 			>
 				<Button fullWidth variant='contained'>

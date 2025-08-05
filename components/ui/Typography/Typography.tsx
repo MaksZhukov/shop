@@ -1,13 +1,11 @@
-import { SxProps, TypographyProps, Typography as UITypography, useMediaQuery } from '@mui/material';
-import classNames from 'classnames';
-import styles from './Typography.module.scss';
-const Typography = ({
+import { SxProps, TypographyProps, Typography as UITypography } from '@mui/material';
+import { FC } from 'react';
+
+export const Typography: FC<TypographyProps & { component?: React.ElementType; lineClamp?: number }> = ({
 	children,
 	lineClamp,
-	withSeparator,
 	...props
-}: TypographyProps & { component?: React.ElementType; lineClamp?: number; withSeparator?: boolean }) => {
-	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+}: TypographyProps & { component?: React.ElementType; lineClamp?: number }) => {
 	let sx: SxProps = lineClamp
 		? {
 				display: '-webkit-box',
@@ -19,18 +17,8 @@ const Typography = ({
 		: {};
 
 	return (
-		<UITypography
-			sx={{ ...sx, ...props.sx }}
-			{...props}
-			className={classNames(
-				props.className,
-				withSeparator && styles['text_with-separator'],
-				withSeparator && isMobile && styles['text_with-separator_mobile']
-			)}
-		>
+		<UITypography sx={{ ...sx, ...props.sx }} {...props}>
 			{children}
 		</UITypography>
 	);
 };
-
-export default Typography;

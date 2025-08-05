@@ -45,7 +45,7 @@ export const WorkTimetableTrigger: FC<WorkTimetableTriggerProps> = ({ isMobile, 
 
 	const mobileStyles = isMobile
 		? {
-				bgcolor: '#F5F5F5',
+				bgcolor: 'custom.bg-surface-1',
 				cursor: 'pointer',
 				p: 1,
 				justifyContent: 'center',

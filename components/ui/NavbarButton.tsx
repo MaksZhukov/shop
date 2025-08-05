@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { Button, ButtonProps } from './Button';
 
 interface NavbarButtonProps extends ButtonProps {
@@ -5,7 +6,7 @@ interface NavbarButtonProps extends ButtonProps {
 	isActive?: boolean;
 }
 
-export const NavbarButton = (props: NavbarButtonProps) => {
+export const NavbarButton: FC<NavbarButtonProps> = (props) => {
 	return (
 		<Button
 			{...props}

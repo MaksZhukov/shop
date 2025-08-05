@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import React, { memo } from 'react';
+import React from 'react';
 import reactStringReplace from 'react-string-replace';
 import { highlightSearchTerms } from 'services/StringService';
 import { SparePart } from 'api/spareParts/types';

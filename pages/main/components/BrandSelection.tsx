@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { Brand } from 'api/brands/types';
-import Typography from 'components/ui/Typography';
-import WhiteBox from 'components/ui/WhiteBox';
+import { Typography, WhiteBox } from 'components/ui';
 import LinkWithImage from 'components/LinkWithImage';
 
 interface BrandSelectionProps {

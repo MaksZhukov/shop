@@ -50,7 +50,7 @@ export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpen
 					</Typography>
 				</Box>
 				<SocialButtons sx={{ justifyContent: 'center' }} data={SOCIAL_BUTTONS_MOBILE} />
-				<Box mt={1.5} bgcolor='#F5F5F5' p={1.5} py={1} borderRadius={4}>
+				<Box mt={1.5} bgcolor='custom.bg-surface-1' p={1.5} py={1} borderRadius={4}>
 					<Typography variant='h6' fontSize={18}>
 						Авторазборка Полотково ООО "Дриблинг"
 					</Typography>
@@ -61,7 +61,6 @@ export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpen
 						src='https://yandex.com/map-widget/v1/?um=constructor%3A8e4478010012318b78f66dc37db42cd1a6247bbea253e93b24602e1ac041c3c0&amp;source=constructor'
 						width='100%'
 						height='304'
-						frameBorder='0'
 					></iframe>
 					<Button variant='contained' fullWidth onClick={handleOpenYandexMaps} sx={{ mt: 1 }}>
 						Проложить маршрут

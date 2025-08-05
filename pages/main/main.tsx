@@ -4,10 +4,7 @@ import { SparePart } from 'api/spareParts/types';
 import { CarOnParts } from 'api/cars-on-parts/types';
 import { Article } from 'api/articles/types';
 import { PageMain } from 'api/pages/types';
-import type { GetServerSidePropsResult, NextPage } from 'next';
-import { AxiosResponse } from 'axios';
-import { ApiResponse } from 'api/types';
-import { DefaultPage } from 'api/pages/types';
+import type { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 import { API_MAX_LIMIT } from 'api/constants';
 import { fetchPage } from 'api/pages';
@@ -39,7 +36,7 @@ const Main: NextPage<Props> = ({ page, brands, newSpareParts, carsOnParts, artic
 	return (
 		<Box sx={{ my: 4 }}>
 			<MainSection brands={brands} sparePartsTotal={sparePartsTotal} />
-			<Benefits sparePartsTotal={sparePartsTotal} />
+			<Benefits sparePartsTotal={sparePartsTotal} view='grid' />
 			<NewArrivals newSpareParts={newSpareParts} />
 			<BrandSelection brands={brands} />
 			<PopularCategories />

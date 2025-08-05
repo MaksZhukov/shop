@@ -57,7 +57,6 @@ const Header: FC = () => {
 						searchValue={searchValue}
 						onChangeSearchValue={setSearchValue}
 						searchHistory={searchHistory}
-						setSearchHistory={setSearchHistory}
 						searchedSpareParts={searchedSparePartsData}
 						isFetching={isFetching}
 						onClickSignIn={handleClickSignIn}

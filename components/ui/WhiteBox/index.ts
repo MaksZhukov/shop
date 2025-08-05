@@ -1,1 +1,1 @@
-export { default } from './WhiteBox';
+export { WhiteBox } from './WhiteBox';

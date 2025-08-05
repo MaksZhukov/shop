@@ -26,7 +26,7 @@ export const CatalogCategories: React.FC = () => {
 		queryFn: () =>
 			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
 				pagination: { limit: 10 },
-				populate: { spareParts: { count: true } }
+				populate: { spareParts: { count: true, filters: { sold: false } } }
 			})
 	});
 
@@ -38,7 +38,7 @@ export const CatalogCategories: React.FC = () => {
 		queryFn: () =>
 			fetchKindSpareParts({
 				pagination: { limit: Math.floor(Math.random() * 15), start: Math.floor(Math.random() * 100) },
-				populate: { spareParts: { count: true } }
+				populate: { spareParts: { count: true, filters: { sold: false } } }
 			})
 	});
 
@@ -77,15 +77,15 @@ export const CatalogCategories: React.FC = () => {
 					horizontal: 'left'
 				}}
 			>
-				<Box bgcolor='white' minHeight={'900px'} display='flex' p={2}>
+				<Box bgcolor='background.paper' minHeight={'900px'} display='flex' p={2}>
 					<Box width={'256px'} p={1} display='flex' flexDirection='column'>
 						<Typography variant='h6' fontWeight={700} fontSize={18}>
 							Каталог
 						</Typography>
 						{kindSpareParts?.data.data.map((item) => (
 							<Box
-								bgcolor={hoveredCategory === item ? '#E2E2E2' : 'transparent'}
-								sx={{ cursor: 'pointer', ':hover': { bgcolor: '#E2E2E2' } }}
+								bgcolor={hoveredCategory === item ? 'custom.bg-surface-3' : 'transparent'}
+								sx={{ cursor: 'pointer', ':hover': { bgcolor: 'custom.bg-surface-3' } }}
 								p={1}
 								borderRadius={2}
 								key={item.id}
@@ -108,7 +108,7 @@ export const CatalogCategories: React.FC = () => {
 							</Box>
 						))}
 					</Box>
-					<Box minWidth={'1000px'} maxHeight={'500px'} borderRadius={4} bgcolor='#F5F5F5' p={2}>
+					<Box minWidth={'1000px'} maxHeight={'500px'} borderRadius={4} bgcolor='custom.bg-surface-1' p={2}>
 						<Typography variant='h6' fontWeight={700} fontSize={18}>
 							{hoveredCategory?.name}
 						</Typography>

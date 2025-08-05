@@ -38,7 +38,7 @@ export default function MobileCatalog({ sparePartsTotal }: Props) {
 				<Box mb={2}>
 					{kindSpareParts?.data.data.map((item) => (
 						<Box
-							sx={{ cursor: 'pointer', ':hover': { bgcolor: '#E2E2E2' } }}
+							sx={{ cursor: 'pointer', ':hover': { bgcolor: 'custom.bg-surface-3' } }}
 							px={1}
 							py={1}
 							borderRadius={2}
