@@ -1,5 +1,5 @@
 export { SearchForm } from './MainSection/SearchForm';
-export { Benefits } from './Benefits';
+export { Benefits } from '../../../components/features/Benefits/Benefits';
 export { NewArrivals } from './NewArrivals';
 export { BrandSelection } from './BrandSelection';
 export { PopularCategories } from './PopularCategories';

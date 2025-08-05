@@ -49,10 +49,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onClickSignIn,
 			</NavbarButton>
 
 			<NavbarButton
-				href='/spare-parts'
+				href='/mobile-catalog'
 				variant='link'
-				icon={router.pathname.startsWith('/spare-parts') ? <DashboardFilledIcon /> : <DashboardIcon />}
-				isActive={router.pathname.startsWith('/spare-parts')}
+				icon={router.pathname.startsWith('/mobile-catalog') ? <DashboardFilledIcon /> : <DashboardIcon />}
+				isActive={router.pathname.startsWith('/mobile-catalog')}
 			>
 				Каталог
 			</NavbarButton>

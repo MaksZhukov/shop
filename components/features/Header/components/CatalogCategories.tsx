@@ -36,7 +36,10 @@ export const CatalogCategories: React.FC = () => {
 		enabled: !!hoveredCategory,
 		placeholderData: (prev) => prev,
 		queryFn: () =>
-			fetchKindSpareParts({ pagination: { limit: index * 5 }, populate: { spareParts: { count: true } } })
+			fetchKindSpareParts({
+				pagination: { limit: Math.floor(Math.random() * 15), start: Math.floor(Math.random() * 100) },
+				populate: { spareParts: { count: true } }
+			})
 	});
 
 	useEffect(() => {

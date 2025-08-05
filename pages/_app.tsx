@@ -117,7 +117,7 @@ function MyApp({
 							<RouteShield>
 								<ErrorBoundary fallback={<></>} onError={handleRenderError}>
 									<Breadcrumbs
-										exclude={['buyback-cars']}
+										exclude={['buyback-cars', 'mobile-catalog']}
 										h1={restPageProps.data?.h1 || restPageProps.page?.name}
 									></Breadcrumbs>
 									<Container>

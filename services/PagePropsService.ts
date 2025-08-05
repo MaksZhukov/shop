@@ -3,13 +3,9 @@ import { ApiResponse } from 'api/types';
 import { AxiosError, AxiosResponse } from 'axios';
 import { UAParser } from 'ua-parser-js';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { DefaultPage } from 'api/pages/types';
 
 type DeviceType = 'desktop' | 'mobile';
-
-type FetchFunction<T> = (
-	context: GetServerSidePropsContext,
-	deviceType: DeviceType
-) => Promise<GetServerSidePropsResult<T>>;
 
 const getDeviceType = (userAgent?: string): DeviceType => {
 	if (!userAgent) return 'desktop';
@@ -35,8 +31,11 @@ const handleErrorRedirect = (status: number): GetServerSidePropsResult<Record<st
 };
 
 export const getPageProps = (
-	fetchPage?: FetchFunction<AxiosResponse<ApiResponse<Record<string, object>>>>,
-	fetchAdditional?: FetchFunction<GetServerSidePropsResult<Record<string, object>>>
+	fetchPage?: () => Promise<AxiosResponse<ApiResponse<DefaultPage>>>,
+	fetchAdditional?: (
+		context: GetServerSidePropsContext,
+		deviceType: DeviceType
+	) => Promise<GetServerSidePropsResult<Record<string, object | number | string>>>
 ) => {
 	return async (context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Record<string, object>>> => {
 		const deviceType = getDeviceType(context?.req?.headers['user-agent']);
@@ -46,14 +45,14 @@ export const getPageProps = (
 		try {
 			const fetchFunctions = [
 				fetchLayout(),
-				fetchPage ? fetchPage(context, deviceType) : Promise.resolve({ props: {} }),
+				fetchPage ? fetchPage() : Promise.resolve({ props: {} }),
 				...(fetchAdditional ? [fetchAdditional(context, deviceType)] : [])
 			];
 
 			const responses = await Promise.all(fetchFunctions);
 			const [layoutResponse, pageResponse, additionalResponse] = responses;
 
-			if (additionalResponse && additionalResponse) {
+			if (additionalResponse) {
 				result = additionalResponse;
 			}
 
@@ -61,7 +60,7 @@ export const getPageProps = (
 				result.props.page = pageResponse.data.data;
 			}
 
-			if (layoutResponse && 'data' in layoutResponse && layoutResponse.data?.data) {
+			if (layoutResponse && 'data' in layoutResponse && layoutResponse.data.data) {
 				result.props.layout = layoutResponse.data.data;
 			}
 

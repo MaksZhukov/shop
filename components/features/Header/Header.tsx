@@ -1,14 +1,7 @@
 import { AppBar, Container, useTheme } from '@mui/material';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import React, { FC, useState } from 'react';
-import {
-	useHeaderScroll,
-	useSearchSpareParts,
-	useAuthModal,
-	useMobileModals,
-	useSearchHistory,
-	useSearchNavigation
-} from './hooks';
+import { useHeaderScroll, useSearchSpareParts, useAuthModal, useMobileModals, useSearchHistory } from './hooks';
 import { HeaderTop, HeaderBottom, MobileBottomNav, MobileSearchModal, MobileContactsModal } from './components';
 import ModalAuth from 'components/features/ModalAuth';
 import { SparePart } from 'api/spareParts/types';
@@ -29,14 +22,16 @@ const Header: FC = () => {
 	} = useMobileModals();
 	const { searchHistory, setSearchHistory, deleteSearchHistory, addToSearchHistory, clearSearchHistory } =
 		useSearchHistory();
-	const { handleSearchSelect } = useSearchNavigation(addToSearchHistory);
 
 	const handleDeleteSearchHistory = (value: string) => {
 		deleteSearchHistory(value);
 	};
 
 	const handleSearchSelectWithValue = (item: SparePart) => {
-		handleSearchSelect(item, searchValue);
+		addToSearchHistory(searchValue);
+		router.push(`/spare-parts/${item.brand?.slug}/${item.slug}`);
+		setSearchValue('');
+		setIsOpenedMobileSearch(false);
 	};
 
 	const handleCloseMobileContacts = () => {

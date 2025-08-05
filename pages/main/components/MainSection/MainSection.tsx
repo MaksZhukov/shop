@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { SearchForm } from './SearchForm';
-import { Carousel } from 'components/ui/Carousel';
 import { Brand } from 'api/brands/types';
+import { Banners } from 'components/features/Banners';
 
 interface MainSectionProps {
 	brands: Brand[];
@@ -18,13 +18,7 @@ export const MainSection: React.FC<MainSectionProps> = ({ brands, sparePartsTota
 			gap={2}
 		>
 			<SearchForm brands={brands} sparePartsTotal={sparePartsTotal} />
-			<Box flex={{ xs: 'none', md: '1' }} height={{ xs: 234, md: '446px' }} overflow={'hidden'} borderRadius={2}>
-				<Carousel showArrows={true} showDots={true}>
-					<Box bgcolor={'gray'} width={'50%'} height={'100%'}></Box>
-					<Box bgcolor={'gray'} width={'50%'} height={'100%'}></Box>
-					<Box bgcolor={'gray'} width={'50%'} height={'100%'}></Box>
-				</Carousel>
-			</Box>
+			<Banners images={[]} />
 		</Box>
 	);
 };
