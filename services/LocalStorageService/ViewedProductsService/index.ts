@@ -1,0 +1,1 @@
+export { ViewedProductsService } from './ViewedProductsService';

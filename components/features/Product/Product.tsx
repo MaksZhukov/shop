@@ -29,7 +29,7 @@ import { ChevronDownIcon, ChevronUpIcon, PhoneCallFilledIcon, PhoneCallIcon, Sha
 import { ShareButton } from 'components/features/ShareButton';
 import { Carousel } from 'components/ui';
 import ProductItem from 'components/features/ProductItem';
-import { addViewedProduct, getViewedProducts, saveViewedProducts } from 'services/LocalStorageService';
+import { viewedProductsService } from 'services/LocalStorageService';
 
 interface Props {
 	page: PageProduct & (PageProductCabin | PageProductSparePart | PageProductTire | PageProductWheel);
@@ -48,7 +48,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 
 	useEffect(() => {
 		if (data.type === 'sparePart') {
-			addViewedProduct({ id: data.id, type: data.type });
+			viewedProductsService.addViewedProduct({ id: data.id, type: data.type });
 		}
 	}, []);
 

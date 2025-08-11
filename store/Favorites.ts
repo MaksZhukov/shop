@@ -5,16 +5,11 @@ import { ApiResponse, CollectionParams, Product } from 'api/types';
 import { fetchWheels } from 'api/wheels/wheels';
 import { AxiosResponse } from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
-import {
-	StorageFavorite,
-	getFavorites,
-	removeFavorite as removeFavoriteLS,
-	removeFavorites as removeFavoritesLS,
-	saveFavorite
-} from 'services/LocalStorageService';
+import { favoritesService } from 'services/LocalStorageService';
 import RootStore from '.';
 import { addFavorite, fetchFavorites, removeFavorite, removeFavorites } from '../api/favorites/favorites';
 import { Favorite } from '../api/favorites/types';
+import { FavoritesService, StorageFavorite } from 'services/LocalStorageService/FavoritesService';
 
 export interface Favorites {
 	items: Favorite[];
@@ -25,9 +20,11 @@ export default class FavoritesStore implements Favorites {
 	root: RootStore;
 	items: Favorite[] = [];
 	isLoading: boolean = false;
+	favoritesLocalStorageService: FavoritesService;
 
-	constructor(root: RootStore) {
+	constructor(root: RootStore, favoritesLocalStorageService: FavoritesService) {
 		this.root = root;
+		this.favoritesLocalStorageService = favoritesLocalStorageService;
 		makeAutoObservable(this);
 	}
 	async loadFavorites() {
@@ -40,7 +37,7 @@ export default class FavoritesStore implements Favorites {
 				this.items = data;
 			});
 		} else {
-			const favorites = getFavorites();
+			const favorites = favoritesService.getFavorites();
 			try {
 				const [
 					{ data: spareParts, irrelevantFavoriteIDs: irrelevantFavoritesSparePartIDs },
@@ -66,7 +63,7 @@ export default class FavoritesStore implements Favorites {
 					)
 				]);
 
-				removeFavoritesLS([
+				this.favoritesLocalStorageService.removeFavorites([
 					...irrelevantFavoritesSparePartIDs,
 					...irrelevantFavoritesCabinsIDs,
 					...irrelevantFavoritesTiresIDs,
@@ -119,7 +116,7 @@ export default class FavoritesStore implements Favorites {
 				console.error(err);
 			}
 		} else {
-			saveFavorite(favorite);
+			this.favoritesLocalStorageService.saveFavorite(favorite);
 			runInAction(() => {
 				this.items.push(favorite);
 			});
@@ -129,18 +126,17 @@ export default class FavoritesStore implements Favorites {
 		if (this.root.user.id) {
 			await removeFavorite(favorite.id);
 		} else {
-			removeFavoriteLS(favorite);
+			this.favoritesLocalStorageService.removeFavorite(favorite);
 		}
 		runInAction(() => {
 			this.items = this.items.filter((el) => el.id !== favorite.id);
 		});
 	}
 	async removeFavorites(favoritesIDs: number[]) {
-		debugger;
 		if (this.root.user.id) {
 			await removeFavorites(favoritesIDs);
 		} else {
-			removeFavoritesLS(favoritesIDs);
+			this.favoritesLocalStorageService.removeFavorites(favoritesIDs);
 		}
 		runInAction(() => {
 			this.items = this.items.filter((el) => !favoritesIDs.includes(el.id));
@@ -148,7 +144,7 @@ export default class FavoritesStore implements Favorites {
 	}
 
 	clearFavorites() {
-		let favorites = getFavorites();
+		let favorites = this.favoritesLocalStorageService.getFavorites();
 		this.items = this.items.filter((item) => favorites.filter((el) => el.id === item.id));
 	}
 }

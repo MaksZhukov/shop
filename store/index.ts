@@ -4,6 +4,7 @@ import { useContext } from 'react';
 // import CartStore from './Cart';
 import FavoriteStore from './Favorites';
 import UserStore from './User';
+import { authService, favoritesService } from 'services/LocalStorageService';
 
 enableStaticRendering(typeof window === 'undefined');
 
@@ -13,9 +14,9 @@ class RootStore {
 	favorites: FavoriteStore;
 	isInitialRequestDone: boolean = false;
 	constructor() {
-		this.user = new UserStore(this);
+		this.user = new UserStore(this, authService);
 		// this.cart = new CartStore(this);
-		this.favorites = new FavoriteStore(this);
+		this.favorites = new FavoriteStore(this, favoritesService);
 		makeAutoObservable(this);
 	}
 	setIsInitialRequestDone() {

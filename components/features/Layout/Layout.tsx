@@ -9,7 +9,13 @@ const Layout = ({ children }: Props) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	const headerHeight = isMobile ? 72 : 112;
 	return (
-		<Box bgcolor={'background.default'} pt={`${headerHeight}px`} minHeight={'100vh'}>
+		<Box
+			bgcolor={'background.default'}
+			pt={`${headerHeight}px`}
+			minHeight={'100vh'}
+			display='flex'
+			flexDirection='column'
+		>
 			{children}
 		</Box>
 	);

@@ -12,7 +12,7 @@ import Header from '../components/features/Header';
 import Footer from '../components/features/Footer';
 import Layout from '../components/features/Layout';
 import RouteShield from '../components/features/RouteShield';
-import { getJwt, saveJwt } from '../services/LocalStorageService';
+import { authService } from '../services/LocalStorageService';
 import { store } from '../store';
 import { QueryProvider } from 'components/providers/QueryProvider';
 import { ThemeProvider } from 'components/providers/ThemeProvider';
@@ -33,7 +33,7 @@ function MyApp({
 
 	useEffect(() => {
 		const tryFetchData = async () => {
-			let token = getJwt();
+			let token = authService.getJwt();
 			if (token) {
 				store.user.setJWT(token);
 				try {
@@ -43,7 +43,7 @@ function MyApp({
 						store.favorites.loadFavorites()
 					]);
 				} catch (err) {
-					saveJwt('');
+					authService.removeJwt();
 				}
 			} else {
 				await store.favorites.loadFavorites();
@@ -119,7 +119,7 @@ function MyApp({
 										exclude={['buyback-cars', 'mobile-catalog']}
 										h1={restPageProps.data?.h1 || restPageProps.page?.name}
 									></Breadcrumbs>
-									<Container>
+									<Container sx={{ flex: 1 }}>
 										<Component {...restPageProps} />
 									</Container>
 								</ErrorBoundary>

@@ -1,5 +1,4 @@
-import { ClickAwayListener, Divider, Grow, MenuItem, MenuList, Paper, Popper, Typography } from '@mui/material';
-import classNames from 'classnames';
+import { ClickAwayListener, Divider, Grow, MenuItem, MenuList, Paper, Popper } from '@mui/material';
 import { observer } from 'mobx-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -58,12 +57,6 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 									) : (
 										<MenuItem onClick={onClickSignIn}>Войти</MenuItem>
 									)}
-									<MenuItem onClick={handleClickLink('/favorites')}>
-										Избранное{' '}
-										<Typography component='span' color='primary' paddingLeft='5px'>
-											({store.favorites.items.length})
-										</Typography>
-									</MenuItem>
 									{store.user.id && <Divider />}
 									{store.user.id && <MenuItem onClick={onClickLogout}>Выход</MenuItem>}
 								</MenuList>

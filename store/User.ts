@@ -1,7 +1,7 @@
 import { makeAutoObservable, action, runInAction } from 'mobx';
 import RootStore from '.';
 import { getUserInfo, login, updateUserInfo } from '../api/user/user';
-import { saveJwt } from '../services/LocalStorageService';
+import { AuthService } from 'services/LocalStorageService/AuthService';
 
 export interface User {
 	jwt: string;
@@ -11,6 +11,7 @@ export interface User {
 
 export default class UserStore implements User {
 	root: RootStore;
+	authLocalStorageService: AuthService;
 
 	jwt: string = '';
 	id: string = '';
@@ -19,8 +20,9 @@ export default class UserStore implements User {
 	phone: string = '';
 	address: string = '';
 
-	constructor(root: RootStore) {
+	constructor(root: RootStore, authLocalStorageService: AuthService) {
 		this.root = root;
+		this.authLocalStorageService = authLocalStorageService;
 		makeAutoObservable(this);
 	}
 	async loadInfo() {
@@ -46,7 +48,7 @@ export default class UserStore implements User {
 			this.phone = data.user.phone;
 			this.address = data.user.address;
 		});
-		saveJwt(data.jwt);
+		this.authLocalStorageService.saveJwt(data.jwt);
 	}
 	clearUser() {
 		this.jwt = '';
@@ -58,7 +60,7 @@ export default class UserStore implements User {
 	async logout() {
 		this.clearUser();
 		this.root.favorites.clearFavorites();
-		saveJwt('');
+		this.authLocalStorageService.removeJwt();
 		this.root.favorites.loadFavorites();
 	}
 

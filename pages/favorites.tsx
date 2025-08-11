@@ -1,4 +1,3 @@
-import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import { Loader, Typography, Link } from 'components/ui';
 import { observer } from 'mobx-react';
@@ -6,7 +5,7 @@ import Head from 'next/head';
 import { getPageProps } from 'services/PagePropsService';
 import { useStore } from 'store';
 import ProductItem from 'components/features/ProductItem';
-import { getViewedProducts } from 'services/LocalStorageService';
+import { viewedProductsService } from 'services/LocalStorageService';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
 
@@ -14,7 +13,7 @@ const Favorites = () => {
 	const store = useStore();
 	const items = store.favorites.items;
 	const isLoading = store.favorites.isLoading;
-	const viewedProducts = getViewedProducts();
+	const viewedProducts = viewedProductsService.getViewedProducts();
 
 	const { data: viewedProductsData } = useQuery({
 		queryKey: ['viewedProducts'],
@@ -37,7 +36,7 @@ const Favorites = () => {
 	if (isLoading) {
 		return (
 			<Box paddingY='10em' position='relative'>
-				<Loader></Loader>
+				<Loader />
 			</Box>
 		);
 	}
@@ -63,7 +62,7 @@ const Favorites = () => {
 					))}
 				</Box>
 			) : (
-				<Typography variant='subtitle1' marginY='1em' textAlign='center'>
+				<Typography variant='subtitle1' my={1}>
 					У вас нет товаров в избранном, добавьте их из <Link href='/'>Магазина</Link>
 				</Typography>
 			)}

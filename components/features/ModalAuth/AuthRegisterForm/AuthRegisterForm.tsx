@@ -44,7 +44,6 @@ const AuthRegisterForm = ({ type, isLoading, onChangeType, onChangeIsLoading, on
 					variant: 'success'
 				});
 			} catch (err) {
-				debugger;
 				if (axios.isAxiosError(err)) {
 					if (err.response?.data.error?.status === 400 || err.response?.status === 500) {
 						enqueueSnackbar('Неверные данные', {
