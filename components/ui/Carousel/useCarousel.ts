@@ -11,6 +11,8 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
 
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+	const [canScrollPrev, setCanScrollPrev] = useState(false);
+	const [canScrollNext, setCanScrollNext] = useState(false);
 
 	const scrollPrev = useCallback(() => {
 		emblaApi?.scrollPrev();
@@ -32,6 +34,8 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
 
 		const handleSelect = () => {
 			setSelectedIndex(emblaApi.selectedScrollSnap());
+			setCanScrollPrev(emblaApi.canScrollPrev());
+			setCanScrollNext(emblaApi.canScrollNext());
 		};
 
 		const handleReInit = () => {
@@ -57,6 +61,8 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
 		scrollSnaps,
 		scrollPrev,
 		scrollNext,
-		scrollTo
+		scrollTo,
+		canScrollPrev,
+		canScrollNext
 	};
 };

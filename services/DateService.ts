@@ -11,9 +11,15 @@ export const generateArrayOfYears = (count: number) => {
 	return years;
 };
 
-export const getCurrentSchedule = (workingHours: WorkingHour[]) => {
+export const getCurrentTimeInGMT3 = (): Date => {
 	const now = new Date();
-	const currentDay = now.getDay();
+	const gmt3Time = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+	return gmt3Time;
+};
+
+export const getCurrentSchedule = (workingHours: WorkingHour[]) => {
+	const gmt3Time = getCurrentTimeInGMT3();
+	const currentDay = gmt3Time.getUTCDay();
 	return workingHours.find((schedule) => schedule.dayIndex === currentDay);
 };
 
@@ -21,8 +27,8 @@ export const isCurrentlyOpen = (workingHours: WorkingHour[]) => {
 	const currentSchedule = getCurrentSchedule(workingHours);
 	if (!currentSchedule) return false;
 
-	const now = new Date();
-	const currentTime = now.getHours() * 60 + now.getMinutes();
+	const gmt3Time = getCurrentTimeInGMT3();
+	const currentTime = gmt3Time.getUTCHours() * 60 + gmt3Time.getUTCMinutes();
 
 	const [openTime, closeTime] = currentSchedule.hours.split(' - ');
 	const [openHour, openMinute] = openTime.split(':').map(Number);
@@ -38,8 +44,8 @@ export const isCloseToClosing = (workingHours: WorkingHour[], closedMinutesBefor
 	const currentSchedule = getCurrentSchedule(workingHours);
 	if (!currentSchedule || !isCurrentlyOpen(workingHours)) return false;
 
-	const now = new Date();
-	const currentTime = now.getHours() * 60 + now.getMinutes();
+	const gmt3Time = getCurrentTimeInGMT3();
+	const currentTime = gmt3Time.getUTCHours() * 60 + gmt3Time.getUTCMinutes();
 
 	const [_, closeTime] = currentSchedule.hours.split(' - ');
 	const [closeHour, closeMinute] = closeTime.split(':').map(Number);

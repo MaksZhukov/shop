@@ -11,11 +11,11 @@ interface Props {
 	data: Product;
 	width?: number;
 	imageHeight?: number;
+	withCartIcon?: boolean;
 	sx?: SxProps;
 }
 
-const ProductItem = ({ data, width = 280, imageHeight = 290, sx = { margin: 'auto' } }: Props) => {
-	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+const ProductItem = ({ data, width = 280, imageHeight = 290, sx = { margin: 'auto' }, withCartIcon = true }: Props) => {
 	const imageHeightOffset = 20;
 
 	return (
@@ -34,7 +34,7 @@ const ProductItem = ({ data, width = 280, imageHeight = 290, sx = { margin: 'aut
 				<Box>
 					<Carousel options={{ axis: 'x', loop: false }} showArrows={false} showDots={true}>
 						{data.images?.map((image) => (
-							<Box key={image.id} height={imageHeight + imageHeightOffset}>
+							<Box key={image.id} maxWidth={'100%'} height={imageHeight + imageHeightOffset}>
 								<Image
 									title={image.caption}
 									width={width}
@@ -88,11 +88,10 @@ const ProductItem = ({ data, width = 280, imageHeight = 290, sx = { margin: 'aut
 					{isSparePart(data) &&
 						[data.volume?.name, data.fuel, data.transmission, data.year].filter(Boolean).join(', ')}
 				</Typography>
-				{!isMobile && (
-					<Button fullWidth variant='contained' startIcon={<CartFilledIcon />}>
-						В корзину
-					</Button>
-				)}
+
+				<Button fullWidth variant='contained' startIcon={withCartIcon ? <CartFilledIcon /> : undefined}>
+					В корзину
+				</Button>
 			</Box>
 		</WhiteBox>
 	);

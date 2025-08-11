@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { ChevronDownIcon, ChevronUpIcon, ClockIcon } from 'components/icons';
 import { FC } from 'react';
-import { getCurrentSchedule, isCurrentlyOpen } from 'services/DateService';
+import { getCurrentSchedule, getCurrentTimeInGMT3, isCurrentlyOpen } from 'services/DateService';
 import { WORKING_HOURS } from '../../../../constants';
 import { CLOSED_MINUTES_BEFORE_CLOSE } from '../constants';
 
@@ -16,8 +16,8 @@ export const WorkTimetableTrigger: FC<WorkTimetableTriggerProps> = ({ isMobile, 
 		const currentSchedule = getCurrentSchedule(WORKING_HOURS);
 		if (!currentSchedule) return { text: 'Закрыто до завтра', color: 'error.main' };
 
-		const now = new Date();
-		const currentTime = now.getHours() * 60 + now.getMinutes();
+		const gmt3Time = getCurrentTimeInGMT3();
+		const currentTime = gmt3Time.getUTCHours() * 60 + gmt3Time.getUTCMinutes();
 
 		if (isCurrentlyOpen(WORKING_HOURS)) {
 			const [_, closeTime] = currentSchedule.hours.split(' - ');

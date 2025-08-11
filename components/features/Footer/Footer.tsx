@@ -9,12 +9,9 @@ import NavigationLinks from './NavigationLinks';
 import CompanyInfo from './CompanyInfo';
 import PaymentMethods from './PaymentMethods';
 import { NAVIGATION_LINKS } from './constants';
+import { MOBILE_BOTTOM_NAV_HEIGHT } from '../../../constants';
 
-interface Props {
-	footer: IFooter;
-}
-
-const Footer: FC<Props> = ({ footer }) => {
+const Footer: FC = () => {
 	const theme = useTheme();
 
 	const currentYear = new Date().getFullYear();
@@ -24,8 +21,9 @@ const Footer: FC<Props> = ({ footer }) => {
 			component='footer'
 			bgcolor={theme.palette.custom.black}
 			sx={{
+				marginBottom: { xs: `${MOBILE_BOTTOM_NAV_HEIGHT}px`, md: 0 },
 				padding: {
-					xs: `${theme.spacing(2.5)} 0 ${theme.spacing(5)}`,
+					xs: `${theme.spacing(3)} 0 ${theme.spacing(2.5)}`,
 					md: `${theme.spacing(5)} 0 ${theme.spacing(2)}`
 				}
 			}}
@@ -63,20 +61,29 @@ const Footer: FC<Props> = ({ footer }) => {
 							</Typography>
 						))}
 						<CompanyInfo showOnMobile={false} theme={theme} />
-						<PaymentMethods />
 						<CompanyInfo showOnMobile={true} theme={theme} />
 					</Box>
 				</Box>
 
-				{/* Footer Text */}
-				<Box maxWidth={800} margin='auto' textAlign='center' mb={1} color={theme.palette.custom['text-muted']}>
-					<ReactMarkdown variant='body2' content={footer.textAfterPayments} />
+				<Box
+					mb={1}
+					display='flex'
+					flexDirection={{ xs: 'column', md: 'row' }}
+					justifyContent='space-between'
+					alignItems={{ xs: 'center', md: 'flex-start' }}
+				>
+					<Box textAlign={{ xs: 'center', md: 'left' }} maxWidth={800} mb={{ xs: 2, md: 0 }}>
+						<Typography mb={1} variant='body2' color={theme.palette.custom['text-muted']}>
+							Свидетельство выдано Гродненским горисполкомом 03.11.2008. Регистрация в Торговом реестре
+							18.11.2022. Юр. адрес: 231710, Гродненская область, Гродненский район, с/с
+							Коптевский, д.. Полотково
+						</Typography>
+						<Typography variant='body1' color={theme.palette.custom['text-inverse']}>
+							© 2009–{currentYear}
+						</Typography>
+					</Box>
+					<PaymentMethods />
 				</Box>
-
-				{/* Copyright */}
-				<Typography textAlign='center' variant='body1' color={theme.palette.custom['text-inverse']}>
-					© 2009–{currentYear}
-				</Typography>
 			</Container>
 		</Box>
 	);

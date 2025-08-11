@@ -63,3 +63,4 @@ export const COMPANY_COORDINATES = {
 };
 
 export const COMPANY_ADDRESS = 'Полотково, Гродненская область, Беларусь';
+export const MOBILE_BOTTOM_NAV_HEIGHT = 65;

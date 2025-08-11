@@ -1,18 +1,35 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 import Image from 'components/features/Image';
+import { PAYMENT_METHODS } from './constants';
 
 const PaymentMethods: FC = () => (
-	<Box height={100} width={340} overflow='auto'>
-		<Image
-			title='Bepaid карточки'
-			alt='Bepaid карточки'
-			isOnSSR={false}
-			src='/be_paid_cards.png'
-			width={1452}
-			height={100}
-			style={{ objectFit: 'none', objectPosition: 'left' }}
-		/>
+	<Box
+		py={2.5}
+		display='flex'
+		bgcolor='background.paper'
+		justifyContent='center'
+		gap={1.5}
+		borderRadius={2}
+		alignItems='center'
+		maxWidth={420}
+		width='100%'
+		flexWrap='wrap'
+		component='section'
+		aria-label='Способы оплаты'
+	>
+		{PAYMENT_METHODS.map((method) => (
+			<Image
+				key={method.name}
+				title={method.name}
+				alt={`Логотип ${method.name}`}
+				isOnSSR={false}
+				src={method.src}
+				width={method.width}
+				height={method.height}
+				style={{ objectFit: 'contain' }}
+			/>
+		))}
 	</Box>
 );
 

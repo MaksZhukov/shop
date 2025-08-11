@@ -20,13 +20,14 @@ export const Carousel: React.FC<CarouselProps> = ({
 	arrowPrevButtonSx,
 	arrowPrevSx
 }) => {
-	const { emblaRef, selectedIndex, scrollSnaps, scrollPrev, scrollNext, scrollTo } = useCarousel(options);
+	const { emblaRef, selectedIndex, scrollSnaps, scrollPrev, scrollNext, scrollTo, canScrollPrev, canScrollNext } =
+		useCarousel(options);
 
 	const shouldShowDots = showDots && scrollSnaps.length > 1;
 
-	// Determine which arrows to show
-	const shouldShowPrevArrow = showPrevArrow !== undefined ? showPrevArrow : showArrows;
-	const shouldShowNextArrow = showNextArrow !== undefined ? showNextArrow : showArrows;
+	// Determine which arrows to show - only show if there's overflow and the arrow is enabled
+	const shouldShowPrevArrow = (showPrevArrow !== undefined ? showPrevArrow : showArrows) && canScrollPrev;
+	const shouldShowNextArrow = (showNextArrow !== undefined ? showNextArrow : showArrows) && canScrollNext;
 
 	return (
 		<Box height={'100%'} position={'relative'} width={'100%'} sx={sx}>

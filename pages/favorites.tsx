@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
-import { Loader, Typography, Link } from 'components/ui';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Loader, Typography, Link, Carousel } from 'components/ui';
 import { observer } from 'mobx-react';
 import Head from 'next/head';
 import { getPageProps } from 'services/PagePropsService';
@@ -13,6 +13,8 @@ const Favorites = () => {
 	const store = useStore();
 	const items = store.favorites.items;
 	const isLoading = store.favorites.isLoading;
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 	const viewedProducts = viewedProductsService.getViewedProducts();
 
 	const { data: viewedProductsData } = useQuery({
@@ -58,7 +60,13 @@ const Favorites = () => {
 			{items.length ? (
 				<Box display='flex' flexWrap='wrap' gap={1}>
 					{items.map((item) => (
-						<ProductItem imageHeight={215} sx={{ margin: 'initial' }} key={item.id} data={item.product} />
+						<ProductItem
+							imageHeight={isMobile ? 272 : 215}
+							width={isMobile ? 340 : 280}
+							sx={{ margin: 'initial' }}
+							key={item.id}
+							data={item.product}
+						/>
 					))}
 				</Box>
 			) : (
@@ -72,11 +80,20 @@ const Favorites = () => {
 					<Typography mt={3} variant='h6' gutterBottom>
 						Вы смотрели
 					</Typography>
-					<Box display='flex' flexWrap='wrap' gap={1}>
+					<Carousel carouselContainerSx={{ ml: -1 }} showDots={false}>
 						{viewedProductsData.data.data.map((item) => (
-							<ProductItem imageHeight={215} sx={{ margin: 'initial' }} key={item.id} data={item} />
+							<Box pl={1} key={item.id}>
+								<ProductItem
+									withCartIcon={isMobile ? false : true}
+									imageHeight={isMobile ? 115 : 215}
+									width={isMobile ? 150 : 280}
+									sx={{ margin: 'initial' }}
+									key={item.id}
+									data={item}
+								/>
+							</Box>
 						))}
-					</Box>
+					</Carousel>
 				</>
 			)}
 		</Box>
