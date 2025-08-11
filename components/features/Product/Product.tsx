@@ -23,12 +23,13 @@ import FavoriteButton from 'components/features/FavoriteButton';
 import GalleryImages from 'components/features/GalleryImages/GalleryImages';
 import Image from 'components/features/Image';
 import { Typography, WhiteBox } from 'components/ui';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { isSparePart, isTire, isWheel } from 'services/ProductService';
 import { ChevronDownIcon, ChevronUpIcon, PhoneCallFilledIcon, PhoneCallIcon, ShareIcon } from 'components/icons';
 import { ShareButton } from 'components/features/ShareButton';
 import { Carousel } from 'components/ui';
 import ProductItem from 'components/features/ProductItem';
+import { addViewedProduct, getViewedProducts, saveViewedProducts } from 'services/LocalStorageService';
 
 interface Props {
 	page: PageProduct & (PageProductCabin | PageProductSparePart | PageProductTire | PageProductWheel);
@@ -44,6 +45,12 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	const [isMoreFilters, setIsMoreFilters] = useState(false);
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+	useEffect(() => {
+		if (data.type === 'sparePart') {
+			addViewedProduct({ id: data.id, type: data.type });
+		}
+	}, []);
 
 	const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
 		setActiveTab(newValue);

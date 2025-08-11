@@ -59,7 +59,7 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 										<MenuItem onClick={onClickSignIn}>Войти</MenuItem>
 									)}
 									<MenuItem onClick={handleClickLink('/favorites')}>
-										Избранные{' '}
+										Избранное{' '}
 										<Typography component='span' color='primary' paddingLeft='5px'>
 											({store.favorites.items.length})
 										</Typography>

@@ -48,7 +48,7 @@ export type ApiResponse<T = any> = {
 export type Filters = {
 	[field: string]:
 		| {
-				[operator: string]: number | string | undefined | null | boolean;
+				[operator: string]: number | string | undefined | null | boolean | number[];
 		  }
 		| {
 				[field: string]: { [operator: string]: number | string | undefined | null | boolean };

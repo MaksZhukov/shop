@@ -19,7 +19,7 @@ let PATH_NAMES = {
 	profile: 'Профиль',
 	'installment-plan': 'Рассрочка',
 	guarantee: 'Гарантия',
-	favorites: 'Избранные',
+	favorites: 'Избранное',
 	delivery: 'Доставка',
 	contacts: 'Контакты',
 	'company-photo': 'Фото разборки',

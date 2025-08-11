@@ -47,3 +47,31 @@ export const getSearchHistory = (): string[] => {
 export const saveSearchHistory = (searchHistory: string[]) => {
 	localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
 };
+
+type ViewedProduct = {
+	id: number;
+	type: ProductType;
+};
+
+const LIMIT_VIEWED_PRODUCTS = 10;
+
+export const addViewedProduct = (product: ViewedProduct) => {
+	let viewedProducts = getViewedProducts();
+	if (viewedProducts.find((item) => item.id === product.id)) {
+		return;
+	}
+	const newViewedProducts = [product, ...viewedProducts].slice(0, LIMIT_VIEWED_PRODUCTS);
+	saveViewedProducts(newViewedProducts);
+};
+
+export const saveViewedProducts = (viewedProducts: ViewedProduct[]) => {
+	localStorage.setItem('viewedProducts', JSON.stringify(viewedProducts));
+};
+
+export const getViewedProducts = (): ViewedProduct[] => {
+	if (typeof window === 'undefined' || !window.localStorage) {
+		return [];
+	}
+	let result = localStorage.getItem('viewedProducts');
+	return result ? JSON.parse(result) : [];
+};
