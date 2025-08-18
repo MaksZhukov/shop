@@ -147,7 +147,7 @@ const Catalog: React.FC<Props> = ({
 						disableScrollLock
 						sx={{
 							'& .MuiPaper-root': {
-								bgcolor: '#fff',
+								bgcolor: 'background.paper',
 								mt: -0.5
 							}
 						}}

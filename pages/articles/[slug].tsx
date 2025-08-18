@@ -85,9 +85,11 @@ const Article: NextPage<Props> = ({ page }) => {
 export default Article;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	page: (
-		await fetchArticle(context.params?.slug as string, {
-			populate: ['mainImage', 'images1', 'images2', 'seo']
-		})
-	).data.data
+	props: {
+		page: (
+			await fetchArticle(context.params?.slug as string, {
+				populate: ['mainImage', 'images1', 'images2', 'seo']
+			})
+		).data.data
+	}
 }));

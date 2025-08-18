@@ -1,97 +1,47 @@
-import { Box, Pagination, PaginationItem } from '@mui/material';
 import { fetchArticles } from 'api/articles/articles';
 import { Article } from 'api/articles/types';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { ApiResponse } from 'api/types';
-import CardItem from 'components/CardItem';
-import Typography from 'components/ui/Typography';
 import { NextPage } from 'next';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';
-
-const LIMIT = 10;
+import { ArticlesHeader, ArticlesGrid, ArticlesPagination } from './components';
+import { LIMIT, DEFAULT_SORT } from './constants';
+import { useArticlesData } from './hooks/useArticlesData';
 
 interface Props {
 	page: DefaultPage;
 	articles: ApiResponse<Article[]>;
+	serverQueryPage: string;
 }
 
-const Articles: NextPage<Props> = ({ page, articles }) => {
-	const [data, setData] = useState<Article[]>(articles ? articles.data : []);
-	const [isMounted, setIsMounted] = useState<boolean>(false);
-	const total = articles?.meta?.pagination?.total ?? 0;
-	const pageCount = Math.ceil(total / LIMIT);
+const Articles: NextPage<Props> = ({ page, articles, serverQueryPage }) => {
 	const router = useRouter();
 
-	const { page: qPage = '1' } = router.query as {
-		page: string;
-	};
+	const qPage = (router.query.page as string) || '1';
+	const qSort = (router.query.sort as string) || DEFAULT_SORT;
 
-	useEffect(() => {
-		if (isMounted) {
-			const fetchData = async () => {
-				const {
-					data: { data }
-				} = await fetchArticles({
-					pagination: {
-						start: qPage === '1' ? 0 : (+qPage - 1) * LIMIT,
-						limit: LIMIT
-					},
-					sort: 'createdAt:desc',
-					populate: 'mainImage'
-				});
-				setData(data);
-			};
-			fetchData();
-		}
-		setIsMounted(true);
-	}, [qPage]);
+	const { data: articlesData, isFetching } = useArticlesData(qPage, qSort, serverQueryPage, articles);
+
+	const total = articles?.meta?.pagination?.total ?? 0;
+	const pageCount = Math.ceil(total / LIMIT);
+
+	const handleSortChange = (newSort: string) => {
+		router.push({
+			query: {
+				...router.query,
+				sort: newSort,
+				page: '1'
+			}
+		});
+	};
 
 	return (
 		<>
-			<Box sx={{ typography: { xs: 'h5', md: 'h4' } }}>
-				<Typography
-					withSeparator
-					textTransform='uppercase'
-					component='h1'
-					marginBottom='1em'
-					fontSize='inherit'
-				>
-					{page.seo?.h1 || 'Статьи'}
-				</Typography>
-			</Box>
-			{data.map((item) => (
-				<CardItem
-					key={item.id}
-					description={item.rightText}
-					name={item.name}
-					image={item.mainImage}
-					link={`/articles/${item.slug}`}
-				></CardItem>
-			))}
-			{pageCount > 1 && (
-				<Box display='flex' justifyContent='center'>
-					<Pagination
-						page={+qPage}
-						renderItem={(params) =>
-							params.disabled ? (
-								<PaginationItem {...params} />
-							) : (
-								<NextLink prefetch={false} shallow href={`${router.pathname}?page=${params.page}`}>
-									<PaginationItem {...params} />
-								</NextLink>
-							)
-						}
-						siblingCount={2}
-						color='primary'
-						count={pageCount}
-						variant='outlined'
-					/>
-				</Box>
-			)}
+			<ArticlesHeader currentSort={qSort} onSortChange={handleSortChange} />
+			<ArticlesGrid articles={articlesData} isLoading={isFetching} />
+			<ArticlesPagination currentPage={+qPage} totalPages={pageCount} />
 		</>
 	);
 };
@@ -99,17 +49,23 @@ const Articles: NextPage<Props> = ({ page, articles }) => {
 export default Articles;
 
 export const getServerSideProps = getPageProps(fetchPage('article'), async (context) => {
-	const start = !context.query?.page || context.query?.page === '1' ? 0 : +context.query.page * LIMIT;
+	const page = context.query?.page ? +context.query.page : 1;
+	const start = (page - 1) * LIMIT;
+	const sort = context.query?.sort ? context.query.sort : DEFAULT_SORT;
+
 	return {
-		articles: (
-			await fetchArticles({
-				pagination: {
-					start,
-					limit: LIMIT
-				},
-				sort: 'createdAt:desc',
-				populate: 'mainImage'
-			})
-		).data
+		props: {
+			articles: (
+				await fetchArticles({
+					pagination: {
+						start,
+						limit: LIMIT
+					},
+					sort,
+					populate: 'mainImage'
+				})
+			).data,
+			serverQueryPage: context.query.page ? context.query.page : '1'
+		}
 	};
 });

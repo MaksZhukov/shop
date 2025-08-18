@@ -10,10 +10,11 @@ interface LinkProps {
 	color?: string;
 	size?: 'small' | 'medium' | 'large';
 	lineClamp?: number;
+	shallow?: boolean;
 	sx?: SxProps<Theme>;
 }
 
-export const Link: FC<LinkProps> = ({ href, children, target, color, size = 'medium', lineClamp, sx }) => {
+export const Link: FC<LinkProps> = ({ href, children, target, color, size = 'medium', lineClamp, shallow, sx }) => {
 	const sizeStyles = {
 		small: { fontSize: '0.75rem' },
 		medium: { fontSize: '0.875rem' },
@@ -29,7 +30,7 @@ export const Link: FC<LinkProps> = ({ href, children, target, color, size = 'med
 		  }
 		: {};
 	return (
-		<NextLink href={href} target={target}>
+		<NextLink href={href} target={target} shallow={shallow}>
 			<MuiLink color={color} component='span' sx={{ ...sizeStyles[size], ...sx }} style={lineClampStyles}>
 				{children}
 			</MuiLink>

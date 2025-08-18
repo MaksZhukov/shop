@@ -2,7 +2,6 @@ import { Box, SxProps } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import Image from 'components/features/Image';
 import { FC } from 'react';
-import Slider from 'react-slick';
 import styles from './BlockImages.module.scss';
 
 interface Props {
@@ -20,7 +19,7 @@ const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSlider = f
 	if (withSlider) {
 		return (
 			<Box paddingX='1em'>
-				<Slider slidesToShow={1}>
+				{/* <Slider slidesToShow={1}>
 					{images.map((item) => (
 						<Box key={item.id} padding='0.5em'>
 							<Image
@@ -33,7 +32,7 @@ const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSlider = f
 							></Image>
 						</Box>
 					))}
-				</Slider>
+				</Slider> */}
 			</Box>
 		);
 	}
