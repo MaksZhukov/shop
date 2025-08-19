@@ -1,0 +1,36 @@
+import { Box, useMediaQuery } from '@mui/material';
+import { Article } from 'api/articles/types';
+import { ArticleItem } from 'components/features/ArticleItem';
+import { ViewAllButton } from './ViewAllButton';
+
+interface ArticlesGridProps {
+	articles: Article[];
+}
+
+export const ArticlesGrid: React.FC<ArticlesGridProps> = ({ articles }) => {
+	const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+	return (
+		<Box
+			display='flex'
+			gap={{ xs: 1, md: 2 }}
+			flexWrap='wrap'
+			justifyContent='center'
+			alignItems='center'
+			flexDirection={{ xs: 'column', md: 'row' }}
+		>
+			{articles.map((article, index) => (
+				<ArticleItem
+					key={article.id}
+					image={article.mainImage}
+					description={article.rightText}
+					name={article.name}
+					date={article.createdAt}
+					link={`/articles/${article.slug}`}
+					width={isMobile ? '100%' : 336}
+					variant={isMobile ? (index === 0 ? 'default' : 'compact') : 'default'}
+				/>
+			))}
+			<ViewAllButton title='Смотреть все новости' visibility='mobile' />
+		</Box>
+	);
+};

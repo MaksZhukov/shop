@@ -3,7 +3,7 @@ import { fetchArticle } from 'api/articles/articles';
 import { Article as IArticle } from 'api/articles/types';
 import BlockImages from 'components/BlockImages/BlockImages';
 import Image from 'components/features/Image/Image';
-import ReactMarkdown from 'components/ReactMarkdown/ReactMarkdown';
+import ReactMarkdown from 'components/features/ReactMarkdown/ReactMarkdown';
 
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';

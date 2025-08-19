@@ -1,4 +1,4 @@
-import Metrics from 'components/Metrics';
+import Metrics from 'components/features/Metrics';
 import { golos } from 'fonts';
 import { Head, Html, Main, NextScript } from 'next/document';
 

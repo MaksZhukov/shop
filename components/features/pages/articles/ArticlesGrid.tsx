@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { Article } from 'api/articles/types';
-import ArticleItem from 'components/features/ArticleItem';
+import { ArticleItem } from 'components/features/ArticleItem';
 import { Loader } from 'components/ui';
 
 interface ArticlesGridProps {
@@ -8,22 +8,27 @@ interface ArticlesGridProps {
 	isLoading: boolean;
 }
 
-const ArticlesGrid = ({ articles, isLoading }: ArticlesGridProps) => {
+export const ArticlesGrid = ({ articles, isLoading }: ArticlesGridProps) => {
 	return (
-		<Box display='flex' flexWrap='wrap' gap={1}>
+		<Box
+			display='flex'
+			gap={{ xs: 1, md: 2 }}
+			flexWrap='wrap'
+			justifyContent='center'
+			alignItems='center'
+			flexDirection={{ xs: 'column', md: 'row' }}
+		>
 			{articles?.map((item) => (
 				<ArticleItem
 					key={item.id}
+					image={item.mainImage}
 					description={item.rightText}
 					name={item.name}
-					image={item.mainImage}
-					link={`/articles/${item.slug}`}
 					date={item.createdAt}
+					link={`/articles/${item.slug}`}
 				/>
 			))}
 			{isLoading && <Loader />}
 		</Box>
 	);
 };
-
-export default ArticlesGrid;

@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
-import ReactMarkdown from 'components/ReactMarkdown';
+import ReactMarkdown from 'components/features/ReactMarkdown';
 import { FC } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 

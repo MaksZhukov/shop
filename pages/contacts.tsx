@@ -6,7 +6,7 @@ import { PageContacts } from 'api/pages/types';
 import { LinkWithImage } from 'api/types';
 import BlockImages from 'components/BlockImages';
 import Image from 'components/features/Image';
-import ReactMarkdown from 'components/ReactMarkdown';
+import ReactMarkdown from 'components/features/ReactMarkdown';
 import Typography from 'components/ui/Typography';
 import { useSnackbar } from 'notistack';
 import { ChangeEventHandler, FormEvent, useState } from 'react';

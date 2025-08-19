@@ -10,15 +10,12 @@ import { Tire } from 'api/tires/types';
 import { SEO } from 'api/types';
 import CatalogTires from 'components/CatalogTires';
 import Product from 'components/features/Product';
-import Typography from 'components/ui/Typography/Typography';
+import { Typography } from 'components/ui';
 import type { NextPage } from 'next';
-import dynamic from 'next/dynamic';
 import { ReactElement, useEffect } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
 import { getStringByTemplateStr } from 'services/StringService';
-
-const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 
 interface Props {
 	data?: Tire;
@@ -35,7 +32,6 @@ const Tires: NextPage<Props> = ({ page, tireBrands, data, relatedProducts, brand
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
-				<BrandsCarousel linkType='tires' brands={tireBrands}></BrandsCarousel>
 				<Typography component='h3' marginTop='1em' variant={isMobile ? 'h6' : 'h5'}>
 					Отзывы о нас
 				</Typography>

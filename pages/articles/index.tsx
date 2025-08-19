@@ -6,9 +6,8 @@ import { ApiResponse } from 'api/types';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getPageProps } from 'services/PagePropsService';
-import { ArticlesHeader, ArticlesGrid, ArticlesPagination } from './components';
-import { LIMIT, DEFAULT_SORT } from './constants';
-import { useArticlesData } from './hooks/useArticlesData';
+import { ArticlesHeader, ArticlesGrid, ArticlesPagination, useArticlesData } from 'components/features/pages/articles';
+import { LIMIT, DEFAULT_SORT } from 'components/features/pages/articles/constants';
 
 interface Props {
 	page: DefaultPage;

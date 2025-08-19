@@ -21,7 +21,7 @@ import {
 	CarsOnParts,
 	CarBuyback,
 	Articles
-} from './components';
+} from 'components/features/pages/main';
 
 interface Props {
 	page: PageMain;

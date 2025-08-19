@@ -10,16 +10,13 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage, PageProduct, PageProductCabin } from 'api/pages/types';
 import CatalogCabins from 'components/CatalogCabins/CatalogCabins';
 import Product from 'components/features/Product/Product';
-import Typography from 'components/ui/Typography/Typography';
+import { Typography } from 'components/ui';
 import { NextPage } from 'next';
-import dynamic from 'next/dynamic';
 import { ReactElement, useEffect } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
 import { withKindSparePart } from 'services/SEOService';
 import { getStringByTemplateStr } from 'services/StringService';
-
-const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 
 interface Props {
 	data: Cabin;
@@ -37,7 +34,6 @@ const Cabins: NextPage<Props> = ({ page, brands, data, relatedProducts, kindSpar
 		setRenderBeforeFooter(
 			<>
 				<Box marginY='1em' paddingX='1em'>
-					<BrandsCarousel linkType='cabins' brands={brands}></BrandsCarousel>
 					<Typography component='h3' marginTop='1em' variant={isMobile ? 'h6' : 'h5'}>
 						Отзывы о нас
 					</Typography>

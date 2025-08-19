@@ -8,16 +8,13 @@ import { Wheel } from 'api/wheels/types';
 import { fetchWheel, fetchWheels } from 'api/wheels/wheels';
 import CatalogWheels from 'components/CatalogWheels';
 import Product from 'components/features/Product';
-import Typography from 'components/ui/Typography/Typography';
+import { Typography } from 'components/ui';
 import type { NextPage } from 'next';
-import dynamic from 'next/dynamic';
 import { ReactElement, useEffect } from 'react';
 import { getPageProps } from 'services/PagePropsService';
 import { getProductPageSeo } from 'services/ProductService';
 import { withKindSparePart } from 'services/SEOService';
 import { getStringByTemplateStr } from 'services/StringService';
-
-const BrandsCarousel = dynamic(() => import('components/BrandsCarousel'));
 
 interface Props {
 	data?: Wheel;
@@ -33,7 +30,6 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts, setRende
 	useEffect(() => {
 		setRenderBeforeFooter(
 			<Box marginY='1em' paddingX='1em'>
-				<BrandsCarousel linkType='wheels' brands={brands}></BrandsCarousel>
 				<Typography component='h3' marginTop='1em' variant={isMobile ? 'h6' : 'h5'}>
 					Отзывы о нас
 				</Typography>

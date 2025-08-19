@@ -1,6 +1,6 @@
 import { Box, Typography, Container, useTheme } from '@mui/material';
 import { Footer as IFooter } from 'api/layout/types';
-import ReactMarkdown from 'components/ReactMarkdown';
+import ReactMarkdown from 'components/features/ReactMarkdown';
 import NextLink from 'next/link';
 import { FC } from 'react';
 import ContactInfo from './ContactInfo';

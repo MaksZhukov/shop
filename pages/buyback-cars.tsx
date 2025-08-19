@@ -13,7 +13,7 @@ import { PageBuybackCars } from 'api/pages/types';
 import classNames from 'classnames';
 import Autocomplete from 'components/ui/Autocomplete';
 import Image from 'components/features/Image';
-import ReactMarkdown from 'components/ReactMarkdown';
+import ReactMarkdown from 'components/features/ReactMarkdown';
 import { Typography } from 'components/ui';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';

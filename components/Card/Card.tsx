@@ -3,9 +3,9 @@ import { Box } from '@mui/material';
 import { Autocomis } from 'api/autocomises/types';
 import { ServiceStation } from 'api/serviceStations/types';
 import Image from 'components/features/Image';
-import ReactMarkdown from 'components/ReactMarkdown';
-import Typography from 'components/ui/Typography';
-import WhiteBox from 'components/ui/WhiteBox';
+import ReactMarkdown from 'components/features/ReactMarkdown';
+import { Typography } from 'components/ui';
+import { WhiteBox } from 'components/ui';
 import { FC } from 'react';
 
 interface Props {

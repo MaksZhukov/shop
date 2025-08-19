@@ -7,7 +7,7 @@ interface ArticlesPaginationProps {
 	totalPages: number;
 }
 
-const ArticlesPagination = ({ currentPage, totalPages }: ArticlesPaginationProps) => {
+export const ArticlesPagination = ({ currentPage, totalPages }: ArticlesPaginationProps) => {
 	const router = useRouter();
 
 	if (totalPages <= 1) return null;
@@ -32,5 +32,3 @@ const ArticlesPagination = ({ currentPage, totalPages }: ArticlesPaginationProps
 		</Box>
 	);
 };
-
-export default ArticlesPagination;

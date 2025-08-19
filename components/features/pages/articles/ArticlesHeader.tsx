@@ -1,11 +1,16 @@
-import { Box, Button, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Menu, MenuItem, useMediaQuery } from '@mui/material';
 import { Typography } from 'components/ui';
 import { ChevronDownIcon } from 'components/icons';
 import { useState } from 'react';
-import { SortItem } from '../types';
-import { SORT_ITEMS } from '../constants';
+import { SORT_ITEMS } from './constants';
+import { SortItem } from './types';
 
-const useSortMenu = () => {
+interface ArticlesHeaderProps {
+	currentSort: string;
+	onSortChange: (sort: string) => void;
+}
+
+export const ArticlesHeader = ({ currentSort, onSortChange }: ArticlesHeaderProps) => {
 	const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
 
 	const handleSortMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -16,20 +21,7 @@ const useSortMenu = () => {
 		setSortMenuAnchor(null);
 	};
 
-	return {
-		sortMenuAnchor,
-		handleSortMenuOpen,
-		handleSortMenuClose
-	};
-};
-
-interface ArticlesHeaderProps {
-	currentSort: string;
-	onSortChange: (sort: string) => void;
-}
-
-const ArticlesHeader = ({ currentSort, onSortChange }: ArticlesHeaderProps) => {
-	const { sortMenuAnchor, handleSortMenuOpen, handleSortMenuClose } = useSortMenu();
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
 	const handleSortItemClick = (item: SortItem) => {
 		handleSortMenuClose();
@@ -39,9 +31,9 @@ const ArticlesHeader = ({ currentSort, onSortChange }: ArticlesHeaderProps) => {
 	const currentSortName = SORT_ITEMS.find((item) => item.value === currentSort)?.name;
 
 	return (
-		<Box display='flex' justifyContent='space-between' alignItems='center'>
-			<Typography variant='h6' component='h1' marginBottom='1em'>
-				Новости авторазборки
+		<Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
+			<Typography variant='h6' component='h1'>
+				{isMobile ? 'Новости' : 'Новости авторазборки'}
 			</Typography>
 			<Button variant='text' endIcon={<ChevronDownIcon />} color='primary' onClick={handleSortMenuOpen}>
 				{currentSortName}
@@ -71,5 +63,3 @@ const ArticlesHeader = ({ currentSort, onSortChange }: ArticlesHeaderProps) => {
 		</Box>
 	);
 };
-
-export default ArticlesHeader;

@@ -2,7 +2,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { Video } from 'api/types';
-import ReactMarkdown from 'components/ReactMarkdown';
+import ReactMarkdown from 'components/features/ReactMarkdown';
 import getConfig from 'next/config';
 import { FC } from 'react';
 import ReactPlayer from 'react-player';

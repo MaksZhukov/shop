@@ -67,14 +67,14 @@ export default function MobileCatalog({ sparePartsTotal }: Props) {
 }
 
 export const getServerSideProps = getPageProps(undefined, async (context, deviceTypeResult) => {
-	// if (deviceTypeResult === 'desktop') {
-	// 	return {
-	// 		redirect: {
-	// 			destination: '/',
-	// 			permanent: false
-	// 		}
-	// 	};
-	// }
+	if (deviceTypeResult === 'desktop') {
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false
+			}
+		};
+	}
 
 	const { data } = await fetchSpareParts({
 		pagination: { limit: 0 },

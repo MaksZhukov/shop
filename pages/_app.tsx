@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import Breadcrumbs from 'components/features/Breadcrumbs';
-import HeadSEO from 'components/HeadSEO';
+import HeadSEO from 'components/features/HeadSEO';
 import type { AppProps } from 'next/app';
 import NextApp from 'next/app';
 import { useRouter } from 'next/router';

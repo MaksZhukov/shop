@@ -23,7 +23,7 @@ import {
 	FUELS_OPTIONS,
 	OFFSET_SCROLL_LOAD_MORE,
 	TRANSMISSIONS_OPTIONS
-} from '../../../../constants';
+} from '../../../../../constants';
 import { fetchEngineVolumes } from 'api/engineVolumes/engineVolumes';
 import { EngineVolume } from 'api/engineVolumes/types';
 import { useQuery } from '@tanstack/react-query';
