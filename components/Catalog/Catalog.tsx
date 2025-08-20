@@ -255,6 +255,7 @@ const Catalog: React.FC<Props> = ({
 				<Box flex={1}>
 					{(!filtersValues.brand || !filtersValues.model) && !isMobile && (
 						<Box
+							overflow='auto'
 							mb={2}
 							boxShadow={`0px 10px 25px 0px ${theme.palette.custom.shadow}`}
 							px={2}

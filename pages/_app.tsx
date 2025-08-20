@@ -124,7 +124,7 @@ function MyApp({
 									</Container>
 								</ErrorBoundary>
 							</RouteShield>
-							<Footer footer={layout.footer}></Footer>
+							<Footer />
 							<ScrollUp />
 						</Layout>
 					</SnackbarProvider>

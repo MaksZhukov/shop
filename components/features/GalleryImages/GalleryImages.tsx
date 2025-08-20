@@ -34,9 +34,9 @@ const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => {
 				>
 					<CloseIcon sx={{ color: 'secondary.main' }} fontSize='large' />
 				</IconButton>
-				<Carousel>
+				<Carousel showDots={false} sx={{ maxWidth: 1500, margin: 'auto' }}>
 					{images?.map((item) => (
-						<Box key={item.id} height={'100%'} sx={{ display: 'flex !important' }}>
+						<Box width={'100%'} key={item.id} height={'100%'} sx={{ display: 'flex !important' }}>
 							<Zoom
 								src={publicRuntimeConfig.backendUrl + (item.formats?.medium?.url || item.url)}
 								width={isTablet ? 500 : 820}

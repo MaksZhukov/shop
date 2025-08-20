@@ -12,4 +12,5 @@ export interface Article {
 	images2: Image[];
 	content2: string;
 	seo: ShortSEO;
+	content?: string;
 }

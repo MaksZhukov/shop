@@ -312,30 +312,34 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					</WhiteBox>
 				</Box>
 			</Box>
-			<Typography mb={1} variant='h6' fontWeight='bold'>
-				{isSparePart(data) && 'Другие запчасти для'}
-				{isTire(data) && 'Другие шины для'}
-				{isWheel(data) && 'Другие диски для'}
-				{data.type === 'cabin' && 'Другие кабины для'} {data.brand?.name}{' '}
-				{isSparePart(data) && data.model?.name} {isSparePart(data) && data.generation?.name}
-			</Typography>
-			<Carousel
-				sx={{ mb: 3 }}
-				options={{ axis: 'x', watchDrag: false, loop: true }}
-				showArrows={true}
-				showDots={false}
-				carouselContainerSx={{ ml: -1 }}
-			>
-				{relatedProducts.map((item) => (
-					<Box pl={1} key={item.id}>
-						<ProductItem
-							data={item}
-							width={isMobile ? 155 : 228}
-							imageHeight={isMobile ? 120 : 180}
-						></ProductItem>
-					</Box>
-				))}
-			</Carousel>
+			{relatedProducts.length > 0 && (
+				<>
+					<Typography mb={1} variant='h6' fontWeight='bold'>
+						{isSparePart(data) && 'Другие запчасти для'}
+						{isTire(data) && 'Другие шины для'}
+						{isWheel(data) && 'Другие диски для'}
+						{data.type === 'cabin' && 'Другие кабины для'} {data.brand?.name}{' '}
+						{isSparePart(data) && data.model?.name} {isSparePart(data) && data.generation?.name}
+					</Typography>
+					<Carousel
+						sx={{ mb: 3 }}
+						options={{ axis: 'x', watchDrag: false, loop: true }}
+						showArrows={true}
+						showDots={false}
+						carouselContainerSx={{ ml: -1 }}
+					>
+						{relatedProducts.map((item) => (
+							<Box pl={1} key={item.id}>
+								<ProductItem
+									data={item}
+									width={isMobile ? 155 : 228}
+									imageHeight={isMobile ? 120 : 180}
+								></ProductItem>
+							</Box>
+						))}
+					</Carousel>
+				</>
+			)}
 			<WhiteBox
 				width={{ xs: '100%', md: 'fit-content' }}
 				alignItems='center'
