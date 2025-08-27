@@ -12,5 +12,7 @@ const ServiceStation: NextPage<Props> = ({ page }) => <Card data={page}></Card>;
 export default ServiceStation;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	page: (await fetchServiceStation(context.params?.slug as string)).data.data
+	props: {
+		page: (await fetchServiceStation(context.params?.slug as string)).data.data
+	}
 }));

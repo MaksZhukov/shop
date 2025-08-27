@@ -217,12 +217,14 @@ const Privacy = () => {
 
 export default Privacy;
 
-export const getStaticProps = getPageProps(undefined, () => ({
-	page: {
-		seo: {
-			title: 'Политика конфиденциальности',
-			description: 'Наша политика конфиденциальности',
-			keywords: 'политика конфиденциальности'
+export const getStaticProps = getPageProps(undefined, async () => ({
+	props: {
+		page: {
+			seo: {
+				title: 'Политика конфиденциальности',
+				description: 'Наша политика конфиденциальности',
+				keywords: 'политика конфиденциальности'
+			}
 		}
 	}
 }));

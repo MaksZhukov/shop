@@ -1,7 +1,7 @@
 import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import ReactMarkdown from 'components/features/ReactMarkdown';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import { getPageProps } from 'services/PagePropsService';
 
 interface Props {

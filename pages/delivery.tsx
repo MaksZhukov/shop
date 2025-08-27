@@ -7,7 +7,7 @@ import { PageDelivery } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
 import Image from 'components/features/Image';
 import ReactMarkdown from 'components/features/ReactMarkdown';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import { getUrlByMinFormat } from 'services/ImageService';
 import { getPageProps } from 'services/PagePropsService';
 
@@ -49,7 +49,7 @@ const Delivery: FC<Props> = ({ page }) => {
 				sx={{ marginY: '0', paddingY: 0 }}
 				images={page.images1}
 			></BlockImages>
-			<Typography marginTop='1em' textTransform='uppercase' withSeparator component='h2' variant='h4'>
+			<Typography marginTop='1em' textTransform='uppercase' component='h2' variant='h4'>
 				{page.deliveryCitiesTitle}
 			</Typography>
 			<Table sx={{ marginY: '2em', maxWidth: 930 }}>
@@ -68,7 +68,7 @@ const Delivery: FC<Props> = ({ page }) => {
 			</Table>
 
 			<Box>
-				<Typography marginTop='1em' textTransform='uppercase' withSeparator component='h2' variant='h4'>
+				<Typography marginTop='1em' textTransform='uppercase' component='h2' variant='h4'>
 					{page.courierTitle}
 				</Typography>
 				<Table sx={{ marginY: '2em', maxWidth: 1030 }}>
@@ -86,7 +86,7 @@ const Delivery: FC<Props> = ({ page }) => {
 					</TableBody>
 				</Table>
 			</Box>
-			<Typography marginTop='1em' withSeparator component='h2' variant='h4' textTransform='uppercase'>
+			<Typography marginTop='1em' component='h2' variant='h4' textTransform='uppercase'>
 				{page.shipmentTitle}
 			</Typography>
 			<Box

@@ -12,7 +12,7 @@ export const BenefitsCarousel: React.FC<BenefitsCarouselProps> = ({ benefitsData
 	return (
 		<Carousel carouselContainerSx={{ ml: -1 }} showArrows={false} showDots={false}>
 			{benefitsData.map((item) => (
-				<Box pl={1} width={'45%'}>
+				<Box key={item.id} pl={1} width={'45%'}>
 					<BenefitCard key={item.id} item={item} sparePartsTotal={sparePartsTotal} />
 				</Box>
 			))}

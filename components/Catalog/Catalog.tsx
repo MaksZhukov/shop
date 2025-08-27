@@ -21,12 +21,11 @@ import { Typography } from 'components/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { ChevronDownIcon, ChevronRightIcon } from 'components/icons';
+import { ChevronDownIcon, ChevronRightIcon, OptionsIcon } from 'components/icons';
 import { BrandWithSparePartsCount } from 'api/brands/types';
 import { Link, ModalContainer } from 'components/ui';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
 import { WhiteBox } from 'components/ui';
-import { OptionsIcon } from 'components/icons';
 
 type SortItem = {
 	value: string;
@@ -417,9 +416,9 @@ const Catalog: React.FC<Props> = ({
 			</Typography>
 			<Typography mb={2}>
 				Ищете надёжные Б/У запчасти в Гродно или других городах Беларуси? В интернет-магазине Авторазборка
-				Полотково ООО "Дриблинг" вы найдёте широкий выбор оригинальных запасных частей с минимальным пробегом.
-				Мы предлагаем высококачественные комплектующие по доступным ценам – как для популярных моделей, так и
-				для редких комплектаций. <br />
+				Полотково ООО &quot;Дриблинг&quot; вы найдёте широкий выбор оригинальных запасных частей с минимальным
+				пробегом. Мы предлагаем высококачественные комплектующие по доступным ценам – как для популярных
+				моделей, так и для редких комплектаций. <br />
 			</Typography>
 			<Typography variant='h6' fontWeight={700} fontSize={18}>
 				Почему выбирают нас:
@@ -444,7 +443,8 @@ const Catalog: React.FC<Props> = ({
 				Будние дни – с 10:00 до 18:00 <br />
 				Выходные – с 10:00 до 14:00 <br />
 				Связаться с нами можно через сайт, мессенджеры или социальные сети. <br />
-				Авторазборка Полотково ООО "Дриблинг" – ваш проверенный поставщик оригинальных Б/У автозапчастей
+				Авторазборка Полотково ООО &quot;Дриблинг&quot; – ваш проверенный поставщик оригинальных Б/У
+				автозапчастей
 			</Typography>
 
 			<Modal
@@ -455,7 +455,7 @@ const Catalog: React.FC<Props> = ({
 				onClose={handleFiltersModalClose}
 			>
 				<ModalContainer
-					width={'calc(100% - 1em)'}
+					width='calc(100% - 1em)'
 					sx={{
 						m: 1,
 						position: 'relative',

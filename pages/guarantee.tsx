@@ -4,7 +4,7 @@ import { PageGuarantee } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
 import Image from 'components/features/Image';
 import ReactMarkdown from 'components/features/ReactMarkdown';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import { getUrlByMinFormat } from 'services/ImageService';
 import { getPageProps } from 'services/PagePropsService';
 
@@ -67,13 +67,7 @@ const Guarantee = ({ page }: Props) => {
 				}}
 			></BlockImages>
 			<Box sx={{ typography: { xs: 'h5', md: 'h4' } }}>
-				<Typography
-					withSeparator
-					textTransform='uppercase'
-					fontWeight='500'
-					marginBottom='0.5em'
-					variant='inherit'
-				>
+				<Typography textTransform='uppercase' fontWeight='500' marginBottom='0.5em' variant='inherit'>
 					{page.guaranteeNotApplyTitle}
 				</Typography>
 			</Box>

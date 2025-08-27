@@ -4,7 +4,7 @@ import { fetchPage } from 'api/pages';
 import { PageVacancies, Vacancy } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
 import Image from 'components/features/Image';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 
@@ -94,7 +94,6 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 						textTransform='uppercase'
 						fontWeight='500'
 						variant='inherit'
-						withSeparator
 					>
 						{item.fullTitle}
 					</Typography>

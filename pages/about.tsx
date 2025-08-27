@@ -5,7 +5,7 @@ import { PageAbout } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
 import Image from 'components/features/Image';
 import ReactMarkdown from 'components/features/ReactMarkdown/ReactMarkdown';
-import Typography from 'components/ui/Typography';
+import { Typography } from 'components/ui';
 import { getUrlByMinFormat } from 'services/ImageService';
 import { getPageProps } from 'services/PagePropsService';
 
@@ -61,7 +61,7 @@ const About = ({ page }: Props) => {
 				sx={{ paddingY: { xs: 0, md: '3em' }, margin: { xs: '1em 0 3em', md: '3em 0' } }}
 			></BlockImages>
 			<Box>
-				<Typography marginBottom='1em' component='h2' variant='h4' withSeparator textTransform='uppercase'>
+				<Typography marginBottom='1em' component='h2' variant='h4' textTransform='uppercase'>
 					{page.whyNeedServicesTitle}
 				</Typography>
 				<ReactMarkdown content={page.whyNeedServicesText}></ReactMarkdown>
@@ -80,7 +80,6 @@ const About = ({ page }: Props) => {
 						marginBottom='1em'
 						component='h2'
 						variant='h4'
-						withSeparator
 						textTransform='uppercase'
 					>
 						{page.mainPrinciplesTitle}
@@ -94,7 +93,6 @@ const About = ({ page }: Props) => {
 						marginBottom='1em'
 						component='h2'
 						variant='h4'
-						withSeparator
 						textTransform='uppercase'
 					>
 						{page.mainPrinciplesTitle}
@@ -119,7 +117,7 @@ const About = ({ page }: Props) => {
 					></Image>
 				</Box>
 			</Box>
-			<Typography withSeparator component='h2' textTransform='uppercase' marginBottom='1em' variant='h4'>
+			<Typography component='h2' textTransform='uppercase' marginBottom='1em' variant='h4'>
 				{page.nuancesTitle}
 			</Typography>
 			<ReactMarkdown content={page.nuancesText}></ReactMarkdown>

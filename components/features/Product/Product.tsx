@@ -50,7 +50,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 		if (data.type === 'sparePart') {
 			viewedProductsService.addViewedProduct({ id: data.id, type: data.type });
 		}
-	}, []);
+	}, [data.id, data.type]);
 
 	const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
 		setActiveTab(newValue);
@@ -374,7 +374,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				</Box>
 			</WhiteBox>
 			<Typography color='text.secondary' fontSize='18px' variant='h6' fontWeight='700'>
-				Б/у патрубок интеркулера для Audi A4 B6 – надёжное решение от Авторазборка Полотково ООО "Дриблинг"
+				Б/у патрубок интеркулера для Audi A4 B6 – надёжное решение от Авторазборка Полотково ООО
+				&quot;Дриблинг&quot;
 			</Typography>
 			<Typography variant='body1' color='text.primary' mb={1}>
 				Ищете исправный и проверенный патрубок интеркулера для Audi A4 B6 года? В наличии оригинальные б/у
@@ -386,10 +387,10 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				Доставка патрубок интеркулера для Audi A4 B6по Гродно и всей Беларуси
 			</Typography>
 			<Typography variant='body1' color='text.primary' mb={1}>
-				Авторазборка Полотково ООО "Дриблинг" предлагает удобные варианты доставки в Гродно и любые регионы
-				Беларуси. Мы отправляем заказы транспортом компании в областные центры, такие как Гродно, Гомель, Брест,
-				Витебск, Могилев, а также по области. Также доступна доставка через почтоматы АвтолайтЭкспресс и выдача
-				в магазинах-партнёрах
+				Авторазборка Полотково ООО &quot;Дриблинг&quot; предлагает удобные варианты доставки в Гродно и любые
+				регионы Беларуси. Мы отправляем заказы транспортом компании в областные центры, такие как Гродно,
+				Гомель, Брест, Витебск, Могилев, а также по области. Также доступна доставка через почтоматы
+				АвтолайтЭкспресс и выдача в магазинах-партнёрах
 			</Typography>
 			<Typography color='text.secondary' fontSize='18px' variant='h6' fontWeight='700'>
 				Качественные б/у автозапчасти с гарантией
@@ -397,8 +398,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 			<Typography variant='body1' color='text.primary' mb={1}>
 				Все детали с нашей авторазборки поступают из Европы, имеют прозрачную историю эксплуатации и проходят
 				проверку на работоспособность. Мы гарантируем высокое качество, совместимость и отличное состояние
-				каждой запчасти. Обращаясь в Авторазборку Полотково ООО "Дриблинг", вы получаете профессиональный подход
-				и честный сервис при покупке патрубок интеркулера для Audi A4 B6
+				каждой запчасти. Обращаясь в Авторазборку Полотково ООО &quot;Дриблинг&quot;, вы получаете
+				профессиональный подход и честный сервис при покупке патрубок интеркулера для Audi A4 B6
 			</Typography>
 			<GalleryImages
 				images={data.images}

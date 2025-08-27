@@ -52,7 +52,7 @@ export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpen
 				<SocialButtons sx={{ justifyContent: 'center' }} data={SOCIAL_BUTTONS_MOBILE} />
 				<Box mt={1.5} bgcolor='custom.bg-surface-1' p={1.5} py={1} borderRadius={4}>
 					<Typography variant='h6' fontSize={18}>
-						Авторазборка Полотково ООО "Дриблинг"
+						Авторазборка Полотково ООО &quot;Дриблинг&quot;
 					</Typography>
 					<Typography mb={1} variant='body2'>
 						Гродненская область, Гродненский район, с/с Коптевский, д. Полотково

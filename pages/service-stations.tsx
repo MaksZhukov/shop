@@ -5,7 +5,7 @@ import { fetchServiceStations } from 'api/serviceStations/serviceStations';
 import { ServiceStation } from 'api/serviceStations/types';
 import { ApiResponse } from 'api/types';
 import CardItem from 'components/CardItem';
-import WhiteBox from 'components/ui/WhiteBox';
+import { WhiteBox } from 'components/ui';
 import { NextPage } from 'next';
 import getConfig from 'next/config';
 import { getPageProps } from 'services/PagePropsService';
@@ -39,10 +39,12 @@ const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
 export default Vacancies;
 
 export const getStaticProps = getPageProps(fetchPage('service-station'), async () => ({
-	serviceStations: (
-		await fetchServiceStations({
-			populate: 'image',
-			sort: 'updatedAt:desc'
-		})
-	).data
+	props: {
+		serviceStations: (
+			await fetchServiceStations({
+				populate: 'image',
+				sort: 'updatedAt:desc'
+			})
+		).data
+	}
 }));

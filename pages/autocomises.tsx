@@ -5,7 +5,7 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { ApiResponse } from 'api/types';
 import CardItem from 'components/CardItem';
-import WhiteBox from 'components/ui/WhiteBox';
+import { WhiteBox } from 'components/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 
@@ -36,10 +36,12 @@ const Vacancies: NextPage<Props> = ({ page, autocomises }) => {
 export default Vacancies;
 
 export const getStaticProps = getPageProps(fetchPage('autocomis'), async () => ({
-	autocomises: (
-		await fetchAutocomises({
-			populate: 'image',
-			sort: 'updatedAt:desc'
-		})
-	).data
+	props: {
+		autocomises: (
+			await fetchAutocomises({
+				populate: 'image',
+				sort: 'updatedAt:desc'
+			})
+		).data
+	}
 }));
