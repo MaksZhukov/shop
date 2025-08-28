@@ -59,7 +59,12 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 
 	return {
 		props: {
-			page
+			page,
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Статьи', href: '/articles' },
+				{ text: article.name, href: `/articles/${article.slug}` }
+			]
 		}
 	};
 });

@@ -1,79 +1,15 @@
 import { Box, Container, Breadcrumbs as MUIBreadcrumbs, Typography } from '@mui/material';
 import { Generation } from 'api/generations/types';
 import { Link } from 'components/ui/Link';
-import { useRouter } from 'next/router';
-import { FC, useMemo } from 'react';
-
-const generatePathParts = (pathStr: string) => {
-	const pathWithoutQuery = pathStr.split('?')[0];
-	return pathWithoutQuery.split('/').filter((v) => v.length > 0);
-};
-
-let PATH_NAMES = {
-	articles: 'Блог',
-	'spare-parts': 'Запчасти',
-	wheels: 'Диски',
-	cabins: 'Салоны',
-	tires: 'Шины',
-	'how-to-get-to': 'Как добраться',
-	'service-stations': 'СТО',
-	profile: 'Профиль',
-	'installment-plan': 'Рассрочка',
-	guarantee: 'Гарантия',
-	favorites: 'Избранное',
-	delivery: 'Доставка',
-	contacts: 'Контакты',
-	'company-photo': 'Фото разборки',
-	'car-dismantling-photos': 'Фото/вид разборки',
-	'awaiting-cars': 'Ожидаемые авто',
-	autocomises: 'Автокомисы',
-	vacancies: 'Вакансии',
-	'buyback-cars': 'Выкуп авто',
-	about: 'О нас',
-	payment: 'Оплата',
-	reviews: 'Отзывы',
-	sitemap: 'Карта сайта',
-	privacy: 'Политика конфидециальности'
-};
+import { FC } from 'react';
+import { BreadcrumbItem } from 'types';
 
 interface Props {
-	h1?: string;
-	exclude: string[];
-	generation?: Generation;
+	breadcrumbs: BreadcrumbItem[];
 }
 
-const Breadcrumbs: FC<Props> = ({ h1, exclude, generation }) => {
-	const router = useRouter();
-	const breadcrumbs = useMemo(
-		function generateBreadcrumbs() {
-			if (router.asPath.includes('.json')) {
-				return [];
-			}
-			const asPathNestedRoutes = generatePathParts(router.asPath.replace('model-', ''));
-			const pathnameNestedRoutes = generatePathParts(
-				router.pathname.includes('[[...slug]]') ? router.pathname + '/[[...slug]]' : router.pathname
-			);
-
-			const crumblist = asPathNestedRoutes.map((subpath, idx) => {
-				const param = pathnameNestedRoutes[idx]?.replace('[', '').replace(']', '') || '';
-				const originalPathParts = generatePathParts(router.asPath);
-				const href = '/' + originalPathParts.slice(0, idx + 1).join('/');
-				return {
-					href,
-					text:
-						idx === asPathNestedRoutes.length - 1 && param.includes('slug')
-							? h1 ?? subpath
-							: PATH_NAMES[subpath as keyof typeof PATH_NAMES] ?? subpath
-				};
-			});
-
-			return [{ href: '/', text: 'Главная' }, ...crumblist];
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[router.asPath, router.pathname, router.query]
-	);
-
-	if (exclude.some((item) => router.pathname.includes(item)) || breadcrumbs.length <= 1) {
+const Breadcrumbs: FC<Props> = ({ breadcrumbs }) => {
+	if (!breadcrumbs || breadcrumbs.length === 0) {
 		return <></>;
 	}
 
@@ -84,23 +20,22 @@ const Breadcrumbs: FC<Props> = ({ h1, exclude, generation }) => {
 	return (
 		<Container>
 			<MUIBreadcrumbs separator={renderSeparator} sx={{ marginY: '1em' }} aria-label='breadcrumb'>
-				{breadcrumbs.length > 1 &&
-					breadcrumbs.map((crumb, idx) =>
-						idx === breadcrumbs.length - 1 ? (
-							<Typography textTransform='capitalize' key={crumb.text} color='text.secondary'>
-								{crumb.text}
-							</Typography>
-						) : (
-							<Link
-								key={crumb.text}
-								href={crumb.href}
-								color='custom.text-muted'
-								sx={{ textTransform: 'capitalize' }}
-							>
-								{crumb.text}
-							</Link>
-						)
-					)}
+				{breadcrumbs.map((crumb: BreadcrumbItem, idx: number) =>
+					idx === breadcrumbs.length - 1 ? (
+						<Typography textTransform='capitalize' key={crumb.text} color='text.secondary'>
+							{crumb.text}
+						</Typography>
+					) : (
+						<Link
+							key={crumb.text}
+							href={crumb.href}
+							color='custom.text-muted'
+							sx={{ textTransform: 'capitalize' }}
+						>
+							{crumb.text}
+						</Link>
+					)
+				)}
 			</MUIBreadcrumbs>
 		</Container>
 	);

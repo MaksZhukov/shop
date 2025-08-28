@@ -102,4 +102,13 @@ const Favorites = () => {
 
 export default observer(Favorites);
 
-export const getStaticProps = getPageProps();
+export const getStaticProps = getPageProps(undefined, async () => {
+	return {
+		props: {
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Избранное', href: '/favorites' }
+			]
+		}
+	};
+});

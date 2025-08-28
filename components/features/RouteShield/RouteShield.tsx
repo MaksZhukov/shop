@@ -15,7 +15,7 @@ const RouteShield = ({ children }: Props) => {
 		if (!store.user.id && store.isInitialRequestDone && PRIVATE_PATHS.includes(router.pathname)) {
 			router.push('/', undefined, { shallow: true });
 		}
-	}, [store.user.id, store.isInitialRequestDone]);
+	}, [store.user.id, store.isInitialRequestDone, router]);
 
 	if (PRIVATE_PATHS.includes(router.pathname)) {
 		if (!store.isInitialRequestDone) {

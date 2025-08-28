@@ -47,4 +47,13 @@ const HowToGetTo: FC<Props> = ({ page }) => {
 
 export default HowToGetTo;
 
-export const getStaticProps = getPageProps(fetchPage('how-to-get-to'));
+export const getStaticProps = getPageProps(fetchPage('how-to-get-to'), async () => {
+	return {
+		props: {
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Как добраться', href: '/how-to-get-to' }
+			]
+		}
+	};
+});

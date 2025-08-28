@@ -225,6 +225,10 @@ export const getStaticProps = getPageProps(undefined, async () => ({
 				description: 'Наша политика конфиденциальности',
 				keywords: 'политика конфиденциальности'
 			}
-		}
+		},
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Политика конфиденциальности', href: '/privacy' }
+		]
 	}
 }));

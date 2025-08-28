@@ -21,4 +21,13 @@ const Contacts = ({ page }: Props) => {
 
 export default Contacts;
 
-export const getStaticProps = getPageProps(fetchPage('payment'));
+export const getStaticProps = getPageProps(fetchPage('payment'), async () => {
+	return {
+		props: {
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Оплата', href: '/payment' }
+			]
+		}
+	};
+});

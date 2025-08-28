@@ -63,7 +63,6 @@ export const getPageProps = (
 			if (layoutResponse && 'data' in layoutResponse && layoutResponse.data.data) {
 				result.props.layout = layoutResponse.data.data;
 			}
-
 			return result;
 		} catch (error) {
 			if (error instanceof AxiosError && error.response?.status) {

@@ -143,5 +143,15 @@ export const getStaticProps = getPageProps(
 			'courierDescription',
 			'shipmentImageRight'
 		]
-	})
+	}),
+	async () => {
+		return {
+			props: {
+				breadcrumbs: [
+					{ text: 'Главная', href: '/' },
+					{ text: 'Доставка', href: '/delivery' }
+				]
+			}
+		};
+	}
 );

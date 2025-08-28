@@ -136,5 +136,15 @@ const Guarantee = ({ page }: Props) => {
 export default Guarantee;
 
 export const getStaticProps = getPageProps(
-	fetchPage('guarantee', { populate: ['seo', 'mainLeftImage', 'images1', 'images2', 'warningLeftImage'] })
+	fetchPage('guarantee', { populate: ['seo', 'mainLeftImage', 'images1', 'images2', 'warningLeftImage'] }),
+	async () => {
+		return {
+			props: {
+				breadcrumbs: [
+					{ text: 'Главная', href: '/' },
+					{ text: 'Гарантия', href: '/guarantee' }
+				]
+			}
+		};
+	}
 );

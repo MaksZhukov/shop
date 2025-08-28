@@ -103,7 +103,8 @@ export const getServerSideProps = getPageProps(
 				newSpareParts: newSpareParts.data.data,
 				articles: articles.data.data,
 				carsOnParts: carsOnParts.data.data,
-				sparePartsTotal: sparePartsTotal.data.meta?.pagination?.total || 0
+				sparePartsTotal: sparePartsTotal.data.meta?.pagination?.total || 0,
+				breadcrumbs: []
 			}
 		};
 	}

@@ -153,5 +153,15 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 export default Vacancies;
 
 export const getStaticProps = getPageProps(
-	fetchPage('vacancy', { populate: ['vacancies.image', 'vacancies.images', 'seo', 'vacancies.description'] })
+	fetchPage('vacancy', { populate: ['vacancies.image', 'vacancies.images', 'seo', 'vacancies.description'] }),
+	async () => {
+		return {
+			props: {
+				breadcrumbs: [
+					{ text: 'Главная', href: '/' },
+					{ text: 'Вакансии', href: '/vacancies' }
+				]
+			}
+		};
+	}
 );

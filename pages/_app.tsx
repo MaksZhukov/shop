@@ -30,7 +30,6 @@ function MyApp({
 	deviceType
 }: AppProps & { deviceType: 'desktop' | 'mobile' }) {
 	const router = useRouter();
-
 	useEffect(() => {
 		const tryFetchData = async () => {
 			let token = authService.getJwt();
@@ -115,11 +114,7 @@ function MyApp({
 							<Header />
 							<RouteShield>
 								<ErrorBoundary fallback={<></>} onError={handleRenderError}>
-									<Breadcrumbs
-										generation={restPageProps.generation}
-										exclude={['buyback-cars', 'mobile-catalog']}
-										h1={restPageProps.data?.h1 || restPageProps.page?.name}
-									></Breadcrumbs>
+									<Breadcrumbs breadcrumbs={restPageProps.breadcrumbs || []}></Breadcrumbs>
 									<Container sx={{ flex: 1 }}>
 										<Component {...restPageProps} />
 									</Container>

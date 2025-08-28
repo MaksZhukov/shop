@@ -217,4 +217,16 @@ const Contacts = ({ page, socials }: Props) => {
 
 export default Contacts;
 
-export const getStaticProps = getPageProps(fetchPage('contact', { populate: ['seo', 'images', 'requisites'] }));
+export const getStaticProps = getPageProps(
+	fetchPage('contact', { populate: ['seo', 'images', 'requisites'] }),
+	async () => {
+		return {
+			props: {
+				breadcrumbs: [
+					{ text: 'Главная', href: '/' },
+					{ text: 'Контакты', href: '/contacts' }
+				]
+			}
+		};
+	}
+);

@@ -150,7 +150,13 @@ const handleProductPage = async (productSlug: string, kindSparePartSlug?: string
 				...getProductPageSeo(pageSparePart.seo, data),
 				h1: data.h1 || data.name
 			}
-		}
+		},
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Запчасти', href: '/spare-parts' },
+			{ text: data.brand?.name, href: `/spare-parts/${data.brand?.slug}` },
+			{ text: data.name, href: `/spare-parts/${data.brand?.slug}/${data.slug}` }
+		]
 	};
 };
 
@@ -187,7 +193,20 @@ const handleGenerationPage = async (
 				kindSparePart?.name
 			)
 		},
-		...(kindSparePart ? { kindSparePart } : {})
+		...(kindSparePart ? { kindSparePart } : {}),
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Запчасти', href: '/spare-parts' },
+			{ text: generation.brand.name, href: `/spare-parts/${generation.brand?.slug}` },
+			{
+				text: generation.model.name,
+				href: `/spare-parts/${generation.brand?.slug}/model-${generation.model.slug}`
+			},
+			{
+				text: generation.name,
+				href: `/spare-parts/${generation.brand?.slug}/model-${generation.model.slug}/${generation.slug}`
+			}
+		]
 	};
 };
 
@@ -195,7 +214,7 @@ const handleModelPage = async (brandParamSlug: string, modelSlug: string, kindSp
 	const {
 		data: { data }
 	} = await fetchModelBySlug(modelSlug, {
-		populate: ['seoSpareParts.images', 'image'],
+		populate: ['seoSpareParts.images', 'image', 'brand'],
 		filters: { brand: { slug: brandParamSlug } }
 	});
 
@@ -205,7 +224,13 @@ const handleModelPage = async (brandParamSlug: string, modelSlug: string, kindSp
 		page: {
 			seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart?.name)
 		},
-		...(kindSparePart ? { kindSparePart } : {})
+		...(kindSparePart ? { kindSparePart } : {}),
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Запчасти', href: '/spare-parts' },
+			{ text: data.brand?.name, href: `/spare-parts/${data.brand?.slug}` },
+			{ text: data.name, href: `/spare-parts/${data.brand?.slug}/model-${data.slug}` }
+		]
 	};
 };
 
@@ -222,7 +247,12 @@ const handleBrandPage = async (brandParamSlug: string, kindSparePartSlug?: strin
 		page: {
 			seo: withKindSparePart(data.seoSpareParts, 'запчасти', kindSparePart?.name)
 		},
-		...(kindSparePart ? { kindSparePart } : {})
+		...(kindSparePart ? { kindSparePart } : {}),
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Запчасти', href: '/spare-parts' },
+			{ text: data.name, href: `/spare-parts/${data.slug}` }
+		]
 	};
 };
 
@@ -236,6 +266,10 @@ const handleDefaultPage = async (kindSparePartSlug?: string) => {
 		page: {
 			seo: withKindSparePart(data.seo, 'запчасти', kindSparePart?.name)
 		},
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Запчасти', href: '/spare-parts' }
+		],
 		...(kindSparePart ? { kindSparePart } : {})
 	};
 };
@@ -263,18 +297,22 @@ const buildPageProps = async (params: SlugParams): Promise<Partial<Props>> => {
 };
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-	const { slug = [], kindSparePart: kindSparePartSlug } = context.query;
+	try {
+		const { slug = [], kindSparePart: kindSparePartSlug } = context.query;
 
-	const params = parseParams(slug as string[], kindSparePartSlug as string);
+		const params = parseParams(slug as string[], kindSparePartSlug as string);
 
-	const brands = await fetchBrandsData();
+		const brands = await fetchBrandsData();
 
-	const pageProps = await buildPageProps(params);
+		const pageProps = await buildPageProps(params);
 
-	const props = {
-		brands,
-		...pageProps
-	};
+		const props = {
+			brands,
+			...pageProps
+		};
 
-	return { props };
+		return { props };
+	} catch (error) {
+		return { props: {}, notFound: true };
+	}
 });

@@ -45,6 +45,10 @@ export const getStaticProps = getPageProps(fetchPage('service-station'), async (
 				populate: 'image',
 				sort: 'updatedAt:desc'
 			})
-		).data
+		).data,
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'СТО', href: '/service-stations' }
+		]
 	}
 }));

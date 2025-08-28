@@ -22,4 +22,13 @@ const InstallmentPlan: FC<Props> = ({ page }) => {
 
 export default InstallmentPlan;
 
-export const getStaticProps = getPageProps(fetchPage('installment-plan'));
+export const getStaticProps = getPageProps(fetchPage('installment-plan'), async () => {
+	return {
+		props: {
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Рассрочка', href: '/installment-plan' }
+			]
+		}
+	};
+});

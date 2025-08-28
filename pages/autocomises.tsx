@@ -42,6 +42,10 @@ export const getStaticProps = getPageProps(fetchPage('autocomis'), async () => (
 				populate: 'image',
 				sort: 'updatedAt:desc'
 			})
-		).data
+		).data,
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Автокомисы', href: '/autocomises' }
+		]
 	}
 }));

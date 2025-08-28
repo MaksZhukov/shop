@@ -84,4 +84,13 @@ const Reviews = ({ page }: Props) => {
 
 export default Reviews;
 
-export const getStaticProps = getPageProps(fetchPage('review'));
+export const getStaticProps = getPageProps(fetchPage('review'), async () => {
+	return {
+		props: {
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Отзывы', href: '/reviews' }
+			]
+		}
+	};
+});

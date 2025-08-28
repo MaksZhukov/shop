@@ -15,5 +15,9 @@ export default Autocomis;
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
 	props: {
 		page: (await fetchAutocomis(context.params?.slug as string)).data.data
-	}
+	},
+	breadcrumbs: [
+		{ text: 'Главная', href: '/' },
+		{ text: 'Автокомисы', href: '/autocomises' }
+	]
 }));

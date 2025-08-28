@@ -174,5 +174,15 @@ export const getStaticProps = getPageProps(
 			'images4',
 			'pricesLeftImage'
 		]
-	})
+	}),
+	async () => {
+		return {
+			props: {
+				breadcrumbs: [
+					{ text: 'Главная', href: '/' },
+					{ text: 'О компании', href: '/about' }
+				]
+			}
+		};
+	}
 );

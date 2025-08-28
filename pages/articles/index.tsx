@@ -64,7 +64,11 @@ export const getServerSideProps = getPageProps(fetchPage('article'), async (cont
 					populate: 'mainImage'
 				})
 			).data,
-			serverQueryPage: context.query.page ? context.query.page : '1'
+			serverQueryPage: context.query.page ? context.query.page : '1',
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Статьи', href: '/articles' }
+			]
 		}
 	};
 });
