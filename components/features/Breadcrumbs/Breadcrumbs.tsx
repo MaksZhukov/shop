@@ -1,4 +1,5 @@
 import { Box, Container, Breadcrumbs as MUIBreadcrumbs, Typography } from '@mui/material';
+import { Generation } from 'api/generations/types';
 import { Link } from 'components/ui/Link';
 import { useRouter } from 'next/router';
 import { FC, useMemo } from 'react';
@@ -38,9 +39,10 @@ let PATH_NAMES = {
 interface Props {
 	h1?: string;
 	exclude: string[];
+	generation?: Generation;
 }
 
-const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
+const Breadcrumbs: FC<Props> = ({ h1, exclude, generation }) => {
 	const router = useRouter();
 	const breadcrumbs = useMemo(
 		function generateBreadcrumbs() {
@@ -54,7 +56,8 @@ const Breadcrumbs: FC<Props> = ({ h1, exclude }) => {
 
 			const crumblist = asPathNestedRoutes.map((subpath, idx) => {
 				const param = pathnameNestedRoutes[idx]?.replace('[', '').replace(']', '') || '';
-				const href = '/' + asPathNestedRoutes.slice(0, idx + 1).join('/');
+				const originalPathParts = generatePathParts(router.asPath);
+				const href = '/' + originalPathParts.slice(0, idx + 1).join('/');
 				return {
 					href,
 					text:

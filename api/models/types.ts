@@ -1,5 +1,6 @@
 import { SEO } from 'api/types';
 import { Generation, GenerationWithSparePartsCount } from 'api/generations/types';
+import { Brand } from 'api/brands/types';
 
 export interface Model {
 	id: number;
@@ -8,6 +9,7 @@ export interface Model {
 	seoSpareParts: SEO;
 	seoWheels: SEO;
 	seoCabins: SEO;
+	brand?: Brand;
 }
 
 export type ModelSparePartsCountWithGenerationsSparePartsCount = Model & {

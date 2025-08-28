@@ -263,7 +263,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 	};
 
 	const handleClickFind = () => {
-		const { brand, model, kindSparePart, ...restValues } = values;
+		const { brand, model, kindSparePart, generation, ...restValues } = values;
 		const sanitizedValues = Object.keys(restValues).reduce(
 			(prev, curr) => (restValues[curr] ? { ...prev, [curr]: restValues[curr] } : prev),
 			{}
@@ -277,6 +277,9 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 			url += `/${brand}`;
 			if (model) {
 				url += `/model-${model}`;
+			}
+			if (generation) {
+				url += `/${generation}`;
 			}
 		}
 		url += formattedQuery;

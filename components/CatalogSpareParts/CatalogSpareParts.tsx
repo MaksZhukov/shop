@@ -59,7 +59,6 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 	const {
 		sort = 'createdAt:desc',
 		page: pageParam = '1',
-		generation,
 		kindSparePart: kindSparePartSlug,
 		volume,
 		fuel,
@@ -68,8 +67,10 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 		slug
 	} = router.query as unknown as QueryParams;
 	const page = +pageParam;
-	const [brand, modelParam] = slug || [];
+	const [brandParamSlug, modelParam, generationParamSlug = ''] = slug || [];
 	const model = modelParam ? modelParam.replace('model-', '') : '';
+	const brand = brandParamSlug;
+	const generation = generationParamSlug;
 
 	const [filtersValues, setFiltersValues] = useState<{ [key: string]: string | null }>({
 		brand: brand,
@@ -399,12 +400,20 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 
 	const handleClickFind = () => {
 		const slug: string[] = [];
-		const { brand: brandValue, model: modelValue, ...restFiltersValues } = filtersValues;
+		const {
+			brand: brandValue,
+			model: modelValue,
+			generation: generationValue,
+			...restFiltersValues
+		} = filtersValues;
 		if (brandValue) {
 			slug.push(brandValue);
 		}
 		if (modelValue) {
 			slug.push('model-' + modelValue);
+		}
+		if (generationValue) {
+			slug.push(generationValue);
 		}
 		Object.keys(restFiltersValues).forEach((key) => {
 			if (restFiltersValues[key]) {
@@ -416,7 +425,7 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 		router.query['slug'] = slug;
 		router.query['page'] = '1';
 
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: false });
 	};
 
 	const handleChangeSort = (sort: string) => {

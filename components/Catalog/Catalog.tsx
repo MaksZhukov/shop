@@ -283,7 +283,7 @@ const Catalog: React.FC<Props> = ({
 										{model.generations?.map((generation) => (
 											<Box display='flex' gap={0.5} py={1} key={generation.id}>
 												<Link
-													href={`/spare-parts/${filtersValues.brand}/model-${model.slug}?generation=${generation.slug}`}
+													href={`/spare-parts/${filtersValues.brand}/model-${model.slug}/${generation.slug}`}
 												>
 													{model.name} {generation.name}
 												</Link>
