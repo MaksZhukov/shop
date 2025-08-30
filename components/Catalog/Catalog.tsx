@@ -308,7 +308,7 @@ const Catalog: React.FC<Props> = ({
 							data.map((item) => (
 								<ProductItem
 									sx={{ margin: 'initial' }}
-									width={278}
+									width={isMobile ? 340 : 278}
 									imageHeight={220}
 									key={item.id}
 									data={item}
