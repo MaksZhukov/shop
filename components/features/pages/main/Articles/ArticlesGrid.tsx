@@ -10,14 +10,7 @@ interface ArticlesGridProps {
 export const ArticlesGrid: React.FC<ArticlesGridProps> = ({ articles }) => {
 	const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 	return (
-		<Box
-			display='flex'
-			gap={{ xs: 1, md: 2 }}
-			flexWrap='wrap'
-			justifyContent='center'
-			alignItems='center'
-			flexDirection={{ xs: 'column', md: 'row' }}
-		>
+		<Box display='flex' gap={{ xs: 1, md: 2 }} flexWrap='wrap' flexDirection={{ xs: 'column', md: 'row' }}>
 			{articles.map((article, index) => (
 				<ArticleItem
 					key={article.id}
@@ -26,7 +19,7 @@ export const ArticlesGrid: React.FC<ArticlesGridProps> = ({ articles }) => {
 					name={article.name}
 					date={article.createdAt}
 					link={`/articles/${article.slug}`}
-					width={isMobile ? '100%' : 336}
+					width={isMobile ? '100%' : 340}
 					variant={isMobile ? (index === 0 ? 'default' : 'compact') : 'default'}
 				/>
 			))}

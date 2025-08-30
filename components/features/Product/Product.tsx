@@ -80,7 +80,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				},
 				{
 					title: 'Обьем двигателя',
-					value: data.volume.name
+					value: data.volume?.name
 				},
 				{
 					title: 'Тип топлива',

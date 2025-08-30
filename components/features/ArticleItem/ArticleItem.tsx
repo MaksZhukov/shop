@@ -4,7 +4,7 @@ import Image from 'components/features/Image';
 import ReactMarkdown from 'components/features/ReactMarkdown';
 import { Link, Typography, WhiteBox } from 'components/ui';
 import { FC } from 'react';
-
+import NextLink from 'next/link';
 interface ArticleCardProps {
 	image: IImage;
 	description: string;
@@ -52,17 +52,19 @@ export const ArticleItem: FC<ArticleCardProps> = ({
 				border={2}
 				borderColor='background.paper'
 			>
-				<Image
-					src={getImageUrl(image)}
-					alt={name}
-					style={{
-						objectFit: 'cover',
-						borderRadius: '16px',
-						minWidth: imageWidth
-					}}
-					width={imageWidth}
-					height={imageHeight}
-				/>
+				<NextLink href={link}>
+					<Image
+						src={getImageUrl(image)}
+						alt={name}
+						style={{
+							objectFit: 'cover',
+							borderRadius: '16px',
+							minWidth: imageWidth
+						}}
+						width={imageWidth}
+						height={imageHeight}
+					/>
+				</NextLink>
 				<Box py={{ xs: 0.25, md: 1.75 }} px={{ xs: 1, md: 1.75 }}>
 					<Link href={link}>
 						<Typography variant='h6' fontSize={{ xs: '18px', md: '22px' }} lineClamp={1}>
@@ -82,17 +84,19 @@ export const ArticleItem: FC<ArticleCardProps> = ({
 
 	return (
 		<WhiteBox border='2px solid' borderColor={'background.paper'} overflow='hidden' maxWidth={width}>
-			<Image
-				title={image?.caption}
-				alt={image?.alternativeText || name}
-				width={336}
-				height={190}
-				style={{
-					objectFit: 'cover',
-					width: '100%'
-				}}
-				src={getImageUrl(image)}
-			/>
+			<NextLink href={link}>
+				<Image
+					title={image?.caption}
+					alt={image?.alternativeText || name}
+					width={336}
+					height={190}
+					style={{
+						objectFit: 'cover',
+						width: '100%'
+					}}
+					src={getImageUrl(image)}
+				/>
+			</NextLink>
 
 			<Box px={1.5} py={1}>
 				<Link lineClamp={1} color='text.secondary' sx={{ fontWeight: 700, fontSize: '18px' }} href={link}>
