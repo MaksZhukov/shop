@@ -20,7 +20,7 @@ import ProductItem from 'components/features/ProductItem';
 import { Typography } from 'components/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDownIcon, ChevronRightIcon, OptionsIcon } from 'components/icons';
 import { BrandWithSparePartsCount } from 'api/brands/types';
 import { Link, ModalContainer } from 'components/ui';
@@ -332,7 +332,12 @@ const Catalog: React.FC<Props> = ({
 								<PaginationItem
 									{...params}
 									onClick={() => {
-										window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+										// Use instant scroll on mobile to avoid animation issues
+										if (isMobile) {
+											window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+										} else {
+											window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+										}
 									}}
 								>
 									{params.page}
@@ -348,7 +353,12 @@ const Catalog: React.FC<Props> = ({
 									<PaginationItem
 										{...params}
 										onClick={() => {
-											window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+											// Use instant scroll on mobile to avoid animation issues
+											if (isMobile) {
+												window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+											} else {
+												window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+											}
 										}}
 									>
 										{params.page}
