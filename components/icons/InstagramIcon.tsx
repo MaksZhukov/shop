@@ -26,10 +26,10 @@ export const InstagramIcon = () => {
 					y2='3.51317'
 					gradientUnits='userSpaceOnUse'
 				>
-					<stop stop-color='#FAAD4F' />
-					<stop offset='0.35' stop-color='#DD2A7B' />
-					<stop offset='0.62' stop-color='#9537B0' />
-					<stop offset='1' stop-color='#515BD4' />
+					<stop stopColor='#FAAD4F' />
+					<stop offset='0.35' stopColor='#DD2A7B' />
+					<stop offset='0.62' stopColor='#9537B0' />
+					<stop offset='1' stopColor='#515BD4' />
 				</linearGradient>
 			</defs>
 		</svg>

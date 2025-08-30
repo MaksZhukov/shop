@@ -4,7 +4,7 @@ import { Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document() {
 	return (
-		<Html lang='ru'>
+		<Html lang='ru' data-scroll-behavior='smooth'>
 			<Head>
 				<link rel='apple-touch-icon' href='/favicons/apple-touch-icon.png' />
 				<link rel='icon' type='image/png' sizes='96x96' href='/favicons/favicon-16x16.png' />
