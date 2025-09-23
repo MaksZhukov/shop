@@ -75,6 +75,7 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 	const [filtersValues, setFiltersValues] = useState<{ [key: string]: string | null }>({
 		brand: brand,
 		model: model,
+		generation: generation,
 		kindSparePart: kindSparePartSlug,
 		volume: volume,
 		fuel: fuel,
@@ -83,7 +84,19 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 	});
 
 	const { data: spareParts, isFetching } = useQuery({
-		queryKey: ['spare-parts', sort, page, brand, model, kindSparePartSlug, volume, fuel, bodyStyle, transmission],
+		queryKey: [
+			'spare-parts',
+			sort,
+			page,
+			brand,
+			model,
+			generation,
+			kindSparePartSlug,
+			volume,
+			fuel,
+			bodyStyle,
+			transmission
+		],
 		placeholderData: (prev) => prev,
 		queryFn: () =>
 			fetchSpareParts({
@@ -95,7 +108,8 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 						volume,
 						fuel,
 						bodyStyle,
-						transmission
+						transmission,
+						generation
 					}),
 					sold: false
 				},
@@ -113,7 +127,8 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 			filtersValues.volume,
 			filtersValues.fuel,
 			filtersValues.bodyStyle,
-			filtersValues.transmission
+			filtersValues.transmission,
+			filtersValues.generation
 		],
 		placeholderData: (prev) => prev,
 		queryFn: () =>
