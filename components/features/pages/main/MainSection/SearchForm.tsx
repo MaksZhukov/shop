@@ -130,7 +130,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 
 		try {
 			const { data } = await fetchKindSpareParts(
-				{ pagination: { start: kindSpareParts.data.length } },
+				{ filters: { spareParts: { sold: false } }, pagination: { start: kindSpareParts.data.length } },
 				{ abortController: controller }
 			);
 			setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });

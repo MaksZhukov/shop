@@ -322,34 +322,14 @@ const Catalog: React.FC<Props> = ({
 							<CircularProgress sx={{ margin: 'auto' }}></CircularProgress>
 						)}
 					</Box>
-					<Pagination
-						sx={{
-							display: 'flex',
-							justifyContent: 'center'
-						}}
-						renderItem={(params) =>
-							params.page === null ? (
-								<PaginationItem
-									{...params}
-									onClick={() => {
-										// Use instant scroll on mobile to avoid animation issues
-										if (isMobile) {
-											window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
-										} else {
-											window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-										}
-									}}
-								>
-									{params.page}
-								</PaginationItem>
-							) : (
-								<NextLink
-									shallow
-									href={`${router.asPath.split('?')[0]}?${new URLSearchParams({
-										...router.query,
-										page: params.page.toString()
-									}).toString()}`}
-								>
+					{pageCount > 0 && (
+						<Pagination
+							sx={{
+								display: 'flex',
+								justifyContent: 'center'
+							}}
+							renderItem={(params) =>
+								params.page === null ? (
 									<PaginationItem
 										{...params}
 										onClick={() => {
@@ -363,16 +343,38 @@ const Catalog: React.FC<Props> = ({
 									>
 										{params.page}
 									</PaginationItem>
-								</NextLink>
-							)
-						}
-						boundaryCount={1}
-						page={+page}
-						siblingCount={1}
-						color='primary'
-						count={pageCount}
-						variant='text'
-					/>
+								) : (
+									<NextLink
+										shallow
+										href={`${router.asPath.split('?')[0]}?${new URLSearchParams({
+											...router.query,
+											page: params.page.toString()
+										}).toString()}`}
+									>
+										<PaginationItem
+											{...params}
+											onClick={() => {
+												// Use instant scroll on mobile to avoid animation issues
+												if (isMobile) {
+													window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+												} else {
+													window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+												}
+											}}
+										>
+											{params.page}
+										</PaginationItem>
+									</NextLink>
+								)
+							}
+							boundaryCount={1}
+							page={+page}
+							siblingCount={1}
+							color='primary'
+							count={pageCount}
+							variant='text'
+						/>
+					)}
 				</Box>
 			</Box>
 

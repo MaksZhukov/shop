@@ -18,7 +18,7 @@ import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'confi
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Dispatch, FC, SetStateAction, UIEventHandler, useEffect, useRef, useState } from 'react';
-import { useDebounce, useThrottle } from 'rooks';
+import { useDebounce, usePreviousDifferent, useThrottle } from 'rooks';
 import { getParamByRelation } from 'services/ParamsService';
 import { OFFSET_SCROLL_LOAD_MORE } from '../../constants';
 import { useQuery } from '@tanstack/react-query';
@@ -27,7 +27,7 @@ import { DefaultPage } from 'api/pages/types';
 type QueryParams = {
 	sort: string;
 	page: string;
-	slug: [string, string];
+	slug: [string, string, string];
 	generation: string;
 	kindSparePart: string;
 	volume: string;
@@ -67,7 +67,7 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 		slug
 	} = router.query as unknown as QueryParams;
 	const page = +pageParam;
-	const [brandParamSlug, modelParam, generationParamSlug = ''] = slug || [];
+	const [brandParamSlug, modelParam, generationParamSlug] = slug || [];
 	const model = modelParam ? modelParam.replace('model-', '') : '';
 	const brand = brandParamSlug;
 	const generation = generationParamSlug;
@@ -82,6 +82,8 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 		bodyStyle: bodyStyle,
 		transmission: transmission
 	});
+
+	const [isReloadKindSpareParts, setIsReloadKindSpareParts] = useState(true);
 
 	const { data: spareParts, isFetching } = useQuery({
 		queryKey: [
@@ -183,7 +185,7 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 		}
 	}, [generation]);
 
-	const loadKindSpareParts = async () => {
+	const loadKindSpareParts = async (initial: boolean = false) => {
 		if (abortControllerRef.current) {
 			abortControllerRef.current.abort();
 		}
@@ -192,17 +194,34 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 		try {
 			const { data } = await fetchKindSpareParts(
 				{
+					filters: {
+						spareParts: {
+							sold: false,
+							...(filtersValues.brand && { brand: { slug: filtersValues.brand } }),
+							...(filtersValues.model && { model: { slug: filtersValues.model } }),
+							...(filtersValues.generation && { generation: { slug: filtersValues.generation } })
+						}
+					},
 					pagination: { start: kindSpareParts.data.length }
 				},
 				{ abortController: controller }
 			);
-			setKindSpareParts({
-				data: [
-					...kindSpareParts.data,
-					...(kindSparePart ? data.data.filter((item) => item.id !== kindSparePart.id) : data.data)
-				],
-				meta: data.meta
-			});
+			if (initial) {
+				setKindSpareParts({
+					data: kindSparePart
+						? [kindSparePart, ...data.data.filter((item) => item.id !== kindSparePart.id)]
+						: data.data,
+					meta: data.meta
+				});
+			} else {
+				setKindSpareParts({
+					data: [
+						...kindSpareParts.data,
+						...(kindSparePart ? data.data.filter((item) => item.id !== kindSparePart.id) : data.data)
+					],
+					meta: data.meta
+				});
+			}
 		} catch (err) {
 			if (!axios.isCancel(err)) {
 				enqueueSnackbar(
@@ -314,12 +333,18 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 
 	const handleOpenAutocompleteKindSparePart = () => async () => {
 		if (
-			kindSpareParts.data.length < API_DEFAULT_LIMIT &&
-			kindSpareParts.meta.pagination?.total !== kindSpareParts.data.length
+			(kindSpareParts.data.length < API_DEFAULT_LIMIT &&
+				kindSpareParts.meta.pagination?.total !== kindSpareParts.data.length) ||
+			isReloadKindSpareParts
 		) {
 			setIsLoading(true);
-			await loadKindSpareParts();
+			setKindSpareParts({
+				data: [],
+				meta: {}
+			});
+			await loadKindSpareParts(true);
 			setIsLoading(false);
+			setIsReloadKindSpareParts(false);
 		}
 	};
 
@@ -340,8 +365,10 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 	) => {
 		if (
 			event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
-			event.currentTarget.scrollHeight
+				event.currentTarget.scrollHeight &&
+			kindSpareParts.meta.pagination?.total !== kindSpareParts.data.length
 		) {
+            console.log(kindSpareParts)
 			throttledLoadMoreKindSpareParts();
 		}
 	};
@@ -409,6 +436,13 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 		if (!values.model) {
 			newFilterValues = { ...newFilterValues, generation: null };
 			setGenerations([]);
+		}
+		if (
+			filtersValues.brand !== newFilterValues.brand ||
+			filtersValues.model !== newFilterValues.model ||
+			filtersValues.generation !== newFilterValues.generation
+		) {
+			setIsReloadKindSpareParts(true);
 		}
 		setFiltersValues(newFilterValues);
 	};

@@ -47,19 +47,20 @@ export type ApiResponse<T = any> = {
 
 export type Filters = {
 	[field: string]:
-		| {
-				[operator: string]: number | string | undefined | null | boolean | number[];
-		  }
-		| {
-				[field: string]: { [operator: string]: number | string | undefined | null | boolean };
-		  }
 		| string
 		| number
-		| number[]
-		| null
 		| boolean
+		| null
 		| undefined
-		| any[];
+		| string[]
+		| number[]
+		| {
+				[operator: string]: string | number | boolean | null | undefined | string[] | number[];
+		  }
+		| {
+				[field: string]: string | number | boolean | null | undefined;
+		  }
+		| Filters;
 };
 
 export type Populate = string[] | string | { [key: string]: boolean | { count: boolean } | Populate };
