@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const PAGES = [
+	'/',
 	'/404',
 	'/500',
 	'/autocomises',

@@ -19,22 +19,22 @@ const Reviews = ({ page }: Props) => {
 
 	const { enqueueSnackbar } = useSnackbar();
 
-	const fetchData = async () => {
-		try {
-			const {
-				data: { data }
-			} = await fetchReviews();
-			setReviews(data);
-		} catch (err) {
-			enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
-				variant: 'error'
-			});
-		}
-		setIsLoading(false);
-	};
 	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const {
+					data: { data }
+				} = await fetchReviews();
+				setReviews(data);
+			} catch (err) {
+				enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
+					variant: 'error'
+				});
+			}
+			setIsLoading(false);
+		};
 		fetchData();
-	}, []);
+	}, [enqueueSnackbar]);
 
 	const renderReviews = reviews.map((item, index) => (
 		<Fragment key={item.id}>
