@@ -90,7 +90,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 			})
 	});
 
-	const total = totalSpareParts?.data.meta.pagination?.total || sparePartsTotal;
+	const total = totalSpareParts?.data.meta.pagination?.total ?? sparePartsTotal;
 
 	const generateFiltersByQuery = ({
 		brand,
@@ -262,28 +262,32 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 		}
 	};
 
-	const handleClickFind = () => {
-		const { brand, model, kindSparePart, generation, ...restValues } = values;
-		const sanitizedValues = Object.keys(restValues).reduce(
-			(prev, curr) => (restValues[curr] ? { ...prev, [curr]: restValues[curr] } : prev),
-			{}
+	const buildSearchUrl = (searchValues: FormValues): string => {
+		const { brand, model, generation, ...queryParams } = searchValues;
+
+		const sanitizedQueryParams = Object.fromEntries(
+			Object.entries(queryParams).filter(([_, value]) => Boolean(value))
 		);
 
-		const query = qs.stringify(sanitizedValues, { encode: false });
-		const formattedQuery = query ? `?${query}` : '';
+		const queryString = qs.stringify(sanitizedQueryParams, { encode: false });
+		const query = queryString ? `?${queryString}` : '';
 
-		let url = `/spare-parts`;
+		const pathSegments = ['/spare-parts'];
 		if (brand) {
-			url += `/${brand}`;
+			pathSegments.push(brand);
 			if (model) {
-				url += `/model-${model}`;
+				pathSegments.push(`model-${model}`);
 			}
 			if (generation) {
-				url += `/${generation}`;
+				pathSegments.push(generation);
 			}
 		}
-		url += formattedQuery;
 
+		return pathSegments.join('/') + query;
+	};
+
+	const handleClickFind = () => {
+		const url = buildSearchUrl(values);
 		router.push(url);
 	};
 
