@@ -7,7 +7,8 @@ export const QueryProvider: FC<{ children: ReactNode }> = ({ children }) => {
 			new QueryClient({
 				defaultOptions: {
 					queries: {
-						staleTime: 6000
+						staleTime: 60 * 1000, // 30 seconds - good default for most queries
+						gcTime: 5 * 60 * 1000 // 5 minutes - keep unused queries in cache
 					}
 				}
 			})
