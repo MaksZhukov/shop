@@ -1,9 +1,8 @@
 import { Image } from 'api/types';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
-const { publicRuntimeConfig } = getConfig();
+import { backendUrl } from 'services/EnvService';
 
 interface Props {
 	title?: string;
@@ -42,9 +41,7 @@ const HeadSEO: FC<Props> = ({ title, description, keywords, image }) => {
 			<meta property='og:type' content={getOGType(router.asPath)} />
 			<meta
 				property='og:image'
-				content={
-					image ? publicRuntimeConfig.backendUrl + image.url : origin + '/favicons/android-chrome-192x192.png'
-				}
+				content={image ? backendUrl + image.url : origin + '/favicons/android-chrome-192x192.png'}
 			/>
 			<meta property='twitter:title' content={title} />
 			<meta property='twitter:description' content={description} />

@@ -3,11 +3,10 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { Video } from 'api/types';
 import ReactMarkdown from 'components/features/ReactMarkdown';
-import getConfig from 'next/config';
 import { FC } from 'react';
 import ReactPlayer from 'react-player';
 import { getPageProps } from 'services/PagePropsService';
-const { publicRuntimeConfig } = getConfig();
+import { backendUrl } from 'services/EnvService';
 
 interface Props {
 	page: DefaultPage & { content: string; text: string; video: Video };
@@ -30,7 +29,7 @@ const HowToGetTo: FC<Props> = ({ page }) => {
 						style={{ margin: 'auto' }}
 						width={isMobile ? '100%' : 230}
 						height={isMobile ? 'auto' : 400}
-						src={publicRuntimeConfig.backendUrl + page.video.url}
+						src={backendUrl + page.video.url}
 					></ReactPlayer>
 				</Box>
 			</Box>

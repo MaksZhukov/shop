@@ -22,6 +22,7 @@ import {
 	CarBuyback,
 	Articles
 } from 'components/features/pages/main';
+import { backendUrl } from 'services/EnvService';
 
 interface Props {
 	page: PageMain;

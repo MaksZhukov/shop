@@ -1,8 +1,5 @@
-import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
+import { backendLocalUrls } from 'services/EnvService';
 
 export const getRandomBackendLocalUrl = () => {
-	const backendUrls = publicRuntimeConfig.backendLocalUrls;
-	return backendUrls[Math.floor(Math.random() * backendUrls.length)];
+	return backendLocalUrls[Math.floor(Math.random() * backendLocalUrls.length)];
 };

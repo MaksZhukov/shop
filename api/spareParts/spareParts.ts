@@ -1,8 +1,6 @@
-import getConfig from 'next/config';
 import { api } from '..';
 import { ApiResponse, CollectionParams } from '../types';
 import { SparePart } from './types';
-const { publicRuntimeConfig } = getConfig();
 
 export const fetchSpareParts = (params?: CollectionParams) =>
 	api.get<ApiResponse<SparePart[]>>('/spare-parts', {

@@ -1,14 +1,13 @@
 import axios from 'axios';
 import https from 'https';
 import axiosRetry from 'axios-retry';
-import getConfig from 'next/config';
 import NotistackService from 'services/NotistackService';
 import { getRandomBackendLocalUrl } from 'services/BackendUrlService';
+import { backendUrl } from 'services/EnvService';
 import { store } from '../store';
-const { publicRuntimeConfig } = getConfig();
 
 export const api = axios.create({
-	baseURL: publicRuntimeConfig.backendUrl + '/api'
+	baseURL: backendUrl + '/api'
 });
 
 axiosRetry(api, { retries: 3 });

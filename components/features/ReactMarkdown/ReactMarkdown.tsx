@@ -3,7 +3,6 @@ import { Image as IImage } from 'api/types';
 import classNames from 'classnames';
 import Image from 'components/features/Image';
 import { Typography } from 'components/ui';
-import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import { FC } from 'react';
 import ReactMarkdownLib from 'react-markdown';

@@ -18,6 +18,7 @@ import { QueryProvider } from 'components/providers/QueryProvider';
 import { ThemeProvider } from 'components/providers/ThemeProvider';
 import { StoreProvider } from 'components/providers/StoreProvider';
 import { SnackbarProvider } from 'components/providers/SnackbarProvider';
+import { emailFEErrors } from 'services/EnvService';
 import './app.scss';
 
 const ScrollUp = dynamic(() => import('components/features/ScrollUp').then((mod) => ({ default: mod.ScrollUp })), {
@@ -91,7 +92,7 @@ function MyApp({
 			// send(
 			// 	'Nextjs FE Error',
 			// 	`<b>URL</b>: ${router.asPath} <br /><b>Name</b>: ${error.name} <br /> <b>Message</b>: ${error.message} <br /> <b>Stack</b>: ${error.stack} <br />`,
-			// 	publicRuntimeConfig.emailFEErrors
+			// 	emailFEErrors
 			// );
 			router.push('/500', undefined, { shallow: true });
 		} else {

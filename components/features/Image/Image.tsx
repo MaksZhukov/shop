@@ -1,9 +1,8 @@
 import { useMediaQuery, Box } from '@mui/material';
-import getConfig from 'next/config';
 import NextImage, { ImageProps } from 'next/image';
 import { useState } from 'react';
-const { publicRuntimeConfig } = getConfig();
-
+import { backendUrl } from 'services/EnvService';
+import { emailFEErrors } from 'services/EnvService';
 const MAX_LOADING_IMAGES_ERRORS = 1;
 
 const Image = ({
@@ -26,7 +25,7 @@ const Image = ({
 		// send(
 		// 	'Nextjs FE Error',
 		// 	`<b>SRC</b>: ${src} <br /><b>Alt</b>: ${alt} <br />`,
-		// 	publicRuntimeConfig.emailFEErrors
+		// 	emailFEErrors
 		// );
 		if (key < MAX_LOADING_IMAGES_ERRORS) {
 			setKey(key + 1);
@@ -57,7 +56,7 @@ const Image = ({
 	const getSrc = () => {
 		const hasHttps = src.toString().startsWith('https');
 		if (isOnSSR) {
-			return hasHttps ? src : publicRuntimeConfig.backendUrl + src;
+			return hasHttps ? src : backendUrl + src;
 		}
 		return src;
 	};
@@ -66,7 +65,7 @@ const Image = ({
 		<NextImage
 			key={key}
 			alt={alt}
-			src={getSrc()}
+			src={getSrc() as string}
 			onError={handleError}
 			style={{
 				objectFit: 'contain',

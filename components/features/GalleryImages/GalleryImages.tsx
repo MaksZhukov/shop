@@ -3,10 +3,9 @@ import { IconButton, Modal, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import { Image as IIamge } from 'api/types';
 import Zoom from './Zoom';
-import getConfig from 'next/config';
 import { FC } from 'react';
 import { Carousel } from 'components/ui';
-const { publicRuntimeConfig } = getConfig();
+import { backendUrl } from 'services/EnvService';
 
 interface Props {
 	images?: IIamge[];
@@ -38,7 +37,7 @@ const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => {
 					{images?.map((item) => (
 						<Box width={'100%'} key={item.id} height={'100%'} sx={{ display: 'flex !important' }}>
 							<Zoom
-								src={publicRuntimeConfig.backendUrl + (item.formats?.medium?.url || item.url)}
+								src={backendUrl + (item.formats?.medium?.url || item.url)}
 								width={isTablet ? 500 : 820}
 								height={'100%'}
 								style={{ margin: 'auto' }}
