@@ -38,10 +38,10 @@ export const PopularCategories: React.FC = () => {
 						alignItems='center'
 					>
 						<Typography variant='body1' fontWeight='600'>
-							Автозапчасти
+							Детали кузова
 						</Typography>
 						<Typography color='custom.text-muted' variant='body2'>
-							Без пробега по РБ
+							Оригинальные запчасти
 						</Typography>
 					</WhiteBox>
 				</Box>
@@ -58,10 +58,10 @@ export const PopularCategories: React.FC = () => {
 						alignItems='center'
 					>
 						<Typography variant='body1' fontWeight='600'>
-							Автозапчасти
+							Двигатели
 						</Typography>
 						<Typography color='custom.text-muted' variant='body2'>
-							Без пробега по РБ
+							Из Европы и США
 						</Typography>
 					</WhiteBox>
 				</Box>
@@ -78,10 +78,10 @@ export const PopularCategories: React.FC = () => {
 						alignItems='center'
 					>
 						<Typography variant='body1' fontWeight='600'>
-							Автозапчасти
+							Трансмиссия
 						</Typography>
 						<Typography color='custom.text-muted' variant='body2'>
-							Без пробега по РБ
+							Коробка АКПП и МКПП
 						</Typography>
 					</WhiteBox>
 					<WhiteBox
@@ -94,10 +94,10 @@ export const PopularCategories: React.FC = () => {
 						alignItems='center'
 					>
 						<Typography variant='body1' fontWeight='600'>
-							Автозапчасти
+							Оптика
 						</Typography>
 						<Typography color='custom.text-muted' variant='body2'>
-							Без пробега по РБ
+							Оригинальные запчасти
 						</Typography>
 					</WhiteBox>
 				</Box>
@@ -114,10 +114,10 @@ export const PopularCategories: React.FC = () => {
 						alignItems='center'
 					>
 						<Typography variant='body1' fontWeight='600'>
-							Автозапчасти
+							Шины и диски
 						</Typography>
 						<Typography color='custom.text-muted' variant='body2'>
-							Без пробега по РБ
+							Гарантия качества
 						</Typography>
 					</WhiteBox>
 				</Box>
