@@ -46,6 +46,8 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+	const isInCart = false;
+
 	useEffect(() => {
 		if (data.type === 'sparePart') {
 			viewedProductsService.addViewedProduct({ id: data.id, type: data.type });
@@ -297,8 +299,11 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 								</Typography>
 							)}
 						</Box>
-						<Button sx={{ display: { xs: 'none', md: 'block' } }} variant='contained'>
-							Добавить в корзину
+						<Button
+							sx={{ display: { xs: 'none', md: 'block' }, width: '191px' }}
+							variant={isInCart ? 'outlined' : 'contained'}
+						>
+							{isInCart ? 'В корзине' : 'Добавить в корзину'}
 						</Button>
 					</WhiteBox>
 					<WhiteBox border={0} mb={{ xs: 3, md: 0 }} px={{ xs: 1, md: 2 }} py={{ xs: 0, md: 1.5 }}>
