@@ -18,6 +18,7 @@ interface Props {
 
 const ProductItem = ({ data, width = 280, imageHeight = 290, sx = { margin: 'auto' }, withCartIcon = true }: Props) => {
 	const imageHeightOffset = 20;
+	const isInCart = false;
 
 	return (
 		<WhiteBox
@@ -94,8 +95,12 @@ const ProductItem = ({ data, width = 280, imageHeight = 290, sx = { margin: 'aut
 						[data.volume?.name, data.fuel, data.transmission, data.year].filter(Boolean).join(', ')}
 				</Typography>
 
-				<Button fullWidth variant='contained' startIcon={withCartIcon ? <CartFilledIcon /> : undefined}>
-					В корзину
+				<Button
+					fullWidth
+					variant={isInCart ? 'outlined' : 'contained'}
+					startIcon={withCartIcon ? <CartFilledIcon /> : undefined}
+				>
+					{isInCart ? 'В корзине' : 'В корзину'}
 				</Button>
 			</Box>
 		</WhiteBox>
