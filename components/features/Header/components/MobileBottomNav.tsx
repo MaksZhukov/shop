@@ -13,6 +13,7 @@ import {
 } from 'components/icons';
 import { NavbarButton } from 'components/ui/NavbarButton';
 import Profile from '../Profile';
+import { BadgeCartCount } from './BadgeCartCount';
 
 interface MobileBottomNavProps {
 	onClickSignIn: () => void;
@@ -71,7 +72,11 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onClickSignIn,
 			<NavbarButton
 				href='/cart'
 				variant='link'
-				icon={router.pathname.startsWith('/cart') ? <CartFilledIcon /> : <CartIcon />}
+				icon={
+					<BadgeCartCount>
+						{router.pathname.startsWith('/cart') ? <CartFilledIcon /> : <CartIcon />}
+					</BadgeCartCount>
+				}
 				isActive={router.pathname.startsWith('/cart')}
 			>
 				Корзина

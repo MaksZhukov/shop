@@ -1,4 +1,4 @@
-import { Box, IconButton, Input } from '@mui/material';
+import { Box, IconButton, Input, Badge } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
 import { Link } from 'components/ui';
@@ -10,6 +10,7 @@ import { SearchHistoryChips, SearchResults } from './';
 import { WhiteBox, Loader } from 'components/ui';
 import { SparePart } from 'api/spareParts/types';
 import { useOutsideClick } from 'rooks';
+import { BadgeCartCount } from './BadgeCartCount';
 
 interface HeaderTopProps {
 	isScrolled: boolean;
@@ -44,6 +45,7 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 }) => {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
+	const cartCount = 1;
 
 	const searchRefContainer = useRef<HTMLDivElement>(null);
 
@@ -135,7 +137,11 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 				<NavbarButton
 					variant='link'
 					href='/cart'
-					icon={router.pathname.startsWith('/cart') ? <CartFilledIcon /> : <CartIcon />}
+					icon={
+						<BadgeCartCount>
+							{router.pathname.startsWith('/cart') ? <CartFilledIcon /> : <CartIcon />}
+						</BadgeCartCount>
+					}
 					isActive={router.pathname.startsWith('/cart')}
 				>
 					Корзина

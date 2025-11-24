@@ -35,6 +35,7 @@ export const BUTTON_SIZES = {
 	medium: {
 		height: '40px',
 		padding: '10px 16px',
+        lineHeight: '1.2',
 		fontSize: '16px'
 	},
 	large: {
