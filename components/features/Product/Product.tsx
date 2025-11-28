@@ -1,16 +1,4 @@
-import {
-	Box,
-	Button,
-	IconButton,
-	Tab,
-	Table,
-	TableBody,
-	TableCell,
-	TableRow,
-	Tabs,
-	useMediaQuery,
-	useTheme
-} from '@mui/material';
+import { Box, Button, Tab, Table, TableBody, TableCell, TableRow, Tabs, useMediaQuery, useTheme } from '@mui/material';
 import {
 	PageProduct,
 	PageProductCabin,
@@ -20,6 +8,7 @@ import {
 } from 'api/pages/types';
 import { Product as IProduct } from 'api/types';
 import FavoriteButton from 'components/features/FavoriteButton';
+import { CartButton } from 'components/features/CartButton';
 import GalleryImages from 'components/features/GalleryImages/GalleryImages';
 import Image from 'components/features/Image';
 import { Typography, WhiteBox } from 'components/ui';
@@ -30,6 +19,7 @@ import { ShareButton } from 'components/features/ShareButton';
 import { Carousel } from 'components/ui';
 import ProductItem from 'components/features/ProductItem';
 import { viewedProductsService } from 'services/LocalStorageService';
+import { AnyQuestionsLeft } from 'components/features/AnyQuestionsLeft';
 
 interface Props {
 	page: PageProduct & (PageProductCabin | PageProductSparePart | PageProductTire | PageProductWheel);
@@ -45,8 +35,6 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 	const [isMoreFilters, setIsMoreFilters] = useState(false);
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-	const isInCart = false;
 
 	useEffect(() => {
 		if (data.type === 'sparePart') {
@@ -299,12 +287,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 								</Typography>
 							)}
 						</Box>
-						<Button
-							sx={{ display: { xs: 'none', md: 'block' }, width: '191px' }}
-							variant={isInCart ? 'outlined' : 'contained'}
-						>
-							{isInCart ? 'В корзине' : 'Добавить в корзину'}
-						</Button>
+						<CartButton product={data} sx={{ display: { xs: 'none', md: 'block' }, width: '191px' }} />
 					</WhiteBox>
 					<WhiteBox border={0} mb={{ xs: 3, md: 0 }} px={{ xs: 1, md: 2 }} py={{ xs: 0, md: 1.5 }}>
 						<Tabs value={activeTab} onChange={handleTabChange}>
@@ -345,39 +328,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 					</Carousel>
 				</>
 			)}
-			<WhiteBox
-				width={{ xs: '100%', md: 'fit-content' }}
-				alignItems='center'
-				borderRadius={4}
-				gap={1}
-				p={1.5}
-				py={2}
-				mb={2}
-				bgcolor={{ xs: 'custom.bg-surface-1', md: 'white' }}
-				display='flex'
-				border={0}
-			>
-				<Box
-					bgcolor={'success.main'}
-					width={40}
-					borderRadius={'50%'}
-					height={40}
-					display='flex'
-					alignItems='center'
-					justifyContent='center'
-					color='white'
-				>
-					<PhoneCallFilledIcon></PhoneCallFilledIcon>
-				</Box>
-				<Box>
-					<Typography variant='body1' fontSize={'16px'} fontWeight={500} color='text.secondary'>
-						Остались вопросы?
-					</Typography>
-					<Typography variant='body1' color='text.primary'>
-						Мы можем с вами связаться
-					</Typography>
-				</Box>
-			</WhiteBox>
+			<AnyQuestionsLeft sx={{ width: { xs: '100%', md: 'fit-content' } }} />
 			<Typography color='text.secondary' fontSize='18px' variant='h6' fontWeight='700'>
 				Б/у патрубок интеркулера для Audi A4 B6 – надёжное решение от Авторазборка Полотково ООО
 				&quot;Дриблинг&quot;

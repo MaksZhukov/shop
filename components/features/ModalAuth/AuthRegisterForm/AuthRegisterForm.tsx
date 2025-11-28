@@ -35,10 +35,7 @@ const AuthRegisterForm = ({ type, isLoading, onChangeType, onChangeIsLoading, on
 		if (type === 'login') {
 			try {
 				await store.user.login(email, password);
-				await Promise.all([
-					// store.cart.loadShoppingCart(),
-					store.favorites.loadFavorites()
-				]);
+				await Promise.all([store.shoppingCart.loadShoppingCart(), store.favorites.loadFavorites()]);
 				onChangeModalOpened(false);
 				enqueueSnackbar('Вы вошли в свой аккаунт', {
 					variant: 'success'

@@ -2,9 +2,10 @@ import { makeAutoObservable } from 'mobx';
 import { enableStaticRendering, MobXProviderContext } from 'mobx-react';
 import { useContext } from 'react';
 // import CartStore from './Cart';
-import FavoriteStore from './Favorites';
-import UserStore from './User';
-import { authService, favoritesService } from 'services/LocalStorageService';
+import FavoriteStore from './FavoritesStore';
+import ShoppingCartStore from './ShoppingCartStore';
+import UserStore from './UserStore';
+import { authService, favoritesService, shoppingCartService } from 'services/LocalStorageService';
 
 enableStaticRendering(typeof window === 'undefined');
 
@@ -12,11 +13,12 @@ class RootStore {
 	user: UserStore;
 	// cart: CartStore;
 	favorites: FavoriteStore;
+	shoppingCart: ShoppingCartStore;
 	isInitialRequestDone: boolean = false;
 	constructor() {
 		this.user = new UserStore(this, authService);
-		// this.cart = new CartStore(this);
 		this.favorites = new FavoriteStore(this, favoritesService);
+		this.shoppingCart = new ShoppingCartStore(this, shoppingCartService);
 		makeAutoObservable(this);
 	}
 	setIsInitialRequestDone() {

@@ -5,9 +5,7 @@ import Head from 'next/head';
 import { getPageProps } from 'services/PagePropsService';
 import { useStore } from 'store';
 import ProductItem from 'components/features/ProductItem';
-import { viewedProductsService } from 'services/LocalStorageService';
-import { useQuery } from '@tanstack/react-query';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
+import { ViewedProducts } from 'components/features/ViewedProducts';
 
 const Favorites = () => {
 	const store = useStore();
@@ -15,17 +13,6 @@ const Favorites = () => {
 	const isLoading = store.favorites.isLoading;
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-	const viewedProducts = viewedProductsService.getViewedProducts();
-
-	const { data: viewedProductsData } = useQuery({
-		queryKey: ['viewedProducts'],
-		queryFn: () =>
-			fetchSpareParts({
-				populate: ['images', 'brand'],
-				filters: { id: { $in: viewedProducts.map((item) => item.id) } }
-			}),
-		enabled: !!viewedProducts.length
-	});
 
 	if (isLoading) {
 		return (
@@ -75,27 +62,7 @@ const Favorites = () => {
 				</Typography>
 			)}
 
-			{viewedProductsData?.data.data.length && (
-				<>
-					<Typography mt={3} variant='h6' gutterBottom>
-						Вы смотрели
-					</Typography>
-					<Carousel carouselContainerSx={{ ml: -1 }} showDots={false}>
-						{viewedProductsData.data.data.map((item) => (
-							<Box pl={1} key={item.id}>
-								<ProductItem
-									withCartIcon={isMobile ? false : true}
-									imageHeight={isMobile ? 115 : 215}
-									width={isMobile ? 150 : 280}
-									sx={{ margin: 'initial' }}
-									key={item.id}
-									data={item}
-								/>
-							</Box>
-						))}
-					</Carousel>
-				</>
-			)}
+			<ViewedProducts />
 		</Box>
 	);
 };

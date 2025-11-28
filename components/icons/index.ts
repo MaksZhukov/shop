@@ -24,3 +24,4 @@ export { HomeFilledIcon } from './HomeFilledIcon';
 export { DashboardIcon } from './DashboardIcon';
 export { CloseIcon } from './CloseIcon';
 export { OptionsIcon } from './OptionsIcons';
+export { TrashIcon } from './TrashIcon';

@@ -11,6 +11,7 @@ import { WhiteBox, Loader } from 'components/ui';
 import { SparePart } from 'api/spareParts/types';
 import { useOutsideClick } from 'rooks';
 import { BadgeCartCount } from './BadgeCartCount';
+import { useStore } from 'store';
 
 interface HeaderTopProps {
 	isScrolled: boolean;
@@ -45,7 +46,6 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 }) => {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
-	const cartCount = 1;
 
 	const searchRefContainer = useRef<HTMLDivElement>(null);
 

@@ -39,14 +39,14 @@ function MyApp({
 				try {
 					await Promise.all([
 						store.user.loadInfo(),
-						// store.cart.loadShoppingCart(),
+						store.shoppingCart.loadShoppingCart(),
 						store.favorites.loadFavorites()
 					]);
 				} catch (err) {
 					authService.removeJwt();
 				}
 			} else {
-				await store.favorites.loadFavorites();
+				await Promise.all([store.shoppingCart.loadShoppingCart(), store.favorites.loadFavorites()]);
 			}
 			store.setIsInitialRequestDone();
 		};
