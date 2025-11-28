@@ -1,14 +1,15 @@
-import { Box, Typography } from '@mui/material';
+import { Box, SxProps, Typography } from '@mui/material';
 import { Product } from 'api/types';
 
 interface Props {
 	data: Product;
 	withPercentage?: boolean;
+	sx?: SxProps;
 }
 
-export const ProductPrice = ({ data, withPercentage = true }: Props) => {
+export const ProductPrice = ({ data, withPercentage = true, sx }: Props) => {
 	return (
-		<Box display='flex' alignItems='center' gap={1} mb={1}>
+		<Box display='flex' alignItems='center' gap={1} mb={1} sx={sx}>
 			{data.discountPrice ? (
 				<>
 					<Typography variant='h6' fontSize='20px' color='text.secondary'>

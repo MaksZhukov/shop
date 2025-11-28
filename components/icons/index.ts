@@ -25,3 +25,4 @@ export { DashboardIcon } from './DashboardIcon';
 export { CloseIcon } from './CloseIcon';
 export { OptionsIcon } from './OptionsIcons';
 export { TrashIcon } from './TrashIcon';
+export { TrashFilledIcon } from './TrashFilledIcon';
