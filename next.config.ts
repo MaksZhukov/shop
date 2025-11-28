@@ -16,7 +16,12 @@ const nextConfig: NextConfig = {
 	productionBrowserSourceMaps: true,
 	reactStrictMode: true,
 	images: {
-		remotePatterns: JSON.parse(process.env.REMOTE_PATTERNS || '[]'),
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: '*' // or use "**"
+			}
+		],
 		minimumCacheTTL: 60000,
 		qualities: [50, 60, 70, 80, 90, 100]
 	},
