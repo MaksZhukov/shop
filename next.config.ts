@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
 	},
 	productionBrowserSourceMaps: true,
 	reactStrictMode: true,
-	...(process.env.PAGES ? { pageExtensions: ['dev.tsx'] } : {}),
 	images: {
 		remotePatterns: JSON.parse(process.env.REMOTE_PATTERNS || '[]'),
 		minimumCacheTTL: 60000,

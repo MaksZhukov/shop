@@ -60,7 +60,7 @@ const Image = ({
 		}
 		return src;
 	};
-	console.log(backendUrl, getSrc());
+
 	return (
 		<NextImage
 			key={key}
