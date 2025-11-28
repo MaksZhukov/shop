@@ -1,11 +1,10 @@
 import { ThemeProvider as MUIThemeProvider } from '@mui/material';
 import { FC, ReactNode, useMemo } from 'react';
 import { createCustomTheme } from 'services/ThemeService';
+import { useDeviceType } from 'hooks/useDeviceType';
 
-export const ThemeProvider: FC<{ children: ReactNode; deviceType: 'desktop' | 'mobile' }> = ({
-	children,
-	deviceType
-}) => {
+export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
+	const deviceType = useDeviceType();
 	const theme = useMemo(() => createCustomTheme(deviceType), [deviceType]);
 	return <MUIThemeProvider theme={theme}>{children}</MUIThemeProvider>;
 };

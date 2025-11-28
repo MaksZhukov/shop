@@ -2,12 +2,10 @@ import { Container } from '@mui/material';
 import Breadcrumbs from 'components/features/Breadcrumbs';
 import HeadSEO from 'components/features/HeadSEO';
 import type { AppProps } from 'next/app';
-import NextApp from 'next/app';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import dynamic from 'next/dynamic';
-import { UAParser } from 'ua-parser-js';
 import Header from '../components/features/Header';
 import Footer from '../components/features/Footer';
 import Layout from '../components/features/Layout';
@@ -25,11 +23,7 @@ const ScrollUp = dynamic(() => import('components/features/ScrollUp').then((mod)
 	ssr: false
 });
 
-function MyApp({
-	Component,
-	pageProps: { layout, ...restPageProps },
-	deviceType
-}: AppProps & { deviceType: 'desktop' | 'mobile' }) {
+function MyApp({ Component, pageProps: { layout, ...restPageProps } }: AppProps) {
 	const router = useRouter();
 	useEffect(() => {
 		const tryFetchData = async () => {
@@ -101,7 +95,7 @@ function MyApp({
 	};
 
 	return (
-		<ThemeProvider deviceType={deviceType}>
+		<ThemeProvider>
 			<QueryProvider>
 				<StoreProvider>
 					<SnackbarProvider>
@@ -130,14 +124,5 @@ function MyApp({
 		</ThemeProvider>
 	);
 }
-
-MyApp.getInitialProps = (context: any) => {
-	const deviceType = context.ctx.req ? UAParser(context.ctx.req.headers['user-agent']).device.type : 'desktop';
-	const deviceTypeResult = deviceType === 'mobile' || deviceType === 'tablet' ? 'mobile' : 'desktop';
-	return {
-		...NextApp.getInitialProps(context),
-		deviceType: deviceTypeResult
-	};
-};
 
 export default MyApp;
