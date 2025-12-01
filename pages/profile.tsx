@@ -49,7 +49,7 @@ const Profile = observer(() => {
 				<Box component='form' marginBottom='2em' onSubmit={handleSubmit} className={styles.content}>
 					<TextField
 						value={store.user.email}
-						label='Почта'
+						placeholder='Почта'
 						disabled
 						variant='standard'
 						margin='normal'
@@ -58,34 +58,28 @@ const Profile = observer(() => {
 					<TextField
 						value={store.user.username}
 						onChange={handleChangeUsername}
-						label='ФИО'
+						placeholder='ФИО'
 						margin='normal'
 						variant='standard'
 						fullWidth
 					></TextField>
 					<TextField
-						label='Телефон'
 						margin='normal'
+						placeholder='Телефон'
 						variant='standard'
 						fullWidth
 						value={store.user.phone}
 						onChange={handleChangePhone}
-						InputProps={{
-							inputProps: {
-								mask: '+375 00 000 00 00',
-								unmask: true
-							}
-						}}
 					/>
 					<TextField
 						value={store.user.address}
 						onChange={handleChangeAddress}
-						label='Адрес'
+						placeholder='Адрес'
 						margin='normal'
 						variant='standard'
 						fullWidth
 					></TextField>
-					<Button fullWidth type='submit'>
+					<Button fullWidth type='submit' variant='contained'>
 						Сохранить
 					</Button>
 				</Box>

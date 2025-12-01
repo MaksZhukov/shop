@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
 		remotePatterns: JSON.parse(process.env.REMOTE_PATTERNS || '[]'),
 		minimumCacheTTL: 60000,
 		qualities: [50, 60, 70, 80, 90, 100],
-        dangerouslyAllowLocalIP: true
+		dangerouslyAllowLocalIP: true
 	},
 	experimental: {
 		largePageDataBytes: 200 * 1000

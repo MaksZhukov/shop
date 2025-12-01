@@ -1,9 +1,10 @@
+import { API_MAX_LIMIT } from 'api/constants';
 import { api } from '..';
 import { ApiResponse } from '../types';
 import { ShoppingCart } from './types';
 
 export const fetchShoppingCart = () =>
-	api.get<ApiResponse<ShoppingCart[]>>('shopping-cart', { params: { filters: { product: { sold: false } } } });
+	api.get<ApiResponse<ShoppingCart[]>>('shopping-cart', { params: { pagination: { limit: API_MAX_LIMIT } } });
 
 export const addToShoppingCart = (productId: number, type: 'sparePart' | 'wheel' | 'tire' | 'cabin') =>
 	api.post<ApiResponse<ShoppingCart>>('shopping-cart', {
