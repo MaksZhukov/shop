@@ -11,10 +11,21 @@ interface LinkProps {
 	size?: 'small' | 'medium' | 'large';
 	lineClamp?: number;
 	shallow?: boolean;
+	disabled?: boolean;
 	sx?: SxProps<Theme>;
 }
 
-export const Link: FC<LinkProps> = ({ href, children, target, color, size = 'medium', lineClamp, shallow, sx }) => {
+export const Link: FC<LinkProps> = ({
+	href,
+	children,
+	target,
+	color,
+	size = 'medium',
+	lineClamp,
+	shallow,
+	disabled,
+	sx
+}) => {
 	const sizeStyles = {
 		small: { fontSize: '0.75rem' },
 		medium: { fontSize: '0.875rem' },
@@ -29,11 +40,23 @@ export const Link: FC<LinkProps> = ({ href, children, target, color, size = 'med
 				textOverflow: 'ellipsis' as const
 		  }
 		: {};
+	const disabledStyles = disabled
+		? {
+				opacity: 0.5,
+				cursor: 'not-allowed',
+				pointerEvents: 'none' as const
+		  }
+		: {};
+
+	const linkContent = (
+		<MuiLink color={color} component='span' sx={{ ...sizeStyles[size], ...sx }} style={lineClampStyles}>
+			{children}
+		</MuiLink>
+	);
+
 	return (
-		<NextLink href={href} target={target} shallow={shallow}>
-			<MuiLink color={color} component='span' sx={{ ...sizeStyles[size], ...sx }} style={lineClampStyles}>
-				{children}
-			</MuiLink>
+		<NextLink href={href} target={target} style={disabledStyles} shallow={shallow}>
+			{linkContent}
 		</NextLink>
 	);
 };

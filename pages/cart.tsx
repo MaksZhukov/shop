@@ -43,8 +43,7 @@ const Cart: NextPage<Props> = observer(() => {
 		await store.shoppingCart.removeFromShoppingCart(item);
 	};
 
-	const selectedCartItems = shoppingCartItems.filter((item) => selectedItems.includes(item.id));
-
+	const selectedCartItems = shoppingCartItems.filter((item) => !item.product.sold && selectedItems.includes(item.id));
 	const selectedTotal = selectedCartItems.reduce(
 		(acc, item) => acc + (item.product.discountPrice || item.product.price),
 		0

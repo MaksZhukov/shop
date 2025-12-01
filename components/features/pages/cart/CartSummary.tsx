@@ -20,7 +20,7 @@ export const CartSummary = ({ selectedItemsCount, totalAmount, onCheckout }: Car
 						variant='contained'
 						color='primary'
 						fullWidth
-						disabled={selectedItemsCount === 0}
+						disabled={totalAmount === 0}
 						onClick={onCheckout}
 					>
 						Перейти к оформлению

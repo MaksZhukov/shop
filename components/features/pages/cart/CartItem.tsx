@@ -29,13 +29,18 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove }: CartIte
 	const renderActionButtons = (showBuyButton: boolean) => {
 		return (
 			<>
-				<FavoriteButton product={product} />
+				{!item.product.sold && <FavoriteButton product={product} />}
 				<IconButton size='large' onClick={() => onRemove(item)}>
 					<TrashIcon />
 				</IconButton>
 				{showBuyButton && (
-					<Button sx={{ ml: 1 }} variant='outlined' size='small'>
-						Купить
+					<Button
+						disabled={item.product.sold}
+						sx={{ ml: 1 }}
+						variant={item.product.sold ? 'contained' : 'outlined'}
+						size='small'
+					>
+						{item.product.sold ? 'Товар закончился' : 'Купить'}
 					</Button>
 				)}
 			</>
@@ -50,6 +55,7 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove }: CartIte
 						<Checkbox sx={{ padding: 0 }} checked={isSelected} onChange={() => onToggleSelect(item.id)} />
 					</Box>
 					<ProductItemImages
+						disabled={item.product.sold}
 						data={product}
 						width={IMAGE_WIDTH}
 						imageHeight={IMAGE_HEIGHT}
@@ -61,9 +67,9 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove }: CartIte
 						<ProductPrice
 							data={product}
 							withPercentage={false}
-							sx={{ display: { xs: 'flex', md: 'none' }, mb: 0 }}
+							sx={{ display: { xs: 'flex', md: 'none' }, mb: 0, opacity: item.product.sold ? 0.5 : 1 }}
 						/>
-						<Link href={productUrl} lineClamp={2}>
+						<Link href={productUrl} lineClamp={2} disabled={item.product.sold}>
 							{product.h1}
 						</Link>
 						{productDetails && (
@@ -76,11 +82,19 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove }: CartIte
 						{renderActionButtons(true)}
 					</Box>
 				</Box>
-				<ProductPrice data={product} withPercentage={false} sx={{ display: { xs: 'none', md: 'flex' } }} />
+				<ProductPrice
+					data={product}
+					withPercentage={false}
+					sx={{ display: { xs: 'none', md: 'flex' }, opacity: item.product.sold ? 0.5 : 1 }}
+				/>
 			</Box>
 			<Box display={{ xs: 'flex', md: 'none' }} justifyContent='space-between' alignItems='center'>
-				<Button variant='outlined' size='small'>
-					Купить
+				<Button
+					disabled={item.product.sold}
+					variant={item.product.sold ? 'contained' : 'outlined'}
+					size='small'
+				>
+					{item.product.sold ? 'Товар закончился' : 'Купить'}
 				</Button>
 				<Box>{renderActionButtons(false)}</Box>
 			</Box>

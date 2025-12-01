@@ -368,7 +368,6 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 				event.currentTarget.scrollHeight &&
 			kindSpareParts.meta.pagination?.total !== kindSpareParts.data.length
 		) {
-            console.log(kindSpareParts)
 			throttledLoadMoreKindSpareParts();
 		}
 	};
