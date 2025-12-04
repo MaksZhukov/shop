@@ -1,4 +1,5 @@
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
+import { API_MAX_CART_ITEMS } from 'api/constants';
 import { Product } from 'api/types';
 import { observer } from 'mobx-react';
 import { useSnackbar } from 'notistack';
@@ -16,6 +17,7 @@ export const CartButton = observer(({ product, sx }: Props) => {
 		(item) => item.product.id === product.id && item.product.type === product.type
 	);
 	const isInCart = !!cartItem;
+	const isMaxCartItems = store.shoppingCart.items.length >= API_MAX_CART_ITEMS;
 
 	const handleClick = async () => {
 		if (isInCart && cartItem) {
@@ -46,9 +48,16 @@ export const CartButton = observer(({ product, sx }: Props) => {
 		}
 	};
 
-	return (
-		<Button sx={sx} variant={isInCart ? 'outlined' : 'contained'} onClick={handleClick}>
+	const button = (
+		<Button disabled={isMaxCartItems} sx={sx} variant={isInCart ? 'outlined' : 'contained'} onClick={handleClick}>
 			{isInCart ? 'В корзине' : 'Добавить в корзину'}
 		</Button>
+	);
+	return isMaxCartItems ? (
+		<Tooltip title={`Достигнут лимит корзины (${API_MAX_CART_ITEMS} товаров)`} placement='top'>
+			<span>{button}</span>
+		</Tooltip>
+	) : (
+		button
 	);
 });
