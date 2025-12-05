@@ -23,6 +23,8 @@ import {
 	Articles
 } from 'components/features/pages/main';
 import { backendUrl } from 'services/EnvService';
+import { fetchTopCategories } from 'api/catalog/catalog';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {
 	page: PageMain;
@@ -34,6 +36,11 @@ interface Props {
 }
 
 const Main: NextPage<Props> = ({ page, brands, newSpareParts, carsOnParts, articles, sparePartsTotal }) => {
+	const { data: catalog } = useQuery({
+		queryKey: ['catalog'],
+		queryFn: () => fetchTopCategories(),
+		enabled: true
+	});
 	return (
 		<Box sx={{ my: 4 }}>
 			<MainSection brands={brands} sparePartsTotal={sparePartsTotal} />

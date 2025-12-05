@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'components/ui';
 import { DashboardFilledIcon, ChevronRightIcon, CloseIcon } from 'components/icons';
 import { useQuery } from '@tanstack/react-query';
-import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
+import { fetchTopCategories } from 'api/catalog/catalog';
+import { TopCategory } from 'api/catalog/types';
 
 export const CatalogCategories: React.FC = () => {
-	const [hoveredCategory, setHoveredCategory] = useState<any | null>(null);
+	const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
 	const [catalogAnchorEl, setCatalogAnchorEl] = useState<HTMLElement | null>(null);
 	const catalogOpen = Boolean(catalogAnchorEl);
 
@@ -19,34 +19,18 @@ export const CatalogCategories: React.FC = () => {
 		setCatalogAnchorEl(null);
 	};
 
-	const { data: kindSpareParts } = useQuery({
-		queryKey: ['catalogCategories'],
+	const { data: topCategories } = useQuery({
+		queryKey: ['catalogTopCategories'],
 		enabled: catalogOpen,
 		placeholderData: (prev) => prev,
-		queryFn: () =>
-			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
-				pagination: { limit: 10 },
-				populate: { spareParts: { count: true, filters: { sold: false } } }
-			})
-	});
-
-	const index = kindSpareParts?.data.data.findIndex((item: any) => item.id === hoveredCategory?.id) || 0;
-	const { data: relatedKindSpareParts } = useQuery({
-		queryKey: ['relatedCatalogCategories', index],
-		enabled: !!hoveredCategory,
-		placeholderData: (prev) => prev,
-		queryFn: () =>
-			fetchKindSpareParts({
-				pagination: { limit: Math.floor(Math.random() * 15), start: Math.floor(Math.random() * 100) },
-				populate: { spareParts: { count: true, filters: { sold: false } } }
-			})
+		queryFn: () => fetchTopCategories()
 	});
 
 	useEffect(() => {
-		if (kindSpareParts) {
-			setHoveredCategory(kindSpareParts.data.data[0]);
+		if (topCategories?.data.data && topCategories.data.data.length > 0) {
+			setHoveredCategory(topCategories.data.data[0]);
 		}
-	}, [kindSpareParts]);
+	}, [topCategories]);
 
 	return (
 		<>
@@ -82,25 +66,25 @@ export const CatalogCategories: React.FC = () => {
 						<Typography variant='h6' fontWeight={700} fontSize={18}>
 							Каталог
 						</Typography>
-						{kindSpareParts?.data.data.map((item) => (
+						{topCategories?.data.data.map((category) => (
 							<Box
-								bgcolor={hoveredCategory === item ? 'custom.bg-surface-3' : 'transparent'}
+								bgcolor={hoveredCategory === category ? 'custom.bg-surface-3' : 'transparent'}
 								sx={{ cursor: 'pointer', ':hover': { bgcolor: 'custom.bg-surface-3' } }}
 								p={1}
 								borderRadius={2}
-								key={item.id}
+								key={category.name}
 								display='flex'
 								gap={0.5}
 								alignItems='center'
 								onMouseEnter={() => {
-									setHoveredCategory(item);
+									setHoveredCategory(category);
 								}}
 							>
 								<Typography variant='body1' fontWeight={500}>
-									{item.name}
+									{category.name}
 								</Typography>
 								<Typography flex={1} variant='body1' color='custom.text-muted'>
-									{item.spareParts.count?.toLocaleString()}
+									{category.totalSparePartsCount?.toLocaleString()}
 								</Typography>
 								<Box>
 									<ChevronRightIcon></ChevronRightIcon>
@@ -119,7 +103,7 @@ export const CatalogCategories: React.FC = () => {
 							justifyContent='flex-start'
 							flexWrap='wrap'
 						>
-							{relatedKindSpareParts?.data.data.map((item: any) => (
+							{hoveredCategory?.kindSpareParts.map((item) => (
 								<Box key={item.id} display='flex' gap={0.5} py={1}>
 									<Link href={`/spare-parts?kindSparePart=${item.slug}`}>{item.name}</Link>
 									<Typography color='custom.text-muted'>

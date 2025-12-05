@@ -26,6 +26,7 @@ import { BrandWithSparePartsCount } from 'api/brands/types';
 import { Link, ModalContainer } from 'components/ui';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
 import { WhiteBox } from 'components/ui';
+import { TopCategory } from 'api/catalog/types';
 
 type SortItem = {
 	value: string;
@@ -47,10 +48,9 @@ interface Props {
 	onClickFind: () => void;
 	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
 	onChangeSort: (sort: string) => void;
-	onChangeHoveredCategory: (category: KindSparePartWithSparePartsCount | null) => void;
-	catalogCategories: KindSparePartWithSparePartsCount[];
-	relatedCatalogCategories: KindSparePartWithSparePartsCount[];
-	hoveredCategory: KindSparePartWithSparePartsCount | null;
+	onChangeHoveredCategory: (category: TopCategory | null) => void;
+	catalogCategories: TopCategory[];
+	hoveredCategory: TopCategory | null;
 }
 
 const selectSortItems = [
@@ -76,7 +76,6 @@ const Catalog: React.FC<Props> = ({
 	sort,
 	onChangeSort,
 	catalogCategories,
-	relatedCatalogCategories,
 	hoveredCategory,
 	onChangeHoveredCategory
 }) => {
@@ -183,10 +182,10 @@ const Catalog: React.FC<Props> = ({
 							<Typography pl={1} variant='h6' fontWeight={700} fontSize={18}>
 								Категории
 							</Typography>
-							{catalogCategories.map((item) => (
-								<Box key={item.id}>
+							{catalogCategories.map((category) => (
+								<Box key={category.name}>
 									<Box
-										bgcolor={hoveredCategory === item ? 'custom.bg-surface-3' : 'transparent'}
+										bgcolor={hoveredCategory === category ? 'custom.bg-surface-3' : 'transparent'}
 										position='relative'
 										sx={{ cursor: 'pointer', ':hover': { bgcolor: 'custom.bg-surface-3' } }}
 										p={1}
@@ -198,29 +197,24 @@ const Catalog: React.FC<Props> = ({
 											onChangeHoveredCategory(null);
 										}}
 										onMouseEnter={() => {
-											onChangeHoveredCategory(item);
+											onChangeHoveredCategory(category);
 										}}
 									>
 										<Typography variant='body1' fontWeight={500}>
-											{item.name}
+											{category.name}
 										</Typography>
 										<Typography flex={1} variant='body1' color='custom.text-muted'>
-											{item.spareParts.count?.toLocaleString()}
+											{category.totalSparePartsCount?.toLocaleString()}
 										</Typography>
 										<Box>
 											<ChevronRightIcon></ChevronRightIcon>
 										</Box>
-										{hoveredCategory === item && relatedCatalogCategories.length > 0 && (
+										{hoveredCategory === category && category.kindSpareParts.length > 0 && (
 											<Box position='absolute' zIndex={1} top={0} left='100%' pl={1.5}>
 												<WhiteBox minWidth={256} p={1} withShadow>
-													{relatedCatalogCategories.map((category) => (
+													{category.kindSpareParts.map((kindSparePart) => (
 														<Box
-															key={category.id}
-															bgcolor={
-																hoveredCategory === category
-																	? 'custom.bg-surface-3'
-																	: 'transparent'
-															}
+															key={kindSparePart.id}
 															sx={{
 																cursor: 'pointer',
 																':hover': { bgcolor: 'custom.bg-surface-3' },
@@ -229,15 +223,19 @@ const Catalog: React.FC<Props> = ({
 															p={1}
 														>
 															<Box display='flex' gap={0.5} alignItems='center'>
-																<Typography variant='body2' fontWeight={500}>
-																	{category.name}
-																</Typography>
+																<Link
+																	href={`/spare-parts?kindSparePart=${kindSparePart.slug}`}
+																>
+																	<Typography variant='body2' fontWeight={500}>
+																		{kindSparePart.name}
+																	</Typography>
+																</Link>
 																<Typography
 																	flex={1}
 																	variant='body2'
 																	color='custom.text-muted'
 																>
-																	{category.spareParts.count?.toLocaleString()}
+																	{kindSparePart.spareParts.count?.toLocaleString()}
 																</Typography>
 															</Box>
 														</Box>

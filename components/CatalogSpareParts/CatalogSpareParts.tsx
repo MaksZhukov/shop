@@ -7,6 +7,8 @@ import { fetchGenerations } from 'api/generations/generations';
 import { Generation } from 'api/generations/types';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePart, KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
+import { fetchTopCategories } from 'api/catalog/catalog';
+import { TopCategory } from 'api/catalog/types';
 import { fetchModels } from 'api/models/models';
 import { ModelSparePartsCountWithGenerationsSparePartsCount } from 'api/models/types';
 import { fetchSpareParts } from 'api/spareParts/spareParts';
@@ -53,7 +55,7 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-	const [hoveredCategory, setHoveredCategory] = useState<any | null>(null);
+	const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
 	const { enqueueSnackbar } = useSnackbar();
 	const router = useRouter();
 	const {
@@ -143,26 +145,9 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 	const total = totalSpareParts?.data?.meta?.pagination?.total || null;
 
 	const { data: catalogCategories } = useQuery({
-		queryKey: ['catalogCategories'],
+		queryKey: ['catalogTopCategories'],
 		placeholderData: (prev) => prev,
-		queryFn: () =>
-			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
-				pagination: { limit: 10 },
-				filters: {
-					id: [12, 13, 14, 15, 16, 17, 18, 21, 23, 25, 26]
-				},
-				populate: { spareParts: { count: true } }
-			})
-	});
-	const { data: relatedCatalogCategories } = useQuery({
-		queryKey: ['relatedCatalogCategories', hoveredCategory?.id],
-		enabled: !!hoveredCategory,
-		placeholderData: (prev) => prev,
-		queryFn: () =>
-			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
-				pagination: { limit: Math.floor(Math.random() * 15), start: Math.floor(Math.random() * 100) },
-				populate: { spareParts: { count: true } }
-			})
+		queryFn: () => fetchTopCategories()
 	});
 
 	useEffect(() => {
@@ -498,7 +483,6 @@ const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) 
 			sort={sort}
 			onChangeSort={handleChangeSort}
 			catalogCategories={catalogCategories?.data.data || []}
-			relatedCatalogCategories={relatedCatalogCategories?.data.data || []}
 			hoveredCategory={hoveredCategory}
 			onChangeHoveredCategory={setHoveredCategory}
 		></Catalog>
