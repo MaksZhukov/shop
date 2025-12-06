@@ -1,5 +1,3 @@
-import { Image, LinkWithImage } from 'api/types';
-
 export interface TopCategoryKindSparePart {
 	id: number;
 	name: string;
