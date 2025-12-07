@@ -364,7 +364,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 			></GalleryImages>
 			<Box
 				position='fixed'
-				bottom={50}
+				bottom={65}
 				display={{ xs: 'flex', md: 'none' }}
 				zIndex={2}
 				bgcolor='custom.bg-surface-1'
@@ -374,9 +374,7 @@ const Product: FC<Props> = ({ data, printOptions, page, relatedProducts }) => {
 				borderTop='1px solid custom.divider'
 				py={1}
 			>
-				<Button fullWidth variant='contained'>
-					Добавить в корзину
-				</Button>
+				<CartButton product={data} sx={{ width: '100%' }} />
 			</Box>
 		</Box>
 	);

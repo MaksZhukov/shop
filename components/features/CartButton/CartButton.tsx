@@ -17,6 +17,7 @@ export const CartButton = observer(({ product, sx }: Props) => {
 		(item) => item.product.id === product.id && item.product.type === product.type
 	);
 	const isInCart = !!cartItem;
+	const isSold = product.sold;
 	const isMaxCartItems = store.shoppingCart.items.length >= API_MAX_CART_ITEMS;
 
 	const handleClick = async () => {
@@ -49,8 +50,13 @@ export const CartButton = observer(({ product, sx }: Props) => {
 	};
 
 	const button = (
-		<Button disabled={isMaxCartItems} sx={sx} variant={isInCart ? 'outlined' : 'contained'} onClick={handleClick}>
-			{isInCart ? 'В корзине' : 'Добавить в корзину'}
+		<Button
+			disabled={isMaxCartItems || isSold}
+			sx={sx}
+			variant={isInCart ? 'outlined' : 'contained'}
+			onClick={handleClick}
+		>
+			{isInCart ? 'В корзине' : isSold ? 'Продан' : 'Добавить в корзину'}
 		</Button>
 	);
 	return isMaxCartItems ? (
