@@ -32,7 +32,6 @@ const FavoriteButton = ({ product }: Props) => {
 			try {
 				await store.favorites.addFavorite({
 					id: new Date().getTime(),
-					uid: new Date().getTime().toString(),
 					product
 				});
 				enqueueSnackbar('Вы успешно добавили товар в избранное', {
