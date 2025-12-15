@@ -1,5 +1,5 @@
 import { Box, Checkbox, IconButton, Typography, useTheme } from '@mui/material';
-import { TrashFilledIcon } from 'components/icons';
+import { TrashFilledIcon } from 'shared/icons';
 
 interface CartHeaderProps {
 	allSelected: boolean;

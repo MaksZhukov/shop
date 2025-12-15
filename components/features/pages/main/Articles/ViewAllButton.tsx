@@ -1,5 +1,5 @@
 import { Button } from 'shared/ui';
-import { ChevronRightIcon } from 'components/icons';
+import { ChevronRightIcon } from 'shared/icons';
 
 interface ViewAllButtonProps {
 	title: string;

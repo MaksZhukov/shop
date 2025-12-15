@@ -4,7 +4,7 @@ import { UIEventHandler, useEffect, useRef, useState } from 'react';
 
 import styles from './Autocomplete.module.scss';
 import { usePreviousImmediate } from 'rooks';
-import { ChevronDownIcon, SearchIcon } from 'components/icons';
+import { ChevronDownIcon, SearchIcon } from 'shared/icons';
 
 const Autocomplete = <
 	T,

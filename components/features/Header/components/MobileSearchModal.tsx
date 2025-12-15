@@ -1,7 +1,7 @@
 import { Box, Input, Modal } from '@mui/material';
 import React from 'react';
 import { ModalContainer } from 'shared/ui';
-import { SearchIcon } from 'components/icons';
+import { SearchIcon } from 'shared/icons';
 import { Loader } from 'shared/ui';
 import { SearchHistoryChips, SearchResults } from './';
 import { SparePart } from 'api/spareParts/types';

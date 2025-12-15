@@ -1,7 +1,7 @@
 import { Box, Button, Popover, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'shared/ui';
-import { DashboardFilledIcon, ChevronRightIcon, CloseIcon } from 'components/icons';
+import { DashboardFilledIcon, ChevronRightIcon, CloseIcon } from 'shared/icons';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTopCategories } from 'api/catalog/catalog';
 import { TopCategory } from 'api/catalog/types';

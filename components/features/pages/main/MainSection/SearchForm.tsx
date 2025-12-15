@@ -11,7 +11,7 @@ import { ApiResponse, Filters } from 'api/types';
 import axios, { AxiosResponse } from 'axios';
 import Autocomplete from 'shared/ui/Autocomplete';
 import { Typography, WhiteBox } from 'shared/ui';
-import { ChevronDownIcon, ChevronUpIcon } from 'components/icons';
+import { ChevronDownIcon, ChevronUpIcon } from 'shared/icons';
 import { Button } from 'shared/ui';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';

@@ -1,6 +1,6 @@
 import { Box, Button, Menu, MenuItem, useMediaQuery } from '@mui/material';
 import { Typography } from 'shared/ui';
-import { ChevronDownIcon } from 'components/icons';
+import { ChevronDownIcon } from 'shared/icons';
 import { useState } from 'react';
 import { SORT_ITEMS } from './constants';
 import { SortItem } from './types';

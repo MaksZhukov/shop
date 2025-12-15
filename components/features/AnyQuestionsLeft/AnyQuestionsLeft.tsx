@@ -1,5 +1,5 @@
 import { Box, SxProps, Typography } from '@mui/material';
-import { PhoneCallFilledIcon } from 'components/icons';
+import { PhoneCallFilledIcon } from 'shared/icons';
 import { WhiteBox } from 'shared/ui';
 
 interface AnyQuestionsLeftProps {

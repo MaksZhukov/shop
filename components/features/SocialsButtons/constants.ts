@@ -1,1 +1,1 @@
-import { InstagramIcon, SkypeIcon, TelegramIcon, ViberIcon, WhatsAppIcon } from 'components/icons';
+import { InstagramIcon, SkypeIcon, TelegramIcon, ViberIcon, WhatsAppIcon } from 'shared/icons';

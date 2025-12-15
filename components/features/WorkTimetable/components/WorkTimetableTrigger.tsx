@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { ChevronDownIcon, ChevronUpIcon, ClockIcon } from 'components/icons';
+import { ChevronDownIcon, ChevronUpIcon, ClockIcon } from 'shared/icons';
 import { FC } from 'react';
 import { getCurrentSchedule, getCurrentTimeInGMT3, isCurrentlyOpen } from 'services/DateService';
 import { WORKING_HOURS } from '../../../../constants';

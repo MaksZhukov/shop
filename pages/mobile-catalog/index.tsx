@@ -6,7 +6,7 @@ import { fetchSpareParts } from 'api/spareParts/spareParts';
 import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
 import { useQuery } from '@tanstack/react-query';
-import { ChevronRightIcon } from 'components/icons/ChevronRightIcon';
+import { ChevronRightIcon } from 'shared/icons/ChevronRightIcon';
 import { useState } from 'react';
 
 interface Props {

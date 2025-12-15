@@ -14,7 +14,7 @@ import Image from 'components/features/Image';
 import { Typography, WhiteBox } from 'shared/ui';
 import { FC, useEffect, useState } from 'react';
 import { isSparePart, isTire, isWheel } from 'services/ProductService';
-import { ChevronDownIcon, ChevronUpIcon, PhoneCallFilledIcon, PhoneCallIcon, ShareIcon } from 'components/icons';
+import { ChevronDownIcon, ChevronUpIcon, PhoneCallFilledIcon, PhoneCallIcon, ShareIcon } from 'shared/icons';
 import { ShareButton } from 'components/features/ShareButton';
 import { Carousel } from 'shared/ui';
 import ProductItem from 'components/features/ProductItem';

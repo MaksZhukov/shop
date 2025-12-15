@@ -2,7 +2,7 @@ import { Box, IconButton, Input, Badge } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
 import { Link } from 'shared/ui';
-import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'components/icons';
+import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'shared/icons';
 import { NavbarButton } from 'shared/ui/NavbarButton';
 import Profile from '../Profile';
 import { CatalogCategories } from './CatalogCategories';

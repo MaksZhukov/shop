@@ -1,5 +1,5 @@
 import { Box, IconButton, SxProps, Typography } from '@mui/material';
-import { CloseIcon } from 'components/icons/CloseIcon';
+import { CloseIcon } from 'shared/icons/CloseIcon';
 import { WhiteBox } from 'shared/ui/WhiteBox';
 import { FC } from 'react';
 

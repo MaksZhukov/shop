@@ -21,7 +21,7 @@ import { Typography } from 'shared/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { ChevronDownIcon, ChevronRightIcon, OptionsIcon } from 'components/icons';
+import { ChevronDownIcon, ChevronRightIcon, OptionsIcon } from 'shared/icons';
 import { BrandWithSparePartsCount } from 'api/brands/types';
 import { Link, ModalContainer } from 'shared/ui';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';

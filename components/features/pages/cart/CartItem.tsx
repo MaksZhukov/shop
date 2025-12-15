@@ -4,7 +4,7 @@ import { ShoppingCart } from 'api/shopping-cart/types';
 import { ProductItemImages } from 'components/features/ProductItemImages';
 import { ProductPrice } from 'components/features/ProductPrice';
 import FavoriteButton from 'components/features/FavoriteButton';
-import { TrashIcon } from 'components/icons';
+import { TrashIcon } from 'shared/icons';
 import { isSparePart } from 'services/ProductService';
 import { Button } from 'shared/ui';
 import { Product } from 'api/types';

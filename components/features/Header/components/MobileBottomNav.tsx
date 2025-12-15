@@ -10,7 +10,7 @@ import {
 	HeartFilledIcon,
 	HomeFilledIcon,
 	HomeIcon
-} from 'components/icons';
+} from 'shared/icons';
 import { NavbarButton } from 'shared/ui/NavbarButton';
 import Profile from '../Profile';
 import { BadgeCartCount } from './BadgeCartCount';

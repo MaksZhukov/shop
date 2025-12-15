@@ -1,6 +1,6 @@
 import { Box, Button, Chip, IconButton, Typography } from '@mui/material';
 import React from 'react';
-import { CloseIcon } from 'components/icons';
+import { CloseIcon } from 'shared/icons';
 
 interface SearchHistoryChipsProps {
 	searchHistory: string[];

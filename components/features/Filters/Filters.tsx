@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import styles from './Filters.module.scss';
 import { AutocompleteType, NumberType } from './types';
-import { ChevronUpIcon, ChevronDownIcon } from 'components/icons';
+import { ChevronUpIcon, ChevronDownIcon } from 'shared/icons';
 
 interface Props {
 	onClickFind?: (values: { [key: string]: string | null }) => void;

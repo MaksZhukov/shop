@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { SparePart } from 'api/spareParts/types';
 import { Button } from 'shared/ui';
-import { ChevronRightIcon } from 'components/icons';
+import { ChevronRightIcon } from 'shared/icons';
 import { Typography, Carousel } from 'shared/ui';
 import ProductItem from 'components/features/ProductItem';
 
