@@ -1,22 +1,23 @@
-import { fetchBrandBySlug, fetchBrands } from 'api/brands/brands';
-import { BrandWithSparePartsCount } from 'api/brands/types';
-import { API_MAX_LIMIT } from 'api/constants';
-import { fetchGeneration } from 'api/generations/generations';
-import { GenerationWithModelAndBrand } from 'api/generations/types';
-import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { KindSparePart } from 'api/kindSpareParts/types';
-import { fetchModelBySlug } from 'api/models/models';
-import { fetchPage } from 'api/pages';
-import { DefaultPage, PageProduct, PageProductSparePart } from 'api/pages/types';
-import { fetchSparePart, fetchSpareParts } from 'api/spareParts/spareParts';
-import { SparePart } from 'api/spareParts/types';
-import CatalogSpareParts from 'components/CatalogSpareParts';
-import Product from 'components/features/Product';
+import { brandApi } from 'entities/brand';
+import type { BrandWithSparePartsCount } from 'entities/brand/brandTypes';
+import { API_MAX_LIMIT } from 'shared/api/constants';
+import { generationApi } from 'entities/generation';
+import type { GenerationWithModelAndBrand } from 'entities/generation/generationTypes';
+import { kindSparePartApi } from 'entities/kindSparePart';
+import type { KindSparePart } from 'entities/kindSparePart';
+import { modelApi } from 'entities/model';
+import { pageApi } from 'entities/page';
+import type { DefaultPage, PageProduct, PageProductSparePart } from 'entities/page';
+import { sparePartApi } from 'entities/sparePart';
+import type { SparePart } from 'entities/sparePart';
+import { CatalogSpareParts } from 'widgets/catalog';
+import { Product } from 'widgets/product';
 import type { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
-import { getProductPageSeo } from 'services/ProductService';
-import { withGeneration, withKindSparePart } from 'services/SEOService';
-import { getStringByTemplateStr } from 'services/StringService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { getProductPageSeo } from 'entities/product';
+import { withGeneration } from 'entities/generation';
+import { withKindSparePart } from 'entities/kindSparePart';
+import { getStringByTemplateStr } from 'shared/utils/stringUtils';
 
 interface Props {
 	data: SparePart;
@@ -37,24 +38,7 @@ interface SlugParams {
 const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts }) => {
 	if (data && relatedProducts) {
 		return (
-			<Product
-				data={data}
-				printOptions={[
-					{ text: 'Артикул', value: data.id },
-					{ text: 'Поколение', value: data.generation?.name },
-					...(data.engineNumber ? [{ text: 'Маркировка двигателя', value: data.engineNumber }] : []),
-					...(data.engine ? [{ text: 'Двигатель', value: data.engine }] : []),
-					{ text: 'Запчасть', value: data.kindSparePart?.name },
-					{ text: 'Марка', value: data.brand?.name },
-					{ text: 'Модель', value: data.model?.name },
-					{ text: 'Год', value: data.year },
-					{ text: 'Коробка', value: data.transmission },
-					{ text: 'Обьем', value: data.volume?.name },
-					{ text: 'Тип топлива', value: data.fuel as any }
-				]}
-				page={page as PageProduct & PageProductSparePart}
-				relatedProducts={relatedProducts}
-			></Product>
+			<Product data={data} page={page as PageProduct & PageProductSparePart} relatedProducts={relatedProducts} />
 		);
 	}
 	return <CatalogSpareParts pageData={page} brands={brands} kindSparePart={kindSparePart}></CatalogSpareParts>;
@@ -65,7 +49,7 @@ export default SpareParts;
 const fetchBrandsData = async (): Promise<BrandWithSparePartsCount[]> => {
 	const {
 		data: { data: brands }
-	} = await fetchBrands({
+	} = await brandApi.fetchBrands({
 		populate: { image: true, spareParts: { count: true } },
 		sort: 'name',
 		pagination: { limit: API_MAX_LIMIT },
@@ -103,7 +87,7 @@ const parseParams = (slug: string[], kindSparePartSlug?: string): SlugParams => 
 const fetchKindSparePartIfNeeded = async (kindSparePartSlug?: string): Promise<KindSparePart | undefined> => {
 	if (!kindSparePartSlug) return undefined;
 
-	const result = await fetchKindSpareParts({ filters: { slug: kindSparePartSlug } });
+	const result = await kindSparePartApi.fetchKindSpareParts({ filters: { slug: kindSparePartSlug } });
 	return result?.data?.data[0];
 };
 
@@ -119,14 +103,14 @@ const handleProductPage = async (productSlug: string, kindSparePartSlug?: string
 			data: { data: pageSparePart }
 		}
 	] = await Promise.all([
-		fetchSparePart(productSlug),
-		fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-		fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
+		sparePartApi.fetchSparePart(productSlug),
+		pageApi.fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
+		pageApi.fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
 	]);
 
 	const {
 		data: { data: relatedProducts }
-	} = await fetchSpareParts({
+	} = await sparePartApi.fetchSpareParts({
 		filters: {
 			sold: false,
 			id: { $ne: data.id },
@@ -167,7 +151,7 @@ const handleGenerationPage = async (
 	kindSparePartSlug?: string
 ) => {
 	const [resultGeneration] = await Promise.all([
-		fetchGeneration<GenerationWithModelAndBrand>({
+		generationApi.fetchGeneration<GenerationWithModelAndBrand>({
 			filters: {
 				slug: generationParamSlug,
 				model: { slug: modelSlug },
@@ -213,7 +197,7 @@ const handleGenerationPage = async (
 const handleModelPage = async (brandParamSlug: string, modelSlug: string, kindSparePartSlug?: string) => {
 	const {
 		data: { data }
-	} = await fetchModelBySlug(modelSlug, {
+	} = await modelApi.fetchModelBySlug(modelSlug, {
 		populate: ['seoSpareParts.images', 'image', 'brand'],
 		filters: { brand: { slug: brandParamSlug } }
 	});
@@ -237,7 +221,7 @@ const handleModelPage = async (brandParamSlug: string, modelSlug: string, kindSp
 const handleBrandPage = async (brandParamSlug: string, kindSparePartSlug?: string) => {
 	const {
 		data: { data }
-	} = await fetchBrandBySlug(brandParamSlug, {
+	} = await brandApi.fetchBrandBySlug(brandParamSlug, {
 		populate: ['seoSpareParts.images', 'image']
 	});
 
@@ -259,7 +243,7 @@ const handleBrandPage = async (brandParamSlug: string, kindSparePartSlug?: strin
 const handleDefaultPage = async (kindSparePartSlug?: string) => {
 	const {
 		data: { data }
-	} = await fetchPage('spare-part')();
+	} = await pageApi.fetchPage('spare-part')();
 	const kindSparePart = await fetchKindSparePartIfNeeded(kindSparePartSlug);
 
 	return {

@@ -1,17 +1,16 @@
 import { Button, Input, Link, ListItemButton, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { send } from 'api/email';
-import { fetchPage } from 'api/pages';
-import { PageContacts } from 'api/pages/types';
-import { LinkWithImage } from 'api/types';
-import BlockImages from 'components/BlockImages';
-import Image from 'components/features/Image';
-import ReactMarkdown from 'components/features/ReactMarkdown';
+import { emailApi } from 'entities/email';
+import { pageApi, PageContacts } from 'entities/page';
+import { LinkWithImage } from 'shared/api/types';
+import { BlockImages } from 'shared/ui';
+import { Image } from 'shared/ui';
+import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { useSnackbar } from 'notistack';
 import { ChangeEventHandler, FormEvent, useState } from 'react';
 import { useThrottle } from 'rooks';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: PageContacts;
@@ -39,7 +38,7 @@ const Contacts = ({ page, socials }: Props) => {
 	const [throttledSubmit] = useThrottle(async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await send(
+			await emailApi.send(
 				'Вопрос',
 				`<b>Телефон</b>: ${phone} <br /><b>Имя</b>: ${name} <br /><b>Сообщение</b>: ${message} <br />`
 			);
@@ -218,7 +217,7 @@ const Contacts = ({ page, socials }: Props) => {
 export default Contacts;
 
 export const getStaticProps = getPageProps(
-	fetchPage('contact', { populate: ['seo', 'images', 'requisites'] }),
+	pageApi.fetchPage('contact', { populate: ['seo', 'images', 'requisites'] }),
 	async () => {
 		return {
 			props: {

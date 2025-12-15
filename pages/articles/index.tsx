@@ -1,13 +1,12 @@
-import { fetchArticles } from 'api/articles/articles';
-import { Article } from 'api/articles/types';
-import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
-import { ApiResponse } from 'api/types';
+import { articlesApi } from 'entities/article';
+import { Article } from 'entities/article/articleTypes';
+import { pageApi, DefaultPage } from 'entities/page';
+import { ApiResponse } from 'shared/api/types';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { getPageProps } from 'services/PagePropsService';
-import { ArticlesHeader, ArticlesGrid, ArticlesPagination, useArticlesData } from 'components/features/pages/articles';
-import { LIMIT, DEFAULT_SORT } from 'components/features/pages/articles/constants';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { ArticlesHeader, ArticlesGrid, ArticlesPagination, useArticlesData } from 'features/articlesList';
+import { LIMIT, DEFAULT_SORT } from 'features/articlesList';
 
 interface Props {
 	page: DefaultPage;
@@ -47,7 +46,7 @@ const Articles: NextPage<Props> = ({ page, articles, serverQueryPage }) => {
 
 export default Articles;
 
-export const getServerSideProps = getPageProps(fetchPage('article'), async (context) => {
+export const getServerSideProps = getPageProps(pageApi.fetchPage('article'), async (context) => {
 	const page = context.query?.page ? +context.query.page : 1;
 	const start = (page - 1) * LIMIT;
 	const sort = context.query?.sort ? context.query.sort : DEFAULT_SORT;
@@ -55,7 +54,7 @@ export const getServerSideProps = getPageProps(fetchPage('article'), async (cont
 	return {
 		props: {
 			articles: (
-				await fetchArticles({
+				await articlesApi.fetchArticles({
 					pagination: {
 						start,
 						limit: LIMIT

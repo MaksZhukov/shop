@@ -1,13 +1,12 @@
 import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { fetchPage } from 'api/pages';
-import { PageAbout } from 'api/pages/types';
-import BlockImages from 'components/BlockImages';
-import Image from 'components/features/Image';
-import ReactMarkdown from 'components/features/ReactMarkdown/ReactMarkdown';
+import { pageApi, PageAbout } from 'entities/page';
+import { BlockImages } from 'shared/ui';
+import { Image } from 'shared/ui';
+import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
-import { getUrlByMinFormat } from 'services/ImageService';
-import { getPageProps } from 'services/PagePropsService';
+import { getUrlByMinFormat } from 'shared/utils/imageUtils';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: PageAbout;
@@ -163,7 +162,7 @@ const About = ({ page }: Props) => {
 export default About;
 
 export const getStaticProps = getPageProps(
-	fetchPage('about', {
+	pageApi.fetchPage('about', {
 		populate: [
 			'seo',
 			'mainImageLeft',

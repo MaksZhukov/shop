@@ -1,9 +1,8 @@
 import { Typography } from '@mui/material';
-import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
-import ReactMarkdown from 'components/features/ReactMarkdown';
+import { pageApi, DefaultPage } from 'entities/page';
+import { ReactMarkdown } from 'shared/ui';
 import { FC } from 'react';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: DefaultPage & { content: string };
@@ -22,7 +21,7 @@ const InstallmentPlan: FC<Props> = ({ page }) => {
 
 export default InstallmentPlan;
 
-export const getStaticProps = getPageProps(fetchPage('installment-plan'), async () => {
+export const getStaticProps = getPageProps(pageApi.fetchPage('installment-plan'), async () => {
 	return {
 		props: {
 			breadcrumbs: [

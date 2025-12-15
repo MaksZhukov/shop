@@ -1,13 +1,12 @@
 import { Box, Link, Typography, useMediaQuery } from '@mui/material';
-import { fetchArticle } from 'api/articles/articles';
-import { Article as IArticle } from 'api/articles/types';
-import BlockImages from 'components/BlockImages/BlockImages';
-import Image from 'components/features/Image/Image';
-import ReactMarkdown from 'components/features/ReactMarkdown/ReactMarkdown';
-import { SocialButtons } from 'components/features/SocialsButtons';
-import { SOCIAL_TELEGRAM } from '../../constants';
+import { articlesApi } from 'entities/article';
+import { Article as IArticle } from 'entities/article/articleTypes';
+import { Image } from 'shared/ui';
+import { ReactMarkdown } from 'shared/ui';
+import { SocialButtons } from 'shared/ui';
+import { SOCIAL_TELEGRAM } from 'shared/ui';
 import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: IArticle;
@@ -50,7 +49,7 @@ export default Article;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
 	const article = (
-		await fetchArticle(context.params?.slug as string, {
+		await articlesApi.fetchArticle(context.params?.slug as string, {
 			populate: ['mainImage', 'images1', 'images2', 'seo']
 		})
 	).data.data;

@@ -1,13 +1,13 @@
 import { CircularProgress, Divider, Link, Rating } from '@mui/material';
 import { Box } from '@mui/material';
-import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
-import { fetchReviews } from 'api/reviews/reviews';
-import { Review } from 'api/reviews/types';
+import { pageApi } from 'entities/page';
+import type { DefaultPage } from 'entities/page';
+import { reviewApi } from 'entities/review';
+import type { Review } from 'entities/review';
 import { Typography } from 'shared/ui';
 import { useSnackbar } from 'notistack';
 import { Fragment, useEffect, useState } from 'react';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: DefaultPage;
@@ -24,7 +24,7 @@ const Reviews = ({ page }: Props) => {
 			try {
 				const {
 					data: { data }
-				} = await fetchReviews();
+				} = await reviewApi.fetchReviews();
 				setReviews(data);
 			} catch (err) {
 				enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
@@ -84,7 +84,7 @@ const Reviews = ({ page }: Props) => {
 
 export default Reviews;
 
-export const getStaticProps = getPageProps(fetchPage('review'), async () => {
+export const getStaticProps = getPageProps(pageApi.fetchPage('review'), async () => {
 	return {
 		props: {
 			breadcrumbs: [

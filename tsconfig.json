@@ -19,7 +19,12 @@
     "jsx": "react-jsx",
     "incremental": true,
     "experimentalDecorators": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -27,7 +32,9 @@
     "**/*.tsx",
     "declarations.d.ts",
     "react-img-hover-zoom.d.ts",
-    "store/Notification.tsx"
+    "store/Notification.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

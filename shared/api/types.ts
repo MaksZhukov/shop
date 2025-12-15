@@ -1,0 +1,87 @@
+export const enum ErrorTypes {
+	ValidationError = 'ValidationError'
+}
+
+export type ImageFormat = 'thumbnail' | 'small' | 'medium' | 'large';
+
+export type Image = {
+	id: number;
+	name: string;
+	url: string;
+	alternativeText: string;
+	caption: string;
+	width: number;
+	height: number;
+	formats?: Record<ImageFormat, { url: string }>;
+};
+
+export type Video = {
+	id: number;
+	url: string;
+	size: number;
+};
+
+export type MetaResponse = {
+	pagination?: {
+		page: number;
+		pageCount: number;
+		pageSize: number;
+		total: number;
+	};
+};
+
+export type ApiResponse<T = any> = {
+	data: T;
+	meta: MetaResponse;
+};
+
+export type Filters = {
+	[field: string]:
+		| string
+		| number
+		| boolean
+		| null
+		| undefined
+		| string[]
+		| number[]
+		| {
+				[operator: string]: string | number | boolean | null | undefined | string[] | number[];
+		  }
+		| {
+				[field: string]: string | number | boolean | null | undefined;
+		  }
+		| Filters;
+};
+
+export type Populate = string[] | string | { [key: string]: boolean | { count: boolean } | Populate };
+
+export type CollectionParams = {
+	sort?: string[] | string;
+	filters?: Filters;
+	populate?: Populate;
+	fields?: string[];
+	pagination?: {
+		page?: number;
+		pageSize?: number;
+		limit?: number;
+		start?: number;
+	};
+	publicationState?: 'live' | 'preview';
+};
+
+export type SEO = {
+	title: string;
+	description: string;
+	keywords: string;
+	h1: string;
+	images?: Image[];
+	content?: string;
+};
+
+export type ShortSEO = Omit<SEO, 'h1' | 'images' | 'content'>;
+
+export type LinkWithImage = {
+	id: number;
+	image: Image;
+	link: string;
+};

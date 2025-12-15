@@ -1,0 +1,1 @@
+export { CatalogSpareParts } from './ui';

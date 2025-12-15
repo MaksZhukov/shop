@@ -1,10 +1,10 @@
-import { getPageProps } from 'services/PagePropsService';
-import { Banners } from 'components/features/Banners';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { Banners } from 'shared/ui/Banners';
 import { Box, Typography } from '@mui/material';
-import { Benefits } from 'components/features/Benefits';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { fetchKindSpareParts } from 'api/kindSpareParts/kindSpareParts';
-import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
+import { Benefits } from 'widgets/benefits';
+import { sparePartApi } from 'entities/sparePart';
+import { kindSparePartApi } from 'entities/kindSparePart';
+import type { KindSparePartWithSparePartsCount } from 'entities/kindSparePart';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRightIcon } from 'shared/icons/ChevronRightIcon';
 import { useState } from 'react';
@@ -21,7 +21,7 @@ export default function MobileCatalog({ sparePartsTotal }: Props) {
 		enabled: true,
 		placeholderData: (prev) => prev,
 		queryFn: () =>
-			fetchKindSpareParts<KindSparePartWithSparePartsCount>({
+			kindSparePartApi.fetchKindSpareParts<KindSparePartWithSparePartsCount>({
 				pagination: { limit: 15, start: selectedCategory ? Math.floor(Math.random() * 100) : 0 },
 				populate: { spareParts: { count: true } }
 			})
@@ -76,7 +76,7 @@ export const getServerSideProps = getPageProps(undefined, async (context, device
 		};
 	}
 
-	const { data } = await fetchSpareParts({
+	const { data } = await sparePartApi.fetchSpareParts({
 		pagination: { limit: 0 },
 		filters: {
 			sold: false

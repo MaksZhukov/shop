@@ -1,0 +1,1 @@
+export { BrandItem } from './BrandItem';

@@ -1,8 +1,7 @@
-import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
-import ReactMarkdown from 'components/features/ReactMarkdown';
+import { pageApi, DefaultPage } from 'entities/page';
+import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: DefaultPage & { content: string };
@@ -21,7 +20,7 @@ const Contacts = ({ page }: Props) => {
 
 export default Contacts;
 
-export const getStaticProps = getPageProps(fetchPage('payment'), async () => {
+export const getStaticProps = getPageProps(pageApi.fetchPage('payment'), async () => {
 	return {
 		props: {
 			breadcrumbs: [

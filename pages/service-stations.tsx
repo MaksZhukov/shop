@@ -1,13 +1,11 @@
 import { Typography } from '@mui/material';
-import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
-import { fetchServiceStations } from 'api/serviceStations/serviceStations';
-import { ServiceStation } from 'api/serviceStations/types';
-import { ApiResponse } from 'api/types';
-import CardItem from 'components/CardItem';
+import { pageApi, DefaultPage } from 'entities/page';
+import { serviceStationApi, ServiceStation } from 'entities/serviceStation';
+import { ApiResponse } from 'shared/api/types';
+import { CardItem } from 'shared/ui';
 import { WhiteBox } from 'shared/ui';
 import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: DefaultPage;
@@ -35,10 +33,10 @@ const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
 
 export default Vacancies;
 
-export const getStaticProps = getPageProps(fetchPage('service-station'), async () => ({
+export const getStaticProps = getPageProps(pageApi.fetchPage('service-station'), async () => ({
 	props: {
 		serviceStations: (
-			await fetchServiceStations({
+			await serviceStationApi.fetchServiceStations({
 				populate: 'image',
 				sort: 'updatedAt:desc'
 			})

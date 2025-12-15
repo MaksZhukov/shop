@@ -1,6 +1,6 @@
 import { Container, Typography } from '@mui/material';
 import { WhiteBox } from 'shared/ui';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 const PageNotFound = () => {
 	return (

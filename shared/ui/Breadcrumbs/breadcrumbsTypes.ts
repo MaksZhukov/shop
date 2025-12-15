@@ -1,0 +1,4 @@
+export interface BreadcrumbItem {
+	href: string;
+	text: string;
+}

@@ -1,12 +1,11 @@
 import { Box, useMediaQuery } from '@mui/material';
-import { fetchPage } from 'api/pages';
-import { PageGuarantee } from 'api/pages/types';
-import BlockImages from 'components/BlockImages';
-import Image from 'components/features/Image';
-import ReactMarkdown from 'components/features/ReactMarkdown';
+import { pageApi, PageGuarantee } from 'entities/page';
+import { BlockImages } from 'shared/ui';
+import { Image } from 'shared/ui';
+import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
-import { getUrlByMinFormat } from 'services/ImageService';
-import { getPageProps } from 'services/PagePropsService';
+import { getUrlByMinFormat } from 'shared/utils/imageUtils';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: PageGuarantee;
@@ -136,7 +135,7 @@ const Guarantee = ({ page }: Props) => {
 export default Guarantee;
 
 export const getStaticProps = getPageProps(
-	fetchPage('guarantee', { populate: ['seo', 'mainLeftImage', 'images1', 'images2', 'warningLeftImage'] }),
+	pageApi.fetchPage('guarantee', { populate: ['seo', 'mainLeftImage', 'images1', 'images2', 'warningLeftImage'] }),
 	async () => {
 		return {
 			props: {

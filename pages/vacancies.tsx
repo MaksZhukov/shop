@@ -1,12 +1,11 @@
 import { Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { fetchPage } from 'api/pages';
-import { PageVacancies, Vacancy } from 'api/pages/types';
-import BlockImages from 'components/BlockImages';
-import Image from 'components/features/Image';
+import { pageApi, PageVacancies, Vacancy } from 'entities/page';
+import { BlockImages } from 'shared/ui';
+import { Image } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: PageVacancies;
@@ -153,7 +152,7 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 export default Vacancies;
 
 export const getStaticProps = getPageProps(
-	fetchPage('vacancy', { populate: ['vacancies.image', 'vacancies.images', 'seo', 'vacancies.description'] }),
+	pageApi.fetchPage('vacancy', { populate: ['vacancies.image', 'vacancies.images', 'seo', 'vacancies.description'] }),
 	async () => {
 		return {
 			props: {

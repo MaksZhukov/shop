@@ -1,0 +1,50 @@
+import { Button, TextField, Typography } from '@mui/material';
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
+import { ChangeEvent, FC, FormEvent, useState } from 'react';
+import { userApi } from 'entities/user';
+
+interface Props {
+	isLoading: boolean;
+	onChangeIsLoading: (val: boolean) => void;
+}
+
+const ForgotForm: FC<Props> = ({ isLoading, onChangeIsLoading }) => {
+	const [email, setEmail] = useState<string>('');
+	const { enqueueSnackbar } = useSnackbar();
+	const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
+		setEmail(e.target.value);
+	};
+	const handleClickSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		onChangeIsLoading(true);
+		try {
+			await userApi.forgotPassword(email);
+			enqueueSnackbar('Проверьте свою почту', { variant: 'success' });
+		} catch (err) {
+			if (axios.isAxiosError(err)) {
+				enqueueSnackbar('Неверные данные', { variant: 'error' });
+			}
+		}
+		onChangeIsLoading(false);
+	};
+	return (
+		<form onSubmit={handleClickSubmit}>
+			<TextField
+				fullWidth
+				disabled={isLoading}
+				margin='normal'
+				name='email'
+				onChange={handleChangeEmail}
+				value={email}
+				required
+				placeholder='Почта'
+			></TextField>
+			<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
+				Восстановить
+			</Button>
+		</form>
+	);
+};
+
+export default ForgotForm;

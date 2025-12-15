@@ -4,28 +4,31 @@ import { observer } from 'mobx-react';
 import Head from 'next/head';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent } from 'react';
-import { getPageProps } from 'services/PagePropsService';
-import { useStore } from '../store';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { useSaveUserInfo } from 'features/user/useSaveUserInfo';
 import styles from './profile.module.scss';
+import { useUserStore } from 'entities/user';
 
 const Profile = observer(() => {
-	const store = useStore();
+	const userStore = useUserStore();
 	const { enqueueSnackbar } = useSnackbar();
+	const saveUserInfo = useSaveUserInfo();
+
 	const handleChangeUsername = (e: ChangeEvent<HTMLInputElement>) => {
-		store.user.setUsername(e.target.value);
+		userStore.setUsername(e.target.value);
 	};
 	const handleChangePhone = (e: ChangeEvent<HTMLInputElement>) => {
-		store.user.setPhone(e.target.value);
+		userStore.setPhone(e.target.value);
 	};
 
 	const handleChangeAddress = (e: ChangeEvent<HTMLInputElement>) => {
-		store.user.setAddress(e.target.value);
+		userStore.setAddress(e.target.value);
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await store.user.saveUserInfo();
+			await saveUserInfo();
 			enqueueSnackbar('Данные успешно обновлены', {
 				variant: 'success'
 			});
@@ -48,7 +51,7 @@ const Profile = observer(() => {
 				</Typography>
 				<Box component='form' marginBottom='2em' onSubmit={handleSubmit} className={styles.content}>
 					<TextField
-						value={store.user.email}
+						value={userStore.email}
 						placeholder='Почта'
 						disabled
 						variant='standard'
@@ -56,7 +59,7 @@ const Profile = observer(() => {
 						fullWidth
 					></TextField>
 					<TextField
-						value={store.user.username}
+						value={userStore.username}
 						onChange={handleChangeUsername}
 						placeholder='ФИО'
 						margin='normal'
@@ -68,11 +71,11 @@ const Profile = observer(() => {
 						placeholder='Телефон'
 						variant='standard'
 						fullWidth
-						value={store.user.phone}
+						value={userStore.phone}
 						onChange={handleChangePhone}
 					/>
 					<TextField
-						value={store.user.address}
+						value={userStore.address}
 						onChange={handleChangeAddress}
 						placeholder='Адрес'
 						margin='normal'

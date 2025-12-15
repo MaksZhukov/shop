@@ -1,12 +1,11 @@
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
-import { Video } from 'api/types';
-import ReactMarkdown from 'components/features/ReactMarkdown';
+import { pageApi, DefaultPage } from 'entities/page';
+import { Video } from 'shared/api/types';
+import { ReactMarkdown } from 'shared/ui';
 import { FC } from 'react';
 import ReactPlayer from 'react-player';
-import { getPageProps } from 'services/PagePropsService';
-import { backendUrl } from 'services/EnvService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { backendUrl } from 'shared/services/EnvService';
 
 interface Props {
 	page: DefaultPage & { content: string; text: string; video: Video };
@@ -46,7 +45,7 @@ const HowToGetTo: FC<Props> = ({ page }) => {
 
 export default HowToGetTo;
 
-export const getStaticProps = getPageProps(fetchPage('how-to-get-to'), async () => {
+export const getStaticProps = getPageProps(pageApi.fetchPage('how-to-get-to'), async () => {
 	return {
 		props: {
 			breadcrumbs: [

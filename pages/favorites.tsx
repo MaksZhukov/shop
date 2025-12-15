@@ -1,16 +1,18 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { Loader, Typography, Link, Carousel } from 'shared/ui';
+import { Loader, Typography, Link } from 'shared/ui';
 import { observer } from 'mobx-react';
 import Head from 'next/head';
-import { getPageProps } from 'services/PagePropsService';
-import { useStore } from 'store';
-import ProductItem from 'components/features/ProductItem';
-import { ViewedProducts } from 'components/features/ViewedProducts';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { ProductItem } from 'entities/product';
+import { ViewedProducts } from 'features/product';
+import { FavoriteButton } from 'features/favorites';
+import { CartButton } from 'features/cart';
+import { useFavoriteStore } from 'entities/favorite';
 
 const Favorites = () => {
-	const store = useStore();
-	const items = store.favorites.items;
-	const isLoading = store.favorites.isLoading;
+	const favoriteStore = useFavoriteStore();
+	const items = favoriteStore.items;
+	const isLoading = favoriteStore.isLoading;
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -53,6 +55,13 @@ const Favorites = () => {
 							sx={{ margin: 'initial' }}
 							key={item.id}
 							data={item.product}
+							headerActions={<FavoriteButton product={item.product} />}
+							bottomActions={
+								<CartButton
+									product={item.product}
+									sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }}
+								/>
+							}
 						/>
 					))}
 				</Box>

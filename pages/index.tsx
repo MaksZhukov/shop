@@ -1,17 +1,16 @@
 import { Box } from '@mui/material';
-import { Brand } from 'api/brands/types';
-import { SparePart } from 'api/spareParts/types';
-import { CarOnParts } from 'api/cars-on-parts/types';
-import { Article } from 'api/articles/types';
-import { PageMain } from 'api/pages/types';
+import type { Brand } from 'entities/brand/brandTypes';
+import type { SparePart } from 'entities/sparePart';
+import type { CarOnParts } from 'entities/carOnParts';
+import type { Article } from 'entities/article/articleTypes';
+import { pageApi } from 'entities/page';
 import type { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
-import { API_MAX_LIMIT } from 'api/constants';
-import { fetchPage } from 'api/pages';
-import { fetchSpareParts } from 'api/spareParts/spareParts';
-import { fetchCarsOnParts } from 'api/cars-on-parts/cars-on-parts';
-import { fetchArticles } from 'api/articles/articles';
-import { fetchBrands } from 'api/brands/brands';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { API_MAX_LIMIT } from 'shared/api/constants';
+import { sparePartApi } from 'entities/sparePart';
+import { carOnPartsApi } from 'entities/carOnParts';
+import { articlesApi } from 'entities/article';
+import { brandApi } from 'entities/brand';
 import {
 	MainSection,
 	Benefits,
@@ -21,13 +20,10 @@ import {
 	CarsOnParts,
 	CarBuyback,
 	Articles
-} from 'components/features/pages/main';
-import { backendUrl } from 'services/EnvService';
-import { fetchTopCategories } from 'api/catalog/catalog';
-import { useQuery } from '@tanstack/react-query';
+} from 'widgets/main';
+import { useDeviceType } from 'shared/hooks/useDeviceType';
 
 interface Props {
-	page: PageMain;
 	brands: Brand[];
 	newSpareParts: SparePart[];
 	carsOnParts: CarOnParts[];
@@ -35,12 +31,10 @@ interface Props {
 	sparePartsTotal: number;
 }
 
-const Main: NextPage<Props> = ({ page, brands, newSpareParts, carsOnParts, articles, sparePartsTotal }) => {
-	const { data: catalog } = useQuery({
-		queryKey: ['catalog'],
-		queryFn: () => fetchTopCategories(),
-		enabled: true
-	});
+const Main: NextPage<Props> = ({ brands, newSpareParts, carsOnParts, articles, sparePartsTotal }) => {
+	const deviceType = useDeviceType();
+	const articlesLimit = deviceType === 'mobile' ? 5 : 8;
+	const articlesToShow = articles.slice(0, articlesLimit);
 	return (
 		<Box sx={{ my: 4 }}>
 			<MainSection brands={brands} sparePartsTotal={sparePartsTotal} />
@@ -50,29 +44,20 @@ const Main: NextPage<Props> = ({ page, brands, newSpareParts, carsOnParts, artic
 			<PopularCategories />
 			<CarsOnParts carsOnParts={carsOnParts} />
 			<CarBuyback />
-			<Articles articles={articles} />
+			<Articles articles={articlesToShow} />
 		</Box>
 	);
 };
 
 export default Main;
 
-export const getServerSideProps = getPageProps(
-	fetchPage('main', {
-		populate: [
-			'seo',
-			'benefits.image',
-			'categoryImages',
-			'banner',
-			'bannerMobile',
-			'benefitsRightImage',
-			'autocomises.image',
-			'serviceStations.image'
-		]
+export const getStaticProps = getPageProps(
+	pageApi.fetchPage('main', {
+		populate: ['seo']
 	}),
 	async (context, deviceType) => {
 		const [brands, newSpareParts, articles, carsOnParts, sparePartsTotal] = await Promise.all([
-			fetchBrands({
+			brandApi.fetchBrands({
 				populate: ['image'],
 				sort: 'name',
 				filters: {
@@ -84,20 +69,20 @@ export const getServerSideProps = getPageProps(
 				},
 				pagination: { limit: API_MAX_LIMIT }
 			}),
-			fetchSpareParts({
+			sparePartApi.fetchSpareParts({
 				populate: ['images', 'brand', 'volume'],
 				pagination: { limit: 10 }
 			}),
-			fetchArticles({
+			articlesApi.fetchArticles({
 				populate: ['mainImage'],
 				sort: ['createdAt:desc'],
-				pagination: { limit: deviceType === 'mobile' ? 5 : 8 }
+				pagination: { limit: 8 }
 			}),
-			fetchCarsOnParts({
+			carOnPartsApi.fetchCarsOnParts({
 				populate: ['images', 'volume', 'brand', 'model', 'generation'],
 				pagination: { limit: 10 }
 			}),
-			fetchSpareParts({
+			sparePartApi.fetchSpareParts({
 				pagination: { limit: 0 },
 				filters: {
 					sold: false
@@ -113,7 +98,8 @@ export const getServerSideProps = getPageProps(
 				carsOnParts: carsOnParts.data.data,
 				sparePartsTotal: sparePartsTotal.data.meta?.pagination?.total || 0,
 				breadcrumbs: []
-			}
+			},
+			revalidate: 60
 		};
 	}
 );

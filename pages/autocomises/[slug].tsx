@@ -1,8 +1,8 @@
-import { fetchAutocomis } from 'api/autocomises/autocomises';
-import { Autocomis as IAutocomis } from 'api/autocomises/types';
-import Card from 'components/Card';
+import { autocomiseApi } from 'entities/autocomise';
+import { Autocomis as IAutocomis } from 'entities/autocomise';
+import { Card } from 'shared/ui';
 import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: IAutocomis;
@@ -14,7 +14,7 @@ export default Autocomis;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
 	props: {
-		page: (await fetchAutocomis(context.params?.slug as string)).data.data
+		page: (await autocomiseApi.fetchAutocomis(context.params?.slug as string)).data.data
 	},
 	breadcrumbs: [
 		{ text: 'Главная', href: '/' },

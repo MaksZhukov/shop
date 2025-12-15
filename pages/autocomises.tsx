@@ -1,13 +1,12 @@
 import { Typography } from '@mui/material';
-import { fetchAutocomises } from 'api/autocomises/autocomises';
-import { Autocomis } from 'api/autocomises/types';
-import { fetchPage } from 'api/pages';
-import { DefaultPage } from 'api/pages/types';
-import { ApiResponse } from 'api/types';
-import CardItem from 'components/CardItem';
+import { autocomiseApi } from 'entities/autocomise';
+import { Autocomis } from 'entities/autocomise';
+import { pageApi, DefaultPage } from 'entities/page';
+import { ApiResponse } from 'shared/api/types';
+import { CardItem } from 'shared/ui';
 import { WhiteBox } from 'shared/ui';
 import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: DefaultPage;
@@ -35,10 +34,10 @@ const Vacancies: NextPage<Props> = ({ page, autocomises }) => {
 
 export default Vacancies;
 
-export const getStaticProps = getPageProps(fetchPage('autocomis'), async () => ({
+export const getStaticProps = getPageProps(pageApi.fetchPage('autocomis'), async () => ({
 	props: {
 		autocomises: (
-			await fetchAutocomises({
+			await autocomiseApi.fetchAutocomises({
 				populate: 'image',
 				sort: 'updatedAt:desc'
 			})

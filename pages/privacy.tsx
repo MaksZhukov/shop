@@ -1,6 +1,6 @@
 import { Link, Typography } from '@mui/material';
 import NextLink from 'next/link';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 const Privacy = () => {
 	return (

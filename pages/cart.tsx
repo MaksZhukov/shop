@@ -1,20 +1,24 @@
 import { Box, Typography } from '@mui/material';
 import { Loader, WhiteBox } from 'shared/ui';
 import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
-import { ViewedProducts } from 'components/features/ViewedProducts';
-import { useStore } from 'store';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { ViewedProducts } from 'features/product';
+import { useStore } from 'app/providers/StoreProvider';
 import { observer } from 'mobx-react';
-import { AnyQuestionsLeft } from 'components/features/AnyQuestionsLeft';
+import { AnyQuestionsLeft } from 'shared/ui';
 import { useState, useEffect } from 'react';
-import { EmptyCart, CartList, CartSummary } from 'components/features/pages/cart';
+import { EmptyCart, CartList, CartSummary } from 'widgets/cart';
+import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
+import { useRemoveCart } from 'features/cart/useRemoveCart';
 
 interface Props {}
 
 const Cart: NextPage<Props> = observer(() => {
 	const store = useStore();
-	const shoppingCartItems = store.shoppingCart.items;
-	const isLoading = store.shoppingCart.isLoading || !store.isInitialRequestDone;
+	const removeCartMany = useRemoveCartMany();
+	const removeCart = useRemoveCart();
+	const shoppingCartItems = store.cart.items;
+	const isLoading = store.cart.isLoading || !store.isInitialRequestDone;
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
 	const allSelected =
@@ -34,13 +38,13 @@ const Cart: NextPage<Props> = observer(() => {
 
 	const handleDeleteSelected = async () => {
 		if (selectedItems.length > 0) {
-			await store.shoppingCart.removeFromShoppingCartMany(selectedItems);
+			await removeCartMany(selectedItems);
 			setSelectedItems([]);
 		}
 	};
 
 	const handleRemoveItem = async (item: (typeof shoppingCartItems)[0]) => {
-		await store.shoppingCart.removeFromShoppingCart(item);
+		await removeCart(item);
 	};
 
 	const selectedCartItems = shoppingCartItems.filter((item) => !item.product.sold && selectedItems.includes(item.id));

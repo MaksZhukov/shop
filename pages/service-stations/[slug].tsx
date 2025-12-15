@@ -1,8 +1,7 @@
-import { fetchServiceStation } from 'api/serviceStations/serviceStations';
-import { ServiceStation as IServiceStation } from 'api/serviceStations/types';
-import Card from 'components/Card';
+import { serviceStationApi, ServiceStation as IServiceStation } from 'entities/serviceStation';
+import { Card } from 'shared/ui';
 import { NextPage } from 'next';
-import { getPageProps } from 'services/PagePropsService';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 interface Props {
 	page: IServiceStation;
 }
@@ -13,6 +12,6 @@ export default ServiceStation;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => ({
 	props: {
-		page: (await fetchServiceStation(context.params?.slug as string)).data.data
+		page: (await serviceStationApi.fetchServiceStation(context.params?.slug as string)).data.data
 	}
 }));

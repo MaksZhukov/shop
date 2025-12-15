@@ -2,14 +2,13 @@ import { FC } from 'react';
 
 import { SxProps, Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { fetchPage } from 'api/pages';
-import { PageDelivery } from 'api/pages/types';
-import BlockImages from 'components/BlockImages';
-import Image from 'components/features/Image';
-import ReactMarkdown from 'components/features/ReactMarkdown';
+import { pageApi, PageDelivery } from 'entities/page';
+import { BlockImages } from 'shared/ui';
+import { Image } from 'shared/ui';
+import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
-import { getUrlByMinFormat } from 'services/ImageService';
-import { getPageProps } from 'services/PagePropsService';
+import { getUrlByMinFormat } from 'shared/utils/imageUtils';
+import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: PageDelivery;
@@ -133,7 +132,7 @@ const Delivery: FC<Props> = ({ page }) => {
 export default Delivery;
 
 export const getStaticProps = getPageProps(
-	fetchPage('delivery', {
+	pageApi.fetchPage('delivery', {
 		populate: [
 			'seo',
 			'images1',
