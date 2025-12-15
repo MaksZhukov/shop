@@ -3,7 +3,7 @@ import { DefaultPage } from 'api/pages/types';
 import { Image as IIamge } from 'api/types';
 import GalleryImages from 'components/features/GalleryImages/GalleryImages';
 import Image from 'components/features/Image';
-import { Typography } from 'components/ui';
+import { Typography } from 'shared/ui';
 import { FC, useState } from 'react';
 
 interface Props {

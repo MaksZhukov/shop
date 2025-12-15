@@ -1,6 +1,6 @@
 import { Popover } from '@mui/material';
 import { FC } from 'react';
-import { ModalContainer } from 'components/ui';
+import { ModalContainer } from 'shared/ui';
 import { WorkingHour } from 'types';
 import { WorkingHoursList } from './WorkingHoursList';
 

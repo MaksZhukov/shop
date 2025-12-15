@@ -4,7 +4,7 @@ import { fetchPage } from 'api/pages';
 import { PageVacancies, Vacancy } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
 import Image from 'components/features/Image';
-import { Typography } from 'components/ui';
+import { Typography } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 

@@ -11,7 +11,7 @@ import {
 	HomeFilledIcon,
 	HomeIcon
 } from 'components/icons';
-import { NavbarButton } from 'components/ui/NavbarButton';
+import { NavbarButton } from 'shared/ui/NavbarButton';
 import Profile from '../Profile';
 import { BadgeCartCount } from './BadgeCartCount';
 

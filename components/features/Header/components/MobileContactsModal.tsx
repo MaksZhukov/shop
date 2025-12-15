@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
 import React from 'react';
-import { Link, ModalContainer } from 'components/ui';
+import { Link, ModalContainer } from 'shared/ui';
 import { WorkTimetable } from 'components/features/WorkTimetable';
 import { SocialButtons } from 'components/features/SocialsButtons';
 import Image from 'components/features/Image';

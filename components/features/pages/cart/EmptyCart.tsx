@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { Button } from 'components/ui';
+import { Button } from 'shared/ui';
 import NextImage from 'next/image';
 import { useRouter } from 'next/router';
 

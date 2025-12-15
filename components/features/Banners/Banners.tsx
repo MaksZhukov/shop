@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { Carousel } from 'components/ui/Carousel';
+import { Carousel } from 'shared/ui/Carousel';
 
 interface BannersProps {
 	images: string[];

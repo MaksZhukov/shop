@@ -2,7 +2,7 @@ import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import Image from 'components/features/Image';
 import ReactMarkdown from 'components/features/ReactMarkdown';
-import { Link, Typography, WhiteBox } from 'components/ui';
+import { Link, Typography, WhiteBox } from 'shared/ui';
 import { FC } from 'react';
 import NextLink from 'next/link';
 interface ArticleCardProps {

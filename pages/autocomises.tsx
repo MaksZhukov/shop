@@ -5,7 +5,7 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { ApiResponse } from 'api/types';
 import CardItem from 'components/CardItem';
-import { WhiteBox } from 'components/ui';
+import { WhiteBox } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 

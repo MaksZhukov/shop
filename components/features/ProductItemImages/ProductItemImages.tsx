@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import Image from 'components/features/Image';
 import { Product } from 'api/types';
-import { Carousel } from 'components/ui/Carousel';
+import { Carousel } from 'shared/ui/Carousel';
 import NextLink from 'next/link';
 
 interface Props {

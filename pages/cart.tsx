@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { Loader, WhiteBox } from 'components/ui';
+import { Loader, WhiteBox } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'services/PagePropsService';
 import { ViewedProducts } from 'components/features/ViewedProducts';

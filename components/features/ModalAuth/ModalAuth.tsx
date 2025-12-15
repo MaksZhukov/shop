@@ -4,7 +4,7 @@ import AuthRegisterForm from './AuthRegisterForm';
 import ForgotForm from './ForgotForm/ForgotForm';
 import ResetForm from './ResetForm';
 import { ModalAuthStates } from './types';
-import { ModalContainer } from 'components/ui';
+import { ModalContainer } from 'shared/ui';
 
 interface Props {
 	onChangeModalOpened: (value: boolean) => void;

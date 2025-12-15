@@ -1,5 +1,5 @@
 import { Theme, Typography } from '@mui/material';
-import { Link } from 'components/ui';
+import { Link } from 'shared/ui';
 import NextLink from 'next/link';
 import { FC, HTMLAttributeAnchorTarget } from 'react';
 

@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
 import { CarOnParts } from 'api/cars-on-parts/types';
-import { Button } from 'components/ui';
+import { Button } from 'shared/ui';
 import { ChevronRightIcon } from 'components/icons';
-import { Typography } from 'components/ui';
+import { Typography } from 'shared/ui';
 import CarItem from 'components/CarItem';
-import { Carousel } from 'components/ui';
+import { Carousel } from 'shared/ui';
 
 interface CarsOnPartsProps {
 	carsOnParts: CarOnParts[];

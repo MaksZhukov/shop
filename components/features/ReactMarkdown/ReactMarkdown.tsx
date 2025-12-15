@@ -2,13 +2,13 @@ import { Box, useMediaQuery } from '@mui/material';
 import { Image as IImage } from 'api/types';
 import classNames from 'classnames';
 import Image from 'components/features/Image';
-import { Typography } from 'components/ui';
+import { Typography } from 'shared/ui';
 import dynamic from 'next/dynamic';
 import { FC } from 'react';
 import ReactMarkdownLib from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { getRandomBackendLocalUrl } from 'services/BackendUrlService';
-import { Link } from 'components/ui';
+import { Link } from 'shared/ui';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 

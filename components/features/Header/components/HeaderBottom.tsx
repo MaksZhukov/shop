@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
-import { Link } from 'components/ui';
+import { Link } from 'shared/ui';
 import { WorkTimetable } from 'components/features/WorkTimetable';
 import Image from 'components/features/Image';
 

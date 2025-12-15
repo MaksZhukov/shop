@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
 import { Car } from 'api/cars/types';
-import { Typography } from 'components/ui';
+import { Typography } from 'shared/ui';
 import { CarOnParts } from 'api/cars-on-parts/types';
 import FavoriteButton from 'components/features/FavoriteButton';
-import { WhiteBox, Carousel } from 'components/ui';
+import { WhiteBox, Carousel } from 'shared/ui';
 import { Product } from 'api/types';
 import Image from 'components/features/Image';
 

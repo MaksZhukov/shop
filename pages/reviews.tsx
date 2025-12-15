@@ -4,7 +4,7 @@ import { fetchPage } from 'api/pages';
 import { DefaultPage } from 'api/pages/types';
 import { fetchReviews } from 'api/reviews/reviews';
 import { Review } from 'api/reviews/types';
-import { Typography } from 'components/ui';
+import { Typography } from 'shared/ui';
 import { useSnackbar } from 'notistack';
 import { Fragment, useEffect, useState } from 'react';
 import { getPageProps } from 'services/PagePropsService';

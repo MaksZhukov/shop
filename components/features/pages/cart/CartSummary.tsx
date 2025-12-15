@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from '@mui/material';
-import { Button, WhiteBox } from 'components/ui';
+import { Button, WhiteBox } from 'shared/ui';
 import { AnyQuestionsLeft } from 'components/features/AnyQuestionsLeft';
 
 interface CartSummaryProps {

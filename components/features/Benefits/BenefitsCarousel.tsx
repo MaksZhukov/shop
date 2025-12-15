@@ -1,4 +1,4 @@
-import { Carousel } from 'components/ui/Carousel';
+import { Carousel } from 'shared/ui/Carousel';
 import { BenefitItem } from './types';
 import { BenefitCard } from './BenefitCard';
 import { Box } from '@mui/material';

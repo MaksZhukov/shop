@@ -1,5 +1,5 @@
 import { Box, Button, Input } from '@mui/material';
-import Autocomplete from 'components/ui/Autocomplete';
+import Autocomplete from 'shared/ui/Autocomplete';
 import { useRouter } from 'next/router';
 import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import styles from './Filters.module.scss';

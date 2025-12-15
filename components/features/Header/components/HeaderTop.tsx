@@ -1,13 +1,13 @@
 import { Box, IconButton, Input, Badge } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
-import { Link } from 'components/ui';
+import { Link } from 'shared/ui';
 import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'components/icons';
-import { NavbarButton } from 'components/ui/NavbarButton';
+import { NavbarButton } from 'shared/ui/NavbarButton';
 import Profile from '../Profile';
 import { CatalogCategories } from './CatalogCategories';
 import { SearchHistoryChips, SearchResults } from './';
-import { WhiteBox, Loader } from 'components/ui';
+import { WhiteBox, Loader } from 'shared/ui';
 import { SparePart } from 'api/spareParts/types';
 import { useOutsideClick } from 'rooks';
 import { BadgeCartCount } from './BadgeCartCount';

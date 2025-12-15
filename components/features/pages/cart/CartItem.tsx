@@ -1,12 +1,12 @@
 import { Box, Checkbox, IconButton, Typography } from '@mui/material';
-import { Link, WhiteBox } from 'components/ui';
+import { Link, WhiteBox } from 'shared/ui';
 import { ShoppingCart } from 'api/shopping-cart/types';
 import { ProductItemImages } from 'components/features/ProductItemImages';
 import { ProductPrice } from 'components/features/ProductPrice';
 import FavoriteButton from 'components/features/FavoriteButton';
 import { TrashIcon } from 'components/icons';
 import { isSparePart } from 'services/ProductService';
-import { Button } from 'components/ui';
+import { Button } from 'shared/ui';
 import { Product } from 'api/types';
 
 interface CartItemProps {

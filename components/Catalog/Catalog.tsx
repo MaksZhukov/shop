@@ -17,15 +17,15 @@ import { Product, SEO } from 'api/types';
 import Filters from 'components/features/Filters';
 import { AutocompleteType, NumberType } from 'components/features/Filters/types';
 import ProductItem from 'components/features/ProductItem';
-import { Typography } from 'components/ui';
+import { Typography } from 'shared/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { ChevronDownIcon, ChevronRightIcon, OptionsIcon } from 'components/icons';
 import { BrandWithSparePartsCount } from 'api/brands/types';
-import { Link, ModalContainer } from 'components/ui';
+import { Link, ModalContainer } from 'shared/ui';
 import { KindSparePartWithSparePartsCount } from 'api/kindSpareParts/types';
-import { WhiteBox } from 'components/ui';
+import { WhiteBox } from 'shared/ui';
 import { TopCategory } from 'api/catalog/types';
 
 type SortItem = {

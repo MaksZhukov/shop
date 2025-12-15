@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { Image as IIamge } from 'api/types';
 import Zoom from './Zoom';
 import { FC } from 'react';
-import { Carousel } from 'components/ui';
+import { Carousel } from 'shared/ui';
 import { backendUrl } from 'services/EnvService';
 
 interface Props {

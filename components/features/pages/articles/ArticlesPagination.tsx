@@ -1,5 +1,5 @@
 import { Box, Pagination, PaginationItem } from '@mui/material';
-import { Link } from 'components/ui';
+import { Link } from 'shared/ui';
 import { useRouter } from 'next/router';
 
 interface ArticlesPaginationProps {

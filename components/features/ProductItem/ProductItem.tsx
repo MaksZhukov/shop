@@ -1,6 +1,6 @@
 import { SxProps, Box } from '@mui/material';
 import FavoriteButton from 'components/features/FavoriteButton';
-import { Typography, WhiteBox, Link } from 'components/ui';
+import { Typography, WhiteBox, Link } from 'shared/ui';
 import { Product } from 'api/types';
 import { isSparePart } from 'services/ProductService';
 import { CartButton } from '../CartButton';

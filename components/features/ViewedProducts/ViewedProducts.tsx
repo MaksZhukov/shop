@@ -4,7 +4,7 @@ import { viewedProductsService } from 'services/LocalStorageService';
 import ProductItem from '../ProductItem';
 import { Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Box } from '@mui/material';
-import { Carousel } from 'components/ui';
+import { Carousel } from 'shared/ui';
 
 export const ViewedProducts = () => {
 	const viewedProducts = viewedProductsService.getViewedProducts();

@@ -1,6 +1,6 @@
 import { Box, Container, Breadcrumbs as MUIBreadcrumbs, Typography } from '@mui/material';
 import { Generation } from 'api/generations/types';
-import { Link } from 'components/ui/Link';
+import { Link } from 'shared/ui/Link';
 import { FC } from 'react';
 import { BreadcrumbItem } from 'types';
 

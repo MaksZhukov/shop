@@ -5,7 +5,7 @@ import { PageAbout } from 'api/pages/types';
 import BlockImages from 'components/BlockImages';
 import Image from 'components/features/Image';
 import ReactMarkdown from 'components/features/ReactMarkdown/ReactMarkdown';
-import { Typography } from 'components/ui';
+import { Typography } from 'shared/ui';
 import { getUrlByMinFormat } from 'services/ImageService';
 import { getPageProps } from 'services/PagePropsService';
 

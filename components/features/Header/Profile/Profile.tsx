@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useStore } from '../../../../store';
 import { PersonIcon } from 'components/icons/PersonIcon';
-import { NavbarButton } from 'components/ui/NavbarButton';
+import { NavbarButton } from 'shared/ui/NavbarButton';
 
 interface Props {
 	onClickSignIn: () => void;

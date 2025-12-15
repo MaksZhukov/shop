@@ -1,5 +1,5 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { Loader, Typography, Link, Carousel } from 'components/ui';
+import { Loader, Typography, Link, Carousel } from 'shared/ui';
 import { observer } from 'mobx-react';
 import Head from 'next/head';
 import { getPageProps } from 'services/PagePropsService';
