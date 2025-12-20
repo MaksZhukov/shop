@@ -41,7 +41,7 @@ export const useCatalogRouter = () => {
 
 	const handleChangeSort = (sort: string) => {
 		const newQuery = { ...router.query, sort };
-		router.push({ pathname: router.pathname, query: newQuery });
+		router.push({ pathname: router.pathname, query: newQuery }, undefined, { shallow: true });
 	};
 
 	return {

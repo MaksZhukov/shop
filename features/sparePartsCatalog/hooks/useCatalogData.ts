@@ -18,7 +18,6 @@ interface UseCatalogDataParams {
 export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataParams) => {
 	const { sort, page, brand, model, generation, kindSparePartSlug, volume, fuel, bodyStyle, transmission } =
 		queryParams;
-
 	const [models, setModels] = useState<ModelSparePartsCountWithGenerationsSparePartsCount[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);
 	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
@@ -55,6 +54,7 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 					}),
 					sold: false
 				},
+				sort,
 				populate: ['brand', 'images'],
 				pagination: { start: (page - 1) * API_DEFAULT_LIMIT }
 			})
@@ -137,4 +137,3 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 		setHoveredCategory
 	};
 };
-

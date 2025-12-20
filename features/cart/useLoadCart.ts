@@ -10,6 +10,7 @@ import { wheelApi } from 'entities/wheel';
 import type { AxiosResponse } from 'axios';
 import { cartApi, cartLocalStorage } from 'entities/cart';
 import type { Cart, StorageCart } from 'entities/cart';
+import { useCallback } from 'react';
 
 const getShoppingCartByTypes = async (
 	cartItems: StorageCart[],
@@ -91,5 +92,5 @@ export const loadCart = async (
 export const useLoadCart = () => {
 	const cartStore = useCartStore();
 	const userStore = useUserStore();
-	return () => loadCart(cartStore, userStore);
+	return useCallback(() => loadCart(cartStore, userStore), [cartStore, userStore]);
 };

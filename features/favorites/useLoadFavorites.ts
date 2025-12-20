@@ -12,6 +12,7 @@ import { favoriteApi } from 'entities/favorite';
 import type { Favorite } from 'entities/favorite';
 import type { StorageFavorite } from 'entities/favorite';
 import { favoriteLocalStorage } from 'entities/favorite';
+import { useCallback } from 'react';
 
 const getFavoritesByTypes = async (
 	favorites: StorageFavorite[],
@@ -93,5 +94,5 @@ export const loadFavorites = async (
 export const useLoadFavorites = () => {
 	const favoriteStore = useFavoriteStore();
 	const userStore = useUserStore();
-	return () => loadFavorites(favoriteStore, userStore);
+	return useCallback(() => loadFavorites(favoriteStore, userStore), [favoriteStore, userStore]);
 };
