@@ -26,7 +26,7 @@ export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
 			});
 		};
 		setupApiInterceptors(getUserJwt, errorResponseUnauthorizedCallback, errorResponseTooManyRequestsCallback);
-	}, [store]);
+	}, [store, enqueueSnackbar]);
 
 	return <>{children}</>;
 };

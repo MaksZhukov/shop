@@ -21,6 +21,7 @@ export const Metrics = () => {
 			  ecommerce:"dataLayer"
 		 });`}</Script>
 			<div>
+				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<img
 					src='https://mc.yandex.ru/watch/91656056'
 					style={{ position: 'absolute', left: '-9999px' }}

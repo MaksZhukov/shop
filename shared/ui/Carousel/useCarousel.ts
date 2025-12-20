@@ -44,6 +44,7 @@ export const useCarousel = (options: EmblaOptionsType = {}) => {
 		};
 
 		handleSelect();
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setScrollSnaps(emblaApi.scrollSnapList());
 
 		emblaApi.on('select', handleSelect);

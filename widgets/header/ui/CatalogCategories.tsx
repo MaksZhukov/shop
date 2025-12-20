@@ -27,6 +27,7 @@ export const CatalogCategories: React.FC = () => {
 
 	useEffect(() => {
 		if (topCategories?.data.data && topCategories.data.data.length > 0) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setHoveredCategory(topCategories.data.data[0]);
 		}
 	}, [topCategories]);

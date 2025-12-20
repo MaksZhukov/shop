@@ -33,6 +33,7 @@ const Autocomplete = <
 				(typeof prevValue === 'string' && value instanceof Object)) &&
 			!isDefaultSet
 		) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setInputValue(value.label);
 			setIsDefaultSet(true);
 		}
@@ -40,6 +41,7 @@ const Autocomplete = <
 
 	useEffect(() => {
 		if (!props.value) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setInputValue('');
 			return;
 		}

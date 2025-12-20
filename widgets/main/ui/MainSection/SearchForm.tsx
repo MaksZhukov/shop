@@ -14,7 +14,7 @@ import { Button } from 'shared/ui';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import qs from 'qs';
-import { Dispatch, SetStateAction, UIEventHandler, useRef, useState, SyntheticEvent } from 'react';
+import { Dispatch, SetStateAction, UIEventHandler, useRef, useState, SyntheticEvent, useCallback } from 'react';
 import { useDebounce, useThrottle } from 'rooks';
 import { OFFSET_SCROLL_LOAD_MORE } from 'shared/constants';
 import { BODY_STYLES_OPTIONS, FUELS_OPTIONS, TRANSMISSIONS_OPTIONS } from 'entities/car';
@@ -140,7 +140,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 		setIsLoadingMore(false);
 	});
 
-	const fetchKindSparePartsRef = useRef(async (value: string) => {
+	const fetchKindSpareParts = async (value: string) => {
 		if (abortControllerRef.current) {
 			abortControllerRef.current.abort();
 		}
@@ -159,9 +159,9 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 			}
 		}
 		setIsLoading(false);
-	});
+	};
 
-	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
+	const debouncedFetchKindSpareParts = useDebounce(fetchKindSpareParts, 300);
 
 	const updateValue = (id: string, selected: AutocompleteChangeEvent | string | null) => {
 		const value = typeof selected === 'string' ? selected : selected?.value || null;
@@ -241,7 +241,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 
 	const handleInputChangeKindSparePart = (_: SyntheticEvent<Element, Event>, value: string) => {
 		setIsLoading(true);
-		debouncedFetchKindSparePartsRef(value);
+		debouncedFetchKindSpareParts(value);
 	};
 
 	const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLDivElement> & UIEventHandler<HTMLUListElement> = (
@@ -333,6 +333,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal 
 		disabled: !values.model
 	});
 
+	// eslint-disable-next-line react-hooks/refs
 	const kindSparePartAutocompleteProps = createAutocompleteProps({
 		options: kindSpareParts.data.map((item) => ({ label: item.name, value: item.slug })),
 		noOptionsText,

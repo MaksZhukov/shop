@@ -23,23 +23,25 @@ export const useCatalogRouter = () => {
 			slug.push(generationValue);
 		}
 
+		const newQuery = { ...router.query };
+
 		Object.keys(restFiltersValues).forEach((key) => {
 			if (restFiltersValues[key as keyof typeof restFiltersValues]) {
-				router.query[key] = restFiltersValues[key as keyof typeof restFiltersValues] as string;
+				newQuery[key] = restFiltersValues[key as keyof typeof restFiltersValues] as string;
 			} else {
-				delete router.query[key];
+				delete newQuery[key];
 			}
 		});
 
-		router.query['slug'] = slug;
-		router.query['page'] = '1';
+		newQuery['slug'] = slug;
+		newQuery['page'] = '1';
 
-		router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: false });
+		router.push({ pathname: router.pathname, query: newQuery }, undefined, { shallow: false });
 	};
 
 	const handleChangeSort = (sort: string) => {
-		router.query.sort = sort;
-		router.push({ pathname: router.pathname, query: router.query });
+		const newQuery = { ...router.query, sort };
+		router.push({ pathname: router.pathname, query: newQuery });
 	};
 
 	return {
@@ -47,4 +49,3 @@ export const useCatalogRouter = () => {
 		handleChangeSort
 	};
 };
-

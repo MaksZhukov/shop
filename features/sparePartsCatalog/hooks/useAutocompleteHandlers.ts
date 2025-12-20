@@ -46,6 +46,7 @@ export const useAutocompleteHandlers = ({
 	// Sync kindSparePart prop with state
 	useEffect(() => {
 		if (kindSparePart) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setKindSpareParts({
 				data: [kindSparePart],
 				meta: {}
@@ -105,7 +106,7 @@ export const useAutocompleteHandlers = ({
 		setIsLoadingMore(false);
 	});
 
-	const fetchKindSparePartsRef = useRef(async (value: string) => {
+	const fetchKindSpareParts = async (value: string) => {
 		if (abortControllerRef.current) {
 			abortControllerRef.current.abort();
 		}
@@ -124,9 +125,9 @@ export const useAutocompleteHandlers = ({
 			}
 		}
 		setIsLoading(false);
-	});
+	};
 
-	const debouncedFetchKindSparePartsRef = useDebounce(fetchKindSparePartsRef.current, 300);
+	const debouncedFetchKindSpareParts = useDebounce(fetchKindSpareParts, 300);
 
 	const handleOpenAutocomplete =
 		<T extends any>(
@@ -188,7 +189,7 @@ export const useAutocompleteHandlers = ({
 
 	const handleInputChangeKindSparePart = (_: any, value: string) => {
 		setIsLoading(true);
-		debouncedFetchKindSparePartsRef(value);
+		debouncedFetchKindSpareParts(value);
 	};
 
 	const handleScrollKindSparePartAutocomplete = (event: React.UIEvent<HTMLDivElement | HTMLUListElement>) => {
@@ -223,4 +224,3 @@ export const useAutocompleteHandlers = ({
 		setIsReloadKindSpareParts
 	};
 };
-
