@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "prepare": "husky"
   },
   "dependencies": {
     "@babel/core": "^7.28.5",
@@ -51,6 +52,7 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.0.10",
+    "husky": "^9.1.7",
     "typescript": "^5.9.3"
   }
 }
