@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
-    "prepare": "husky"
+    "prepare": "npx husky || true"
   },
   "dependencies": {
     "@babel/core": "^7.28.5",
