@@ -1,5 +1,5 @@
 import { Metrics } from 'app';
-import { golos } from 'fonts';
+import { golos } from 'shared/fonts';
 import { Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document() {

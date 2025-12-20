@@ -1,5 +1,5 @@
 import { Components, createTheme, Theme, ThemeOptions } from '@mui/material';
-import { golos } from 'fonts';
+import { golos } from 'shared/fonts';
 import mediaQuery from 'css-mediaquery';
 
 export type DeviceType = 'desktop' | 'mobile';
