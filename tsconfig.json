@@ -19,7 +19,7 @@
     "jsx": "react-jsx",
     "incremental": true,
     "experimentalDecorators": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "plugins": [
       {
         "name": "next"
