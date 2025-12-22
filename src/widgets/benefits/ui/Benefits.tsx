@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { BenefitsProps } from '../benefitsTypes';
+import type { BenefitsProps } from '../benefitsTypes';
 import { getBenefitsData } from '../benefitsConfig';
 import { BenefitsGrid } from './BenefitsGrid';
 import { BenefitsCarousel } from './BenefitsCarousel';

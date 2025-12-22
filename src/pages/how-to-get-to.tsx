@@ -1,11 +1,13 @@
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { pageApi, DefaultPage } from 'entities/page';
-import { Video } from 'shared/api/types';
+import type { Video } from 'shared/api/types';
 import { ReactMarkdown } from 'shared/ui';
 import { FC } from 'react';
-import ReactPlayer from 'react-player';
+import dynamic from 'next/dynamic';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { backendUrl } from 'shared/services/EnvService';
+
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 interface Props {
 	page: DefaultPage & { content: string; text: string; video: Video };

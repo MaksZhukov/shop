@@ -7,7 +7,7 @@ import {
 	TRANSMISSIONS
 } from 'entities/car';
 import { AutocompleteType, NumberType } from 'features/productFilters';
-import { GetSparePartsFiltersConfigParams } from './types';
+import type { GetSparePartsFiltersConfigParams } from './types';
 
 export const getSparePartsFiltersConfig = ({
 	brands,

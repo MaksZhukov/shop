@@ -1,7 +1,7 @@
-import { Filters } from 'shared/api/types';
+import type { Filters } from 'shared/api/types';
 import { getParamByRelation } from 'shared/services/ParamsService';
 import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'entities/car';
-import { FilterValues } from '../types';
+import type { FilterValues } from '../types';
 
 export const generateFiltersByQuery = ({
 	brand,

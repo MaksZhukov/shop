@@ -1,4 +1,4 @@
-import { Image } from 'shared/api/types';
+import type { Image } from 'shared/api/types';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FC } from 'react';

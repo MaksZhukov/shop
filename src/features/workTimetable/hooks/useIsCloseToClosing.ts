@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { WorkingHour } from 'features/workTimetable/workTimetableTypes';
+import type { WorkingHour } from 'features/workTimetable/workTimetableTypes';
 import { getCurrentTimeInGMT3 } from 'shared/utils/dateUtils';
 import { useCurrentSchedule } from 'features/workTimetable/hooks/useCurrentSchedule';
 import { useIsCurrentlyOpen } from 'features/workTimetable/hooks/useIsCurrentlyOpen';

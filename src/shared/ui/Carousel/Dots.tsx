@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { DotsProps } from './types';
+import type { DotsProps } from './types';
 
 export const Dots: React.FC<DotsProps> = ({ scrollSnaps, selectedIndex, onDotClick }) => {
 	if (scrollSnaps.length <= 1) return null;

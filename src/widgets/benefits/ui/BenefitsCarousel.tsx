@@ -1,5 +1,5 @@
 import { Carousel } from 'shared/ui/Carousel';
-import { BenefitItem } from '../benefitsTypes';
+import type { BenefitItem } from '../benefitsTypes';
 import { BenefitCard } from './BenefitCard';
 import { Box } from '@mui/material';
 

@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse, CollectionParams } from 'shared/api/types';
-import { WheelDiameterCenterHole } from './wheelDiameterCenterHoleTypes';
+import type { ApiResponse, CollectionParams } from 'shared/api/types';
+import type { WheelDiameterCenterHole } from './wheelDiameterCenterHoleTypes';
 
 export const wheelDiameterCenterHoleApi = {
 	fetchWheelDiameterCenterHoles: (params?: CollectionParams) =>

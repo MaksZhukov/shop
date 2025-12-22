@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse, CollectionParams } from 'shared/api/types';
-import { Tire } from './tireTypes';
+import type { ApiResponse, CollectionParams } from 'shared/api/types';
+import type { Tire } from './tireTypes';
 
 export const tireApi = {
 	fetchTires: (params?: CollectionParams) => api.get<ApiResponse<Tire[]>>('/tires', { params }),

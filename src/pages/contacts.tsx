@@ -2,7 +2,7 @@ import { Button, Input, Link, ListItemButton, useMediaQuery } from '@mui/materia
 import { Box } from '@mui/material';
 import { emailApi } from 'entities/email';
 import { pageApi, PageContacts } from 'entities/page';
-import { LinkWithImage } from 'shared/api/types';
+import type { LinkWithImage } from 'shared/api/types';
 import { BlockImages } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';

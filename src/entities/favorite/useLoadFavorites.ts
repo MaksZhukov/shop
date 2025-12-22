@@ -1,14 +1,14 @@
 import { cabinApi } from 'entities/cabin';
 import { sparePartApi } from 'entities/sparePart';
 import { tireApi } from 'entities/tire';
-import { ApiResponse } from 'shared/api/types';
-import { CollectionParams } from 'shared/api/types';
+import type { ApiResponse } from 'shared/api/types';
+import type { CollectionParams } from 'shared/api/types';
 import { Product } from 'entities/product';
 import { wheelApi } from 'entities/wheel';
 import { AxiosResponse } from 'axios';
 import { favoriteApi } from './favoriteApi';
-import { Favorite } from './favoriteTypes';
-import { StorageFavorite } from './favoriteLocalStorageTypes';
+import type { Favorite } from './favoriteTypes';
+import type { StorageFavorite } from './favoriteLocalStorageTypes';
 import { favoriteLocalStorage } from './favoriteLocalStorage';
 import { useFavoriteStore } from './useFavoriteStore';
 import { useUserStore } from 'entities/user/useUserStore';
@@ -91,6 +91,3 @@ export const useLoadFavorites = () => {
 		favoritesStore.setIsLoading(false);
 	};
 };
-
-
-

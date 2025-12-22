@@ -2,7 +2,7 @@ import { Box, Button, Input } from '@mui/material';
 import Autocomplete from 'shared/ui/Autocomplete';
 import { ChangeEvent, useState } from 'react';
 import styles from './Filters.module.scss';
-import { AutocompleteType, NumberType } from '../types';
+import type { AutocompleteType, NumberType } from '../types';
 import { ChevronUpIcon, ChevronDownIcon } from 'shared/icons';
 
 interface Props {

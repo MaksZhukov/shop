@@ -1,5 +1,5 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { Image as IImage } from 'shared/api/types';
+import type { Image as IImage } from 'shared/api/types';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
 import { Link, Typography, WhiteBox } from 'shared/ui';

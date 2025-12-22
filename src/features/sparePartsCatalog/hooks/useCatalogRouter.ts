@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { FilterValues } from '../types';
+import type { FilterValues } from '../types';
 
 export const useCatalogRouter = () => {
 	const router = useRouter();

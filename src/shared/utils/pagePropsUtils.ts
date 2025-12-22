@@ -1,4 +1,4 @@
-import { ApiResponse } from 'shared/api/types';
+import type { ApiResponse } from 'shared/api/types';
 import { AxiosError, AxiosResponse } from 'axios';
 import { UAParser } from 'ua-parser-js';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';

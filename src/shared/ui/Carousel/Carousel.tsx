@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useCarousel } from './useCarousel';
 import { NavigationArrow } from './NavigationArrow';
 import { Dots } from './Dots';
-import { CarouselProps } from './types';
+import type { CarouselProps } from './types';
 import { Box } from '@mui/material';
 import styles from './Carousel.module.scss';
 

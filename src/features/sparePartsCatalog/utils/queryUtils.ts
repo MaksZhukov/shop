@@ -1,4 +1,4 @@
-import { ParsedQueryParams, QueryParams } from '../types';
+import type { ParsedQueryParams, QueryParams } from '../types';
 
 export const parseRouterQuery = (query: unknown): ParsedQueryParams => {
 	const {

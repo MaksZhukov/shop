@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse, CollectionParams } from 'shared/api/types';
-import { WheelDiskOffset } from './wheelDiskOffsetTypes';
+import type { ApiResponse, CollectionParams } from 'shared/api/types';
+import type { WheelDiskOffset } from './wheelDiskOffsetTypes';
 
 export const wheelDiskOffsetApi = {
 	fetchWheelDiskOffsets: (params?: CollectionParams) =>

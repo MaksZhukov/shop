@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { userApi } from 'entities/user';
-import { ModalAuthStates } from '../types';
+import type { ModalAuthStates } from '../types';
 
 interface Props {
 	isLoading: boolean;

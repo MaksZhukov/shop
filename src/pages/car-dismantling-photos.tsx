@@ -1,5 +1,5 @@
 import { pageApi, DefaultPage } from 'entities/page';
-import { Image as IImage } from 'shared/api/types';
+import type { Image as IImage } from 'shared/api/types';
 import { Gallery } from 'widgets/gallery';
 import type { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';

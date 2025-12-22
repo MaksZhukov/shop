@@ -4,10 +4,10 @@ import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { sparePartApi } from 'entities/sparePart';
 import { modelApi, ModelSparePartsCountWithGenerationsSparePartsCount } from 'entities/model';
 import { generationApi } from 'entities/generation';
-import { Generation } from 'entities/generation/generationTypes';
+import type { Generation } from 'entities/generation/generationTypes';
 import { engineVolumeApi, EngineVolume } from 'entities/engineVolume';
 import { catalogApi, TopCategory } from 'entities/catalog';
-import { FilterValues, ParsedQueryParams } from '../types';
+import type { FilterValues, ParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
 
 interface UseCatalogDataParams {

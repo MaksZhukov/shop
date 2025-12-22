@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { autocomiseApi } from 'entities/autocomise';
 import { Autocomis } from 'entities/autocomise';
 import { pageApi, DefaultPage } from 'entities/page';
-import { ApiResponse } from 'shared/api/types';
+import type { ApiResponse } from 'shared/api/types';
 import { CardItem } from 'shared/ui';
 import { WhiteBox } from 'shared/ui';
 import { NextPage } from 'next';

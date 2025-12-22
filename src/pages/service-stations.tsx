@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { pageApi, DefaultPage } from 'entities/page';
 import { serviceStationApi, ServiceStation } from 'entities/serviceStation';
-import { ApiResponse } from 'shared/api/types';
+import type { ApiResponse } from 'shared/api/types';
 import { CardItem } from 'shared/ui';
 import { WhiteBox } from 'shared/ui';
 import { NextPage } from 'next';

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { WorkingHour } from '../workTimetableTypes';
+import type { WorkingHour } from '../workTimetableTypes';
 import { getCurrentTimeInGMT3 } from 'shared/utils/dateUtils';
 
 export const useCurrentSchedule = (workingHours: WorkingHour[]) => {

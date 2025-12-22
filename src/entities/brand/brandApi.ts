@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse, CollectionParams } from 'shared/api/types';
-import { Brand } from './brandTypes';
+import type { ApiResponse, CollectionParams } from 'shared/api/types';
+import type { Brand } from './brandTypes';
 
 export const brandApi = {
 	fetchBrands: (params: CollectionParams) =>

@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material';
-import { BenefitItem } from '../benefitsTypes';
+import type { BenefitItem } from '../benefitsTypes';
 import { BenefitCard } from './BenefitCard';
 
 interface BenefitsGridProps {

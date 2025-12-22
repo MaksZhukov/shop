@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse, CollectionParams } from 'shared/api/types';
-import { KindSparePart } from './kindSparePartTypes';
+import type { ApiResponse, CollectionParams } from 'shared/api/types';
+import type { KindSparePart } from './kindSparePartTypes';
 
 export const kindSparePartApi = {
 	fetchKindSpareParts: <T extends KindSparePart>(

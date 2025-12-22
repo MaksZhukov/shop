@@ -1,4 +1,4 @@
-import { SortItem } from '../articlesListTypes';
+import type { SortItem } from '../articlesListTypes';
 
 export const DEFAULT_SORT = 'createdAt:desc';
 export const LIMIT = 12;

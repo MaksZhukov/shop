@@ -1,7 +1,7 @@
 import { articlesApi } from 'entities/article';
-import { Article } from 'entities/article/articleTypes';
+import type { Article } from 'entities/article/articleTypes';
 import { pageApi, DefaultPage } from 'entities/page';
-import { ApiResponse } from 'shared/api/types';
+import type { ApiResponse } from 'shared/api/types';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getPageProps } from 'shared/utils/pagePropsUtils';

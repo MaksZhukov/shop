@@ -1,6 +1,6 @@
 import { Box, useMediaQuery } from '@mui/material';
 import Link from '@mui/material/Link';
-import { Image as IImage } from 'shared/api/types';
+import type { Image as IImage } from 'shared/api/types';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';

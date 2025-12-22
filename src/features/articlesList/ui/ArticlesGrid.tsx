@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { Article } from 'entities/article/articleTypes';
+import type { Article } from 'entities/article/articleTypes';
 import { ArticleItem } from 'entities/article/ui/ArticleItem';
 import { Loader } from 'shared/ui';
 

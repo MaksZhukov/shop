@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import { useCurrentSchedule } from '../hooks/useCurrentSchedule';
-import { WorkingHour } from '../workTimetableTypes';
+import type { WorkingHour } from '../workTimetableTypes';
 
 interface WorkingHoursListProps {
 	workingHours: WorkingHour[];

@@ -1,6 +1,6 @@
-import { Cart } from './cartTypes';
+import type { Cart } from './cartTypes';
 import { BaseStorageService } from 'shared/services';
-import { StorageCart } from './cartLocalStorageTypes';
+import type { StorageCart } from './cartLocalStorageTypes';
 
 export class CartLocalStorage extends BaseStorageService {
 	private readonly CART_KEY = 'cart';

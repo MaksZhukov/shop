@@ -3,11 +3,9 @@ import { Breadcrumbs } from 'shared/ui';
 import { HeadSEO } from 'app';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import dynamic from 'next/dynamic';
-import { Header } from 'widgets/header';
-import { Footer } from 'widgets/footer';
 import { Layout } from 'shared/ui';
 import { RouteShield } from 'features/routeShield';
 import { authLocalStorage } from 'entities/user/authLocalStorage';
@@ -20,9 +18,12 @@ import { ApiProvider } from 'app/providers/ApiProvider';
 import { useLoadFavorites } from 'features/favorites/useLoadFavorites';
 import { useLoadCart } from 'features/cart/useLoadCart';
 import { useSetJWT } from 'features/user/useSetJWT';
+import { Header } from 'widgets/header';
+import { Footer } from 'widgets/footer';
 import { useLoadUserInfo } from 'features/user/useLoadUserInfo';
 import './app.scss';
 
+// Lazy load components that don't need SSR
 const ScrollUp = dynamic(() => import('features/scrollUp').then((mod) => ({ default: mod.ScrollUp })), {
 	ssr: false
 });
@@ -52,40 +53,27 @@ function AppContent({ Component, pageProps }: AppProps) {
 		tryFetchData();
 	}, [loadFavorites, loadCart, setJWT, loadUserInfo]);
 
-	const getHeadSEOImage = () => {
-		let image = null;
-		if (pageProps.data) {
-			Object.keys(pageProps.data).forEach((key) => {
+	const seoImage = useMemo(() => {
+		const findImage = (obj: any): any => {
+			if (!obj) return null;
+
+			for (const key in obj) {
 				if (key.includes('image') || key.includes('banner')) {
-					image =
-						Array.isArray(pageProps.data[key]) && pageProps.data[key][0]?.url
-							? pageProps.data[key][0]
-							: pageProps.data[key]?.url
-							? pageProps.data[key]
-							: null;
+					const value = obj[key];
+					if (Array.isArray(value) && value[0]?.url) {
+						return value[0];
+					}
+					if (value?.url) {
+						return value;
+					}
 				}
-			});
-			if (image) {
-				return image;
 			}
-		}
-		if (pageProps.page) {
-			Object.keys(pageProps.page).forEach((key) => {
-				if (key.includes('image')) {
-					image =
-						Array.isArray(pageProps.page[key]) && pageProps.page[key][0]?.url
-							? pageProps.page[key][0]
-							: pageProps.page[key]?.url
-							? pageProps.page[key]
-							: null;
-				}
-			});
-			if (image) {
-				return image;
-			}
-		}
-		return image;
-	};
+			return null;
+		};
+
+		return findImage(pageProps.data) || findImage(pageProps.page) || null;
+	}, [pageProps.data, pageProps.page]);
+
 	const handleRenderError = (error: Error) => {
 		if (process.env.NODE_ENV === 'production') {
 			// send(
@@ -105,7 +93,7 @@ function AppContent({ Component, pageProps }: AppProps) {
 				title={pageProps.page?.seo?.title}
 				description={pageProps.page?.seo?.description}
 				keywords={pageProps.page?.seo?.keywords}
-				image={getHeadSEOImage()}
+				image={seoImage}
 			></HeadSEO>
 			<Header />
 			<RouteShield>

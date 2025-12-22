@@ -1,5 +1,5 @@
 import { formatNumberWithSeparators } from 'shared/utils/numberUtils';
-import { BenefitItem } from './benefitsTypes';
+import type { BenefitItem } from './benefitsTypes';
 
 export const getBenefitsData = (): BenefitItem[] => [
 	{

@@ -1,11 +1,11 @@
 import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
-import { Brand } from 'entities/brand/brandTypes';
+import type { Brand } from 'entities/brand/brandTypes';
 import { API_MAX_LIMIT } from 'shared/api/constants';
 import { generationApi } from 'entities/generation';
-import { Generation } from 'entities/generation/generationTypes';
+import type { Generation } from 'entities/generation/generationTypes';
 import { kindSparePartApi, KindSparePart } from 'entities/kindSparePart';
 import { modelApi, Model } from 'entities/model';
-import { ApiResponse, Filters } from 'shared/api/types';
+import type { ApiResponse, Filters } from 'shared/api/types';
 import axios, { AxiosResponse } from 'axios';
 import Autocomplete from 'shared/ui/Autocomplete';
 import { Typography, WhiteBox } from 'shared/ui';

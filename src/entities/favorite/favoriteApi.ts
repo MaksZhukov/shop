@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse } from 'shared/api/types';
-import { Favorite } from './favoriteTypes';
+import type { ApiResponse } from 'shared/api/types';
+import type { Favorite } from './favoriteTypes';
 
 export const favoriteApi = {
 	fetchFavorites: () =>

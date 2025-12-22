@@ -1,4 +1,4 @@
-import { SEO } from 'shared/api/types';
+import type { SEO } from 'shared/api/types';
 
 export const withGeneration = (seo: SEO, replace: string, generation?: string) => {
 	if (generation) {

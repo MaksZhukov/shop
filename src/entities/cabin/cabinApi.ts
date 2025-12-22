@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse, CollectionParams } from 'shared/api/types';
-import { Cabin } from './cabinTypes';
+import type { ApiResponse, CollectionParams } from 'shared/api/types';
+import type { Cabin } from './cabinTypes';
 
 export const cabinApi = {
 	fetchCabins: (params?: CollectionParams) =>

@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse } from 'shared/api/types';
-import { TopCategory } from './catalogTypes';
+import type { ApiResponse } from 'shared/api/types';
+import type { TopCategory } from './catalogTypes';
 
 export const catalogApi = {
 	fetchTopCategories: () => api.get<ApiResponse<TopCategory[]>>(`/catalog/top-categories`)

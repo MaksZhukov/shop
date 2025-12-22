@@ -1,9 +1,9 @@
 import { cabinApi } from 'entities/cabin';
 import { sparePartApi } from 'entities/sparePart';
 import { tireApi } from 'entities/tire';
-import { ApiResponse } from 'shared/api/types';
-import { CollectionParams } from 'shared/api/types';
-import { Product } from 'entities/product';
+import type { ApiResponse } from 'shared/api/types';
+import type { CollectionParams } from 'shared/api/types';
+import type { Product } from 'entities/product';
 import { wheelApi } from 'entities/wheel';
 import { AxiosResponse } from 'axios';
 import { cartApi, Cart, cartLocalStorage, StorageCart } from './index';

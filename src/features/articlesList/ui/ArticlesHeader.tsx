@@ -3,7 +3,7 @@ import { Typography } from 'shared/ui';
 import { ChevronDownIcon } from 'shared/icons';
 import { useState } from 'react';
 import { SORT_ITEMS } from '../model';
-import { SortItem } from '../articlesListTypes';
+import type { SortItem } from '../articlesListTypes';
 
 interface ArticlesHeaderProps {
 	currentSort: string;

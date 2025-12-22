@@ -1,4 +1,4 @@
-import { WorkingHour } from './workTimetableTypes';
+import type { WorkingHour } from './workTimetableTypes';
 
 export const WORKING_HOURS: WorkingHour[] = [
 	{ day: 'Понедельник', hours: '10:00 - 18:00', dayIndex: 1 },

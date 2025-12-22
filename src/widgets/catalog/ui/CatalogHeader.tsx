@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { Typography } from 'shared/ui';
 import { useState } from 'react';
 import { ChevronDownIcon, OptionsIcon } from 'shared/icons';
-import { SEO } from 'shared/api/types';
+import type { SEO } from 'shared/api/types';
 
 type SortItem = {
 	value: string;

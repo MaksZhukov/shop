@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import { WorkingHour } from '../workTimetableTypes';
+import type { WorkingHour } from '../workTimetableTypes';
 import { WorkingHoursList } from './WorkingHoursList';
 
 interface MobileScheduleProps {

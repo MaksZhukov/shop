@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
 		dangerouslyAllowLocalIP: true
 	},
 	experimental: {
-		largePageDataBytes: 200 * 1000
+		largePageDataBytes: 200 * 1500
 	}
 };
 

@@ -1,5 +1,5 @@
 import { LinkProps } from '@mui/material';
-import { Image as IImage } from 'shared/api/types';
+import type { Image as IImage } from 'shared/api/types';
 import { Image } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { CSSProperties, FC, HTMLAttributeAnchorTarget } from 'react';

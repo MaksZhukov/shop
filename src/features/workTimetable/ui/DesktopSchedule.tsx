@@ -1,7 +1,7 @@
 import { Popover } from '@mui/material';
 import { FC } from 'react';
 import { ModalContainer } from 'shared/ui';
-import { WorkingHour } from '../workTimetableTypes';
+import type { WorkingHour } from '../workTimetableTypes';
 import { WorkingHoursList } from './WorkingHoursList';
 
 interface DesktopScheduleProps {

@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Modal, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { Image as IIamge } from 'shared/api/types';
+import type { Image as IIamge } from 'shared/api/types';
 import { Zoom } from './Zoom';
 import { FC } from 'react';
 import { Carousel } from 'shared/ui';

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { userApi } from 'entities/user';
-import { ModalAuthStates } from '../types';
+import type { ModalAuthStates } from '../types';
 import { useLogin } from 'features/user';
 
 interface Props {

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import AuthRegisterForm from './AuthRegisterForm';
 import ForgotForm from './ForgotForm/ForgotForm';
 import ResetForm from './ResetForm';
-import { ModalAuthStates } from './types';
+import type { ModalAuthStates } from './types';
 import { ModalContainer } from 'shared/ui';
 
 interface Props {

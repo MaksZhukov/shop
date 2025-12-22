@@ -1,7 +1,7 @@
 import { api } from 'shared/api';
-import { ApiResponse, CollectionParams } from 'shared/api/types';
+import type { ApiResponse, CollectionParams } from 'shared/api/types';
 import { getRandomBackendLocalUrl } from 'shared/services/BackendUrlService';
-import { DefaultPage } from './pageTypes';
+import type { DefaultPage } from './pageTypes';
 
 export const pageApi = {
 	fetchPage:

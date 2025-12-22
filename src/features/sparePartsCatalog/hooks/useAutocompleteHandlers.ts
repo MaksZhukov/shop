@@ -2,14 +2,14 @@ import { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import { useSnackbar } from 'notistack';
 import { useDebounce, useThrottle } from 'rooks';
 import axios, { AxiosResponse } from 'axios';
-import { ApiResponse } from 'shared/api/types';
+import type { ApiResponse } from 'shared/api/types';
 import { kindSparePartApi, KindSparePart } from 'entities/kindSparePart';
 import { engineVolumeApi, EngineVolume } from 'entities/engineVolume';
 import { generationApi } from 'entities/generation';
-import { Generation } from 'entities/generation/generationTypes';
+import type { Generation } from 'entities/generation/generationTypes';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { OFFSET_SCROLL_LOAD_MORE } from 'shared/constants';
-import { FilterValues } from '../types';
+import type { FilterValues } from '../types';
 import { ERROR_MESSAGES } from '../constants';
 
 interface UseAutocompleteHandlersParams {

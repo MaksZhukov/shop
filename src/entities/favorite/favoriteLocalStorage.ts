@@ -1,6 +1,6 @@
-import { Favorite } from './favoriteTypes';
+import type { Favorite } from './favoriteTypes';
 import { BaseStorageService } from 'shared/services';
-import { StorageFavorite } from './favoriteLocalStorageTypes';
+import type { StorageFavorite } from './favoriteLocalStorageTypes';
 
 export class FavoriteLocalStorage extends BaseStorageService {
 	private readonly FAVORITES_KEY = 'favorites';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, IconButton } from '@mui/material';
 import { ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, ChevronDownIcon } from 'shared/icons';
-import { NavigationArrowProps } from './types';
+import type { NavigationArrowProps } from './types';
 
 export const NavigationArrow: React.FC<NavigationArrowProps> = ({ direction, onClick, axis = 'x', sx, buttonSx }) => {
 	const isPrev = direction === 'prev';

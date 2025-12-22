@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
-import { ApiResponse, CollectionParams } from 'shared/api/types';
-import { Model } from './modelTypes';
+import type { ApiResponse, CollectionParams } from 'shared/api/types';
+import type { Model } from './modelTypes';
 
 export const modelApi = {
 	fetchModels: <T extends Model>(params: CollectionParams) => api.get<ApiResponse<T[]>>('/models', { params }),

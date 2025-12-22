@@ -1,4 +1,4 @@
-import { SEO } from 'shared/api/types';
+import type { SEO } from 'shared/api/types';
 
 export const withKindSparePart = (seo: SEO, appendAfter: string, kindSparePart?: string) => {
 	if (kindSparePart) {

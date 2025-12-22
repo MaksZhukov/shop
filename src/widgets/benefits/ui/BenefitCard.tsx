@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material';
 import { Typography, WhiteBox } from 'shared/ui';
-import { BenefitCardProps } from '../benefitsTypes';
+import type { BenefitCardProps } from '../benefitsTypes';
 
 export const BenefitCard: React.FC<BenefitCardProps> = ({ item, sparePartsTotal, sx }) => {
 	const theme = useTheme();

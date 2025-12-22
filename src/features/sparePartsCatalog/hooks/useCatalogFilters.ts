@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ParsedQueryParams, FilterValues } from '../types';
+import type { ParsedQueryParams, FilterValues } from '../types';
 
 export const useCatalogFilters = (queryParams: ParsedQueryParams) => {
 	const { brand, model, generation, kindSparePartSlug, volume, fuel, bodyStyle, transmission } = queryParams;
