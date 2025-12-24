@@ -1,6 +1,7 @@
 import { Components, createTheme, Theme, ThemeOptions } from '@mui/material';
 import { golos } from 'shared/fonts';
 import mediaQuery from 'css-mediaquery';
+import type React from 'react';
 
 export type DeviceType = 'desktop' | 'mobile';
 
@@ -224,11 +225,38 @@ const createComponentConfig = (deviceType: DeviceType): Components<Theme> => ({
 				},
 				'&::after': {
 					borderBottom: 'none!important'
+				},
+				'&.MuiInputBase-adornedStart input': {
+					paddingLeft: '8px'
 				}
+			}
+		}
+	},
+	MuiSelect: {
+		defaultProps: {
+			onClose: () => {
+				// Blur the select input after menu closes or item is selected
+				setTimeout(() => {
+					const activeElement = document.activeElement;
+					if (activeElement && activeElement instanceof HTMLElement) {
+						// Check if active element is a select input or contains select classes
+						if (
+							activeElement.classList.contains('MuiSelect-select') ||
+							activeElement.classList.contains('MuiInputBase-input') ||
+							activeElement.closest('.MuiSelect-root')
+						) {
+							activeElement.blur();
+						}
+					}
+				}, 0);
+			}
+		},
+		styleOverrides: {
+			select: {
+				padding: 0
 			},
-			input: {
-				paddingLeft: '8px',
-				paddingRight: '8px'
+			outlined: {
+				padding: 0
 			}
 		}
 	},
@@ -243,7 +271,6 @@ const createComponentConfig = (deviceType: DeviceType): Components<Theme> => ({
 	MuiPopover: {
 		styleOverrides: {
 			paper: {
-				backgroundColor: 'transparent',
 				boxShadow: 'none'
 			}
 		}

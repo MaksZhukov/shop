@@ -26,3 +26,5 @@ export { CloseIcon } from './CloseIcon';
 export { OptionsIcon } from './OptionsIcons';
 export { TrashIcon } from './TrashIcon';
 export { TrashFilledIcon } from './TrashFilledIcon';
+export { AttachFileIcon } from './AttachFileIcon';
+export { InfoIcon } from './InfoIcon';

@@ -5,6 +5,7 @@ import type { Cart } from './cartTypes';
 export class CartStore {
 	items: Cart[] = [];
 	isLoading = false;
+	selectedItemsForCheckout: number[] = [];
 
 	constructor() {
 		makeAutoObservable(this);
@@ -32,5 +33,13 @@ export class CartStore {
 
 	clearItems() {
 		this.items = [];
+	}
+
+	setSelectedItemsForCheckout(itemIds: number[]) {
+		this.selectedItemsForCheckout = itemIds;
+	}
+
+	clearSelectedItemsForCheckout() {
+		this.selectedItemsForCheckout = [];
 	}
 }

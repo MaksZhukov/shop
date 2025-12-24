@@ -1,20 +1,28 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Divider, Typography, useTheme } from '@mui/material';
 import { Button, WhiteBox } from 'shared/ui';
 import { AnyQuestionsLeft } from 'shared/ui';
 
-interface CartSummaryProps {
+interface OrderSummaryProps {
 	selectedItemsCount: number;
 	totalAmount: number;
 	onCheckout: () => void;
+	buttonText?: string;
+	disclaimerText: string | React.ReactNode;
 }
 
-export const CartSummary = ({ selectedItemsCount, totalAmount, onCheckout }: CartSummaryProps) => {
+export const OrderSummary = ({
+	selectedItemsCount,
+	totalAmount,
+	onCheckout,
+	buttonText,
+	disclaimerText
+}: OrderSummaryProps) => {
 	const theme = useTheme();
 
 	return (
 		<Box display='flex' maxWidth={{ xs: '100%', md: '400px' }} gap={1} flexDirection='column'>
-			<WhiteBox>
-				<Box p={2} borderBottom={`1px solid ${theme.palette.custom.divider}`}>
+			<WhiteBox display='flex' flexDirection={{ xs: 'column-reverse', md: 'column' }}>
+				<Box p={2}>
 					<Button
 						size='large'
 						variant='contained'
@@ -23,12 +31,13 @@ export const CartSummary = ({ selectedItemsCount, totalAmount, onCheckout }: Car
 						disabled={totalAmount === 0}
 						onClick={onCheckout}
 					>
-						Перейти к оформлению
+						{buttonText || 'Перейти к оформлению'}
 					</Button>
 					<Typography mt={0.5} textAlign='center' variant='body1' color='custom.text-muted'>
-						Доступные способы и условия доставки можно узнать при оформлении заказа
+						{disclaimerText}
 					</Typography>
 				</Box>
+				<Divider />
 				<Box p={1.5}>
 					<Box display='flex' gap={1} mb={0.5}>
 						<Typography flex={1} variant='body1' color='custom.text-muted'>

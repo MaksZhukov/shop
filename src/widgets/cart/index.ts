@@ -1,1 +1,1 @@
-export { EmptyCart, CartItem, CartHeader, CartSummary, CartList } from './ui';
+export { EmptyCart, CartItem, CartHeader, CartList } from './ui';

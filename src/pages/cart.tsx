@@ -1,15 +1,16 @@
 import { Box, Typography } from '@mui/material';
-import { Loader, WhiteBox } from 'shared/ui';
+import { Loader, MobileQuestionsSection } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { ViewedProducts } from 'features/product';
 import { useStore } from 'app/providers/StoreProvider';
 import { observer } from 'mobx-react';
-import { AnyQuestionsLeft } from 'shared/ui';
 import { useState, useEffect } from 'react';
-import { EmptyCart, CartList, CartSummary } from 'widgets/cart';
+import { EmptyCart, CartList } from 'widgets/cart';
+import { OrderSummary } from 'features/orderRegistration';
 import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
 import { useRemoveCart } from 'features/cart/useRemoveCart';
+import router from 'next/router';
 
 interface Props {}
 
@@ -58,7 +59,8 @@ const Cart: NextPage<Props> = observer(() => {
 	}, [shoppingCartItems]);
 
 	const handleCheckout = () => {
-		// TODO: Implement checkout navigation
+		store.cart.setSelectedItemsForCheckout(selectedItems);
+		router.push('/order-registration', undefined, { shallow: true });
 	};
 
 	if (isLoading) {
@@ -85,27 +87,22 @@ const Cart: NextPage<Props> = observer(() => {
 						onDeleteSelected={handleDeleteSelected}
 						onRemoveItem={handleRemoveItem}
 					/>
-					<CartSummary
+					<OrderSummary
 						selectedItemsCount={selectedCartItems.length}
 						totalAmount={selectedTotal}
 						onCheckout={handleCheckout}
+						disclaimerText='Доступные способы и условия доставки можно узнать при оформлении заказа'
 					/>
 				</Box>
 			</>
 		);
 	};
 
-	const renderMobileQuestions = () => (
-		<WhiteBox display={{ xs: 'block', md: 'none' }} borderRadius={0} ml={-2} mr={-2} pt={3} pb={1} mt={3} px={1}>
-			<AnyQuestionsLeft />
-		</WhiteBox>
-	);
-
 	return (
 		<Box pt={2} pb={{ xs: 0, md: 2 }}>
 			{renderCartContent()}
 			<ViewedProducts />
-			{renderMobileQuestions()}
+			<MobileQuestionsSection />
 		</Box>
 	);
 });
