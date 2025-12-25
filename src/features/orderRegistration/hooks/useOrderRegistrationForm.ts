@@ -92,13 +92,14 @@ export const useOrderRegistrationForm = () => {
 		return true;
 	};
 
-	const handleCheckout = () => {
+	const handleCheckout = (): boolean => {
 		if (!validateForm()) {
 			enqueueSnackbar('Пожалуйста, заполните все обязательные поля', { variant: 'error' });
-			return;
+			return false;
 		}
 		// TODO: Implement checkout logic
 		console.log('Checkout:', formData);
+		return true;
 	};
 
 	return {

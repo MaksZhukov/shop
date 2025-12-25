@@ -99,7 +99,7 @@ function AppContent({ Component, pageProps }: AppProps) {
 			<RouteShield>
 				<ErrorBoundary fallback={<></>} onError={handleRenderError}>
 					<Breadcrumbs breadcrumbs={pageProps.breadcrumbs || []}></Breadcrumbs>
-					<Container sx={{ flex: 1 }}>
+					<Container sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
 						<Component {...pageProps} />
 					</Container>
 				</ErrorBoundary>

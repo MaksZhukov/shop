@@ -1,14 +1,18 @@
 import { Box, Button, Container, Typography } from '@mui/material';
-import { MobileQuestionsSection } from 'shared/ui';
+import { Image, MobileQuestionsSection } from 'shared/ui';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { useRouter } from 'next/router';
 
 const PageNotFound = () => {
 	const router = useRouter();
 	return (
-		<Box p={6} display='flex' flexDirection='column' alignItems='center' gap={2} justifyContent='center'>
+		<Box margin='auto' maxWidth='400px' textAlign='center'>
+			<Image isOnSSR={false} src='/404.png' alt='404' width={178} height={90} />
 			<Typography component='h1' variant='h6' textAlign='center'>
 				Страница не найдена
+			</Typography>
+			<Typography variant='body1' color='text.primary' component='p' mb={2}>
+				Кажется что-то пошло не так, страница не найдена либо не существует
 			</Typography>
 			<Button sx={{ m: 'auto' }} variant='contained' color='primary' onClick={() => router.push('/')}>
 				Вернуться на главную
