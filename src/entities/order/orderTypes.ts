@@ -5,6 +5,11 @@ export type OrderCheckout = {
 	redirect_url: string;
 };
 
+export type OrderCheckoutResponse = {
+	order: Order;
+	checkout?: OrderCheckout;
+};
+
 export type Order = {
 	username: string;
 	email: string;
@@ -12,4 +17,6 @@ export type Order = {
 	transactionId: string;
 	address: string;
 	products: [{ product: Product }];
+	createdAt: string;
+	id: number;
 };

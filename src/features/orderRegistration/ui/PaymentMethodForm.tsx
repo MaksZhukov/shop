@@ -5,9 +5,10 @@ import type { OrderRegistrationFormData, PaymentMethod } from '../types';
 interface PaymentMethodFormProps {
 	formData: OrderRegistrationFormData;
 	onPaymentMethodChange: (paymentMethod: PaymentMethod) => void;
+	disabled?: boolean;
 }
 
-export const PaymentMethodForm = ({ formData, onPaymentMethodChange }: PaymentMethodFormProps) => {
+export const PaymentMethodForm = ({ formData, onPaymentMethodChange, disabled = false }: PaymentMethodFormProps) => {
 	const isPickupPaymentAvailable = formData.deliveryMethod === 'pickup';
 
 	return (
@@ -15,13 +16,14 @@ export const PaymentMethodForm = ({ formData, onPaymentMethodChange }: PaymentMe
 			<Typography variant='h6' component='h2' mb={2}>
 				Способ оплаты *
 			</Typography>
-			<FormControl fullWidth sx={{ mb: 2, maxWidth: '480px' }} required>
+			<FormControl fullWidth sx={{ mb: 2, maxWidth: '480px' }} required disabled={disabled}>
 				<Select
 					value={formData.paymentMethod || ''}
 					onChange={(e) => onPaymentMethodChange(e.target.value as PaymentMethod)}
 					size='medium'
 					displayEmpty
 					required
+					disabled={disabled}
 					MenuProps={{ disablePortal: true, disableScrollLock: true }}
 					renderValue={(value) => {
 						if (!value) {

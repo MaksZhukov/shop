@@ -1,20 +1,28 @@
 import { Box, Typography } from '@mui/material';
 import { Link, MobileQuestionsSection } from 'shared/ui';
-import { OrderRegistrationForm, OrderSummary, useOrderRegistrationForm } from 'features/orderRegistration';
-import { useOrderRegistration } from 'features/orderRegistration/hooks/useOrderRegistration';
-import { OrderSuccess } from 'features/orderRegistration/ui/OrderSuccess';
-import { useState } from 'react';
+import {
+	OrderRegistrationForm,
+	OrderSummary,
+	OrderSuccess,
+	useOrderRegistrationForm,
+	useOrderRegistration,
+	useOrderCheckout
+} from 'features/orderRegistration';
 
 export const OrderRegistration = () => {
-	const [isOrdered, setIsOrdered] = useState(false);
 	const form = useOrderRegistrationForm();
 	const { checkoutItems, totalAmount, getButtonText } = useOrderRegistration();
+	const { isOrdered, orderCheckout, formattedTime, isExpired, handleCheckout } = useOrderCheckout({
+		formData: form.formData,
+		checkoutItems
+	});
 
-	const handleCheckout = () => {
+	const handleCheckoutClick = async () => {
 		const success = form.handleCheckout();
-		if (success) {
-			setIsOrdered(true);
+		if (!success) {
+			return;
 		}
+		await handleCheckout();
 	};
 
 	if (isOrdered) {
@@ -26,12 +34,17 @@ export const OrderRegistration = () => {
 			<Typography variant='h6' component='h1' mb={2}>
 				Оформление заказа
 			</Typography>
+			{orderCheckout?.order && formattedTime && !isExpired && (
+				<Typography variant='body2' color='warning.main' mb={2}>
+					Время на оплату: {formattedTime}
+				</Typography>
+			)}
 			<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} gap={1}>
-				<OrderRegistrationForm form={form} />
+				<OrderRegistrationForm form={form} disabled={!!orderCheckout?.order} />
 				<OrderSummary
 					selectedItemsCount={checkoutItems.length}
 					totalAmount={totalAmount}
-					onCheckout={handleCheckout}
+					onCheckout={handleCheckoutClick}
 					buttonText={getButtonText(form.formData.paymentMethod)}
 					disclaimerText={
 						<>

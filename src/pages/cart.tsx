@@ -111,6 +111,13 @@ export default Cart;
 
 export const getStaticProps = getPageProps(undefined, async () => ({
 	props: {
+		page: {
+			seo: {
+				title: 'Корзина',
+				description: 'Корзина',
+				keywords: 'Корзина'
+			}
+		},
 		breadcrumbs: [
 			{ text: 'Главная', href: '/' },
 			{ text: 'Корзина', href: '/cart' }

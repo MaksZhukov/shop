@@ -6,9 +6,10 @@ import { useOrderRegistrationForm } from '../hooks/useOrderRegistrationForm';
 
 interface OrderRegistrationFormProps {
 	form: ReturnType<typeof useOrderRegistrationForm>;
+	disabled?: boolean;
 }
 
-export const OrderRegistrationForm = ({ form }: OrderRegistrationFormProps) => {
+export const OrderRegistrationForm = ({ form, disabled = false }: OrderRegistrationFormProps) => {
 	const {
 		formData,
 		fileInputRef,
@@ -29,13 +30,19 @@ export const OrderRegistrationForm = ({ form }: OrderRegistrationFormProps) => {
 				onFieldChange={updateField}
 				onUploadClick={handleUploadClick}
 				onFileChange={handleFileChange}
+				disabled={disabled}
 			/>
 			<DeliveryMethodForm
 				formData={formData}
 				onDeliveryMethodChange={handleDeliveryMethodChange}
 				onFieldChange={updateField}
+				disabled={disabled}
 			/>
-			<PaymentMethodForm formData={formData} onPaymentMethodChange={handlePaymentMethodChange} />
+			<PaymentMethodForm
+				formData={formData}
+				onPaymentMethodChange={handlePaymentMethodChange}
+				disabled={disabled}
+			/>
 		</Box>
 	);
 };

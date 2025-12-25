@@ -1,6 +1,7 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import { useSnackbar } from 'notistack';
 import type { OrderRegistrationFormData, UserType, DeliveryMethod, PaymentMethod } from '../types';
+import { orderApi } from 'entities/order';
 
 export const useOrderRegistrationForm = () => {
 	const [formData, setFormData] = useState<OrderRegistrationFormData>({
@@ -97,8 +98,7 @@ export const useOrderRegistrationForm = () => {
 			enqueueSnackbar('Пожалуйста, заполните все обязательные поля', { variant: 'error' });
 			return false;
 		}
-		// TODO: Implement checkout logic
-		console.log('Checkout:', formData);
+
 		return true;
 	};
 

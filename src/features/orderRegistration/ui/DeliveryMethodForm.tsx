@@ -11,9 +11,15 @@ interface DeliveryMethodFormProps {
 	formData: OrderRegistrationFormData;
 	onDeliveryMethodChange: (deliveryMethod: DeliveryMethod) => void;
 	onFieldChange: <K extends keyof OrderRegistrationFormData>(field: K, value: OrderRegistrationFormData[K]) => void;
+	disabled?: boolean;
 }
 
-export const DeliveryMethodForm = ({ formData, onDeliveryMethodChange, onFieldChange }: DeliveryMethodFormProps) => {
+export const DeliveryMethodForm = ({
+	formData,
+	onDeliveryMethodChange,
+	onFieldChange,
+	disabled = false
+}: DeliveryMethodFormProps) => {
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 	const [isMobileContactsModalOpen, setIsMobileContactsModalOpen] = useState<boolean>(false);
@@ -32,14 +38,14 @@ export const DeliveryMethodForm = ({ formData, onDeliveryMethodChange, onFieldCh
 				<Typography variant='h6' component='h2' mb={1}>
 					Способ получения
 				</Typography>
-				<FormControl component='fieldset' sx={{ mb: 1, width: '100%' }}>
+				<FormControl component='fieldset' sx={{ mb: 1, width: '100%' }} disabled={disabled}>
 					<RadioGroup
 						row
 						value={formData.deliveryMethod}
 						onChange={(e) => onDeliveryMethodChange(e.target.value as DeliveryMethod)}
 					>
-						<FormControlLabel value='delivery' control={<Radio />} label='Доставка' />
-						<FormControlLabel value='pickup' control={<Radio />} label='Самовывоз' />
+						<FormControlLabel value='delivery' control={<Radio />} label='Доставка' disabled={disabled} />
+						<FormControlLabel value='pickup' control={<Radio />} label='Самовывоз' disabled={disabled} />
 					</RadioGroup>
 				</FormControl>
 				{formData.deliveryMethod === 'pickup' && (
@@ -76,6 +82,7 @@ export const DeliveryMethodForm = ({ formData, onDeliveryMethodChange, onFieldCh
 									onFieldChange('comment', e.target.value)
 								}
 								sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
+								disabled={disabled}
 							/>
 						</Box>
 						<Box maxWidth='480px' display='flex' alignItems='center' gap={1}>
@@ -111,6 +118,7 @@ export const DeliveryMethodForm = ({ formData, onDeliveryMethodChange, onFieldCh
 								}
 								sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 								required
+								disabled={disabled}
 							/>
 							<Input
 								fullWidth
@@ -122,6 +130,7 @@ export const DeliveryMethodForm = ({ formData, onDeliveryMethodChange, onFieldCh
 									onFieldChange('comment', e.target.value)
 								}
 								sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
+								disabled={disabled}
 							/>
 						</Box>
 						<Box maxWidth='480px' display='flex' alignItems='center' gap={1}>

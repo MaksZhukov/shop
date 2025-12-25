@@ -71,7 +71,10 @@ export const getStaticProps = getPageProps(
 			}),
 			sparePartApi.fetchSpareParts({
 				populate: ['images', 'brand', 'volume'],
-				pagination: { limit: 10 }
+				pagination: { limit: 10 },
+				filters: {
+					sold: false
+				}
 			}),
 			articlesApi.fetchArticles({
 				populate: ['mainImage'],

@@ -11,6 +11,7 @@ interface ContactInfoFormProps {
 	onFieldChange: <K extends keyof OrderRegistrationFormData>(field: K, value: OrderRegistrationFormData[K]) => void;
 	onUploadClick: () => void;
 	onFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
+	disabled?: boolean;
 }
 
 export const ContactInfoForm = ({
@@ -19,18 +20,24 @@ export const ContactInfoForm = ({
 	onUserTypeChange,
 	onFieldChange,
 	onUploadClick,
-	onFileChange
+	onFileChange,
+	disabled = false
 }: ContactInfoFormProps) => {
 	return (
 		<WhiteBox p={2}>
-			<FormControl component='fieldset' sx={{ mb: 1, width: '100%' }}>
+			<FormControl component='fieldset' sx={{ mb: 1, width: '100%' }} disabled={disabled}>
 				<RadioGroup
 					row
 					value={formData.userType}
 					onChange={(e) => onUserTypeChange(e.target.value as UserType)}
 				>
-					<FormControlLabel value='individual' control={<Radio />} label='Физическое лицо' />
-					<FormControlLabel value='legal' control={<Radio />} label='Юридическое лицо' />
+					<FormControlLabel
+						value='individual'
+						control={<Radio />}
+						label='Физическое лицо'
+						disabled={disabled}
+					/>
+					<FormControlLabel value='legal' control={<Radio />} label='Юридическое лицо' disabled={disabled} />
 				</RadioGroup>
 			</FormControl>
 
@@ -48,6 +55,7 @@ export const ContactInfoForm = ({
 							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('name', e.target.value)}
 							sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 							required
+							disabled={disabled}
 						/>
 						<Input
 							fullWidth
@@ -61,6 +69,7 @@ export const ContactInfoForm = ({
 								unmask: true
 							}}
 							required
+							disabled={disabled}
 						/>
 						<Input
 							fullWidth
@@ -71,6 +80,7 @@ export const ContactInfoForm = ({
 							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('email', e.target.value)}
 							sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 							required
+							disabled={disabled}
 						/>
 					</>
 				) : (
@@ -83,6 +93,7 @@ export const ContactInfoForm = ({
 							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('name', e.target.value)}
 							sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 							required
+							disabled={disabled}
 						/>
 						<Input
 							fullWidth
@@ -92,6 +103,7 @@ export const ContactInfoForm = ({
 							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('unp', e.target.value)}
 							sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 							required
+							disabled={disabled}
 						/>
 						<Input
 							fullWidth
@@ -105,6 +117,7 @@ export const ContactInfoForm = ({
 								unmask: true
 							}}
 							required
+							disabled={disabled}
 						/>
 						<Input
 							fullWidth
@@ -115,6 +128,7 @@ export const ContactInfoForm = ({
 							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('email', e.target.value)}
 							sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 							required
+							disabled={disabled}
 						/>
 						<Box>
 							<input
@@ -124,9 +138,10 @@ export const ContactInfoForm = ({
 								accept='.jpeg,.jpg,.png,.pdf'
 								style={{ display: 'none' }}
 								required
+								disabled={disabled}
 							/>
 							<Box
-								onClick={onUploadClick}
+								onClick={disabled ? undefined : onUploadClick}
 								maxWidth='480px'
 								border='2px dashed  '
 								borderColor={'custom.divider'}
@@ -138,10 +153,11 @@ export const ContactInfoForm = ({
 								justifyContent='center'
 								gap={1}
 								sx={{
-									cursor: 'pointer',
+									cursor: disabled ? 'not-allowed' : 'pointer',
+									opacity: disabled ? 0.6 : 1,
 									'&:hover': {
-										borderColor: 'primary.main',
-										bgcolor: 'action.hover'
+										borderColor: disabled ? 'custom.divider' : 'primary.main',
+										bgcolor: disabled ? 'custom.bg-surface-1' : 'action.hover'
 									}
 								}}
 							>
