@@ -33,7 +33,7 @@ export default function MobileCatalog({ sparePartsTotal }: Props) {
 
 	return (
 		<Box bgcolor='white' ml={-2} mr={-2} py={2} pl={2}>
-			<Benefits sparePartsTotal={sparePartsTotal} view='carousel' />
+			<Benefits view='carousel' />
 			<Box mt={2} pr={2}>
 				<Box mb={2}>
 					{kindSpareParts?.data.data.map((item) => (

@@ -5,8 +5,8 @@ import { authLocalStorage } from 'entities/user/authLocalStorage';
 export const useLogin = () => {
 	const userStore = useUserStore();
 
-	return async (email: string, password: string) => {
-		const { data } = await userApi.login(email, password);
+	return async (email: string, password: string, recaptchaToken?: string) => {
+		const { data } = await userApi.login(email, password, recaptchaToken);
 		userStore.setUser({
 			jwt: data.jwt,
 			id: data.user.id,

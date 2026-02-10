@@ -17,6 +17,20 @@ declare global {
 	}
 }
 
+declare module 'react-google-recaptcha' {
+	import { Component } from 'react';
+	export interface ReCAPTCHAProps {
+		sitekey: string;
+		theme?: 'light' | 'dark';
+		size?: 'compact' | 'normal' | 'invisible';
+	}
+	export default class ReCAPTCHA extends Component<ReCAPTCHAProps> {
+		getValue(): string | null;
+		reset(): void;
+		executeAsync(): Promise<string>;
+	}
+}
+
 declare module '@mui/material/styles' {
 	interface Palette {
 		custom: {

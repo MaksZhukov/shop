@@ -2,16 +2,18 @@ import { api } from 'shared/api';
 import { AuthResponse } from './userTypes';
 
 export const userApi = {
-	login: (email: string, password: string) =>
+	login: (email: string, password: string, recaptchaToken?: string) =>
 		api.post<AuthResponse>('auth/local', {
 			identifier: email,
-			password
+			password,
+			recaptchaToken
 		}),
-	register: (email: string, password: string) =>
+	register: (email: string, password: string, recaptchaToken?: string) =>
 		api.post<AuthResponse>('auth/local/register', {
 			username: email,
 			email,
-			password
+			password,
+			recaptchaToken
 		}),
 	forgotPassword: (email: string) =>
 		api.post('auth/forgot-password', {

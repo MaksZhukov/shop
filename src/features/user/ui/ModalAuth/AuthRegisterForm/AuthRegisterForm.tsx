@@ -21,7 +21,6 @@ export const AuthRegisterForm = ({
 	const { step, email, setEmail, password, setPassword, handleEmailStepSubmit, handlePasswordSubmit } =
 		useAuthRegisterForm({
 			onChangeIsLoading,
-			onChangeType,
 			onChangeModalOpened,
 			onLoginSuccess
 		});

@@ -18,6 +18,7 @@ import { useInitialAuthLoad } from 'features/user/useInitialAuthLoad';
 import { Header } from 'widgets/header';
 import { Footer } from 'widgets/footer';
 import './app.scss';
+import { RecaptchaProvider } from 'app/providers/RecaptchaProvider';
 
 // Lazy load components that don't need SSR
 const ScrollUp = dynamic(() => import('features/scrollUp').then((mod) => ({ default: mod.ScrollUp })), {
@@ -88,15 +89,17 @@ function AppContent({ Component, pageProps }: AppProps) {
 const App = (props: AppProps<{ dehydratedState: DehydratedState }>) => (
 	<ThemeProvider>
 		<QueryProvider>
-			<HydrationBoundary state={props.pageProps?.dehydratedState}>
-				<StoreProvider>
-					<ApiProvider>
-						<SnackbarProvider>
-							<AppContent {...props} />
-						</SnackbarProvider>
-					</ApiProvider>
-				</StoreProvider>
-			</HydrationBoundary>
+			<RecaptchaProvider>
+				<HydrationBoundary state={props.pageProps?.dehydratedState}>
+					<StoreProvider>
+						<ApiProvider>
+							<SnackbarProvider>
+								<AppContent {...props} />
+							</SnackbarProvider>
+						</ApiProvider>
+					</StoreProvider>
+				</HydrationBoundary>
+			</RecaptchaProvider>
 		</QueryProvider>
 	</ThemeProvider>
 );
