@@ -2,6 +2,12 @@ import { Typography, FormControl, Select, MenuItem, Box } from '@mui/material';
 import { WhiteBox } from 'shared/ui';
 import type { OrderRegistrationFormData, PaymentMethod } from '../types';
 
+const PAYMENT_DESCRIPTIONS: Partial<Record<PaymentMethod, string>> = {
+	online: 'Банковской картой, Samsung Pay, Apple Pay, Карты рассрочки (Халва, Халва+, Халва МАХ, Карта покупок, Черепаха, СмартКарта, Магнит, МТБ Автокарта, Моцная картка)',
+	cash: 'Оплата происходит в момент получения доставки наличными деньгами',
+	receive_invoice: 'Счет на оплату будет выслан на указанную электронную почту'
+};
+
 interface PaymentMethodFormProps {
 	formData: OrderRegistrationFormData;
 	onPaymentMethodChange: (paymentMethod: PaymentMethod) => void;
@@ -10,6 +16,7 @@ interface PaymentMethodFormProps {
 
 export const PaymentMethodForm = ({ formData, onPaymentMethodChange, disabled = false }: PaymentMethodFormProps) => {
 	const isPickupPaymentAvailable = formData.deliveryMethod === 'pickup';
+	const isLegalEntity = formData.userType === 'legal';
 
 	return (
 		<WhiteBox p={2}>
@@ -33,7 +40,8 @@ export const PaymentMethodForm = ({ formData, onPaymentMethodChange, disabled = 
 							online: 'Оплата онлайн',
 							cash: 'Оплата наличными',
 							bank_transfer: 'Безналичная оплата',
-							pickup: 'Оплата в пункте самовывоза'
+							pickup: 'Оплата в пункте самовывоза',
+							receive_invoice: 'Получить счет на оплату'
 						};
 						return options[value as PaymentMethod] || value;
 					}}
@@ -59,13 +67,13 @@ export const PaymentMethodForm = ({ formData, onPaymentMethodChange, disabled = 
 							</>
 						)}
 					</MenuItem>
+					{isLegalEntity && <MenuItem value='receive_invoice'>Получить счет на оплату</MenuItem>}
 				</Select>
 			</FormControl>
-			{formData.paymentMethod === 'online' && (
+			{PAYMENT_DESCRIPTIONS[formData.paymentMethod] && (
 				<Box maxWidth='480px' bgcolor='custom.bg-surface-1' py={1} px={1.5} borderRadius={2}>
 					<Typography variant='body2' color='custom.text-muted'>
-						Банковской картой, Samsung Pay, Apple Pay, Карты рассрочки (Халва, Халва+, Халва МАХ, Карта
-						покупок, Черепаха, СмартКарта, Магнит, МТБ Автокарта, Моцная картка)
+						{PAYMENT_DESCRIPTIONS[formData.paymentMethod]}
 					</Typography>
 				</Box>
 			)}

@@ -1,7 +1,6 @@
 import { SxProps } from '@mui/material';
 
 export interface BenefitsProps {
-	sparePartsTotal: number;
 	view: 'grid' | 'carousel';
 }
 

@@ -6,14 +6,16 @@ import { useOrderRegistration } from 'features/orderRegistration';
 import { OrderRegistration } from 'widgets/orderRegistration';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 interface Props {}
 
 const OrderRegistrationPage: NextPage<Props> = observer(() => {
-	const { isLoading, checkoutItems } = useOrderRegistration();
+	const { isLoading, checkoutItems, isOrdered, setIsOrdered } = useOrderRegistration();
 	const router = useRouter();
 
-	if (checkoutItems.length === 0 && router.isReady) {
+	if (!isOrdered && checkoutItems.length === 0 && router.isReady) {
 		router.push('/cart');
 		return null;
 	}
@@ -24,7 +26,7 @@ const OrderRegistrationPage: NextPage<Props> = observer(() => {
 
 	return (
 		<>
-			<OrderRegistration />
+			<OrderRegistration isOrdered={isOrdered} onChangeIsOrdered={setIsOrdered} />
 			<Script
 				async
 				id='bepaid'

@@ -6,12 +6,17 @@ import { Typography, Carousel } from 'shared/ui';
 import { ProductItem } from 'entities/product';
 import { CartButton } from 'features/cart';
 import { FavoriteButton } from 'features/favorites';
+import { mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { useQuery } from '@tanstack/react-query';
+import { ApiResponse } from 'shared/api';
 
-interface NewArrivalsProps {
-	newSpareParts: SparePart[];
-}
-
-export const NewArrivals: React.FC<NewArrivalsProps> = ({ newSpareParts }) => {
+export const NewArrivals: React.FC = () => {
+	const { data: newSparePartsRes } = useQuery({
+		queryKey: mainPageQueryKeys.newSpareParts(),
+		queryFn: mainPageQueryFns.newSpareParts,
+		select: (res: ApiResponse<SparePart[]>) => res.data
+	});
+	const newSpareParts = newSparePartsRes ?? [];
 	return (
 		<>
 			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>

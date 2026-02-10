@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 export const OrderSuccess = () => {
 	const router = useRouter();
 	const isMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
-
 	return (
 		<Box maxWidth='400px' margin='auto' py={3} textAlign='center'>
 			<Image
@@ -19,8 +18,7 @@ export const OrderSuccess = () => {
 				Спасибо за заказ
 			</Typography>
 			<Typography variant='body1' color='text.primary' component='p' mb={2}>
-				Заказ оформлен. Наш менеджер свяжется с вами в ближайшее время для уточнения всех подробностей по
-				заказу
+				Заказ оформлен. Наш менеджер свяжется с вами в ближайшее время для уточнения всех подробностей по заказу
 			</Typography>
 			<Button variant='contained' color='primary' onClick={() => router.push('/')}>
 				Продолжить покупки
@@ -28,4 +26,3 @@ export const OrderSuccess = () => {
 		</Box>
 	);
 };
-

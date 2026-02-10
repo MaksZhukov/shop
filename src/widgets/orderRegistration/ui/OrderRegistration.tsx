@@ -9,12 +9,19 @@ import {
 	useOrderCheckout
 } from 'features/orderRegistration';
 
-export const OrderRegistration = () => {
+export const OrderRegistration = ({
+	isOrdered,
+	onChangeIsOrdered
+}: {
+	isOrdered: boolean;
+	onChangeIsOrdered: (isOrdered: boolean) => void;
+}) => {
 	const form = useOrderRegistrationForm();
 	const { checkoutItems, totalAmount, getButtonText } = useOrderRegistration();
-	const { isOrdered, orderCheckout, formattedTime, isExpired, handleCheckout } = useOrderCheckout({
+	const { orderCheckout, formattedTime, isExpired, handleCheckout } = useOrderCheckout({
 		formData: form.formData,
-		checkoutItems
+		checkoutItems,
+		onChangeIsOrdered
 	});
 
 	const handleCheckoutClick = async () => {

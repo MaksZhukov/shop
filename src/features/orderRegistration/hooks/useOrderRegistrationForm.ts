@@ -6,8 +6,9 @@ import { orderApi } from 'entities/order';
 export const useOrderRegistrationForm = () => {
 	const [formData, setFormData] = useState<OrderRegistrationFormData>({
 		userType: 'individual',
-		name: '',
-		unp: '',
+		username: '',
+		companyName: '',
+		tin: '',
 		phone: '',
 		email: '',
 		deliveryMethod: 'delivery',
@@ -57,8 +58,7 @@ export const useOrderRegistrationForm = () => {
 	};
 
 	const validateForm = (): boolean => {
-		// Validate required fields
-		if (!formData.name || !formData.name.trim()) {
+		if (!formData.username || !formData.username.trim()) {
 			return false;
 		}
 
@@ -70,22 +70,18 @@ export const useOrderRegistrationForm = () => {
 			return false;
 		}
 
-		// Validate UNP for legal entities
-		if (formData.userType === 'legal' && (!formData.unp || !formData.unp.trim())) {
+		if (formData.userType === 'legal' && (!formData.companyName || !formData.companyName.trim())) {
 			return false;
 		}
 
-		// Validate uploaded file for legal entities
 		if (formData.userType === 'legal' && !formData.uploadedFile) {
 			return false;
 		}
 
-		// Validate address for delivery method
 		if (formData.deliveryMethod === 'delivery' && (!formData.address || !formData.address.trim())) {
 			return false;
 		}
 
-		// Validate payment method
 		if (!formData.paymentMethod) {
 			return false;
 		}

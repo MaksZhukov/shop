@@ -1,14 +1,8 @@
 import { Box } from '@mui/material';
 import { SearchForm } from './SearchForm';
-import type { Brand } from 'entities/brand/brandTypes';
 import { Banners } from 'shared/ui/Banners';
 
-interface MainSectionProps {
-	brands: Brand[];
-	sparePartsTotal: number;
-}
-
-export const MainSection: React.FC<MainSectionProps> = ({ brands, sparePartsTotal }) => {
+export const MainSection: React.FC = () => {
 	return (
 		<Box
 			mb={5}
@@ -17,7 +11,7 @@ export const MainSection: React.FC<MainSectionProps> = ({ brands, sparePartsTota
 			flexDirection={{ xs: 'column', md: 'row' }}
 			gap={2}
 		>
-			<SearchForm brands={brands} sparePartsTotal={sparePartsTotal} />
+			<SearchForm />
 			<Banners images={[]} />
 		</Box>
 	);

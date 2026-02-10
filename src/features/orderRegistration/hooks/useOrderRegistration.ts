@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useStore } from 'app/providers/StoreProvider';
 import type { OrderRegistrationFormData } from '../types';
 
 export const useOrderRegistration = () => {
 	const store = useStore();
+	const [isOrdered, setIsOrdered] = useState(false);
 	const shoppingCartItems = store.cart.items;
 	const selectedItemIds = store.cart.selectedItemsForCheckout;
 	const isLoading = store.cart.isLoading || !store.isInitialRequestDone;
@@ -34,6 +35,8 @@ export const useOrderRegistration = () => {
 	};
 
 	return {
+		isOrdered,
+		setIsOrdered,
 		checkoutItems,
 		totalAmount,
 		isLoading,

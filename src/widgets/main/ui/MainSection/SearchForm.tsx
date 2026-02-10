@@ -24,11 +24,7 @@ import { sparePartApi } from 'entities/sparePart';
 import { getParamByRelation } from 'shared/services/ParamsService';
 import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'entities/car';
 import { SparePart } from 'entities/sparePart';
-
-interface SearchFormProps {
-	brands: Brand[];
-	sparePartsTotal: number;
-}
+import { mainPageQueryFns, mainPageQueryKeys } from 'features/mainPage';
 
 interface FormValues {
 	[key: string]: string | null;
@@ -49,7 +45,20 @@ type AutocompleteHandler = (
 	value: AutocompleteChangeEvent | string | null
 ) => void;
 
-export const SearchForm: React.FC<SearchFormProps> = ({ brands, sparePartsTotal }) => {
+export const SearchForm: React.FC = () => {
+	const { data: brandsRes } = useQuery({
+		queryKey: mainPageQueryKeys.brands(),
+		queryFn: mainPageQueryFns.brands,
+		select: (res: ApiResponse<Brand[]>) => res.data
+	});
+	const brands = brandsRes ?? [];
+
+	const { data: sparePartsTotalRes } = useQuery({
+		queryKey: mainPageQueryKeys.sparePartsTotal(),
+		queryFn: mainPageQueryFns.sparePartsTotal,
+		select: (res: ApiResponse<SparePart[]>) => res.meta?.pagination?.total ?? 0
+	});
+	const sparePartsTotal = sparePartsTotalRes ?? 0;
 	const [isMoreFilters, setIsMoreFilters] = useState(false);
 	const [models, setModels] = useState<Model[]>([]);
 	const [generations, setGenerations] = useState<Generation[]>([]);

@@ -1,5 +1,5 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Button, IconButton, Input, InputAdornment, TextField, Typography } from '@mui/material';
+import { Button, IconButton, Input, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent, useState } from 'react';
@@ -103,6 +103,7 @@ const AuthRegisterForm = ({
 				required
 				placeholder='Почта'
 			></Input>
+			<Link href='http://localhost:1337/api/connect/google'>Забыли пароль?</Link>
 			<Input
 				disabled={isLoading}
 				fullWidth

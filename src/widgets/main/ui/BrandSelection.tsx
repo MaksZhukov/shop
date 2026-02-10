@@ -2,12 +2,17 @@ import { Box } from '@mui/material';
 import type { Brand } from 'entities/brand/brandTypes';
 import { Typography } from 'shared/ui';
 import { BrandItem } from 'entities/brand';
+import { mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { useQuery } from '@tanstack/react-query';
+import { ApiResponse } from 'shared/api/types';
 
-interface BrandSelectionProps {
-	brands: Brand[];
-}
-
-export const BrandSelection: React.FC<BrandSelectionProps> = ({ brands }) => {
+export const BrandSelection: React.FC = () => {
+	const { data: brandsRes } = useQuery({
+		queryKey: mainPageQueryKeys.brands(),
+		queryFn: mainPageQueryFns.brands,
+		select: (res: ApiResponse<Brand[]>) => res.data || []
+	});
+	const brands = brandsRes ?? [];
 	return (
 		<Box mb={5}>
 			<Typography textAlign={{ xs: 'center', md: 'left' }} variant='h6'>

@@ -5,12 +5,17 @@ import { ChevronRightIcon } from 'shared/icons';
 import { Typography } from 'shared/ui';
 import { CarItem } from 'entities/carOnParts';
 import { Carousel } from 'shared/ui';
+import { ApiResponse } from 'shared/api';
+import { mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { useQuery } from '@tanstack/react-query';
 
-interface CarsOnPartsProps {
-	carsOnParts: CarOnParts[];
-}
-
-export const CarsOnParts: React.FC<CarsOnPartsProps> = ({ carsOnParts }) => {
+export const CarsOnParts: React.FC = () => {
+	const { data: carsOnPartsRes } = useQuery({
+		queryKey: mainPageQueryKeys.carsOnParts(),
+		queryFn: mainPageQueryFns.carsOnParts,
+		select: (res: ApiResponse<CarOnParts[]>) => res.data
+	});
+	const carsOnParts = carsOnPartsRes ?? [];
 	return (
 		<>
 			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>

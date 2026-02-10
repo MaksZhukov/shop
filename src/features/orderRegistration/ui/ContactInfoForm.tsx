@@ -1,7 +1,7 @@
-import { Box, Typography, Input, FormControl, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import { ChangeEvent } from 'react';
+import { Box, Typography, Input, FormControl, RadioGroup, FormControlLabel, Radio, IconButton } from '@mui/material';
+import { ChangeEvent, useState, useEffect } from 'react';
 import { WhiteBox } from 'shared/ui';
-import { AttachFileIcon } from 'shared/icons';
+import { AttachFileIcon, CloseIcon } from 'shared/icons';
 import type { OrderRegistrationFormData, UserType } from '../types';
 
 interface ContactInfoFormProps {
@@ -23,6 +23,30 @@ export const ContactInfoForm = ({
 	onFileChange,
 	disabled = false
 }: ContactInfoFormProps) => {
+	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (formData.uploadedFile) {
+			let url: string = URL.createObjectURL(formData.uploadedFile);
+
+			// eslint-disable-next-line react-hooks/set-state-in-effect
+			setPreviewUrl(url);
+
+			return () => {
+				if (url) {
+					URL.revokeObjectURL(url);
+				}
+			};
+		}
+	}, [formData.uploadedFile]);
+
+	const handleRemoveFile = () => {
+		onFieldChange('uploadedFile', null);
+		if (fileInputRef.current) {
+			fileInputRef.current.value = '';
+		}
+	};
+
 	return (
 		<WhiteBox p={2}>
 			<FormControl component='fieldset' sx={{ mb: 1, width: '100%' }} disabled={disabled}>
@@ -50,9 +74,9 @@ export const ContactInfoForm = ({
 						<Input
 							fullWidth
 							placeholder='Имя *'
-							value={formData.name}
+							value={formData.username}
 							size='medium'
-							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('name', e.target.value)}
+							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('username', e.target.value)}
 							sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 							required
 							disabled={disabled}
@@ -88,9 +112,11 @@ export const ContactInfoForm = ({
 						<Input
 							fullWidth
 							placeholder='Название *'
-							value={formData.name}
+							value={formData.companyName}
 							size='medium'
-							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('name', e.target.value)}
+							onChange={(e: ChangeEvent<HTMLInputElement>) =>
+								onFieldChange('companyName', e.target.value)
+							}
 							sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 							required
 							disabled={disabled}
@@ -98,9 +124,9 @@ export const ContactInfoForm = ({
 						<Input
 							fullWidth
 							placeholder='УНП *'
-							value={formData.unp}
+							value={formData.tin}
 							size='medium'
-							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('unp', e.target.value)}
+							onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('tin', e.target.value)}
 							sx={{ bgcolor: 'background.paper', padding: '0.5em 1em' }}
 							required
 							disabled={disabled}
@@ -173,6 +199,53 @@ export const ContactInfoForm = ({
 									</Typography>
 								</Box>
 							</Box>
+							{previewUrl && (
+								<Box
+									width={80}
+									height={80}
+									mt={0.5}
+									border='2px solid'
+									borderColor='custom.bg-surface-3'
+									borderRadius={1}
+									display='flex'
+									alignItems='center'
+									justifyContent='center'
+									bgcolor='background.paper'
+									overflow='hidden'
+									position={'relative'}
+								>
+									{previewUrl ? (
+										<Box
+											component='img'
+											src={previewUrl}
+											alt='Preview'
+											width={'100%'}
+											height={'100%'}
+											style={{ objectFit: 'cover' }}
+										/>
+									) : (
+										<AttachFileIcon />
+									)}
+									<IconButton
+										size='small'
+										sx={{
+											position: 'absolute',
+											width: 20,
+											height: 20,
+											top: 0,
+											right: 0,
+											bgcolor: 'custom.text-muted',
+											'&:hover': {
+												bgcolor: 'custom.bg-surface-3'
+											}
+										}}
+										onClick={handleRemoveFile}
+										disabled={disabled}
+									>
+										<CloseIcon />
+									</IconButton>
+								</Box>
+							)}
 							<Typography variant='caption' color='custom.text-muted' mt={1} display='block'>
 								Подойдет свидетельство о регистрации либо другой подтверждающий документ
 							</Typography>

@@ -11,6 +11,7 @@ import { OrderSummary } from 'features/orderRegistration';
 import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
 import { useRemoveCart } from 'features/cart/useRemoveCart';
 import router from 'next/router';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {}
 
