@@ -1,49 +1,52 @@
-import { Button, TextField, Typography } from '@mui/material';
-import axios from 'axios';
-import { useSnackbar } from 'notistack';
-import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { userApi } from 'entities/user';
+import { Box, Button, Link, OutlinedInput } from '@mui/material';
+import { ChangeEvent } from 'react';
+import type { ModalAuthFormProps } from '../types';
+import { AuthFormHeader } from '../shared';
+import { useForgotForm } from '../hooks';
 
-interface Props {
-	isLoading: boolean;
-	onChangeIsLoading: (val: boolean) => void;
-}
+const submitButtonSx = {
+	marginBottom: 1.5,
+	bgcolor: 'grey.900',
+	'&:hover': { bgcolor: 'grey.800' }
+} as const;
 
-const ForgotForm: FC<Props> = ({ isLoading, onChangeIsLoading }) => {
-	const [email, setEmail] = useState<string>('');
-	const { enqueueSnackbar } = useSnackbar();
-	const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
-		setEmail(e.target.value);
-	};
-	const handleClickSubmit = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		onChangeIsLoading(true);
-		try {
-			await userApi.forgotPassword(email);
-			enqueueSnackbar('Проверьте свою почту', { variant: 'success' });
-		} catch (err) {
-			if (axios.isAxiosError(err)) {
-				enqueueSnackbar('Неверные данные', { variant: 'error' });
-			}
-		}
-		onChangeIsLoading(false);
-	};
+export const ForgotForm = ({ isLoading, onChangeIsLoading, onChangeType }: ModalAuthFormProps) => {
+	const { email, setEmail, handleSubmit } = useForgotForm({ onChangeIsLoading });
+
 	return (
-		<form onSubmit={handleClickSubmit}>
-			<TextField
-				fullWidth
-				disabled={isLoading}
-				margin='normal'
-				name='email'
-				onChange={handleChangeEmail}
-				value={email}
-				required
-				placeholder='Почта'
-			></TextField>
-			<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
-				Восстановить
-			</Button>
-		</form>
+		<Box>
+			<AuthFormHeader title='Ссылка для сброса пароля будет отправлена на указанную почту' />
+			<form onSubmit={handleSubmit}>
+				<OutlinedInput
+					fullWidth
+					disabled={isLoading}
+					name='email'
+					type='email'
+					autoComplete='email'
+					size='medium'
+					sx={{ marginBottom: 1.5 }}
+					onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+					value={email}
+					required
+					placeholder='Электронная почта'
+				/>
+				<Button disabled={isLoading} variant='contained' type='submit' fullWidth sx={submitButtonSx}>
+					Сбросить пароль
+				</Button>
+			</form>
+			<Box textAlign='center'>
+				<Link
+					component='button'
+					type='button'
+					variant='body2'
+					color='text.primary'
+					onClick={() => onChangeType('auth')}
+					sx={{ cursor: 'pointer' }}
+				>
+					Войти
+				</Link>
+			</Box>
+		</Box>
 	);
 };
 

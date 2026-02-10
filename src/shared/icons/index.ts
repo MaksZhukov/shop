@@ -28,3 +28,4 @@ export { TrashIcon } from './TrashIcon';
 export { TrashFilledIcon } from './TrashFilledIcon';
 export { AttachFileIcon } from './AttachFileIcon';
 export { InfoIcon } from './InfoIcon';
+export { GoogleIcon } from './GoogleIcon';

@@ -1,136 +1,101 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Button, IconButton, Input, InputAdornment, Link, TextField, Typography } from '@mui/material';
-import axios from 'axios';
-import { useSnackbar } from 'notistack';
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { userApi } from 'entities/user';
-import type { ModalAuthStates } from '../types';
-import { useLogin } from 'features/user';
+import { Box, Button, Link, OutlinedInput, Typography } from '@mui/material';
+import { ChangeEvent } from 'react';
+import type { ModalAuthFormProps } from '../types';
+import { AuthFormHeader, PasswordInput } from '../shared';
+import { GoogleIcon } from 'shared/icons';
+import { backendUrl } from 'shared/services/EnvService';
+import { useAuthRegisterForm } from '../hooks';
 
-interface Props {
-	type: ModalAuthStates;
-	isLoading: boolean;
-	onChangeIsLoading: (val: boolean) => void;
-	onChangeType: (type: ModalAuthStates) => void;
+interface AuthRegisterFormProps extends ModalAuthFormProps {
 	onChangeModalOpened: (value: boolean) => void;
 	onLoginSuccess?: () => Promise<void>;
 }
 
-const AuthRegisterForm = ({
-	type,
+export const AuthRegisterForm = ({
 	isLoading,
 	onChangeType,
 	onChangeIsLoading,
 	onChangeModalOpened,
 	onLoginSuccess
-}: Props) => {
-	const [email, setEmail] = useState<string>('');
-	const [showPassword, setShowPassword] = useState<boolean>(false);
-	const [password, setPassword] = useState<string>('');
+}: AuthRegisterFormProps) => {
+	const { step, email, setEmail, password, setPassword, handleEmailStepSubmit, handlePasswordSubmit } =
+		useAuthRegisterForm({
+			onChangeIsLoading,
+			onChangeType,
+			onChangeModalOpened,
+			onLoginSuccess
+		});
 
-	const { enqueueSnackbar } = useSnackbar();
-	const login = useLogin();
-
-	const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
-		setEmail(e.target.value);
-	};
-
-	const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
-		setPassword(e.target.value);
-	};
-
-	const handleClickSubmit = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		onChangeIsLoading(true);
-		if (type === 'login') {
-			try {
-				await login(email, password);
-				if (onLoginSuccess) {
-					await onLoginSuccess();
-				}
-				onChangeModalOpened(false);
-				enqueueSnackbar('Вы вошли в свой аккаунт', {
-					variant: 'success'
-				});
-			} catch (err) {
-				if (axios.isAxiosError(err)) {
-					if (err.response?.data.error?.status === 400 || err.response?.status === 500) {
-						enqueueSnackbar('Неверные данные', {
-							variant: 'error'
-						});
-					}
-				}
-			}
-		}
-		if (type === 'register') {
-			try {
-				await userApi.register(email, password);
-				enqueueSnackbar('Вы успешно зарегистрировались', {
-					variant: 'success'
-				});
-				onChangeType('login');
-				setEmail('');
-				setPassword('');
-			} catch (err) {
-				if (axios.isAxiosError(err)) {
-					if (err.response?.data.error.status === 400) {
-						if (err.response.data.error.message === 'Email is already taken') {
-							enqueueSnackbar('Такой пользователь уже существует', {
-								variant: 'error'
-							});
-						}
-					}
-				}
-			}
-		}
-		onChangeIsLoading(false);
-	};
-
-	const handleClickShowPassword = () => {
-		setShowPassword(!showPassword);
-	};
+	if (step === 'password') {
+		return (
+			<>
+				<AuthFormHeader title='Введите пароль' />
+				<form onSubmit={handlePasswordSubmit}>
+					<PasswordInput
+						fullWidth
+						disabled={isLoading}
+						name='password'
+						size='medium'
+						sx={{ marginBottom: 1.5 }}
+						onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+						value={password}
+						required
+						placeholder='Введите пароль'
+					/>
+					<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
+						Продолжить
+					</Button>
+					<Box textAlign='center' mt={1.5}>
+						<Link
+							component='button'
+							type='button'
+							variant='body2'
+							color='text.secondary'
+							onClick={() => onChangeType('forgot')}
+							sx={{ cursor: 'pointer' }}
+						>
+							Забыли пароль?
+						</Link>
+					</Box>
+				</form>
+			</>
+		);
+	}
 
 	return (
-		<form onSubmit={handleClickSubmit}>
-			<Input
-				fullWidth
-				disabled={isLoading}
-				name='email'
-				size='medium'
-				sx={{ marginBottom: 1 }}
-				onChange={handleChangeEmail}
-				value={email}
-				required
-				placeholder='Почта'
-			></Input>
-			<Link href='http://localhost:1337/api/connect/google'>Забыли пароль?</Link>
-			<Input
-				disabled={isLoading}
-				fullWidth
-				required
-				sx={{ marginBottom: '1em' }}
-				value={password}
-				size='medium'
-				onChange={handleChangePassword}
-				type={showPassword ? 'text' : 'password'}
-				name='password'
-				placeholder='Пароль'
-				endAdornment={
-					<InputAdornment position='end'>
-						<IconButton
-							aria-label='toggle password visibility'
-							onClick={handleClickShowPassword}
-							edge='end'
-						>
-							{showPassword ? <VisibilityOff /> : <Visibility />}
-						</IconButton>
-					</InputAdornment>
-				}
-			></Input>
-			<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
-				{type === 'login' ? 'Войти' : 'Зарегистрироваться'}
+		<Box>
+			<AuthFormHeader title='Войдите или создайте профиль' />
+			<Button fullWidth variant='outlined' href={`${backendUrl}/api/connect/google`} startIcon={<GoogleIcon />}>
+				Продолжить с Google
 			</Button>
-		</form>
+			<Typography variant='body2' color='custom.text-muted' textAlign='center' sx={{ my: 1.5 }}>
+				или
+			</Typography>
+			<form onSubmit={handleEmailStepSubmit}>
+				<OutlinedInput
+					fullWidth
+					disabled={isLoading}
+					name='email'
+					size='medium'
+					type='email'
+					autoComplete='email'
+					sx={{ marginBottom: 1.5 }}
+					onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+					value={email}
+					required
+					placeholder='Электронная почта'
+				/>
+				<Button fullWidth variant='contained' type='submit' disabled={isLoading}>
+					Продолжить
+				</Button>
+			</form>
+			<Typography mt={0.5} variant='body2' color='text.secondary' textAlign='center'>
+				Нажимая на кнопку, вы соглашаетесь с{' '}
+				<Link color='info.main' href='/privacy'>
+					Условиями обработки персональных данных
+				</Link>
+			</Typography>
+		</Box>
 	);
 };
 

@@ -1,84 +1,49 @@
-import { Box, Modal, Link } from '@mui/material';
-import { useState } from 'react';
+import { Modal } from '@mui/material';
 import AuthRegisterForm from './AuthRegisterForm';
-import ForgotForm from './ForgotForm/ForgotForm';
+import ForgotForm from './ForgotForm';
 import ResetForm from './ResetForm';
-import type { ModalAuthStates } from './types';
+import { useModalAuth } from './hooks';
 import { ModalContainer } from 'shared/ui';
 
-interface Props {
+interface ModalAuthProps {
 	onChangeModalOpened: (value: boolean) => void;
 	isResetPassword: boolean;
 	onLoginSuccess?: () => Promise<void>;
 }
 
-export const ModalAuth = ({ onChangeModalOpened, isResetPassword, onLoginSuccess }: Props) => {
-	const [type, setType] = useState<ModalAuthStates>(isResetPassword ? 'reset' : 'login');
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+export const ModalAuth = ({ onChangeModalOpened, isResetPassword, onLoginSuccess }: ModalAuthProps) => {
+	const { type, handleModalClose, formProps } = useModalAuth({
+		onChangeModalOpened,
+		isResetPassword
+	});
 
-	const handleModalClose = () => {
-		if (!isLoading) {
-			onChangeModalOpened(false);
-		}
-	};
-
-	const handleClickToggleType = (newType: ModalAuthStates) => () => {
-		setType(newType);
-	};
-	let renderAuthRegisterForm = (
-		<AuthRegisterForm
-			isLoading={isLoading}
-			onChangeIsLoading={setIsLoading}
-			type={type}
-			onChangeModalOpened={onChangeModalOpened}
-			onChangeType={setType}
-			onLoginSuccess={onLoginSuccess}
-		></AuthRegisterForm>
-	);
-
-	const formElement = {
-		['forgot']: <ForgotForm isLoading={isLoading} onChangeIsLoading={setIsLoading}></ForgotForm>,
-		['reset']: (
-			<ResetForm isLoading={isLoading} onChangeIsLoading={setIsLoading} onChangeType={setType}></ResetForm>
-		),
-		['login']: renderAuthRegisterForm,
-		['register']: renderAuthRegisterForm
-	};
-	const title = {
-		['forgot']: 'Восстановление пароля',
-		['reset']: 'Сброс пароля',
-		['login']: 'Авторизация',
-		['register']: 'Регистрация'
+	const formContent = {
+		forgot: <ForgotForm {...formProps} />,
+		reset: <ResetForm {...formProps} />,
+		auth: (
+			<AuthRegisterForm
+				{...formProps}
+				onChangeModalOpened={onChangeModalOpened}
+				onLoginSuccess={onLoginSuccess}
+			/>
+		)
 	};
 
 	return (
 		<Modal open onClose={handleModalClose}>
 			<ModalContainer
+				title=''
 				sx={{
 					maxWidth: '400px',
 					position: 'absolute',
 					top: '50%',
 					left: '50%',
+					py: 2,
 					transform: 'translate(-50%, -50%)'
 				}}
 				onClose={handleModalClose}
-				title={title[type]}
 			>
-				{formElement[type]}
-				{type !== 'reset' && (
-					<>
-						<Box textAlign='center' marginTop='10px'>
-							<Link onClick={handleClickToggleType(type === 'login' ? 'register' : 'login')}>
-								{type === 'login' ? 'Зарегистрироваться' : 'Войти'}
-							</Link>
-						</Box>
-						<Box textAlign='center' marginTop='10px'>
-							<Link onClick={handleClickToggleType(type === 'forgot' ? 'register' : 'forgot')}>
-								{type === 'forgot' ? 'Зарегистрироваться' : 'Забыли пароль'}
-							</Link>
-						</Box>
-					</>
-				)}
+				{formContent[type]}
 			</ModalContainer>
 		</Modal>
 	);
