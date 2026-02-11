@@ -5,10 +5,11 @@ import { userApi } from 'entities/user';
 
 interface UseForgotFormProps {
 	onChangeIsLoading: (value: boolean) => void;
+	email: string;
+	setEmail: (email: string) => void;
 }
 
-export const useForgotForm = ({ onChangeIsLoading }: UseForgotFormProps) => {
-	const [email, setEmail] = useState('');
+export const useForgotForm = ({ onChangeIsLoading, email, setEmail }: UseForgotFormProps) => {
 	const { enqueueSnackbar } = useSnackbar();
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

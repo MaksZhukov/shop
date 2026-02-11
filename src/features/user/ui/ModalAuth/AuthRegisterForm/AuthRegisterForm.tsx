@@ -16,14 +16,17 @@ export const AuthRegisterForm = ({
 	onChangeType,
 	onChangeIsLoading,
 	onChangeModalOpened,
-	onLoginSuccess
+	onLoginSuccess,
+	email,
+	setEmail
 }: AuthRegisterFormProps) => {
-	const { step, email, setEmail, password, setPassword, handleEmailStepSubmit, handlePasswordSubmit } =
-		useAuthRegisterForm({
-			onChangeIsLoading,
-			onChangeModalOpened,
-			onLoginSuccess
-		});
+	const { step, password, setPassword, handleEmailStepSubmit, handlePasswordSubmit } = useAuthRegisterForm({
+		onChangeIsLoading,
+		email,
+		setEmail,
+		onChangeModalOpened,
+		onLoginSuccess
+	});
 
 	if (step === 'password') {
 		return (

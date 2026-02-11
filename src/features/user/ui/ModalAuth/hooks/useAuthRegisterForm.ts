@@ -11,15 +11,18 @@ interface UseAuthRegisterFormProps {
 	onChangeIsLoading: (value: boolean) => void;
 	onChangeModalOpened: (value: boolean) => void;
 	onLoginSuccess?: () => Promise<void>;
+	email: string;
+	setEmail: (email: string) => void;
 }
 
 export const useAuthRegisterForm = ({
 	onChangeIsLoading,
 	onChangeModalOpened,
-	onLoginSuccess
+	onLoginSuccess,
+	email,
+	setEmail
 }: UseAuthRegisterFormProps) => {
 	const [step, setStep] = useState<AuthStep>('email');
-	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [loginAttempts, setLoginAttempts] = useState(0);
 	const login = useLogin();

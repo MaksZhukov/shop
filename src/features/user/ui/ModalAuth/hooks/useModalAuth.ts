@@ -8,6 +8,7 @@ interface UseModalAuthProps {
 
 export const useModalAuth = ({ onChangeModalOpened, isResetPassword }: UseModalAuthProps) => {
 	const [type, setType] = useState<ModalAuthStates>(() => (isResetPassword ? 'reset' : 'auth'));
+	const [email, setEmail] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleModalClose = useCallback(() => {
@@ -17,7 +18,9 @@ export const useModalAuth = ({ onChangeModalOpened, isResetPassword }: UseModalA
 	const formProps = {
 		isLoading,
 		onChangeIsLoading: setIsLoading,
-		onChangeType: setType
+		onChangeType: setType,
+		email,
+		setEmail
 	};
 
 	return { type, handleModalClose, formProps };
