@@ -58,7 +58,7 @@ export const useOrderRegistrationForm = () => {
 	};
 
 	const validateForm = (): boolean => {
-		if (!formData.username || !formData.username.trim()) {
+		if (formData.userType === 'individual' && (!formData.username || !formData.username.trim())) {
 			return false;
 		}
 
