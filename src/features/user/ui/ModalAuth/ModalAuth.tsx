@@ -35,6 +35,7 @@ export const ModalAuth = ({ onChangeModalOpened, isResetPassword, onLoginSuccess
 				title=''
 				sx={{
 					maxWidth: '400px',
+					width: '100%',
 					position: 'absolute',
 					top: '50%',
 					left: '50%',

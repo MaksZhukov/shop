@@ -25,7 +25,17 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 		setAnchorEl(null);
 	};
 
+	const handleClickSignIn = () => {
+		setAnchorEl(null);
+		onClickSignIn();
+	};
+	const handleClickLogout = () => {
+		setAnchorEl(null);
+		onClickLogout();
+	};
+
 	const handleClickLink = (path: string) => () => {
+		setAnchorEl(null);
 		router.push(path);
 	};
 
@@ -55,10 +65,10 @@ const Profile = ({ onClickSignIn, onClickLogout }: Props) => {
 									{userStore.id ? (
 										<MenuItem onClick={handleClickLink('/profile')}>Профиль</MenuItem>
 									) : (
-										<MenuItem onClick={onClickSignIn}>Войти</MenuItem>
+										<MenuItem onClick={handleClickSignIn}>Войти</MenuItem>
 									)}
 									{userStore.id && <Divider />}
-									{userStore.id && <MenuItem onClick={onClickLogout}>Выход</MenuItem>}
+									{userStore.id && <MenuItem onClick={handleClickLogout}>Выход</MenuItem>}
 								</MenuList>
 							</ClickAwayListener>
 						</Paper>
