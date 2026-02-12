@@ -1,7 +1,10 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import { useSnackbar } from 'notistack';
 import type { OrderRegistrationFormData, UserType, DeliveryMethod, PaymentMethod } from '../types';
-import { orderApi } from 'entities/order';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const isValidEmail = (email: string): boolean => EMAIL_REGEX.test(email.trim());
 
 export const useOrderRegistrationForm = () => {
 	const [formData, setFormData] = useState<OrderRegistrationFormData>({
@@ -70,6 +73,11 @@ export const useOrderRegistrationForm = () => {
 			return false;
 		}
 
+		if (!isValidEmail(formData.email)) {
+       
+			return false;
+		}
+
 		if (formData.userType === 'legal' && (!formData.companyName || !formData.companyName.trim())) {
 			return false;
 		}
@@ -91,7 +99,13 @@ export const useOrderRegistrationForm = () => {
 
 	const handleCheckout = (): boolean => {
 		if (!validateForm()) {
-			enqueueSnackbar('Пожалуйста, заполните все обязательные поля', { variant: 'error' });
+			const emailInvalid = formData.email?.trim() && !isValidEmail(formData.email);
+			enqueueSnackbar(
+				emailInvalid
+					? 'Введите корректный адрес электронной почты'
+					: 'Пожалуйста, заполните все обязательные поля',
+				{ variant: 'error' }
+			);
 			return false;
 		}
 
