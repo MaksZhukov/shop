@@ -12,6 +12,7 @@ import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
 import { useRemoveCart } from 'features/cart/useRemoveCart';
 import router from 'next/router';
 import { useQueryClient } from '@tanstack/react-query';
+import { Cart } from 'entities/cart';
 
 interface Props {}
 
@@ -64,6 +65,11 @@ const Cart: NextPage<Props> = observer(() => {
 		router.push('/order-registration', undefined, { shallow: true });
 	};
 
+	const handleClickBuy = (item: Cart) => {
+		store.cart.setSelectedItemsForCheckout([item.id]);
+		router.push('/order-registration', undefined, { shallow: true });
+	};
+
 	if (isLoading) {
 		return <Loader />;
 	}
@@ -87,6 +93,7 @@ const Cart: NextPage<Props> = observer(() => {
 						onToggleItem={handleToggleItem}
 						onDeleteSelected={handleDeleteSelected}
 						onRemoveItem={handleRemoveItem}
+						onClickBuy={handleClickBuy}
 					/>
 					<OrderSummary
 						selectedItemsCount={selectedCartItems.length}

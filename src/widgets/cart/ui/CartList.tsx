@@ -11,6 +11,7 @@ interface CartListProps {
 	onToggleItem: (itemId: number) => void;
 	onDeleteSelected: () => void;
 	onRemoveItem: (item: Cart) => void;
+	onClickBuy: (item: Cart) => void;
 }
 
 export const CartList = ({
@@ -20,7 +21,8 @@ export const CartList = ({
 	onSelectAll,
 	onToggleItem,
 	onDeleteSelected,
-	onRemoveItem
+	onRemoveItem,
+	onClickBuy
 }: CartListProps) => {
 	return (
 		<Box flex={1}>
@@ -38,6 +40,7 @@ export const CartList = ({
 						isSelected={selectedItems.includes(item.id)}
 						onToggleSelect={onToggleItem}
 						onRemove={onRemoveItem}
+						onClickBuy={onClickBuy}
 					/>
 				))}
 			</Box>

@@ -13,17 +13,22 @@ interface CartItemProps {
 	isSelected: boolean;
 	onToggleSelect: (itemId: number) => void;
 	onRemove: (item: Cart) => void;
+	onClickBuy: (item: Cart) => void;
 }
 
 const IMAGE_WIDTH = 136;
 const IMAGE_HEIGHT = 108;
 
-export const CartItem = ({ item, isSelected, onToggleSelect, onRemove }: CartItemProps) => {
+export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBuy }: CartItemProps) => {
 	const product = item.product;
 	const productDetails = !isSparePart(product)
 		? ''
 		: [product.volume?.name, product.fuel, product.transmission, product.year].filter(Boolean).join(', ');
 	const productUrl = `/spare-parts/${product.brand?.slug}/${product.id}`;
+
+	const handleClickBuy = (item: Cart) => () => {
+		onClickBuy(item);
+	};
 
 	const renderActionButtons = (showBuyButton: boolean) => {
 		return (
@@ -36,6 +41,7 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove }: CartIte
 					<Button
 						disabled={item.product.sold}
 						sx={{ ml: 1 }}
+						onClick={handleClickBuy(item)}
 						variant={item.product.sold ? 'contained' : 'outlined'}
 						size='small'
 					>
