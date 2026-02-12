@@ -11,10 +11,12 @@ import type { SparePart } from 'entities/sparePart';
 export const Header: FC = () => {
 	const theme = useTheme();
 	const { code } = useRouter().query;
+	const isResetPassword = !!code;
 	const [searchValue, setSearchValue] = useState<string>('');
 	const { isScrolled } = useHeaderScroll();
 	const { searchedSpareParts, isFetching } = useSearchSpareParts(searchValue);
-	const { isOpenedAuthModal, setIsOpenedAuthModal, handleClickSignIn, handleClickLogout } = useAuthModal();
+	const { isOpenedAuthModal, setIsOpenedAuthModal, handleClickSignIn, handleClickLogout } =
+		useAuthModal(isResetPassword);
 	const loadCart = useLoadCart();
 	const loadFavorites = useLoadFavorites();
 
@@ -100,7 +102,7 @@ export const Header: FC = () => {
 
 			{isOpenedAuthModal && (
 				<ModalAuth
-					isResetPassword={!!code}
+					isResetPassword={isResetPassword}
 					onChangeModalOpened={setIsOpenedAuthModal}
 					onLoginSuccess={handleLoginSuccess}
 				/>
