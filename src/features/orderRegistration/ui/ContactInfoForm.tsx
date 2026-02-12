@@ -42,6 +42,7 @@ export const ContactInfoForm = ({
 
 	const handleRemoveFile = () => {
 		onFieldChange('uploadedFile', null);
+		setPreviewUrl(null);
 		if (fileInputRef.current) {
 			fileInputRef.current.value = '';
 		}
