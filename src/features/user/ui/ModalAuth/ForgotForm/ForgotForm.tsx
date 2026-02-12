@@ -10,8 +10,15 @@ const submitButtonSx = {
 	'&:hover': { bgcolor: 'grey.800' }
 } as const;
 
-export const ForgotForm = ({ isLoading, onChangeIsLoading, onChangeType, email, setEmail }: ModalAuthFormProps) => {
-	const { handleSubmit } = useForgotForm({ onChangeIsLoading, email, setEmail });
+export const ForgotForm = ({
+	isLoading,
+	onChangeIsLoading,
+	onChangeType,
+	email,
+	setEmail,
+	onChangeModalOpened
+}: ModalAuthFormProps) => {
+	const { handleSubmit } = useForgotForm({ onChangeIsLoading, email, setEmail, onChangeModalOpened });
 
 	return (
 		<Box>

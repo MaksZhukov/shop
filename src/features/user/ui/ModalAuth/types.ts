@@ -6,4 +6,5 @@ export interface ModalAuthFormProps {
 	onChangeType: (type: ModalAuthStates) => void;
 	email: string;
 	setEmail: (email: string) => void;
+	onChangeModalOpened: (value: boolean) => void;
 }

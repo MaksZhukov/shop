@@ -18,8 +18,8 @@ export const ModalAuth = ({ onChangeModalOpened, isResetPassword, onLoginSuccess
 	});
 
 	const formContent = {
-		forgot: <ForgotForm {...formProps} />,
-		reset: <ResetForm {...formProps} />,
+		forgot: <ForgotForm {...formProps} onChangeModalOpened={onChangeModalOpened} />,
+		reset: <ResetForm {...formProps} onChangeModalOpened={onChangeModalOpened} />,
 		auth: (
 			<AuthRegisterForm
 				{...formProps}

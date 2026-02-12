@@ -7,9 +7,10 @@ interface UseForgotFormProps {
 	onChangeIsLoading: (value: boolean) => void;
 	email: string;
 	setEmail: (email: string) => void;
+	onChangeModalOpened: (value: boolean) => void;
 }
 
-export const useForgotForm = ({ onChangeIsLoading, email, setEmail }: UseForgotFormProps) => {
+export const useForgotForm = ({ onChangeIsLoading, email, setEmail, onChangeModalOpened }: UseForgotFormProps) => {
 	const { enqueueSnackbar } = useSnackbar();
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -18,6 +19,7 @@ export const useForgotForm = ({ onChangeIsLoading, email, setEmail }: UseForgotF
 		try {
 			await userApi.forgotPassword(email);
 			enqueueSnackbar('Проверьте свою почту', { variant: 'success' });
+			onChangeModalOpened(false);
 		} catch (err) {
 			if (axios.isAxiosError(err)) {
 				enqueueSnackbar('Неверные данные', { variant: 'error' });
