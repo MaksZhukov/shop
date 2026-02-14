@@ -1,7 +1,6 @@
 import { SxProps, Box } from '@mui/material';
 import { Typography, WhiteBox, Link } from 'shared/ui';
-import { Product } from 'entities/product';
-import { isSparePart } from 'entities/product';
+import { Product, getProductLink, isSparePart } from 'entities/product';
 import { ProductPrice } from './ProductPrice';
 import { ProductItemImages } from 'entities/product/ui/ProductItemImages';
 
@@ -44,7 +43,7 @@ export const ProductItem = ({
 
 			<Box p={1.5}>
 				<ProductPrice data={data} />
-				<Link href={`/spare-parts/${data.brand?.slug}/${data.id}`} lineClamp={2} sx={{ height: 34 }}>
+				<Link href={getProductLink(data)} lineClamp={2} sx={{ height: 34 }}>
 					{data.h1}
 				</Link>
 				<Typography mb={1} color='custom.text-muted'>

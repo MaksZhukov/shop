@@ -2,7 +2,7 @@ import { Button, Tab, Table, TableBody, TableCell, TableRow, Tabs } from '@mui/m
 import { Typography, WhiteBox } from 'shared/ui';
 import { ChevronDownIcon, ChevronUpIcon } from 'shared/icons';
 import type { Product } from 'entities/product';
-import { isSparePart } from 'entities/product';
+import { isSparePart, isTire } from 'entities/product';
 import { useState } from 'react';
 
 interface DescriptionItem {
@@ -22,21 +22,32 @@ const TAB_VALUES = {
 } as const;
 
 const getProductDescriptions = (product: Product): DescriptionItem[] => {
-	if (!isSparePart(product)) {
-		return [];
+	if (isSparePart(product)) {
+		return [
+			{ title: 'Год', value: product.year },
+			{ title: 'Ориг.номер', value: product.id },
+			{ title: 'Обьем двигателя', value: product.volume?.name },
+			{ title: 'Тип топлива', value: product.fuel },
+			{ title: 'Примечание', value: product.description },
+			{ title: 'Маркировка двигателя', value: product.engine },
+			{ title: 'КПП', value: product.transmission },
+			{ title: 'Привод', value: product.id },
+			{ title: 'Тип кузова', value: product.id }
+		];
 	}
 
-	return [
-		{ title: 'Год', value: product.year },
-		{ title: 'Ориг.номер', value: product.id },
-		{ title: 'Обьем двигателя', value: product.volume?.name },
-		{ title: 'Тип топлива', value: product.fuel },
-		{ title: 'Примечание', value: product.description },
-		{ title: 'Маркировка двигателя', value: product.engine },
-		{ title: 'КПП', value: product.transmission },
-		{ title: 'Привод', value: product.id },
-		{ title: 'Тип кузова', value: product.id }
-	];
+	if (isTire(product)) {
+		return [
+			{ title: 'Ширина', value: product.width?.name },
+			{ title: 'Высота профиля', value: product.height?.name },
+			{ title: 'Диаметр', value: product.diameter?.name },
+			{ title: 'Сезон', value: product.season },
+			{ title: 'Бренд', value: product.brand?.name },
+			{ title: 'Описание', value: product.description }
+		];
+	}
+
+	return [];
 };
 
 export const ProductTabs = ({ product }: Props) => {

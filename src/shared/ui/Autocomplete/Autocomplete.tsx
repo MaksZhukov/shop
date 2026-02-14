@@ -112,7 +112,7 @@ const Autocomplete = <
 												paddingLeft: '8px !important'
 											}
 										}
-								  }
+									}
 								: {})
 						}}
 						placeholder={props.placeholder}

@@ -119,7 +119,7 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 	}, [generation, model, brand]);
 
 	const pageCount = Math.ceil((spareParts?.data?.meta?.pagination?.total || 0) / API_DEFAULT_LIMIT);
-	const total = totalSpareParts?.data?.meta?.pagination?.total || null;
+	const total = totalSpareParts?.data?.meta?.pagination?.total;
 
 	return {
 		spareParts: spareParts?.data?.data || [],

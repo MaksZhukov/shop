@@ -9,7 +9,7 @@ import { ChevronRightIcon } from 'shared/icons';
 interface CatalogSidebarProps {
 	filtersConfig: (AutocompleteType | NumberType)[];
 	filtersValues: { [key: string]: string | null };
-	total: number | null;
+	total?: number;
 	onClickFind: () => void;
 	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
 	catalogCategories: TopCategory[];

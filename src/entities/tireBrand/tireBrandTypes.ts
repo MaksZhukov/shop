@@ -8,4 +8,7 @@ export interface TireBrand {
 	image: Image;
 	seo: SEO;
 	productBrandText?: BrandTextComponent;
+	tires?: {
+		count: number;
+	};
 }

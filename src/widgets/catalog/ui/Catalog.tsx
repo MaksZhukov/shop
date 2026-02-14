@@ -3,7 +3,6 @@ import type { ModelSparePartsCountWithGenerationsSparePartsCount } from 'entitie
 import type { SEO } from 'shared/api/types';
 import type { Product } from 'entities/product';
 import { Filters, AutocompleteType, NumberType } from 'features/productFilters';
-import type { BrandWithSparePartsCount } from 'entities/brand/brandTypes';
 import type { TopCategory } from 'entities/catalog';
 import { useState } from 'react';
 import { CatalogHeader } from './CatalogHeader';
@@ -11,14 +10,15 @@ import { CatalogSidebar } from './CatalogSidebar';
 import { CatalogContent } from './CatalogContent';
 import { CatalogSEO } from './CatalogSEO';
 import { CatalogFiltersModal } from './CatalogFiltersModal';
+import { TireBrand } from 'entities/tireBrand';
 
 interface CatalogProps {
 	seo: SEO | null;
 	filtersConfig: (AutocompleteType | NumberType)[];
-	brands: BrandWithSparePartsCount[];
+	brands: TireBrand[];
 	models: ModelSparePartsCountWithGenerationsSparePartsCount[];
 	filtersValues: { [key: string]: string | null };
-	total: number | null;
+	total?: number;
 	data: Product[];
 	isLoading: boolean;
 	pageCount: number;
@@ -30,6 +30,7 @@ interface CatalogProps {
 	onChangeHoveredCategory: (category: TopCategory | null) => void;
 	catalogCategories: TopCategory[];
 	hoveredCategory: TopCategory | null;
+	catalogVariant?: 'spareParts' | 'tires';
 }
 
 export const Catalog: React.FC<CatalogProps> = ({
@@ -49,7 +50,8 @@ export const Catalog: React.FC<CatalogProps> = ({
 	onChangeSort,
 	catalogCategories,
 	hoveredCategory,
-	onChangeHoveredCategory
+	onChangeHoveredCategory,
+	catalogVariant = 'spareParts'
 }) => {
 	const [filtersModalOpen, setFiltersModalOpen] = useState(false);
 
@@ -90,6 +92,7 @@ export const Catalog: React.FC<CatalogProps> = ({
 					isLoading={isLoading}
 					pageCount={pageCount}
 					page={page}
+					catalogVariant={catalogVariant}
 				/>
 			</Box>
 

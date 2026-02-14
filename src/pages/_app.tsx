@@ -3,7 +3,7 @@ import { Breadcrumbs } from 'shared/ui';
 import { HeadSEO } from 'app';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { ErrorInfo, useMemo } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import dynamic from 'next/dynamic';
 import { Layout } from 'shared/ui';
@@ -50,7 +50,7 @@ function AppContent({ Component, pageProps }: AppProps) {
 		return findImage(pageProps.data) || findImage(pageProps.page) || null;
 	}, [pageProps.data, pageProps.page]);
 
-	const handleRenderError = (error: Error) => {
+	const handleRenderError = (error: unknown, info: ErrorInfo) => {
 		if (process.env.NODE_ENV === 'production') {
 			// send(
 			// 	'Nextjs FE Error',

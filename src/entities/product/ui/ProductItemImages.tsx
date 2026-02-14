@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { Image } from 'shared/ui';
-import { Product } from 'entities/product';
+import { Product, getProductLink } from 'entities/product';
 import { Carousel } from 'shared/ui/Carousel';
 import NextLink from 'next/link';
 
@@ -22,7 +22,7 @@ export const ProductItemImages = ({ data, width, imageHeight, imageHeightOffset,
 		: {};
 	return data.images ? (
 		<Box>
-			<NextLink href={`/spare-parts/${data.brand?.slug}/${data.id}`} style={disabledStyles}>
+			<NextLink href={getProductLink(data)} style={disabledStyles}>
 				<Carousel options={{ axis: 'x', loop: false }} showArrows={false} showDots={true}>
 					{data.images?.map((image) => (
 						<Box key={image.id} maxWidth={'100%'} height={imageHeight + imageHeightOffset}>
@@ -43,7 +43,7 @@ export const ProductItemImages = ({ data, width, imageHeight, imageHeightOffset,
 		</Box>
 	) : (
 		<Box>
-			<NextLink href={`/spare-parts/${data.brand?.slug}/${data.id}`} style={disabledStyles}>
+			<NextLink href={getProductLink(data)} style={disabledStyles}>
 				<Image
 					title={data.h1}
 					style={{

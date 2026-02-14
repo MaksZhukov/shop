@@ -1,4 +1,4 @@
 export type TireHeight = {
-	id: number;
+	id: string;
 	name: string;
 };

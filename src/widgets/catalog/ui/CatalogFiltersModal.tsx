@@ -6,7 +6,7 @@ interface CatalogFiltersModalProps {
 	open: boolean;
 	filtersConfig: (AutocompleteType | NumberType)[];
 	filtersValues: { [key: string]: string | null };
-	total: number | null;
+	total?: number;
 	onClose: () => void;
 	onClickFind: () => void;
 	onChangeFilterValues: (values: { [key: string]: string | null }) => void;

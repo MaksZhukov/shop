@@ -1,5 +1,5 @@
 export type TireWidth = {
-	id: number;
+	id: string;
 	name: string;
 };
 

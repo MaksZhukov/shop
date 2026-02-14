@@ -4,20 +4,26 @@ import { ProductItem } from 'entities/product';
 import { Typography } from 'shared/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import type { BrandWithSparePartsCount } from 'entities/brand/brandTypes';
 import type { ModelSparePartsCountWithGenerationsSparePartsCount } from 'entities/model';
 import { CartButton } from 'features/cart';
 import { FavoriteButton } from 'features/favorites';
 import { Link } from 'shared/ui';
 
 interface CatalogContentProps {
-	brands: BrandWithSparePartsCount[];
+	brands: Array<{
+		id: number;
+		name: string;
+		slug: string;
+		spareParts?: { count: number };
+		tires?: { count: number };
+	}>;
 	models: ModelSparePartsCountWithGenerationsSparePartsCount[];
 	filtersValues: { [key: string]: string | null };
 	data: Product[];
 	isLoading: boolean;
 	pageCount: number;
 	page: number;
+	catalogVariant?: 'spareParts' | 'tires';
 }
 
 export const CatalogContent: React.FC<CatalogContentProps> = ({
@@ -27,11 +33,17 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 	data,
 	isLoading,
 	pageCount,
-	page
+	page,
+	catalogVariant = 'spareParts'
 }) => {
 	const router = useRouter();
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+	const brandLink = (slug: string) =>
+		catalogVariant === 'tires' ? `/tires?brand=${encodeURIComponent(slug)}` : `/spare-parts/${slug}`;
+	const showModelsSection = catalogVariant === 'spareParts';
+	const showBrandsSection = !filtersValues.brand || (showModelsSection && !filtersValues.model);
 
 	const handleScrollToTop = () => {
 		// Use instant scroll on mobile to avoid animation issues
@@ -44,13 +56,13 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 
 	return (
 		<Box flex={1}>
-			{(!filtersValues.brand || !filtersValues.model) && !isMobile && (
+			{showBrandsSection && !isMobile && (
 				<Box
 					overflow='auto'
 					mb={2}
 					boxShadow={`0px 10px 25px 0px ${theme.palette.custom.shadow}`}
 					px={2}
-					py={4}
+					py={2}
 					minHeight={360}
 					display='flex'
 					flexDirection='column'
@@ -64,11 +76,16 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 					{!filtersValues.brand &&
 						brands.map((brand) => (
 							<Box py={1} display='flex' gap={0.5} key={brand.id}>
-								<Link href={`/spare-parts/${brand.slug}`}>{brand.name}</Link>
-								<Typography color='custom.text-muted'>{brand.spareParts?.count}</Typography>
+								<Link href={brandLink(brand.slug)}>{brand.name}</Link>
+								{(brand.spareParts != null || brand.tires != null) && (
+									<Typography color='custom.text-muted'>
+										{brand.spareParts?.count ?? brand.tires?.count}
+									</Typography>
+								)}
 							</Box>
 						))}
-					{filtersValues.brand &&
+					{showModelsSection &&
+						filtersValues.brand &&
 						!filtersValues.model &&
 						models.flatMap(
 							(model) =>

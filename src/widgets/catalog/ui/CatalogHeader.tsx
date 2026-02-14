@@ -20,7 +20,7 @@ const SORT_ITEMS: SortItem[] = [
 interface CatalogHeaderProps {
 	seo: SEO | null;
 	sort: string;
-	total: number | null;
+	total?: number;
 	onChangeSort: (sort: string) => void;
 	onOpenFiltersModal: () => void;
 }
@@ -73,7 +73,7 @@ export const CatalogHeader: React.FC<CatalogHeaderProps> = ({ seo, sort, total, 
 			>
 				<Box display={{ xs: 'flex', md: 'none' }} gap={0.5}>
 					<Typography color='custom.text-muted'> Всего запчастей: </Typography>
-					<Typography fontWeight={500}>{total?.toLocaleString()}</Typography>
+					<Typography fontWeight={500}>{total?.toLocaleString() ?? 0}</Typography>
 				</Box>
 				<Button variant='text' endIcon={<ChevronDownIcon />} color='primary' onClick={handleSortMenuOpen}>
 					{SORT_ITEMS.find((item) => item.value === sort)?.name}

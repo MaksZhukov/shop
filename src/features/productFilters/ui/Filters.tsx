@@ -7,7 +7,7 @@ import { ChevronUpIcon, ChevronDownIcon } from 'shared/icons';
 
 interface Props {
 	onClickFind?: (values: { [key: string]: string | null }) => void;
-	total: number | null;
+	total?: number;
 	values: { [key: string]: string | null };
 	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
 	config: (AutocompleteType | NumberType)[];
@@ -26,6 +26,8 @@ const getDependencyItemIds = (
 
 export const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: Props) => {
 	const [isMoreFilters, setIsMoreFilters] = useState(false);
+
+	console.log(values);
 
 	const handleClickFind = () => {
 		if (onClickFind) {
@@ -109,14 +111,16 @@ export const Filters = ({ onClickFind, config, total, values, onChangeFilterValu
 		<>
 			{mainFiltersConfig.map(renderFilterItem)}
 			{isMoreFilters && additionalFiltersConfig.map(renderFilterItem)}
-			<Button
-				size='small'
-				sx={{ alignSelf: 'flex-start', mb: 2, px: 1 }}
-				onClick={() => setIsMoreFilters(!isMoreFilters)}
-				endIcon={isMoreFilters ? <ChevronUpIcon /> : <ChevronDownIcon />}
-			>
-				{isMoreFilters ? 'Меньше параметров' : 'Больше параметров'}
-			</Button>
+			{!!additionalFiltersConfig.length && (
+				<Button
+					size='small'
+					sx={{ alignSelf: 'flex-start', mb: 2, px: 1 }}
+					onClick={() => setIsMoreFilters(!isMoreFilters)}
+					endIcon={isMoreFilters ? <ChevronUpIcon /> : <ChevronDownIcon />}
+				>
+					{isMoreFilters ? 'Меньше параметров' : 'Больше параметров'}
+				</Button>
+			)}
 			<Button onClick={handleClickFind} fullWidth variant='contained'>
 				Показать {total?.toLocaleString()}
 			</Button>

@@ -26,9 +26,9 @@ interface Props {
 const Product: FC<Props> = ({ data, page, relatedProducts }) => {
 	const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+    
 	useEffect(() => {
-		if (data.type === 'sparePart') {
+		if (data.type === 'sparePart' || data.type === 'tire') {
 			productViewedLocalStorage.addViewedProduct({ id: data.id, type: data.type });
 		}
 	}, [data.id, data.type]);
