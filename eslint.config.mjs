@@ -9,7 +9,11 @@ const eslintConfig = defineConfig([
 		'.next/**',
 		'out/**',
 		'build/**',
-		'next-env.d.ts'
+		'next-env.d.ts',
+		'declarations.d.ts',
+		// Husky and tooling (v10 config lookup lints from file dir; avoid parsing non-source)
+		'.husky/**',
+		'node_modules/**'
 	])
 ]);
 

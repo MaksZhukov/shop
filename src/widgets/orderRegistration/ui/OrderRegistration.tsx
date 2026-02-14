@@ -21,7 +21,8 @@ export const OrderRegistration = ({
 	const { orderCheckout, formattedTime, isExpired, handleCheckout } = useOrderCheckout({
 		formData: form.formData,
 		checkoutItems,
-		onChangeIsOrdered
+		onChangeIsOrdered,
+		isOrdered
 	});
 
 	const handleCheckoutClick = async () => {

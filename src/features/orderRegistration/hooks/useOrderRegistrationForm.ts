@@ -1,21 +1,23 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import { useSnackbar } from 'notistack';
 import type { OrderRegistrationFormData, UserType, DeliveryMethod, PaymentMethod } from '../types';
+import { useUserStore } from 'entities/user';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const isValidEmail = (email: string): boolean => EMAIL_REGEX.test(email.trim());
 
 export const useOrderRegistrationForm = () => {
+	const userStore = useUserStore();
 	const [formData, setFormData] = useState<OrderRegistrationFormData>({
 		userType: 'individual',
 		username: '',
 		companyName: '',
 		tin: '',
-		phone: '',
-		email: '',
+		phone: userStore.phone,
+		email: userStore.email,
 		deliveryMethod: 'delivery',
-		address: '',
+		address: userStore.address,
 		comment: '',
 		paymentMethod: 'online',
 		uploadedFile: null
@@ -74,7 +76,6 @@ export const useOrderRegistrationForm = () => {
 		}
 
 		if (!isValidEmail(formData.email)) {
-       
 			return false;
 		}
 

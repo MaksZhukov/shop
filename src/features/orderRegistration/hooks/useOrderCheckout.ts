@@ -1,32 +1,61 @@
 import { useState, useEffect } from 'react';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import { useQueryClient } from '@tanstack/react-query';
 import { orderApi, type OrderCheckoutResponse } from 'entities/order';
-import { useOrderTimer } from './useOrderTimer';
-import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
-import type { OrderRegistrationFormData } from '../types';
 import type { Cart } from 'entities/cart';
+import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
+import { useOrderTimer } from './useOrderTimer';
+import { useUnpaidOrderGuard } from './useUnpaidOrderGuard';
+import { openPaymentWidget } from '../lib/openPaymentWidget';
+import { BEPAID_CHECKOUT_URL } from '../constants';
+import type { OrderRegistrationFormData } from '../types';
 
 interface UseOrderCheckoutParams {
 	formData: OrderRegistrationFormData;
 	checkoutItems: Cart[];
 	onChangeIsOrdered: (isOrdered: boolean) => void;
+	isOrdered: boolean;
 }
 
-export const useOrderCheckout = ({ formData, checkoutItems, onChangeIsOrdered }: UseOrderCheckoutParams) => {
+export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, isOrdered }: UseOrderCheckoutParams) {
 	const [orderCheckout, setOrderCheckout] = useState<OrderCheckoutResponse | null>(null);
+	const [token, setToken] = useState<string | null>(null);
 	const queryClient = useQueryClient();
 	const removeCartMany = useRemoveCartMany();
+	const router = useRouter();
 	const { formattedTime, isExpired } = useOrderTimer(orderCheckout?.order);
+
+	const hasUnpaidOnlineOrder = !!orderCheckout?.order && formData.paymentMethod === 'online' && !isOrdered;
+
+	const unpaidOrderCheckoutToken =
+		hasUnpaidOnlineOrder && orderCheckout?.checkout?.token ? orderCheckout.checkout.token : null;
+
+	useUnpaidOrderGuard(hasUnpaidOnlineOrder, unpaidOrderCheckoutToken);
 
 	useEffect(() => {
 		if (isExpired && orderCheckout?.order) {
 			router.push('/cart');
 		}
-	}, [isExpired, orderCheckout]);
+	}, [isExpired, orderCheckout?.order, router]);
+
+	const onOrderSuccess = async () => {
+		onChangeIsOrdered(true);
+		removeCartMany(checkoutItems.map((item) => item.id));
+		await queryClient.invalidateQueries();
+	};
+
+	const openWidget = (paymentToken: string) => {
+		openPaymentWidget(BEPAID_CHECKOUT_URL, paymentToken, onOrderSuccess);
+	};
 
 	const handleCheckout = async () => {
 		const isOnlinePayment = formData.paymentMethod === 'online';
+
+		if (isOnlinePayment && token) {
+			openWidget(token);
+			return;
+		}
+
 		const {
 			data: { data }
 		} = await orderApi.checkout({
@@ -46,25 +75,10 @@ export const useOrderCheckout = ({ formData, checkoutItems, onChangeIsOrdered }:
 		setOrderCheckout(data);
 
 		if (isOnlinePayment && data.checkout) {
-			const params = {
-				checkout_url: 'https://checkout.bepaid.by',
-				token: data.checkout.token,
-				closeWidget: async (status: string | null | undefined) => {
-					if (status === 'successful') {
-						onChangeIsOrdered(true);
-						removeCartMany(checkoutItems.map((item) => item.id));
-						await queryClient.invalidateQueries();
-					}
-					if (status === 'failed') {
-						// Handle failed payment if needed
-					}
-				}
-			};
-			new BeGateway(params).createWidget();
+			setToken(data.checkout.token);
+			openWidget(data.checkout.token);
 		} else {
-			removeCartMany(checkoutItems.map((item) => item.id));
-			onChangeIsOrdered(true);
-			await queryClient.invalidateQueries();
+			await onOrderSuccess();
 		}
 	};
 
@@ -74,4 +88,4 @@ export const useOrderCheckout = ({ formData, checkoutItems, onChangeIsOrdered }:
 		isExpired,
 		handleCheckout
 	};
-};
+}

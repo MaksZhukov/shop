@@ -1,8 +1,11 @@
 import { api } from 'shared/api';
 import type { ApiResponse } from 'shared/api/types';
 import type { ProductType } from 'entities/product';
+import { backendUrl } from 'shared/services/EnvService';
 import { OrderCheckout, OrderCheckoutResponse } from './orderTypes';
 import type { UserType } from 'features/orderRegistration';
+
+const CANCEL_ORDER_URL = `${backendUrl}/api/orders-v1/cancel`;
 
 export type OrderCheckoutParams = {
 	products: { id: number; type: ProductType }[];
@@ -53,5 +56,15 @@ export const orderApi = {
 
 	checkout: (params: OrderCheckoutParams) => {
 		return api.post<ApiResponse<OrderCheckoutResponse>>(`/orders-v1/checkout`, buildCheckoutFormData(params));
+	},
+	cancelOrder: (checkoutToken: string) => {
+		return api.post<ApiResponse<OrderCheckoutResponse>>(`/orders-v1/cancel`, { token: checkoutToken });
+	},
+
+	/** Fire-and-forget cancel via sendBeacon (for pagehide/beforeunload when fetch is unreliable). */
+	cancelOrderBeacon: (checkoutToken: string): void => {
+		if (typeof navigator.sendBeacon !== 'function') return;
+		const payload = JSON.stringify({ token: checkoutToken });
+		navigator.sendBeacon(CANCEL_ORDER_URL, new Blob([payload], { type: 'application/json' }));
 	}
 };
