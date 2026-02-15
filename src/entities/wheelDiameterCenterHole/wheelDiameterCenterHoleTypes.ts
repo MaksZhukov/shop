@@ -1,5 +1,5 @@
 export interface WheelDiameterCenterHole {
-	id: number;
+	id: string;
 	name: string;
 }
 

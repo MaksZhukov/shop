@@ -1,6 +1,6 @@
 import { SxProps, Box } from '@mui/material';
 import { Typography, WhiteBox, Link } from 'shared/ui';
-import { Product, getProductLink, isSparePart } from 'entities/product';
+import { Product, getProductLink, getProductDetails } from 'entities/product';
 import { ProductPrice } from './ProductPrice';
 import { ProductItemImages } from 'entities/product/ui/ProductItemImages';
 
@@ -47,8 +47,7 @@ export const ProductItem = ({
 					{data.h1}
 				</Link>
 				<Typography mb={1} color='custom.text-muted'>
-					{isSparePart(data) &&
-						[data.volume?.name, data.fuel, data.transmission, data.year].filter(Boolean).join(', ')}
+					{getProductDetails(data)}
 				</Typography>
 				{bottomActions}
 			</Box>

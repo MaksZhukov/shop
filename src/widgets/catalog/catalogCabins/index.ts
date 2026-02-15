@@ -1,0 +1,1 @@
+export { CatalogCabins } from './ui';

@@ -1,22 +1,21 @@
 import { Box } from '@mui/material';
-import type { ModelSparePartsCountWithGenerationsSparePartsCount } from 'entities/model';
 import type { SEO } from 'shared/api/types';
 import type { Product } from 'entities/product';
-import { Filters, AutocompleteType, NumberType } from 'features/productFilters';
+import { AutocompleteType, NumberType } from 'features/productFilters';
 import type { TopCategory } from 'entities/catalog';
 import { useState } from 'react';
 import { CatalogHeader } from './CatalogHeader';
 import { CatalogSidebar } from './CatalogSidebar';
+import type { BrandCatalog, ModelCatalog } from './types';
 import { CatalogContent } from './CatalogContent';
 import { CatalogSEO } from './CatalogSEO';
 import { CatalogFiltersModal } from './CatalogFiltersModal';
-import { TireBrand } from 'entities/tireBrand';
 
 interface CatalogProps {
 	seo: SEO | null;
 	filtersConfig: (AutocompleteType | NumberType)[];
-	brands: TireBrand[];
-	models: ModelSparePartsCountWithGenerationsSparePartsCount[];
+	brands: BrandCatalog[];
+	models?: ModelCatalog[];
 	filtersValues: { [key: string]: string | null };
 	total?: number;
 	data: Product[];
@@ -27,10 +26,9 @@ interface CatalogProps {
 	onClickFind: () => void;
 	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
 	onChangeSort: (sort: string) => void;
-	onChangeHoveredCategory: (category: TopCategory | null) => void;
-	catalogCategories: TopCategory[];
-	hoveredCategory: TopCategory | null;
-	catalogVariant?: 'spareParts' | 'tires';
+	onChangeHoveredCategory?: (category: TopCategory | null) => void;
+	catalogCategories?: TopCategory[];
+	hoveredCategory?: TopCategory | null;
 }
 
 export const Catalog: React.FC<CatalogProps> = ({
@@ -48,10 +46,9 @@ export const Catalog: React.FC<CatalogProps> = ({
 	page,
 	sort,
 	onChangeSort,
-	catalogCategories,
+	catalogCategories = [],
 	hoveredCategory,
-	onChangeHoveredCategory,
-	catalogVariant = 'spareParts'
+	onChangeHoveredCategory
 }) => {
 	const [filtersModalOpen, setFiltersModalOpen] = useState(false);
 
@@ -92,7 +89,6 @@ export const Catalog: React.FC<CatalogProps> = ({
 					isLoading={isLoading}
 					pageCount={pageCount}
 					page={page}
-					catalogVariant={catalogVariant}
 				/>
 			</Box>
 

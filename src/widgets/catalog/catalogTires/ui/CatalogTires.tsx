@@ -1,7 +1,8 @@
 import { FC } from 'react';
+import { CircularProgress } from '@mui/material';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
-import { Catalog } from 'widgets/catalog/ui';
+import { BrandCatalog, Catalog } from 'widgets/catalog/ui';
 import {
 	useCatalogFilters,
 	useCatalogData,
@@ -20,7 +21,6 @@ export const CatalogTires: FC<Props> = ({ pageData }) => {
 	const queryParams = parseRouterQuery(router.query);
 
 	const { filtersValues, setFiltersValues } = useCatalogFilters(queryParams);
-
 	const {
 		tires,
 		isLoading,
@@ -31,8 +31,13 @@ export const CatalogTires: FC<Props> = ({ pageData }) => {
 		heights,
 		diameters,
 		catalogCategories,
-		hoveredCategory,
-		setHoveredCategory
+		onOpenWidthAutocomplete,
+		onOpenHeightAutocomplete,
+		onOpenDiameterAutocomplete,
+		isLoadingBrands,
+		isLoadingWidths,
+		isLoadingHeights,
+		isLoadingDiameters
 	} = useCatalogData({ queryParams, filtersValues });
 
 	const { handleClickFind, handleChangeSort } = useCatalogRouter();
@@ -46,13 +51,28 @@ export const CatalogTires: FC<Props> = ({ pageData }) => {
 		widths,
 		heights,
 		diameters,
-		noOptionsText: <>Совпадений нет</>
+		noOptionsText: <>Совпадений нет</>,
+		onOpenWidthAutocomplete,
+		onOpenHeightAutocomplete,
+		onOpenDiameterAutocomplete,
+		isLoadingBrand: isLoadingBrands,
+		isLoadingWidth: isLoadingWidths,
+		isLoadingHeight: isLoadingHeights,
+		isLoadingDiameter: isLoadingDiameters,
+		loadingOptionsText: <CircularProgress size={20} />
 	});
+
+	const brandsForCatalog: BrandCatalog[] = tireBrands.map((b) => ({
+		id: b.id,
+		name: b.name,
+		slug: b.slug,
+		path: `/tires/${b.slug}`,
+		count: b.tires.count
+	}));
 
 	return (
 		<Catalog
-			brands={tireBrands}
-			models={[]}
+			brands={brandsForCatalog}
 			filtersValues={filtersValues}
 			onChangeFilterValues={handleChangeFilterValues}
 			filtersConfig={filtersConfig}
@@ -66,9 +86,6 @@ export const CatalogTires: FC<Props> = ({ pageData }) => {
 			sort={queryParams.sort}
 			onChangeSort={handleChangeSort}
 			catalogCategories={catalogCategories}
-			hoveredCategory={hoveredCategory}
-			onChangeHoveredCategory={setHoveredCategory}
-			catalogVariant='tires'
 		/>
 	);
 };

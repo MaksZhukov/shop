@@ -1,2 +1,2 @@
 export { tireBrandApi } from './tireBrandApi';
-export type { TireBrand } from './tireBrandTypes';
+export type { TireBrand, TireBrandWithCount } from './tireBrandTypes';

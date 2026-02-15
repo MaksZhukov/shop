@@ -8,7 +8,10 @@ export interface TireBrand {
 	image: Image;
 	seo: SEO;
 	productBrandText?: BrandTextComponent;
-	tires?: {
+}
+
+export type TireBrandWithCount = TireBrand & {
+	tires: {
 		count: number;
 	};
-}
+};

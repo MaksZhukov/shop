@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, type Dispatch, type SetStateAction } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { sparePartApi } from 'entities/sparePart';
 import { modelApi, ModelSparePartsCountWithGenerationsSparePartsCount } from 'entities/model';
 import { generationApi } from 'entities/generation';
 import type { Generation } from 'entities/generation/generationTypes';
-import { engineVolumeApi, EngineVolume } from 'entities/engineVolume';
+import { EngineVolume } from 'entities/engineVolume';
 import { catalogApi, TopCategory } from 'entities/catalog';
 import type { FilterValues, ParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
@@ -15,15 +15,17 @@ interface UseCatalogDataParams {
 	filtersValues: FilterValues;
 }
 
+const brandSlug = (brand: string | undefined, filtersBrand: string | null) => filtersBrand || brand || '';
+
 export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataParams) => {
 	const { sort, page, brand, model, generation, kindSparePartSlug, volume, fuel, bodyStyle, transmission } =
 		queryParams;
-	const [models, setModels] = useState<ModelSparePartsCountWithGenerationsSparePartsCount[]>([]);
-	const [generations, setGenerations] = useState<Generation[]>([]);
+	const queryClient = useQueryClient();
 	const [volumes, setVolumes] = useState<EngineVolume[]>([]);
 	const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
 
-	// Fetch spare parts
+	const currentBrandSlug = brandSlug(brand, filtersValues.brand);
+
 	const { data: spareParts, isFetching } = useQuery({
 		queryKey: [
 			'spare-parts',
@@ -81,42 +83,71 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 			})
 	});
 
-	// Fetch catalog categories
 	const { data: catalogCategories } = useQuery({
 		queryKey: ['catalogTopCategories'],
 		placeholderData: (prev) => prev,
 		queryFn: () => catalogApi.fetchTopCategories()
 	});
 
-	// Fetch models when brand changes
-	useEffect(() => {
-		const fetchModels = async () => {
-			const result = await modelApi.fetchModels<ModelSparePartsCountWithGenerationsSparePartsCount>({
-				filters: { brand: { slug: filtersValues.brand || brand } },
+	const { data: modelsData } = useQuery({
+		queryKey: ['spare-parts-models', currentBrandSlug],
+		enabled: !!currentBrandSlug,
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			modelApi.fetchModels<ModelSparePartsCountWithGenerationsSparePartsCount>({
+				filters: { brand: { slug: currentBrandSlug }, spareParts: { sold: false, id: { $notNull: true } } },
 				pagination: { limit: API_MAX_LIMIT },
-				populate: { generations: { populate: { spareParts: { count: true, filters: { sold: false } } } } }
-			});
-			setModels(result.data.data);
-		};
+				populate: {
+					generations: {
+						populate: { spareParts: { count: true, filters: { sold: false } } }
+					}
+				}
+			})
+	});
 
-		if (brand || filtersValues.brand) {
-			fetchModels();
-		}
-	}, [brand, filtersValues.brand]);
+	const { data: generationsData } = useQuery({
+		queryKey: ['spare-parts-generations', brand, model],
+		enabled: !!(brand && model),
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			generationApi.fetchGenerations({
+				filters: { model: { slug: model! }, brand: { slug: brand! } },
+				pagination: { limit: API_MAX_LIMIT }
+			})
+	});
 
-	// Fetch generations when generation param exists
-	useEffect(() => {
-		if (generation && model && brand) {
-			const fetchGenerations = async () => {
-				const result = await generationApi.fetchGenerations({
-					filters: { model: { slug: model }, brand: { slug: brand } },
-					pagination: { limit: API_MAX_LIMIT }
-				});
-				setGenerations(result.data.data);
-			};
-			fetchGenerations();
-		}
-	}, [generation, model, brand]);
+	const models = modelsData?.data?.data ?? [];
+	const generations = generationsData?.data?.data ?? [];
+
+	const setModels: Dispatch<SetStateAction<ModelSparePartsCountWithGenerationsSparePartsCount[]>> = (value) => {
+		queryClient.setQueryData(
+			['spare-parts-models', currentBrandSlug],
+			(prev: { data: { data: ModelSparePartsCountWithGenerationsSparePartsCount[] } } | undefined) => {
+				const next =
+					typeof value === 'function'
+						? (
+								value as (
+									prev: ModelSparePartsCountWithGenerationsSparePartsCount[]
+								) => ModelSparePartsCountWithGenerationsSparePartsCount[]
+							)(prev?.data?.data ?? [])
+						: value;
+				return prev ? { ...prev, data: { ...prev.data, data: next } } : { data: { data: next } };
+			}
+		);
+	};
+
+	const setGenerations: Dispatch<SetStateAction<Generation[]>> = (value) => {
+		queryClient.setQueryData(
+			['spare-parts-generations', brand, model],
+			(prev: { data: { data: Generation[] } } | undefined) => {
+				const next =
+					typeof value === 'function'
+						? (value as (prev: Generation[]) => Generation[])(prev?.data?.data ?? [])
+						: value;
+				return prev ? { ...prev, data: { ...prev.data, data: next } } : { data: { data: next } };
+			}
+		);
+	};
 
 	const pageCount = Math.ceil((spareParts?.data?.meta?.pagination?.total || 0) / API_DEFAULT_LIMIT);
 	const total = totalSpareParts?.data?.meta?.pagination?.total;

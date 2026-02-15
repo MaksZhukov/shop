@@ -12,6 +12,8 @@ import { OFFSET_SCROLL_LOAD_MORE } from 'shared/constants';
 import type { FilterValues } from '../types';
 import { ERROR_MESSAGES } from '../constants';
 
+type KindSparePartType = 'regular' | 'cabin';
+
 interface UseAutocompleteHandlersParams {
 	generations: Generation[];
 	setGenerations: Dispatch<SetStateAction<Generation[]>>;
@@ -19,9 +21,12 @@ interface UseAutocompleteHandlersParams {
 	setVolumes: Dispatch<SetStateAction<EngineVolume[]>>;
 	filtersValues: FilterValues;
 	kindSparePart?: KindSparePart;
+	kindSparePartType?: KindSparePartType;
 	onBrandChange: () => void;
 	onModelChange: () => void;
 }
+
+const DEFAULT_KIND_SPARE_PART_TYPE: KindSparePartType = 'regular';
 
 export const useAutocompleteHandlers = ({
 	generations,
@@ -30,6 +35,7 @@ export const useAutocompleteHandlers = ({
 	setVolumes,
 	filtersValues,
 	kindSparePart,
+	kindSparePartType = DEFAULT_KIND_SPARE_PART_TYPE,
 	onBrandChange,
 	onModelChange
 }: UseAutocompleteHandlersParams) => {
@@ -65,6 +71,7 @@ export const useAutocompleteHandlers = ({
 			const { data } = await kindSparePartApi.fetchKindSpareParts(
 				{
 					filters: {
+						type: kindSparePartType,
 						spareParts: {
 							sold: false,
 							...(filtersValues.brand && { brand: { slug: filtersValues.brand } }),
@@ -115,7 +122,7 @@ export const useAutocompleteHandlers = ({
 
 		try {
 			const { data } = await kindSparePartApi.fetchKindSpareParts(
-				{ filters: { name: { $contains: value } } },
+				{ filters: { name: { $contains: value }, type: kindSparePartType } },
 				{ abortController: controller }
 			);
 			setKindSpareParts(data);

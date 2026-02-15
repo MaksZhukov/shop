@@ -27,3 +27,15 @@ export type BrandWithSparePartsCount = Brand & {
 		count: number;
 	};
 };
+
+export type BrandWithCabinsCount = Brand & {
+	cabins: {
+		count: number;
+	};
+};
+
+export type BrandWithWheelsCount = Brand & {
+	wheels: {
+		count: number;
+	};
+};

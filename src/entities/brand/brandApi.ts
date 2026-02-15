@@ -3,8 +3,8 @@ import type { ApiResponse, CollectionParams } from 'shared/api/types';
 import type { Brand } from './brandTypes';
 
 export const brandApi = {
-	fetchBrands: (params: CollectionParams) =>
-		api.get<ApiResponse<Brand[]>>('/brands', {
+	fetchBrands: <T extends Brand>(params: CollectionParams) =>
+		api.get<ApiResponse<T[]>>('/brands', {
 			params
 		}),
 	fetchBrandBySlug: (slug: string, params: CollectionParams) =>

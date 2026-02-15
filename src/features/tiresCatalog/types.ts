@@ -8,13 +8,14 @@ export interface TireFilterValues {
 }
 
 export type TireQueryParams = {
-	sort: string;
-	page: string;
-	brand: string;
-	width: string;
-	height: string;
-	diameter: string;
-	season: string;
+	sort?: string;
+	page?: string;
+	brand?: string;
+	width?: string;
+	height?: string;
+	diameter?: string;
+	season?: string;
+	slug?: string[];
 };
 
 export interface TireParsedQueryParams {

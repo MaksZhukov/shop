@@ -7,12 +7,18 @@ export const useCatalogRouter = () => {
 	const handleClickFind = (filtersValues: TireFilterValues) => {
 		const newQuery = { ...router.query };
 
-		newQuery['brand'] = filtersValues.brand ?? '';
+		const brand = filtersValues.brand ?? '';
 		newQuery['width'] = filtersValues.width ?? '';
 		newQuery['height'] = filtersValues.height ?? '';
 		newQuery['diameter'] = filtersValues.diameter ?? '';
 		newQuery['season'] = filtersValues.season ?? '';
 		newQuery['page'] = '1';
+
+		if (brand) {
+			delete newQuery['brand'];
+		} else {
+			newQuery['brand'] = '';
+		}
 
 		Object.keys(newQuery).forEach((key) => {
 			if (newQuery[key] === '' || newQuery[key] == null) {
@@ -20,12 +26,16 @@ export const useCatalogRouter = () => {
 			}
 		});
 
-		router.push({ pathname: router.pathname, query: newQuery }, undefined, { shallow: false });
+		const pathname = brand ? `/tires/${encodeURIComponent(brand)}` : '/tires';
+		router.push({ pathname, query: newQuery }, undefined, { shallow: false });
 	};
 
 	const handleChangeSort = (sort: string) => {
-		const newQuery = { ...router.query, sort };
-		router.push({ pathname: router.pathname, query: newQuery }, undefined, { shallow: true });
+		const newQuery: Record<string, string | string[] | undefined> = { ...router.query, sort };
+		delete newQuery['slug'];
+		const brandFromPath = Array.isArray(router.query.slug) ? router.query.slug[0] : undefined;
+		const pathname = brandFromPath ? `/tires/${encodeURIComponent(brandFromPath)}` : '/tires';
+		router.push({ pathname, query: newQuery }, undefined, { shallow: true });
 	};
 
 	return {

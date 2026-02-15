@@ -1,8 +1,10 @@
+export type KindSparePartType = 'regular' | 'cabin';
+
 export interface KindSparePart {
 	id: number;
 	name: string;
 	slug: string;
-	type: 'regular' | 'cabin';
+	type: KindSparePartType;
 }
 
 export type KindSparePartWithSparePartsCount = KindSparePart & {

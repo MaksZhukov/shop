@@ -2,13 +2,8 @@ import { Button, Tab, Table, TableBody, TableCell, TableRow, Tabs } from '@mui/m
 import { Typography, WhiteBox } from 'shared/ui';
 import { ChevronDownIcon, ChevronUpIcon } from 'shared/icons';
 import type { Product } from 'entities/product';
-import { isSparePart, isTire } from 'entities/product';
+import { getProductDescriptionItems } from 'entities/product';
 import { useState } from 'react';
-
-interface DescriptionItem {
-	title: string;
-	value: string | number | undefined;
-}
 
 interface Props {
 	product: Product;
@@ -21,34 +16,7 @@ const TAB_VALUES = {
 	PAYMENT: 'payment'
 } as const;
 
-const getProductDescriptions = (product: Product): DescriptionItem[] => {
-	if (isSparePart(product)) {
-		return [
-			{ title: 'Год', value: product.year },
-			{ title: 'Ориг.номер', value: product.id },
-			{ title: 'Обьем двигателя', value: product.volume?.name },
-			{ title: 'Тип топлива', value: product.fuel },
-			{ title: 'Примечание', value: product.description },
-			{ title: 'Маркировка двигателя', value: product.engine },
-			{ title: 'КПП', value: product.transmission },
-			{ title: 'Привод', value: product.id },
-			{ title: 'Тип кузова', value: product.id }
-		];
-	}
-
-	if (isTire(product)) {
-		return [
-			{ title: 'Ширина', value: product.width?.name },
-			{ title: 'Высота профиля', value: product.height?.name },
-			{ title: 'Диаметр', value: product.diameter?.name },
-			{ title: 'Сезон', value: product.season },
-			{ title: 'Бренд', value: product.brand?.name },
-			{ title: 'Описание', value: product.description }
-		];
-	}
-
-	return [];
-};
+const VISIBLE_DESCRIPTION_LIMIT = 5;
 
 export const ProductTabs = ({ product }: Props) => {
 	const [activeTab, setActiveTab] = useState<string>(TAB_VALUES.DESCRIPTION);
@@ -58,8 +26,11 @@ export const ProductTabs = ({ product }: Props) => {
 		setActiveTab(newValue);
 	};
 
-	const descriptions = getProductDescriptions(product);
-	const visibleDescriptions = descriptions.slice(0, isMoreFilters ? descriptions.length : 5);
+	const descriptions = getProductDescriptionItems(product);
+	const visibleDescriptions = descriptions.slice(
+		0,
+		isMoreFilters ? descriptions.length : VISIBLE_DESCRIPTION_LIMIT
+	);
 
 	const renderTabContent = () => {
 		switch (activeTab) {
@@ -88,7 +59,7 @@ export const ProductTabs = ({ product }: Props) => {
 							</TableBody>
 						</Table>
 
-						{descriptions.length > 5 && (
+						{descriptions.length > VISIBLE_DESCRIPTION_LIMIT && (
 							<Button
 								size='small'
 								sx={{ alignSelf: 'flex-start', px: 1, mt: 1 }}

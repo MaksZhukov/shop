@@ -15,4 +15,12 @@ export interface GetTiresFiltersConfigParams {
 	onChangeHeightAutocomplete?: (_: unknown, value: string | null) => void;
 	onChangeDiameterAutocomplete?: (_: unknown, value: string | null) => void;
 	onChangeSeasonAutocomplete?: (_: unknown, value: string | null) => void;
+	onOpenWidthAutocomplete?: () => void;
+	onOpenHeightAutocomplete?: () => void;
+	onOpenDiameterAutocomplete?: () => void;
+	isLoadingBrand?: boolean;
+	isLoadingWidth?: boolean;
+	isLoadingHeight?: boolean;
+	isLoadingDiameter?: boolean;
+	loadingOptionsText?: ReactNode;
 }

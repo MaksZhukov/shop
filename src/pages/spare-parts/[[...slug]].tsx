@@ -50,7 +50,7 @@ const fetchBrandsData = async (): Promise<BrandWithSparePartsCount[]> => {
 	const {
 		data: { data: brands }
 	} = await brandApi.fetchBrands({
-		populate: { image: true, spareParts: { count: true } },
+		populate: { spareParts: { count: true } },
 		sort: 'name',
 		pagination: { limit: API_MAX_LIMIT },
 		filters: {
@@ -87,7 +87,9 @@ const parseParams = (slug: string[], kindSparePartSlug?: string): SlugParams => 
 const fetchKindSparePartIfNeeded = async (kindSparePartSlug?: string): Promise<KindSparePart | undefined> => {
 	if (!kindSparePartSlug) return undefined;
 
-	const result = await kindSparePartApi.fetchKindSpareParts({ filters: { slug: kindSparePartSlug } });
+	const result = await kindSparePartApi.fetchKindSpareParts({
+		filters: { slug: kindSparePartSlug, type: 'regular' }
+	});
 	return result?.data?.data[0];
 };
 
@@ -198,7 +200,7 @@ const handleModelPage = async (brandParamSlug: string, modelSlug: string, kindSp
 	const {
 		data: { data }
 	} = await modelApi.fetchModelBySlug(modelSlug, {
-		populate: ['seoSpareParts.images', 'image', 'brand'],
+		populate: ['seoSpareParts.images', 'brand'],
 		filters: { brand: { slug: brandParamSlug } }
 	});
 
@@ -222,7 +224,7 @@ const handleBrandPage = async (brandParamSlug: string, kindSparePartSlug?: strin
 	const {
 		data: { data }
 	} = await brandApi.fetchBrandBySlug(brandParamSlug, {
-		populate: ['seoSpareParts.images', 'image']
+		populate: ['seoSpareParts.images']
 	});
 
 	const kindSparePart = await fetchKindSparePartIfNeeded(kindSparePartSlug);

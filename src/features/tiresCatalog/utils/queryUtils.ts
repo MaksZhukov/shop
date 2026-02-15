@@ -4,14 +4,16 @@ export const parseRouterQuery = (query: unknown): TireParsedQueryParams => {
 	const {
 		sort = 'createdAt:desc',
 		page: pageParam = '1',
-		brand,
+		brand: brandQuery,
 		width,
 		height,
 		diameter,
-		season
+		season,
+		slug
 	} = (query || {}) as TireQueryParams;
 
 	const page = +pageParam;
+	const brand = (Array.isArray(slug) && slug[0] ? slug[0] : brandQuery) || undefined;
 
 	return {
 		sort,

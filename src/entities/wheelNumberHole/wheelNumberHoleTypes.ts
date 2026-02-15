@@ -1,5 +1,5 @@
 export interface WheelNumberHole {
-	id: number;
+	id: string;
 	name: string;
 }
 

@@ -27,6 +27,7 @@ export const HeaderBottom: React.FC<HeaderBottomProps> = ({ isScrolled }) => {
 				<Link href='/spare-parts?kindSparePart=dvigatel'>Двигатели</Link>
 				<Link href='/spare-parts?kindSparePart=kpp-avtomaticheskaya-akpp'>Коробки АКПП</Link>
 				<Link href='/spare-parts?kindSparePart=kpp-mehanicheskaya-mkpp'>МКПП</Link>
+				<Link href='/cabins'>Салоны</Link>
 				<Link href='/tires'>Шины</Link>
 				<Link href='/wheels'>Диски</Link>
 				<Link href='/delivery'>Доставка и оплата</Link>

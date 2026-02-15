@@ -25,9 +25,14 @@ const getDependencyItemIds = (
 };
 
 export const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: Props) => {
-	const [isMoreFilters, setIsMoreFilters] = useState(false);
-
-	console.log(values);
+	const mainFiltersConfig = config.filter((item) => item.category === 'main');
+	const additionalFiltersConfig = config.filter((item) => item.category === 'additional');
+	const [isMoreFilters, setIsMoreFilters] = useState(() =>
+		additionalFiltersConfig.some((item) => {
+			const v = values[item.id];
+			return v != null && v !== '';
+		})
+	);
 
 	const handleClickFind = () => {
 		if (onClickFind) {
@@ -59,7 +64,7 @@ export const Filters = ({ onClickFind, config, total, values, onChangeFilterValu
 			<Input
 				key={item.id}
 				fullWidth
-				sx={{ bgcolor: 'background.paper', padding: '0 1em' }}
+				size='medium'
 				onChange={handleChangeNumberInput(item)}
 				value={values[item.id]}
 				placeholder={item.placeholder}
@@ -97,8 +102,6 @@ export const Filters = ({ onClickFind, config, total, values, onChangeFilterValu
 			></Autocomplete>
 		);
 	};
-	const mainFiltersConfig = config.filter((item) => item.category === 'main');
-	const additionalFiltersConfig = config.filter((item) => item.category === 'additional');
 
 	const renderFilterItem = (item: AutocompleteType | NumberType) => (
 		<Box key={item.id} display='flex' marginBottom={1}>

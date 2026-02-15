@@ -85,7 +85,7 @@ export const getServerSideProps = getPageProps(undefined, async (
 			breadcrumbs: [
 				{ text: 'Главная', href: '/' },
 				{ text: 'Шины', href: '/tires' },
-				{ text: tire.brand?.name ?? '', href: `/tires?brand=${encodeURIComponent(tire.brand?.slug ?? '')}` },
+				{ text: tire.brand?.name ?? '', href: `/tires/${tire.brand?.slug ?? ''}` },
 				{ text: tire.name, href: `/tires/${tire.brand?.slug}/${tire.slug}` }
 			]
 		}

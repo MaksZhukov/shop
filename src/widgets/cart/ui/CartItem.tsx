@@ -5,7 +5,7 @@ import { ProductItemImages } from 'entities/product/ui/ProductItemImages';
 import { ProductPrice } from 'entities/product/ui/ProductPrice';
 import { FavoriteButton } from 'features/favorites';
 import { TrashIcon } from 'shared/icons';
-import { isSparePart } from 'entities/product';
+import { getProductLink, getProductDetails, CART_ITEM_IMAGE_WIDTH, CART_ITEM_IMAGE_HEIGHT } from 'entities/product';
 import { Button } from 'shared/ui';
 
 interface CartItemProps {
@@ -16,15 +16,10 @@ interface CartItemProps {
 	onClickBuy: (item: Cart) => void;
 }
 
-const IMAGE_WIDTH = 136;
-const IMAGE_HEIGHT = 108;
-
 export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBuy }: CartItemProps) => {
 	const product = item.product;
-	const productDetails = !isSparePart(product)
-		? ''
-		: [product.volume?.name, product.fuel, product.transmission, product.year].filter(Boolean).join(', ');
-	const productUrl = `/spare-parts/${product.brand?.slug}/${product.id}`;
+	const productDetails = getProductDetails(product);
+	const productUrl = getProductLink(product);
 
 	const handleClickBuy = (item: Cart) => () => {
 		onClickBuy(item);
@@ -55,15 +50,15 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBu
 	return (
 		<WhiteBox mb={1} p={{ xs: 1, md: 2 }}>
 			<Box display='flex' gap={1} position='relative'>
-				<Box overflow='hidden' borderRadius={2} width={IMAGE_WIDTH} height={IMAGE_HEIGHT}>
+				<Box overflow='hidden' borderRadius={2} width={CART_ITEM_IMAGE_WIDTH} height={CART_ITEM_IMAGE_HEIGHT}>
 					<Box position='absolute' bgcolor='white' zIndex={1} left={0} top={0}>
 						<Checkbox sx={{ padding: 0 }} checked={isSelected} onChange={() => onToggleSelect(item.id)} />
 					</Box>
 					<ProductItemImages
 						disabled={item.product.sold}
 						data={product}
-						width={IMAGE_WIDTH}
-						imageHeight={IMAGE_HEIGHT}
+						width={CART_ITEM_IMAGE_WIDTH}
+						imageHeight={CART_ITEM_IMAGE_HEIGHT}
 						imageHeightOffset={0}
 					/>
 				</Box>

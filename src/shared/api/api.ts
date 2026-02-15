@@ -5,7 +5,8 @@ import { getRandomBackendLocalUrl } from 'shared/services/BackendUrlService';
 import { backendUrl } from 'shared/services/EnvService';
 
 export const api = axios.create({
-	baseURL: backendUrl + '/api'
+	baseURL: backendUrl + '/api',
+	withCredentials: true // required for browser to store Set-Cookie from API (e.g. jwt)
 });
 
 axiosRetry(api, { retries: 3 });

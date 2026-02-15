@@ -1,0 +1,41 @@
+import type { Brand } from 'entities/brand/brandTypes';
+import type { Model } from 'entities/model';
+import type { WheelDiameter } from 'entities/wheelDiameter';
+import type { WheelWidth } from 'entities/wheelWidth';
+import type { WheelNumberHole } from 'entities/wheelNumberHole';
+import type { WheelDiameterCenterHole } from 'entities/wheelDiameterCenterHole';
+import type { WheelDiskOffset } from 'entities/wheelDiskOffset';
+import type { ReactNode } from 'react';
+
+export interface GetWheelsFiltersConfigParams {
+	brands: Brand[];
+	models: Model[];
+	diameters: WheelDiameter[];
+	widths: WheelWidth[];
+	numberHoles: WheelNumberHole[];
+	diameterCenterHoles: WheelDiameterCenterHole[];
+	diskOffsets: WheelDiskOffset[];
+	noOptionsText: ReactNode;
+	onChangeKindAutocomplete?: (_: unknown, value: string | null) => void;
+	onChangeBrandAutocomplete?: (_: unknown, value: string | null) => void;
+	onChangeModelAutocomplete?: (_: unknown, value: string | null) => void;
+	onChangeWidthAutocomplete?: (_: unknown, value: string | null) => void;
+	onChangeDiameterAutocomplete?: (_: unknown, value: string | null) => void;
+	onChangeNumberHolesAutocomplete?: (_: unknown, value: string | null) => void;
+	onChangeDiameterCenterHoleAutocomplete?: (_: unknown, value: string | null) => void;
+	onChangeDistanceBetweenCenters?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onChangeDiskOffsetAutocomplete?: (_: unknown, value: string | null) => void;
+	onOpenDiameterAutocomplete?: () => void;
+	onOpenWidthAutocomplete?: () => void;
+	onOpenNumberHolesAutocomplete?: () => void;
+	onOpenDiameterCenterHoleAutocomplete?: () => void;
+	onOpenDiskOffsetAutocomplete?: () => void;
+	isLoadingBrand?: boolean;
+	isLoadingModel?: boolean;
+	isLoadingDiameter?: boolean;
+	isLoadingWidth?: boolean;
+	isLoadingNumberHoles?: boolean;
+	isLoadingDiameterCenterHole?: boolean;
+	isLoadingDiskOffset?: boolean;
+	loadingOptionsText?: ReactNode;
+}

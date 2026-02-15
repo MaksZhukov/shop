@@ -17,3 +17,15 @@ export type GenerationWithSparePartsCount = Generation & {
 		count: number;
 	};
 };
+
+export type GenerationWithCabinsCount = Generation & {
+	cabins: {
+		count: number;
+	};
+};
+
+export type GenerationWithWheelsCount = Generation & {
+	wheels: {
+		count: number;
+	};
+};

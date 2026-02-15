@@ -9,6 +9,7 @@ import { tireDiameterApi } from 'entities/tireDiameter';
 import type { TopCategory } from 'entities/catalog';
 import type { TireFilterValues, TireParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
+import type { TireBrandWithCount } from 'entities/tireBrand';
 
 interface UseCatalogDataParams {
 	queryParams: TireParsedQueryParams;
@@ -17,7 +18,9 @@ interface UseCatalogDataParams {
 
 export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataParams) => {
 	const { sort, page, brand, width, height, diameter, season } = queryParams;
-	const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
+	const [widthsEnabled, setWidthsEnabled] = useState(false);
+	const [heightsEnabled, setHeightsEnabled] = useState(false);
+	const [diametersEnabled, setDiametersEnabled] = useState(false);
 
 	const { data: tires, isFetching } = useQuery({
 		queryKey: ['tires', sort, page, brand, width, height, diameter, season],
@@ -57,10 +60,11 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 			})
 	});
 
-	const { data: tireBrandsData } = useQuery({
+	const { data: tireBrandsData, isFetching: isLoadingBrands } = useQuery({
 		queryKey: ['tire-brands'],
+		placeholderData: (prev) => prev,
 		queryFn: () =>
-			tireBrandApi.fetchTireBrands({
+			tireBrandApi.fetchTireBrands<TireBrandWithCount>({
 				pagination: { limit: API_MAX_LIMIT },
 				sort: 'name',
 				populate: { image: true, tires: { count: true } },
@@ -73,28 +77,34 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 			})
 	});
 
-	const { data: widthsData } = useQuery({
-		queryKey: ['tire-widths'],
+	const { data: widthsData, isFetching: isLoadingWidths } = useQuery({
+		queryKey: ['tire-widths', filtersValues.brand],
+		enabled: widthsEnabled,
 		queryFn: () =>
 			tireWidthApi.fetchTireWidths({
+				filters: { tires: { brand: { slug: filtersValues.brand || null } } },
 				pagination: { limit: API_MAX_LIMIT }
 			}),
 		select: (data) => data.data?.data?.map((item) => ({ id: item.id.toString(), name: item.name.toString() })) ?? []
 	});
 
-	const { data: heightsData } = useQuery({
-		queryKey: ['tire-heights'],
+	const { data: heightsData, isFetching: isLoadingHeights } = useQuery({
+		queryKey: ['tire-heights', filtersValues.brand],
+		enabled: heightsEnabled,
 		queryFn: () =>
 			tireHeightApi.fetchTireHeights({
+				filters: { tires: { brand: { slug: filtersValues.brand || null } } },
 				pagination: { limit: API_MAX_LIMIT }
 			}),
 		select: (data) => data.data?.data?.map((item) => ({ id: item.id.toString(), name: item.name.toString() })) ?? []
 	});
 
-	const { data: diametersData } = useQuery({
-		queryKey: ['tire-diameters'],
+	const { data: diametersData, isFetching: isLoadingDiameters } = useQuery({
+		queryKey: ['tire-diameters', filtersValues.brand],
+		enabled: diametersEnabled,
 		queryFn: () =>
 			tireDiameterApi.fetchTireDiameters({
+				filters: { tires: { brand: { slug: filtersValues.brand || null } } },
 				pagination: { limit: API_MAX_LIMIT }
 			})
 	});
@@ -102,7 +112,6 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 	const tireBrands = tireBrandsData?.data?.data ?? [];
 	const widths = widthsData ?? [];
 	const heights = heightsData ?? [];
-	console.log(heights);
 	const diameters = diametersData?.data?.data ?? [];
 
 	const pageCount = Math.ceil((tires?.data?.meta?.pagination?.total || 0) / API_DEFAULT_LIMIT);
@@ -118,7 +127,12 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 		heights,
 		diameters,
 		catalogCategories: [] as TopCategory[],
-		hoveredCategory,
-		setHoveredCategory
+		onOpenWidthAutocomplete: () => setWidthsEnabled(true),
+		onOpenHeightAutocomplete: () => setHeightsEnabled(true),
+		onOpenDiameterAutocomplete: () => setDiametersEnabled(true),
+		isLoadingBrands,
+		isLoadingWidths,
+		isLoadingHeights,
+		isLoadingDiameters
 	};
 };

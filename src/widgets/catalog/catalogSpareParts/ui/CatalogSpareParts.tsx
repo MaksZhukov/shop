@@ -4,7 +4,7 @@ import type { BrandWithSparePartsCount } from 'entities/brand/brandTypes';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
-import { Catalog } from 'widgets/catalog/ui';
+import { BrandCatalog, Catalog } from 'widgets/catalog/ui';
 import {
 	useCatalogFilters,
 	useCatalogData,
@@ -14,19 +14,26 @@ import {
 	parseRouterQuery,
 	FilterValues
 } from 'features/sparePartsCatalog';
+import type { KindSparePartType } from 'entities/kindSparePart';
+import { ModelCatalog } from 'widgets/catalog/ui/types';
 
 interface Props {
 	brands: BrandWithSparePartsCount[];
 	kindSparePart?: KindSparePart;
+	kindSparePartType?: KindSparePartType;
 	pageData: DefaultPage;
 }
 
-export const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageData }) => {
+export const CatalogSpareParts: FC<Props> = ({
+	brands = [],
+	kindSparePart,
+	kindSparePartType = 'regular',
+	pageData
+}) => {
 	const router = useRouter();
 	const queryParams = parseRouterQuery(router.query);
 
 	const { filtersValues, setFiltersValues } = useCatalogFilters(queryParams);
-
 	const {
 		spareParts,
 		isLoading,
@@ -62,6 +69,7 @@ export const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageD
 		setVolumes,
 		filtersValues,
 		kindSparePart,
+		kindSparePartType,
 		onBrandChange: () => {
 			setModels([]);
 			setGenerations([]);
@@ -118,10 +126,35 @@ export const CatalogSpareParts: FC<Props> = ({ brands = [], kindSparePart, pageD
 		onOpenAutoCompleteVolume: handleOpenAutocompleteVolume
 	});
 
+	const brandsForCatalog: BrandCatalog[] = brands.map((b) => ({
+		id: b.id,
+		name: b.name,
+		slug: b.slug,
+		path: `/spare-parts/${b.slug}`,
+		count: b.spareParts.count
+	}));
+
+	const modelsForCatalog: ModelCatalog[] = models?.map((m) => ({
+		id: m.id,
+		name: m.name,
+		slug: m.slug,
+		path: `/spare-parts/${filtersValues.brand}/model-${m.slug}`,
+		count: m.spareParts?.count,
+		generations: m.generations
+			.filter((g) => g.spareParts?.count)
+			.map((g) => ({
+				id: g.id,
+				name: g.name,
+				slug: g.slug,
+				path: `/spare-parts/${filtersValues.brand}/model-${m.slug}/${g.slug}`,
+				count: g.spareParts?.count
+			}))
+	}));
+
 	return (
 		<Catalog
-			brands={brands}
-			models={models}
+			brands={brandsForCatalog}
+			models={modelsForCatalog}
 			filtersValues={filtersValues}
 			onChangeFilterValues={handleChangeFilterValues}
 			filtersConfig={filtersConfig}

@@ -1,5 +1,5 @@
 export interface WheelDiskOffset {
-	id: number;
+	id: string;
 	name: string;
 }
 

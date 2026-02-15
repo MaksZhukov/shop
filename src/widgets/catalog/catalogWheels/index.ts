@@ -1,0 +1,1 @@
+export { CatalogWheels } from './ui';

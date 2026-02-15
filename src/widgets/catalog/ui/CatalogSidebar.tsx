@@ -13,8 +13,8 @@ interface CatalogSidebarProps {
 	onClickFind: () => void;
 	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
 	catalogCategories: TopCategory[];
-	hoveredCategory: TopCategory | null;
-	onChangeHoveredCategory: (category: TopCategory | null) => void;
+	hoveredCategory?: TopCategory | null;
+	onChangeHoveredCategory?: (category: TopCategory | null) => void;
 }
 
 export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
@@ -55,10 +55,10 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
 								gap={0.5}
 								alignItems='center'
 								onMouseLeave={() => {
-									onChangeHoveredCategory(null);
+									onChangeHoveredCategory?.(null);
 								}}
 								onMouseEnter={() => {
-									onChangeHoveredCategory(category);
+									onChangeHoveredCategory?.(category);
 								}}
 							>
 								<Typography variant='body1' fontWeight={500}>

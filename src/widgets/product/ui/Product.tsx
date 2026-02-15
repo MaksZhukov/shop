@@ -28,7 +28,7 @@ const Product: FC<Props> = ({ data, page, relatedProducts }) => {
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
     
 	useEffect(() => {
-		if (data.type === 'sparePart' || data.type === 'tire') {
+		if (data.type === 'sparePart' || data.type === 'tire' || data.type === 'wheel') {
 			productViewedLocalStorage.addViewedProduct({ id: data.id, type: data.type });
 		}
 	}, [data.id, data.type]);

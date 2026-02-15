@@ -24,7 +24,7 @@ const getRelatedProductsTitle = (product: Product): string => {
 	} else if (isWheel(product)) {
 		prefix = 'Другие диски для';
 	} else if (product.type === 'cabin') {
-		prefix = 'Другие кабины для';
+		prefix = 'Другие салоны для';
 	}
 
 	return `${prefix} ${brandName} ${modelName} ${generationName}`.trim();

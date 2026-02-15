@@ -132,7 +132,10 @@ export const SearchForm: React.FC = () => {
 
 		try {
 			const { data } = await kindSparePartApi.fetchKindSpareParts(
-				{ filters: { spareParts: { sold: false } }, pagination: { start: kindSpareParts.data.length } },
+				{
+					filters: { spareParts: { sold: false }, type: 'regular' },
+					pagination: { start: kindSpareParts.data.length }
+				},
 				{ abortController: controller }
 			);
 			setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
@@ -158,7 +161,7 @@ export const SearchForm: React.FC = () => {
 
 		try {
 			const { data } = await kindSparePartApi.fetchKindSpareParts(
-				{ filters: { name: { $contains: value } } },
+				{ filters: { name: { $contains: value }, type: 'regular' } },
 				{ abortController: controller }
 			);
 			setKindSpareParts(data);

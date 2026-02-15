@@ -2,6 +2,8 @@ import { AutocompleteType } from 'features/productFilters';
 import { SEASONS, SEASONS_SLUGIFY } from 'entities/tire';
 import type { GetTiresFiltersConfigParams } from './types';
 
+const onOpen = (callback?: () => void) => () => () => callback?.();
+
 export const getTiresFiltersConfig = ({
 	tireBrands,
 	widths,
@@ -12,7 +14,15 @@ export const getTiresFiltersConfig = ({
 	onChangeWidthAutocomplete,
 	onChangeHeightAutocomplete,
 	onChangeDiameterAutocomplete,
-	onChangeSeasonAutocomplete
+	onChangeSeasonAutocomplete,
+	onOpenWidthAutocomplete,
+	onOpenHeightAutocomplete,
+	onOpenDiameterAutocomplete,
+	isLoadingBrand,
+	isLoadingWidth,
+	isLoadingHeight,
+	isLoadingDiameter,
+	loadingOptionsText
 }: GetTiresFiltersConfigParams): AutocompleteType[] => [
 	{
 		id: 'brand',
@@ -21,7 +31,7 @@ export const getTiresFiltersConfig = ({
 		type: 'autocomplete',
 		options: tireBrands.map((item) => ({ label: item.name, value: item.slug })),
 		onChange: onChangeBrandAutocomplete,
-		noOptionsText
+		noOptionsText: isLoadingBrand && loadingOptionsText ? loadingOptionsText : noOptionsText
 	},
 	{
 		id: 'width',
@@ -30,7 +40,8 @@ export const getTiresFiltersConfig = ({
 		type: 'autocomplete',
 		options: widths.map((item) => ({ label: item.name, value: item.name })),
 		onChange: onChangeWidthAutocomplete,
-		noOptionsText
+		onOpen: onOpen(onOpenWidthAutocomplete),
+		noOptionsText: isLoadingWidth && loadingOptionsText ? loadingOptionsText : noOptionsText
 	},
 	{
 		id: 'height',
@@ -39,7 +50,8 @@ export const getTiresFiltersConfig = ({
 		type: 'autocomplete',
 		options: heights.map((item) => ({ label: item.name, value: item.name })),
 		onChange: onChangeHeightAutocomplete,
-		noOptionsText
+		onOpen: onOpen(onOpenHeightAutocomplete),
+		noOptionsText: isLoadingHeight && loadingOptionsText ? loadingOptionsText : noOptionsText
 	},
 	{
 		id: 'diameter',
@@ -48,7 +60,8 @@ export const getTiresFiltersConfig = ({
 		type: 'autocomplete',
 		options: diameters.map((item) => ({ label: item.name, value: item.name })),
 		onChange: onChangeDiameterAutocomplete,
-		noOptionsText
+		onOpen: onOpen(onOpenDiameterAutocomplete),
+		noOptionsText: isLoadingDiameter && loadingOptionsText ? loadingOptionsText : noOptionsText
 	},
 	{
 		id: 'season',

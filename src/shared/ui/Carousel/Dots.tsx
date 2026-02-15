@@ -5,15 +5,22 @@ import type { DotsProps } from './types';
 export const Dots: React.FC<DotsProps> = ({ scrollSnaps, selectedIndex, onDotClick }) => {
 	if (scrollSnaps.length <= 1) return null;
 
+	const handleDotClick = (index: number) => (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		onDotClick(index);
+	};
+
 	return (
 		<Box
-			height={8}
+			height={12}
 			position={'absolute'}
-			bottom={8}
+			bottom={4}
 			left={0}
 			right={0}
 			display={'flex'}
 			gap={0.25}
+			width={'100%'}
 			alignItems={'center'}
 			justifyContent={'center'}
 		>
@@ -28,7 +35,7 @@ export const Dots: React.FC<DotsProps> = ({ scrollSnaps, selectedIndex, onDotCli
 						cursor: 'pointer',
 						'&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.8)' }
 					}}
-					onClick={() => onDotClick(index)}
+					onClick={handleDotClick(index)}
 				/>
 			))}
 		</Box>
