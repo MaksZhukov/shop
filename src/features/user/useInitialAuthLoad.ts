@@ -1,33 +1,27 @@
 import { store } from 'app/providers/StoreProvider';
-import { authLocalStorage } from 'entities/user/authLocalStorage';
+import { useUserStore } from 'entities/user';
 import { useLoadCart } from 'features/cart/useLoadCart';
 import { useLoadFavorites } from 'features/favorites/useLoadFavorites';
 import { useEffect } from 'react';
 import { useLoadUserInfo } from './useLoadUserInfo';
-import { useSetJWT } from './useSetJWT';
 
-export function useInitialAuthLoad(token?: string) {
+export function useInitialAuthLoad() {
 	const loadFavorites = useLoadFavorites();
 	const loadCart = useLoadCart();
-	const setJWT = useSetJWT();
 	const loadUserInfo = useLoadUserInfo();
+	const userStore = useUserStore();
 
 	useEffect(() => {
 		const tryFetchData = async () => {
-			const effectiveToken = token ?? authLocalStorage.getJwt();
-
-			if (effectiveToken) {
-				setJWT(effectiveToken);
-				try {
-					await Promise.all([loadUserInfo(), loadCart(), loadFavorites()]);
-				} catch {
-					authLocalStorage.removeJwt();
-				}
-			} else {
+			try {
+				await loadUserInfo();
+				await Promise.all([loadCart(), loadFavorites()]);
+			} catch {
+				userStore.clearUser();
 				await Promise.all([loadCart(), loadFavorites()]);
 			}
 			store.setIsInitialRequestDone();
 		};
 		tryFetchData();
-	}, [token, loadFavorites, loadCart, setJWT, loadUserInfo]);
+	}, [loadFavorites, loadCart, loadUserInfo, userStore]);
 }

@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { backendUrl } from 'shared/services';
 
+const AUTH_COOKIE_NAME = 'token';
+const AUTH_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 30;
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method !== 'GET') {
 		return res.status(405).end();
@@ -18,5 +21,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const response = await fetch(url.href);
 	const data = await response.json();
 
-	return res.redirect(302, `/auth/callback?token=${data.jwt}`);
+	const jwt = data?.jwt;
+	if (!jwt) {
+		return res.redirect(302, '/');
+	}
+
+	const isProd = process.env.NODE_ENV === 'production';
+
+	res.setHeader(
+		'Set-Cookie',
+		[
+			`${AUTH_COOKIE_NAME}=${jwt}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${AUTH_COOKIE_MAX_AGE}${isProd ? '; Secure' : ''}`
+		].join(', ')
+	);
+
+	return res.redirect(302, '/');
 }

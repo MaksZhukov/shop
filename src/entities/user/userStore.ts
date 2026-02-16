@@ -1,13 +1,11 @@
 import { makeAutoObservable } from 'mobx';
 
 export interface User {
-	jwt: string;
 	id: string;
 	email: string;
 }
 
 export class UserStore implements User {
-	jwt: string = '';
 	id: string = '';
 	email: string = '';
 	username: string = '';
@@ -16,10 +14,6 @@ export class UserStore implements User {
 
 	constructor() {
 		makeAutoObservable(this);
-	}
-
-	setJWT(jwt: string) {
-		this.jwt = jwt;
 	}
 
 	setId(id: string) {
@@ -42,8 +36,7 @@ export class UserStore implements User {
 		this.address = address;
 	}
 
-	setUser(user: { jwt: string; id: string; email: string; username: string; phone: string; address: string }) {
-		this.jwt = user.jwt;
+	setUser(user: { id: string; email: string; username: string; phone: string; address: string }) {
 		this.id = user.id;
 		this.email = user.email;
 		this.username = user.username;
@@ -52,7 +45,6 @@ export class UserStore implements User {
 	}
 
 	clearUser() {
-		this.jwt = '';
 		this.id = '';
 		this.email = '';
 		this.username = '';

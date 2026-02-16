@@ -44,7 +44,7 @@ export const useLoadFavorites = () => {
 
 	return async () => {
 		favoritesStore.setIsLoading(true);
-		if (userStore.jwt) {
+		if (userStore.id) {
 			const {
 				data: { data }
 			} = await favoriteApi.fetchFavorites();

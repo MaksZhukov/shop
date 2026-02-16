@@ -1,9 +1,8 @@
-import { useUserStore } from 'entities/user';
-import { authLocalStorage } from 'entities/user/authLocalStorage';
+import { userApi, useUserStore } from 'entities/user';
 
-export const logout = (userStore: ReturnType<typeof useUserStore>) => {
+export const logout = async (userStore: ReturnType<typeof useUserStore>) => {
 	userStore.clearUser();
-	authLocalStorage.removeJwt();
+	await userApi.logout();
 };
 
 export const useLogout = () => {

@@ -8,6 +8,7 @@ export const userApi = {
 			password,
 			recaptchaToken
 		}),
+	logout: () => api.post('auth/logout'),
 	register: (email: string, password: string, recaptchaToken?: string) =>
 		api.post<AuthResponse>('auth/local/register', {
 			username: email,

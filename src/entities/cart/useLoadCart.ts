@@ -41,7 +41,7 @@ export const useLoadCart = () => {
 
 	return async () => {
 		cartStore.setIsLoading(true);
-		if (userStore.jwt) {
+		if (userStore.id) {
 			const {
 				data: { data }
 			} = await cartApi.fetchShoppingCart();

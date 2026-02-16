@@ -12,9 +12,6 @@ export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
 	const store = useStore();
 	const { enqueueSnackbar } = useSnackbar();
 	useEffect(() => {
-		const getUserJwt = () => {
-			return store.user.jwt;
-		};
 		const errorResponseUnauthorizedCallback = () => {
 			if (store.user.id) {
 				logout(store.user);
@@ -25,7 +22,7 @@ export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
 				variant: 'warning'
 			});
 		};
-		setupApiInterceptors(getUserJwt, errorResponseUnauthorizedCallback, errorResponseTooManyRequestsCallback);
+		setupApiInterceptors(errorResponseUnauthorizedCallback, errorResponseTooManyRequestsCallback);
 	}, [store, enqueueSnackbar]);
 
 	return <>{children}</>;
