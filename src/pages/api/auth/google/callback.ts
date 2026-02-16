@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { backendUrl } from 'shared/services';
 
 const AUTH_COOKIE_NAME = 'token';
-const AUTH_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 30;
+/** Max-Age is in seconds (30 days) */
+const AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method !== 'GET') {
@@ -27,13 +28,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	}
 
 	const isProd = process.env.NODE_ENV === 'production';
+	const cookieDomain = process.env.COOKIE_DOMAIN;
+	const domainPart = cookieDomain ? `; Domain=${cookieDomain}` : '';
+	const cookie = [
+		`${AUTH_COOKIE_NAME}=${jwt}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${AUTH_COOKIE_MAX_AGE}${isProd ? '; Secure' : ''}${domainPart}`
+	].join(', ');
 
-	res.setHeader(
-		'Set-Cookie',
-		[
-			`${AUTH_COOKIE_NAME}=${jwt}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${AUTH_COOKIE_MAX_AGE}${isProd ? '; Secure' : ''}`
-		].join(', ')
-	);
+	res.setHeader('Set-Cookie', cookie);
 
 	return res.redirect(302, '/');
 }

@@ -104,7 +104,7 @@ export const CatalogCategories: React.FC = () => {
 							flexWrap='wrap'
 						>
 							{hoveredCategory?.kindSpareParts.map((item) => (
-								<Box key={item.id} display='flex' gap={0.5} py={1}>
+								<Box onClick={handleCatalogClose} key={item.id} display='flex' gap={0.5} py={1}>
 									<Link href={`/spare-parts?kindSparePart=${item.slug}`}>{item.name}</Link>
 									<Typography color='custom.text-muted'>
 										{item.spareParts.count?.toLocaleString()}
