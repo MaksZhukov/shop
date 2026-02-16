@@ -13,7 +13,7 @@ export const useSearchSpareParts = (searchValue: string) => {
 			sparePartApi.fetchSpareParts({
 				pagination: { limit: 10 },
 				populate: ['brand'],
-				filters: { h1: { $contains: debouncedSearchValue } }
+				filters: { h1: { $contains: debouncedSearchValue }, sold: false }
 			})
 	});
 
