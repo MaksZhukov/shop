@@ -18,7 +18,7 @@ export const OrderRegistration = ({
 }) => {
 	const form = useOrderRegistrationForm();
 	const { checkoutItems, totalAmount, getButtonText } = useOrderRegistration();
-	const { orderCheckout, formattedTime, isExpired, handleCheckout } = useOrderCheckout({
+	const { orderCheckout, formattedTime, isExpired, handleCheckout, isReissuingCheckoutToken } = useOrderCheckout({
 		formData: form.formData,
 		checkoutItems,
 		onChangeIsOrdered,
@@ -66,6 +66,7 @@ export const OrderRegistration = ({
 							</Link>
 						</>
 					}
+					disabled={isReissuingCheckoutToken}
 				/>
 			</Box>
 			<MobileQuestionsSection />

@@ -8,6 +8,7 @@ interface OrderSummaryProps {
 	onCheckout: () => void;
 	buttonText?: string;
 	disclaimerText: string | React.ReactNode;
+	disabled?: boolean;
 }
 
 export const OrderSummary = ({
@@ -15,7 +16,8 @@ export const OrderSummary = ({
 	totalAmount,
 	onCheckout,
 	buttonText,
-	disclaimerText
+	disclaimerText,
+	disabled
 }: OrderSummaryProps) => {
 	const theme = useTheme();
 
@@ -28,7 +30,7 @@ export const OrderSummary = ({
 						variant='contained'
 						color='primary'
 						fullWidth
-						disabled={totalAmount === 0}
+						disabled={totalAmount === 0 || disabled}
 						onClick={onCheckout}
 					>
 						{buttonText || 'Перейти к оформлению'}

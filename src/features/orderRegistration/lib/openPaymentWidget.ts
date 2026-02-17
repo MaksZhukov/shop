@@ -8,6 +8,7 @@ export function openPaymentWidget(
 	onError: () => void | Promise<void>
 ): void {
 	const closeWidget = async (status: string | null | undefined) => {
+		console.log('closeWidget', status);
 		if (status === 'successful') {
 			await onSuccess();
 		}

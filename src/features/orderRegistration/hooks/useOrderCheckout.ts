@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { orderApi, type OrderCheckoutResponse } from 'entities/order';
 import type { Cart } from 'entities/cart';
 import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
@@ -20,11 +20,26 @@ interface UseOrderCheckoutParams {
 export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, isOrdered }: UseOrderCheckoutParams) {
 	const [orderCheckout, setOrderCheckout] = useState<OrderCheckoutResponse | null>(null);
 	const [token, setToken] = useState<string | null>(null);
+	const tokenRef = useRef<string | null>(null);
+	const orderIdRef = useRef<number | null>(null);
 	const queryClient = useQueryClient();
 	const removeCartMany = useRemoveCartMany();
 	const router = useRouter();
 	const { formattedTime, isExpired } = useOrderTimer(orderCheckout?.order);
 
+	useEffect(() => {
+		tokenRef.current = token;
+	}, [token]);
+
+	useEffect(() => {
+		orderIdRef.current = orderCheckout?.order?.id ?? null;
+	}, [orderCheckout?.order?.id]);
+
+	const { mutateAsync: reissueCheckoutToken, isPending: isReissuingCheckoutToken } = useMutation({
+		mutationKey: ['reissueCheckoutToken'],
+		mutationFn: ({ checkoutToken, orderId }: { checkoutToken: string; orderId: number }) =>
+			orderApi.reissueCheckoutToken(checkoutToken, orderId)
+	});
 	const hasUnpaidOnlineOrder = !!orderCheckout?.order && formData.paymentMethod === 'online' && !isOrdered;
 
 	const unpaidOrderCheckoutToken =
@@ -45,11 +60,9 @@ export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, i
 	};
 
 	const onOrderError = async () => {
-		if (!token || !orderCheckout?.order?.id) return;
-		const {
-			data: { data }
-		} = await orderApi.reissueCheckoutToken(token, orderCheckout?.order?.id);
-		setToken(data.checkout.token);
+		if (!tokenRef.current || !orderIdRef.current) return;
+		const { data } = await reissueCheckoutToken({ checkoutToken: tokenRef.current, orderId: orderIdRef.current });
+		setToken(data.data.checkout.token);
 	};
 
 	const openWidget = (paymentToken: string) => {
@@ -60,6 +73,7 @@ export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, i
 		const isOnlinePayment = formData.paymentMethod === 'online';
 
 		if (isOnlinePayment && token) {
+			debugger;
 			openWidget(token);
 			return;
 		}
@@ -94,6 +108,7 @@ export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, i
 		orderCheckout,
 		formattedTime,
 		isExpired,
-		handleCheckout
+		handleCheckout,
+		isReissuingCheckoutToken
 	};
 }
