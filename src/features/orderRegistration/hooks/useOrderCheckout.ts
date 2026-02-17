@@ -44,8 +44,16 @@ export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, i
 		await queryClient.invalidateQueries();
 	};
 
+	const onOrderError = async () => {
+		if (!token || !orderCheckout?.order?.id) return;
+		const {
+			data: { data }
+		} = await orderApi.reissueCheckoutToken(token, orderCheckout?.order?.id);
+		setToken(data.checkout.token);
+	};
+
 	const openWidget = (paymentToken: string) => {
-		openPaymentWidget(BEPAID_CHECKOUT_URL, paymentToken, onOrderSuccess);
+		openPaymentWidget(BEPAID_CHECKOUT_URL, paymentToken, onOrderSuccess, onOrderError);
 	};
 
 	const handleCheckout = async () => {

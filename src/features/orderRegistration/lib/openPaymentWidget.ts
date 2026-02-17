@@ -4,11 +4,15 @@
 export function openPaymentWidget(
 	checkoutUrl: string,
 	token: string,
-	onSuccess: () => void | Promise<void>
+	onSuccess: () => void | Promise<void>,
+	onError: () => void | Promise<void>
 ): void {
 	const closeWidget = async (status: string | null | undefined) => {
 		if (status === 'successful') {
 			await onSuccess();
+		}
+		if (status === 'error') {
+			await onError();
 		}
 	};
 	new BeGateway({

@@ -10,6 +10,10 @@ export type OrderCheckoutResponse = {
 	checkout?: OrderCheckout;
 };
 
+export type OrderReissueCheckoutTokenResponse = {
+	checkout: OrderCheckout;
+};
+
 export type Order = {
 	username: string;
 	email: string;

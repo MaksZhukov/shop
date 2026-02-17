@@ -2,7 +2,7 @@ import { api } from 'shared/api';
 import type { ApiResponse } from 'shared/api/types';
 import type { ProductType } from 'entities/product';
 import { backendUrl } from 'shared/services/EnvService';
-import { OrderCheckout, OrderCheckoutResponse } from './orderTypes';
+import { OrderCheckout, OrderCheckoutResponse, OrderReissueCheckoutTokenResponse } from './orderTypes';
 import type { UserType } from 'features/orderRegistration';
 
 const CANCEL_ORDER_URL = `${backendUrl}/api/orders-v1/cancel`;
@@ -56,6 +56,12 @@ export const orderApi = {
 
 	checkout: (params: OrderCheckoutParams) => {
 		return api.post<ApiResponse<OrderCheckoutResponse>>(`/orders-v1/checkout`, buildCheckoutFormData(params));
+	},
+	reissueCheckoutToken: (checkoutToken: string, orderId: number) => {
+		return api.post<ApiResponse<OrderReissueCheckoutTokenResponse>>(`/orders-v1/reissue-checkout-token`, {
+			token: checkoutToken,
+			orderId
+		});
 	},
 	cancelOrder: (checkoutToken: string) => {
 		return api.post<ApiResponse<OrderCheckoutResponse>>(`/orders-v1/cancel`, { token: checkoutToken });
