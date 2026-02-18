@@ -1,12 +1,12 @@
 import { makeAutoObservable } from 'mobx';
 
 export interface User {
-	id: string;
+	id: number | null;
 	email: string;
 }
 
 export class UserStore implements User {
-	id: string = '';
+	id: number | null = null;
 	email: string = '';
 	username: string = '';
 	phone: string = '';
@@ -16,7 +16,7 @@ export class UserStore implements User {
 		makeAutoObservable(this);
 	}
 
-	setId(id: string) {
+	setId(id: number) {
 		this.id = id;
 	}
 
@@ -36,7 +36,7 @@ export class UserStore implements User {
 		this.address = address;
 	}
 
-	setUser(user: { id: string; email: string; username: string; phone: string; address: string }) {
+	setUser(user: { id: number; email: string; username: string; phone: string; address: string }) {
 		this.id = user.id;
 		this.email = user.email;
 		this.username = user.username;
@@ -45,7 +45,7 @@ export class UserStore implements User {
 	}
 
 	clearUser() {
-		this.id = '';
+		this.id = null;
 		this.email = '';
 		this.username = '';
 		this.phone = '';

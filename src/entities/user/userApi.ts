@@ -1,5 +1,5 @@
 import { api } from 'shared/api';
-import { AuthResponse } from './userTypes';
+import { AuthResponse, User } from './userTypes';
 
 export const userApi = {
 	login: (email: string, password: string, recaptchaToken?: string) =>
@@ -26,6 +26,6 @@ export const userApi = {
 			password,
 			passwordConfirmation: passwordConfirmation
 		}),
-	getUserInfo: () => api.get('/users/me'),
+	getUserInfo: () => api.get<User>('/users/me'),
 	updateUserInfo: (data: { username: string; phone: string; address: string }) => api.put('/users/me', data)
 };

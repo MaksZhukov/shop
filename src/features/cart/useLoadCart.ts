@@ -45,8 +45,12 @@ export const loadCart = async (
 	if (userStore.id) {
 		const {
 			data: { data }
-		} = await cartApi.fetchShoppingCart();
-		cartStore.setItems(data);
+		} = await cartApi.fetchShoppingCart(userStore.id);
+		const cartItems = data.map((item) => ({
+			id: item.id,
+			product: item.product[0].product
+		}));
+		cartStore.setItems(cartItems);
 	} else {
 		const cartItems = cartLocalStorage.getCart();
 		try {

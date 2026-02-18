@@ -17,7 +17,7 @@ export const getProductLink = (data: Product): string => {
 	if (isCabin(data)) {
 		return `/cabins/${data.brand?.slug ?? ''}/${data.slug}`;
 	}
-	return `/spare-parts/${data.brand?.slug ?? ''}/${data.id}`;
+	return `/spare-parts/${data.brand?.slug ?? ''}/${data.slug}`;
 };
 
 export const getProductDetails = (product: Product): string => {

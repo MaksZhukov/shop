@@ -19,6 +19,7 @@ interface CartItemProps {
 export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBuy }: CartItemProps) => {
 	const product = item.product;
 	const productDetails = getProductDetails(product);
+
 	const productUrl = getProductLink(product);
 
 	const handleClickBuy = (item: Cart) => () => {
