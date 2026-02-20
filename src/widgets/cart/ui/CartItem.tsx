@@ -26,6 +26,17 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBu
 		onClickBuy(item);
 	};
 
+	const renderBuyButton = (
+		<Button
+			disabled={item.product.sold}
+			onClick={handleClickBuy(item)}
+			variant={item.product.sold ? 'contained' : 'outlined'}
+			size='small'
+		>
+			{item.product.sold ? 'Товар закончился' : 'Купить'}
+		</Button>
+	);
+
 	const renderActionButtons = (showBuyButton: boolean) => {
 		return (
 			<>
@@ -33,17 +44,7 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBu
 				<IconButton size='large' onClick={() => onRemove(item)}>
 					<TrashIcon />
 				</IconButton>
-				{showBuyButton && (
-					<Button
-						disabled={item.product.sold}
-						sx={{ ml: 1 }}
-						onClick={handleClickBuy(item)}
-						variant={item.product.sold ? 'contained' : 'outlined'}
-						size='small'
-					>
-						{item.product.sold ? 'Товар закончился' : 'Купить'}
-					</Button>
-				)}
+				{showBuyButton && renderBuyButton}
 			</>
 		);
 	};
@@ -90,13 +91,7 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBu
 				/>
 			</Box>
 			<Box display={{ xs: 'flex', md: 'none' }} justifyContent='space-between' alignItems='center'>
-				<Button
-					disabled={item.product.sold}
-					variant={item.product.sold ? 'contained' : 'outlined'}
-					size='small'
-				>
-					{item.product.sold ? 'Товар закончился' : 'Купить'}
-				</Button>
+				{renderBuyButton}
 				<Box>{renderActionButtons(false)}</Box>
 			</Box>
 		</WhiteBox>
