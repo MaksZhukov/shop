@@ -3,7 +3,7 @@ import { IconButton, Modal, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import type { Image as IIamge } from 'shared/api/types';
 import { Zoom } from './Zoom';
-import { FC } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Carousel } from 'shared/ui';
 import { backendUrl } from 'shared/services/EnvService';
 
@@ -15,6 +15,18 @@ interface Props {
 
 export const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => {
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+	const [currentIndex, setCurrentIndex] = useState(selectedIndex);
+	const arrowPrevRef = useRef<HTMLDivElement>(null);
+	const arrowNextRef = useRef<HTMLDivElement>(null);
+
+	const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
+		if (
+			!arrowPrevRef.current?.contains(event.target as Node) &&
+			!arrowNextRef.current?.contains(event.target as Node)
+		) {
+			onClose();
+		}
+	};
 
 	return (
 		<Modal disableScrollLock open={selectedIndex !== null} onClose={onClose}>
@@ -33,10 +45,18 @@ export const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => 
 				>
 					<CloseIcon sx={{ color: 'secondary.main' }} fontSize='large' />
 				</IconButton>
-				<Carousel showDots={false} sx={{ maxWidth: 1500, margin: 'auto' }}>
-					{images?.map((item) => (
+				<Carousel
+					arrowPrevRef={arrowPrevRef}
+					arrowNextRef={arrowNextRef}
+					onChangeSelectedIndex={setCurrentIndex}
+					showDots={false}
+					sx={{ maxWidth: 1500, margin: 'auto' }}
+				>
+					{images?.map((item, index) => (
 						<Box width={'100%'} key={item.id} height={'100%'} sx={{ display: 'flex !important' }}>
 							<Zoom
+								onOutsideClick={handleOutsideClick}
+								enableOutsideClick={currentIndex === index}
 								src={backendUrl + (item.formats?.medium?.url || item.url)}
 								width={isTablet ? 500 : 820}
 								height={'100%'}

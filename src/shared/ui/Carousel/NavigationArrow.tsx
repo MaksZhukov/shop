@@ -3,7 +3,8 @@ import { Box, IconButton } from '@mui/material';
 import { ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, ChevronDownIcon } from 'shared/icons';
 import type { NavigationArrowProps } from './types';
 
-export const NavigationArrow: React.FC<NavigationArrowProps> = ({ direction, onClick, axis = 'x', sx, buttonSx }) => {
+export const NavigationArrow = React.forwardRef<HTMLDivElement, NavigationArrowProps>(
+	({ direction, onClick, axis = 'x', sx, buttonSx }, ref) => {
 	const isPrev = direction === 'prev';
 	const isVertical = axis === 'y';
 
@@ -25,6 +26,7 @@ export const NavigationArrow: React.FC<NavigationArrowProps> = ({ direction, onC
 
 	return (
 		<Box
+			ref={ref}
 			position={'absolute'}
 			{...position}
 			sx={{
@@ -48,4 +50,7 @@ export const NavigationArrow: React.FC<NavigationArrowProps> = ({ direction, onC
 			</IconButton>
 		</Box>
 	);
-};
+	}
+);
+
+NavigationArrow.displayName = 'NavigationArrow';

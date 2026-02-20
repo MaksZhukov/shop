@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useCarousel } from './useCarousel';
 import { NavigationArrow } from './NavigationArrow';
 import { Dots } from './Dots';
 import type { CarouselProps } from './types';
-import { Box } from '@mui/material';
+import { Box, SxProps } from '@mui/material';
 import styles from './Carousel.module.scss';
 
 export const Carousel: React.FC<CarouselProps> = ({
@@ -12,16 +12,23 @@ export const Carousel: React.FC<CarouselProps> = ({
 	options = { axis: 'x' },
 	showArrows = true,
 	showPrevArrow,
+	onChangeSelectedIndex,
 	showNextArrow,
 	showDots = true,
 	carouselContainerSx,
 	arrowNextButtonSx,
 	arrowNextSx,
 	arrowPrevButtonSx,
-	arrowPrevSx
+	arrowPrevSx,
+	arrowPrevRef,
+	arrowNextRef
 }) => {
 	const { emblaRef, selectedIndex, scrollSnaps, scrollPrev, scrollNext, scrollTo, canScrollPrev, canScrollNext } =
 		useCarousel(options);
+
+	useEffect(() => {
+		onChangeSelectedIndex?.(selectedIndex);
+	}, [selectedIndex, onChangeSelectedIndex]);
 
 	const shouldShowDots = showDots && scrollSnaps.length > 1;
 
@@ -45,6 +52,7 @@ export const Carousel: React.FC<CarouselProps> = ({
 			</Box>
 			{shouldShowPrevArrow && (
 				<NavigationArrow
+					ref={arrowPrevRef}
 					direction='prev'
 					onClick={scrollPrev}
 					axis={options.axis}
@@ -54,6 +62,7 @@ export const Carousel: React.FC<CarouselProps> = ({
 			)}
 			{shouldShowNextArrow && (
 				<NavigationArrow
+					ref={arrowNextRef}
 					direction='next'
 					onClick={scrollNext}
 					axis={options.axis}

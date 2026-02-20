@@ -3,6 +3,7 @@ import { EmblaOptionsType } from 'embla-carousel';
 
 export interface CarouselProps {
 	children: React.ReactNode;
+	onChangeSelectedIndex?: (index: number) => void;
 	options?: EmblaOptionsType;
 	showArrows?: boolean;
 	showPrevArrow?: boolean;
@@ -14,6 +15,10 @@ export interface CarouselProps {
 	arrowPrevButtonSx?: SxProps;
 	arrowPrevSx?: SxProps;
 	carouselContainerSx?: SxProps;
+	/** Ref for the previous (left/up) NavigationArrow Box root element */
+	arrowPrevRef?: React.Ref<HTMLDivElement>;
+	/** Ref for the next (right/down) NavigationArrow Box root element */
+	arrowNextRef?: React.Ref<HTMLDivElement>;
 }
 
 export interface NavigationArrowProps {

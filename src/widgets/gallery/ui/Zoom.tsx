@@ -1,4 +1,5 @@
 import { CSSProperties, FC, MouseEventHandler, useRef, useState } from 'react';
+import { useOutsideClick } from 'rooks';
 
 interface Props {
 	className?: string;
@@ -7,14 +8,34 @@ interface Props {
 	width: string | number;
 	src: string;
 	transitionTime?: number;
+	enableOutsideClick?: boolean;
 	style: CSSProperties;
+	onOutsideClick?: (event: MouseEvent | TouchEvent) => void;
 }
 
-export const Zoom: FC<Props> = ({ className, zoomScale, height, width, style, src, transitionTime = 0.1 }) => {
+export const Zoom: FC<Props> = ({
+	className,
+	zoomScale,
+	height,
+	width,
+	style,
+	src,
+	transitionTime = 0.1,
+	enableOutsideClick = false,
+	onOutsideClick
+}) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const [zoom, setZoom] = useState<boolean>(false);
 	const [mouseX, setMouseX] = useState<number>(0);
 	const [mouseY, setMouseY] = useState<number>(0);
+
+	useOutsideClick(
+		ref,
+		(event: MouseEvent | TouchEvent) => {
+			onOutsideClick?.(event);
+		},
+		enableOutsideClick
+	);
 
 	const handleMouseOver = () => {
 		setZoom(true);
