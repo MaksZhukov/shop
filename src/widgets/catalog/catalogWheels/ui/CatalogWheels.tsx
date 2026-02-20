@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { CircularProgress } from '@mui/material';
+import type { BrandWithWheelsCount } from 'entities/brand';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
 import { Catalog, BrandCatalog } from 'widgets/catalog/ui';
@@ -15,9 +16,10 @@ import { ModelCatalog } from 'widgets/catalog/ui/types';
 
 interface Props {
 	pageData: DefaultPage;
+	brands: BrandWithWheelsCount[];
 }
 
-export const CatalogWheels: FC<Props> = ({ pageData }) => {
+export const CatalogWheels: FC<Props> = ({ pageData, brands }) => {
 	const router = useRouter();
 	const queryParams = parseRouterQuery(router.query);
 
@@ -28,7 +30,6 @@ export const CatalogWheels: FC<Props> = ({ pageData }) => {
 		isLoading,
 		pageCount,
 		total,
-		brands,
 		models,
 		diameters,
 		widths,
@@ -41,7 +42,6 @@ export const CatalogWheels: FC<Props> = ({ pageData }) => {
 		onOpenNumberHolesAutocomplete,
 		onOpenDiameterCenterHoleAutocomplete,
 		onOpenDiskOffsetAutocomplete,
-		isLoadingBrands,
 		isLoadingModels,
 		isLoadingDiameters,
 		isLoadingWidths,
@@ -70,7 +70,7 @@ export const CatalogWheels: FC<Props> = ({ pageData }) => {
 		onOpenNumberHolesAutocomplete,
 		onOpenDiameterCenterHoleAutocomplete,
 		onOpenDiskOffsetAutocomplete,
-		isLoadingBrand: isLoadingBrands,
+		isLoadingBrand: false,
 		isLoadingModel: isLoadingModels,
 		isLoadingDiameter: isLoadingDiameters,
 		isLoadingWidth: isLoadingWidths,
@@ -85,7 +85,7 @@ export const CatalogWheels: FC<Props> = ({ pageData }) => {
 		name: b.name,
 		slug: b.slug,
 		path: `/wheels/${b.slug}`,
-		count: b.wheels?.count
+		count: b.wheels?.count ?? 0
 	}));
 
 	const modelsForCatalog: ModelCatalog[] = models?.map((m) => ({
