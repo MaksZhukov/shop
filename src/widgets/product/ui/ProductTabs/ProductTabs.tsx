@@ -1,5 +1,5 @@
 import { Button, Tab, Table, TableBody, TableCell, TableRow, Tabs } from '@mui/material';
-import { Typography, WhiteBox } from 'shared/ui';
+import { Link, Typography, WhiteBox } from 'shared/ui';
 import { ChevronDownIcon, ChevronUpIcon } from 'shared/icons';
 import type { Product } from 'entities/product';
 import { getProductDescriptionItems } from 'entities/product';
@@ -27,10 +27,7 @@ export const ProductTabs = ({ product }: Props) => {
 	};
 
 	const descriptions = getProductDescriptionItems(product);
-	const visibleDescriptions = descriptions.slice(
-		0,
-		isMoreFilters ? descriptions.length : VISIBLE_DESCRIPTION_LIMIT
-	);
+	const visibleDescriptions = descriptions.slice(0, isMoreFilters ? descriptions.length : VISIBLE_DESCRIPTION_LIMIT);
 
 	const renderTabContent = () => {
 		switch (activeTab) {
@@ -52,7 +49,11 @@ export const ProductTabs = ({ product }: Props) => {
 											width='100%'
 											padding='none'
 										>
-											<Typography>{item.value}</Typography>
+											{item.link ? (
+												<Link href={item.link}>{item.value}</Link>
+											) : (
+												<Typography>{item.value}</Typography>
+											)}
 										</TableCell>
 									</TableRow>
 								))}

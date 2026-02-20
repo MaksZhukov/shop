@@ -4,11 +4,18 @@ import { isCabin, isSparePart, isTire, isWheel } from './productGuards';
 export interface ProductDescriptionItem {
 	title: string;
 	value: string | number | undefined;
+	link?: string;
 }
 
 export const getProductDescriptionItems = (product: Product): ProductDescriptionItem[] => {
 	if (isSparePart(product)) {
 		return [
+			{ title: 'Марка', value: product.brand?.name, link: '/spare-parts/' + product.brand?.slug },
+			{
+				title: 'Модель',
+				value: product.model?.name,
+				link: '/spare-parts/' + product.brand?.slug + '/model-' + product.model?.slug
+			},
 			{ title: 'Год', value: product.year },
 			{ title: 'Ориг.номер', value: product.id },
 			{ title: 'Обьем двигателя', value: product.volume?.name },
@@ -23,6 +30,7 @@ export const getProductDescriptionItems = (product: Product): ProductDescription
 
 	if (isTire(product)) {
 		return [
+			{ title: 'Марка', value: product.brand?.name, link: '/tires/' + product.brand?.slug },
 			{ title: 'Ширина', value: product.width?.name },
 			{ title: 'Высота профиля', value: product.height?.name },
 			{ title: 'Диаметр', value: product.diameter?.name },
@@ -34,6 +42,12 @@ export const getProductDescriptionItems = (product: Product): ProductDescription
 
 	if (isWheel(product)) {
 		return [
+			{ title: 'Марка', value: product.brand?.name, link: '/wheels/' + product.brand?.slug },
+			{
+				title: 'Модель',
+				value: product.model?.name,
+				link: '/wheels/' + product.brand?.slug + '/model-' + product.model?.slug
+			},
 			{ title: 'Диаметр', value: product.diameter?.name },
 			{ title: 'Ширина', value: product.width?.name },
 			{ title: 'Количество отверстий', value: product.numberHoles?.name },
@@ -41,17 +55,19 @@ export const getProductDescriptionItems = (product: Product): ProductDescription
 			{ title: 'Вылет диска', value: product.diskOffset?.name },
 			{ title: 'Диаметр центрального отверстия', value: product.diameterCenterHole?.name },
 			{ title: 'Межболтовое расстояние', value: product.distanceBetweenCenters },
-			{ title: 'Бренд', value: product.brand?.name },
-			{ title: 'Модель', value: product.model?.name },
 			{ title: 'Описание', value: product.description }
 		];
 	}
 
 	if (isCabin(product)) {
 		return [
+			{ title: 'Марка', value: product.brand?.name, link: '/cabins/' + product.brand?.slug },
+			{
+				title: 'Модель',
+				value: product.model?.name,
+				link: '/cabins/' + product.brand?.slug + '/model-' + product.model?.slug
+			},
 			{ title: 'Год', value: product.year },
-			{ title: 'Бренд', value: product.brand?.name },
-			{ title: 'Модель', value: product.model?.name },
 			{ title: 'Поколение', value: product.generation?.name },
 			{ title: 'Тип', value: product.kindSparePart?.name },
 			{ title: 'Обивка сидений', value: product.seatUpholstery },
