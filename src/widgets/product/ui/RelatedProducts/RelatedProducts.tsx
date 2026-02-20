@@ -40,7 +40,7 @@ export const RelatedProducts = ({ product, relatedProducts }: Props) => {
 
 	return (
 		<>
-			<Typography mb={1} variant='h6' fontWeight='bold'>
+			<Typography mb={1} variant='h6' component={'h3'} fontWeight='bold'>
 				{getRelatedProductsTitle(product)}
 			</Typography>
 			<Carousel

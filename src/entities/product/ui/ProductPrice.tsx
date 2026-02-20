@@ -12,7 +12,7 @@ export const ProductPrice = ({ data, withPercentage = true, sx }: Props) => {
 		<Box display='flex' alignItems='center' gap={1} mb={1} sx={sx}>
 			{data.discountPrice ? (
 				<>
-					<Typography variant='h6' fontSize='20px' color='text.secondary'>
+					<Typography variant='h6' component={'span'} fontSize='20px' color='text.secondary'>
 						{data.discountPrice} руб
 					</Typography>
 					<Typography color='custom.text-muted' sx={{ textDecoration: 'line-through' }}>
@@ -25,7 +25,7 @@ export const ProductPrice = ({ data, withPercentage = true, sx }: Props) => {
 					)}
 				</>
 			) : (
-				<Typography variant='h6' fontSize='20px' color='text.secondary'>
+				<Typography variant='h6' component={'span'} fontSize='20px' color='text.secondary'>
 					{data.price} руб
 				</Typography>
 			)}

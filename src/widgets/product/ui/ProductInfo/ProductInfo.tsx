@@ -50,7 +50,7 @@ export const ProductInfo = ({ product }: Props) => {
 					</Box>
 				</Box>
 
-				<Typography px={{ xs: 1, md: 0 }} fontWeight='bold' variant='h6' mb={1.5}>
+				<Typography px={{ xs: 1, md: 0 }} fontWeight='bold' component={'h1'} variant='h6' mb={1.5}>
 					{product.h1}
 				</Typography>
 
@@ -66,7 +66,7 @@ export const ProductInfo = ({ product }: Props) => {
 				>
 					{product.discountPrice ? (
 						<>
-							<Typography variant='h6' color='text.secondary'>
+							<Typography variant='h6' component={'span'} color='text.secondary'>
 								{product.discountPrice} руб
 							</Typography>
 							<Typography
@@ -78,7 +78,7 @@ export const ProductInfo = ({ product }: Props) => {
 							</Typography>
 						</>
 					) : (
-						<Typography variant='h6' color='text.secondary'>
+						<Typography variant='h6' component={'span'} color='text.secondary'>
 							{product.price} руб
 						</Typography>
 					)}
