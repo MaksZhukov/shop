@@ -44,7 +44,7 @@ export const ProductImages = ({ images, currentImageIndex, onImageClick, onImage
 						>
 							<Image
 								src={item.url}
-								alt={item.alternativeText}
+								alt={`${item.alternativeText} - Фото ${i + 1}`}
 								width={56}
 								height={44}
 								style={{
@@ -61,11 +61,11 @@ export const ProductImages = ({ images, currentImageIndex, onImageClick, onImage
 			{/* Mobile carousel */}
 			{isMobile ? (
 				<Carousel carouselContainerSx={{ ml: -1 }} showArrows={false} showDots={true}>
-					{images.map((item) => (
+					{images.map((item, i) => (
 						<Box pl={1} width={'90%'} height={280} key={item.id}>
 							<Image
 								src={item.url}
-								alt={item.alternativeText}
+								alt={`${item.alternativeText} - Фото ${i + 1}`}
 								width={300}
 								height={256}
 								style={{ borderRadius: '16px', objectFit: 'cover', width: '100%' }}
@@ -78,7 +78,7 @@ export const ProductImages = ({ images, currentImageIndex, onImageClick, onImage
 				<Box onClick={() => onImageClick(currentImageIndex)} sx={{ cursor: 'pointer' }}>
 					<Image
 						src={images[currentImageIndex]?.url}
-						alt={images[currentImageIndex]?.alternativeText}
+						alt={`${images[currentImageIndex]?.alternativeText} - Фото ${currentImageIndex + 1}`}
 						width={632}
 						height={505}
 						style={{

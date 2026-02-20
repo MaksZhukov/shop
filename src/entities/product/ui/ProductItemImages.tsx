@@ -25,7 +25,7 @@ export const ProductItemImages = ({ data, width, imageHeight, imageHeightOffset,
 		<Box>
 			<NextLink href={getProductLink(data)} style={disabledStyles}>
 				<Carousel options={{ axis: 'x', loop: false }} showArrows={false} showDots={true}>
-					{data.images?.slice(0, LIMIT_PRODUCT_IMAGES).map((image) => (
+					{data.images?.slice(0, LIMIT_PRODUCT_IMAGES).map((image, i) => (
 						<Box key={image.id} maxWidth={'100%'} height={imageHeight + imageHeightOffset}>
 							<Image
 								title={image.caption}
@@ -34,7 +34,7 @@ export const ProductItemImages = ({ data, width, imageHeight, imageHeightOffset,
 								style={{
 									objectFit: 'cover'
 								}}
-								alt={image.alternativeText}
+								alt={`${image.alternativeText} - Фото ${i + 1}`}
 								src={image.url}
 							></Image>
 						</Box>
@@ -54,7 +54,7 @@ export const ProductItemImages = ({ data, width, imageHeight, imageHeightOffset,
 					src=''
 					width={width}
 					height={imageHeight + imageHeightOffset}
-					alt={data.h1}
+					alt={`${data.h1} - Фото 1`}
 				></Image>
 			</NextLink>
 		</Box>

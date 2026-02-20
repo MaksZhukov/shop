@@ -18,7 +18,7 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 			{data.images ? (
 				<Box>
 					<Carousel showArrows={false} showDots={false}>
-						{data.images?.map((image) => (
+						{data.images?.map((image, i) => (
 							<Box key={image.id} height={290}>
 								<Image
 									title={image.caption}
@@ -27,7 +27,7 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 									style={{
 										objectFit: 'cover'
 									}}
-									alt={image.alternativeText}
+									alt={`${image.alternativeText} - Фото ${i + 1}`}
 									src={image.url}
 								></Image>
 							</Box>
@@ -45,7 +45,7 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 						src=''
 						width={width}
 						height={290}
-						alt={data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name}
+						alt={`${data.brand?.name} ${data.model?.name} ${data.generation?.name} - Фото 1`}
 					></Image>
 				</Box>
 			)}

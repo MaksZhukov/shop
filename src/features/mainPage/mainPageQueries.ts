@@ -27,7 +27,8 @@ export const mainPageQueryFns = {
 			.fetchSpareParts({
 				populate: ['images', 'brand', 'volume'],
 				pagination: { limit: 10 },
-				filters: { sold: false }
+				filters: { sold: false },
+				sort: ['createdAt:desc']
 			})
 			.then((r) => r.data),
 	articles: () =>
