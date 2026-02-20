@@ -8,7 +8,6 @@ import { CatalogHeader } from './CatalogHeader';
 import { CatalogSidebar } from './CatalogSidebar';
 import type { BrandCatalog, ModelCatalog } from './types';
 import { CatalogContent } from './CatalogContent';
-import { CatalogSEO } from './CatalogSEO';
 import { CatalogFiltersModal } from './CatalogFiltersModal';
 
 interface CatalogProps {
@@ -70,7 +69,7 @@ export const Catalog: React.FC<CatalogProps> = ({
 				onOpenFiltersModal={handleFiltersModalOpen}
 			/>
 
-			<Box display='flex' gap={2}>
+			<Box display='flex' gap={2} mb={4}>
 				<CatalogSidebar
 					filtersConfig={filtersConfig}
 					filtersValues={filtersValues}
@@ -91,8 +90,6 @@ export const Catalog: React.FC<CatalogProps> = ({
 					page={page}
 				/>
 			</Box>
-
-			<CatalogSEO />
 
 			<CatalogFiltersModal
 				open={filtersModalOpen}
