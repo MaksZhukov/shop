@@ -279,7 +279,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 		const pageProps = await buildPageProps(params);
 
 		const queryClient = new QueryClient();
-		queryClient.setQueryData(cabinsBrandsQueryKey(), brands);
+		queryClient.setQueryData(cabinsBrandsQueryKey(kindSparePartSlug as string), brands);
 		const dehydratedState = dehydrate(queryClient);
 
 		const props = {
