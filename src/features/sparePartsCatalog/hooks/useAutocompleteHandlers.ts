@@ -60,6 +60,19 @@ export const useAutocompleteHandlers = ({
 		}
 	}, [kindSparePart]);
 
+	const generateKindSparePartsFilters = (name?: string) => {
+		return {
+			type: kindSparePartType,
+			spareParts: {
+				sold: false,
+				...(name && { name: { $contains: name } }),
+				...(filtersValues.brand && { brand: { slug: filtersValues.brand } }),
+				...(filtersValues.model && { model: { slug: filtersValues.model } }),
+				...(filtersValues.generation && { generation: { slug: filtersValues.generation } })
+			}
+		};
+	};
+
 	const loadKindSpareParts = async (initial: boolean = false) => {
 		if (abortControllerRef.current) {
 			abortControllerRef.current.abort();
@@ -70,15 +83,7 @@ export const useAutocompleteHandlers = ({
 		try {
 			const { data } = await kindSparePartApi.fetchKindSpareParts(
 				{
-					filters: {
-						type: kindSparePartType,
-						spareParts: {
-							sold: false,
-							...(filtersValues.brand && { brand: { slug: filtersValues.brand } }),
-							...(filtersValues.model && { model: { slug: filtersValues.model } }),
-							...(filtersValues.generation && { generation: { slug: filtersValues.generation } })
-						}
-					},
+					filters: generateKindSparePartsFilters(),
 					pagination: { start: kindSpareParts.data.length }
 				},
 				{ abortController: controller }
@@ -122,7 +127,9 @@ export const useAutocompleteHandlers = ({
 
 		try {
 			const { data } = await kindSparePartApi.fetchKindSpareParts(
-				{ filters: { name: { $contains: value }, type: kindSparePartType } },
+				{
+					filters: generateKindSparePartsFilters(value)
+				},
 				{ abortController: controller }
 			);
 			setKindSpareParts(data);
