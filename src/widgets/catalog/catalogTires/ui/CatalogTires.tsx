@@ -62,11 +62,29 @@ export const CatalogTires: FC<Props> = ({ pageData }) => {
 		loadingOptionsText: <CircularProgress size={20} />
 	});
 
+	const generateQueryParams = () => {
+		const { brand, ...restFiltersValues } = filtersValues;
+
+		const newQuery: Record<string, string> = {};
+
+		Object.keys(restFiltersValues).forEach((key) => {
+			if (restFiltersValues[key as keyof typeof restFiltersValues]) {
+				newQuery[key] = restFiltersValues[key as keyof typeof restFiltersValues] as string;
+			} else {
+				delete newQuery[key];
+			}
+		});
+
+		const queryString = new URLSearchParams(newQuery).toString();
+
+		return queryString ? `?${queryString}` : '';
+	};
+
 	const brandsForCatalog: BrandCatalog[] = tireBrands.map((b) => ({
 		id: b.id,
 		name: b.name,
 		slug: b.slug,
-		path: `/tires/${b.slug}`,
+		path: `/tires/${b.slug}${generateQueryParams()}`,
 		count: b.tires.count
 	}));
 

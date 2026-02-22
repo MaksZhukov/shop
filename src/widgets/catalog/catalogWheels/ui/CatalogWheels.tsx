@@ -80,11 +80,29 @@ export const CatalogWheels: FC<Props> = ({ pageData, brands }) => {
 		loadingOptionsText: <CircularProgress size={20} />
 	});
 
+	const generateQueryParams = () => {
+		const { brand, model, ...restFiltersValues } = filtersValues;
+
+		const newQuery: Record<string, string> = {};
+
+		Object.keys(restFiltersValues).forEach((key) => {
+			if (restFiltersValues[key as keyof typeof restFiltersValues]) {
+				newQuery[key] = restFiltersValues[key as keyof typeof restFiltersValues] as string;
+			} else {
+				delete newQuery[key];
+			}
+		});
+
+		const queryString = new URLSearchParams(newQuery).toString();
+
+		return queryString ? `?${queryString}` : '';
+	};
+
 	const brandsForCatalog: BrandCatalog[] = brands.map((b) => ({
 		id: b.id,
 		name: b.name,
 		slug: b.slug,
-		path: `/wheels/${b.slug}`,
+		path: `/wheels/${b.slug}${generateQueryParams()}`,
 		count: b.wheels?.count ?? 0
 	}));
 
@@ -92,7 +110,7 @@ export const CatalogWheels: FC<Props> = ({ pageData, brands }) => {
 		id: m.id,
 		name: m.name,
 		slug: m.slug,
-		path: `/wheels/${filtersValues.brand}/model-${m.slug}`,
+		path: `/wheels/${filtersValues.brand}/model-${m.slug}${generateQueryParams()}`,
 		count: m.wheels?.count
 	}));
 

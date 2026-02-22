@@ -9,6 +9,8 @@ import { EngineVolume } from 'entities/engineVolume';
 import { catalogApi, TopCategory } from 'entities/catalog';
 import type { FilterValues, ParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
+import { sparePartsBrandsQueryKey } from '../constants';
+import { sparePartsPageQueryFns } from '../sparePartsPageQueries';
 
 interface UseCatalogDataParams {
 	queryParams: ParsedQueryParams;
@@ -25,6 +27,12 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 	const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
 
 	const currentBrandSlug = brandSlug(brand, filtersValues.brand);
+	const currentKindSparePartSlug = kindSparePartSlug || filtersValues.kindSparePart;
+
+	const { data: brands = [] } = useQuery({
+		queryKey: sparePartsBrandsQueryKey(filtersValues.kindSparePart),
+		queryFn: sparePartsPageQueryFns.fetchBrandsData(filtersValues.kindSparePart)
+	});
 
 	const { data: spareParts, isFetching } = useQuery({
 		queryKey: [
@@ -90,19 +98,45 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 	});
 
 	const { data: modelsData } = useQuery({
-		queryKey: ['spare-parts-models', currentBrandSlug],
+		queryKey: ['spare-parts-models', currentBrandSlug, currentKindSparePartSlug],
 		enabled: !!currentBrandSlug,
 		placeholderData: (prev) => prev,
-		queryFn: () =>
-			modelApi.fetchModels<ModelSparePartsCountWithGenerationsSparePartsCount>({
-				filters: { brand: { slug: currentBrandSlug }, spareParts: { sold: false, id: { $notNull: true } } },
+		queryFn: () => {
+			return modelApi.fetchModels<ModelSparePartsCountWithGenerationsSparePartsCount>({
 				pagination: { limit: API_MAX_LIMIT },
+				filters: {
+					brand: { slug: currentBrandSlug },
+					spareParts: {
+						...(currentKindSparePartSlug && { kindSparePart: { slug: currentKindSparePartSlug } })
+					}
+				},
 				populate: {
 					generations: {
-						populate: { spareParts: { count: true, filters: { sold: false } } }
+						populate: {
+							spareParts: {
+								count: true,
+								filters: {
+									brand: { slug: currentBrandSlug },
+									sold: false,
+									...(currentKindSparePartSlug && {
+										kindSparePart: { slug: currentKindSparePartSlug }
+									})
+								}
+							}
+						},
+						filters: {
+							brand: { slug: currentBrandSlug },
+							spareParts: {
+								sold: false,
+								...(currentKindSparePartSlug && {
+									kindSparePart: { slug: currentKindSparePartSlug }
+								})
+							}
+						}
 					}
 				}
-			})
+			});
+		}
 	});
 
 	const { data: generationsData } = useQuery({
@@ -158,6 +192,7 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 		pageCount,
 		total,
 		models,
+		brands,
 		setModels,
 		generations,
 		setGenerations,

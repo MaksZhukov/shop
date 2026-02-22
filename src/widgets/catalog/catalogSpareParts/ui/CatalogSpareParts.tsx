@@ -1,6 +1,5 @@
 import { CircularProgress } from '@mui/material';
 import { FC } from 'react';
-import type { BrandWithSparePartsCount } from 'entities/brand/brandTypes';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
@@ -18,18 +17,12 @@ import type { KindSparePartType } from 'entities/kindSparePart';
 import { ModelCatalog } from 'widgets/catalog/ui/types';
 
 interface Props {
-	brands: BrandWithSparePartsCount[];
 	kindSparePart?: KindSparePart;
 	kindSparePartType?: KindSparePartType;
 	pageData: DefaultPage;
 }
 
-export const CatalogSpareParts: FC<Props> = ({
-	brands = [],
-	kindSparePart,
-	kindSparePartType = 'regular',
-	pageData
-}) => {
+export const CatalogSpareParts: FC<Props> = ({ kindSparePart, kindSparePartType = 'regular', pageData }) => {
 	const router = useRouter();
 	const queryParams = parseRouterQuery(router.query);
 
@@ -47,7 +40,8 @@ export const CatalogSpareParts: FC<Props> = ({
 		setVolumes,
 		catalogCategories,
 		hoveredCategory,
-		setHoveredCategory
+		setHoveredCategory,
+		brands
 	} = useCatalogData({ queryParams, filtersValues });
 
 	const {
@@ -125,11 +119,29 @@ export const CatalogSpareParts: FC<Props> = ({
 		onOpenAutoCompleteVolume: handleOpenAutocompleteVolume
 	});
 
+	const generateQueryParams = () => {
+		const { brand, model, generation, ...restFiltersValues } = filtersValues;
+
+		const newQuery: Record<string, string> = {};
+
+		Object.keys(restFiltersValues).forEach((key) => {
+			if (restFiltersValues[key as keyof typeof restFiltersValues]) {
+				newQuery[key] = restFiltersValues[key as keyof typeof restFiltersValues] as string;
+			} else {
+				delete newQuery[key];
+			}
+		});
+
+		const queryString = new URLSearchParams(newQuery).toString();
+
+		return queryString ? `?${queryString}` : '';
+	};
+
 	const brandsForCatalog: BrandCatalog[] = brands.map((b) => ({
 		id: b.id,
 		name: b.name,
 		slug: b.slug,
-		path: `/spare-parts/${b.slug}`,
+		path: `/spare-parts/${b.slug}${generateQueryParams()}`,
 		count: b.spareParts.count
 	}));
 
@@ -137,17 +149,15 @@ export const CatalogSpareParts: FC<Props> = ({
 		id: m.id,
 		name: m.name,
 		slug: m.slug,
-		path: `/spare-parts/${filtersValues.brand}/model-${m.slug}`,
+		path: `/spare-parts/${filtersValues.brand}/model-${m.slug}${generateQueryParams()}`,
 		count: m.spareParts?.count,
-		generations: m.generations
-			.filter((g) => g.spareParts?.count)
-			.map((g) => ({
-				id: g.id,
-				name: g.name,
-				slug: g.slug,
-				path: `/spare-parts/${filtersValues.brand}/model-${m.slug}/${g.slug}`,
-				count: g.spareParts?.count
-			}))
+		generations: m.generations.map((g) => ({
+			id: g.id,
+			name: g.name,
+			slug: g.slug,
+			path: `/spare-parts/${filtersValues.brand}/model-${m.slug}/${g.slug}${generateQueryParams()}`,
+			count: g.spareParts?.count
+		}))
 	}));
 
 	return (

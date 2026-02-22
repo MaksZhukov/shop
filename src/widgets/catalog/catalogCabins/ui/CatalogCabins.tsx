@@ -100,11 +100,29 @@ export const CatalogCabins: FC<Props> = ({ brands = [], kindSparePart, pageData 
 		onInputChangeKindSparePart: handleInputChangeKindSparePart
 	});
 
+	const generateQueryParams = () => {
+		const { brand, model, generation, ...restFiltersValues } = filtersValues;
+
+		const newQuery: Record<string, string> = {};
+
+		Object.keys(restFiltersValues).forEach((key) => {
+			if (restFiltersValues[key as keyof typeof restFiltersValues]) {
+				newQuery[key] = restFiltersValues[key as keyof typeof restFiltersValues] as string;
+			} else {
+				delete newQuery[key];
+			}
+		});
+
+		const queryString = new URLSearchParams(newQuery).toString();
+
+		return queryString ? `?${queryString}` : '';
+	};
+
 	const brandsForCatalog: BrandCatalog[] = brands.map((b) => ({
 		id: b.id,
 		name: b.name,
 		slug: b.slug,
-		path: `/cabins/${b.slug}`,
+		path: `/cabins/${b.slug}${generateQueryParams()}`,
 		count: b.cabins.count
 	}));
 
@@ -112,7 +130,7 @@ export const CatalogCabins: FC<Props> = ({ brands = [], kindSparePart, pageData 
 		id: m.id,
 		name: m.name,
 		slug: m.slug,
-		path: `/cabins/${filtersValues.brand}/model-${m.slug}`,
+		path: `/cabins/${filtersValues.brand}/model-${m.slug}${generateQueryParams()}`,
 		count: m.cabins?.count,
 		generations: m.generations
 			.filter((g) => g.cabins?.count)
@@ -120,7 +138,7 @@ export const CatalogCabins: FC<Props> = ({ brands = [], kindSparePart, pageData 
 				id: g.id,
 				name: g.name,
 				slug: g.slug,
-				path: `/cabins/${filtersValues.brand}/model-${m.slug}/${g.slug}`,
+				path: `/cabins/${filtersValues.brand}/model-${m.slug}/${g.slug}${generateQueryParams()}`,
 				count: g.cabins.count
 			}))
 	}));

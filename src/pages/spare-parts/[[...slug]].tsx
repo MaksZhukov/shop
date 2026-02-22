@@ -18,6 +18,9 @@ import { getProductPageSeo } from 'entities/product';
 import { withGeneration } from 'entities/generation';
 import { withKindSparePart } from 'entities/kindSparePart';
 import { getStringByTemplateStr } from 'shared/utils/stringUtils';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { sparePartsBrandsQueryKey } from 'features/sparePartsCatalog/constants';
+import { sparePartsPageQueryFns } from 'features/sparePartsCatalog/sparePartsPageQueries';
 
 interface Props {
 	data: SparePart;
@@ -35,34 +38,16 @@ interface SlugParams {
 	kindSparePartSlug?: string;
 }
 
-const SpareParts: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts }) => {
+const SpareParts: NextPage<Props> = ({ page, kindSparePart, data, relatedProducts }) => {
 	if (data && relatedProducts) {
 		return (
 			<Product data={data} page={page as PageProduct & PageProductSparePart} relatedProducts={relatedProducts} />
 		);
 	}
-	return <CatalogSpareParts pageData={page} brands={brands} kindSparePart={kindSparePart}></CatalogSpareParts>;
+	return <CatalogSpareParts pageData={page} kindSparePart={kindSparePart}></CatalogSpareParts>;
 };
 
 export default SpareParts;
-
-const fetchBrandsData = async (): Promise<BrandWithSparePartsCount[]> => {
-	const {
-		data: { data: brands }
-	} = await brandApi.fetchBrands({
-		populate: { spareParts: { count: true } },
-		sort: 'name',
-		pagination: { limit: API_MAX_LIMIT },
-		filters: {
-			spareParts: {
-				id: {
-					$notNull: true
-				}
-			}
-		}
-	});
-	return brands as BrandWithSparePartsCount[];
-};
 
 const parseParams = (slug: string[], kindSparePartSlug?: string): SlugParams => {
 	const [brandParamSlug, modelOrProductParamSlug, generationParamSlug] = slug;
@@ -288,13 +273,18 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 
 		const params = parseParams(slug as string[], kindSparePartSlug as string);
 
-		const brands = await fetchBrandsData();
-
+		const fetchBrands = sparePartsPageQueryFns.fetchBrandsData(kindSparePartSlug as string);
+		const brands = await fetchBrands();
 		const pageProps = await buildPageProps(params);
+
+		const queryClient = new QueryClient();
+		queryClient.setQueryData(sparePartsBrandsQueryKey(kindSparePartSlug as string), brands);
+		const dehydratedState = dehydrate(queryClient);
 
 		const props = {
 			brands,
-			...pageProps
+			...pageProps,
+			dehydratedState
 		};
 
 		return { props };

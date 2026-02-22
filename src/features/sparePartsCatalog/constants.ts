@@ -4,3 +4,5 @@ export const ERROR_MESSAGES = {
 	AUTOCOMPLETE_FETCH_ERROR: 'Произошла какая-то ошибка при загрузке данных для автозаполнения, обратитесь в поддержку'
 } as const;
 
+export const sparePartsBrandsQueryKey = (kindSparePartSlug?: string | null) =>
+	['spare-parts-brands', kindSparePartSlug ?? ''] as const;
