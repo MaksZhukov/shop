@@ -51,7 +51,7 @@ export const CatalogHeader: React.FC<CatalogHeaderProps> = ({ seo, sort, total, 
 			mb={{ xs: 2, md: 0 }}
 			alignItems={{ xs: 'flex-start', md: 'center' }}
 		>
-			<Typography mb={1} variant='h6'>
+			<Typography mb={1} variant='h6' component={'h1'}>
 				{seo?.h1}
 			</Typography>
 			<Button
