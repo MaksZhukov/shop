@@ -12,7 +12,6 @@ export const useCatalogRouter = () => {
 		newQuery['height'] = filtersValues.height ?? '';
 		newQuery['diameter'] = filtersValues.diameter ?? '';
 		newQuery['season'] = filtersValues.season ?? '';
-		newQuery['page'] = '1';
 
 		if (brand) {
 			delete newQuery['brand'];
@@ -25,6 +24,8 @@ export const useCatalogRouter = () => {
 				delete newQuery[key];
 			}
 		});
+
+		delete newQuery['page'];
 
 		const pathname = brand ? `/tires/${encodeURIComponent(brand)}` : '/tires';
 		router.push({ pathname, query: newQuery }, undefined, { shallow: false });

@@ -103,7 +103,6 @@ export const CatalogSpareParts: FC<Props> = ({
 		) {
 			setIsReloadKindSpareParts(true);
 		}
-
 		setFiltersValues(newFilterValues);
 	};
 

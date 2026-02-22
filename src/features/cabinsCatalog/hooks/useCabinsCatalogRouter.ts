@@ -34,7 +34,7 @@ export const useCabinsCatalogRouter = () => {
 		});
 
 		newQuery['slug'] = slug;
-		newQuery['page'] = '1';
+		delete newQuery['page'];
 
 		router.push({ pathname: router.pathname, query: newQuery }, undefined, { shallow: false });
 	};

@@ -43,6 +43,19 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 		}
 	};
 
+	const getPageHref = (page: number) => {
+		const basePath = router.asPath.split('?')[0];
+		const { slug, ...restQuery } = router.query;
+		const query: Record<string, string> = { ...restQuery } as Record<string, string>;
+		if (page !== 1) {
+			query.page = page.toString();
+		} else {
+			delete query.page;
+		}
+		const search = new URLSearchParams(query).toString();
+		return search ? `${basePath}?${search}` : basePath;
+	};
+
 	const renderModelLinkEntries = (model: ModelCatalog) => {
 		return (
 			model.generations?.map((gen) => ({
@@ -138,13 +151,7 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 								{params.page}
 							</PaginationItem>
 						) : (
-							<NextLink
-								shallow
-								href={`${router.asPath.split('?')[0]}?${new URLSearchParams({
-									...router.query,
-									page: params.page.toString()
-								}).toString()}`}
-							>
+							<NextLink shallow href={getPageHref(params.page)}>
 								<PaginationItem {...params} onClick={handleScrollToTop}>
 									{params.page}
 								</PaginationItem>

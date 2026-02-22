@@ -16,8 +16,7 @@ export const useCatalogRouter = () => {
 		newQuery['diameterCenterHole'] = filtersValues.diameterCenterHole ?? '';
 		newQuery['distanceBetweenCenters'] = filtersValues.distanceBetweenCenters ?? '';
 		newQuery['diskOffset'] = filtersValues.diskOffset ?? '';
-		newQuery['page'] = '1';
-
+		delete newQuery['page'];
 		delete newQuery['brand'];
 		delete newQuery['model'];
 
