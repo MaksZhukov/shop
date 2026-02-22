@@ -18,6 +18,9 @@ import { getProductPageSeo } from 'entities/product';
 import { withGeneration } from 'entities/generation';
 import { withKindSparePart } from 'entities/kindSparePart';
 import { getStringByTemplateStr } from 'shared/utils/stringUtils';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { cabinsBrandsQueryKey } from 'features/cabinsCatalog/constants';
+import { cabinsPageQueryFns } from 'features/cabinsCatalog/cabinsPageQueries';
 
 const CABINS_BASE_PATH = '/cabins';
 const CABINS_LABEL = 'Салоны';
@@ -38,32 +41,14 @@ interface SlugParams {
 	kindSparePartSlug?: string;
 }
 
-const Cabins: NextPage<Props> = ({ page, brands, kindSparePart, data, relatedProducts }) => {
+const Cabins: NextPage<Props> = ({ page, kindSparePart, data, relatedProducts }) => {
 	if (data && relatedProducts) {
 		return <Product data={data} page={page as PageProduct & PageProductCabin} relatedProducts={relatedProducts} />;
 	}
-	return <CatalogCabins pageData={page} brands={brands} kindSparePart={kindSparePart} />;
+	return <CatalogCabins pageData={page} kindSparePart={kindSparePart} />;
 };
 
 export default Cabins;
-
-const fetchBrandsData = async (): Promise<BrandWithCabinsCount[]> => {
-	const {
-		data: { data: brands }
-	} = await brandApi.fetchBrands({
-		populate: { cabins: { count: true } },
-		sort: 'name',
-		pagination: { limit: API_MAX_LIMIT },
-		filters: {
-			cabins: {
-				id: {
-					$notNull: true
-				}
-			}
-		}
-	});
-	return brands as BrandWithCabinsCount[];
-};
 
 const parseParams = (slug: string[], kindSparePartSlug?: string): SlugParams => {
 	const [brandParamSlug, modelOrProductParamSlug, generationParamSlug] = slug;
@@ -289,13 +274,17 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 
 		const params = parseParams(slug as string[], kindSparePartSlug as string);
 
-		const brands = await fetchBrandsData();
-
+		const fetchBrands = cabinsPageQueryFns.fetchBrandsData(kindSparePartSlug as string);
+		const brands = await fetchBrands();
 		const pageProps = await buildPageProps(params);
 
+		const queryClient = new QueryClient();
+		queryClient.setQueryData(cabinsBrandsQueryKey(), brands);
+		const dehydratedState = dehydrate(queryClient);
+
 		const props = {
-			brands,
-			...pageProps
+			...pageProps,
+			dehydratedState
 		};
 
 		return { props };

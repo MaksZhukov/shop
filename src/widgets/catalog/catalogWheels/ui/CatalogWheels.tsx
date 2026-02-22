@@ -16,10 +16,9 @@ import { ModelCatalog } from 'widgets/catalog/ui/types';
 
 interface Props {
 	pageData: DefaultPage;
-	brands: BrandWithWheelsCount[];
 }
 
-export const CatalogWheels: FC<Props> = ({ pageData, brands }) => {
+export const CatalogWheels: FC<Props> = ({ pageData }) => {
 	const router = useRouter();
 	const queryParams = parseRouterQuery(router.query);
 
@@ -47,7 +46,8 @@ export const CatalogWheels: FC<Props> = ({ pageData, brands }) => {
 		isLoadingWidths,
 		isLoadingNumberHoles,
 		isLoadingDiameterCenterHoles,
-		isLoadingDiskOffsets
+		isLoadingDiskOffsets,
+		brands
 	} = useCatalogData({ queryParams, filtersValues });
 
 	const { handleClickFind, handleChangeSort } = useCatalogRouter();

@@ -1,7 +1,6 @@
 import { pageApi } from 'entities/page';
 import type { DefaultPage, PageProduct, PageProductWheel } from 'entities/page';
 import { brandApi } from 'entities/brand';
-import type { BrandWithWheelsCount } from 'entities/brand';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { modelApi } from 'entities/model';
 import { CatalogWheels } from 'widgets/catalog';
@@ -12,10 +11,12 @@ import { getProductPageSeo } from 'entities/product';
 import type { Wheel } from 'entities/wheel';
 import { wheelApi } from 'entities/wheel';
 import { getStringByTemplateStr } from 'shared/utils/stringUtils';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { wheelsBrandsQueryKey } from 'features/wheelsCatalog/constants';
+import { wheelsPageQueryFns } from 'features/wheelsCatalog/wheelsPageQueries';
 
 interface Props {
 	page: DefaultPage;
-	brands: BrandWithWheelsCount[];
 	data?: Wheel;
 	relatedProducts?: Wheel[];
 }
@@ -26,7 +27,7 @@ interface SlugParams {
 	productSlug?: string;
 }
 
-const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
+const Wheels: NextPage<Props> = ({ page, data, relatedProducts }) => {
 	if (data && relatedProducts) {
 		return (
 			<Product
@@ -36,26 +37,10 @@ const Wheels: NextPage<Props> = ({ page, brands, data, relatedProducts }) => {
 			/>
 		);
 	}
-	return <CatalogWheels pageData={page} brands={brands} />;
+	return <CatalogWheels pageData={page} />;
 };
 
 export default Wheels;
-
-const fetchBrandsData = async (): Promise<BrandWithWheelsCount[]> => {
-	const {
-		data: { data: brands }
-	} = await brandApi.fetchBrands({
-		populate: { wheels: { count: true } },
-		sort: 'name',
-		pagination: { limit: API_MAX_LIMIT },
-		filters: {
-			wheels: {
-				id: { $notNull: true }
-			}
-		}
-	});
-	return brands as BrandWithWheelsCount[];
-};
 
 const parseParams = (slug: string[]): SlugParams => {
 	const [brandParamSlug, modelOrProductParamSlug] = slug;
@@ -201,15 +186,24 @@ const buildPageProps = async (
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
 	try {
-		const { slug = [] } = context.query;
+		const { slug = [], kind } = context.query;
 		const slugArray = slug as string[];
 		const params = parseParams(slugArray);
 
 		const pageProps = await buildPageProps(params);
 		if (!pageProps) return { props: {}, notFound: true };
 
-		const brands = await fetchBrandsData();
-		return { props: { brands, ...pageProps } };
+		const filtersValues = {
+			kind: kind as string
+		};
+		const fetchBrands = wheelsPageQueryFns.fetchBrandsData(filtersValues);
+		const brands = await fetchBrands();
+
+		const queryClient = new QueryClient();
+		queryClient.setQueryData(wheelsBrandsQueryKey(filtersValues), brands);
+		const dehydratedState = dehydrate(queryClient);
+
+		return { props: { ...pageProps, dehydratedState } };
 	} catch {
 		return { props: {}, notFound: true };
 	}

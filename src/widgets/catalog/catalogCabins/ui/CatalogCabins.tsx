@@ -17,17 +17,16 @@ import {
 import { ModelCatalog } from 'widgets/catalog/ui/types';
 
 interface Props {
-	brands: BrandWithCabinsCount[];
 	kindSparePart?: KindSparePart;
 	pageData: DefaultPage;
 }
 
-export const CatalogCabins: FC<Props> = ({ brands = [], kindSparePart, pageData }) => {
+export const CatalogCabins: FC<Props> = ({ kindSparePart, pageData }) => {
 	const router = useRouter();
 	const queryParams = parseCabinsRouterQuery(router.query);
 
 	const { filtersValues, setFiltersValues } = useCabinsCatalogFilters(queryParams);
-	const { cabins, isLoading, pageCount, total, models, setModels, generations, setGenerations } =
+	const { cabins, isLoading, pageCount, total, models, setModels, brands, generations, setGenerations } =
 		useCabinsCatalogData({ queryParams, filtersValues });
 
 	const {

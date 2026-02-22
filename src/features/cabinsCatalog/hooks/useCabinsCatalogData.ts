@@ -8,6 +8,8 @@ import type { CabinsFilterValues, CabinsParsedQueryParams } from '../types';
 import { generateCabinsFiltersByQuery } from '../utils';
 import type { Dispatch, SetStateAction } from 'react';
 import { ModelCabinsCountWithGenerationsCabinsCount } from 'entities/model/modelTypes';
+import { cabinsBrandsQueryKey } from '../constants';
+import { cabinsPageQueryFns } from '../cabinsPageQueries';
 
 interface UseCabinsCatalogDataParams {
 	queryParams: CabinsParsedQueryParams;
@@ -21,7 +23,7 @@ export const useCabinsCatalogData = ({ queryParams, filtersValues }: UseCabinsCa
 	const queryClient = useQueryClient();
 
 	const currentBrandSlug = brandSlug(brand, filtersValues.brand);
-
+	const currentKindSparePartSlug = filtersValues.kindSparePart || kindSparePartSlug;
 	const { data: cabins, isFetching } = useQuery({
 		queryKey: ['cabins', sort, page, brand, model, generation, kindSparePartSlug],
 		placeholderData: (prev) => prev,
@@ -40,6 +42,11 @@ export const useCabinsCatalogData = ({ queryParams, filtersValues }: UseCabinsCa
 				populate: ['brand', 'images'],
 				pagination: { start: (page - 1) * API_DEFAULT_LIMIT, limit: API_DEFAULT_LIMIT }
 			})
+	});
+
+	const { data: brandsData = [] } = useQuery({
+		queryKey: cabinsBrandsQueryKey(filtersValues.kindSparePart),
+		queryFn: cabinsPageQueryFns.fetchBrandsData(filtersValues.kindSparePart)
 	});
 
 	const { data: totalCabins } = useQuery({
@@ -64,11 +71,38 @@ export const useCabinsCatalogData = ({ queryParams, filtersValues }: UseCabinsCa
 		placeholderData: (prev) => prev,
 		queryFn: () =>
 			modelApi.fetchModels<ModelCabinsCountWithGenerationsCabinsCount>({
-				filters: { brand: { slug: currentBrandSlug }, cabins: { sold: false, id: { $notNull: true } } },
+				filters: {
+					brand: { slug: currentBrandSlug },
+					cabins: {
+						sold: false,
+						id: { $notNull: true },
+						...(currentKindSparePartSlug && { kindSparePart: { slug: currentKindSparePartSlug } })
+					}
+				},
 				pagination: { limit: API_MAX_LIMIT },
 				populate: {
 					generations: {
-						populate: { cabins: { count: true, filters: { sold: false } } }
+						populate: {
+							cabins: {
+								count: true,
+								filters: {
+									brand: { slug: currentBrandSlug },
+									sold: false,
+									id: { $notNull: true },
+									...(currentKindSparePartSlug && {
+										kindSparePart: { slug: currentKindSparePartSlug }
+									})
+								}
+							}
+						},
+						filters: {
+							cabins: {
+								brand: { slug: currentBrandSlug },
+								sold: false,
+								id: { $notNull: true },
+								...(currentKindSparePartSlug && { kindSparePart: { slug: currentKindSparePartSlug } })
+							}
+						}
 					}
 				}
 			})
@@ -125,6 +159,7 @@ export const useCabinsCatalogData = ({ queryParams, filtersValues }: UseCabinsCa
 		isLoading: isFetching,
 		pageCount,
 		total,
+		brands: brandsData,
 		models,
 		setModels,
 		generations,

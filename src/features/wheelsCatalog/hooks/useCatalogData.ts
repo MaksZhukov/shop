@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { wheelApi } from 'entities/wheel';
-import { brandApi } from 'entities/brand';
 import { modelApi } from 'entities/model';
 import { wheelDiameterApi } from 'entities/wheelDiameter';
 import { wheelWidthApi } from 'entities/wheelWidth';
@@ -12,7 +11,8 @@ import { wheelDiskOffsetApi } from 'entities/wheelDiskOffset';
 import type { WheelFilterValues, WheelParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
 import type { ModelWheelsCountWithGenerationsWheelsCount } from 'entities/model/modelTypes';
-import type { BrandWithWheelsCount } from 'entities/brand';
+import { wheelsBrandsQueryKey } from '../constants';
+import { wheelsPageQueryFns } from '../wheelsPageQueries';
 
 interface UseCatalogDataParams {
 	queryParams: WheelParsedQueryParams;
@@ -75,20 +75,9 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 			})
 	});
 
-	const { data: brandsData, isFetching: isLoadingBrands } = useQuery({
-		queryKey: ['brands-wheels'],
-		queryFn: () =>
-			brandApi.fetchBrands<BrandWithWheelsCount>({
-				pagination: { limit: API_MAX_LIMIT },
-				sort: 'name',
-				populate: { image: true, wheels: { count: true } },
-				filters: {
-					wheels: {
-						id: { $notNull: true },
-						sold: false
-					}
-				}
-			})
+	const { data: brandsData = [], isFetching: isLoadingBrands } = useQuery({
+		queryKey: wheelsBrandsQueryKey({ kind: filtersValues.kind }),
+		queryFn: wheelsPageQueryFns.fetchBrandsData({ kind: filtersValues.kind })
 	});
 
 	const { data: modelsData, isFetching: isLoadingModels } = useQuery({
@@ -158,7 +147,7 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 		select: (data) => data.data?.data?.map((item) => ({ id: item.id.toString(), name: item.name.toString() })) ?? []
 	});
 
-	const brands = brandsData?.data?.data ?? [];
+	const brands = brandsData ?? [];
 	const models = modelsData?.data?.data ?? [];
 	const diameters = diametersData?.data?.data ?? [];
 	const widths = widthsData ?? [];
