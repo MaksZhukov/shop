@@ -27,7 +27,6 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 	const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
 
 	const currentBrandSlug = brandSlug(brand, filtersValues.brand);
-	const currentKindSparePartSlug = kindSparePartSlug || filtersValues.kindSparePart;
 
 	const { data: brands = [] } = useQuery({
 		queryKey: sparePartsBrandsQueryKey(filtersValues.kindSparePart),
@@ -98,7 +97,7 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 	});
 
 	const { data: modelsData } = useQuery({
-		queryKey: ['spare-parts-models', currentBrandSlug, currentKindSparePartSlug],
+		queryKey: ['spare-parts-models', currentBrandSlug, filtersValues.kindSparePart],
 		enabled: !!currentBrandSlug,
 		placeholderData: (prev) => prev,
 		queryFn: () => {
@@ -107,7 +106,7 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 				filters: {
 					brand: { slug: currentBrandSlug },
 					spareParts: {
-						...(currentKindSparePartSlug && { kindSparePart: { slug: currentKindSparePartSlug } })
+						...(filtersValues.kindSparePart && { kindSparePart: { slug: filtersValues.kindSparePart } })
 					}
 				},
 				populate: {
@@ -118,8 +117,8 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 								filters: {
 									brand: { slug: currentBrandSlug },
 									sold: false,
-									...(currentKindSparePartSlug && {
-										kindSparePart: { slug: currentKindSparePartSlug }
+									...(filtersValues.kindSparePart && {
+										kindSparePart: { slug: filtersValues.kindSparePart }
 									})
 								}
 							}
@@ -128,8 +127,8 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 							brand: { slug: currentBrandSlug },
 							spareParts: {
 								sold: false,
-								...(currentKindSparePartSlug && {
-									kindSparePart: { slug: currentKindSparePartSlug }
+								...(filtersValues.kindSparePart && {
+									kindSparePart: { slug: filtersValues.kindSparePart }
 								})
 							}
 						}

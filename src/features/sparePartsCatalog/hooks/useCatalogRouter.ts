@@ -10,6 +10,7 @@ export const useCatalogRouter = () => {
 			brand: brandValue,
 			model: modelValue,
 			generation: generationValue,
+			kindSparePart: kindSparePartValue,
 			...restFiltersValues
 		} = filtersValues;
 
@@ -20,7 +21,10 @@ export const useCatalogRouter = () => {
 			slug.push('model-' + modelValue);
 		}
 		if (generationValue) {
-			slug.push(generationValue);
+			slug.push('gen-' + generationValue);
+		}
+		if (kindSparePartValue) {
+			slug.push('ksp-' + kindSparePartValue);
 		}
 
 		const newQuery = { ...router.query };

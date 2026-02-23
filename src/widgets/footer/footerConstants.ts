@@ -1,7 +1,7 @@
 export const NAVIGATION_LINKS = {
 	products: [
 		{ href: '/spare-parts', label: 'Запчасти' },
-		{ href: '/spare-parts?kindSparePart=dvigatel', label: 'Двигатели' },
+		{ href: '/spare-parts/ksp-dvigatel', label: 'Двигатели' },
 		{ href: '/cabins', label: 'Салоны' },
 		{ href: '/tires', label: 'Шины' },
 		{ href: '/wheels', label: 'Диски' }

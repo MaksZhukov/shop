@@ -1,3 +1,3 @@
 export { generateFiltersByQuery } from './filterUtils';
-export { parseRouterQuery } from './queryUtils';
+export { parseRouterQuery, parseSlugParam } from './queryUtils';
 

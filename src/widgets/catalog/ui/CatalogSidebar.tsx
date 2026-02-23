@@ -84,7 +84,7 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
 													p={1}
 												>
 													<Box display='flex' gap={0.5} alignItems='center'>
-														<Link href={`/spare-parts?kindSparePart=${kindSparePart.slug}`}>
+														<Link href={`/spare-parts/ksp-${kindSparePart.slug}`}>
 															<Typography variant='body2' fontWeight={500}>
 																{kindSparePart.name}
 															</Typography>

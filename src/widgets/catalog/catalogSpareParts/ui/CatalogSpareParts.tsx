@@ -120,7 +120,7 @@ export const CatalogSpareParts: FC<Props> = ({ kindSparePart, kindSparePartType 
 	});
 
 	const generateQueryParams = () => {
-		const { brand, model, generation, ...restFiltersValues } = filtersValues;
+		const { brand, model, generation, kindSparePart, ...restFiltersValues } = filtersValues;
 
 		const newQuery: Record<string, string> = {};
 
@@ -137,11 +137,17 @@ export const CatalogSpareParts: FC<Props> = ({ kindSparePart, kindSparePartType 
 		return queryString ? `?${queryString}` : '';
 	};
 
+	const generateSparePartsPath = (...segments: string[]) => {
+		const pathBase = `/spare-parts/${segments.join('/')}`;
+		const ksp = filtersValues.kindSparePart ? `/ksp-${filtersValues.kindSparePart}` : '';
+		return `${pathBase}${ksp}${generateQueryParams()}`;
+	};
+
 	const brandsForCatalog: BrandCatalog[] = brands.map((b) => ({
 		id: b.id,
 		name: b.name,
 		slug: b.slug,
-		path: `/spare-parts/${b.slug}${generateQueryParams()}`,
+		path: generateSparePartsPath(b.slug),
 		count: b.spareParts.count
 	}));
 
@@ -149,13 +155,13 @@ export const CatalogSpareParts: FC<Props> = ({ kindSparePart, kindSparePartType 
 		id: m.id,
 		name: m.name,
 		slug: m.slug,
-		path: `/spare-parts/${filtersValues.brand}/model-${m.slug}${generateQueryParams()}`,
+		path: generateSparePartsPath(filtersValues.brand!, `model-${m.slug}`),
 		count: m.spareParts?.count,
 		generations: m.generations.map((g) => ({
 			id: g.id,
 			name: g.name,
 			slug: g.slug,
-			path: `/spare-parts/${filtersValues.brand}/model-${m.slug}/${g.slug}${generateQueryParams()}`,
+			path: generateSparePartsPath(filtersValues.brand!, `model-${m.slug}`, `gen-${g.slug}`),
 			count: g.spareParts?.count
 		}))
 	}));

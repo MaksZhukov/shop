@@ -1,3 +1,11 @@
+export interface SlugParams {
+	brandParamSlug?: string;
+	modelSlug?: string;
+	generationSlug?: string;
+	productSlug?: string;
+	kindSparePartSlug?: string;
+}
+
 export interface FilterValues {
 	brand: string | null;
 	model: string | null;
@@ -26,7 +34,7 @@ export interface ParsedQueryParams {
 	sort: string;
 	page: number;
 	brand: string | undefined;
-	model: string;
+	model: string | undefined;
 	generation: string | undefined;
 	kindSparePartSlug: string | undefined;
 	volume: string | undefined;
@@ -34,4 +42,3 @@ export interface ParsedQueryParams {
 	bodyStyle: string | undefined;
 	transmission: string | undefined;
 }
-
