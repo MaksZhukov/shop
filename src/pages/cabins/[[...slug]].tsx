@@ -85,15 +85,11 @@ const handleProductPage = async (productSlug: string, _kindSparePartSlug?: strin
 			data: { data }
 		},
 		{
-			data: { data: page }
-		},
-		{
 			data: { data: pageCabin }
 		}
 	] = await Promise.all([
 		cabinApi.fetchCabin(productSlug),
-		pageApi.fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-		pageApi.fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'] })()
+		pageApi.fetchPage<PageProductCabin>('product-cabin', { populate: ['seo'], fields: ['id'] })()
 	]);
 
 	const {
@@ -112,12 +108,6 @@ const handleProductPage = async (productSlug: string, _kindSparePartSlug?: strin
 		data,
 		relatedProducts: relatedProducts ?? [],
 		page: {
-			...page,
-			...pageCabin,
-			additionalDescription: pageCabin?.additionalDescription
-				? getStringByTemplateStr(pageCabin.additionalDescription, data)
-				: '',
-			textAfterDescription: pageCabin?.textAfterDescription ?? '',
 			seo: {
 				...getProductPageSeo(pageCabin.seo, data),
 				h1: data.h1 || data.name

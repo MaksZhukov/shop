@@ -11,7 +11,6 @@ import type { DefaultPage, PageProduct, PageProductSparePart } from 'entities/pa
 import { sparePartApi } from 'entities/sparePart';
 import type { SparePart } from 'entities/sparePart';
 import { getProductPageSeo } from 'entities/product';
-import { getStringByTemplateStr } from 'shared/utils/stringUtils';
 import type { SlugParams } from '../types';
 
 export interface SparePartsPagePropsResult {
@@ -54,15 +53,11 @@ const handleProductPage = async (productSlug: string): Promise<SparePartsPagePro
 			data: { data }
 		},
 		{
-			data: { data: page }
-		},
-		{
 			data: { data: pageSparePart }
 		}
 	] = await Promise.all([
 		sparePartApi.fetchSparePart(productSlug),
-		pageApi.fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-		pageApi.fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'] })()
+		pageApi.fetchPage<PageProductSparePart>('product-spare-part', { populate: ['seo'], fields: ['id'] })()
 	]);
 
 	const {
@@ -72,9 +67,6 @@ const handleProductPage = async (productSlug: string): Promise<SparePartsPagePro
 		populate: ['images', 'brand']
 	});
 
-	const autoSynonyms = pageSparePart?.autoSynonyms.split(',') || [];
-	const randomAutoSynonym = autoSynonyms[Math.floor(Math.random() * autoSynonyms.length)];
-
 	const brandSlug = data.brand?.slug ?? '';
 	const brandPath = `/spare-parts/${brandSlug}`;
 
@@ -82,10 +74,6 @@ const handleProductPage = async (productSlug: string): Promise<SparePartsPagePro
 		data,
 		relatedProducts,
 		page: {
-			...page,
-			...pageSparePart,
-			additionalDescription: getStringByTemplateStr(pageSparePart.additionalDescription, data),
-			textAfterDescription: pageSparePart.textAfterDescription.replace('{autoSynonyms}', randomAutoSynonym),
 			seo: {
 				...getProductPageSeo(pageSparePart.seo, data),
 				h1: data.h1 || data.name

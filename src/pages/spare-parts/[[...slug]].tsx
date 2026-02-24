@@ -52,6 +52,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 
 		return { props };
 	} catch (error) {
+		console.log(error);
 		return { props: {}, notFound: true };
 	}
 });

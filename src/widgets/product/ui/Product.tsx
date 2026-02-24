@@ -53,7 +53,7 @@ const Product: FC<Props> = ({ data, page, relatedProducts }) => {
 			pr={{ xs: 1, md: 0 }}
 			width={{ xs: 'calc(100% + 2em)', md: '100%' }}
 		>
-			<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} gap={1}>
+			<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} gap={1} mb={4}>
 				<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} flex={1} gap={1}>
 					<ProductImages
 						images={data.images}

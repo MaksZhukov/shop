@@ -27,7 +27,7 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 									style={{
 										objectFit: 'cover'
 									}}
-									alt={`${image.alternativeText} - Фото ${i + 1}`}
+									alt={image.alternativeText}
 									src={image.url}
 								></Image>
 							</Box>
@@ -45,7 +45,7 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 						src=''
 						width={width}
 						height={290}
-						alt={`${data.brand?.name} ${data.model?.name} ${data.generation?.name} - Фото 1`}
+						alt={data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name}
 					></Image>
 				</Box>
 			)}

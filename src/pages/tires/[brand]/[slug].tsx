@@ -23,71 +23,68 @@ const TireProductPage: NextPage<Props> = ({ data, page, relatedProducts }) => (
 
 export default TireProductPage;
 
-export const getServerSideProps = getPageProps(undefined, async (
-	context: GetServerSidePropsContext
-): Promise<GetServerSidePropsResult<Record<string, string | number | object>>> => {
-	const { brand: brandSlug, slug: tireSlug } = context.params as { brand: string; slug: string };
+export const getServerSideProps = getPageProps(
+	undefined,
+	async (
+		context: GetServerSidePropsContext
+	): Promise<GetServerSidePropsResult<Record<string, string | number | object>>> => {
+		const { brand: brandSlug, slug: tireSlug } = context.params as { brand: string; slug: string };
 
-	let tire: Tire | null = null;
-	let page: PageProduct | null = null;
-	let pageTire: PageProductTire | null = null;
+		let tire: Tire | null = null;
+		let pageTire: PageProductTire | null = null;
 
-	try {
-		const [tireRes, pageRes, pageTireRes] = await Promise.all([
-			tireApi.fetchTire(tireSlug),
-			pageApi.fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })().catch(() => ({ data: { data: null } })),
-			pageApi.fetchPage<PageProductTire>('product-tire', { populate: ['seo'] })().catch(() => ({ data: { data: null } }))
-		]);
-		tire = tireRes?.data?.data ?? null;
-		page = pageRes?.data?.data ?? null;
-		pageTire = pageTireRes?.data?.data ?? null;
-	} catch {
-		return { notFound: true };
-	}
-
-	if (!tire || tire.brand?.slug !== brandSlug) {
-		return { notFound: true };
-	}
-
-	let relatedTires: Tire[] = [];
-	try {
-		const { data: { data: related } } = await tireApi.fetchTires({
-			filters: {
-				sold: false,
-				id: { $ne: tire.id },
-				brand: { id: tire.brand?.id }
-			},
-			populate: ['brand', 'images'],
-			pagination: { limit: API_DEFAULT_LIMIT }
-		});
-		relatedTires = related ?? [];
-	} catch {
-		// continue without related products
-	}
-
-	const mergedPage = {
-		...(page ?? {}),
-		...(pageTire ?? {}),
-		additionalDescription: pageTire?.additionalDescription
-			? getStringByTemplateStr(pageTire.additionalDescription, tire)
-			: '',
-		seo: {
-			...(pageTire?.seo ? getProductPageSeo(pageTire.seo, tire) : {}),
-			h1: tire.h1 || tire.name
+		try {
+			const [tireRes, pageTireRes] = await Promise.all([
+				tireApi.fetchTire(tireSlug),
+				pageApi.fetchPage<PageProductTire>('product-tire', { populate: ['seo'], fields: ['id'] })()
+			]);
+			tire = tireRes?.data?.data ?? null;
+			pageTire = pageTireRes?.data?.data ?? null;
+		} catch {
+			return { notFound: true };
 		}
-	};
 
-	return {
-		props: {
-			data: tire,
-			relatedProducts: relatedTires,
-			page: mergedPage,
-			breadcrumbs: [
-				{ text: 'Главная', href: '/' },
-				{ text: 'Шины', href: '/tires' },
-				{ text: tire.brand?.name ?? '', href: `/tires/${tire.brand?.slug ?? ''}` },
-				{ text: tire.name, href: `/tires/${tire.brand?.slug}/${tire.slug}` }
-			]
+		if (!tire || tire.brand?.slug !== brandSlug) {
+			return { notFound: true };
 		}
-	};
-});
+
+		let relatedTires: Tire[] = [];
+		try {
+			const {
+				data: { data: related }
+			} = await tireApi.fetchTires({
+				filters: {
+					sold: false,
+					id: { $ne: tire.id },
+					brand: { id: tire.brand?.id }
+				},
+				populate: ['brand', 'images'],
+				pagination: { limit: API_DEFAULT_LIMIT }
+			});
+			relatedTires = related ?? [];
+		} catch {
+			// continue without related products
+		}
+
+		const mergedPage = {
+			seo: {
+				...(pageTire?.seo ? getProductPageSeo(pageTire.seo, tire) : {}),
+				h1: tire.h1 || tire.name
+			}
+		};
+
+		return {
+			props: {
+				data: tire,
+				relatedProducts: relatedTires,
+				page: mergedPage,
+				breadcrumbs: [
+					{ text: 'Главная', href: '/' },
+					{ text: 'Шины', href: '/tires' },
+					{ text: tire.brand?.name ?? '', href: `/tires/${tire.brand?.slug ?? ''}` },
+					{ text: tire.name, href: `/tires/${tire.brand?.slug}/${tire.slug}` }
+				]
+			}
+		};
+	}
+);

@@ -34,7 +34,7 @@ export const ProductItemImages = ({ data, width, imageHeight, imageHeightOffset,
 								style={{
 									objectFit: 'cover'
 								}}
-								alt={`${image.alternativeText} - Фото ${i + 1}`}
+								alt={image.alternativeText}
 								src={image.url}
 							></Image>
 						</Box>
@@ -54,7 +54,7 @@ export const ProductItemImages = ({ data, width, imageHeight, imageHeightOffset,
 					src=''
 					width={width}
 					height={imageHeight + imageHeightOffset}
-					alt={`${data.h1} - Фото 1`}
+					alt={data.h1}
 				></Image>
 			</NextLink>
 		</Box>

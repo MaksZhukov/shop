@@ -50,7 +50,9 @@ export const ProductTabs = ({ product }: Props) => {
 											padding='none'
 										>
 											{item.link ? (
-												<Link href={item.link}>{item.value}</Link>
+												<Link color='info.main' href={item.link}>
+													{item.value}
+												</Link>
 											) : (
 												<Typography>{item.value}</Typography>
 											)}

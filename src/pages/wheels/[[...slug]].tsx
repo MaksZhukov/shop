@@ -1,7 +1,7 @@
 import { pageApi } from 'entities/page';
 import type { DefaultPage, PageProduct, PageProductWheel } from 'entities/page';
 import { brandApi } from 'entities/brand';
-import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
+import { API_DEFAULT_LIMIT } from 'shared/api/constants';
 import { modelApi } from 'entities/model';
 import { CatalogWheels } from 'widgets/catalog';
 import { Product } from 'widgets/product';
@@ -10,7 +10,6 @@ import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { getProductPageSeo } from 'entities/product';
 import type { Wheel } from 'entities/wheel';
 import { wheelApi } from 'entities/wheel';
-import { getStringByTemplateStr } from 'shared/utils/stringUtils';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { wheelsBrandsQueryKey } from 'features/wheelsCatalog/constants';
 import { wheelsPageQueryFns } from 'features/wheelsCatalog/wheelsPageQueries';
@@ -58,15 +57,11 @@ const handleProductPage = async (brandParamSlug: string, productSlug: string) =>
 			data: { data: wheel }
 		},
 		{
-			data: { data: page }
-		},
-		{
 			data: { data: pageWheel }
 		}
 	] = await Promise.all([
 		wheelApi.fetchWheel(productSlug),
-		pageApi.fetchPage<PageProduct>('product', { populate: ['whyWeBest.image'] })(),
-		pageApi.fetchPage<PageProductWheel>('product-wheel', { populate: ['seo'] })()
+		pageApi.fetchPage<PageProductWheel>('product-wheel', { populate: ['seo'], fields: ['id'] })()
 	]);
 
 	if (!wheel || wheel.brand?.slug !== brandParamSlug) return null;
@@ -84,11 +79,6 @@ const handleProductPage = async (brandParamSlug: string, productSlug: string) =>
 	});
 
 	const mergedPage: DefaultPage = {
-		...(page ?? {}),
-		...(pageWheel ?? {}),
-		additionalDescription: pageWheel?.additionalDescription
-			? getStringByTemplateStr(pageWheel.additionalDescription, wheel)
-			: '',
 		seo: {
 			...(pageWheel?.seo ? getProductPageSeo(pageWheel.seo, wheel) : {}),
 			h1: wheel.h1 || wheel.name
