@@ -1,6 +1,7 @@
 import { AppBar, Container, useTheme } from '@mui/material';
 import router, { useRouter } from 'next/router';
 import React, { FC, useState } from 'react';
+import { observer } from 'mobx-react';
 import { useHeaderScroll, useSearchSpareParts, useAuthModal, useMobileModals, useSearchHistory } from '../hooks';
 import { HeaderTop, HeaderBottom, MobileBottomNav, MobileSearchModal, MobileContactsModal } from '../ui';
 import { ModalAuth } from 'features/user';
@@ -8,7 +9,7 @@ import { useLoadCart } from 'features/cart';
 import { useLoadFavorites } from 'features/favorites';
 import type { SparePart } from 'entities/sparePart';
 
-export const Header: FC = () => {
+export const Header: FC = observer(() => {
 	const theme = useTheme();
 	const { code } = useRouter().query;
 	const isResetPassword = !!code;
@@ -109,4 +110,4 @@ export const Header: FC = () => {
 			)}
 		</>
 	);
-};
+});

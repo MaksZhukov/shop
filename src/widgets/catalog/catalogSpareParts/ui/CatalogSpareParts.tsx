@@ -1,17 +1,19 @@
 import { CircularProgress } from '@mui/material';
 import { FC } from 'react';
+import { observer } from 'mobx-react';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
 import { BrandCatalog, Catalog } from 'widgets/catalog/ui';
 import {
-	useCatalogFilters,
+	useSparePartsCatalogFiltersStore,
 	useCatalogData,
 	useAutocompleteHandlers,
 	useCatalogRouter,
 	getSparePartsFiltersConfig,
 	parseRouterQuery,
-	FilterValues
+	FilterValues,
+	useSyncSparePartsCatalogFiltersFromRouter
 } from 'features/sparePartsCatalog';
 import type { KindSparePartType } from 'entities/kindSparePart';
 import { ModelCatalog } from 'widgets/catalog/ui/types';
@@ -22,11 +24,13 @@ interface Props {
 	pageData: DefaultPage;
 }
 
-export const CatalogSpareParts: FC<Props> = ({ kindSparePart, kindSparePartType = 'regular', pageData }) => {
+export const CatalogSpareParts: FC<Props> = observer(({ kindSparePart, kindSparePartType = 'regular', pageData }) => {
 	const router = useRouter();
 	const queryParams = parseRouterQuery(router.query);
 
-	const { filtersValues, setFiltersValues } = useCatalogFilters(queryParams);
+	const sparePartsCatalogFiltersStore = useSparePartsCatalogFiltersStore();
+	const filtersValues = sparePartsCatalogFiltersStore.filtersValues;
+	useSyncSparePartsCatalogFiltersFromRouter();
 	const {
 		spareParts,
 		isLoading,
@@ -97,7 +101,7 @@ export const CatalogSpareParts: FC<Props> = ({ kindSparePart, kindSparePartType 
 		) {
 			setIsReloadKindSpareParts(true);
 		}
-		setFiltersValues(newFilterValues);
+		sparePartsCatalogFiltersStore.setFiltersValues(newFilterValues);
 	};
 
 	const noOptionsText = isLoadingAutocomplete ? <CircularProgress size={20} /> : <>Совпадений нет</>;
@@ -187,4 +191,4 @@ export const CatalogSpareParts: FC<Props> = ({ kindSparePart, kindSparePartType 
 			onChangeHoveredCategory={setHoveredCategory}
 		/>
 	);
-};
+});
