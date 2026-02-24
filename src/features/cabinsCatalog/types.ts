@@ -1,3 +1,11 @@
+export interface SlugParams {
+	brandParamSlug?: string;
+	modelSlug?: string;
+	generationParamSlug?: string;
+	productSlug?: string;
+	kindSparePartSlug?: string;
+}
+
 export interface CabinsFilterValues {
 	brand: string | null;
 	model: string | null;

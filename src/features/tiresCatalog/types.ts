@@ -1,3 +1,7 @@
+export interface TiresSlugParams {
+	brandSlug?: string;
+}
+
 export interface TireFilterValues {
 	brand: string | null;
 	width: string | null;

@@ -1,6 +1,6 @@
 import type { SEO } from 'shared/api/types';
 
-export const withKindSparePart = (seo: SEO, appendAfter: string, kindSparePart?: string) => {
+export const withKindSparePart = (seo: SEO, appendAfter: string, kindSparePart?: string): SEO => {
 	if (kindSparePart) {
 		const arrH1 = seo.h1.split(' ');
 		const arrTitle = seo.title.split(' ');
@@ -12,7 +12,12 @@ export const withKindSparePart = (seo: SEO, appendAfter: string, kindSparePart?:
 			0,
 			kindSparePart
 		);
-		return { ...seo, title: arrTitle.join(' '), description: arrDescription.join(' '), h1: arrH1.join(' ') };
+		return {
+			keywords: seo.keywords,
+			title: arrTitle.join(' '),
+			description: arrDescription.join(' '),
+			h1: arrH1.join(' ')
+		};
 	}
-	return seo;
+	return { keywords: seo.keywords, title: seo.title, description: seo.description, h1: seo.h1 };
 };

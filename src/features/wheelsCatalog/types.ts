@@ -1,3 +1,9 @@
+export interface WheelsSlugParams {
+	brandParamSlug?: string;
+	modelSlug?: string;
+	productSlug?: string;
+}
+
 export interface WheelFilterValues {
 	kind: string | null;
 	brand: string | null;

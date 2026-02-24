@@ -12,6 +12,3 @@ export const pageApi = {
 				baseURL: getRandomBackendLocalUrl() + '/api'
 			})
 };
-
-
-

@@ -4,7 +4,9 @@ export {
 	useCabinsAutocompleteHandlers,
 	useCabinsCatalogRouter
 } from './hooks';
-export { generateCabinsFiltersByQuery, parseCabinsRouterQuery } from './utils';
-export type { CabinsFilterValues, CabinsQueryParams, CabinsParsedQueryParams } from './types';
-export { ERROR_MESSAGES } from './constants';
+export { generateCabinsFiltersByQuery, parseCabinsRouterQuery, parseSlugParam } from './utils';
+export type { CabinsFilterValues, CabinsQueryParams, CabinsParsedQueryParams, SlugParams } from './types';
+export { ERROR_MESSAGES, cabinsBrandsQueryKey } from './constants';
 export { getCabinsFiltersConfig } from './config/getCabinsFiltersConfig';
+export { buildPageProps } from './lib/buildPageProps';
+export type { CabinsPagePropsResult } from './lib/buildPageProps';
