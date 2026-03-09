@@ -9,6 +9,7 @@ export interface BenefitItem {
 	title: string;
 	subtitle: string;
 	formatter?: (value: number) => string;
+	image?: string;
 }
 
 export interface BenefitCardProps {
