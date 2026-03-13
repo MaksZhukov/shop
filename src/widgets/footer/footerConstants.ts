@@ -8,7 +8,7 @@ export const NAVIGATION_LINKS = {
 	],
 	company: [
 		{ href: '/about', label: 'О нас' },
-		{ href: '/news', label: 'Новости' },
+		{ href: '/articles', label: 'Новости' },
 		{ href: '/contacts', label: 'Контакты' },
 		{ href: '/delivery-and-payment', label: 'Доставка и оплата' }
 	],

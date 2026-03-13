@@ -2,7 +2,6 @@ import { Button, Input, Link, ListItemButton, useMediaQuery } from '@mui/materia
 import { Box } from '@mui/material';
 import { emailApi } from 'entities/email';
 import { pageApi, PageContacts } from 'entities/page';
-import type { LinkWithImage } from 'shared/api/types';
 import { BlockImages } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
@@ -14,10 +13,9 @@ import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: PageContacts;
-	socials: LinkWithImage[];
 }
 
-const Contacts = ({ page, socials }: Props) => {
+const Contacts = ({ page }: Props) => {
 	const [name, setName] = useState<string>('');
 	const [phone, setPhone] = useState<string>('');
 	const [message, setMessage] = useState<string>('');
@@ -172,33 +170,6 @@ const Contacts = ({ page, socials }: Props) => {
 						</Button>
 					</Box>
 				</Box>
-			</Box>
-			<Typography gutterBottom width={'100%'} textTransform='uppercase'>
-				Мы в соц сетях:
-			</Typography>
-			<Box display='flex' gap='1em' flexWrap='wrap' marginBottom='1em'>
-				{socials?.map((item) => (
-					<ListItemButton
-						sx={{ padding: '0.5em 0.25em', flex: 'initial' }}
-						component='a'
-						key={item.id}
-						href={item.link}
-						target='_blank'
-						color='inherit'
-					>
-						<Image
-							title={item.image?.caption}
-							alt={item.image?.alternativeText}
-							width={20}
-							height={20}
-							src={item.image?.url}
-						></Image>
-						<Typography marginLeft='0.5em'>{item.image?.caption}</Typography>
-					</ListItemButton>
-				))}
-			</Box>
-			<Box>
-				<ReactMarkdown content={page.content}></ReactMarkdown>
 			</Box>
 			<Typography component='h2' variant='h5' textTransform='uppercase' marginBottom='1em'>
 				{page.requisitesTitle}
