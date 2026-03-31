@@ -1,12 +1,10 @@
-export type UserType = 'individual' | 'legal';
-export type DeliveryMethod = 'delivery' | 'pickup';
-export type PaymentMethod = 'online' | 'cash' | 'bank_transfer' | 'pickup' | 'receive_invoice';
+import { DeliveryMethod, PaymentMethod, UserType } from 'entities/order/orderTypes';
 
 export interface OrderRegistrationFormData {
 	userType: UserType;
-    companyName: string;
-    tin: string;
-    username: string;
+	companyName: string;
+	tin: string;
+	username: string;
 	phone: string;
 	email: string;
 	deliveryMethod: DeliveryMethod;

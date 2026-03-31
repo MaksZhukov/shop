@@ -2,24 +2,14 @@ import { api } from 'shared/api';
 import type { ApiResponse } from 'shared/api/types';
 import type { ProductType } from 'entities/product';
 import { backendUrl } from 'shared/services/EnvService';
-import { OrderCheckout, OrderCheckoutResponse, OrderReissueCheckoutTokenResponse } from './orderTypes';
-import type { UserType } from 'features/orderRegistration';
+import {
+	OrderCheckout,
+	OrderCheckoutResponse,
+	OrderReissueCheckoutTokenResponse,
+	OrderCheckoutParams
+} from './orderTypes';
 
 const CANCEL_ORDER_URL = `${backendUrl}/api/orders-v1/cancel`;
-
-export type OrderCheckoutParams = {
-	products: { id: number; type: ProductType }[];
-	file: File | null;
-	paymentMethod: string;
-	userName?: string;
-	phone: string;
-	email: string;
-	address?: string;
-	comment?: string;
-	companyName?: string;
-	userType: UserType;
-	tin?: string;
-};
 
 const CHECKOUT_OPTIONAL_KEYS: (keyof Pick<
 	OrderCheckoutParams,
