@@ -1,13 +1,16 @@
 import { useMemo, useState } from 'react';
-import { useStore } from 'app/providers/StoreProvider';
 import type { OrderRegistrationFormData } from '../types';
+import { useUserStore } from 'entities/user';
+import { useCartStore } from 'entities/cart';
 
 export const useOrderRegistration = () => {
-	const store = useStore();
+	const userStore = useUserStore();
+	const cartStore = useCartStore();
+
 	const [isOrdered, setIsOrdered] = useState(false);
-	const shoppingCartItems = store.cart.items;
-	const selectedItemIds = store.cart.selectedItemsForCheckout;
-	const isLoading = store.cart.isLoading || !store.isInitialRequestDone;
+	const shoppingCartItems = cartStore.items;
+	const selectedItemIds = cartStore.selectedItemsForCheckout;
+	const isLoading = cartStore.isLoading || !userStore.isInitialRequestDone;
 
 	const checkoutItems = useMemo(
 		() => shoppingCartItems.filter((item) => !item.product.sold && selectedItemIds.includes(item.id)),

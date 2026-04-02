@@ -11,6 +11,7 @@ export class UserStore implements User {
 	username: string = '';
 	phone: string = '';
 	address: string = '';
+	isInitialRequestDone: boolean = false;
 
 	constructor() {
 		makeAutoObservable(this);
@@ -50,5 +51,9 @@ export class UserStore implements User {
 		this.username = '';
 		this.phone = '';
 		this.address = '';
+	}
+
+	setIsInitialRequestDone() {
+		this.isInitialRequestDone = true;
 	}
 }

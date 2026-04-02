@@ -3,7 +3,6 @@ import { Loader, MobileQuestionsSection } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { ViewedProducts } from 'features/product';
-import { useStore } from 'app/providers/StoreProvider';
 import { observer } from 'mobx-react';
 import { useState, useEffect } from 'react';
 import { EmptyCart, CartList } from 'widgets/cart';
@@ -12,15 +11,18 @@ import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
 import { useRemoveCart } from 'features/cart/useRemoveCart';
 import router from 'next/router';
 import type { Cart } from 'entities/cart';
+import { useUserStore } from 'entities/user';
+import { useCartStore } from 'entities/cart';
 
 interface Props {}
 
 const Cart: NextPage<Props> = observer(() => {
-	const store = useStore();
+	const userStore = useUserStore();
+	const cartStore = useCartStore();
 	const removeCartMany = useRemoveCartMany();
 	const removeCart = useRemoveCart();
-	const shoppingCartItems = store.cart.items;
-	const isLoading = store.cart.isLoading || !store.isInitialRequestDone;
+	const shoppingCartItems = cartStore.items;
+	const isLoading = cartStore.isLoading || !userStore.isInitialRequestDone;
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
 	const allSelected =
@@ -60,12 +62,12 @@ const Cart: NextPage<Props> = observer(() => {
 	}, [shoppingCartItems]);
 
 	const handleCheckout = () => {
-		store.cart.setSelectedItemsForCheckout(selectedItems);
+		cartStore.setSelectedItemsForCheckout(selectedItems);
 		router.push('/order-registration', undefined, { shallow: true });
 	};
 
 	const handleClickBuy = (item: Cart) => {
-		store.cart.setSelectedItemsForCheckout([item.id]);
+		cartStore.setSelectedItemsForCheckout([item.id]);
 		router.push('/order-registration', undefined, { shallow: true });
 	};
 

@@ -15,16 +15,12 @@ export class RootStore {
 	favorites: FavoriteStore;
 	cart: CartStore;
 	sparePartsCatalogFilters: SparePartsCatalogFilterStore;
-	isInitialRequestDone: boolean = false;
 	constructor() {
 		this.user = new UserStore();
 		this.favorites = new FavoriteStore();
 		this.cart = new CartStore();
 		this.sparePartsCatalogFilters = new SparePartsCatalogFilterStore();
 		makeAutoObservable(this);
-	}
-	setIsInitialRequestDone() {
-		this.isInitialRequestDone = true;
 	}
 }
 

@@ -1,4 +1,3 @@
-import { store } from 'app/providers/StoreProvider';
 import { useUserStore } from 'entities/user';
 import { useLoadCart } from 'features/cart/useLoadCart';
 import { useLoadFavorites } from 'features/favorites/useLoadFavorites';
@@ -12,6 +11,7 @@ export function useInitialAuthLoad() {
 	const userStore = useUserStore();
 
 	useEffect(() => {
+		console.log('useInitialAuthLoad');
 		const tryFetchData = async () => {
 			try {
 				await loadUserInfo();
@@ -20,7 +20,7 @@ export function useInitialAuthLoad() {
 				userStore.clearUser();
 				await Promise.all([loadCart(), loadFavorites()]);
 			}
-			store.setIsInitialRequestDone();
+			userStore.setIsInitialRequestDone();
 		};
 		tryFetchData();
 	}, [loadFavorites, loadCart, loadUserInfo, userStore]);
