@@ -11,7 +11,6 @@ export function useInitialAuthLoad() {
 	const userStore = useUserStore();
 
 	useEffect(() => {
-		console.log('useInitialAuthLoad');
 		const tryFetchData = async () => {
 			try {
 				await loadUserInfo();

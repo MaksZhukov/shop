@@ -1,20 +1,20 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { setupApiInterceptors } from 'shared/api';
-import { useStore } from './StoreProvider';
 import { logout } from 'features/user';
 import { useSnackbar } from 'notistack';
+import { useUserStore } from 'entities/user';
 
 interface ApiProviderProps {
 	children: ReactNode;
 }
 
 export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
-	const store = useStore();
+	const userStore = useUserStore();
 	const { enqueueSnackbar } = useSnackbar();
 	useEffect(() => {
 		const errorResponseUnauthorizedCallback = () => {
-			if (store.user.id) {
-				logout(store.user);
+			if (userStore.id) {
+				logout(userStore);
 			}
 		};
 		const errorResponseTooManyRequestsCallback = () => {
@@ -23,7 +23,7 @@ export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
 			});
 		};
 		setupApiInterceptors(errorResponseUnauthorizedCallback, errorResponseTooManyRequestsCallback);
-	}, [store, enqueueSnackbar]);
+	}, [userStore, enqueueSnackbar]);
 
 	return <>{children}</>;
 };

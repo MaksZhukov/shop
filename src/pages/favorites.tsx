@@ -8,11 +8,13 @@ import { ViewedProducts } from 'features/product';
 import { FavoriteButton } from 'features/favorites';
 import { CartButton } from 'features/cart';
 import { useFavoriteStore } from 'entities/favorite';
+import { useUserStore } from 'entities/user';
 
 const Favorites = () => {
 	const favoriteStore = useFavoriteStore();
+	const userStore = useUserStore();
 	const items = favoriteStore.items;
-	const isLoading = favoriteStore.isLoading;
+	const isLoading = favoriteStore.isLoading || !userStore.isInitialRequestDone;
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
