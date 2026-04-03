@@ -2,7 +2,8 @@ import { Box, Typography, Input, FormControl, RadioGroup, FormControlLabel, Radi
 import { ChangeEvent, useState, useEffect } from 'react';
 import { WhiteBox } from 'shared/ui';
 import { AttachFileIcon, CloseIcon } from 'shared/icons';
-import type { OrderRegistrationFormData, UserType } from '../types';
+import type { OrderRegistrationFormData } from '../types';
+import type { UserType } from 'entities/order/orderTypes';
 
 interface ContactInfoFormProps {
 	formData: OrderRegistrationFormData;

@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useLayoutEffect } from 'react';
 import { setupApiInterceptors } from 'shared/api';
 import { logout } from 'features/user';
 import { useSnackbar } from 'notistack';
@@ -11,7 +11,8 @@ interface ApiProviderProps {
 export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
 	const userStore = useUserStore();
 	const { enqueueSnackbar } = useSnackbar();
-	useEffect(() => {
+	useLayoutEffect(() => {
+		console.log('ApiProvider');
 		const errorResponseUnauthorizedCallback = () => {
 			if (userStore.id) {
 				logout(userStore);

@@ -1,8 +1,11 @@
 import { useContext } from 'react';
-import { MobXProviderContext } from 'mobx-react';
 import { CartStore } from './cartStore';
+import { CartStoreContext } from './cartContext';
 
 export const useCartStore = (): CartStore => {
-	const { store } = useContext(MobXProviderContext) as { store: { cart: CartStore } };
-	return store.cart;
+	const cartStore = useContext(CartStoreContext);
+	if (!cartStore) {
+		throw new Error('CartStore not found');
+	}
+	return cartStore;
 };

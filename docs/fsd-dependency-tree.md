@@ -1,10 +1,11 @@
 # FSD dependency tree (cross-slice imports)
 
-Includes both runtime imports and type-only imports/exports.
+Includes both runtime imports and type-only imports/exports, including cross-slice `export … from` re-exports in public API (`index.ts`) files.
 Entries marked `(type-only)` are used only for TypeScript types.
 Same-slice internal imports are omitted. `(root)` means files directly under layer root.
 
 ## app/(root)
+  → app/providers
   → shared/api (type-only)
   → shared/services
 
@@ -37,7 +38,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/catalog
   → entities/kindSparePart (type-only)
   → entities/page (type-only)
-  → entities/product (type-only)
+  → entities/product
   → features/cabinsCatalog
   → features/cart
   → features/favorites
@@ -74,12 +75,12 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → shared/utils
 
 ## widgets/main
-  → entities/article (type-only)
-  → entities/brand (type-only)
+  → entities/article
+  → entities/brand
   → entities/car
-  → entities/carOnParts (type-only)
+  → entities/carOnParts
   → entities/engineVolume
-  → entities/generation (type-only)
+  → entities/generation
   → entities/kindSparePart
   → entities/model
   → entities/product
@@ -101,7 +102,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
 
 ## widgets/product
   → entities/page (type-only)
-  → entities/product (type-only)
+  → entities/product
   → features/cart
   → features/favorites
   → features/share
@@ -110,7 +111,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → widgets/gallery
 
 ## features/articlesList
-  → entities/article (type-only)
+  → entities/article
   → shared/api (type-only)
   → shared/icons
   → shared/ui
@@ -123,10 +124,10 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
 ## features/cabinsCatalog
   → entities/brand
   → entities/cabin
-  → entities/generation (type-only)
+  → entities/generation
   → entities/kindSparePart
   → entities/model
-  → entities/page (type-only)
+  → entities/page
   → entities/product
   → features/productFilters
   → shared/api
@@ -162,8 +163,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → shared/api
 
 ## features/orderRegistration
-  → app/providers
-  → entities/cart (type-only)
+  → entities/cart
   → entities/order
   → entities/user
   → features/cart
@@ -198,10 +198,10 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/car
   → entities/catalog
   → entities/engineVolume
-  → entities/generation (type-only)
+  → entities/generation
   → entities/kindSparePart
   → entities/model
-  → entities/page (type-only)
+  → entities/page
   → entities/product
   → entities/sparePart
   → features/productFilters
@@ -211,7 +211,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
 
 ## features/tiresCatalog
   → entities/catalog (type-only)
-  → entities/page (type-only)
+  → entities/page
   → entities/product
   → entities/tire
   → entities/tireBrand
@@ -223,7 +223,6 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → shared/services
 
 ## features/user
-  → app/providers
   → entities/user
   → features/cart
   → features/favorites
@@ -234,7 +233,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
 ## features/wheelsCatalog
   → entities/brand
   → entities/model
-  → entities/page (type-only)
+  → entities/page
   → entities/product
   → entities/wheel
   → entities/wheelDiameter
@@ -252,14 +251,14 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → shared/utils
 
 ## entities/article
-  → shared/api (type-only)
+  → shared/api
   → shared/ui
 
 ## entities/autocomise
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/brand
-  → shared/api (type-only)
+  → shared/api
   → shared/ui
 
 ## entities/cabin
@@ -269,14 +268,14 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/model (type-only)
   → entities/order (type-only)
   → entities/product (type-only)
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/car
   → entities/brand (type-only)
   → entities/engineVolume (type-only)
   → entities/generation (type-only)
   → entities/model (type-only)
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/carOnParts
   → entities/brand (type-only)
@@ -284,22 +283,22 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/engineVolume (type-only)
   → entities/generation (type-only)
   → entities/model (type-only)
-  → shared/api (type-only)
+  → shared/api
   → shared/ui
 
 ## entities/cart
   → entities/product (type-only)
-  → shared/api (type-only)
+  → shared/api
   → shared/services
 
 ## entities/catalog
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/email
   → shared/api
 
 ## entities/engineVolume
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/favorite
   → entities/cabin
@@ -308,32 +307,31 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/tire
   → entities/user
   → entities/wheel
-  → shared/api (type-only)
+  → shared/api
   → shared/services
 
 ## entities/generation
   → entities/brand (type-only)
   → entities/model (type-only)
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/kindSparePart
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/model
   → entities/brand (type-only)
   → entities/generation (type-only)
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/order
   → entities/product (type-only)
-  → features/orderRegistration (type-only)
-  → shared/api (type-only)
+  → shared/api
   → shared/services
 
 ## entities/page
   → entities/autocomise (type-only)
   → entities/serviceStation (type-only)
-  → shared/api (type-only)
+  → shared/api
   → shared/services
 
 ## entities/product
@@ -349,10 +347,10 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → shared/utils
 
 ## entities/review
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/serviceStation
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/sparePart
   → entities/brand (type-only)
@@ -362,7 +360,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/kindSparePart (type-only)
   → entities/model (type-only)
   → entities/product (type-only)
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/tire
   → entities/order (type-only)
@@ -371,20 +369,20 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/tireDiameter (type-only)
   → entities/tireHeight (type-only)
   → entities/tireWidth (type-only)
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/tireBrand
   → entities/brand
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/tireDiameter
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/tireHeight
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/tireWidth
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/user
   → shared/api
@@ -399,22 +397,22 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/wheelDiskOffset (type-only)
   → entities/wheelNumberHole (type-only)
   → entities/wheelWidth (type-only)
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/wheelDiameter
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/wheelDiameterCenterHole
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/wheelDiskOffset
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/wheelNumberHole
-  → shared/api (type-only)
+  → shared/api
 
 ## entities/wheelWidth
-  → shared/api (type-only)
+  → shared/api
 
 ## shared/api
   → shared/services
@@ -437,8 +435,8 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
 
 ## Layer → layers (summary)
 
-**app** → entities, features, shared
+**app** → app (cross-segment, e.g. `(root)` → `providers`), entities, features, shared
 **widgets** → entities, features, shared, widgets
-**features** → app, entities, features, shared, widgets
+**features** → entities, features, shared, widgets
 **entities** → entities, features, shared
 **shared** → entities, shared

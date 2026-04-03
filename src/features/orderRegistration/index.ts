@@ -5,4 +5,4 @@ export { useOrderRegistrationForm } from './hooks/useOrderRegistrationForm';
 export { useOrderRegistration } from './hooks/useOrderRegistration';
 export { useOrderTimer } from './hooks/useOrderTimer';
 export { useOrderCheckout } from './hooks/useOrderCheckout';
-export type { OrderRegistrationFormData, UserType, DeliveryMethod, PaymentMethod } from './types';
+export type { OrderRegistrationFormData } from './types';

@@ -1,6 +1,7 @@
 import { Typography, FormControl, Select, MenuItem, Box } from '@mui/material';
 import { WhiteBox } from 'shared/ui';
-import type { OrderRegistrationFormData, PaymentMethod } from '../types';
+import type { OrderRegistrationFormData } from '../types';
+import type { PaymentMethod } from 'entities/order';
 
 const PAYMENT_DESCRIPTIONS: Partial<Record<PaymentMethod, string>> = {
 	online: 'Банковской картой, Samsung Pay, Apple Pay, Карты рассрочки (Халва, Халва+, Халва МАХ, Карта покупок, Черепаха, СмартКарта, Магнит, МТБ Автокарта, Моцная картка)',

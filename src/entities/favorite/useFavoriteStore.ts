@@ -1,8 +1,11 @@
 import { useContext } from 'react';
-import { MobXProviderContext } from 'mobx-react';
 import { FavoriteStore } from './favoriteStore';
+import { FavoriteStoreContext } from './favoriteContext';
 
 export const useFavoriteStore = (): FavoriteStore => {
-	const { store } = useContext(MobXProviderContext) as { store: { favorites: FavoriteStore } };
-	return store.favorites;
+	const favoriteStore = useContext(FavoriteStoreContext);
+	if (!favoriteStore) {
+		throw new Error('FavoriteStore not found');
+	}
+	return favoriteStore;
 };

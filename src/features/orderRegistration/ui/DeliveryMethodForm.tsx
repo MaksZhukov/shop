@@ -5,7 +5,8 @@ import { InfoIcon } from 'shared/icons';
 import { MobileContactsModal } from 'widgets/header/ui/MobileContactsModal';
 import { useState } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
-import type { OrderRegistrationFormData, DeliveryMethod } from '../types';
+import type { OrderRegistrationFormData } from '../types';
+import type { DeliveryMethod } from 'entities/order/orderTypes';
 
 interface DeliveryMethodFormProps {
 	formData: OrderRegistrationFormData;
