@@ -1,18 +1,23 @@
 import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { Autocomis } from 'entities/autocomise';
-import { ServiceStation } from 'entities/serviceStation';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { WhiteBox } from 'shared/ui';
 import { FC } from 'react';
+import type { Image as IImage } from 'shared/api/types';
 
-interface Props {
-	data: ServiceStation | Autocomis;
+interface Data {
+	name: string;
+	image: IImage;
+	description: string;
 }
 
-export const Card: FC<Props> = ({ data }) => {
+export interface CardProps {
+	data: Data;
+}
+
+export const Card: FC<CardProps> = ({ data }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
 		<WhiteBox>
