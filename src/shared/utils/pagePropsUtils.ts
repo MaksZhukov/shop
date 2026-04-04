@@ -2,7 +2,6 @@ import type { ApiResponse } from 'shared/api/types';
 import { AxiosError, AxiosResponse } from 'axios';
 import { UAParser } from 'ua-parser-js';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import { DefaultPage } from 'entities/page';
 
 type DeviceType = 'desktop' | 'mobile';
 
@@ -29,8 +28,8 @@ const handleErrorRedirect = (status: number): GetServerSidePropsResult<Record<st
 	}
 };
 
-export const getPageProps = (
-	fetchPage?: () => Promise<AxiosResponse<ApiResponse<DefaultPage>>>,
+export const getPageProps = <TPage = unknown>(
+	fetchPage?: () => Promise<AxiosResponse<ApiResponse<TPage>>>,
 	fetchAdditional?: (
 		context: GetServerSidePropsContext,
 		deviceType: DeviceType
