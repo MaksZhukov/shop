@@ -1,4 +1,4 @@
-import { DeliveryMethod, PaymentMethod, UserType } from 'entities/order/orderTypes';
+import type { DeliveryMethod, PaymentMethod, UserType } from 'entities/order';
 
 export interface OrderRegistrationFormData {
 	userType: UserType;

@@ -1,6 +1,6 @@
 import type { AutocompleteType } from 'features/productFilters';
 import type { KindSparePart } from 'entities/kindSparePart';
-import type { Generation } from 'entities/generation/generationTypes';
+import type { Generation } from 'entities/generation';
 import type { ModelCabinsCountWithGenerationsCabinsCount } from 'entities/model';
 import type { ReactNode } from 'react';
 

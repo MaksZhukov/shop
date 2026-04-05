@@ -1,5 +1,5 @@
 import { CartStore } from 'entities/cart';
-import { CartStoreContext } from 'entities/cart/cartContext';
+import { CartStoreContext } from 'entities/cart';
 
 const cartStore = new CartStore();
 

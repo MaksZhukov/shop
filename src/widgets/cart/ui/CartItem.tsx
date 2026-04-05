@@ -1,8 +1,7 @@
 import { Box, Checkbox, IconButton, Typography } from '@mui/material';
 import { Link, WhiteBox } from 'shared/ui';
 import type { Cart } from 'entities/cart';
-import { ProductItemImages } from 'entities/product/ui/ProductItemImages';
-import { ProductPrice } from 'entities/product/ui/ProductPrice';
+import { ProductItemImages, ProductPrice } from 'entities/product';
 import { FavoriteButton } from 'features/favorites';
 import { TrashIcon } from 'shared/icons';
 import { getProductLink, getProductDetails, CART_ITEM_IMAGE_WIDTH, CART_ITEM_IMAGE_HEIGHT } from 'entities/product';

@@ -1,20 +1,19 @@
-import type { Brand } from 'entities/brand/brandTypes';
-import type { Generation } from 'entities/generation/generationTypes';
+import type { Brand } from 'entities/brand';
+import type { Generation } from 'entities/generation';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { Model } from 'entities/model';
+import type { Order } from 'entities/order';
 import type { Image, SEO } from 'shared/api/types';
 import type { ProductSnippets } from 'entities/product';
-import type { Fuel } from 'entities/car';
-import type { EngineVolume } from 'entities/engineVolume';
 
-export interface SparePart {
+export interface Cabin {
 	id: number;
-	type: 'sparePart';
+	type: 'cabin';
 	slug: string;
 	h1: string;
 	name: string;
-	volume: EngineVolume;
 	description: string;
+	seatUpholstery: string;
 	price: number;
 	priceUSD?: number;
 	priceRUB: number;
@@ -25,13 +24,8 @@ export interface SparePart {
 	generation?: Generation;
 	kindSparePart?: KindSparePart;
 	images?: Image[];
-	transmission: string;
 	seo?: SEO;
-	snippets?: ProductSnippets;
-	year: number;
-	engine?: string;
-	fuel: Fuel;
-	engineNumber: string;
+	snippets: ProductSnippets;
+	year: string;
 	sold: boolean;
-	videoLink: string;
 }

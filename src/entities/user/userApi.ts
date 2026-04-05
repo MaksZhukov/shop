@@ -1,5 +1,5 @@
 import { api } from 'shared/api';
-import { AuthResponse, User } from './userTypes';
+import { AuthResponse, User } from './model/userModel';
 
 export const userApi = {
 	login: (email: string, password: string, recaptchaToken?: string) =>

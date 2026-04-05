@@ -1,2 +1,3 @@
 export { articlesApi } from './articleApi';
-export type { Article } from './articleTypes';
+export type { Article } from './model/articleModel';
+export { ArticleItem } from './ui';

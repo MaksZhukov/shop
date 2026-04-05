@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { SparePart } from './sparePartTypes';
+import type { SparePart } from './model/sparePartModel';
 
 export const sparePartApi = {
 	fetchSpareParts: (params?: CollectionParams) =>

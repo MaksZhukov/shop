@@ -1,5 +1,5 @@
-import type { Brand } from 'entities/brand/brandTypes';
-import type { Generation } from 'entities/generation/generationTypes';
+import type { Brand } from 'entities/brand';
+import type { Generation } from 'entities/generation';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { Model } from 'entities/model';
 import type { ReactNode, UIEventHandler } from 'react';

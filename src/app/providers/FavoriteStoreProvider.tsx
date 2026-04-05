@@ -1,5 +1,5 @@
 import { FavoriteStore } from 'entities/favorite';
-import { FavoriteStoreContext } from 'entities/favorite/favoriteContext';
+import { FavoriteStoreContext } from 'entities/favorite';
 
 const favoriteStore = new FavoriteStore();
 

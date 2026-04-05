@@ -1,8 +1,8 @@
 import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
-import type { Brand } from 'entities/brand/brandTypes';
+import type { Brand } from 'entities/brand';
 import { API_MAX_LIMIT } from 'shared/api/constants';
 import { generationApi } from 'entities/generation';
-import type { Generation } from 'entities/generation/generationTypes';
+import type { Generation } from 'entities/generation';
 import { kindSparePartApi, KindSparePart } from 'entities/kindSparePart';
 import { modelApi, Model } from 'entities/model';
 import type { ApiResponse, Filters } from 'shared/api/types';

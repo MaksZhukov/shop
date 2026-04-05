@@ -1,4 +1,4 @@
-import type { Brand } from '../brandTypes';
+import type { Brand } from '../model/brandModel';
 import { WhiteBox } from 'shared/ui';
 import { LinkWithImage } from 'shared/ui';
 

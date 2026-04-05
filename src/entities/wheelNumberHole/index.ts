@@ -1,2 +1,2 @@
 export { wheelNumberHoleApi } from './wheelNumberHoleApi';
-export type { WheelNumberHole } from './wheelNumberHoleTypes';
+export type { WheelNumberHole } from './model/wheelNumberHoleModel';

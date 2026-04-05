@@ -1,2 +1,2 @@
 export { sparePartApi } from './sparePartApi';
-export type { SparePart } from './sparePartTypes';
+export type { SparePart } from './model/sparePartModel';

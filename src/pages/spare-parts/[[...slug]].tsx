@@ -1,4 +1,4 @@
-import type { BrandWithSparePartsCount } from 'entities/brand/brandTypes';
+import type { BrandWithSparePartsCount } from 'entities/brand';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { DefaultPage, PageProduct, PageProductSparePart } from 'entities/page';
 import type { SparePart } from 'entities/sparePart';

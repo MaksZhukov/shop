@@ -6,7 +6,7 @@ import type { ApiResponse } from 'shared/api/types';
 import { kindSparePartApi, KindSparePart } from 'entities/kindSparePart';
 import { engineVolumeApi, EngineVolume } from 'entities/engineVolume';
 import { generationApi } from 'entities/generation';
-import type { Generation } from 'entities/generation/generationTypes';
+import type { Generation } from 'entities/generation';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { OFFSET_SCROLL_LOAD_MORE } from 'shared/constants';
 import type { FilterValues } from '../types';

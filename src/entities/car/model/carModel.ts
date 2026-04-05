@@ -1,9 +1,9 @@
-import type { Brand } from 'entities/brand/brandTypes';
+import type { Brand } from 'entities/brand';
 import type { EngineVolume } from 'entities/engineVolume';
-import type { Generation } from 'entities/generation/generationTypes';
+import type { Generation } from 'entities/generation';
 import type { Model } from 'entities/model';
 import type { Image, SEO } from 'shared/api/types';
-import { FUELS } from './carConstants';
+import { FUELS } from '../carConstants';
 
 export type Fuel = (typeof FUELS)[number];
 

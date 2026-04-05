@@ -1,4 +1,4 @@
-import type { BrandWithCabinsCount } from 'entities/brand/brandTypes';
+import type { BrandWithCabinsCount } from 'entities/brand';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { DefaultPage, PageProduct, PageProductCabin } from 'entities/page';
 import type { Cabin } from 'entities/cabin';

@@ -1,5 +1,5 @@
 import { articlesApi } from 'entities/article';
-import type { Article } from 'entities/article/articleTypes';
+import type { Article } from 'entities/article';
 import { pageApi, DefaultPage } from 'entities/page';
 import type { ApiResponse } from 'shared/api/types';
 import { NextPage } from 'next';

@@ -1,2 +1,2 @@
 export { catalogApi } from './catalogApi';
-export type { TopCategory, TopCategoryKindSparePart } from './catalogTypes';
+export type { TopCategory, TopCategoryKindSparePart } from './model/catalogModel';

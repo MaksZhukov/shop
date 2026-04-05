@@ -1,5 +1,5 @@
 export { carApi } from './carApi';
-export type { Car, Fuel } from './carTypes';
+export type { Car, Fuel } from './model/carModel';
 export {
 	FUELS_SLUGIFY,
 	SLUGIFY_FUELS,

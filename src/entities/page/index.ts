@@ -14,4 +14,4 @@ export type {
 	PageProductCabin,
 	PageProductWheel,
 	PageProductSparePart
-} from './pageTypes';
+} from './model/pageModel';

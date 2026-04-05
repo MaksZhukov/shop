@@ -1,7 +1,7 @@
 import type { SEO } from 'shared/api/types';
 import { getStringByTemplateStr } from 'shared/utils/stringUtils';
 import { SLUG_PRODUCT_TYPE } from './productConstants';
-import type { Product } from './productTypes';
+import type { Product } from './model/productModel';
 import { isTire, isWheel, isCabin, isSparePart } from './productGuards';
 
 export const getProductTypeSlug = (data: Product) => `${SLUG_PRODUCT_TYPE[data.type]}/${data.brand?.slug}`;

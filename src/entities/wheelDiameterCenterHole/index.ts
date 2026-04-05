@@ -1,2 +1,2 @@
 export { wheelDiameterCenterHoleApi } from './wheelDiameterCenterHoleApi';
-export type { WheelDiameterCenterHole } from './wheelDiameterCenterHoleTypes';
+export type { WheelDiameterCenterHole } from './model/wheelDiameterCenterHoleModel';

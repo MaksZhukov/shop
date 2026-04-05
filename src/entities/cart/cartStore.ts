@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import type { Cart } from './cartTypes';
+import type { Cart } from './model/cartModel';
 
 // Pure MobX store
 export class CartStore {

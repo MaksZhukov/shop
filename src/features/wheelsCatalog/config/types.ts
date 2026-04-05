@@ -1,4 +1,4 @@
-import type { Brand } from 'entities/brand/brandTypes';
+import type { Brand } from 'entities/brand';
 import type { Model } from 'entities/model';
 import type { WheelDiameter } from 'entities/wheelDiameter';
 import type { WheelWidth } from 'entities/wheelWidth';

@@ -1,4 +1,4 @@
-import type { Brand } from 'entities/brand/brandTypes';
+import type { Brand } from 'entities/brand';
 import type { Model } from 'entities/model';
 import type { Order } from 'entities/order';
 import type { Image, SEO } from 'shared/api/types';

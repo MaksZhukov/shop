@@ -5,5 +5,5 @@ export type {
 	GenerationWithSparePartsCount,
 	GenerationWithCabinsCount,
 	GenerationWithWheelsCount
-} from './generationTypes';
+} from './model/generationModel';
 export { withGeneration } from './generationUtils';

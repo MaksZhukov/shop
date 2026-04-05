@@ -1,6 +1,6 @@
 import { Box, Link, Typography, useMediaQuery } from '@mui/material';
 import { articlesApi } from 'entities/article';
-import type { Article as IArticle } from 'entities/article/articleTypes';
+import type { Article as IArticle } from 'entities/article';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
 import { SocialButtons } from 'shared/ui';

@@ -1,7 +1,7 @@
 import { API_MAX_LIMIT } from 'shared/api/constants';
 import { api } from 'shared/api';
 import type { ApiResponse } from 'shared/api/types';
-import type { ApiCart, Cart } from './cartTypes';
+import type { ApiCart, Cart } from './model/cartModel';
 
 export const cartApi = {
 	fetchShoppingCart: (userId: number) =>

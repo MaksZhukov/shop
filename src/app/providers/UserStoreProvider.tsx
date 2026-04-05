@@ -1,5 +1,5 @@
 import { UserStore } from 'entities/user';
-import { UserStoreContext } from 'entities/user/userContext';
+import { UserStoreContext } from 'entities/user';
 
 const userStore = new UserStore();
 

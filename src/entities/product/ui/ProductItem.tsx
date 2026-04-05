@@ -2,7 +2,7 @@ import { SxProps, Box } from '@mui/material';
 import { Typography, WhiteBox, Link } from 'shared/ui';
 import { Product, getProductLink, getProductDetails } from 'entities/product';
 import { ProductPrice } from './ProductPrice';
-import { ProductItemImages } from 'entities/product/ui/ProductItemImages';
+import { ProductItemImages } from './ProductItemImages';
 
 interface Props {
 	data: Product;

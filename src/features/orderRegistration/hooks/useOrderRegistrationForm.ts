@@ -1,7 +1,7 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import { useSnackbar } from 'notistack';
 import type { OrderRegistrationFormData } from '../types';
-import { UserType, DeliveryMethod, PaymentMethod } from 'entities/order/orderTypes';
+import type { UserType, DeliveryMethod, PaymentMethod } from 'entities/order';
 import { useUserStore } from 'entities/user';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import type { Favorite } from './favoriteTypes';
+import type { Favorite } from './model/favoriteModel';
 
 export class FavoriteStore {
 	items: Favorite[] = [];

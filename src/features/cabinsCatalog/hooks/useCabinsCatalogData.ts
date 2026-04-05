@@ -3,11 +3,11 @@ import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { cabinApi } from 'entities/cabin';
 import { modelApi, ModelSparePartsCountWithGenerationsSparePartsCount } from 'entities/model';
 import { generationApi } from 'entities/generation';
-import type { Generation } from 'entities/generation/generationTypes';
+import type { Generation } from 'entities/generation';
 import type { CabinsFilterValues, CabinsParsedQueryParams } from '../types';
 import { generateCabinsFiltersByQuery } from '../utils';
 import type { Dispatch, SetStateAction } from 'react';
-import { ModelCabinsCountWithGenerationsCabinsCount } from 'entities/model/modelTypes';
+import type { ModelCabinsCountWithGenerationsCabinsCount } from 'entities/model';
 import { cabinsBrandsQueryKey } from '../constants';
 import { cabinsPageQueryFns } from '../cabinsPageQueries';
 

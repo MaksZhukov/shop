@@ -1,6 +1,6 @@
 import { brandApi } from 'entities/brand';
 import { generationApi } from 'entities/generation';
-import type { GenerationWithModelAndBrand } from 'entities/generation/generationTypes';
+import type { GenerationWithModelAndBrand } from 'entities/generation';
 import { withGeneration } from 'entities/generation';
 import { kindSparePartApi } from 'entities/kindSparePart';
 import type { KindSparePart } from 'entities/kindSparePart';

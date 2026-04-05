@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { Article } from './articleTypes';
+import type { Article } from './model/articleModel';
 
 export const articlesApi = {
 	fetchArticles: (params: CollectionParams) =>

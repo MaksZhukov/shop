@@ -6,4 +6,4 @@ export type {
 	UserType,
 	DeliveryMethod,
 	PaymentMethod
-} from './orderTypes';
+} from './model/orderModel';

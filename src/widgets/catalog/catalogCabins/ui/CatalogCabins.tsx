@@ -1,6 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import { FC } from 'react';
-import type { BrandWithCabinsCount } from 'entities/brand/brandTypes';
+import type { BrandWithCabinsCount } from 'entities/brand';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';

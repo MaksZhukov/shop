@@ -5,7 +5,7 @@ import { InfoIcon } from 'shared/icons';
 import { useState } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import type { OrderRegistrationFormData } from '../types';
-import type { DeliveryMethod } from 'entities/order/orderTypes';
+import type { DeliveryMethod } from 'entities/order';
 import { useOrderRegistrationContext } from '../orderRegistrationContext';
 
 interface DeliveryMethodFormProps {

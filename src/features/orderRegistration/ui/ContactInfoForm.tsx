@@ -3,7 +3,7 @@ import { ChangeEvent, useState, useEffect } from 'react';
 import { WhiteBox } from 'shared/ui';
 import { AttachFileIcon, CloseIcon } from 'shared/icons';
 import type { OrderRegistrationFormData } from '../types';
-import type { UserType } from 'entities/order/orderTypes';
+import type { UserType } from 'entities/order';
 
 interface ContactInfoFormProps {
 	formData: OrderRegistrationFormData;

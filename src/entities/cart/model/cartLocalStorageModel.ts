@@ -1,4 +1,4 @@
-import type { Cart } from './cartTypes';
+import type { Cart } from './cartModel';
 import type { ProductType } from 'entities/product';
 
 export type StorageCart = Omit<Cart, 'product'> & {

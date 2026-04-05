@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
-import type { Article } from 'entities/article/articleTypes';
-import { ArticleItem } from 'entities/article/ui/ArticleItem';
+import { ArticleItem, type Article } from 'entities/article';
 import { Loader } from 'shared/ui';
 
 interface ArticlesGridProps {

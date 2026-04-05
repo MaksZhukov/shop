@@ -1,4 +1,4 @@
-import type { Article } from 'entities/article/articleTypes';
+import type { Article } from 'entities/article';
 import { ArticlesHeader } from './ArticlesHeader';
 import { ArticlesGrid } from './ArticlesGrid';
 import { mainPageQueryFns, mainPageQueryKeys } from 'features/mainPage';

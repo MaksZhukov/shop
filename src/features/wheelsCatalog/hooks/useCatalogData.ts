@@ -10,7 +10,7 @@ import { wheelDiameterCenterHoleApi } from 'entities/wheelDiameterCenterHole';
 import { wheelDiskOffsetApi } from 'entities/wheelDiskOffset';
 import type { WheelFilterValues, WheelParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
-import type { ModelWheelsCountWithGenerationsWheelsCount } from 'entities/model/modelTypes';
+import type { ModelWheelsCountWithGenerationsWheelsCount } from 'entities/model';
 import { wheelsBrandsQueryKey } from '../constants';
 import { wheelsPageQueryFns } from '../wheelsPageQueries';
 

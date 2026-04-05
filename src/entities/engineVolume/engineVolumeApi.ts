@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { EngineVolume } from './engineVolumeTypes';
+import type { EngineVolume } from './model/engineVolumeModel';
 
 export const engineVolumeApi = {
 	fetchEngineVolumes: (params?: CollectionParams) =>

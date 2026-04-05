@@ -4,6 +4,8 @@ Includes both runtime imports and type-only imports/exports, including cross-sli
 Entries marked `(type-only)` are used only for TypeScript types.
 Same-slice internal imports are omitted. `(root)` means files directly under layer root.
 
+**Entity `model/` segment:** Domain types live under `entities/<slice>/model/` (e.g. `brand/model/brandModel.ts`), same pattern as `entities/article/model/articleModel.ts`. The car-catalog **slice** named `model` uses `entities/model/model/types.ts` to avoid a `modelModel` filename. **Consumers** (pages, widgets, features, app, other entity slices) import only from the slice public API: `entities/<slice>` (root `index.ts`). Inside the same slice, use relative paths (`./model/…`, `./ui/…`) so barrels do not create circular imports.
+
 ## ESLint boundaries (`boundaries/dependencies`)
 
 Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).

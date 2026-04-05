@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import type { Brand } from 'entities/brand/brandTypes';
+import type { Brand } from 'entities/brand';
 import { Typography } from 'shared/ui';
 import { BrandItem } from 'entities/brand';
 import { mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';

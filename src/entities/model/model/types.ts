@@ -4,7 +4,7 @@ import type {
 	GenerationWithSparePartsCount,
 	GenerationWithWheelsCount
 } from 'entities/generation';
-import type { Brand } from 'entities/brand/brandTypes';
+import type { Brand } from 'entities/brand';
 
 export interface Model {
 	id: number;

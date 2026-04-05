@@ -1,4 +1,4 @@
-import type { Favorite } from './favoriteTypes';
+import type { Favorite } from './favoriteModel';
 import type { ProductType } from 'entities/product';
 
 export type StorageFavorite = Omit<Favorite, 'product'> & {

@@ -1,2 +1,2 @@
 export { tireWidthApi } from './tireWidthApi';
-export type { TireWidth } from './tireWidthTypes';
+export type { TireWidth } from './model/tireWidthModel';

@@ -1,2 +1,2 @@
 export { engineVolumeApi } from './engineVolumeApi';
-export type { EngineVolume } from './engineVolumeTypes';
+export type { EngineVolume } from './model/engineVolumeModel';
