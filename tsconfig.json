@@ -19,6 +19,7 @@
     "jsx": "react-jsx",
     "incremental": true,
     "experimentalDecorators": true,
+    "ignoreDeprecations": "6.0",
     "baseUrl": "src",
     "plugins": [
       {

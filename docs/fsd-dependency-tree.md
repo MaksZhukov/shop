@@ -426,14 +426,11 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → shared/fonts
 
 ## shared/ui
-  → entities/autocomise
-  → entities/serviceStation
   → shared/api (type-only)
   → shared/icons
   → shared/services
 
 ## shared/utils
-  → entities/page
   → shared/api
 
 ---
@@ -443,5 +440,5 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
 **app** → app (cross-segment, e.g. `(root)` → `providers`), entities, features, shared
 **widgets** → entities, features, shared, widgets
 **features** → entities, features, shared
-**entities** → entities, features, shared
-**shared** → entities, shared
+**entities** → entities, shared
+**shared** → shared
