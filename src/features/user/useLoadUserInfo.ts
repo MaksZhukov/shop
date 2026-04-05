@@ -6,7 +6,6 @@ export const useLoadUserInfo = () => {
 	const userStore = useUserStore();
 
 	return useCallback(async () => {
-		console.log('useLoadUserInfo');
 		const { data } = await userApi.getUserInfo();
 		userStore.setId(data.id);
 		userStore.setEmail(data.email);

@@ -12,7 +12,6 @@ export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
 	const userStore = useUserStore();
 	const { enqueueSnackbar } = useSnackbar();
 	useLayoutEffect(() => {
-		console.log('ApiProvider');
 		const errorResponseUnauthorizedCallback = () => {
 			if (userStore.id) {
 				logout(userStore);

@@ -13,6 +13,7 @@ interface Props {
 }
 
 export const CarItem = ({ data, width = 342 }: Props) => {
+	const title = data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name;
 	return (
 		<WhiteBox margin='auto' overflow={'hidden'} width={width} marginBottom='1em' bgcolor='#fff' position='relative'>
 			{data.images ? (
@@ -27,7 +28,7 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 									style={{
 										objectFit: 'cover'
 									}}
-									alt={image.alternativeText}
+									alt={image.alternativeText || title}
 									src={image.url}
 								></Image>
 							</Box>
@@ -37,7 +38,7 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 			) : (
 				<Box>
 					<Image
-						title={data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name}
+						title={title}
 						style={{
 							objectFit: 'cover',
 							margin: 'auto'
@@ -45,14 +46,14 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 						src=''
 						width={width}
 						height={290}
-						alt={data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name}
+						alt={title}
 					></Image>
 				</Box>
 			)}
 
 			<Box p={1.5}>
 				<Typography variant='h6' fontSize='20px' color='text.secondary'>
-					{data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name}
+					{title}
 				</Typography>
 				<Typography mb={1} color='custom.text-muted'>
 					{[data.volume?.name, data.fuel, data.transmission].filter(Boolean).join(', ')}
