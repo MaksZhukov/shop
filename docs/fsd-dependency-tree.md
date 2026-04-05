@@ -4,78 +4,84 @@ Includes both runtime imports and type-only imports/exports, including cross-sli
 Entries marked `(type-only)` are used only for TypeScript types.
 Same-slice internal imports are omitted. `(root)` means files directly under layer root.
 
+Within each slice, dependency lines are ordered **app → pages → widgets → features → entities → shared** (alphabetically within the same layer).
+
 **Entity `model/` segment:** Domain types live under `entities/<slice>/model/` (e.g. `brand/model/brandModel.ts`), same pattern as `entities/article/model/articleModel.ts`. The car-catalog **slice** named `model` uses `entities/model/model/types.ts` to avoid a `modelModel` filename. **Consumers** (pages, widgets, features, app, other entity slices) import only from the slice public API: `entities/<slice>` (root `index.ts`). Inside the same slice, use relative paths (`./model/…`, `./ui/…`) so barrels do not create circular imports.
 
 ## ESLint boundaries (`boundaries/dependencies`)
 
 Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 
-- **widgets**: no **value** imports from `widgets/<otherSlice>/…` (same slice allowed). Compose via **pages**, **features**, or **shared**.
-- **entities**: no **value** imports across entity slices; **type-only** imports from other entities are allowed.
-- **features**: no **value** imports across feature slices; **type-only** imports are allowed. **Exception**: `features/mobileContacts` may value-import `features/workTimetable` (explicit allow rule).
+- **app**: must not import `pages` or `widgets` (see `eslint.config.mjs`).
+- **pages**: no slice-specific `boundaries` entries beyond normal FSD layering; composition lives here.
+- **widgets**: no **value** imports from `widgets/<otherSlice>/…` (same slice allowed); must not import `pages` or `app`. Compose via **pages**, **features**, or **shared**.
+- **features**: no **value** imports across feature slices; **type-only** imports are allowed; must not import `app`, `pages`, or `widgets`. **Exception**: `features/mobileContacts` may value-import `features/workTimetable` (explicit allow rule).
+- **entities**: no **value** imports across entity slices; **type-only** imports from other entities are allowed; must not import `app`, `pages`, `widgets`, or `features`.
+- **shared**: must not import domain layers (`app` / `pages` / `widgets` / `features` / `entities`).
 
 ---
 
-## app/(root)
+## App
+
+### app/(root)
 
 → app/providers  
 → shared/api (type-only)  
 → shared/services
 
-## app/hooks
+### app/hooks
 
 (`useInitialAuthLoad` — bootstraps user, cart, and favorites after mount.)
 
-→ entities/user  
 → features/cart  
 → features/favorites  
-→ features/user
+→ features/user  
+→ entities/user
 
-## app/providers
+### app/providers
 
+→ features/sparePartsCatalog  
+→ features/user  
 → entities/cart  
 → entities/favorite  
 → entities/user  
-→ features/sparePartsCatalog  
-→ features/user  
 → shared/api  
 → shared/hooks  
 → shared/services
 
-## pages/_app (composition)
+## Pages
+
+### pages/\_app (composition)
 
 → app/hooks (`useInitialAuthLoad`)  
 → app/providers (`ApiProvider`, `QueryProvider`, `RecaptchaProvider`, `SnackbarProvider`, `StoreProvider`, `ThemeProvider`)  
 → app (`HeadSEO` from barrel)  
+→ widgets/footer  
+→ widgets/header  
 → features/routeShield  
 → features/scrollUp  
-→ shared/ui  
-→ widgets/footer  
-→ widgets/header
+→ shared/ui
 
-## widgets/benefits
+## Widgets
 
-→ entities/sparePart  
+### widgets/benefits
+
 → features/mainPage  
+→ entities/sparePart  
 → shared/api  
 → shared/ui  
 → shared/utils
 
-## widgets/cart
+### widgets/cart
 
+→ features/favorites  
 → entities/cart (type-only)  
 → entities/product  
-→ features/favorites  
 → shared/icons  
 → shared/ui
 
-## widgets/catalog
+### widgets/catalog
 
-→ entities/brand (type-only)  
-→ entities/catalog  
-→ entities/kindSparePart (type-only)  
-→ entities/page (type-only)  
-→ entities/product  
 → features/cabinsCatalog  
 → features/cart  
 → features/favorites  
@@ -83,40 +89,48 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → features/sparePartsCatalog  
 → features/tiresCatalog  
 → features/wheelsCatalog  
+→ entities/brand (type-only)  
+→ entities/catalog  
+→ entities/kindSparePart (type-only)  
+→ entities/page (type-only)  
+→ entities/product  
 → shared/api (type-only)  
 → shared/icons  
 → shared/ui
 
-## widgets/footer
+### widgets/footer
 
 → shared/ui
 
-## widgets/gallery
+### widgets/gallery
 
 → entities/page (type-only)  
 → shared/api (type-only)  
 → shared/services  
-→ shared/ui (`GalleryImages` implementation lives under `shared/ui/GalleryImages`; slice `index.ts` re-exports it for consumers of `widgets/gallery`)
+→ shared/ui (`GalleryImages` implementation lives under `shared/ui/GalleryImages`)
 
-## widgets/header
+### widgets/header
 
-→ entities/cart  
-→ entities/catalog  
-→ entities/sparePart  
-→ entities/user  
 → features/cart  
 → features/favorites  
 → features/mobileContacts  
 → features/sparePartsCatalog  
 → features/user  
 → features/workTimetable  
+→ entities/cart  
+→ entities/catalog  
+→ entities/sparePart  
+→ entities/user  
 → shared/icons  
 → shared/services  
 → shared/ui  
 → shared/utils
 
-## widgets/main
+### widgets/main
 
+→ features/cart  
+→ features/favorites  
+→ features/mainPage  
 → entities/article  
 → entities/brand  
 → entities/car  
@@ -127,9 +141,6 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/model  
 → entities/product  
 → entities/sparePart  
-→ features/cart  
-→ features/favorites  
-→ features/mainPage  
 → shared/api  
 → shared/constants  
 → shared/hooks  
@@ -137,46 +148,49 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → shared/services  
 → shared/ui
 
-## widgets/orderRegistration
+### widgets/orderRegistration
 
 → features/cart  
 → features/mobileContacts  
 → features/orderRegistration  
 → shared/ui
 
-## widgets/product
+### widgets/product
 
-→ entities/page (type-only)  
-→ entities/product  
 → features/cart  
 → features/favorites  
 → features/share  
+→ entities/page (type-only)  
+→ entities/product  
 → shared/icons  
 → shared/ui (GalleryImages)
 
-## widgets/viewedProducts
+### widgets/viewedProducts
 
-→ entities/product  
-→ entities/sparePart  
 → features/cart  
 → features/favorites  
+→ entities/product  
+→ entities/sparePart  
 → shared/ui
 
-## features/articlesList
+## Features
+
+### features/articlesList
 
 → entities/article  
 → shared/api (type-only)  
 → shared/icons  
 → shared/ui
 
-## features/buy
+### features/buy
 
 → entities/order  
 → entities/product (type-only)  
 → shared/ui
 
-## features/cabinsCatalog
+### features/cabinsCatalog
 
+→ features/productFilters (type-only)  
 → entities/brand  
 → entities/cabin  
 → entities/generation  
@@ -184,12 +198,11 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/model  
 → entities/page  
 → entities/product  
-→ features/productFilters (type-only)  
 → shared/api  
 → shared/constants  
 → shared/services
 
-## features/cart
+### features/cart
 
 → entities/cabin  
 → entities/cart  
@@ -200,7 +213,7 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/wheel  
 → shared/api (type-only)
 
-## features/favorites
+### features/favorites
 
 → entities/cabin  
 → entities/favorite  
@@ -212,7 +225,7 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → shared/api (type-only)  
 → shared/icons
 
-## features/mainPage
+### features/mainPage
 
 → entities/article  
 → entities/brand  
@@ -220,12 +233,12 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/sparePart  
 → shared/api
 
-## features/mobileContacts
+### features/mobileContacts
 
 → features/workTimetable  
 → shared/ui
 
-## features/orderRegistration
+### features/orderRegistration
 
 → entities/cart  
 → entities/order  
@@ -233,27 +246,28 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → shared/icons  
 → shared/ui
 
-## features/productFilters
+### features/productFilters
 
 → shared/icons  
 → shared/ui
 
-## features/routeShield
+### features/routeShield
 
 → entities/user  
 → shared/constants  
 → shared/ui
 
-## features/scrollUp
+### features/scrollUp
 
 → shared/icons
 
-## features/share
+### features/share
 
 → shared/icons
 
-## features/sparePartsCatalog
+### features/sparePartsCatalog
 
+→ features/productFilters (type-only)  
 → entities/brand  
 → entities/car  
 → entities/catalog  
@@ -264,13 +278,13 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/page  
 → entities/product  
 → entities/sparePart  
-→ features/productFilters (type-only)  
 → shared/api  
 → shared/constants  
 → shared/services
 
-## features/tiresCatalog
+### features/tiresCatalog
 
+→ features/productFilters (type-only)  
 → entities/catalog (type-only)  
 → entities/page  
 → entities/product  
@@ -279,19 +293,19 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/tireDiameter  
 → entities/tireHeight  
 → entities/tireWidth  
-→ features/productFilters (type-only)  
 → shared/api  
 → shared/services
 
-## features/user
+### features/user
 
 → entities/user  
 → shared/icons  
 → shared/services  
 → shared/ui
 
-## features/wheelsCatalog
+### features/wheelsCatalog
 
+→ features/productFilters (type-only)  
 → entities/brand  
 → entities/model  
 → entities/page  
@@ -302,31 +316,32 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/wheelDiskOffset  
 → entities/wheelNumberHole  
 → entities/wheelWidth  
-→ features/productFilters (type-only)  
 → shared/api  
 → shared/services
 
-## features/workTimetable
+### features/workTimetable
 
 → shared/icons  
 → shared/ui  
 → shared/utils
 
-## entities/article
+## Entities
+
+### entities/article
 
 → shared/api  
 → shared/ui
 
-## entities/autocomise
+### entities/autocomise
 
 → shared/api
 
-## entities/brand
+### entities/brand
 
 → shared/api  
 → shared/ui
 
-## entities/cabin
+### entities/cabin
 
 → entities/brand (type-only)  
 → entities/generation (type-only)  
@@ -336,7 +351,7 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/product (type-only)  
 → shared/api
 
-## entities/car
+### entities/car
 
 → entities/brand (type-only)  
 → entities/engineVolume (type-only)  
@@ -344,7 +359,7 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/model (type-only)  
 → shared/api
 
-## entities/carOnParts
+### entities/carOnParts
 
 → entities/brand (type-only)  
 → entities/car (type-only)  
@@ -354,60 +369,60 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → shared/api  
 → shared/ui
 
-## entities/cart
+### entities/cart
 
 → entities/product (type-only)  
 → shared/api  
 → shared/services
 
-## entities/catalog
+### entities/catalog
 
 → shared/api
 
-## entities/email
+### entities/email
 
 → shared/api
 
-## entities/engineVolume
+### entities/engineVolume
 
 → shared/api
 
-## entities/favorite
+### entities/favorite
 
 → entities/product (type-only)  
 → shared/api  
 → shared/services
 
-## entities/generation
+### entities/generation
 
 → entities/brand (type-only)  
 → entities/model (type-only)  
 → shared/api
 
-## entities/kindSparePart
+### entities/kindSparePart
 
 → shared/api
 
-## entities/model
+### entities/model
 
 → entities/brand (type-only)  
 → entities/generation (type-only)  
 → shared/api
 
-## entities/order
+### entities/order
 
 → entities/product (type-only)  
 → shared/api  
 → shared/services
 
-## entities/page
+### entities/page
 
 → entities/autocomise (type-only)  
 → entities/serviceStation (type-only)  
 → shared/api  
 → shared/services
 
-## entities/product
+### entities/product
 
 → entities/brand (type-only)  
 → entities/cabin (type-only)  
@@ -420,15 +435,15 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → shared/ui  
 → shared/utils
 
-## entities/review
+### entities/review
 
 → shared/api
 
-## entities/serviceStation
+### entities/serviceStation
 
 → shared/api
 
-## entities/sparePart
+### entities/sparePart
 
 → entities/brand (type-only)  
 → entities/car (type-only)  
@@ -439,7 +454,7 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/product (type-only)  
 → shared/api
 
-## entities/tire
+### entities/tire
 
 → entities/order (type-only)  
 → entities/product (type-only)  
@@ -449,28 +464,28 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/tireWidth (type-only)  
 → shared/api
 
-## entities/tireBrand
+### entities/tireBrand
 
 → entities/brand (type-only)  
 → shared/api
 
-## entities/tireDiameter
+### entities/tireDiameter
 
 → shared/api
 
-## entities/tireHeight
+### entities/tireHeight
 
 → shared/api
 
-## entities/tireWidth
+### entities/tireWidth
 
 → shared/api
 
-## entities/user
+### entities/user
 
 → shared/api
 
-## entities/wheel
+### entities/wheel
 
 → entities/brand (type-only)  
 → entities/model (type-only)  
@@ -483,47 +498,51 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 → entities/wheelWidth (type-only)  
 → shared/api
 
-## entities/wheelDiameter
+### entities/wheelDiameter
 
 → shared/api
 
-## entities/wheelDiameterCenterHole
+### entities/wheelDiameterCenterHole
 
 → shared/api
 
-## entities/wheelDiskOffset
+### entities/wheelDiskOffset
 
 → shared/api
 
-## entities/wheelNumberHole
+### entities/wheelNumberHole
 
 → shared/api
 
-## entities/wheelWidth
+### entities/wheelWidth
 
 → shared/api
 
-## shared/api
+## Shared
+
+### shared/api
 
 → shared/services
 
-## shared/services
+### shared/services
 
 → shared/fonts
 
-## shared/ui
+### shared/ui
 
 → shared/api (type-only)  
 → shared/icons  
 → shared/services
 
-## shared/utils
+### shared/utils
 
 → shared/api
 
 ---
 
 ## Layer → layers (summary)
+
+Order: **app** → **pages** → **widgets** → **features** → **entities** → **shared**.
 
 **app** → app (providers, hooks, cross-segment), entities, features, shared  
 **pages** → app, features, shared, widgets  
