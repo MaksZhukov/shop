@@ -1,10 +1,10 @@
 import type { Brand } from 'entities/brand/brandTypes';
 import type { Cabin } from 'entities/cabin';
-import { SparePart } from 'entities/sparePart';
-import { TireBrand } from 'entities/tireBrand';
-import { Tire } from 'entities/tire';
+import type { SparePart } from 'entities/sparePart';
+import type { TireBrand } from 'entities/tireBrand';
+import type { Tire } from 'entities/tire';
 import type { Product } from './productTypes';
-import { Wheel } from 'entities/wheel';
+import type { Wheel } from 'entities/wheel';
 
 export const isTire = (data: Product): data is Tire => data.type === 'tire';
 export const isSparePart = (data: Product): data is SparePart => data.type === 'sparePart';

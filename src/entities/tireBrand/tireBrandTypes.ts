@@ -1,5 +1,5 @@
 import type { Image, SEO } from 'shared/api/types';
-import { BrandTextComponent } from 'entities/brand';
+import type { BrandTextComponent } from 'entities/brand';
 
 export interface TireBrand {
 	id: number;

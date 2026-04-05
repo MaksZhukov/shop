@@ -13,7 +13,12 @@ const fsdElements = [
 		capture: ['widgetSlice']
 	},
 	{ type: 'features', pattern: 'src/features/**/*', mode: 'full' },
-	{ type: 'entities', pattern: 'src/entities/**/*', mode: 'full' },
+	{
+		type: 'entities',
+		pattern: 'src/entities/*/**',
+		mode: 'full',
+		capture: ['entitySlice']
+	},
 	{ type: 'shared', pattern: 'src/shared/**/*', mode: 'full' }
 ];
 
@@ -28,6 +33,18 @@ const fsdDependencyRules = [
 		from: { type: 'entities' },
 		disallow: { to: { type: ['app', 'pages', 'widgets', 'features'] } },
 		message: 'FSD: `entities` must not import upper layers (features/widgets/pages/app).'
+	},
+	{
+		from: { type: 'entities' },
+		disallow: {
+			to: {
+				type: 'entities',
+				captured: { entitySlice: '!{{ from.captured.entitySlice }}' }
+			},
+			dependency: { kind: 'value' }
+		},
+		message:
+			'FSD: an entity slice must not value-import another entity slice (use `import type { ... }`, or colocate shared types in `shared`).'
 	},
 	{
 		from: { type: 'features' },
