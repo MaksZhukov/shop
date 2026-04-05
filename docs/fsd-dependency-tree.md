@@ -66,6 +66,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/user
   → features/cart
   → features/favorites
+  → features/mobileContacts
   → features/sparePartsCatalog
   → features/user
   → features/workTimetable
@@ -97,6 +98,7 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → widgets/benefits
 
 ## widgets/orderRegistration
+  → features/mobileContacts
   → features/orderRegistration
   → shared/ui
 
@@ -162,6 +164,10 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → entities/sparePart
   → shared/api
 
+## features/mobileContacts
+  → features/workTimetable
+  → shared/ui
+
 ## features/orderRegistration
   → entities/cart
   → entities/order
@@ -169,7 +175,6 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
   → features/cart
   → shared/icons
   → shared/ui
-  → widgets/header
 
 ## features/product
   → entities/product
@@ -437,6 +442,6 @@ Same-slice internal imports are omitted. `(root)` means files directly under lay
 
 **app** → app (cross-segment, e.g. `(root)` → `providers`), entities, features, shared
 **widgets** → entities, features, shared, widgets
-**features** → entities, features, shared, widgets
+**features** → entities, features, shared
 **entities** → entities, features, shared
 **shared** → entities, shared

@@ -171,7 +171,7 @@ export const ContactInfoForm = ({
 							<Box
 								onClick={disabled ? undefined : onUploadClick}
 								maxWidth='480px'
-								border='2px dashed  '
+								border='2px dashed'
 								borderColor={'custom.divider'}
 								borderRadius={1}
 								padding={1}

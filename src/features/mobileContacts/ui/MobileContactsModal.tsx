@@ -1,11 +1,11 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
 import React from 'react';
 import { Link, ModalContainer } from 'shared/ui';
+// Same-layer feature import: embeds shop hours UI here instead of duplicating providers in every widget.
 import { WorkTimetable } from 'features/workTimetable';
 import { SocialButtons } from 'shared/ui';
 import { Image } from 'shared/ui';
-import { SOCIAL_BUTTONS_MOBILE } from '../headerConstants';
-import { COMPANY_COORDINATES, COMPANY_ADDRESS } from '../headerConstants';
+import { COMPANY_ADDRESS, COMPANY_COORDINATES, SOCIAL_BUTTONS_MOBILE } from '../mobileContactsConstants';
 
 interface MobileContactsModalProps {
 	isOpened: boolean;

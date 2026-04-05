@@ -8,6 +8,7 @@ import {
 	useOrderRegistration,
 	useOrderCheckout
 } from 'features/orderRegistration';
+import { OrderRegistrationProvider } from '../providers/OrderRegistrationProvider';
 
 export const OrderRegistration = ({
 	isOrdered,
@@ -48,7 +49,9 @@ export const OrderRegistration = ({
 				</Typography>
 			)}
 			<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} gap={1}>
-				<OrderRegistrationForm form={form} disabled={!!orderCheckout?.order} />
+				<OrderRegistrationProvider>
+					<OrderRegistrationForm form={form} disabled={!!orderCheckout?.order} />
+				</OrderRegistrationProvider>
 				<OrderSummary
 					selectedItemsCount={checkoutItems.length}
 					totalAmount={totalAmount}

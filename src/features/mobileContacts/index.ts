@@ -1,0 +1,1 @@
+export { MobileContactsModal } from './ui';

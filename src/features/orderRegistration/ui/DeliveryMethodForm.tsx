@@ -2,11 +2,11 @@ import { Box, Typography, Input, FormControl, RadioGroup, FormControlLabel, Radi
 import { ChangeEvent } from 'react';
 import { WhiteBox } from 'shared/ui';
 import { InfoIcon } from 'shared/icons';
-import { MobileContactsModal } from 'widgets/header/ui/MobileContactsModal';
 import { useState } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import type { OrderRegistrationFormData } from '../types';
 import type { DeliveryMethod } from 'entities/order/orderTypes';
+import { useOrderRegistrationContext } from '../orderRegistrationContext';
 
 interface DeliveryMethodFormProps {
 	formData: OrderRegistrationFormData;
@@ -32,6 +32,8 @@ export const DeliveryMethodForm = ({
 	const handleCloseMobileContactsModal = () => {
 		setIsMobileContactsModalOpen(false);
 	};
+
+	const { renderMobileContacts } = useOrderRegistrationContext();
 
 	return (
 		<>
@@ -146,7 +148,7 @@ export const DeliveryMethodForm = ({
 					</>
 				)}
 			</WhiteBox>
-			<MobileContactsModal isOpened={isMobileContactsModalOpen} onClose={handleCloseMobileContactsModal} />
+			{renderMobileContacts(isMobileContactsModalOpen, handleCloseMobileContactsModal)}
 		</>
 	);
 };
