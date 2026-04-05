@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import type { DefaultPage } from 'entities/page';
 import type { Image as IIamge } from 'shared/api/types';
-import { GalleryImages } from './GalleryImages';
+import { GalleryImages } from 'shared/ui/GalleryImages';
 import { Image } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { FC, useState } from 'react';

@@ -1,5 +1,4 @@
 export { SearchForm } from './ui/MainSection';
-export { Benefits } from 'widgets/benefits';
 export { NewArrivals } from './ui/NewArrivals';
 export { BrandSelection } from './ui/BrandSelection';
 export { PopularCategories } from './ui/PopularCategories';

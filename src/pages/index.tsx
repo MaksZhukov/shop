@@ -2,9 +2,9 @@ import { Box } from '@mui/material';
 import { pageApi } from 'entities/page';
 import type { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { Benefits } from 'widgets/benefits';
 import {
 	MainSection,
-	Benefits,
 	NewArrivals,
 	BrandSelection,
 	PopularCategories,

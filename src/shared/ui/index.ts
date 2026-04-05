@@ -19,3 +19,4 @@ export { SocialButtons, SOCIAL_TELEGRAM, SOCIAL_BUTTONS } from './SocialsButtons
 export type { SocialButton } from './SocialsButtons';
 export { AnyQuestionsLeft } from './AnyQuestionsLeft';
 export { MobileQuestionsSection } from './MobileQuestionsSection';
+export { GalleryImages, Zoom } from './GalleryImages';

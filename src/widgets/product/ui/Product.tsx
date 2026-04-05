@@ -7,7 +7,7 @@ import type {
 	PageProductWheel
 } from 'entities/page';
 import type { Product as IProduct } from 'entities/product';
-import { GalleryImages } from 'widgets/gallery';
+import { GalleryImages } from 'shared/ui/GalleryImages';
 import { FC, useEffect, useState } from 'react';
 import { productViewedLocalStorage } from 'entities/product';
 import { ProductImages } from './ProductImages';

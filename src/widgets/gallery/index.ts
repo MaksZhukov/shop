@@ -1,1 +1,2 @@
-export { Gallery, GalleryImages } from './ui';
+export { Gallery } from './ui';
+export { GalleryImages } from 'shared/ui/GalleryImages';

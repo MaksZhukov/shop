@@ -2,10 +2,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Modal, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
 import type { Image as IIamge } from 'shared/api/types';
-import { Zoom } from './Zoom';
-import { FC, useEffect, useRef, useState } from 'react';
-import { Carousel } from 'shared/ui';
+import { FC, useRef, useState } from 'react';
+import { Carousel } from '../Carousel';
 import { backendUrl } from 'shared/services/EnvService';
+import { Zoom } from './Zoom';
 
 interface Props {
 	images?: IIamge[];

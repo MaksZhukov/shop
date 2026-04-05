@@ -6,7 +6,12 @@ import boundaries from 'eslint-plugin-boundaries';
 const fsdElements = [
 	{ type: 'app', pattern: 'src/app/**/*', mode: 'full' },
 	{ type: 'pages', pattern: 'src/pages/**/*', mode: 'full' },
-	{ type: 'widgets', pattern: 'src/widgets/**/*', mode: 'full' },
+	{
+		type: 'widgets',
+		pattern: 'src/widgets/*/**',
+		mode: 'full',
+		capture: ['widgetSlice']
+	},
 	{ type: 'features', pattern: 'src/features/**/*', mode: 'full' },
 	{ type: 'entities', pattern: 'src/entities/**/*', mode: 'full' },
 	{ type: 'shared', pattern: 'src/shared/**/*', mode: 'full' }
@@ -28,6 +33,18 @@ const fsdDependencyRules = [
 		from: { type: 'features' },
 		disallow: { to: { type: ['app', 'pages', 'widgets'] } },
 		message: 'FSD: `features` must not import `widgets`, `pages`, or `app` — compose them from above.'
+	},
+	{
+		from: { type: 'widgets' },
+		disallow: {
+			to: {
+				type: 'widgets',
+				captured: { widgetSlice: '!{{ from.captured.widgetSlice }}' }
+			},
+			dependency: { kind: 'value' }
+		},
+		message:
+			'FSD: a widget slice must not import another widget slice (stay under `widgets/{{ from.captured.widgetSlice }}/` or use `features` / `shared`).'
 	},
 	{
 		from: { type: 'widgets' },
@@ -56,6 +73,7 @@ const eslintConfig = defineConfig([
 		files: ['src/**/*.{ts,tsx}'],
 		plugins: { boundaries },
 		settings: {
+			'boundaries/legacy-templates': false,
 			'boundaries/elements': fsdElements,
 			'import/resolver': {
 				typescript: {
