@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { orderApi, type OrderCheckoutResponse } from 'entities/order';
 import type { Cart } from 'entities/cart';
-import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
 import { useOrderTimer } from './useOrderTimer';
 import { useUnpaidOrderGuard } from './useUnpaidOrderGuard';
 import { openPaymentWidget } from '../lib/openPaymentWidget';
@@ -15,15 +14,21 @@ interface UseOrderCheckoutParams {
 	checkoutItems: Cart[];
 	onChangeIsOrdered: (isOrdered: boolean) => void;
 	isOrdered: boolean;
+	removeCartMany: (cartItemIds: number[]) => void | Promise<void>;
 }
 
-export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, isOrdered }: UseOrderCheckoutParams) {
+export function useOrderCheckout({
+	formData,
+	checkoutItems,
+	onChangeIsOrdered,
+	isOrdered,
+	removeCartMany
+}: UseOrderCheckoutParams) {
 	const [orderCheckout, setOrderCheckout] = useState<OrderCheckoutResponse | null>(null);
 	const [token, setToken] = useState<string | null>(null);
 	const tokenRef = useRef<string | null>(null);
 	const orderIdRef = useRef<number | null>(null);
 	const queryClient = useQueryClient();
-	const removeCartMany = useRemoveCartMany();
 	const router = useRouter();
 	const { formattedTime, isExpired } = useOrderTimer(orderCheckout?.order);
 
@@ -55,7 +60,7 @@ export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, i
 
 	const onOrderSuccess = async () => {
 		onChangeIsOrdered(true);
-		removeCartMany(checkoutItems.map((item) => item.id));
+		await removeCartMany(checkoutItems.map((item) => item.id));
 		await queryClient.invalidateQueries();
 	};
 
@@ -73,7 +78,6 @@ export function useOrderCheckout({ formData, checkoutItems, onChangeIsOrdered, i
 		const isOnlinePayment = formData.paymentMethod === 'online';
 
 		if (isOnlinePayment && token) {
-			debugger;
 			openWidget(token);
 			return;
 		}

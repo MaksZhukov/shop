@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { Loader, MobileQuestionsSection } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
-import { ViewedProducts } from 'features/product';
+import { ViewedProducts } from 'widgets/viewedProducts';
 import { observer } from 'mobx-react';
 import { useState, useEffect } from 'react';
 import { EmptyCart, CartList } from 'widgets/cart';

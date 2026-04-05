@@ -2,9 +2,9 @@ import { useUserStore } from 'entities/user';
 import { useLoadCart } from 'features/cart/useLoadCart';
 import { useLoadFavorites } from 'features/favorites/useLoadFavorites';
 import { useEffect } from 'react';
-import { useLoadUserInfo } from './useLoadUserInfo';
+import { useLoadUserInfo } from 'features/user/useLoadUserInfo';
 
-export function useInitialAuthLoad() {
+export const useInitialAuthLoad = () => {
 	const loadFavorites = useLoadFavorites();
 	const loadCart = useLoadCart();
 	const loadUserInfo = useLoadUserInfo();
@@ -23,4 +23,4 @@ export function useInitialAuthLoad() {
 		};
 		tryFetchData();
 	}, [loadFavorites, loadCart, loadUserInfo, userStore]);
-}
+};

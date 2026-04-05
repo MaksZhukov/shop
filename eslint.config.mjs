@@ -12,7 +12,12 @@ const fsdElements = [
 		mode: 'full',
 		capture: ['widgetSlice']
 	},
-	{ type: 'features', pattern: 'src/features/**/*', mode: 'full' },
+	{
+		type: 'features',
+		pattern: 'src/features/*/**',
+		mode: 'full',
+		capture: ['featureSlice']
+	},
 	{
 		type: 'entities',
 		pattern: 'src/entities/*/**',
@@ -50,6 +55,26 @@ const fsdDependencyRules = [
 		from: { type: 'features' },
 		disallow: { to: { type: ['app', 'pages', 'widgets'] } },
 		message: 'FSD: `features` must not import `widgets`, `pages`, or `app` — compose them from above.'
+	},
+	{
+		from: { type: 'features' },
+		disallow: {
+			to: {
+				type: 'features',
+				captured: { featureSlice: '!{{ from.captured.featureSlice }}' }
+			},
+			dependency: { kind: 'value' }
+		},
+		message:
+			'FSD: a feature slice must not value-import another feature slice (use `import type { ... }`, `shared`, or compose in pages/widgets).'
+	},
+	// Exception: mobileContacts UI embeds WorkTimetable (value import). Placed after cross-feature disallow so allow wins.
+	{
+		from: { type: 'features', captured: { featureSlice: 'mobileContacts' } },
+		allow: {
+			to: { type: 'features', captured: { featureSlice: 'workTimetable' } },
+			dependency: { kind: 'value' }
+		}
 	},
 	{
 		from: { type: 'widgets' },

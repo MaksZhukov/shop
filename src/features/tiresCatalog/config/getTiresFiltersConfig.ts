@@ -1,4 +1,4 @@
-import { AutocompleteType } from 'features/productFilters';
+import type { AutocompleteType } from 'features/productFilters';
 import { SEASONS, SEASONS_SLUGIFY } from 'entities/tire';
 import type { GetTiresFiltersConfigParams } from './types';
 

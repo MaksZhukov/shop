@@ -8,6 +8,7 @@ import {
 	useOrderRegistration,
 	useOrderCheckout
 } from 'features/orderRegistration';
+import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
 import { OrderRegistrationProvider } from '../providers/OrderRegistrationProvider';
 
 export const OrderRegistration = ({
@@ -19,11 +20,13 @@ export const OrderRegistration = ({
 }) => {
 	const form = useOrderRegistrationForm();
 	const { checkoutItems, totalAmount, getButtonText } = useOrderRegistration();
+	const removeCartMany = useRemoveCartMany();
 	const { orderCheckout, formattedTime, isExpired, handleCheckout, isReissuingCheckoutToken } = useOrderCheckout({
 		formData: form.formData,
 		checkoutItems,
 		onChangeIsOrdered,
-		isOrdered
+		isOrdered,
+		removeCartMany
 	});
 
 	const handleCheckoutClick = async () => {

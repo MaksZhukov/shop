@@ -1,4 +1,4 @@
-import { AutocompleteType, NumberType } from 'features/productFilters';
+import type { AutocompleteType, NumberType } from 'features/productFilters';
 import { KIND_WHEELS, KIND_WHEELS_SLUGIFY } from 'entities/wheel';
 import type { GetWheelsFiltersConfigParams } from './types';
 

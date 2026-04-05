@@ -5,7 +5,6 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { ErrorInfo, useMemo } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import dynamic from 'next/dynamic';
 import { Layout } from 'shared/ui';
 import { RouteShield } from 'features/routeShield';
 import { DehydratedState, HydrationBoundary } from '@tanstack/react-query';
@@ -14,16 +13,12 @@ import { ThemeProvider } from 'app/providers/ThemeProvider';
 import { StoreProvider } from 'app/providers/StoreProvider';
 import { SnackbarProvider } from 'app/providers/SnackbarProvider';
 import { ApiProvider } from 'app/providers/ApiProvider';
-import { useInitialAuthLoad } from 'features/user/useInitialAuthLoad';
+import { useInitialAuthLoad } from 'app/hooks/useInitialAuthLoad';
 import { Header } from 'widgets/header';
 import { Footer } from 'widgets/footer';
-import './app.scss';
+import { ScrollUp } from 'features/scrollUp';
 import { RecaptchaProvider } from 'app/providers/RecaptchaProvider';
-
-// Lazy load components that don't need SSR
-const ScrollUp = dynamic(() => import('features/scrollUp').then((mod) => ({ default: mod.ScrollUp })), {
-	ssr: false
-});
+import './app.scss';
 
 function AppContent({ Component, pageProps }: AppProps) {
 	const router = useRouter();

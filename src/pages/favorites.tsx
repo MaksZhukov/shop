@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import Head from 'next/head';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { ProductItem } from 'entities/product';
-import { ViewedProducts } from 'features/product';
+import { ViewedProducts } from 'widgets/viewedProducts';
 import { FavoriteButton } from 'features/favorites';
 import { CartButton } from 'features/cart';
 import { useFavoriteStore } from 'entities/favorite';
