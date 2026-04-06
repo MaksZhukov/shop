@@ -104,7 +104,7 @@ const Contacts = ({ page }: Props) => {
 						src='/mark.png'
 						alt='Расположение'
 					></Image>
-					<Typography marginLeft='1em'>д полотково, Гродно 231710</Typography>
+					<Typography marginLeft='1em'>д. Полотково, Гродно 231710</Typography>
 				</Box>
 			</Box>
 			<Box

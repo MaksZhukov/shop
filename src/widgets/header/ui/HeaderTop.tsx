@@ -2,7 +2,7 @@ import { Box, IconButton, Input, Badge } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
 import { Link } from 'shared/ui';
-import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'shared/icons';
+import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon, LogoIcon } from 'shared/icons';
 import { NavbarButton } from 'shared/ui/NavbarButton';
 import Profile from './Profile';
 import { CatalogCategories } from './CatalogCategories';
@@ -76,8 +76,8 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 			justifyContent={{ xs: 'space-between', md: 'initial' }}
 		>
 			<Link href='/'>
-				<Box width={170} height={40} bgcolor='gray' display='flex' alignItems='center' justifyContent='center'>
-					Logo
+				<Box display='flex' alignItems='center' justifyContent='center'>
+					<LogoIcon sx={{ width: { xs: 170, md: 230 }, height: { xs: 28, md: 40 } }} />
 				</Box>
 			</Link>
 
