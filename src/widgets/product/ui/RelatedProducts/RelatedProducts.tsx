@@ -39,11 +39,17 @@ export const RelatedProducts = ({ product, relatedProducts }: Props) => {
 	}
 
 	return (
-		<>
-			<Typography mb={1} variant='h6' component={'h3'} fontWeight='bold'>
+        <>
+            <Typography
+                variant='h6'
+                component={'h3'}
+                sx={{
+                    mb: 1,
+                    fontWeight: 'bold'
+                }}>
 				{getRelatedProductsTitle(product)}
 			</Typography>
-			<Carousel
+            <Carousel
 				sx={{ mb: 3 }}
 				options={{ axis: 'x', watchDrag: false, loop: true }}
 				showArrows={true}
@@ -51,7 +57,9 @@ export const RelatedProducts = ({ product, relatedProducts }: Props) => {
 				carouselContainerSx={{ ml: -1 }}
 			>
 				{relatedProducts.map((item) => (
-					<Box pl={1} key={item.id}>
+					<Box key={item.id} sx={{
+                        pl: 1
+                    }}>
 						<ProductItem
 							data={item}
 							width={isMobile ? 155 : 228}
@@ -67,6 +75,6 @@ export const RelatedProducts = ({ product, relatedProducts }: Props) => {
 					</Box>
 				))}
 			</Carousel>
-		</>
-	);
+        </>
+    );
 };

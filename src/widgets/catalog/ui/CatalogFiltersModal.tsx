@@ -27,14 +27,14 @@ export const CatalogFiltersModal: React.FC<CatalogFiltersModalProps> = ({
 	};
 
 	return (
-		<Modal
+        <Modal
 			sx={{
 				overflow: 'auto'
 			}}
 			open={open}
 			onClose={onClose}
 		>
-			<ModalContainer
+            <ModalContainer
 				width='calc(100% - 1em)'
 				sx={{
 					m: 1,
@@ -45,7 +45,9 @@ export const CatalogFiltersModal: React.FC<CatalogFiltersModalProps> = ({
 				onClose={onClose}
 				title='Параметры поиска'
 			>
-				<Box pt={2}>
+				<Box sx={{
+                    pt: 2
+                }}>
 					<Filters
 						total={total}
 						config={filtersConfig}
@@ -55,6 +57,6 @@ export const CatalogFiltersModal: React.FC<CatalogFiltersModalProps> = ({
 					/>
 				</Box>
 			</ModalContainer>
-		</Modal>
-	);
+        </Modal>
+    );
 };

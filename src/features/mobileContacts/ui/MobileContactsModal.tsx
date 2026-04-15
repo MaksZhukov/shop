@@ -22,8 +22,8 @@ export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpen
 	};
 
 	return (
-		<Modal open={isOpened} onClose={onClose}>
-			<ModalContainer
+        <Modal open={isOpened} onClose={onClose}>
+            <ModalContainer
 				px={1}
 				py={1}
 				onClose={onClose}
@@ -38,23 +38,51 @@ export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpen
 					transform: 'translate(-50%, -50%)'
 				}}
 			>
-				<Box mb={1.5} display={'flex'} alignItems={'center'} flexDirection={'column'} gap={1.5}>
+				<Box
+                    sx={{
+                        mb: 1.5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        gap: 1.5
+                    }}>
 					<WorkTimetable />
-					<Typography display={'flex'} alignItems='center' gap={1}>
+					<Typography
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1
+                        }}>
 						<Image isOnSSR={false} src='/mts_icon.png' alt='phone' quality={100} width={20} height={20} />{' '}
 						<Link href='tel:+375297804780'>+375297804780</Link>
 					</Typography>
-					<Typography display={'flex'} alignItems='center' gap={1}>
+					<Typography
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1
+                        }}>
 						<Image isOnSSR={false} src='/a1_icon.png' alt='phone' quality={100} width={24} height={24} />{' '}
 						<Link href='tel:+375296011602'>+375296011602</Link>
 					</Typography>
 				</Box>
 				<SocialButtons sx={{ justifyContent: 'center' }} data={SOCIAL_BUTTONS_MOBILE} />
-				<Box mt={1.5} bgcolor='custom.bg-surface-1' p={1.5} py={1} borderRadius={4}>
-					<Typography variant='h6' fontSize={18}>
+				<Box
+                    sx={{
+                        mt: 1.5,
+                        bgcolor: 'custom.bg-surface-1',
+                        p: 1.5,
+                        py: 1,
+                        borderRadius: 4
+                    }}>
+					<Typography variant='h6' sx={{
+                        fontSize: 18
+                    }}>
 						Авторазборка Полотково ООО &quot;Дриблинг&quot;
 					</Typography>
-					<Typography mb={1} variant='body2'>
+					<Typography variant='body2' sx={{
+                        mb: 1
+                    }}>
 						Гродненская область, Гродненский район, с/с Коптевский, д. Полотково
 					</Typography>
 					<iframe
@@ -67,6 +95,6 @@ export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpen
 					</Button>
 				</Box>
 			</ModalContainer>
-		</Modal>
-	);
+        </Modal>
+    );
 };

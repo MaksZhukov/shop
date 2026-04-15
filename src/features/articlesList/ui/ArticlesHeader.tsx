@@ -31,14 +31,20 @@ export const ArticlesHeader = ({ currentSort, onSortChange }: ArticlesHeaderProp
 	const currentSortName = SORT_ITEMS.find((item) => item.value === currentSort)?.name;
 
 	return (
-		<Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
-			<Typography variant='h6' component='h1'>
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 1
+            }}>
+            <Typography variant='h6' component='h1'>
 				{isMobile ? 'Новости' : 'Новости авторазборки'}
 			</Typography>
-			<Button variant='text' endIcon={<ChevronDownIcon />} color='primary' onClick={handleSortMenuOpen}>
+            <Button variant='text' endIcon={<ChevronDownIcon />} color='primary' onClick={handleSortMenuOpen}>
 				{currentSortName}
 			</Button>
-			<Menu
+            <Menu
 				disableScrollLock
 				sx={{
 					'& .MuiPaper-root': {
@@ -60,6 +66,6 @@ export const ArticlesHeader = ({ currentSort, onSortChange }: ArticlesHeaderProp
 					</MenuItem>
 				))}
 			</Menu>
-		</Box>
-	);
+        </Box>
+    );
 };

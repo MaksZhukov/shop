@@ -15,12 +15,22 @@ interface Props {
 export const CarItem = ({ data, width = 342 }: Props) => {
 	const title = data.brand?.name + ' ' + data.model?.name + ' ' + data.generation?.name;
 	return (
-		<WhiteBox margin='auto' overflow={'hidden'} width={width} marginBottom='1em' bgcolor='#fff' position='relative'>
-			{data.images ? (
+		<WhiteBox
+			sx={{
+				m: 'auto',
+				overflow: 'hidden',
+				width,
+				mb: '1em',
+				bgcolor: '#fff',
+				position: 'relative'
+			}}>
+            {data.images ? (
 				<Box>
 					<Carousel showArrows={false} showDots={false}>
 						{data.images?.map((image, i) => (
-							<Box key={image.id} height={290}>
+							<Box key={image.id} sx={{
+                                height: 290
+                            }}>
 								<Image
 									title={image.caption}
 									width={width}
@@ -50,15 +60,16 @@ export const CarItem = ({ data, width = 342 }: Props) => {
 					></Image>
 				</Box>
 			)}
-
-			<Box p={1.5}>
-				<Typography variant='h6' fontSize='20px' color='text.secondary'>
+            <Box sx={{
+                p: 1.5
+            }}>
+				<Typography variant='h6' color='text.secondary' sx={{ fontSize: '20px' }}>
 					{title}
 				</Typography>
-				<Typography mb={1} color='custom.text-muted'>
+				<Typography color='custom.text-muted' sx={{ mb: 1 }}>
 					{[data.volume?.name, data.fuel, data.transmission].filter(Boolean).join(', ')}
 				</Typography>
 			</Box>
-		</WhiteBox>
-	);
+        </WhiteBox>
+    );
 };

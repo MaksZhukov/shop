@@ -17,11 +17,21 @@ export const CarsOnParts: React.FC = () => {
 	});
 	const carsOnParts = carsOnPartsRes ?? [];
 	return (
-		<>
-			<Box display={'flex'} justifyContent={'space-between'} alignItems={'start'} mb={1}>
-				<Box flex={1} textAlign={{ xs: 'center', md: 'left' }}>
+        <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'start',
+                    mb: 1
+                }}>
+				<Box
+                    sx={{
+                        flex: 1,
+                        textAlign: { xs: 'center', md: 'left' }
+                    }}>
 					<Typography variant='h6'>Машины на разбор</Typography>
-					<Typography textAlign={{ xs: 'center', md: 'left' }} color='text.primary' variant='body2'>
+					<Typography color='text.primary' variant='body2' sx={{ textAlign: { xs: 'center', md: 'left' } }}>
 						Новые поступление машин на разбор
 					</Typography>
 				</Box>
@@ -34,15 +44,26 @@ export const CarsOnParts: React.FC = () => {
 					Смотреть все
 				</Button>
 			</Box>
-			<Box display={'flex'} flexWrap={'wrap'} gap={1} mb={5}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    mb: 5
+                }}>
 				<Carousel carouselContainerSx={{ ml: -1 }} showDots={false}>
 					{carsOnParts.map((item) => (
-						<Box key={item.id} width={{ xs: '100%', md: '50%', lg: '25%' }} sx={{ pl: 1 }}>
+						<Box
+                            key={item.id}
+                            sx={{
+                                width: { xs: '100%', md: '50%', lg: '25%' },
+                                pl: 1
+                            }}>
 							<CarItem data={item}></CarItem>
 						</Box>
 					))}
 				</Carousel>
 			</Box>
-		</>
-	);
+        </>
+    );
 };

@@ -13,8 +13,13 @@ export const ArticlesPagination = ({ currentPage, totalPages }: ArticlesPaginati
 	if (totalPages <= 1) return null;
 
 	return (
-		<Box display='flex' py={2} justifyContent='center'>
-			<Pagination
+        <Box
+            sx={{
+                display: 'flex',
+                py: 2,
+                justifyContent: 'center'
+            }}>
+            <Pagination
 				page={currentPage}
 				renderItem={(params) =>
 					params.disabled ? (
@@ -29,6 +34,6 @@ export const ArticlesPagination = ({ currentPage, totalPages }: ArticlesPaginati
 				color='primary'
 				count={totalPages}
 			/>
-		</Box>
-	);
+        </Box>
+    );
 };

@@ -24,33 +24,43 @@ export const ProductItem = ({
 	const imageHeightOffset = 20;
 	return (
 		<WhiteBox
-			overflow={'hidden'}
-			width={width}
-			bgcolor='background.paper'
-			position='relative'
 			key={data.id}
-			sx={sx}
-		>
-			<Box position='absolute' zIndex={1} right={1} top={1}>
+			sx={[
+				{
+					overflow: 'hidden',
+					width,
+					bgcolor: 'background.paper',
+					position: 'relative'
+				},
+				...(Array.isArray(sx) ? sx : sx ? [sx] : [])
+			]}>
+            <Box
+                sx={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    right: 1,
+                    top: 1
+                }}>
 				{headerActions}
 			</Box>
-			<ProductItemImages
+            <ProductItemImages
 				data={data}
 				width={width}
 				imageHeight={imageHeight}
 				imageHeightOffset={imageHeightOffset}
 			/>
-
-			<Box p={1.5}>
+            <Box sx={{
+                p: 1.5
+            }}>
 				<ProductPrice data={data} />
 				<Link href={getProductLink(data)} lineClamp={2} sx={{ height: 34 }}>
 					{data.h1}
 				</Link>
-				<Typography mb={1} color='custom.text-muted'>
+				<Typography color='custom.text-muted' sx={{ mb: 1 }}>
 					{getProductDetails(data)}
 				</Typography>
 				{bottomActions}
 			</Box>
-		</WhiteBox>
-	);
+        </WhiteBox>
+    );
 };

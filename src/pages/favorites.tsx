@@ -20,7 +20,12 @@ const Favorites = () => {
 
 	if (isLoading) {
 		return (
-			<Box paddingY='10em' position='relative'>
+			<Box
+				sx={{
+					paddingY: '10em',
+					position: 'relative'
+				}}
+			>
 				<Loader></Loader>
 			</Box>
 		);
@@ -28,7 +33,12 @@ const Favorites = () => {
 
 	if (isLoading) {
 		return (
-			<Box paddingY='10em' position='relative'>
+			<Box
+				sx={{
+					paddingY: '10em',
+					position: 'relative'
+				}}
+			>
 				<Loader />
 			</Box>
 		);
@@ -43,13 +53,23 @@ const Favorites = () => {
 	);
 
 	return (
-		<Box pb={6}>
+		<Box
+			sx={{
+				pb: 6
+			}}
+		>
 			{renderHead}
 			<Typography variant='h6' component='h1' gutterBottom>
 				Избранное ({items.length})
 			</Typography>
 			{items.length ? (
-				<Box display='flex' flexWrap='wrap' gap={1}>
+				<Box
+					sx={{
+						display: 'flex',
+						flexWrap: 'wrap',
+						gap: 1
+					}}
+				>
 					{items.map((item) => (
 						<ProductItem
 							imageHeight={isMobile ? 272 : 215}
@@ -68,11 +88,10 @@ const Favorites = () => {
 					))}
 				</Box>
 			) : (
-				<Typography variant='subtitle1' my={1}>
+				<Typography variant='subtitle1' sx={{ my: 1 }}>
 					У вас нет товаров в избранном, добавьте их из <Link href='/'>Магазина</Link>
 				</Typography>
 			)}
-
 			<ViewedProducts />
 		</Box>
 	);

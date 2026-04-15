@@ -33,8 +33,8 @@ export const CatalogCategories: React.FC = () => {
 	}, [topCategories]);
 
 	return (
-		<>
-			<Button
+        <>
+            <Button
 				sx={{ display: { xs: 'none', md: 'flex' } }}
 				size='medium'
 				startIcon={catalogOpen ? <CloseIcon /> : <DashboardFilledIcon />}
@@ -46,8 +46,7 @@ export const CatalogCategories: React.FC = () => {
 			>
 				Каталог
 			</Button>
-
-			<Popover
+            <Popover
 				disableScrollLock={true}
 				open={catalogOpen}
 				anchorEl={catalogAnchorEl}
@@ -61,29 +60,55 @@ export const CatalogCategories: React.FC = () => {
 					horizontal: 'left'
 				}}
 			>
-				<Box bgcolor='background.paper' minHeight={'900px'} display='flex' p={2}>
-					<Box width={'256px'} p={1} display='flex' flexDirection='column'>
-						<Typography variant='h6' fontWeight={700} fontSize={18}>
+				<Box
+                    sx={{
+                        bgcolor: 'background.paper',
+                        minHeight: '900px',
+                        display: 'flex',
+                        p: 2
+                    }}>
+					<Box
+                        sx={{
+                            width: '256px',
+                            p: 1,
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}>
+						<Typography
+                            variant='h6'
+                            sx={{
+                                fontWeight: 700,
+                                fontSize: 18
+                            }}>
 							Каталог
 						</Typography>
 						{topCategories?.data.data.map((category) => (
 							<Box
-								bgcolor={hoveredCategory === category ? 'custom.bg-surface-3' : 'transparent'}
-								sx={{ cursor: 'pointer', ':hover': { bgcolor: 'custom.bg-surface-3' } }}
-								p={1}
-								borderRadius={2}
-								key={category.name}
-								display='flex'
-								gap={0.5}
-								alignItems='center'
-								onMouseEnter={() => {
+                                key={category.name}
+                                onMouseEnter={() => {
 									setHoveredCategory(category);
 								}}
-							>
-								<Typography variant='body1' fontWeight={500}>
+                                sx={{
+                                    bgcolor: hoveredCategory === category ? 'custom.bg-surface-3' : 'transparent',
+                                    p: 1,
+                                    borderRadius: 2,
+                                    display: 'flex',
+                                    gap: 0.5,
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                    ':hover': { bgcolor: 'custom.bg-surface-3' }
+                                }}>
+								<Typography variant='body1' sx={{
+                                    fontWeight: 500
+                                }}>
 									{category.name}
 								</Typography>
-								<Typography flex={1} variant='body1' color='custom.text-muted'>
+								<Typography
+                                    variant='body1'
+                                    sx={{
+                                        flex: 1,
+                                        color: 'custom.text-muted'
+                                    }}>
 									{category.totalSparePartsCount?.toLocaleString()}
 								</Typography>
 								<Box>
@@ -92,21 +117,43 @@ export const CatalogCategories: React.FC = () => {
 							</Box>
 						))}
 					</Box>
-					<Box minWidth={'1000px'} maxHeight={'500px'} borderRadius={4} bgcolor='custom.bg-surface-1' p={2}>
-						<Typography variant='h6' fontWeight={700} fontSize={18}>
+					<Box
+                        sx={{
+                            minWidth: '1000px',
+                            maxHeight: '500px',
+                            borderRadius: 4,
+                            bgcolor: 'custom.bg-surface-1',
+                            p: 2
+                        }}>
+						<Typography
+                            variant='h6'
+                            sx={{
+                                fontWeight: 700,
+                                fontSize: 18
+                            }}>
 							{hoveredCategory?.name}
 						</Typography>
 						<Box
-							maxHeight={'100%'}
-							display='flex'
-							flexDirection='column'
-							justifyContent='flex-start'
-							flexWrap='wrap'
-						>
+                            sx={{
+                                maxHeight: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                flexWrap: 'wrap'
+                            }}>
 							{hoveredCategory?.kindSpareParts.map((item) => (
-								<Box onClick={handleCatalogClose} key={item.id} display='flex' gap={0.5} py={1}>
+								<Box
+                                    onClick={handleCatalogClose}
+                                    key={item.id}
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 0.5,
+                                        py: 1
+                                    }}>
 									<Link href={`/spare-parts/ksp-${item.slug}`}>{item.name}</Link>
-									<Typography color='custom.text-muted'>
+									<Typography sx={{
+                                        color: 'custom.text-muted'
+                                    }}>
 										{item.spareParts.count?.toLocaleString()}
 									</Typography>
 								</Box>
@@ -115,6 +162,6 @@ export const CatalogCategories: React.FC = () => {
 					</Box>
 				</Box>
 			</Popover>
-		</>
-	);
+        </>
+    );
 };

@@ -15,16 +15,22 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	let renderVacancy = (item: Vacancy, index: number) => {
 		return (
-			<>
-				<Box key={item.id} display='flex' flexDirection={{ xs: 'column', md: 'row' }}>
+            <>
+                <Box
+                    key={item.id}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', md: 'row' }
+                    }}>
 					<Typography
-						sx={{ display: { xs: 'block', md: 'none' } }}
-						marginBottom='1em'
 						component={index === 0 ? 'h1' : 'h2'}
 						variant='h4'
-						textTransform='uppercase'
-						fontWeight='500'
-					>
+						sx={{
+							display: { xs: 'block', md: 'none' },
+							mb: '1em',
+							textTransform: 'uppercase',
+							fontWeight: 500
+						}}>
 						{item.title}
 					</Typography>
 					<Image
@@ -35,23 +41,26 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 						height={360}
 						style={isMobile ? { height: 'auto' } : {}}
 					></Image>
-					<Box paddingLeft={{ xs: '0', md: '3em' }} marginTop={{ xs: '1em', md: 0 }}>
+					<Box
+                        sx={{
+                            paddingLeft: { xs: '0', md: '3em' },
+                            marginTop: { xs: '1em', md: 0 }
+                        }}>
 						<Typography
-							sx={{ display: { xs: 'none', md: 'block' } }}
-							marginBottom='1em'
 							component={index === 0 ? 'h1' : 'h2'}
 							variant='h4'
-							textTransform='uppercase'
-							fontWeight='500'
-						>
+							sx={{
+								display: { xs: 'none', md: 'block' },
+								mb: '1em',
+								textTransform: 'uppercase',
+								fontWeight: 500
+							}}>
 							{item.title}
 						</Typography>
 						<Typography
-							marginBottom={{ xs: 0, md: '2em' }}
 							color='text.secondary'
 							variant='h5'
-							textTransform='uppercase'
-						>
+							sx={{ mb: { xs: 0, md: '2em' }, textTransform: 'uppercase' }}>
 							{item.vacancy}
 						</Typography>
 						<Table>
@@ -69,7 +78,7 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 											<Typography>{option.label}</Typography>
 										</TableCell>
 										<TableCell sx={{ border: 'none', padding: '0.5em 0 0.5em 0' }} padding='none'>
-											<Typography fontWeight='500'>{option.value}</Typography>
+											<Typography sx={{ fontWeight: 500 }}>{option.value}</Typography>
 										</TableCell>
 									</TableRow>
 								))}
@@ -77,7 +86,7 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 						</Table>
 					</Box>
 				</Box>
-				<BlockImages
+                <BlockImages
 					sx={{
 						marginY: { xs: '1em', md: '2em' },
 						padding: { xs: '1em 0', md: '2em 0' }
@@ -86,30 +95,47 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 					withSlider={isMobile}
 					images={item.images}
 				></BlockImages>
-				<Box sx={{ typography: { xs: 'h6', md: 'h5' } }}>
+                <Box sx={{ typography: { xs: 'h6', md: 'h5' } }}>
 					<Typography
-						marginBottom={{ xs: '1em', md: '2em' }}
 						component='h2'
-						textTransform='uppercase'
-						fontWeight='500'
 						variant='inherit'
-					>
+						sx={{
+							mb: { xs: '1em', md: '2em' },
+							textTransform: 'uppercase',
+							fontWeight: 500
+						}}>
 						{item.fullTitle}
 					</Typography>
 				</Box>
-				<Box display='flex' marginBottom={{ xs: '3em', md: '4em' }} flexDirection={{ xs: 'column', md: 'row' }}>
-					<Box flex='1' paddingRight={{ xs: 0, md: '5em' }}>
-						<Typography color='text.secondary' variant='h6' textTransform='uppercase'>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        marginBottom: { xs: '3em', md: '4em' },
+                        flexDirection: { xs: 'column', md: 'row' }
+                    }}>
+					<Box
+                        sx={{
+                            flex: '1',
+                            paddingRight: { xs: 0, md: '5em' }
+                        }}>
+						<Typography color='text.secondary' variant='h6' sx={{ textTransform: 'uppercase' }}>
 							Обязаности
 						</Typography>
-						<Box component='ul' paddingLeft={{ xs: '2em', md: '0' }}>
+						<Box component='ul' sx={{
+                            paddingLeft: { xs: '2em', md: '0' }
+                        }}>
 							{item.responsibilities?.split('\n').map((val) => (
-								<Typography marginBottom='1em' key={val} component='li'>
+								<Typography key={val} component='li' sx={{ mb: '1em' }}>
 									{val}
 								</Typography>
 							))}
 						</Box>
-						<Box marginTop='2em' display={{ xs: 'none', md: 'flex' }} justifyContent='center'>
+						<Box
+                            sx={{
+                                marginTop: '2em',
+                                display: { xs: 'none', md: 'flex' },
+                                justifyContent: 'center'
+                            }}>
 							<Image
 								src='/logo_medium.png'
 								isOnSSR={false}
@@ -120,19 +146,30 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 							></Image>
 						</Box>
 					</Box>
-					<Box flex='1' paddingRight={{ xs: '0', md: '10em' }}>
-						<Typography color='text.secondary' variant='h6' textTransform='uppercase'>
+					<Box
+                        sx={{
+                            flex: '1',
+                            paddingRight: { xs: '0', md: '10em' }
+                        }}>
+						<Typography color='text.secondary' variant='h6' sx={{ textTransform: 'uppercase' }}>
 							Требования
 						</Typography>
-						<Box component='ul' paddingLeft={{ xs: '2em', md: '0' }}>
+						<Box component='ul' sx={{
+                            paddingLeft: { xs: '2em', md: '0' }
+                        }}>
 							{item.requirements?.split('\n').map((val) => (
-								<Typography marginBottom='1em' key={val} component='li'>
+								<Typography key={val} component='li' sx={{ mb: '1em' }}>
 									{val}
 								</Typography>
 							))}
 						</Box>
 					</Box>
-					<Box marginTop='2em' display={{ xs: 'block', md: 'none' }} justifyContent='center'>
+					<Box
+                        sx={{
+                            marginTop: '2em',
+                            display: { xs: 'block', md: 'none' },
+                            justifyContent: 'center'
+                        }}>
 						<Image
 							src='/logo_medium.png'
 							isOnSSR={false}
@@ -143,8 +180,8 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 						></Image>
 					</Box>
 				</Box>
-			</>
-		);
+            </>
+        );
 	};
 	return <>{page.vacancies.map(renderVacancy)}</>;
 };

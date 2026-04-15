@@ -22,31 +22,33 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 	};
 
 	return (
-		<>
-			{searchedSpareParts.map((item) => (
+        <>
+            {searchedSpareParts.map((item) => (
 				<Box
-					key={item.id}
-					color='custom.text-muted'
-					sx={{
-						height: '37px',
-						p: 1,
-						cursor: 'pointer',
-						display: 'block',
-						pointerEvents: isFetching ? 'none' : 'auto',
-						opacity: isFetching ? 0.5 : 1,
-						'&:hover': {
+                    key={item.id}
+                    onClick={handleSearchSelect(item)}
+                    sx={{
+                        color: 'custom.text-muted',
+                        height: '37px',
+                        p: 1,
+                        cursor: 'pointer',
+                        display: 'block',
+                        pointerEvents: isFetching ? 'none' : 'auto',
+                        opacity: isFetching ? 0.5 : 1,
+
+                        '&:hover': {
 							backgroundColor: 'action.hover'
 						}
-					}}
-					onClick={handleSearchSelect(item)}
-				>
+                    }}>
 					{reactStringReplace(item.h1, highlightSearchTerms(item.h1, searchValue), (match, i) => (
-						<Typography key={i} component='span' color='text.primary'>
+						<Typography key={i} component='span' sx={{
+                            color: 'text.primary'
+                        }}>
 							{match}
 						</Typography>
 					))}
 				</Box>
 			))}
-		</>
-	);
+        </>
+    );
 };

@@ -34,13 +34,15 @@ export const ShareButton = ({ title, text, url, withText = true }: Props) => {
 
 	if (withText) {
 		return (
-			<Button onClick={handleShare} size='small' sx={{ gap: 0.5, px: 0.5 }}>
-				<ShareIcon />
-				<Typography variant='body1' color='text.primary'>
+            <Button onClick={handleShare} size='small' sx={{ gap: 0.5, px: 0.5 }}>
+                <ShareIcon />
+                <Typography variant='body1' sx={{
+                    color: 'text.primary'
+                }}>
 					Поделиться
 				</Typography>
-			</Button>
-		);
+            </Button>
+        );
 	}
 
 	return (

@@ -15,12 +15,20 @@ interface Props {
 const Article: NextPage<Props> = ({ page }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
-		<>
-			<Typography mb={2} variant='h6'>
+        <>
+            <Typography variant='h6' sx={{
+                mb: 2
+            }}>
 				{page.name}
 			</Typography>
-			<Box mb={2} maxWidth={880}>
-				<Box mb={1}>
+            <Box
+                sx={{
+                    mb: 2,
+                    maxWidth: 880
+                }}>
+				<Box sx={{
+                    mb: 1
+                }}>
 					<Image
 						title={page.mainImage?.caption}
 						src={isMobile ? page.mainImage?.formats?.small.url : page.mainImage?.formats?.large.url}
@@ -34,15 +42,21 @@ const Article: NextPage<Props> = ({ page }) => {
 				<ReactMarkdown content={page.content1}></ReactMarkdown>
 				<ReactMarkdown content={page.content2}></ReactMarkdown>
 			</Box>
-			<Typography mb={2} fontSize={16} sx={{ color: 'custom.black' }} fontWeight={500}>
+            <Typography
+                sx={{
+                    mb: 2,
+                    fontSize: 16,
+                    fontWeight: 500,
+                    color: 'custom.black'
+                }}>
 				Подписывайтесь на наши новости в 
 				<Link sx={{ textDecoration: 'underline', color: 'custom.black' }} href={SOCIAL_TELEGRAM.href}>
 					{SOCIAL_TELEGRAM.name}
 				</Link>
 			</Typography>
-			<SocialButtons sx={{ mb: 6 }} />
-		</>
-	);
+            <SocialButtons sx={{ mb: 6 }} />
+        </>
+    );
 };
 
 export default Article;

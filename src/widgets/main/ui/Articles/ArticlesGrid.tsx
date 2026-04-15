@@ -9,8 +9,14 @@ interface ArticlesGridProps {
 export const ArticlesGrid: React.FC<ArticlesGridProps> = ({ articles }) => {
 	const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 	return (
-		<Box display='flex' gap={{ xs: 1, md: 2 }} flexWrap='wrap' flexDirection={{ xs: 'column', md: 'row' }}>
-			{articles.map((article, index) => (
+        <Box
+            sx={{
+                display: 'flex',
+                gap: { xs: 1, md: 2 },
+                flexWrap: 'wrap',
+                flexDirection: { xs: 'column', md: 'row' }
+            }}>
+            {articles.map((article, index) => (
 				<ArticleItem
 					key={article.id}
 					image={article.mainImage}
@@ -22,7 +28,7 @@ export const ArticlesGrid: React.FC<ArticlesGridProps> = ({ articles }) => {
 					variant={isMobile ? (index === 0 ? 'default' : 'compact') : 'default'}
 				/>
 			))}
-			<ViewAllButton title='Смотреть все новости' visibility='mobile' />
-		</Box>
-	);
+            <ViewAllButton title='Смотреть все новости' visibility='mobile' />
+        </Box>
+    );
 };

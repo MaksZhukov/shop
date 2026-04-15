@@ -18,7 +18,9 @@ export const FavoriteButton: FC<FavoriteButtonProps> = observer(({ product, titl
 		const button = (
 			<Button disabled={isMaxFavorites} onClick={handleClickFavorite} sx={{ gap: 0.5, px: 0.5 }} size='small'>
 				{favorite ? <HeartFilledIcon color='error' /> : <FavoriteAddIcon />}
-				<Typography variant='body1' color='text.primary'>
+				<Typography variant='body1' sx={{
+                    color: 'text.primary'
+                }}>
 					{title}
 				</Typography>
 			</Button>

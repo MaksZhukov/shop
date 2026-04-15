@@ -1,4 +1,4 @@
-import { LinkProps } from '@mui/material';
+import { TypographyProps } from '@mui/material';
 import type { Image as IImage } from 'shared/api/types';
 import { Image } from 'shared/ui';
 import { Typography } from 'shared/ui';
@@ -15,7 +15,7 @@ interface Props {
 	imageStyle?: CSSProperties;
 	caption?: string;
 	isOnSSR?: boolean;
-	typographyProps?: LinkProps;
+	typographyProps?: TypographyProps;
 }
 export const LinkWithImage: FC<Props> = ({
 	width = 208,
@@ -26,7 +26,8 @@ export const LinkWithImage: FC<Props> = ({
 	withoutTitle = false,
 	isOnSSR = true,
 	imageStyle = { objectFit: 'contain', margin: 'auto' },
-	targetLink = '_self'
+	targetLink = '_self',
+	typographyProps
 }) => {
 	let title = caption || image?.caption;
 
@@ -39,10 +40,10 @@ export const LinkWithImage: FC<Props> = ({
 				width={width}
 				height={height}
 				isOnSSR={isOnSSR}
-				src={width > 200 ? image?.url : image?.formats?.thumbnail.url || ''}
+				src={width > 200 ? image?.url : image?.formats?.thumbnail.url || image?.url || ''}
 			></Image>
 			{!withoutTitle && title && (
-				<Typography variant='body2' color='text.primary' lineClamp={2} textAlign='center'>
+				<Typography variant='body2' color='text.primary' lineClamp={2} align='center' {...typographyProps}>
 					{title}
 				</Typography>
 			)}

@@ -17,9 +17,21 @@ export const ProductInfo = ({ product }: Props) => {
 	const shareText = `Посмотрите на этот товар: ${product.h1}`;
 
 	return (
-		<>
-			<Box display={{ xs: 'flex', md: 'none' }} alignItems='center' gap={1} mb={1}>
-				<Box display='flex' flex={1} alignItems='center' gap={1}>
+        <>
+            <Box
+                sx={{
+                    display: { xs: 'flex', md: 'none' },
+                    alignItems: 'center',
+                    gap: 1,
+                    mb: 1
+                }}>
+				<Box
+                    sx={{
+                        display: 'flex',
+                        flex: 1,
+                        alignItems: 'center',
+                        gap: 1
+                    }}>
 					<Typography variant='body1' color='custom.text-muted'>
 						Артикул:
 					</Typography>
@@ -27,16 +39,31 @@ export const ProductInfo = ({ product }: Props) => {
 						{product.id}
 					</Typography>
 				</Box>
-				<Box display='flex' alignItems='center'>
+				<Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}>
 					<ShareButton title={product.h1} text={shareText} url={shareUrl} withText={!isMobile} />
 					<FavoriteButton product={product} title={isMobile ? '' : 'В избранное'} />
 				</Box>
 			</Box>
-
-			<WhiteBox px={{ xs: 0, md: 2 }} py={{ xs: 0, md: 1.5 }} mb={1} border={0}>
+			<WhiteBox sx={{ px: { xs: 0, md: 2 }, py: { xs: 0, md: 1.5 }, mb: 1, border: 0 }}>
 				{/* Desktop header with article and actions */}
-				<Box mb={1.5} display={{ xs: 'none', md: 'flex' }} alignItems='center' gap={1}>
-					<Box display='flex' flex={1} alignItems='center' gap={1}>
+				<Box
+                    sx={{
+                        mb: 1.5,
+                        display: { xs: 'none', md: 'flex' },
+                        alignItems: 'center',
+                        gap: 1
+                    }}>
+					<Box
+                        sx={{
+                            display: 'flex',
+                            flex: 1,
+                            alignItems: 'center',
+                            gap: 1
+                        }}>
 						<Typography variant='body1' color='custom.text-muted'>
 							Артикул:
 						</Typography>
@@ -44,26 +71,31 @@ export const ProductInfo = ({ product }: Props) => {
 							{product.id}
 						</Typography>
 					</Box>
-					<Box display='flex' alignItems='center'>
+					<Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}>
 						<ShareButton title={product.h1} text={shareText} url={shareUrl} />
 						<FavoriteButton product={product} title='В избранное' />
 					</Box>
 				</Box>
 
-				<Typography px={{ xs: 1, md: 0 }} fontWeight='bold' component={'h1'} variant='h6' mb={1.5}>
+				<Typography component='h1' variant='h6' sx={{ px: { xs: 1, md: 0 }, fontWeight: 'bold', mb: 1.5 }}>
 					{product.h1}
 				</Typography>
 
 				<Box
-					bgcolor='custom.bg-surface-1'
-					borderRadius={3}
-					p={1.5}
-					mb={{ xs: 0, md: 1.5 }}
-					display='flex'
-					gap={1}
-					alignItems='baseline'
-					width={{ xs: '100%', md: 'fit-content' }}
-				>
+                    sx={{
+                        bgcolor: 'custom.bg-surface-1',
+                        borderRadius: 3,
+                        p: 1.5,
+                        mb: { xs: 0, md: 1.5 },
+                        display: 'flex',
+                        gap: 1,
+                        alignItems: 'baseline',
+                        width: { xs: '100%', md: 'fit-content' }
+                    }}>
 					{product.discountPrice ? (
 						<>
 							<Typography variant='h6' component={'span'} color='text.secondary'>
@@ -86,6 +118,6 @@ export const ProductInfo = ({ product }: Props) => {
 
 				<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '191px' }} />
 			</WhiteBox>
-		</>
-	);
+        </>
+    );
 };

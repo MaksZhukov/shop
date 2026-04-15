@@ -6,23 +6,35 @@ import { useRouter } from 'next/router';
 const PageNotFound = () => {
 	const router = useRouter();
 	return (
-		<>
-			<Box margin='auto' maxWidth='400px' textAlign='center'>
+        <>
+            <Box
+                sx={{
+                    margin: 'auto',
+                    maxWidth: '400px',
+                    textAlign: 'center'
+                }}>
 				<Image isOnSSR={false} src='/500.png' alt='500' width={120} height={104} />
-				<Typography component='h1' variant='h6' textAlign='center'>
+				<Typography component='h1' variant='h6' sx={{
+                    textAlign: 'center'
+                }}>
 					Что-то пошло не так
 				</Typography>
-				<Typography variant='body1' color='text.primary' component='p' mb={2}>
+				<Typography
+                    variant='body1'
+                    component='p'
+                    sx={{
+                        color: 'text.primary',
+                        mb: 2
+                    }}>
 					Техническая ошибка
 				</Typography>
 				<Button sx={{ m: 'auto' }} variant='contained' color='primary' onClick={() => router.push('/')}>
 					Вернуться на главную
 				</Button>
 			</Box>
-
-			<MobileQuestionsSection />
-		</>
-	);
+            <MobileQuestionsSection />
+        </>
+    );
 };
 
 export default PageNotFound;

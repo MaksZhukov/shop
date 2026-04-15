@@ -22,9 +22,17 @@ export const OrderSummary = ({
 	const theme = useTheme();
 
 	return (
-		<Box display='flex' maxWidth={{ xs: '100%', md: '400px' }} gap={1} flexDirection='column'>
-			<WhiteBox display='flex' flexDirection={{ xs: 'column-reverse', md: 'column' }}>
-				<Box p={2}>
+        <Box
+            sx={{
+                display: 'flex',
+                maxWidth: { xs: '100%', md: '400px' },
+                gap: 1,
+                flexDirection: 'column'
+            }}>
+			<WhiteBox sx={{ display: 'flex', flexDirection: { xs: 'column-reverse', md: 'column' } }}>
+				<Box sx={{
+                    p: 2
+                }}>
 					<Button
 						size='large'
 						variant='contained'
@@ -35,29 +43,59 @@ export const OrderSummary = ({
 					>
 						{buttonText || 'Перейти к оформлению'}
 					</Button>
-					<Typography mt={0.5} textAlign='center' variant='body1' color='custom.text-muted'>
+					<Typography
+                        variant='body1'
+                        sx={{
+                            mt: 0.5,
+                            textAlign: 'center',
+                            color: 'custom.text-muted'
+                        }}>
 						{disclaimerText}
 					</Typography>
 				</Box>
 				<Divider />
-				<Box p={1.5}>
-					<Box display='flex' gap={1} mb={0.5}>
-						<Typography flex={1} variant='body1' color='custom.text-muted'>
+				<Box sx={{
+                    p: 1.5
+                }}>
+					<Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            mb: 0.5
+                        }}>
+						<Typography
+                            variant='body1'
+                            sx={{
+                                flex: 1,
+                                color: 'custom.text-muted'
+                            }}>
 							Всего:
 						</Typography>
-						<Typography variant='body1' color='custom.text-muted'>
+						<Typography variant='body1' sx={{
+                            color: 'custom.text-muted'
+                        }}>
 							{selectedItemsCount} шт.
 						</Typography>
 					</Box>
-					<Box display='flex' gap={1}>
-						<Typography flex={1} variant='h6' fontWeight={500} fontSize='16px'>
+					<Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1
+                        }}>
+						<Typography
+                            variant='h6'
+                            sx={{
+                                flex: 1,
+                                fontWeight: 500,
+                                fontSize: '16px'
+                            }}>
 							Сумма заказа:
 						</Typography>
 						<Typography variant='h6'>{totalAmount} руб.</Typography>
 					</Box>
 				</Box>
 			</WhiteBox>
-			<AnyQuestionsLeft sx={{ display: { xs: 'none', md: 'flex' } }} />
-		</Box>
-	);
+            <AnyQuestionsLeft sx={{ display: { xs: 'none', md: 'flex' } }} />
+        </Box>
+    );
 };

@@ -104,7 +104,12 @@ export const Filters = ({ onClickFind, config, total, values, onChangeFilterValu
 	};
 
 	const renderFilterItem = (item: AutocompleteType | NumberType) => (
-		<Box key={item.id} display='flex' marginBottom={1}>
+		<Box
+            key={item.id}
+            sx={{
+                display: 'flex',
+                marginBottom: 1
+            }}>
 			{item.type === 'autocomplete' && renderAutocomplete(item as AutocompleteType)}
 			{item.type === 'number' && renderInput(item as NumberType)}
 		</Box>

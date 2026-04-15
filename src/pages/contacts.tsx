@@ -54,12 +54,25 @@ const Contacts = ({ page }: Props) => {
 		}
 	}, 300);
 	return (
-		<>
-			<Typography component='h1' marginBottom='1.5em' variant='h4' textTransform='uppercase'>
+        <>
+			<Typography component='h1' variant='h4' sx={{ mb: '1.5em', textTransform: 'uppercase' }}>
 				{page.h1}
 			</Typography>
-			<Box display='flex' gap='1em' marginBottom='2em' sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
-				<Box flex='1' display='flex' padding='2em 1em' alignItems='center' bgcolor='#fff'>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: '1em',
+                    marginBottom: '2em',
+                    flexDirection: { xs: 'column', sm: 'row' }
+                }}>
+				<Box
+                    sx={{
+                        flex: '1',
+                        display: 'flex',
+                        padding: '2em 1em',
+                        alignItems: 'center',
+                        bgcolor: '#fff'
+                    }}>
 					<Image
 						title={'Телефон 1'}
 						src='/phone.png'
@@ -69,15 +82,23 @@ const Contacts = ({ page }: Props) => {
 						alt='Телефон 1'
 					></Image>
 					<Link
-						marginLeft='1em'
-						color='#000'
-						underline='hover'
-						href={`tel:${page.phone1.replaceAll(' ', '')}`}
-					>
+                        underline='hover'
+                        href={`tel:${page.phone1.replaceAll(' ', '')}`}
+                        sx={{
+                            marginLeft: '1em',
+                            color: '#000'
+                        }}>
 						{page.phone1}
 					</Link>
 				</Box>
-				<Box flex='1' display='flex' padding='2em 1em' bgcolor='#fff' alignItems='center'>
+				<Box
+                    sx={{
+                        flex: '1',
+                        display: 'flex',
+                        padding: '2em 1em',
+                        bgcolor: '#fff',
+                        alignItems: 'center'
+                    }}>
 					<Image
 						title='Телефон 2'
 						width={50}
@@ -87,15 +108,23 @@ const Contacts = ({ page }: Props) => {
 						alt='Телефон 2'
 					></Image>
 					<Link
-						marginLeft='1em'
-						color='#000'
-						underline='hover'
-						href={`tel:${page.phone2.replaceAll(' ', '')}`}
-					>
+                        underline='hover'
+                        href={`tel:${page.phone2.replaceAll(' ', '')}`}
+                        sx={{
+                            marginLeft: '1em',
+                            color: '#000'
+                        }}>
 						{page.phone2}
 					</Link>
 				</Box>
-				<Box flex='1' display='flex' padding='2em 1em' bgcolor='#fff' alignItems='center'>
+				<Box
+                    sx={{
+                        flex: '1',
+                        display: 'flex',
+                        padding: '2em 1em',
+                        bgcolor: '#fff',
+                        alignItems: 'center'
+                    }}>
 					<Image
 						title='Расположение '
 						width={50}
@@ -104,34 +133,40 @@ const Contacts = ({ page }: Props) => {
 						src='/mark.png'
 						alt='Расположение'
 					></Image>
-					<Typography marginLeft='1em'>д. Полотково, Гродно 231710</Typography>
+					<Typography sx={{ ml: '1em' }}>д. Полотково, Гродно 231710</Typography>
 				</Box>
 			</Box>
-			<Box
-				display='flex'
-				sx={{ flexDirection: { xs: 'column-reverse', md: 'row' }, marginBottom: { xs: '1em', md: '3em' } }}
-			>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column-reverse', md: 'row' },
+                    marginBottom: { xs: '1em', md: '3em' }
+                }}>
 				<iframe
 					style={{ flex: '1', minHeight: isMobile ? 400 : 500 }}
 					loading='lazy'
 					src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&amp;source=constructor'
 					frameBorder='0'
 				></iframe>
-				<Box flex='1' sx={{ marginBottom: { xs: '3em', md: '0' }, marginLeft: { xs: 0, md: '2em' } }}>
+				<Box
+                    sx={{
+                        flex: '1',
+                        marginBottom: { xs: '3em', md: '0' },
+                        marginLeft: { xs: 0, md: '2em' }
+                    }}>
 					<Typography
 						component='h2'
-						fontWeight='500'
-						marginBottom='1em'
 						variant='h5'
-						textTransform='uppercase'
-					>
+						sx={{ fontWeight: 500, mb: '1em', textTransform: 'uppercase' }}>
 						{page.askTitle}
 					</Typography>
-					<Typography color='text.secondary' marginBottom='1em'>
+					<Typography color='text.secondary' sx={{ mb: '1em' }}>
 						<ReactMarkdown content={page.askText}></ReactMarkdown>
 					</Typography>
 					<Box component='form' onSubmit={throttledSubmit} sx={{ maxWidth: { xs: 'initial', md: '430px' } }}>
-						<Box marginBottom='1em'>
+						<Box sx={{
+                            marginBottom: '1em'
+                        }}>
 							<Input
 								sx={{ background: '#fff', padding: '0.5em 1em', border: 'none' }}
 								required
@@ -140,7 +175,9 @@ const Contacts = ({ page }: Props) => {
 								fullWidth
 							></Input>
 						</Box>
-						<Box marginBottom='1em'>
+						<Box sx={{
+                            marginBottom: '1em'
+                        }}>
 							<Input
 								value={phone}
 								onChange={handleChangePhone}
@@ -154,7 +191,9 @@ const Contacts = ({ page }: Props) => {
 								}}
 							/>
 						</Box>
-						<Box marginBottom='1em'>
+						<Box sx={{
+                            marginBottom: '1em'
+                        }}>
 							<Input
 								required
 								sx={{ background: '#fff', padding: '0.5em 1em' }}
@@ -171,18 +210,18 @@ const Contacts = ({ page }: Props) => {
 					</Box>
 				</Box>
 			</Box>
-			<Typography component='h2' variant='h5' textTransform='uppercase' marginBottom='1em'>
+			<Typography component='h2' variant='h5' sx={{ textTransform: 'uppercase', mb: '1em' }}>
 				{page.requisitesTitle}
 			</Typography>
-			<BlockImages
+            <BlockImages
 				withSlider={isMobile}
 				withoutOverlay
 				sx={{ margin: 0, padding: 0 }}
 				images={page.requisites}
 			></BlockImages>
-			<BlockImages sx={{ marginBottom: '-2em' }} images={page.images}></BlockImages>
-		</>
-	);
+            <BlockImages sx={{ marginBottom: '-2em' }} images={page.images}></BlockImages>
+        </>
+    );
 };
 
 export default Contacts;

@@ -4,23 +4,24 @@ import { COMPANY_INFO } from '../footerConstants';
 
 interface CompanyInfoProps {
 	showOnMobile: boolean;
-	theme: any;
 }
 
-const CompanyInfo: FC<CompanyInfoProps> = ({ showOnMobile, theme }) => (
+const CompanyInfo: FC<CompanyInfoProps> = ({ showOnMobile }) => (
 	<>
 		<Typography
-			mb={1}
-			color={theme.palette.custom['text-muted']}
-			sx={{ display: { xs: showOnMobile ? 'block' : 'none', md: showOnMobile ? 'none' : 'block' } }}
-		>
+			sx={{
+				mb: 1,
+				color: 'custom.text-muted',
+				display: { xs: showOnMobile ? 'block' : 'none', md: showOnMobile ? 'none' : 'block' }
+			}}>
 			{COMPANY_INFO.name}
 		</Typography>
 		<Typography
-			mb={1}
-			color={theme.palette.custom['text-muted']}
-			sx={{ display: { xs: showOnMobile ? 'block' : 'none', md: showOnMobile ? 'none' : 'block' } }}
-		>
+			sx={{
+				mb: 1,
+				color: 'custom.text-muted',
+				display: { xs: showOnMobile ? 'block' : 'none', md: showOnMobile ? 'none' : 'block' }
+			}}>
 			{COMPANY_INFO.unp}
 		</Typography>
 	</>

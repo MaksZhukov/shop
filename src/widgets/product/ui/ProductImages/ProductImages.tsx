@@ -20,9 +20,14 @@ export const ProductImages = ({ images, currentImageIndex, onImageClick, onImage
 	}
 
 	return (
-		<>
-			{/* Desktop thumbnail carousel */}
-			<Box width={56} display={{ xs: 'none', md: 'block' }} height={255}>
+        <>
+            {/* Desktop thumbnail carousel */}
+            <Box
+                sx={{
+                    width: 56,
+                    display: { xs: 'none', md: 'block' },
+                    height: 255
+                }}>
 				<Carousel
 					showNextArrow={images.length > 5}
 					showPrevArrow={false}
@@ -34,14 +39,15 @@ export const ProductImages = ({ images, currentImageIndex, onImageClick, onImage
 				>
 					{images.map((item, i) => (
 						<Box
-							borderRadius={'6px'}
-							onClick={() => onImageSelect(i)}
-							key={item.id}
-							width={56}
-							height={52}
-							pt={1}
-							sx={{ cursor: 'pointer' }}
-						>
+                            onClick={() => onImageSelect(i)}
+                            key={item.id}
+                            sx={{
+                                borderRadius: '6px',
+                                width: 56,
+                                height: 52,
+                                pt: 1,
+                                cursor: 'pointer'
+                            }}>
 							<Image
 								src={item.url}
 								alt={item.alternativeText}
@@ -57,12 +63,17 @@ export const ProductImages = ({ images, currentImageIndex, onImageClick, onImage
 					))}
 				</Carousel>
 			</Box>
-
-			{/* Mobile carousel */}
-			{isMobile ? (
+            {/* Mobile carousel */}
+            {isMobile ? (
 				<Carousel carouselContainerSx={{ ml: -1 }} showArrows={false} showDots={true}>
 					{images.map((item, i) => (
-						<Box pl={1} width={'90%'} height={280} key={item.id}>
+						<Box
+                            key={item.id}
+                            sx={{
+                                pl: 1,
+                                width: '90%',
+                                height: 280
+                            }}>
 							<Image
 								src={item.url}
 								alt={item.alternativeText}
@@ -75,8 +86,8 @@ export const ProductImages = ({ images, currentImageIndex, onImageClick, onImage
 				</Carousel>
 			) : (
 				/* Desktop main image */
-				<Box onClick={() => onImageClick(currentImageIndex)} sx={{ cursor: 'pointer' }}>
-					<Image
+				(<Box onClick={() => onImageClick(currentImageIndex)} sx={{ cursor: 'pointer' }}>
+                    <Image
 						src={images[currentImageIndex]?.url}
 						alt={images[currentImageIndex]?.alternativeText}
 						width={632}
@@ -86,8 +97,8 @@ export const ProductImages = ({ images, currentImageIndex, onImageClick, onImage
 							objectFit: 'cover'
 						}}
 					/>
-				</Box>
+                </Box>)
 			)}
-		</>
-	);
+        </>
+    );
 };

@@ -40,16 +40,20 @@ const Profile = observer(() => {
 	};
 
 	return (
-		<>
-			<Head>
+        <>
+            <Head>
 				<title>Профиль</title>
 				<meta name='description' content='Профиль пользователя'></meta>
 			</Head>
-			<Container>
-				<Typography textAlign='center' variant='h4' component='h1'>
+            <Container>
+				<Typography variant='h4' component='h1' sx={{
+                    textAlign: 'center'
+                }}>
 					Профиль
 				</Typography>
-				<Box component='form' marginBottom='2em' onSubmit={handleSubmit} className={styles.content}>
+				<Box component='form' onSubmit={handleSubmit} className={styles.content} sx={{
+                    marginBottom: '2em'
+                }}>
 					<TextField
 						value={userStore.email}
 						placeholder='Почта'
@@ -87,8 +91,8 @@ const Profile = observer(() => {
 					</Button>
 				</Box>
 			</Container>
-		</>
-	);
+        </>
+    );
 });
 
 export default Profile;

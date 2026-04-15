@@ -22,8 +22,14 @@ export const OrderRegistrationForm = ({ form, disabled = false }: OrderRegistrat
 	} = form;
 
 	return (
-		<Box flex={1} display='flex' flexDirection='column' gap={1}>
-			<ContactInfoForm
+        <Box
+            sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1
+            }}>
+            <ContactInfoForm
 				formData={formData}
 				fileInputRef={fileInputRef}
 				onUserTypeChange={handleUserTypeChange}
@@ -32,17 +38,17 @@ export const OrderRegistrationForm = ({ form, disabled = false }: OrderRegistrat
 				onFileChange={handleFileChange}
 				disabled={disabled}
 			/>
-			<DeliveryMethodForm
+            <DeliveryMethodForm
 				formData={formData}
 				onDeliveryMethodChange={handleDeliveryMethodChange}
 				onFieldChange={updateField}
 				disabled={disabled}
 			/>
-			<PaymentMethodForm
+            <PaymentMethodForm
 				formData={formData}
 				onPaymentMethodChange={handlePaymentMethodChange}
 				disabled={disabled}
 			/>
-		</Box>
-	);
+        </Box>
+    );
 };

@@ -26,16 +26,17 @@ export const Image = ({
 	};
 	if (!src || key === MAX_LOADING_IMAGES_ERRORS) {
 		return (
-			<Box
-				maxWidth={props.width}
-				minWidth={props.minWidth}
-				bgcolor='primary.secondary'
-				display='flex'
-				margin='auto'
-				alignItems='center'
-				justifyContent='center'
-			>
-				<NextImage
+            <Box
+                sx={{
+                    maxWidth: props.width,
+                    minWidth: props.minWidth,
+                    bgcolor: 'primary.secondary',
+                    display: 'flex',
+                    margin: 'auto',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                <NextImage
 					width={1200}
 					alt={alt}
 					height={props.height || 237}
@@ -43,8 +44,8 @@ export const Image = ({
 					src={'/photo.png'}
 					style={{ objectFit: 'contain', maxWidth: '50%' }}
 				></NextImage>
-			</Box>
-		);
+            </Box>
+        );
 	}
 	const getSrc = () => {
 		const hasHttps = src.toString().startsWith('https');

@@ -11,22 +11,32 @@ export const WorkingHoursList: FC<WorkingHoursListProps> = ({ workingHours }) =>
 	const currentSchedule = useCurrentSchedule(workingHours);
 
 	return (
-		<>
-			{workingHours.map((schedule) => {
+        <>
+            {workingHours.map((schedule) => {
 				const isToday = currentSchedule?.dayIndex === schedule.dayIndex;
 				const textColor = isToday ? 'info.main' : 'inherit';
 
 				return (
-					<Box key={schedule.day} py={1} display={'flex'} justifyContent={'space-between'}>
-						<Typography variant='body1' fontSize={'16px'} color={textColor}>
+                    <Box
+                        key={schedule.day}
+                        sx={{
+                            py: 1,
+                            display: 'flex',
+                            justifyContent: 'space-between'
+                        }}>
+                        <Typography variant='body1' color={textColor} sx={{
+                            fontSize: '16px'
+                        }}>
 							{schedule.day}
 						</Typography>
-						<Typography variant='body1' fontSize={'16px'} color={textColor}>
+                        <Typography variant='body1' color={textColor} sx={{
+                            fontSize: '16px'
+                        }}>
 							{schedule.hours}
 						</Typography>
-					</Box>
-				);
+                    </Box>
+                );
 			})}
-		</>
-	);
+        </>
+    );
 };

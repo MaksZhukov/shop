@@ -86,7 +86,7 @@ export const ProductTabs = ({ product }: Props) => {
 	};
 
 	return (
-		<WhiteBox border={0} mb={{ xs: 3, md: 0 }} px={{ xs: 1, md: 2 }} py={{ xs: 0, md: 1.5 }}>
+		<WhiteBox sx={{ border: 0, mb: { xs: 3, md: 0 }, px: { xs: 1, md: 2 }, py: { xs: 0, md: 1.5 } }}>
 			<Tabs value={activeTab} onChange={handleTabChange}>
 				<Tab label='Описание' value={TAB_VALUES.DESCRIPTION} />
 				<Tab label='Доставка' value={TAB_VALUES.DELIVERY} />

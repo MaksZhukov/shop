@@ -31,16 +31,29 @@ export const SearchHistoryChips: React.FC<SearchHistoryChipsProps> = ({
 		onDeleteSearchHistory(value);
 	};
 	return (
-		<>
-			<Box display='flex' justifyContent='space-between' gap={1}>
-				<Typography color='custom.text-muted'>История</Typography>
+        <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    gap: 1
+                }}>
+				<Typography sx={{
+                    color: 'custom.text-muted'
+                }}>История</Typography>
 				{showClearButton && (
 					<Button color='info' variant='text' size='small' onClick={onClearSearchHistory}>
 						Очистить
 					</Button>
 				)}
 			</Box>
-			<Box display='flex' mb={mb} flexWrap='wrap' gap={0.5}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    mb: mb,
+                    flexWrap: 'wrap',
+                    gap: 0.5
+                }}>
 				{searchHistory.map((item) => (
 					<Chip
 						key={item}
@@ -57,6 +70,6 @@ export const SearchHistoryChips: React.FC<SearchHistoryChipsProps> = ({
 					/>
 				))}
 			</Box>
-		</>
-	);
+        </>
+    );
 };

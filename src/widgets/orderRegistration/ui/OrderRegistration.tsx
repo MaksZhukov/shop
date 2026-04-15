@@ -42,16 +42,32 @@ export const OrderRegistration = ({
 	}
 
 	return (
-		<Box pt={2} pb={{ xs: 0, md: 2 }}>
-			<Typography variant='h6' component='h1' mb={2}>
+        <Box
+            sx={{
+                pt: 2,
+                pb: { xs: 0, md: 2 }
+            }}>
+            <Typography variant='h6' component='h1' sx={{
+                mb: 2
+            }}>
 				Оформление заказа
 			</Typography>
-			{orderCheckout?.order && formattedTime && !isExpired && (
-				<Typography variant='body2' color='warning.main' mb={2}>
+            {orderCheckout?.order && formattedTime && !isExpired && (
+				<Typography
+                    variant='body2'
+                    sx={{
+                        color: 'warning.main',
+                        mb: 2
+                    }}>
 					Время на оплату: {formattedTime}
 				</Typography>
 			)}
-			<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} gap={1}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    gap: 1
+                }}>
 				<OrderRegistrationProvider>
 					<OrderRegistrationForm form={form} disabled={!!orderCheckout?.order} />
 				</OrderRegistrationProvider>
@@ -75,7 +91,7 @@ export const OrderRegistration = ({
 					disabled={isReissuingCheckoutToken}
 				/>
 			</Box>
-			<MobileQuestionsSection />
-		</Box>
-	);
+            <MobileQuestionsSection />
+        </Box>
+    );
 };

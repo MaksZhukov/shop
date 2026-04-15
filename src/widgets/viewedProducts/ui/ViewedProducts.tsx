@@ -23,15 +23,19 @@ export const ViewedProducts = () => {
 		enabled: !!viewedProducts.length
 	});
 	return (
-		<Box>
-			{viewedProductsData?.data.data.length && (
+        <Box>
+            {viewedProductsData?.data.data.length && (
 				<>
-					<Typography mt={3} variant='h6' gutterBottom>
+					<Typography variant='h6' gutterBottom sx={{
+                        mt: 3
+                    }}>
 						Вы недавно смотрели
 					</Typography>
 					<Carousel carouselContainerSx={{ ml: -1 }} showDots={false}>
 						{viewedProductsData.data.data.map((item) => (
-							<Box pl={1} key={item.id}>
+							<Box key={item.id} sx={{
+                                pl: 1
+                            }}>
 								<ProductItem
 									headerActions={<FavoriteButton product={item} />}
 									bottomActions={
@@ -51,6 +55,6 @@ export const ViewedProducts = () => {
 					</Carousel>
 				</>
 			)}
-		</Box>
-	);
+        </Box>
+    );
 };

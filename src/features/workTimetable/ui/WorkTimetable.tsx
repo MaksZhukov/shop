@@ -23,14 +23,15 @@ export const WorkTimetable: FC = () => {
 	);
 
 	return (
-		<Box width={{ xs: '100%', md: 'auto' }}>
-			<WorkTimetableTrigger isOpen={isOpen || Boolean(anchorEl)} isMobile={isMobile} onClick={handleClick} />
-
-			{isMobile ? (
+        <Box sx={{
+            width: { xs: '100%', md: 'auto' }
+        }}>
+            <WorkTimetableTrigger isOpen={isOpen || Boolean(anchorEl)} isMobile={isMobile} onClick={handleClick} />
+            {isMobile ? (
 				<MobileSchedule isOpen={isOpen} workingHours={WORKING_HOURS} onClose={handleClose} />
 			) : (
 				<DesktopSchedule anchorEl={anchorEl} workingHours={WORKING_HOURS} onClose={handleClose} />
 			)}
-		</Box>
-	);
+        </Box>
+    );
 };

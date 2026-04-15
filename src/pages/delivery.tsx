@@ -17,16 +17,24 @@ interface Props {
 const Delivery: FC<Props> = ({ page }) => {
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const renderH1 = (sx: SxProps) => (
-		<Box sx={sx} fontWeight='500' textTransform='uppercase' marginBottom='1em' component='h1'>
+		<Box
+            component='h1'
+            sx={[{
+                fontWeight: '500',
+                textTransform: 'uppercase',
+                marginBottom: '1em'
+            }, ...(Array.isArray(sx) ? sx : [sx])]}>
 			{page.h1}
 		</Box>
 	);
 	return (
-		<>
-			<Box
-				display='flex'
-				sx={{ marginBottom: { xs: '1em', md: '' }, flexDirection: { xs: 'column', md: 'row' } }}
-			>
+        <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    marginBottom: { xs: '1em', md: '' },
+                    flexDirection: { xs: 'column', md: 'row' }
+                }}>
 				{renderH1({ display: { xs: 'block', md: 'none' }, typography: 'h4', marginBottom: '1em' })}
 				<Image
 					title={page.mainImageLeft?.caption}
@@ -43,15 +51,15 @@ const Delivery: FC<Props> = ({ page }) => {
 					</Typography>
 				</Box>
 			</Box>
-			<BlockImages
+            <BlockImages
 				withoutOverlay={isTablet}
 				sx={{ marginY: '0', paddingY: 0 }}
 				images={page.images1}
 			></BlockImages>
-			<Typography marginTop='1em' textTransform='uppercase' component='h2' variant='h4'>
+			<Typography component='h2' variant='h4' sx={{ mt: '1em', textTransform: 'uppercase' }}>
 				{page.deliveryCitiesTitle}
 			</Typography>
-			<Table sx={{ marginY: '2em', maxWidth: 930 }}>
+            <Table sx={{ marginY: '2em', maxWidth: 930 }}>
 				<TableBody>
 					{page.deliveryCitiesDescription.map((item) => (
 						<TableRow key={item.value}>
@@ -59,15 +67,14 @@ const Delivery: FC<Props> = ({ page }) => {
 								<Typography>{item.label}</Typography>
 							</TableCell>
 							<TableCell>
-								<Typography fontWeight='500'>{item.value}</Typography>
+								<Typography sx={{ fontWeight: 500 }}>{item.value}</Typography>
 							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
 			</Table>
-
-			<Box>
-				<Typography marginTop='1em' textTransform='uppercase' component='h2' variant='h4'>
+            <Box>
+				<Typography component='h2' variant='h4' sx={{ mt: '1em', textTransform: 'uppercase' }}>
 					{page.courierTitle}
 				</Typography>
 				<Table sx={{ marginY: '2em', maxWidth: 1030 }}>
@@ -78,25 +85,24 @@ const Delivery: FC<Props> = ({ page }) => {
 									<Typography>{item.label}</Typography>
 								</TableCell>
 								<TableCell>
-									<Typography fontWeight='500'>{item.value}</Typography>
+									<Typography sx={{ fontWeight: 500 }}>{item.value}</Typography>
 								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
 				</Table>
 			</Box>
-			<Typography marginTop='1em' component='h2' variant='h4' textTransform='uppercase'>
+			<Typography component='h2' variant='h4' sx={{ mt: '1em', textTransform: 'uppercase' }}>
 				{page.shipmentTitle}
 			</Typography>
-			<Box
-				display='flex'
-				paddingTop='2em'
-				sx={{
-					flexDirection: { xs: 'column', md: 'row' },
-					alignItems: { xs: 'initial', md: 'center' },
-					marginBottom: { xs: '1em', md: '' }
-				}}
-			>
+            <Box
+                sx={{
+                    display: 'flex',
+                    paddingTop: '2em',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    alignItems: { xs: 'initial', md: 'center' },
+                    marginBottom: { xs: '1em', md: '' }
+                }}>
 				<Box
 					sx={{
 						paddingRight: { xs: 0, md: '3em' },
@@ -116,7 +122,7 @@ const Delivery: FC<Props> = ({ page }) => {
 					></Image>
 				</Box>
 			</Box>
-			<BlockImages
+            <BlockImages
 				withoutOverlay={isTablet}
 				images={page.images2}
 				sx={{
@@ -125,8 +131,8 @@ const Delivery: FC<Props> = ({ page }) => {
 					marginTop: { xs: 0, md: '3em' }
 				}}
 			></BlockImages>
-		</>
-	);
+        </>
+    );
 };
 
 export default Delivery;

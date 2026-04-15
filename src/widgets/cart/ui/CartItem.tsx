@@ -49,10 +49,28 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBu
 	};
 
 	return (
-		<WhiteBox mb={1} p={{ xs: 1, md: 2 }}>
-			<Box display='flex' gap={1} position='relative'>
-				<Box overflow='hidden' borderRadius={2} width={CART_ITEM_IMAGE_WIDTH} height={CART_ITEM_IMAGE_HEIGHT}>
-					<Box position='absolute' bgcolor='white' zIndex={1} left={0} top={0}>
+		<WhiteBox sx={{ mb: 1, p: { xs: 1, md: 2 } }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 1,
+                    position: 'relative'
+                }}>
+				<Box
+                    sx={{
+                        overflow: 'hidden',
+                        borderRadius: 2,
+                        width: CART_ITEM_IMAGE_WIDTH,
+                        height: CART_ITEM_IMAGE_HEIGHT
+                    }}>
+					<Box
+                        sx={{
+                            position: 'absolute',
+                            bgcolor: 'white',
+                            zIndex: 1,
+                            left: 0,
+                            top: 0
+                        }}>
 						<Checkbox sx={{ padding: 0 }} checked={isSelected} onChange={() => onToggleSelect(item.id)} />
 					</Box>
 					<ProductItemImages
@@ -63,7 +81,13 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBu
 						imageHeightOffset={0}
 					/>
 				</Box>
-				<Box flex={1} display='flex' flexDirection='column' justifyContent='space-between'>
+				<Box
+                    sx={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                    }}>
 					<Box>
 						<ProductPrice
 							data={product}
@@ -74,12 +98,20 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBu
 							{product.h1}
 						</Link>
 						{productDetails && (
-							<Typography mb={1} color='custom.text-muted'>
+							<Typography
+                                sx={{
+                                    mb: 1,
+                                    color: 'custom.text-muted'
+                                }}>
 								{productDetails}
 							</Typography>
 						)}
 					</Box>
-					<Box display={{ xs: 'none', md: 'flex' }} alignItems='center'>
+					<Box
+                        sx={{
+                            display: { xs: 'none', md: 'flex' },
+                            alignItems: 'center'
+                        }}>
 						{renderActionButtons(true)}
 					</Box>
 				</Box>
@@ -89,10 +121,15 @@ export const CartItem = ({ item, isSelected, onToggleSelect, onRemove, onClickBu
 					sx={{ display: { xs: 'none', md: 'flex' }, opacity: item.product.sold ? 0.5 : 1 }}
 				/>
 			</Box>
-			<Box display={{ xs: 'flex', md: 'none' }} justifyContent='space-between' alignItems='center'>
+            <Box
+                sx={{
+                    display: { xs: 'flex', md: 'none' },
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
 				{renderBuyButton}
 				<Box>{renderActionButtons(false)}</Box>
 			</Box>
-		</WhiteBox>
-	);
+        </WhiteBox>
+    );
 };

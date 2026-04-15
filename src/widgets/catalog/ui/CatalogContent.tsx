@@ -68,27 +68,37 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 	};
 
 	return (
-		<Box flex={1}>
-			{showBrandsSection && !isMobile && (
+        <Box sx={{
+            flex: 1
+        }}>
+            {showBrandsSection && !isMobile && (
 				<Box
-					overflow='auto'
-					mb={2}
-					boxShadow={`0px 10px 25px 0px ${theme.palette.custom.shadow}`}
-					px={2}
-					py={2}
-					minHeight={360}
-					display='flex'
-					flexDirection='column'
-					flexWrap='wrap'
-					height={360}
-					gap={2}
-					borderRadius={4}
-					border='1px solid custom.divider'
-					bgcolor='custom.bg-surface-1'
-				>
+                    sx={{
+                        overflow: 'auto',
+                        mb: 2,
+                        boxShadow: '0px 10px 25px 0px #1018281F',
+                        px: 2,
+                        py: 2,
+                        minHeight: 360,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flexWrap: 'wrap',
+                        height: 360,
+                        gap: 2,
+                        borderRadius: 4,
+                        border: '1px solid',
+                        borderColor: 'custom.divider',
+                        bgcolor: 'custom.bg-surface-1'
+                    }}>
 					{!filtersValues.brand &&
 						brands.map((brand) => (
-							<Box py={1} display='flex' gap={0.5} key={brand.id}>
+							<Box
+                                key={brand.id}
+                                sx={{
+                                    py: 1,
+                                    display: 'flex',
+                                    gap: 0.5
+                                }}>
 								<Link href={brand.path}>{brand.name}</Link>
 								{brand.count != null && (
 									<Typography color='custom.text-muted'>{brand.count}</Typography>
@@ -99,21 +109,28 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 						filtersValues.brand &&
 						!filtersValues.model &&
 						models.flatMap(renderModelLinkEntries).map((entry) => (
-							<Box display='flex' gap={0.5} py={1} key={entry.key}>
+							<Box
+                                key={entry.key}
+                                sx={{
+                                    display: 'flex',
+                                    gap: 0.5,
+                                    py: 1
+                                }}>
 								<Link href={entry.path}>{entry.label}</Link>
 								<Typography color='custom.text-muted'>{entry.count}</Typography>
 							</Box>
 						))}
 				</Box>
 			)}
-			<Box
-				display='flex'
-				flexWrap='wrap'
-				justifyContent={{ xs: 'center', md: 'flex-start' }}
-				sx={{ opacity: isLoading ? 0.5 : 1 }}
-				gap={1}
-				mb={2}
-			>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: { xs: 'center', md: 'flex-start' },
+                    gap: 1,
+                    mb: 2,
+                    opacity: isLoading ? 0.5 : 1
+                }}>
 				{data.length ? (
 					data.map((item) => (
 						<ProductItem
@@ -132,14 +149,14 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 						/>
 					))
 				) : !isLoading ? (
-					<Typography textAlign='center' variant='h5'>
+					<Typography variant='h5' align='center'>
 						Данных не найдено
 					</Typography>
 				) : (
 					<CircularProgress sx={{ margin: 'auto' }} />
 				)}
 			</Box>
-			{pageCount > 0 && (
+            {pageCount > 0 && (
 				<Pagination
 					sx={{
 						display: 'flex',
@@ -166,6 +183,6 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 					variant='text'
 				/>
 			)}
-		</Box>
-	);
+        </Box>
+    );
 };

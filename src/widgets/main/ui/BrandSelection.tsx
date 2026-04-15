@@ -14,14 +14,26 @@ export const BrandSelection: React.FC = () => {
 	});
 	const brands = brandsRes ?? [];
 	return (
-		<Box mb={5}>
-			<Typography textAlign={{ xs: 'center', md: 'left' }} variant='h6'>
+		<Box
+			sx={{
+				mb: 5
+			}}
+		>
+			<Typography variant='h6' sx={{ textAlign: { xs: 'center', md: 'left' } }}>
 				Выберите марку авто
 			</Typography>
-			<Typography textAlign={{ xs: 'center', md: 'left' }} color='text.primary' variant='body2'>
+			<Typography color='text.primary' variant='body2' sx={{ textAlign: { xs: 'center', md: 'left' } }}>
 				Автозапчасти б/у на авторазборке в наличии
 			</Typography>
-			<Box mt={1} display={'flex'} justifyContent={{ xs: 'center', md: 'flex-start' }} flexWrap={'wrap'} gap={1}>
+			<Box
+				sx={{
+					mt: 1,
+					display: 'flex',
+					justifyContent: { xs: 'center', md: 'flex-start' },
+					flexWrap: 'wrap',
+					gap: 1
+				}}
+			>
 				{brands.map((brand) => (
 					<BrandItem key={brand.id} brand={brand} />
 				))}

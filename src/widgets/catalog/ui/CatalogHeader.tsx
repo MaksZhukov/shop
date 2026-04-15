@@ -44,17 +44,18 @@ export const CatalogHeader: React.FC<CatalogHeaderProps> = ({ seo, sort, total, 
 	};
 
 	return (
-		<Box
-			display='flex'
-			flexDirection={{ xs: 'column', md: 'row' }}
-			justifyContent='space-between'
-			mb={{ xs: 2, md: 0 }}
-			alignItems={{ xs: 'flex-start', md: 'center' }}
-		>
-			<Typography mb={1} variant='h6' component={'h1'}>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+                justifyContent: 'space-between',
+                mb: { xs: 2, md: 0 },
+                alignItems: { xs: 'flex-start', md: 'center' }
+            }}>
+			<Typography variant='h6' component='h1' sx={{ mb: 1 }}>
 				{seo?.h1}
 			</Typography>
-			<Button
+            <Button
 				sx={{ display: { xs: 'flex', md: 'none' } }}
 				fullWidth
 				startIcon={<OptionsIcon />}
@@ -64,16 +65,21 @@ export const CatalogHeader: React.FC<CatalogHeaderProps> = ({ seo, sort, total, 
 			>
 				Параметры поиска
 			</Button>
-			<Box
-				mt={{ xs: 1, md: 0 }}
-				display='flex'
-				justifyContent='space-between'
-				alignItems='center'
-				width={{ xs: '100%', md: 'auto' }}
-			>
-				<Box display={{ xs: 'flex', md: 'none' }} gap={0.5}>
+            <Box
+                sx={{
+                    mt: { xs: 1, md: 0 },
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: { xs: '100%', md: 'auto' }
+                }}>
+				<Box
+                    sx={{
+                        display: { xs: 'flex', md: 'none' },
+                        gap: 0.5
+                    }}>
 					<Typography color='custom.text-muted'> Всего запчастей: </Typography>
-					<Typography fontWeight={500}>{total?.toLocaleString() ?? 0}</Typography>
+					<Typography sx={{ fontWeight: 500 }}>{total?.toLocaleString() ?? 0}</Typography>
 				</Box>
 				<Button variant='text' endIcon={<ChevronDownIcon />} color='primary' onClick={handleSortMenuOpen}>
 					{SORT_ITEMS.find((item) => item.value === sort)?.name}
@@ -101,6 +107,6 @@ export const CatalogHeader: React.FC<CatalogHeaderProps> = ({ seo, sort, total, 
 					))}
 				</Menu>
 			</Box>
-		</Box>
-	);
+        </Box>
+    );
 };

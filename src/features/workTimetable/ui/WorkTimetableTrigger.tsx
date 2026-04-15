@@ -58,10 +58,17 @@ export const WorkTimetableTrigger: FC<WorkTimetableTriggerProps> = ({ isMobile, 
 		: { cursor: 'pointer' };
 
 	return (
-		<Box color={textColor} display={'flex'} alignItems={'center'} gap={1} sx={mobileStyles} onClick={onClick}>
-			<ClockIcon />
-			<Typography variant='body2'>{statusText}</Typography>
-			{isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-		</Box>
-	);
+        <Box
+            onClick={onClick}
+            sx={[{
+                color: textColor,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1
+            }, ...(Array.isArray(mobileStyles) ? mobileStyles : [mobileStyles])]}>
+            <ClockIcon />
+            <Typography variant='body2'>{statusText}</Typography>
+            {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        </Box>
+    );
 };

@@ -68,22 +68,32 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 	};
 
 	return (
-		<Box
-			display='flex'
-			mb={{ xs: 0, md: isScrolled ? 0 : 1 }}
-			gap={2}
-			alignItems='center'
-			justifyContent={{ xs: 'space-between', md: 'initial' }}
-		>
-			<Link href='/'>
-				<Box display='flex' alignItems='center' justifyContent='center'>
+        <Box
+            sx={{
+                display: 'flex',
+                mb: { xs: 0, md: isScrolled ? 0 : 1 },
+                gap: 2,
+                alignItems: 'center',
+                justifyContent: { xs: 'space-between', md: 'initial' }
+            }}>
+            <Link href='/'>
+				<Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
 					<LogoIcon sx={{ width: { xs: 170, md: 230 }, height: { xs: 28, md: 40 } }} />
 				</Box>
 			</Link>
-
-			<CatalogCategories />
-
-			<Box ref={searchRefContainer} display={{ xs: 'none', md: 'flex' }} flex={1} position='relative'>
+            <CatalogCategories />
+            <Box
+                ref={searchRefContainer}
+                sx={{
+                    display: { xs: 'none', md: 'flex' },
+                    flex: 1,
+                    position: 'relative'
+                }}>
 				<Input
 					sx={{ pl: 1 }}
 					onFocus={handleInputFocus}
@@ -97,10 +107,16 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 
 				{open && (
 					<WhiteBox
-						borderRadius={1}
-						px={2}
-						py={1}
-						sx={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 1000 }}
+						sx={{
+							borderRadius: 1,
+							px: 2,
+							py: 1,
+							position: 'absolute',
+							top: '100%',
+							left: 0,
+							right: 0,
+							zIndex: 1000
+						}}
 					>
 						<SearchHistoryChips
 							searchHistory={searchHistory}
@@ -120,8 +136,7 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 					</WhiteBox>
 				)}
 			</Box>
-
-			<Box display={'flex'} sx={{ display: { xs: 'none', md: 'flex' } }}>
+			<Box sx={{ display: { xs: 'none', md: 'flex' } }}>
 				<Profile onClickSignIn={onClickSignIn} onClickLogout={onClickLogout} />
 
 				<NavbarButton
@@ -146,8 +161,12 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 					Корзина
 				</NavbarButton>
 			</Box>
-
-			<Box alignItems={'center'} gap={0.5} sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <Box
+                sx={{
+                    alignItems: 'center',
+                    gap: 0.5,
+                    display: { xs: 'flex', md: 'none' }
+                }}>
 				<IconButton sx={{ padding: '0' }} onClick={onOpenMobileSearch}>
 					<SearchIcon />
 				</IconButton>
@@ -155,6 +174,6 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
 					<GeoIcon />
 				</IconButton>
 			</Box>
-		</Box>
-	);
+        </Box>
+    );
 };

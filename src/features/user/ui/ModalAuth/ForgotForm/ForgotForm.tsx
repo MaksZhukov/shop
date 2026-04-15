@@ -21,9 +21,9 @@ export const ForgotForm = ({
 	const { handleSubmit } = useForgotForm({ onChangeIsLoading, email, setEmail, onChangeModalOpened });
 
 	return (
-		<Box>
-			<AuthFormHeader title='Ссылка для сброса пароля будет отправлена на указанную почту' />
-			<form onSubmit={handleSubmit}>
+        <Box>
+            <AuthFormHeader title='Ссылка для сброса пароля будет отправлена на указанную почту' />
+            <form onSubmit={handleSubmit}>
 				<OutlinedInput
 					fullWidth
 					disabled={isLoading}
@@ -41,20 +41,23 @@ export const ForgotForm = ({
 					Сбросить пароль
 				</Button>
 			</form>
-			<Box textAlign='center'>
+            <Box sx={{
+                textAlign: 'center'
+            }}>
 				<Link
-					component='button'
-					type='button'
-					variant='body2'
-					color='text.primary'
-					onClick={() => onChangeType('auth')}
-					sx={{ cursor: 'pointer' }}
-				>
+                    component='button'
+                    type='button'
+                    variant='body2'
+                    onClick={() => onChangeType('auth')}
+                    sx={{
+                        color: 'text.primary',
+                        cursor: 'pointer'
+                    }}>
 					Войти
 				</Link>
 			</Box>
-		</Box>
-	);
+        </Box>
+    );
 };
 
 export default ForgotForm;

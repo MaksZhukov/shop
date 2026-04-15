@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useCarousel } from './useCarousel';
 import { NavigationArrow } from './NavigationArrow';
 import { Dots } from './Dots';
 import type { CarouselProps } from './types';
-import { Box, SxProps } from '@mui/material';
+import { Box } from '@mui/material';
 import styles from './Carousel.module.scss';
 
 export const Carousel: React.FC<CarouselProps> = ({
@@ -37,15 +37,35 @@ export const Carousel: React.FC<CarouselProps> = ({
 	const shouldShowNextArrow = (showNextArrow !== undefined ? showNextArrow : showArrows) && canScrollNext;
 
 	return (
-		<Box height={'100%'} position={'relative'} width={'100%'} sx={sx}>
-			<Box overflow={'hidden'} width={'100%'} height={'100%'} ref={emblaRef}>
+		<Box
+			sx={[
+				{
+					height: '100%',
+					position: 'relative',
+					width: '100%'
+				},
+				...(Array.isArray(sx) ? sx : [sx])
+			]}
+		>
+			<Box
+				ref={emblaRef}
+				sx={{
+					overflow: 'hidden',
+					width: '100%',
+					height: '100%'
+				}}
+			>
 				<Box
-					width={'100%'}
-					height={'100%'}
-					display={'flex'}
-					flexDirection={options.axis === 'x' ? 'row' : 'column'}
 					className={styles.carousel__container}
-					sx={carouselContainerSx}
+					sx={[
+						{
+							width: '100%',
+							height: '100%',
+							display: 'flex',
+							flexDirection: options.axis === 'x' ? 'row' : 'column'
+						},
+						...(Array.isArray(carouselContainerSx) ? carouselContainerSx : [carouselContainerSx])
+					]}
 				>
 					{children}
 				</Box>

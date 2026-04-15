@@ -32,26 +32,48 @@ export default function MobileCatalog({ sparePartsTotal }: Props) {
 	};
 
 	return (
-		<Box bgcolor='white' ml={-2} mr={-2} py={2} pl={2}>
-			<Benefits view='carousel' />
-			<Box mt={2} pr={2}>
-				<Box mb={2}>
+        <Box
+            sx={{
+                bgcolor: 'white',
+                ml: -2,
+                mr: -2,
+                py: 2,
+                pl: 2
+            }}>
+            <Benefits view='carousel' />
+            <Box
+                sx={{
+                    mt: 2,
+                    pr: 2
+                }}>
+				<Box sx={{
+                    mb: 2
+                }}>
 					{kindSpareParts?.data.data.map((item) => (
 						<Box
-							sx={{ cursor: 'pointer', ':hover': { bgcolor: 'custom.bg-surface-3' } }}
-							px={1}
-							py={1}
-							borderRadius={2}
-							key={item.id}
-							display='flex'
-							gap={0.5}
-							alignItems='center'
-							onClick={handleCategoryClick(item)}
-						>
-							<Typography variant='body1' fontWeight={500}>
+                            key={item.id}
+                            onClick={handleCategoryClick(item)}
+                            sx={{
+                                px: 1,
+                                py: 1,
+                                borderRadius: 2,
+                                display: 'flex',
+                                gap: 0.5,
+                                alignItems: 'center',
+                                cursor: 'pointer',
+                                ':hover': { bgcolor: 'custom.bg-surface-3' }
+                            }}>
+							<Typography variant='body1' sx={{
+                                fontWeight: 500
+                            }}>
 								{item.name}
 							</Typography>
-							<Typography flex={1} variant='body1' color='custom.text-muted'>
+							<Typography
+                                variant='body1'
+                                sx={{
+                                    flex: 1,
+                                    color: 'custom.text-muted'
+                                }}>
 								{item.spareParts.count?.toLocaleString()}
 							</Typography>
 							<Box>
@@ -62,8 +84,8 @@ export default function MobileCatalog({ sparePartsTotal }: Props) {
 				</Box>
 				<Banners images={[]} />
 			</Box>
-		</Box>
-	);
+        </Box>
+    );
 }
 
 export const getServerSideProps = getPageProps(undefined, async (context, deviceTypeResult) => {

@@ -1,4 +1,4 @@
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import type { Image as IImage } from 'shared/api/types';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
@@ -44,16 +44,17 @@ export const ArticleItem: FC<ArticleCardProps> = ({
 
 	if (variant === 'compact') {
 		return (
-			<Box
-				maxWidth={width}
-				overflow='hidden'
-				display='flex'
-				bgcolor='background.paper'
-				borderRadius={4}
-				border={2}
-				borderColor='background.paper'
-			>
-				<NextLink href={link}>
+            <Box
+                sx={{
+                    maxWidth: width,
+                    overflow: 'hidden',
+                    display: 'flex',
+                    bgcolor: 'background.paper',
+                    borderRadius: 4,
+                    border: 2,
+                    borderColor: 'background.paper'
+                }}>
+                <NextLink href={link}>
 					<Image
 						src={getImageUrl(image)}
 						alt={name}
@@ -66,26 +67,33 @@ export const ArticleItem: FC<ArticleCardProps> = ({
 						height={imageHeight}
 					/>
 				</NextLink>
-				<Box py={{ xs: 0.25, md: 1.75 }} px={{ xs: 1, md: 1.75 }}>
+                <Box
+                    sx={{
+                        py: { xs: 0.25, md: 1.75 },
+                        px: { xs: 1, md: 1.75 }
+                    }}>
 					<Link href={link}>
-						<Typography variant='h6' fontSize={{ xs: '18px', md: '22px' }} lineClamp={1}>
+						<Typography
+							variant='h6'
+							lineClamp={1}
+							sx={{ fontSize: { xs: '18px', md: '22px' } }}>
 							{name}
 						</Typography>
 					</Link>
-					<Typography mb={{ xs: 0, md: 1 }} height={42} variant='body1' lineClamp={2}>
+					<Typography variant='body1' lineClamp={2} sx={{ mb: { xs: 0, md: 1 }, height: 42 }}>
 						<ReactMarkdown inline content={description.substring(0, 300)} />
 					</Typography>
 					<Typography variant='body2' color='custom.text-muted'>
 						{formatDate(date)}
 					</Typography>
 				</Box>
-			</Box>
-		);
+            </Box>
+        );
 	}
 
 	return (
-		<WhiteBox border='2px solid' borderColor={'background.paper'} overflow='hidden' maxWidth={width}>
-			<NextLink href={link}>
+		<WhiteBox sx={{ border: '2px solid', borderColor: 'background.paper', overflow: 'hidden', maxWidth: width }}>
+            <NextLink href={link}>
 				<Image
 					title={image?.caption}
 					alt={image?.alternativeText || name}
@@ -98,18 +106,21 @@ export const ArticleItem: FC<ArticleCardProps> = ({
 					src={getImageUrl(image)}
 				/>
 			</NextLink>
-
-			<Box px={1.5} py={1}>
+            <Box
+                sx={{
+                    px: 1.5,
+                    py: 1
+                }}>
 				<Link lineClamp={1} color='text.secondary' sx={{ fontWeight: 700, fontSize: '18px' }} href={link}>
 					{name}
 				</Link>
-				<Typography mb={1} lineClamp={2}>
+				<Typography lineClamp={2} sx={{ mb: 1 }}>
 					<ReactMarkdown inline content={description.substring(0, 300)} />
 				</Typography>
 				<Typography color='custom.text-muted' variant='body2'>
 					{formatDate(date)}
 				</Typography>
 			</Box>
-		</WhiteBox>
-	);
+        </WhiteBox>
+    );
 };

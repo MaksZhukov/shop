@@ -18,8 +18,10 @@ export const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSli
 	}
 	if (withSlider) {
 		return (
-			<Box paddingX='1em'>
-				{/* <Slider slidesToShow={1}>
+            <Box sx={{
+                paddingX: '1em'
+            }}>
+                {/* <Slider slidesToShow={1}>
 					{images.map((item) => (
 						<Box key={item.id} padding='0.5em'>
 							<Image
@@ -33,19 +35,19 @@ export const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSli
 						</Box>
 					))}
 				</Slider> */}
-			</Box>
-		);
+            </Box>
+        );
 	}
 	return (
-		<Box
-			className={withoutOverlay ? '' : styles.overlay}
-			paddingY='3em'
-			marginY='3em'
-			display='flex'
-			gap={'1em'}
-			sx={sx}
-		>
-			{images.map((item) => (
+        <Box
+            className={withoutOverlay ? '' : styles.overlay}
+            sx={[{
+                paddingY: '3em',
+                marginY: '3em',
+                display: 'flex',
+                gap: '1em'
+            }, ...(Array.isArray(sx) ? sx : [sx])]}>
+            {images.map((item) => (
 				<Box key={item.id}>
 					<Image
 						title={item.caption}
@@ -57,6 +59,6 @@ export const BlockImages: FC<Props> = ({ images, withoutOverlay = false, withSli
 					></Image>
 				</Box>
 			))}
-		</Box>
-	);
+        </Box>
+    );
 };

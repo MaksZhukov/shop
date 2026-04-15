@@ -9,15 +9,16 @@ interface ArticlesGridProps {
 
 export const ArticlesGrid = ({ articles, isLoading }: ArticlesGridProps) => {
 	return (
-		<Box
-			display='flex'
-			gap={{ xs: 1, md: 2 }}
-			flexWrap='wrap'
-			justifyContent='center'
-			alignItems='center'
-			flexDirection={{ xs: 'column', md: 'row' }}
-		>
-			{articles?.map((item) => (
+        <Box
+            sx={{
+                display: 'flex',
+                gap: { xs: 1, md: 2 },
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: { xs: 'column', md: 'row' }
+            }}>
+            {articles?.map((item) => (
 				<ArticleItem
 					key={item.id}
 					image={item.mainImage}
@@ -27,7 +28,7 @@ export const ArticlesGrid = ({ articles, isLoading }: ArticlesGridProps) => {
 					link={`/articles/${item.slug}`}
 				/>
 			))}
-			{isLoading && <Loader />}
-		</Box>
-	);
+            {isLoading && <Loader />}
+        </Box>
+    );
 };

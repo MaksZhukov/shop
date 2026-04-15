@@ -25,14 +25,16 @@ export const CartList = ({
 	onClickBuy
 }: CartListProps) => {
 	return (
-		<Box flex={1}>
-			<CartHeader
+        <Box sx={{
+            flex: 1
+        }}>
+            <CartHeader
 				allSelected={allSelected}
 				onSelectAll={onSelectAll}
 				onDeleteSelected={onDeleteSelected}
 				hasSelectedItems={selectedItems.length > 0}
 			/>
-			<Box>
+            <Box>
 				{items.map((item) => (
 					<CartItem
 						key={item.id}
@@ -44,6 +46,6 @@ export const CartList = ({
 					/>
 				))}
 			</Box>
-		</Box>
-	);
+        </Box>
+    );
 };

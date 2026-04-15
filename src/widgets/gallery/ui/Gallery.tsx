@@ -19,18 +19,25 @@ export const Gallery: FC<Props> = ({ page }) => {
 		setIndex(null);
 	};
 	return (
-		<>
-			<Typography component='h1' textTransform='uppercase' variant='h4' textAlign='center' marginBottom='1em'>
+        <>
+			<Typography component='h1' variant='h4' align='center' sx={{ textTransform: 'uppercase', mb: '1em' }}>
 				{page.seo?.h1}
 			</Typography>
-			<Box display='flex' justifyContent='space-around' flexWrap='wrap' gap={'1em'}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    flexWrap: 'wrap',
+                    gap: '1em'
+                }}>
 				{page.images?.map((item, i) => (
 					<Box
-						width={{ xs: '100%', md: 500 }}
-						onClick={handleClickImage(i)}
-						sx={{ cursor: 'pointer' }}
-						key={item.id}
-					>
+                        onClick={handleClickImage(i)}
+                        key={item.id}
+                        sx={{
+                            width: { xs: '100%', md: 500 },
+                            cursor: 'pointer'
+                        }}>
 						<Image
 							title={item.caption}
 							width={item.width > item.height ? 500 : 375}
@@ -42,8 +49,7 @@ export const Gallery: FC<Props> = ({ page }) => {
 					</Box>
 				))}
 			</Box>
-
-			<GalleryImages images={page.images} onClose={handleClose} selectedIndex={index}></GalleryImages>
-		</>
-	);
+            <GalleryImages images={page.images} onClose={handleClose} selectedIndex={index}></GalleryImages>
+        </>
+    );
 };

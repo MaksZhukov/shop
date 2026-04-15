@@ -14,18 +14,27 @@ interface Props {
 const Guarantee = ({ page }: Props) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
-		<>
-			<Box display='flex' flexDirection={{ xs: 'column', sm: 'row' }}>
+        <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' }
+                }}>
 				<Typography
-					variant={'h4'}
-					display={{ xs: 'block', sm: 'none' }}
+					variant='h4'
 					component='h1'
-					marginBottom='0.5em'
-					fontWeight='500'
-				>
+					sx={{
+						display: { xs: 'block', sm: 'none' },
+						mb: '0.5em',
+						fontWeight: 500
+					}}>
 					{page.h1}
 				</Typography>
-				<Box maxWidth={{ xs: 'initial', sm: 390 }} width='100%'>
+				<Box
+                    sx={{
+                        maxWidth: { xs: 'initial', sm: 390 },
+                        width: '100%'
+                    }}>
 					<Image
 						title={page.mainLeftImage?.caption}
 						src={getUrlByMinFormat(page.mainLeftImage, 'small')}
@@ -36,26 +45,26 @@ const Guarantee = ({ page }: Props) => {
 					></Image>
 				</Box>
 				<Box
-					minWidth={250}
-					sx={{
-						marginLeft: { xs: '0', sm: '3em' },
-						flex: { xs: 1, md: 'initial' },
-						marginTop: { xs: '0.5em', md: 0 }
-					}}
-				>
+                    sx={{
+                        minWidth: 250,
+                        marginLeft: { xs: '0', sm: '3em' },
+                        flex: { xs: 1, md: 'initial' },
+                        marginTop: { xs: '0.5em', md: 0 }
+                    }}>
 					<Typography
-						display={{ xs: 'none', sm: 'block' }}
 						variant='h4'
 						component='h1'
-						marginBottom='0.5em'
-						fontWeight='500'
-					>
+						sx={{
+							display: { xs: 'none', sm: 'block' },
+							mb: '0.5em',
+							fontWeight: 500
+						}}>
 						{page.h1}
 					</Typography>
 					<ReactMarkdown content={page.mainRightText}></ReactMarkdown>
 				</Box>
 			</Box>
-			<BlockImages
+            <BlockImages
 				withSlider={isMobile}
 				withoutOverlay={isMobile}
 				images={page.images1}
@@ -65,15 +74,15 @@ const Guarantee = ({ page }: Props) => {
 					flexDirection: { xs: 'column', sm: 'row' }
 				}}
 			></BlockImages>
-			<Box sx={{ typography: { xs: 'h5', md: 'h4' } }}>
-				<Typography textTransform='uppercase' fontWeight='500' marginBottom='0.5em' variant='inherit'>
+            <Box sx={{ typography: { xs: 'h5', md: 'h4' } }}>
+				<Typography variant='inherit' sx={{ textTransform: 'uppercase', fontWeight: 500, mb: '0.5em' }}>
 					{page.guaranteeNotApplyTitle}
 				</Typography>
 			</Box>
-			<Typography>
+            <Typography>
 				<ReactMarkdown content={page.guaranteeNotApplyText}></ReactMarkdown>
 			</Typography>
-			<BlockImages
+            <BlockImages
 				withSlider={isMobile}
 				withoutOverlay={isMobile}
 				images={page.images2}
@@ -83,18 +92,26 @@ const Guarantee = ({ page }: Props) => {
 					flexDirection: { xs: 'column', sm: 'row' }
 				}}
 			></BlockImages>
-			<Box
-				bgcolor='#FFF5DD'
-				sx={{ marginBottom: { xs: '1em', sm: '4em' }, padding: { xs: '1em 0.5em', sm: '2em 4em' } }}
-			>
-				<Box display='flex' alignItems='center' flexDirection={{ xs: 'column', md: 'row' }}>
+            <Box
+                sx={{
+                    bgcolor: '#FFF5DD',
+                    marginBottom: { xs: '1em', sm: '4em' },
+                    padding: { xs: '1em 0.5em', sm: '2em 4em' }
+                }}>
+				<Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: { xs: 'column', md: 'row' }
+                    }}>
 					<Box
-						display={{ xs: 'block', sm: 'none' }}
-						marginRight='1em'
-						maxWidth='250px'
-						maxHeight='250px'
-						width='100%'
-					>
+                        sx={{
+                            display: { xs: 'block', sm: 'none' },
+                            marginRight: '1em',
+                            maxWidth: '250px',
+                            maxHeight: '250px',
+                            width: '100%'
+                        }}>
 						<Image
 							title={page.warningLeftImage?.caption}
 							src={page.warningLeftImage?.url}
@@ -104,12 +121,25 @@ const Guarantee = ({ page }: Props) => {
 							alt={page.warningLeftImage?.alternativeText}
 						></Image>
 					</Box>
-					<Box textTransform='uppercase' fontWeight='500' sx={{ typography: { xs: 'h6', sm: 'h6' } }}>
+					<Box
+                        sx={{
+                            textTransform: 'uppercase',
+                            fontWeight: '500',
+                            typography: { xs: 'h6', sm: 'h6' }
+                        }}>
 						{page.warningTitle}
 					</Box>
 				</Box>
-				<Box display='flex'>
-					<Box display={{ xs: 'none', sm: 'block' }} marginTop='2em' maxWidth='250px' width='100%'>
+				<Box sx={{
+                    display: 'flex'
+                }}>
+					<Box
+                        sx={{
+                            display: { xs: 'none', sm: 'block' },
+                            marginTop: '2em',
+                            maxWidth: '250px',
+                            width: '100%'
+                        }}>
 						<Image
 							title={page.warningLeftImage?.caption}
 							src={page.warningLeftImage?.url}
@@ -118,18 +148,20 @@ const Guarantee = ({ page }: Props) => {
 							alt={page.warningLeftImage?.alternativeText}
 						></Image>
 					</Box>
-					<Box component='ul' textTransform='uppercase'>
+					<Box component='ul' sx={{
+                        textTransform: 'uppercase'
+                    }}>
 						{page.warningRightText.split('\n').map((item) => (
-							<Typography key={item} variant='h6' fontWeight='normal' component='li' marginY='0.5em'>
+							<Typography key={item} variant='h6' component='li' sx={{ fontWeight: 'normal', my: '0.5em' }}>
 								{item}
 							</Typography>
 						))}
 					</Box>
 				</Box>
 			</Box>
-			<ReactMarkdown content={page.content}></ReactMarkdown>
-		</>
-	);
+            <ReactMarkdown content={page.content}></ReactMarkdown>
+        </>
+    );
 };
 
 export default Guarantee;

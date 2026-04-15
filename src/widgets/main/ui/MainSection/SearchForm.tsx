@@ -391,16 +391,27 @@ export const SearchForm: React.FC = () => {
 	};
 
 	return (
-		<Box width={{ xs: '100%', md: 360 }}>
-			<Typography mb={1} textAlign='center' color='textSecondary' variant='h6'>
+        <Box sx={{
+            width: { xs: '100%', md: 360 }
+        }}>
+			<Typography variant='h6' color='text.secondary' align='center' sx={{ mb: 1 }}>
 				Поиск автозапчастей
 			</Typography>
-			<WhiteBox px={2} py={1} gap={1} withShadow>
+			<WhiteBox withShadow sx={{ px: 2, py: 1, gap: 1 }}>
 				<Tabs sx={{ mb: 2 }} value='brand'>
 					<Tab label='По марке авто' value='brand' />
 				</Tabs>
-				<Box gap={1} display='flex' flexDirection='column'>
-					<Box display='flex' gap={1}>
+				<Box
+                    sx={{
+                        gap: 1,
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}>
+					<Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1
+                        }}>
 						<Autocomplete {...brandAutocompleteProps} />
 						<Autocomplete {...modelAutocompleteProps} />
 					</Box>
@@ -427,6 +438,6 @@ export const SearchForm: React.FC = () => {
 					</Button>
 				</Box>
 			</WhiteBox>
-		</Box>
-	);
+        </Box>
+    );
 };

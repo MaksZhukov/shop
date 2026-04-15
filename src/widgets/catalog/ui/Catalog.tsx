@@ -60,16 +60,20 @@ export const Catalog: React.FC<CatalogProps> = ({
 	};
 
 	return (
-		<>
-			<CatalogHeader
+        <>
+            <CatalogHeader
 				seo={seo}
 				sort={sort}
 				total={total}
 				onChangeSort={onChangeSort}
 				onOpenFiltersModal={handleFiltersModalOpen}
 			/>
-
-			<Box display='flex' gap={2} mb={4}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    mb: 4
+                }}>
 				<CatalogSidebar
 					filtersConfig={filtersConfig}
 					filtersValues={filtersValues}
@@ -90,8 +94,7 @@ export const Catalog: React.FC<CatalogProps> = ({
 					page={page}
 				/>
 			</Box>
-
-			<CatalogFiltersModal
+            <CatalogFiltersModal
 				open={filtersModalOpen}
 				filtersConfig={filtersConfig}
 				filtersValues={filtersValues}
@@ -100,6 +103,6 @@ export const Catalog: React.FC<CatalogProps> = ({
 				onClickFind={onClickFind}
 				onChangeFilterValues={onChangeFilterValues}
 			/>
-		</>
-	);
+        </>
+    );
 };

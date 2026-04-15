@@ -9,7 +9,11 @@ interface SocialButtonsProps {
 }
 
 export const SocialButtons: FC<SocialButtonsProps> = ({ data = SOCIAL_BUTTONS, sx }) => (
-	<Box display='flex' gap={1} sx={sx}>
+	<Box
+        sx={[{
+            display: 'flex',
+            gap: 1
+        }, ...(Array.isArray(sx) ? sx : [sx])]}>
 		{data.map(({ Component: Icon, name, href }) => (
 			<Link key={name} href={href} target='_blank' aria-label={`${name}`}>
 				<Icon />

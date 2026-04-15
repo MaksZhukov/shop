@@ -50,8 +50,8 @@ export const ContactInfoForm = ({
 	};
 
 	return (
-		<WhiteBox p={2}>
-			<FormControl component='fieldset' sx={{ mb: 1, width: '100%' }} disabled={disabled}>
+		<WhiteBox sx={{ p: 2 }}>
+            <FormControl component='fieldset' sx={{ mb: 1, width: '100%' }} disabled={disabled}>
 				<RadioGroup
 					row
 					value={formData.userType}
@@ -66,11 +66,18 @@ export const ContactInfoForm = ({
 					<FormControlLabel value='legal' control={<Radio />} label='Юридическое лицо' disabled={disabled} />
 				</RadioGroup>
 			</FormControl>
-
-			<Typography variant='h6' component='h2' mb={2}>
+            <Typography variant='h6' component='h2' sx={{
+                mb: 2
+            }}>
 				Контактные данные покупателя
 			</Typography>
-			<Box display='flex' flexDirection='column' gap={2} maxWidth='480px'>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    maxWidth: '480px'
+                }}>
 				{formData.userType === 'individual' ? (
 					<>
 						<Input
@@ -169,62 +176,72 @@ export const ContactInfoForm = ({
 								disabled={disabled}
 							/>
 							<Box
-								onClick={disabled ? undefined : onUploadClick}
-								maxWidth='480px'
-								border='2px dashed'
-								borderColor={'custom.divider'}
-								borderRadius={1}
-								padding={1}
-								bgcolor='custom.bg-surface-1'
-								display='flex'
-								alignItems='center'
-								justifyContent='center'
-								gap={1}
-								sx={{
-									cursor: disabled ? 'not-allowed' : 'pointer',
-									opacity: disabled ? 0.6 : 1,
-									'&:hover': {
+                                onClick={disabled ? undefined : onUploadClick}
+                                sx={{
+                                    maxWidth: '480px',
+                                    border: '2px dashed',
+                                    borderColor: 'custom.divider',
+                                    borderRadius: 1,
+                                    padding: 1,
+                                    bgcolor: 'custom.bg-surface-1',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: 1,
+                                    cursor: disabled ? 'not-allowed' : 'pointer',
+                                    opacity: disabled ? 0.6 : 1,
+
+                                    '&:hover': {
 										borderColor: disabled ? 'custom.divider' : 'primary.main',
 										bgcolor: disabled ? 'custom.bg-surface-1' : 'action.hover'
 									}
-								}}
-							>
+                                }}>
 								<AttachFileIcon />
 								<Box>
-									<Typography variant='body2' fontWeight={600} fontSize={16} color='text.primary'>
+									<Typography
+                                        variant='body2'
+                                        sx={{
+                                            fontWeight: 600,
+                                            fontSize: 16,
+                                            color: 'text.primary'
+                                        }}>
 										{formData.uploadedFile
 											? formData.uploadedFile.name
 											: 'Нажмите, чтобы загрузить *'}
 									</Typography>
-									<Typography variant='caption' color='custom.text-muted'>
+									<Typography variant='caption' sx={{
+                                        color: 'custom.text-muted'
+                                    }}>
 										Формат файла jpeg, png, pdf
 									</Typography>
 								</Box>
 							</Box>
 							{previewUrl && (
 								<Box
-									width={80}
-									height={80}
-									mt={0.5}
-									border='2px solid'
-									borderColor='custom.bg-surface-3'
-									borderRadius={1}
-									display='flex'
-									alignItems='center'
-									justifyContent='center'
-									bgcolor='background.paper'
-									overflow='hidden'
-									position={'relative'}
-								>
+                                    sx={{
+                                        width: 80,
+                                        height: 80,
+                                        mt: 0.5,
+                                        border: '2px solid',
+                                        borderColor: 'custom.bg-surface-3',
+                                        borderRadius: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        bgcolor: 'background.paper',
+                                        overflow: 'hidden',
+                                        position: 'relative'
+                                    }}>
 									{previewUrl ? (
 										<Box
-											component='img'
-											src={previewUrl}
-											alt='Preview'
-											width={'100%'}
-											height={'100%'}
-											style={{ objectFit: 'cover' }}
-										/>
+                                            component='img'
+                                            src={previewUrl}
+                                            alt='Preview'
+                                            style={{ objectFit: 'cover' }}
+                                            sx={{
+                                                width: '100%',
+                                                height: '100%'
+                                            }} />
 									) : (
 										<AttachFileIcon />
 									)}
@@ -248,13 +265,19 @@ export const ContactInfoForm = ({
 									</IconButton>
 								</Box>
 							)}
-							<Typography variant='caption' color='custom.text-muted' mt={1} display='block'>
+							<Typography
+                                variant='caption'
+                                sx={{
+                                    color: 'custom.text-muted',
+                                    mt: 1,
+                                    display: 'block'
+                                }}>
 								Подойдет свидетельство о регистрации либо другой подтверждающий документ
 							</Typography>
 						</Box>
 					</>
 				)}
 			</Box>
-		</WhiteBox>
-	);
+        </WhiteBox>
+    );
 };

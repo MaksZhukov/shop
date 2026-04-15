@@ -5,19 +5,20 @@ import { PAYMENT_METHODS } from '../footerConstants';
 
 const PaymentMethods: FC = () => (
 	<Box
-		py={2.5}
-		display='flex'
-		bgcolor='background.paper'
-		justifyContent='center'
-		gap={1.5}
-		borderRadius={2}
-		alignItems='center'
-		maxWidth={420}
-		width='100%'
-		flexWrap='wrap'
-		component='section'
-		aria-label='Способы оплаты'
-	>
+        component='section'
+        aria-label='Способы оплаты'
+        sx={{
+            py: 2.5,
+            display: 'flex',
+            bgcolor: 'background.paper',
+            justifyContent: 'center',
+            gap: 1.5,
+            borderRadius: 2,
+            alignItems: 'center',
+            maxWidth: 420,
+            width: '100%',
+            flexWrap: 'wrap'
+        }}>
 		{PAYMENT_METHODS.map((method) => (
 			<Image
 				key={method.name}

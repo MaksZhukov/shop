@@ -16,14 +16,36 @@ interface ModalContainerProps {
 
 export const ModalContainer: FC<ModalContainerProps> = ({ onClose, title, width, children, py = 1, px = 2, sx }) => {
 	return (
-		<WhiteBox color='text.primary' withShadow width={width} px={px} py={py} sx={sx}>
-			<Box gap={1} display={'flex'} alignItems={'flex-start'} mb={1} justifyContent={'space-between'}>
+		<WhiteBox
+			withShadow
+			sx={[
+				{ color: 'text.primary', width, px, py },
+				...(Array.isArray(sx) ? sx : sx ? [sx] : [])
+			]}>
+            <Box
+                sx={{
+                    gap: 1,
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    mb: 1,
+                    justifyContent: 'space-between'
+                }}>
 				{typeof title === 'string' ? (
-					<Typography flex={1} variant='body1' fontWeight={'500'} fontSize={'16px'}>
+					<Typography
+                        variant='body1'
+                        sx={{
+                            flex: 1,
+                            fontWeight: '500',
+                            fontSize: '16px'
+                        }}>
 						{title}
 					</Typography>
 				) : (
-					<Box flex={1} sx={{ minWidth: 0 }}>{title}</Box>
+					<Box
+                        sx={{
+                            flex: 1,
+                            minWidth: 0
+                        }}>{title}</Box>
 				)}
 				<IconButton
 					onClick={onClose}
@@ -36,7 +58,7 @@ export const ModalContainer: FC<ModalContainerProps> = ({ onClose, title, width,
 					<CloseIcon />
 				</IconButton>
 			</Box>
-			{children}
-		</WhiteBox>
-	);
+            {children}
+        </WhiteBox>
+    );
 };

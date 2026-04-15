@@ -10,17 +10,34 @@ export const EmptyCart = () => {
 	};
 
 	return (
-		<Box py={5} display='flex' flexDirection='column' alignItems='center' justifyContent='center'>
-			<NextImage src='/basket.png' alt='Корзина' width={144} height={136} />
-			<Typography variant='h6' fontSize='18px' mt={2}>
+        <Box
+            sx={{
+                py: 5,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+            <NextImage src='/basket.png' alt='Корзина' width={144} height={136} />
+            <Typography
+                variant='h6'
+                sx={{
+                    fontSize: '18px',
+                    mt: 2
+                }}>
 				В корзине пока пусто
 			</Typography>
-			<Typography mb={2} textAlign='center' variant='body1'>
+            <Typography
+                variant='body1'
+                sx={{
+                    mb: 2,
+                    textAlign: 'center'
+                }}>
 				Воспользуйтесь поиском, чтобы найти всё, что вам нужно
 			</Typography>
-			<Button variant='contained' color='primary' onClick={handleStartShopping}>
+            <Button variant='contained' color='primary' onClick={handleStartShopping}>
 				Начать покупки
 			</Button>
-		</Box>
-	);
+        </Box>
+    );
 };

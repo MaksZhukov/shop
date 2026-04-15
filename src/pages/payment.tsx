@@ -10,7 +10,7 @@ interface Props {
 const Contacts = ({ page }: Props) => {
 	return (
 		<>
-			<Typography marginBottom='1em' component='h1' textTransform='uppercase' variant='h4' textAlign='center'>
+			<Typography component='h1' variant='h4' align='center' sx={{ mb: '1em', textTransform: 'uppercase' }}>
 				{page.seo?.h1 || 'Оплата'}
 			</Typography>
 			<ReactMarkdown content={page.content}></ReactMarkdown>

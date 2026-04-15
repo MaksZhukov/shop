@@ -10,13 +10,20 @@ interface Props {
 
 const InstallmentPlan: FC<Props> = ({ page }) => {
 	return (
-		<>
-			<Typography marginBottom='1em' component='h1' textTransform='uppercase' variant='h4' textAlign='center'>
+        <>
+            <Typography
+                component='h1'
+                variant='h4'
+                sx={{
+                    marginBottom: '1em',
+                    textTransform: 'uppercase',
+                    textAlign: 'center'
+                }}>
 				{page.seo?.h1 || 'Рассрочка'}
 			</Typography>
-			<ReactMarkdown content={page.content}></ReactMarkdown>
-		</>
-	);
+            <ReactMarkdown content={page.content}></ReactMarkdown>
+        </>
+    );
 };
 
 export default InstallmentPlan;

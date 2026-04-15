@@ -11,15 +11,18 @@ export const BenefitCard: React.FC<BenefitCardProps> = ({ item, sparePartsTotal,
 
 	return (
 		<WhiteBox
-			height={120}
-			position='relative'
-			display='flex'
-			flexDirection='column'
-			alignItems='center'
-			justifyContent='end'
-			p={1}
-			sx={sx}
-		>
+			sx={[
+				{
+					height: 120,
+					position: 'relative',
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					justifyContent: 'end',
+					p: 1
+				},
+				...(Array.isArray(sx) ? sx : sx ? [sx] : [])
+			]}>
 			<Image
 				src={item.image}
 				alt={item.title}

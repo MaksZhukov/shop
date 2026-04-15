@@ -43,8 +43,8 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
 	};
 
 	return (
-		<Modal open={isOpened} onClose={handleClose}>
-			<ModalContainer
+        <Modal open={isOpened} onClose={handleClose}>
+            <ModalContainer
 				px={2}
 				py={1.5}
 				onClose={handleClose}
@@ -62,8 +62,12 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
 				width={'calc(100% - 1em)'}
 				sx={{ mx: 1, my: 1, height: 'calc(100vh - 1em)', position: 'relative' }}
 			>
-				<Box position='relative'>
-					<Box mt={2}>
+				<Box sx={{
+                    position: 'relative'
+                }}>
+					<Box sx={{
+                        mt: 2
+                    }}>
 						<SearchHistoryChips
 							searchHistory={searchHistory}
 							onSearchHistoryClick={onChangeSearchValue}
@@ -84,6 +88,6 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
 					)}
 				</Box>
 			</ModalContainer>
-		</Modal>
-	);
+        </Modal>
+    );
 };

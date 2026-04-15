@@ -81,11 +81,18 @@ const Cart: NextPage<Props> = observer(() => {
 		}
 
 		return (
-			<>
-				<Typography variant='h6' component='h1' mb={2}>
+            <>
+                <Typography variant='h6' component='h1' sx={{
+                    mb: 2
+                }}>
 					Корзина
 				</Typography>
-				<Box display='flex' flexDirection={{ xs: 'column', md: 'row' }} gap={1}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        gap: 1
+                    }}>
 					<CartList
 						items={shoppingCartItems}
 						selectedItems={selectedItems}
@@ -103,17 +110,21 @@ const Cart: NextPage<Props> = observer(() => {
 						disclaimerText='Доступные способы и условия доставки можно узнать при оформлении заказа'
 					/>
 				</Box>
-			</>
-		);
+            </>
+        );
 	};
 
 	return (
-		<Box pt={2} pb={{ xs: 0, md: 2 }}>
-			{renderCartContent()}
-			<ViewedProducts />
-			<MobileQuestionsSection />
-		</Box>
-	);
+        <Box
+            sx={{
+                pt: 2,
+                pb: { xs: 0, md: 2 }
+            }}>
+            {renderCartContent()}
+            <ViewedProducts />
+            <MobileQuestionsSection />
+        </Box>
+    );
 });
 
 export default Cart;

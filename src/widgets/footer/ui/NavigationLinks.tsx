@@ -1,6 +1,5 @@
-import { Theme, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Link } from 'shared/ui';
-import NextLink from 'next/link';
 import { FC, HTMLAttributeAnchorTarget } from 'react';
 
 interface NavigationLinksProps {
@@ -9,14 +8,13 @@ interface NavigationLinksProps {
 		readonly label: string;
 		readonly target?: HTMLAttributeAnchorTarget;
 	}>;
-	theme: Theme;
 }
 
-const NavigationLinks: FC<NavigationLinksProps> = ({ links, theme }) => (
+const NavigationLinks: FC<NavigationLinksProps> = ({ links }) => (
 	<>
 		{links.map(({ href, label, target }) => (
-			<Typography key={href} color={theme.palette.custom['text-inverse']} mb={1}>
-				<Link href={href} target={target} color={theme.palette.custom['text-inverse']}>
+			<Typography key={href} sx={{ mb: 1, color: 'custom.text-inverse' }}>
+				<Link href={href} target={target} sx={{ color: 'custom.text-inverse' }}>
 					{label}
 				</Link>
 			</Typography>

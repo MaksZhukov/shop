@@ -11,8 +11,14 @@ export const BenefitsGrid: React.FC<BenefitsGridProps> = ({ benefitsData, spareP
 	const theme = useTheme();
 
 	return (
-		<Box mb={5} display='flex' gap={1} flexWrap='wrap'>
-			{benefitsData.map((item) => (
+        <Box
+            sx={{
+                mb: 5,
+                display: 'flex',
+                gap: 1,
+                flexWrap: 'wrap'
+            }}>
+            {benefitsData.map((item) => (
 				<BenefitCard
 					key={item.id}
 					item={item}
@@ -20,6 +26,6 @@ export const BenefitsGrid: React.FC<BenefitsGridProps> = ({ benefitsData, spareP
 					sx={{ flex: { xs: `calc(50% - ${theme.spacing(1)})`, md: '1' } }}
 				/>
 			))}
-		</Box>
-	);
+        </Box>
+    );
 };

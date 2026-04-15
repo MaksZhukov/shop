@@ -101,19 +101,22 @@ const Autocomplete = <
 						{...params}
 						required={props.required}
 						variant='standard'
-						InputProps={{
-							...params.InputProps,
-							startAdornment: props.withSearchIcon ? <SearchIcon /> : undefined,
-							endAdornment: props.withSearchIcon ? undefined : params.InputProps?.endAdornment,
-							...(props.withSearchIcon
-								? {
-										sx: {
-											input: {
-												paddingLeft: '8px !important'
+						slotProps={{
+							...params.slotProps,
+							input: {
+								...params.slotProps.input,
+								startAdornment: props.withSearchIcon ? <SearchIcon /> : params.slotProps.input.startAdornment,
+								endAdornment: props.withSearchIcon ? undefined : params.slotProps.input.endAdornment,
+								...(props.withSearchIcon
+									? {
+											sx: {
+												'& .MuiInputBase-input': {
+													paddingLeft: '8px !important'
+												}
 											}
 										}
-									}
-								: {})
+									: {})
+							}
 						}}
 						placeholder={props.placeholder}
 					/>

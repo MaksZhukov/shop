@@ -28,8 +28,13 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
 	onChangeHoveredCategory
 }) => {
 	return (
-		<Box display={{ xs: 'none', md: 'block' }} width={256} component='aside'>
-			<WhiteBox p={2} withShadow>
+        <Box
+            component='aside'
+            sx={{
+                display: { xs: 'none', md: 'block' },
+                width: 256
+            }}>
+			<WhiteBox withShadow sx={{ p: 2 }}>
 				<Filters
 					total={total}
 					config={filtersConfig}
@@ -38,58 +43,71 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
 					onChangeFilterValues={onChangeFilterValues}
 				/>
 			</WhiteBox>
-			{catalogCategories.length > 0 && (
-				<WhiteBox mt={2} p={1} withShadow sx={{ position: 'relative' }}>
-					<Typography pl={1} variant='h6' fontWeight={700} fontSize={18}>
+            {catalogCategories.length > 0 && (
+				<WhiteBox withShadow sx={{ mt: 2, p: 1, position: 'relative' }}>
+					<Typography variant='h6' sx={{ pl: 1, fontWeight: 700, fontSize: 18 }}>
 						Категории
 					</Typography>
 					{catalogCategories.map((category) => (
 						<Box key={category.name}>
 							<Box
-								bgcolor={hoveredCategory === category ? 'custom.bg-surface-3' : 'transparent'}
-								position='relative'
-								sx={{ cursor: 'pointer', ':hover': { bgcolor: 'custom.bg-surface-3' } }}
-								p={1}
-								borderRadius={2}
-								display='flex'
-								gap={0.5}
-								alignItems='center'
-								onMouseLeave={() => {
+                                onMouseLeave={() => {
 									onChangeHoveredCategory?.(null);
 								}}
-								onMouseEnter={() => {
+                                onMouseEnter={() => {
 									onChangeHoveredCategory?.(category);
 								}}
-							>
-								<Typography variant='body1' fontWeight={500}>
+                                sx={{
+                                    bgcolor: hoveredCategory === category ? 'custom.bg-surface-3' : 'transparent',
+                                    position: 'relative',
+                                    p: 1,
+                                    borderRadius: 2,
+                                    display: 'flex',
+                                    gap: 0.5,
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                    ':hover': { bgcolor: 'custom.bg-surface-3' }
+                                }}>
+								<Typography variant='body1' sx={{ fontWeight: 500 }}>
 									{category.name}
 								</Typography>
-								<Typography flex={1} variant='body1' color='custom.text-muted'>
+								<Typography variant='body1' color='custom.text-muted' sx={{ flex: 1 }}>
 									{category.totalSparePartsCount?.toLocaleString()}
 								</Typography>
 								<Box>
 									<ChevronRightIcon />
 								</Box>
 								{hoveredCategory === category && category.kindSpareParts.length > 0 && (
-									<Box position='absolute' zIndex={1} top={0} left='100%' pl={1.5}>
-										<WhiteBox minWidth={256} p={1} withShadow>
+									<Box
+                                        sx={{
+                                            position: 'absolute',
+                                            zIndex: 1,
+                                            top: 0,
+                                            left: '100%',
+                                            pl: 1.5
+                                        }}>
+										<WhiteBox withShadow sx={{ minWidth: 256, p: 1 }}>
 											{category.kindSpareParts.map((kindSparePart) => (
 												<Box
-													key={kindSparePart.id}
-													sx={{
-														cursor: 'pointer',
-														':hover': { bgcolor: 'custom.bg-surface-3' },
-														borderRadius: 2
-													}}
-													p={1}
-												>
-													<Box display='flex' gap={0.5} alignItems='center'>
+                                                    key={kindSparePart.id}
+                                                    sx={{
+                                                        p: 1,
+                                                        cursor: 'pointer',
+                                                        ':hover': { bgcolor: 'custom.bg-surface-3' },
+                                                        borderRadius: 2
+                                                    }}>
+													<Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            gap: 0.5,
+                                                            alignItems: 'center'
+                                                        }}>
 														<Link href={`/spare-parts/ksp-${kindSparePart.slug}`}>
-															<Typography variant='body2' fontWeight={500}>
+															<Typography variant='body2' sx={{ fontWeight: 500 }}>
 																{kindSparePart.name}
 															</Typography>
 														</Link>
-														<Typography flex={1} variant='body2' color='custom.text-muted'>
+														<Typography variant='body2' color='custom.text-muted' sx={{ flex: 1 }}>
 															{kindSparePart.spareParts.count?.toLocaleString()}
 														</Typography>
 													</Box>
@@ -103,6 +121,6 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
 					))}
 				</WhiteBox>
 			)}
-		</Box>
-	);
+        </Box>
+    );
 };

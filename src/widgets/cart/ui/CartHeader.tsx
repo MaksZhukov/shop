@@ -1,4 +1,4 @@
-import { Box, Checkbox, IconButton, Typography, useTheme } from '@mui/material';
+import { Box, Checkbox, IconButton, Typography } from '@mui/material';
 import { TrashFilledIcon } from 'shared/icons';
 
 interface CartHeaderProps {
@@ -9,25 +9,30 @@ interface CartHeaderProps {
 }
 
 export const CartHeader = ({ allSelected, onSelectAll, onDeleteSelected, hasSelectedItems }: CartHeaderProps) => {
-	const theme = useTheme();
-
 	return (
-		<Box
-			display='flex'
-			justifyContent='space-between'
-			alignItems='center'
-			bgcolor={{ xs: 'transparent', md: 'white' }}
-			mb={2}
-			py={{ xs: 0, md: 1.5 }}
-			px={{ xs: 0, md: 1 }}
-			border={{ xs: 'none', md: `1px solid ${theme.palette.custom.divider}` }}
-			borderRadius={4}
-		>
-			<Box display='flex' alignItems='center' gap={1}>
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                bgcolor: { xs: 'transparent', md: 'white' },
+                mb: 2,
+                py: { xs: 0, md: 1.5 },
+                px: { xs: 0, md: 1 },
+                border: { xs: 'none', md: '1px solid' },
+                borderColor: { xs: 'transparent', md: 'custom.divider' },
+                borderRadius: 4
+            }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1
+                }}>
 				<Checkbox checked={allSelected} onChange={onSelectAll} />
 				<Typography variant='body1'>Выбрать все</Typography>
 			</Box>
-			<IconButton
+            <IconButton
 				onClick={onDeleteSelected}
 				disabled={!hasSelectedItems}
 				size='large'
@@ -41,6 +46,6 @@ export const CartHeader = ({ allSelected, onSelectAll, onDeleteSelected, hasSele
 			>
 				<TrashFilledIcon />
 			</IconButton>
-		</Box>
-	);
+        </Box>
+    );
 };

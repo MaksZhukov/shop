@@ -16,15 +16,34 @@ interface Props {
 const HowToGetTo: FC<Props> = ({ page }) => {
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
-		<>
-			<Typography marginBottom='1em' component='h1' textTransform='uppercase' variant='h4' textAlign='center'>
+        <>
+            <Typography
+                component='h1'
+                variant='h4'
+                sx={{
+                    marginBottom: '1em',
+                    textTransform: 'uppercase',
+                    textAlign: 'center'
+                }}>
 				{page.seo?.h1}
 			</Typography>
-			<Box display='flex' gap='2em' marginBottom='2em' sx={{ flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
-				<Box flex='1'>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: '2em',
+                    marginBottom: '2em',
+                    flexWrap: { xs: 'wrap', md: 'nowrap' }
+                }}>
+				<Box sx={{
+                    flex: '1'
+                }}>
 					<ReactMarkdown content={page.text}></ReactMarkdown>
 				</Box>
-				<Box width={{ xs: '100%', sm: 250 }} margin='auto'>
+				<Box
+                    sx={{
+                        width: { xs: '100%', sm: 250 },
+                        margin: 'auto'
+                    }}>
 					<ReactPlayer
 						controls
 						style={{ margin: 'auto' }}
@@ -34,15 +53,15 @@ const HowToGetTo: FC<Props> = ({ page }) => {
 					></ReactPlayer>
 				</Box>
 			</Box>
-			<iframe
+            <iframe
 				src='https://yandex.ru/map-widget/v1/?um=constructor%3Aa553e2f9544eb2f0c9143e3fc50b1dd10fc059188ae131165b0455a4ff8c645b&source=constructor'
 				width='100%'
 				loading='lazy'
 				height='400px'
 				frameBorder={0}
 			></iframe>
-		</>
-	);
+        </>
+    );
 };
 
 export default HowToGetTo;

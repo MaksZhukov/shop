@@ -26,7 +26,12 @@ export const ProductItemImages = ({ data, width, imageHeight, imageHeightOffset,
 			<NextLink href={getProductLink(data)} style={disabledStyles}>
 				<Carousel options={{ axis: 'x', loop: false }} showArrows={false} showDots={true}>
 					{data.images?.slice(0, LIMIT_PRODUCT_IMAGES).map((image, i) => (
-						<Box key={image.id} maxWidth={'100%'} height={imageHeight + imageHeightOffset}>
+						<Box
+                            key={image.id}
+                            sx={{
+                                maxWidth: '100%',
+                                height: imageHeight + imageHeightOffset
+                            }}>
 							<Image
 								title={image.caption}
 								width={width}

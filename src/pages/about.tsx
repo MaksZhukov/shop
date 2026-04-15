@@ -16,15 +16,16 @@ const About = ({ page }: Props) => {
 	const isTablet = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 	return (
-		<>
-			<Box display='flex' sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
+        <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' }
+                }}>
 				<Typography
-					sx={{ display: { xs: 'block', md: 'none' } }}
 					component='h1'
 					variant='h4'
-					marginBottom='1em'
-					textTransform='uppercase'
-				>
+					sx={{ display: { xs: 'block', md: 'none' }, mb: '1em', textTransform: 'uppercase' }}>
 					{page.h1}
 				</Typography>
 
@@ -39,12 +40,9 @@ const About = ({ page }: Props) => {
 
 				<Box sx={{ marginLeft: { xs: 0, md: '3em' } }}>
 					<Typography
-						sx={{ display: { xs: 'none', md: 'block' } }}
 						component='h1'
 						variant='h4'
-						marginBottom='1em'
-						textTransform='uppercase'
-					>
+						sx={{ display: { xs: 'none', md: 'block' }, mb: '1em', textTransform: 'uppercase' }}>
 						{page.h1}
 					</Typography>
 
@@ -53,47 +51,52 @@ const About = ({ page }: Props) => {
 					</Typography>
 				</Box>
 			</Box>
-			<BlockImages
+            <BlockImages
 				withoutOverlay={isTablet}
 				images={page.images1}
 				withSlider={isMobile}
 				sx={{ paddingY: { xs: 0, md: '3em' }, margin: { xs: '1em 0 3em', md: '3em 0' } }}
 			></BlockImages>
-			<Box>
-				<Typography marginBottom='1em' component='h2' variant='h4' textTransform='uppercase'>
+            <Box>
+				<Typography component='h2' variant='h4' sx={{ mb: '1em', textTransform: 'uppercase' }}>
 					{page.whyNeedServicesTitle}
 				</Typography>
 				<ReactMarkdown content={page.whyNeedServicesText}></ReactMarkdown>
 			</Box>
-			<BlockImages
+            <BlockImages
 				sx={{ paddingY: { xs: 0, md: '3em' }, marginY: { xs: '1em', md: '2em' } }}
 				withoutOverlay
 				withSlider={isMobile}
 				images={page.images2}
 			></BlockImages>
-			<ReactMarkdown content={page.whyNeedServicesTextAfterImages2}></ReactMarkdown>
-			<Box display='flex' marginBottom='3em' sx={{ flexDirection: { xs: 'column-reverse', md: 'row' } }}>
+            <ReactMarkdown content={page.whyNeedServicesTextAfterImages2}></ReactMarkdown>
+            <Box
+                sx={{
+                    display: 'flex',
+                    marginBottom: '3em',
+                    flexDirection: { xs: 'column-reverse', md: 'row' }
+                }}>
 				<Box sx={{ marginRight: { xs: 0, md: '3em' }, marginTop: { xs: '1em', md: 0 } }}>
 					<Typography
-						display={{ xs: 'none', md: 'block' }}
-						marginBottom='1em'
 						component='h2'
 						variant='h4'
-						textTransform='uppercase'
-					>
+						sx={{
+							display: { xs: 'none', md: 'block' },
+							mb: '1em',
+							textTransform: 'uppercase'
+						}}>
 						{page.mainPrinciplesTitle}
 					</Typography>
 
 					<ReactMarkdown content={page.mainPrinciplesTextLeft}></ReactMarkdown>
 				</Box>
-				<Box display={{ xs: 'block', md: 'none' }}>
+				<Box sx={{
+                    display: { xs: 'block', md: 'none' }
+                }}>
 					<Typography
-						sx={{ wordBreak: 'break-word' }}
-						marginBottom='1em'
 						component='h2'
 						variant='h4'
-						textTransform='uppercase'
-					>
+						sx={{ wordBreak: 'break-word', mb: '1em', textTransform: 'uppercase' }}>
 						{page.mainPrinciplesTitle}
 					</Typography>
 					<Image
@@ -105,7 +108,11 @@ const About = ({ page }: Props) => {
 						style={isTablet ? { height: 'auto' } : {}}
 					></Image>
 				</Box>
-				<Box display={{ xs: 'none', md: 'block' }} minWidth='500px'>
+				<Box
+                    sx={{
+                        display: { xs: 'none', md: 'block' },
+                        minWidth: '500px'
+                    }}>
 					<Image
 						title={page.mainPrinciplesImageRight?.caption}
 						width={500}
@@ -116,25 +123,33 @@ const About = ({ page }: Props) => {
 					></Image>
 				</Box>
 			</Box>
-			<Typography component='h2' textTransform='uppercase' marginBottom='1em' variant='h4'>
+			<Typography component='h2' variant='h4' sx={{ textTransform: 'uppercase', mb: '1em' }}>
 				{page.nuancesTitle}
 			</Typography>
-			<ReactMarkdown content={page.nuancesText}></ReactMarkdown>
-			<BlockImages
+            <ReactMarkdown content={page.nuancesText}></ReactMarkdown>
+            <BlockImages
 				withoutOverlay={isTablet}
 				withSlider={isMobile}
 				images={page.images3}
 				sx={{ paddingY: { xs: 0, md: '3em' }, marginY: { xs: '1em', md: '2em' } }}
 			></BlockImages>
-			<ReactMarkdown content={page.mainPrinciplesTextAfterImages3}></ReactMarkdown>
-			<BlockImages
+            <ReactMarkdown content={page.mainPrinciplesTextAfterImages3}></ReactMarkdown>
+            <BlockImages
 				sx={{ paddingY: { xs: 0, md: '3em' }, margin: { xs: '1em 0 3em', md: '1em 0 3em' } }}
 				withoutOverlay
 				withSlider={isMobile}
 				images={page.images4}
 			></BlockImages>
-			<Box display='flex' marginBottom='3em' sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
-				<Typography display={{ xs: 'block', md: 'none' }} marginBottom='1em' component='h2' variant='h4'>
+            <Box
+                sx={{
+                    display: 'flex',
+                    marginBottom: '3em',
+                    flexDirection: { xs: 'column', md: 'row' }
+                }}>
+				<Typography
+					component='h2'
+					variant='h4'
+					sx={{ display: { xs: 'block', md: 'none' }, mb: '1em' }}>
 					{page.pricesTitle}
 				</Typography>
 				<Image
@@ -146,7 +161,7 @@ const About = ({ page }: Props) => {
 					alt={page.pricesLeftImage.alternativeText}
 				></Image>
 				<Box sx={{ margin: { xs: 0, md: '4em 0 0 3em' } }}>
-					<Typography display={{ xs: 'none', md: 'block' }} component='h2' variant='h4'>
+					<Typography component='h2' variant='h4' sx={{ display: { xs: 'none', md: 'block' } }}>
 						{page.pricesTitle}
 					</Typography>
 					<Typography sx={{ marginTop: { xs: '1em', md: 0 } }}>
@@ -154,9 +169,9 @@ const About = ({ page }: Props) => {
 					</Typography>
 				</Box>
 			</Box>
-			<ReactMarkdown content={page.content}></ReactMarkdown>
-		</>
-	);
+            <ReactMarkdown content={page.content}></ReactMarkdown>
+        </>
+    );
 };
 
 export default About;

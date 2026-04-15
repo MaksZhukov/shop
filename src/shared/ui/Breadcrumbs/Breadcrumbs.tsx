@@ -17,11 +17,16 @@ export const Breadcrumbs: FC<Props> = ({ breadcrumbs }) => {
 	);
 
 	return (
-		<Container>
-			<MUIBreadcrumbs separator={renderSeparator} sx={{ marginY: '1em' }} aria-label='breadcrumb'>
+        <Container>
+            <MUIBreadcrumbs separator={renderSeparator} sx={{ marginY: '1em' }} aria-label='breadcrumb'>
 				{breadcrumbs.map((crumb: BreadcrumbItem, idx: number) =>
 					idx === breadcrumbs.length - 1 ? (
-						<Typography textTransform='capitalize' key={crumb.text} color='text.secondary'>
+						<Typography
+                            key={crumb.text}
+                            sx={{
+                                textTransform: 'capitalize',
+                                color: 'text.secondary'
+                            }}>
 							{crumb.text}
 						</Typography>
 					) : (
@@ -36,6 +41,6 @@ export const Breadcrumbs: FC<Props> = ({ breadcrumbs }) => {
 					)
 				)}
 			</MUIBreadcrumbs>
-		</Container>
-	);
+        </Container>
+    );
 };

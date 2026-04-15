@@ -30,9 +30,9 @@ export const AuthRegisterForm = ({
 
 	if (step === 'password') {
 		return (
-			<>
-				<AuthFormHeader title='Введите пароль' />
-				<form onSubmit={handlePasswordSubmit}>
+            <>
+                <AuthFormHeader title='Введите пароль' />
+                <form onSubmit={handlePasswordSubmit}>
 					<PasswordInput
 						fullWidth
 						disabled={isLoading}
@@ -47,33 +47,44 @@ export const AuthRegisterForm = ({
 					<Button disabled={isLoading} variant='contained' type='submit' fullWidth>
 						Продолжить
 					</Button>
-					<Box textAlign='center' mt={1.5}>
+					<Box
+                        sx={{
+                            textAlign: 'center',
+                            mt: 1.5
+                        }}>
 						<Link
-							component='button'
-							type='button'
-							variant='body2'
-							color='text.secondary'
-							onClick={() => onChangeType('forgot')}
-							sx={{ cursor: 'pointer' }}
-						>
+                            component='button'
+                            type='button'
+                            variant='body2'
+                            onClick={() => onChangeType('forgot')}
+                            sx={{
+                                color: 'text.secondary',
+                                cursor: 'pointer'
+                            }}>
 							Забыли пароль?
 						</Link>
 					</Box>
 				</form>
-			</>
-		);
+            </>
+        );
 	}
 
 	return (
-		<Box>
-			<AuthFormHeader title='Войдите или создайте профиль' />
-			<Button fullWidth variant='outlined' href={`${backendUrl}/api/connect/google`} startIcon={<GoogleIcon />}>
+        <Box>
+            <AuthFormHeader title='Войдите или создайте профиль' />
+            <Button fullWidth variant='outlined' href={`${backendUrl}/api/connect/google`} startIcon={<GoogleIcon />}>
 				Продолжить с Google
 			</Button>
-			<Typography variant='body2' color='custom.text-muted' textAlign='center' sx={{ my: 1.5 }}>
+            <Typography
+                variant='body2'
+                sx={{
+                    color: 'custom.text-muted',
+                    textAlign: 'center',
+                    my: 1.5
+                }}>
 				или
 			</Typography>
-			<form onSubmit={handleEmailStepSubmit}>
+            <form onSubmit={handleEmailStepSubmit}>
 				<OutlinedInput
 					fullWidth
 					disabled={isLoading}
@@ -91,14 +102,22 @@ export const AuthRegisterForm = ({
 					Продолжить
 				</Button>
 			</form>
-			<Typography mt={0.5} variant='body2' color='text.secondary' textAlign='center'>
+            <Typography
+                variant='body2'
+                sx={{
+                    mt: 0.5,
+                    color: 'text.secondary',
+                    textAlign: 'center'
+                }}>
 				Нажимая на кнопку, вы соглашаетесь с{' '}
-				<Link color='info.main' href='/privacy'>
+				<Link href='/privacy' sx={{
+                    color: 'info.main'
+                }}>
 					Условиями обработки персональных данных
 				</Link>
 			</Typography>
-		</Box>
-	);
+        </Box>
+    );
 };
 
 export default AuthRegisterForm;

@@ -27,16 +27,17 @@ export const NavigationArrow = React.forwardRef<HTMLDivElement, NavigationArrowP
 	return (
 		<Box
 			ref={ref}
-			position={'absolute'}
-			{...position}
-			sx={{
-				...(isVertical
-					? { left: '50%', transform: 'translateX(-50%)' }
-					: { top: '50%', transform: 'translateY(-50%)' }),
-				...sx
-			}}
-		>
-			<IconButton
+			sx={[
+				{
+					position: 'absolute',
+					...position,
+					...(isVertical
+						? { left: '50%', transform: 'translateX(-50%)' }
+						: { top: '50%', transform: 'translateY(-50%)' })
+				},
+				...(Array.isArray(sx) ? sx : sx ? [sx] : [])
+			]}>
+            <IconButton
 				sx={{
 					backgroundColor: 'rgba(255, 255, 255, 0.4)',
 					borderRadius: 2,
@@ -48,8 +49,8 @@ export const NavigationArrow = React.forwardRef<HTMLDivElement, NavigationArrowP
 			>
 				<Icon />
 			</IconButton>
-		</Box>
-	);
+        </Box>
+    );
 	}
 );
 

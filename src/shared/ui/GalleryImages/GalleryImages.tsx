@@ -29,8 +29,14 @@ export const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => 
 	};
 
 	return (
-		<Modal disableScrollLock open={selectedIndex !== null} onClose={onClose}>
-			<Box padding='0 50px' sx={{ outline: 'none', transform: 'translateY(20%)', height: '75%' }}>
+        <Modal disableScrollLock open={selectedIndex !== null} onClose={onClose}>
+            <Box
+                sx={{
+                    padding: '0 50px',
+                    outline: 'none',
+                    transform: 'translateY(20%)',
+                    height: '75%'
+                }}>
 				<IconButton
 					size='large'
 					color='primary'
@@ -53,7 +59,13 @@ export const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => 
 					sx={{ maxWidth: 1500, margin: 'auto' }}
 				>
 					{images?.map((item, index) => (
-						<Box width={'100%'} key={item.id} height={'100%'} sx={{ display: 'flex !important' }}>
+						<Box
+                            key={item.id}
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex !important'
+                            }}>
 							<Zoom
 								onOutsideClick={handleOutsideClick}
 								enableOutsideClick={currentIndex === index}
@@ -67,6 +79,6 @@ export const GalleryImages: FC<Props> = ({ images, selectedIndex, onClose }) => 
 					))}
 				</Carousel>
 			</Box>
-		</Modal>
-	);
+        </Modal>
+    );
 };

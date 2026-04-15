@@ -62,9 +62,8 @@ export const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets 
 						<Typography
 							variant={variant}
 							component='span'
-							display={inline ? 'inline' : 'block'}
 							gutterBottom
-						>
+							sx={{ display: inline ? 'inline' : 'block' }}>
 							{data.children}
 						</Typography>
 					);
@@ -78,7 +77,7 @@ export const ReactMarkdown: FC<Props> = ({ content, inline, blockImagesSnippets 
 					</Typography>
 				),
 				h2: (data) => (
-					<Typography component='h2' gutterBottom marginTop='1em' variant='h5'>
+					<Typography component='h2' gutterBottom variant='h5' sx={{ mt: '1em' }}>
 						{data.children}
 					</Typography>
 				),

@@ -20,11 +20,13 @@ export const PaymentMethodForm = ({ formData, onPaymentMethodChange, disabled = 
 	const isLegalEntity = formData.userType === 'legal';
 
 	return (
-		<WhiteBox p={2}>
-			<Typography variant='h6' component='h2' mb={2}>
+		<WhiteBox sx={{ p: 2 }}>
+            <Typography variant='h6' component='h2' sx={{
+                mb: 2
+            }}>
 				Способ оплаты *
 			</Typography>
-			<FormControl fullWidth sx={{ mb: 2, maxWidth: '480px' }} required disabled={disabled}>
+            <FormControl fullWidth sx={{ mb: 2, maxWidth: '480px' }} required disabled={disabled}>
 				<Select
 					value={formData.paymentMethod || ''}
 					onChange={(e) => onPaymentMethodChange(e.target.value as PaymentMethod)}
@@ -59,10 +61,20 @@ export const PaymentMethodForm = ({ formData, onPaymentMethodChange, disabled = 
 							'Оплата в пункте самовывоза'
 						) : (
 							<>
-								<Typography mr={'auto'} variant='body1' color='text.secondary'>
+								<Typography
+                                    variant='body1'
+                                    sx={{
+                                        mr: 'auto',
+                                        color: 'text.secondary'
+                                    }}>
 									Оплата в пункте самовывоза
 								</Typography>
-								<Typography mr={'auto'} variant='body2' color='text.secondary'>
+								<Typography
+                                    variant='body2'
+                                    sx={{
+                                        mr: 'auto',
+                                        color: 'text.secondary'
+                                    }}>
 									Доступно только при самовывозе
 								</Typography>
 							</>
@@ -71,13 +83,22 @@ export const PaymentMethodForm = ({ formData, onPaymentMethodChange, disabled = 
 					{isLegalEntity && <MenuItem value='receive_invoice'>Получить счет на оплату</MenuItem>}
 				</Select>
 			</FormControl>
-			{PAYMENT_DESCRIPTIONS[formData.paymentMethod] && (
-				<Box maxWidth='480px' bgcolor='custom.bg-surface-1' py={1} px={1.5} borderRadius={2}>
-					<Typography variant='body2' color='custom.text-muted'>
+            {PAYMENT_DESCRIPTIONS[formData.paymentMethod] && (
+				<Box
+                    sx={{
+                        maxWidth: '480px',
+                        bgcolor: 'custom.bg-surface-1',
+                        py: 1,
+                        px: 1.5,
+                        borderRadius: 2
+                    }}>
+					<Typography variant='body2' sx={{
+                        color: 'custom.text-muted'
+                    }}>
 						{PAYMENT_DESCRIPTIONS[formData.paymentMethod]}
 					</Typography>
 				</Box>
 			)}
-		</WhiteBox>
-	);
+        </WhiteBox>
+    );
 };

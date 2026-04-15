@@ -14,11 +14,17 @@ interface Props {
 
 const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
 	return (
-		<WhiteBox>
-			<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
+        <WhiteBox>
+            <Typography
+                component='h1'
+                variant='h4'
+                sx={{
+                    textAlign: 'center',
+                    marginBottom: '1em'
+                }}>
 				{page.seo?.h1 || 'СТО'}
 			</Typography>
-			{serviceStations.data.map((item) => (
+            {serviceStations.data.map((item) => (
 				<CardItem
 					key={item.id}
 					name={item.name}
@@ -27,8 +33,8 @@ const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
 					link={`/service-stations/${item.slug}`}
 				></CardItem>
 			))}
-		</WhiteBox>
-	);
+        </WhiteBox>
+    );
 };
 
 export default Vacancies;

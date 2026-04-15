@@ -15,11 +15,17 @@ interface Props {
 
 const Vacancies: NextPage<Props> = ({ page, autocomises }) => {
 	return (
-		<WhiteBox>
-			<Typography textAlign='center' component='h1' variant='h4' marginBottom='1em'>
+        <WhiteBox>
+            <Typography
+                component='h1'
+                variant='h4'
+                sx={{
+                    textAlign: 'center',
+                    marginBottom: '1em'
+                }}>
 				{page.seo?.h1 || 'Автокомисы'}
 			</Typography>
-			{autocomises.data.map((item) => (
+            {autocomises.data.map((item) => (
 				<CardItem
 					key={item.id}
 					description={item.description}
@@ -28,8 +34,8 @@ const Vacancies: NextPage<Props> = ({ page, autocomises }) => {
 					link={`/autocomises/${item.slug}`}
 				></CardItem>
 			))}
-		</WhiteBox>
-	);
+        </WhiteBox>
+    );
 };
 
 export default Vacancies;

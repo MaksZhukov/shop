@@ -36,9 +36,11 @@ export const DeliveryMethodForm = ({
 	const { renderMobileContacts } = useOrderRegistrationContext();
 
 	return (
-		<>
-			<WhiteBox p={2}>
-				<Typography variant='h6' component='h2' mb={1}>
+        <>
+			<WhiteBox sx={{ p: 2 }}>
+				<Typography variant='h6' component='h2' sx={{
+                    mb: 1
+                }}>
 					Способ получения
 				</Typography>
 				<FormControl component='fieldset' sx={{ mb: 1, width: '100%' }} disabled={disabled}>
@@ -54,8 +56,17 @@ export const DeliveryMethodForm = ({
 				{formData.deliveryMethod === 'pickup' && (
 					<>
 						{isMobile && (
-							<Box mt={1} mb={2}>
-								<Typography variant='body2' color='custom.text-muted' mb={1}>
+							<Box
+                                sx={{
+                                    mt: 1,
+                                    mb: 2
+                                }}>
+								<Typography
+                                    variant='body2'
+                                    sx={{
+                                        color: 'custom.text-muted',
+                                        mb: 1
+                                    }}>
 									Гродненский район, д.Полотково
 								</Typography>
 								<Typography
@@ -69,12 +80,29 @@ export const DeliveryMethodForm = ({
 								</Typography>
 							</Box>
 						)}
-						<Box maxWidth='480px' py={1} bgcolor='custom.bg-surface-1' mb={2} px={1.5} borderRadius={2}>
-							<Typography variant='body2' color='custom.text-muted'>
+						<Box
+                            sx={{
+                                maxWidth: '480px',
+                                py: 1,
+                                bgcolor: 'custom.bg-surface-1',
+                                mb: 2,
+                                px: 1.5,
+                                borderRadius: 2
+                            }}>
+							<Typography variant='body2' sx={{
+                                color: 'custom.text-muted'
+                            }}>
 								После оплаты с вами свяжется менеджер и уточнит детали заказа
 							</Typography>
 						</Box>
-						<Box maxWidth='480px' display='flex' flexDirection='column' gap={2} mb={2}>
+						<Box
+                            sx={{
+                                maxWidth: '480px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 2,
+                                mb: 2
+                            }}>
 							<Input
 								fullWidth
 								placeholder='Комментарий к заказу'
@@ -88,9 +116,17 @@ export const DeliveryMethodForm = ({
 								disabled={disabled}
 							/>
 						</Box>
-						<Box maxWidth='480px' display='flex' alignItems='center' gap={1}>
+						<Box
+                            sx={{
+                                maxWidth: '480px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1
+                            }}>
 							<InfoIcon />
-							<Typography variant='body2' color='text.secondary'>
+							<Typography variant='body2' sx={{
+                                color: 'text.secondary'
+                            }}>
 								Информация о гарантии{' '}
 								<Typography
 									component='span'
@@ -105,12 +141,29 @@ export const DeliveryMethodForm = ({
 				)}
 				{formData.deliveryMethod === 'delivery' && (
 					<>
-						<Box maxWidth='480px' py={1} px={1.5} borderRadius={2} bgcolor='custom.bg-surface-1' mb={2}>
-							<Typography variant='body2' color='custom.text-muted'>
+						<Box
+                            sx={{
+                                maxWidth: '480px',
+                                py: 1,
+                                px: 1.5,
+                                borderRadius: 2,
+                                bgcolor: 'custom.bg-surface-1',
+                                mb: 2
+                            }}>
+							<Typography variant='body2' sx={{
+                                color: 'custom.text-muted'
+                            }}>
 								Способы и условия доставки уточнит менеджер после заказа в рабочее время
 							</Typography>
 						</Box>
-						<Box maxWidth='480px' display='flex' flexDirection='column' gap={2} mb={2}>
+						<Box
+                            sx={{
+                                maxWidth: '480px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 2,
+                                mb: 2
+                            }}>
 							<Input
 								fullWidth
 								placeholder='Адрес *'
@@ -136,11 +189,24 @@ export const DeliveryMethodForm = ({
 								disabled={disabled}
 							/>
 						</Box>
-						<Box maxWidth='480px' display='flex' alignItems='center' gap={1}>
+						<Box
+                            sx={{
+                                maxWidth: '480px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1
+                            }}>
 							<InfoIcon />
-							<Typography variant='body2' color='text.secondary'>
+							<Typography variant='body2' sx={{
+                                color: 'text.secondary'
+                            }}>
 								Информация про доставку и гарантию{' '}
-								<Typography component='span' color='info.main' sx={{ cursor: 'pointer' }}>
+								<Typography
+                                    component='span'
+                                    sx={{
+                                        color: 'info.main',
+                                        cursor: 'pointer'
+                                    }}>
 									Подробнее
 								</Typography>
 							</Typography>
@@ -148,7 +214,7 @@ export const DeliveryMethodForm = ({
 					</>
 				)}
 			</WhiteBox>
-			{renderMobileContacts(isMobileContactsModalOpen, handleCloseMobileContactsModal)}
-		</>
-	);
+            {renderMobileContacts(isMobileContactsModalOpen, handleCloseMobileContactsModal)}
+        </>
+    );
 };
