@@ -22,7 +22,7 @@ import { engineVolumeApi, EngineVolume } from 'entities/engineVolume';
 import { useQuery } from '@tanstack/react-query';
 import { sparePartApi } from 'entities/sparePart';
 import { getParamByRelation } from 'shared/services/ParamsService';
-import { SLUGIFY_BODY_STYLES, SLUGIFY_FUELS, SLUGIFY_TRANSMISSIONS } from 'entities/car';
+import { BODY_STYLES_SLUGIFY, FUELS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'entities/car';
 import { SparePart } from 'entities/sparePart';
 import { mainPageQueryFns, mainPageQueryKeys } from 'features/mainPage';
 
@@ -112,9 +112,9 @@ export const SearchForm: React.FC = () => {
 			generation: getParamByRelation(generation, 'slug'),
 			kindSparePart: getParamByRelation(kindSparePart, 'slug'),
 			volume: getParamByRelation(volume),
-			fuel: fuel ? SLUGIFY_FUELS[fuel] : null,
-			bodyStyle: bodyStyle ? SLUGIFY_BODY_STYLES[bodyStyle] : null,
-			transmission: transmission ? SLUGIFY_TRANSMISSIONS[transmission] : null
+			fuel: fuel ?? null,
+			bodyStyle: bodyStyle ?? null,
+			transmission: transmission ?? null
 		};
 		return filters;
 	};
@@ -268,13 +268,23 @@ export const SearchForm: React.FC = () => {
 	};
 
 	const buildSearchUrl = (searchValues: FormValues): string => {
-		const { brand, model, generation, ...queryParams } = searchValues;
+		const { brand, model, generation, kindSparePart, volume, fuel, bodyStyle, transmission } = searchValues;
 
-		const sanitizedQueryParams = Object.fromEntries(
-			Object.entries(queryParams).filter(([_, value]) => Boolean(value))
-		);
+		const queryParams: Record<string, string> = {};
+		if (volume) {
+			queryParams.volume = volume;
+		}
+		if (fuel) {
+			queryParams.fuel = FUELS_SLUGIFY[fuel] ?? fuel;
+		}
+		if (bodyStyle) {
+			queryParams.bodyStyle = BODY_STYLES_SLUGIFY[bodyStyle] ?? bodyStyle;
+		}
+		if (transmission) {
+			queryParams.transmission = TRANSMISSIONS_SLUGIFY[transmission] ?? transmission;
+		}
 
-		const queryString = qs.stringify(sanitizedQueryParams, { encode: false });
+		const queryString = qs.stringify(queryParams, { encode: false });
 		const query = queryString ? `?${queryString}` : '';
 
 		const pathSegments = ['/spare-parts'];
@@ -284,8 +294,11 @@ export const SearchForm: React.FC = () => {
 				pathSegments.push(`model-${model}`);
 			}
 			if (generation) {
-				pathSegments.push(generation);
+				pathSegments.push(`gen-${generation}`);
 			}
+		}
+		if (kindSparePart) {
+			pathSegments.push(`ksp-${kindSparePart}`);
 		}
 
 		return pathSegments.join('/') + query;
@@ -361,7 +374,7 @@ export const SearchForm: React.FC = () => {
 		options: engineVolumes.map((item) => ({ label: item.name, value: item.name })),
 		noOptionsText,
 		placeholder: 'Объем двигателя',
-		onChange: handleChangeAutocomplete('engineVolume'),
+		onChange: handleChangeAutocomplete('volume'),
 		onOpen: handleOpenEngineVolumeAutocomplete
 	});
 
@@ -391,9 +404,11 @@ export const SearchForm: React.FC = () => {
 	};
 
 	return (
-        <Box sx={{
-            width: { xs: '100%', md: 360 }
-        }}>
+		<Box
+			sx={{
+				width: { xs: '100%', md: 360 }
+			}}
+		>
 			<Typography variant='h6' color='text.secondary' align='center' sx={{ mb: 1 }}>
 				Поиск автозапчастей
 			</Typography>
@@ -402,16 +417,18 @@ export const SearchForm: React.FC = () => {
 					<Tab label='По марке авто' value='brand' />
 				</Tabs>
 				<Box
-                    sx={{
-                        gap: 1,
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}>
+					sx={{
+						gap: 1,
+						display: 'flex',
+						flexDirection: 'column'
+					}}
+				>
 					<Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1
-                        }}>
+						sx={{
+							display: 'flex',
+							gap: 1
+						}}
+					>
 						<Autocomplete {...brandAutocompleteProps} />
 						<Autocomplete {...modelAutocompleteProps} />
 					</Box>
@@ -438,6 +455,6 @@ export const SearchForm: React.FC = () => {
 					</Button>
 				</Box>
 			</WhiteBox>
-        </Box>
-    );
+		</Box>
+	);
 };

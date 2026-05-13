@@ -28,9 +28,19 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 
 	const currentBrandSlug = brandSlug(brand, filtersValues.brand);
 
+	const brandsDataFilters = {
+		kindSparePart: filtersValues.kindSparePart,
+		model: filtersValues.model,
+		generation: filtersValues.generation,
+		volume: filtersValues.volume,
+		fuel: filtersValues.fuel,
+		bodyStyle: filtersValues.bodyStyle,
+		transmission: filtersValues.transmission
+	};
+
 	const { data: brands = [] } = useQuery({
-		queryKey: sparePartsBrandsQueryKey(filtersValues.kindSparePart),
-		queryFn: sparePartsPageQueryFns.fetchBrandsData(filtersValues.kindSparePart)
+		queryKey: sparePartsBrandsQueryKey(brandsDataFilters),
+		queryFn: sparePartsPageQueryFns.fetchBrandsData(brandsDataFilters)
 	});
 
 	const { data: spareParts, isFetching } = useQuery({

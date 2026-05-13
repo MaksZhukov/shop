@@ -37,12 +37,22 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 				? [context.query.slug]
 				: [];
 		const params = parseSlugParam(slug);
-		const fetchBrands = sparePartsPageQueryFns.fetchBrandsData(params.kindSparePartSlug);
+		const { volume, fuel, bodyStyle, transmission } = context.query as Record<string, string | undefined>;
+		const brandsFilters = {
+			kindSparePart: params.kindSparePartSlug,
+			model: params.modelSlug,
+			generation: params.generationSlug,
+			volume,
+			fuel,
+			bodyStyle,
+			transmission
+		};
+		const fetchBrands = sparePartsPageQueryFns.fetchBrandsData(brandsFilters);
 		const brands = await fetchBrands();
 		const pageProps = await buildPageProps(params);
 
 		const queryClient = new QueryClient();
-		queryClient.setQueryData(sparePartsBrandsQueryKey(params.kindSparePartSlug), brands);
+		queryClient.setQueryData(sparePartsBrandsQueryKey(brandsFilters), brands);
 		const dehydratedState = dehydrate(queryClient);
 
 		const props = {

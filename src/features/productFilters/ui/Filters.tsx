@@ -27,12 +27,13 @@ const getDependencyItemIds = (
 export const Filters = ({ onClickFind, config, total, values, onChangeFilterValues }: Props) => {
 	const mainFiltersConfig = config.filter((item) => item.category === 'main');
 	const additionalFiltersConfig = config.filter((item) => item.category === 'additional');
-	const [isMoreFilters, setIsMoreFilters] = useState(() =>
-		additionalFiltersConfig.some((item) => {
-			const v = values[item.id];
-			return v != null && v !== '';
-		})
-	);
+	const hasAdditionalSelected = additionalFiltersConfig.some((item) => {
+		const v = values[item.id];
+		return v != null && v !== '';
+	});
+	const [userToggle, setUserToggle] = useState<boolean | null>(null);
+	const isMoreFilters = userToggle ?? hasAdditionalSelected;
+	const setIsMoreFilters = (next: boolean) => setUserToggle(next);
 
 	const handleClickFind = () => {
 		if (onClickFind) {
