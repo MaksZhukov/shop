@@ -6,15 +6,16 @@ import type { TopCategory } from 'entities/catalog';
 import { useState } from 'react';
 import { CatalogHeader } from './CatalogHeader';
 import { CatalogSidebar } from './CatalogSidebar';
-import type { BrandCatalog, ModelCatalog } from './types';
+import type { CatalogReference } from './types';
 import { CatalogContent } from './CatalogContent';
 import { CatalogFiltersModal } from './CatalogFiltersModal';
 
 interface CatalogProps {
 	seo: SEO | null;
 	filtersConfig: (AutocompleteType | NumberType)[];
-	brands: BrandCatalog[];
-	models?: ModelCatalog[];
+	references?: CatalogReference[];
+	showReferencesPanel?: boolean;
+	isReferencesLoading?: boolean;
 	filtersValues: { [key: string]: string | null };
 	total?: number;
 	data: Product[];
@@ -33,8 +34,9 @@ interface CatalogProps {
 export const Catalog: React.FC<CatalogProps> = ({
 	filtersConfig,
 	seo,
-	brands,
-	models,
+	references,
+	showReferencesPanel,
+	isReferencesLoading,
 	filtersValues,
 	total,
 	onClickFind,
@@ -60,20 +62,21 @@ export const Catalog: React.FC<CatalogProps> = ({
 	};
 
 	return (
-        <>
-            <CatalogHeader
+		<>
+			<CatalogHeader
 				seo={seo}
 				sort={sort}
 				total={total}
 				onChangeSort={onChangeSort}
 				onOpenFiltersModal={handleFiltersModalOpen}
 			/>
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: 2,
-                    mb: 4
-                }}>
+			<Box
+				sx={{
+					display: 'flex',
+					gap: 2,
+					mb: 4
+				}}
+			>
 				<CatalogSidebar
 					filtersConfig={filtersConfig}
 					filtersValues={filtersValues}
@@ -85,16 +88,16 @@ export const Catalog: React.FC<CatalogProps> = ({
 					onChangeHoveredCategory={onChangeHoveredCategory}
 				/>
 				<CatalogContent
-					brands={brands}
-					models={models}
-					filtersValues={filtersValues}
+					references={references}
+					showReferencesPanel={showReferencesPanel}
+					isReferencesLoading={isReferencesLoading}
 					data={data}
 					isLoading={isLoading}
 					pageCount={pageCount}
 					page={page}
 				/>
 			</Box>
-            <CatalogFiltersModal
+			<CatalogFiltersModal
 				open={filtersModalOpen}
 				filtersConfig={filtersConfig}
 				filtersValues={filtersValues}
@@ -103,6 +106,6 @@ export const Catalog: React.FC<CatalogProps> = ({
 				onClickFind={onClickFind}
 				onChangeFilterValues={onChangeFilterValues}
 			/>
-        </>
-    );
+		</>
+	);
 };

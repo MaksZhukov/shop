@@ -4,7 +4,8 @@ import type { BrandWithCabinsCount } from 'entities/brand';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
-import { BrandCatalog, Catalog } from 'widgets/catalog/ui';
+import { Catalog, mapToCatalogReferences } from 'widgets/catalog/ui';
+import type { CatalogReference } from 'widgets/catalog/ui';
 import {
 	useCabinsCatalogFilters,
 	useCabinsCatalogData,
@@ -14,7 +15,7 @@ import {
 	parseCabinsRouterQuery,
 	type CabinsFilterValues
 } from 'features/cabinsCatalog';
-import { ModelCatalog } from 'widgets/catalog/ui/types';
+import type { GenerationWithCabinsCount } from 'entities/generation';
 
 interface Props {
 	kindSparePart?: KindSparePart;
@@ -117,35 +118,46 @@ export const CatalogCabins: FC<Props> = ({ kindSparePart, pageData }) => {
 		return queryString ? `?${queryString}` : '';
 	};
 
-	const brandsForCatalog: BrandCatalog[] = brands.map((b) => ({
-		id: b.id,
-		name: b.name,
-		slug: b.slug,
-		path: `/cabins/${b.slug}${generateQueryParams()}`,
-		count: b.cabins.count
-	}));
+	const references: CatalogReference[] = (() => {
+		if (!filtersValues.brand) {
+			return mapToCatalogReferences(
+				brands.map((b) => ({
+					id: b.id,
+					name: b.name,
+					path: `/cabins/${b.slug}${generateQueryParams()}`,
+					count: b.cabins.count
+				}))
+			);
+		}
 
-	const modelsForCatalog: ModelCatalog[] = models?.map((m) => ({
-		id: m.id,
-		name: m.name,
-		slug: m.slug,
-		path: `/cabins/${filtersValues.brand}/model-${m.slug}${generateQueryParams()}`,
-		count: m.cabins?.count,
-		generations: m.generations
+		if (!filtersValues.model) {
+			return mapToCatalogReferences(
+				models.map((m) => ({
+					id: m.id,
+					name: m.name,
+					path: `/cabins/${filtersValues.brand}/model-${m.slug}${generateQueryParams()}`,
+					count: m.cabins?.count ?? 0
+				}))
+			);
+		}
+
+		return (generations as GenerationWithCabinsCount[])
 			.filter((g) => g.cabins?.count)
 			.map((g) => ({
 				id: g.id,
-				name: g.name,
-				slug: g.slug,
-				path: `/cabins/${filtersValues.brand}/model-${m.slug}/${g.slug}${generateQueryParams()}`,
+				label: g.name,
+				href: `/cabins/${filtersValues.brand}/model-${filtersValues.model}/${g.slug}${generateQueryParams()}`,
 				count: g.cabins.count
-			}))
-	}));
+			}));
+	})();
+
+	const showReferencesPanel =
+		!filtersValues.brand || !filtersValues.model || !filtersValues.generation;
 
 	return (
 		<Catalog
-			brands={brandsForCatalog}
-			models={modelsForCatalog}
+			references={references}
+			showReferencesPanel={showReferencesPanel}
 			filtersValues={filtersValues}
 			onChangeFilterValues={handleChangeFilterValues}
 			filtersConfig={filtersConfig}

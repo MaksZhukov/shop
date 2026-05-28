@@ -3,7 +3,8 @@ import { CircularProgress } from '@mui/material';
 import type { BrandWithWheelsCount } from 'entities/brand';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
-import { Catalog, BrandCatalog } from 'widgets/catalog/ui';
+import { Catalog, mapToCatalogReferences } from 'widgets/catalog/ui';
+import type { CatalogReference } from 'widgets/catalog/ui';
 import {
 	useCatalogFilters,
 	useCatalogData,
@@ -12,7 +13,6 @@ import {
 	parseRouterQuery,
 	type WheelFilterValues
 } from 'features/wheelsCatalog';
-import { ModelCatalog } from 'widgets/catalog/ui/types';
 
 interface Props {
 	pageData: DefaultPage;
@@ -98,26 +98,38 @@ export const CatalogWheels: FC<Props> = ({ pageData }) => {
 		return queryString ? `?${queryString}` : '';
 	};
 
-	const brandsForCatalog: BrandCatalog[] = brands.map((b) => ({
-		id: b.id,
-		name: b.name,
-		slug: b.slug,
-		path: `/wheels/${b.slug}${generateQueryParams()}`,
-		count: b.wheels?.count ?? 0
-	}));
+	const references: CatalogReference[] = (() => {
+		if (!filtersValues.brand) {
+			return mapToCatalogReferences(
+				brands.map((b) => ({
+					id: b.id,
+					name: b.name,
+					path: `/wheels/${b.slug}${generateQueryParams()}`,
+					count: b.wheels?.count ?? 0
+				}))
+			);
+		}
 
-	const modelsForCatalog: ModelCatalog[] = models?.map((m) => ({
-		id: m.id,
-		name: m.name,
-		slug: m.slug,
-		path: `/wheels/${filtersValues.brand}/model-${m.slug}${generateQueryParams()}`,
-		count: m.wheels?.count
-	}));
+		if (!filtersValues.model) {
+			return mapToCatalogReferences(
+				models.map((m) => ({
+					id: m.id,
+					name: m.name,
+					path: `/wheels/${filtersValues.brand}/model-${m.slug}${generateQueryParams()}`,
+					count: m.wheels?.count
+				}))
+			);
+		}
+
+		return [];
+	})();
+
+	const showReferencesPanel = !filtersValues.brand || (!filtersValues.model && references.length > 0);
 
 	return (
 		<Catalog
-			brands={brandsForCatalog}
-			models={modelsForCatalog}
+			references={references}
+			showReferencesPanel={showReferencesPanel}
 			filtersValues={filtersValues}
 			onChangeFilterValues={handleChangeFilterValues}
 			filtersConfig={filtersConfig}

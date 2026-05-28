@@ -4,15 +4,15 @@ import { ProductItem } from 'entities/product';
 import { Typography } from 'shared/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import type { BrandCatalog, ModelCatalog } from './types';
+import type { CatalogReference } from './types';
 import { CartButton } from 'features/cart';
 import { FavoriteButton } from 'features/favorites';
 import { Link } from 'shared/ui';
 
 interface CatalogContentProps {
-	brands: BrandCatalog[];
-	models?: ModelCatalog[];
-	filtersValues: { [key: string]: string | null };
+	references?: CatalogReference[];
+	showReferencesPanel?: boolean;
+	isReferencesLoading?: boolean;
 	data: Product[];
 	isLoading: boolean;
 	pageCount: number;
@@ -20,9 +20,9 @@ interface CatalogContentProps {
 }
 
 export const CatalogContent: React.FC<CatalogContentProps> = ({
-	brands,
-	models,
-	filtersValues,
+	references = [],
+	showReferencesPanel = false,
+	isReferencesLoading = false,
 	data,
 	isLoading,
 	pageCount,
@@ -32,10 +32,7 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-	const showBrandsSection = !filtersValues.brand || (models && !filtersValues.model);
-
 	const handleScrollToTop = () => {
-		// Use instant scroll on mobile to avoid animation issues
 		if (isMobile) {
 			window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
 		} else {
@@ -56,81 +53,61 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 		return search ? `${basePath}?${search}` : basePath;
 	};
 
-	const renderModelLinkEntries = (model: ModelCatalog) => {
-		return (
-			model.generations?.map((gen) => ({
-				key: gen.id,
-				path: gen.path,
-				label: `${model.name} ${gen.name}`,
-				count: gen.count
-			})) || [{ key: model.id, path: model.path, label: model.name, count: model.count }]
-		);
-	};
-
 	return (
-        <Box sx={{
-            flex: 1
-        }}>
-            {showBrandsSection && !isMobile && (
+		<Box
+			sx={{
+				flex: 1
+			}}
+		>
+			{showReferencesPanel && !isMobile && (
 				<Box
-                    sx={{
-                        overflow: 'auto',
-                        mb: 2,
-                        boxShadow: '0px 10px 25px 0px #1018281F',
-                        px: 2,
-                        py: 2,
-                        minHeight: 360,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flexWrap: 'wrap',
-                        height: 360,
-                        gap: 2,
-                        borderRadius: 4,
-                        border: '1px solid',
-                        borderColor: 'custom.divider',
-                        bgcolor: 'custom.bg-surface-1'
-                    }}>
-					{!filtersValues.brand &&
-						brands.map((brand) => (
+					sx={{
+						overflow: 'auto',
+						mb: 2,
+						boxShadow: '0px 10px 25px 0px #1018281F',
+						px: 2,
+						py: 2,
+						minHeight: 360,
+						display: 'flex',
+						flexDirection: 'column',
+						flexWrap: 'wrap',
+						height: 360,
+						gap: 2,
+						borderRadius: 4,
+						border: '1px solid',
+						borderColor: 'custom.divider',
+						bgcolor: 'custom.bg-surface-1'
+					}}
+				>
+					{isReferencesLoading ? (
+						<CircularProgress sx={{ margin: 'auto' }} />
+					) : (
+						references.map((item) => (
 							<Box
-                                key={brand.id}
-                                sx={{
-                                    py: 1,
-                                    display: 'flex',
-                                    gap: 0.5
-                                }}>
-								<Link href={brand.path}>{brand.name}</Link>
-								{brand.count != null && (
-									<Typography color='custom.text-muted'>{brand.count}</Typography>
-								)}
+								key={item.id}
+								sx={{
+									display: 'flex',
+									gap: 0.5,
+									py: 1
+								}}
+							>
+								<Link href={item.href}>{item.label}</Link>
+								{item.count != null && <Typography color='custom.text-muted'>{item.count}</Typography>}
 							</Box>
-						))}
-					{models &&
-						filtersValues.brand &&
-						!filtersValues.model &&
-						models.flatMap(renderModelLinkEntries).map((entry) => (
-							<Box
-                                key={entry.key}
-                                sx={{
-                                    display: 'flex',
-                                    gap: 0.5,
-                                    py: 1
-                                }}>
-								<Link href={entry.path}>{entry.label}</Link>
-								<Typography color='custom.text-muted'>{entry.count}</Typography>
-							</Box>
-						))}
+						))
+					)}
 				</Box>
 			)}
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: { xs: 'center', md: 'flex-start' },
-                    gap: 1,
-                    mb: 2,
-                    opacity: isLoading ? 0.5 : 1
-                }}>
+			<Box
+				sx={{
+					display: 'flex',
+					flexWrap: 'wrap',
+					justifyContent: { xs: 'center', md: 'flex-start' },
+					gap: 1,
+					mb: 2,
+					opacity: isLoading ? 0.5 : 1
+				}}
+			>
 				{data.length ? (
 					data.map((item) => (
 						<ProductItem
@@ -156,7 +133,7 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 					<CircularProgress sx={{ margin: 'auto' }} />
 				)}
 			</Box>
-            {pageCount > 0 && (
+			{pageCount > 0 && (
 				<Pagination
 					sx={{
 						display: 'flex',
@@ -183,6 +160,6 @@ export const CatalogContent: React.FC<CatalogContentProps> = ({
 					variant='text'
 				/>
 			)}
-        </Box>
-    );
+		</Box>
+	);
 };

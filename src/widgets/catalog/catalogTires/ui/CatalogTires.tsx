@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { CircularProgress } from '@mui/material';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
-import { BrandCatalog, Catalog } from 'widgets/catalog/ui';
+import { Catalog, mapToCatalogReferences } from 'widgets/catalog/ui';
 import {
 	useCatalogFilters,
 	useCatalogData,
@@ -80,17 +80,19 @@ export const CatalogTires: FC<Props> = ({ pageData }) => {
 		return queryString ? `?${queryString}` : '';
 	};
 
-	const brandsForCatalog: BrandCatalog[] = tireBrands.map((b) => ({
-		id: b.id,
-		name: b.name,
-		slug: b.slug,
-		path: `/tires/${b.slug}${generateQueryParams()}`,
-		count: b.tires.count
-	}));
+	const references = mapToCatalogReferences(
+		tireBrands.map((b) => ({
+			id: b.id,
+			name: b.name,
+			path: `/tires/${b.slug}${generateQueryParams()}`,
+			count: b.tires.count
+		}))
+	);
 
 	return (
 		<Catalog
-			brands={brandsForCatalog}
+			references={references}
+			showReferencesPanel={!filtersValues.brand}
 			filtersValues={filtersValues}
 			onChangeFilterValues={handleChangeFilterValues}
 			filtersConfig={filtersConfig}

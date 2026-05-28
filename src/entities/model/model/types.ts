@@ -16,18 +16,24 @@ export interface Model {
 	brand?: Brand;
 }
 
-export type ModelSparePartsCountWithGenerationsSparePartsCount = Model & {
-	generations: GenerationWithSparePartsCount[];
+export type ModelSparePartsCount = Model & {
 	spareParts: {
 		count: number;
 	};
 };
 
-export type ModelCabinsCountWithGenerationsCabinsCount = Model & {
-	generations: GenerationWithCabinsCount[];
+export type ModelSparePartsCountWithGenerationsSparePartsCount = ModelSparePartsCount & {
+	generations: GenerationWithSparePartsCount[];
+};
+
+export type ModelCabinsCount = Model & {
 	cabins: {
 		count: number;
 	};
+};
+
+export type ModelCabinsCountWithGenerationsCabinsCount = ModelCabinsCount & {
+	generations: GenerationWithCabinsCount[];
 };
 
 export type ModelWheelsCountWithGenerationsWheelsCount = Model & {

@@ -4,7 +4,8 @@ import { observer } from 'mobx-react';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { DefaultPage } from 'entities/page';
 import { useRouter } from 'next/router';
-import { BrandCatalog, Catalog } from 'widgets/catalog/ui';
+import { Catalog, mapToCatalogReferences } from 'widgets/catalog/ui';
+import type { CatalogReference } from 'widgets/catalog/ui';
 import {
 	useSparePartsCatalogFiltersStore,
 	useCatalogData,
@@ -16,7 +17,7 @@ import {
 	useSyncSparePartsCatalogFiltersFromRouter
 } from 'features/sparePartsCatalog';
 import type { KindSparePartType } from 'entities/kindSparePart';
-import { ModelCatalog } from 'widgets/catalog/ui/types';
+import type { GenerationWithSparePartsCount } from 'entities/generation';
 
 interface Props {
 	kindSparePart?: KindSparePart;
@@ -37,7 +38,6 @@ export const CatalogSpareParts: FC<Props> = observer(({ kindSparePart, kindSpare
 		pageCount,
 		total,
 		models,
-		setModels,
 		generations,
 		setGenerations,
 		volumes,
@@ -45,7 +45,9 @@ export const CatalogSpareParts: FC<Props> = observer(({ kindSparePart, kindSpare
 		catalogCategories,
 		hoveredCategory,
 		setHoveredCategory,
-		brands
+		brands,
+		isLoadingModels,
+		isLoadingGenerations
 	} = useCatalogData({ queryParams, filtersValues });
 
 	const {
@@ -68,13 +70,8 @@ export const CatalogSpareParts: FC<Props> = observer(({ kindSparePart, kindSpare
 		filtersValues,
 		kindSparePart,
 		kindSparePartType,
-		onBrandChange: () => {
-			setModels([]);
-			setGenerations([]);
-		},
-		onModelChange: () => {
-			setGenerations([]);
-		}
+		onBrandChange: () => undefined,
+		onModelChange: () => undefined
 	});
 
 	const { handleClickFind, handleChangeSort } = useCatalogRouter();
@@ -85,13 +82,10 @@ export const CatalogSpareParts: FC<Props> = observer(({ kindSparePart, kindSpare
 
 		if (!newValues.brand) {
 			newFilterValues = { ...newFilterValues, model: null, generation: null };
-			setModels([]);
-			setGenerations([]);
 		}
 
 		if (!newValues.model) {
 			newFilterValues = { ...newFilterValues, generation: null };
-			setGenerations([]);
 		}
 
 		if (
@@ -147,33 +141,54 @@ export const CatalogSpareParts: FC<Props> = observer(({ kindSparePart, kindSpare
 		return `${pathBase}${ksp}${generateQueryParams()}`;
 	};
 
-	const brandsForCatalog: BrandCatalog[] = brands.map((b) => ({
-		id: b.id,
-		name: b.name,
-		slug: b.slug,
-		path: generateSparePartsPath(b.slug),
-		count: b.spareParts.count
-	}));
+	const activeBrand = filtersValues.brand ?? queryParams.brand ?? null;
 
-	const modelsForCatalog: ModelCatalog[] = models?.map((m) => ({
-		id: m.id,
-		name: m.name,
-		slug: m.slug,
-		path: generateSparePartsPath(filtersValues.brand!, `model-${m.slug}`),
-		count: m.spareParts?.count,
-		generations: m.generations.map((g) => ({
-			id: g.id,
-			name: g.name,
-			slug: g.slug,
-			path: generateSparePartsPath(filtersValues.brand!, `model-${m.slug}`, `gen-${g.slug}`),
-			count: g.spareParts?.count
-		}))
-	}));
+	const references: CatalogReference[] = (() => {
+		if (!activeBrand) {
+			return mapToCatalogReferences(
+				brands.map((b) => ({
+					id: b.id,
+					name: b.name,
+					path: generateSparePartsPath(b.slug),
+					count: b.spareParts.count
+				}))
+			);
+		}
+
+		if (filtersValues.model) {
+			return (generations as GenerationWithSparePartsCount[])
+				.filter((g) => g.spareParts?.count)
+				.map((g) => ({
+					id: g.id,
+					label: g.name,
+					href: generateSparePartsPath(filtersValues.brand!, `model-${filtersValues.model}`, `gen-${g.slug}`),
+					count: g.spareParts.count
+				}));
+		}
+
+		return mapToCatalogReferences(
+			models.map((m) => ({
+				id: m.id,
+				name: m.name,
+				path: generateSparePartsPath(filtersValues.brand!, `model-${m.slug}`),
+				count: m.spareParts?.count ?? 0
+			}))
+		);
+	})();
+
+	const showReferencesPanel = !filtersValues.brand || !filtersValues.model || !filtersValues.generation;
+
+	const isReferencesLoading = filtersValues.brand
+		? filtersValues.model
+			? isLoadingGenerations
+			: isLoadingModels
+		: false;
 
 	return (
 		<Catalog
-			brands={brandsForCatalog}
-			models={modelsForCatalog}
+			references={references}
+			showReferencesPanel={showReferencesPanel}
+			isReferencesLoading={isReferencesLoading}
 			filtersValues={filtersValues}
 			onChangeFilterValues={handleChangeFilterValues}
 			filtersConfig={filtersConfig}

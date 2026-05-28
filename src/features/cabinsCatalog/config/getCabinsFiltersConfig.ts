@@ -1,12 +1,12 @@
 import type { AutocompleteType } from 'features/productFilters';
 import type { KindSparePart } from 'entities/kindSparePart';
 import type { Generation } from 'entities/generation';
-import type { ModelCabinsCountWithGenerationsCabinsCount } from 'entities/model';
+import type { ModelCabinsCount } from 'entities/model';
 import type { ReactNode } from 'react';
 
 export interface GetCabinsFiltersConfigParams {
 	brands: Array<{ id: number; name: string; slug: string; cabins?: { count: number } }>;
-	models: ModelCabinsCountWithGenerationsCabinsCount[];
+	models: ModelCabinsCount[];
 	kindSpareParts: KindSparePart[];
 	generations: Generation[];
 	isLoadingMoreKindSpareParts: boolean;

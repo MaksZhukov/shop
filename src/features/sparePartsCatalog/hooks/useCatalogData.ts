@@ -2,9 +2,9 @@ import { useState, type Dispatch, type SetStateAction } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { sparePartApi } from 'entities/sparePart';
-import { modelApi, ModelSparePartsCountWithGenerationsSparePartsCount } from 'entities/model';
+import { modelApi, ModelSparePartsCount } from 'entities/model';
 import { generationApi } from 'entities/generation';
-import type { Generation } from 'entities/generation';
+import type { Generation, GenerationWithSparePartsCount } from 'entities/generation';
 import { EngineVolume } from 'entities/engineVolume';
 import { catalogApi, TopCategory } from 'entities/catalog';
 import type { FilterValues, ParsedQueryParams } from '../types';
@@ -27,6 +27,7 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 	const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
 
 	const currentBrandSlug = brandSlug(brand, filtersValues.brand);
+	const currentModelSlug = model || filtersValues.model;
 
 	const brandsDataFilters = {
 		kindSparePart: filtersValues.kindSparePart,
@@ -106,55 +107,55 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 		queryFn: () => catalogApi.fetchTopCategories()
 	});
 
-	const { data: modelsData } = useQuery({
+	const sparePartsModelFilters = {
+		sold: false,
+		id: { $notNull: true },
+		...(filtersValues.kindSparePart && { kindSparePart: { slug: filtersValues.kindSparePart } })
+	};
+
+	const { data: modelsData, isFetching: isLoadingModels } = useQuery({
 		queryKey: ['spare-parts-models', currentBrandSlug, filtersValues.kindSparePart],
 		enabled: !!currentBrandSlug,
-		placeholderData: (prev) => prev,
-		queryFn: () => {
-			return modelApi.fetchModels<ModelSparePartsCountWithGenerationsSparePartsCount>({
+		queryFn: () =>
+			modelApi.fetchModels<ModelSparePartsCount>({
 				pagination: { limit: API_MAX_LIMIT },
+				sort: 'name',
 				filters: {
 					brand: { slug: currentBrandSlug },
-					spareParts: {
-						...(filtersValues.kindSparePart && { kindSparePart: { slug: filtersValues.kindSparePart } })
-					}
+					spareParts: sparePartsModelFilters
 				},
 				populate: {
-					generations: {
-						populate: {
-							spareParts: {
-								count: true,
-								filters: {
-									brand: { slug: currentBrandSlug },
-									sold: false,
-									...(filtersValues.kindSparePart && {
-										kindSparePart: { slug: filtersValues.kindSparePart }
-									})
-								}
-							}
-						},
+					spareParts: {
+						count: true,
 						filters: {
 							brand: { slug: currentBrandSlug },
-							spareParts: {
-								sold: false,
-								...(filtersValues.kindSparePart && {
-									kindSparePart: { slug: filtersValues.kindSparePart }
-								})
-							}
+							...sparePartsModelFilters
 						}
 					}
 				}
-			});
-		}
+			})
 	});
 
-	const { data: generationsData } = useQuery({
-		queryKey: ['spare-parts-generations', brand, model],
-		enabled: !!(brand && model),
-		placeholderData: (prev) => prev,
+	const { data: generationsData, isFetching: isLoadingGenerations } = useQuery({
+		queryKey: ['spare-parts-generations', currentBrandSlug, currentModelSlug, filtersValues.kindSparePart],
+		enabled: !!(currentBrandSlug && currentModelSlug),
 		queryFn: () =>
-			generationApi.fetchGenerations({
-				filters: { model: { slug: model! }, brand: { slug: brand! } },
+			generationApi.fetchGenerations<GenerationWithSparePartsCount>({
+				filters: {
+					model: { slug: currentModelSlug! },
+					brand: { slug: currentBrandSlug },
+					spareParts: sparePartsModelFilters
+				},
+				populate: {
+					spareParts: {
+						count: true,
+						filters: {
+							brand: { slug: currentBrandSlug },
+							model: { slug: currentModelSlug! },
+							...sparePartsModelFilters
+						}
+					}
+				},
 				pagination: { limit: API_MAX_LIMIT }
 			})
 	});
@@ -162,17 +163,13 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 	const models = modelsData?.data?.data ?? [];
 	const generations = generationsData?.data?.data ?? [];
 
-	const setModels: Dispatch<SetStateAction<ModelSparePartsCountWithGenerationsSparePartsCount[]>> = (value) => {
+	const setModels: Dispatch<SetStateAction<ModelSparePartsCount[]>> = (value) => {
 		queryClient.setQueryData(
-			['spare-parts-models', currentBrandSlug],
-			(prev: { data: { data: ModelSparePartsCountWithGenerationsSparePartsCount[] } } | undefined) => {
+			['spare-parts-models', currentBrandSlug, filtersValues.kindSparePart],
+			(prev: { data: { data: ModelSparePartsCount[] } } | undefined) => {
 				const next =
 					typeof value === 'function'
-						? (
-								value as (
-									prev: ModelSparePartsCountWithGenerationsSparePartsCount[]
-								) => ModelSparePartsCountWithGenerationsSparePartsCount[]
-							)(prev?.data?.data ?? [])
+						? (value as (prev: ModelSparePartsCount[]) => ModelSparePartsCount[])(prev?.data?.data ?? [])
 						: value;
 				return prev ? { ...prev, data: { ...prev.data, data: next } } : { data: { data: next } };
 			}
@@ -181,7 +178,7 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 
 	const setGenerations: Dispatch<SetStateAction<Generation[]>> = (value) => {
 		queryClient.setQueryData(
-			['spare-parts-generations', brand, model],
+			['spare-parts-generations', currentBrandSlug, currentModelSlug, filtersValues.kindSparePart],
 			(prev: { data: { data: Generation[] } } | undefined) => {
 				const next =
 					typeof value === 'function'
@@ -201,9 +198,11 @@ export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataPar
 		pageCount,
 		total,
 		models,
+		isLoadingModels,
 		brands,
 		setModels,
 		generations,
+		isLoadingGenerations,
 		setGenerations,
 		volumes,
 		setVolumes,
