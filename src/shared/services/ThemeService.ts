@@ -74,14 +74,14 @@ const createTypographyConfig = () => ({
 
 const createPaletteConfig = () => ({
 	primary: {
-		main: '#17181C',
+		main: '#0081FF',
 		contrastText: '#fff'
 	},
 	secondary: {
 		main: '#fff',
 		contrastText: '#fff',
-		light: 'rgba(12, 21, 85, 0.3)',
-		dark: 'rgba(12, 21, 85, 0.7)'
+		light: 'rgba(0, 129, 255, 0.3)',
+		dark: 'rgba(0, 129, 255, 0.7)'
 	},
 	background: {
 		default: '#EEEEEE',
@@ -109,8 +109,8 @@ const createPaletteConfig = () => ({
 	},
 	info: {
 		main: '#0081FF',
-		light: '#64b5f6',
-		dark: '#1976d2'
+		light: '#4DA3FF',
+		dark: '#0066CC'
 	},
 	custom: {
 		black: '#000',
@@ -214,7 +214,7 @@ const createComponentConfig = (deviceType: DeviceType): Components<Theme> => ({
 					borderColor: '#7A7F89'
 				},
 				'&.Mui-focused': {
-					boxShadow: '0px 0px 0px 2px #FCFCFD, 0px 0px 0px 4px #121212'
+					boxShadow: '0px 0px 0px 2px #FCFCFD, 0px 0px 0px 4px #0081FF'
 				},
 				'&.Mui-disabled': {
 					backgroundColor: COLORS.bgSurface1,
