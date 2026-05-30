@@ -100,6 +100,10 @@ Rules live in `eslint.config.mjs` (`fsdElements`, `fsdDependencyRules`).
 
 ### widgets/footer
 
+→ features/cart  
+→ features/favorites  
+→ features/user  
+→ entities/user  
 → shared/ui
 
 ### widgets/gallery

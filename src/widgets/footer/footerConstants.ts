@@ -1,36 +1,44 @@
-export const NAVIGATION_LINKS = {
-	products: [
-		{ href: '/spare-parts', label: 'Запчасти' },
-		{ href: '/spare-parts/ksp-dvigatel', label: 'Двигатели' },
-		{ href: '/cabins', label: 'Салоны' },
-		{ href: '/tires', label: 'Шины' },
-		{ href: '/wheels', label: 'Диски' }
+export const FOOTER_ADDRESS = 'Гродненская область, Гродненский район, с/с Коптевский, д. Полотково';
+
+export const FOOTER_CONTACT = {
+	phone: '+375297804780',
+	phoneLabel: '+375 29 780 47 80',
+	email: 'info@razbor-avto.by',
+	workingHours: 'Ежедневно, с 8:00 до 18:00'
+} as const;
+
+export const FOOTER_INFO_LINKS = {
+	columnA: [
+		{ href: '/about', label: 'О компании' },
+		{ href: '/payment', label: 'Оплата' },
+		{ href: '/delivery', label: 'Доставка' },
+		{ href: '/guarantee', label: 'Возврат' },
+		{ href: '/reviews', label: 'Отзывы' }
 	],
-	company: [
-		{ href: '/about', label: 'О нас' },
+	columnB: [
+		{ href: '/contacts', label: 'Вопрос-ответ' },
 		{ href: '/articles', label: 'Новости' },
-		{ href: '/contacts', label: 'Контакты' },
-		{ href: '/delivery-and-payment', label: 'Доставка и оплата' }
+		{ href: '/contacts', label: 'Контакты' }
 	],
-	legal: [
-		{ label: 'Политика персональных данных', href: '#' },
-		{ label: 'Обработка файлов cookie', href: '#' }
-	]
+	columnBAfterAuth: [{ href: '/articles', label: 'Все акции' }]
 } as const;
 
-export const CONTACT_INFO = {
-	phones: [
-		{ number: '+375297804780', label: '+375297804780' },
-		{ number: '+375296011602', label: '+375296011602' }
-	],
-	email: 'email@razvor-auto.by',
-	workingHours: ['Пн-Пт с 10:00 до 18:00', 'Сб-Вс с 10.00 до 14.00']
-} as const;
+export const FOOTER_CATALOG_LINKS = [
+	{ href: '/spare-parts', label: 'Запчасти' },
+	{ href: '/spare-parts/ksp-dvigatel', label: 'Двигатели' },
+	{ href: '/spare-parts/ksp-kpp-avtomaticheskaya-akpp', label: 'Коробки передач' },
+	{ href: '/tires', label: 'Шины и диски' },
+	{ href: '/cabins', label: 'Салоны' }
+] as const;
 
-export const COMPANY_INFO = {
-	name: 'Авторазборка Полотково ООО "Дриблинг"',
-	unp: 'УНП 590740644'
-} as const;
+export const FOOTER_LEGAL_LINKS = [
+	{ href: '/privacy', label: 'Политика конфиденциальности' },
+	{ href: '/privacy', label: 'Обработка файлов cookie' },
+	{ href: '/sitemap.xml', label: 'Карта сайта' }
+] as const;
+
+export const FOOTER_LEGAL_TEXT =
+	'Свидетельство выдано Гродненским горисполкомом 03.11.2008. Регистрация в Торговом реестре 18.11.2022. Юр. адрес: 231710, Гродненская область, Гродненский район, с/с Коптевский, д. Полотково';
 
 export const PAYMENT_METHODS = [
 	{

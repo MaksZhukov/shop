@@ -1,13 +1,12 @@
 import { Box, IconButton, Input, Badge } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
-import { Link } from 'shared/ui';
-import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon, LogoIcon } from 'shared/icons';
+import { Link, WhiteBox, Loader, BrandLogo } from 'shared/ui';
+import { CartIcon, CartFilledIcon, HeartIcon, HeartFilledIcon, SearchIcon, GeoIcon } from 'shared/icons';
 import { NavbarButton } from 'shared/ui/NavbarButton';
 import Profile from './Profile';
 import { CatalogCategories } from './CatalogCategories';
 import { SearchHistoryChips, SearchResults } from '.';
-import { WhiteBox, Loader } from 'shared/ui';
 import type { SparePart } from 'entities/sparePart';
 import { useOutsideClick } from 'rooks';
 import { BadgeCartCount } from './BadgeCartCount';
@@ -76,16 +75,7 @@ export const HeaderTop: React.FC<HeaderTopProps> = ({
                 alignItems: 'center',
                 justifyContent: { xs: 'space-between', md: 'initial' }
             }}>
-            <Link href='/'>
-				<Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-					<LogoIcon sx={{ width: { xs: 170, md: 230 }, height: { xs: 28, md: 40 } }} />
-				</Box>
-			</Link>
+            <BrandLogo />
             <CatalogCategories />
             <Box
                 ref={searchRefContainer}

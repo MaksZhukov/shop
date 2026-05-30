@@ -1,6 +1,6 @@
-import { Typography } from '@mui/material';
-import { Link } from 'shared/ui';
+import { Box, Typography } from '@mui/material';
 import { FC, HTMLAttributeAnchorTarget } from 'react';
+import { Link } from 'shared/ui';
 
 interface NavigationLinksProps {
 	links: ReadonlyArray<{
@@ -10,16 +10,14 @@ interface NavigationLinksProps {
 	}>;
 }
 
-const NavigationLinks: FC<NavigationLinksProps> = ({ links }) => (
-	<>
+export const NavigationLinks: FC<NavigationLinksProps> = ({ links }) => (
+	<Box component='nav' sx={{ display: 'flex', flexDirection: 'column' }}>
 		{links.map(({ href, label, target }) => (
-			<Typography key={href} sx={{ mb: 1, color: 'custom.text-inverse' }}>
-				<Link href={href} target={target} sx={{ color: 'custom.text-inverse' }}>
+			<Typography key={`${href}-${label}`} variant='body2' sx={{ py: { xs: 1, md: 1.5 }, lineHeight: 1.6 }}>
+				<Link href={href} target={target} sx={{ color: 'text.primary', fontWeight: 400 }}>
 					{label}
 				</Link>
 			</Typography>
 		))}
-	</>
+	</Box>
 );
-
-export default NavigationLinks;

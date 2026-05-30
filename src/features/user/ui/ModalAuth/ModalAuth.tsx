@@ -1,9 +1,9 @@
-import { Modal } from '@mui/material';
+import { Box, Modal } from '@mui/material';
 import AuthRegisterForm from './AuthRegisterForm';
 import ForgotForm from './ForgotForm';
 import ResetForm from './ResetForm';
 import { useModalAuth } from './hooks';
-import { ModalContainer } from 'shared/ui';
+import { BrandLogo, ModalContainer } from 'shared/ui';
 
 interface ModalAuthProps {
 	onChangeModalOpened: (value: boolean) => void;
@@ -44,6 +44,9 @@ export const ModalAuth = ({ onChangeModalOpened, isResetPassword, onLoginSuccess
 				}}
 				onClose={handleModalClose}
 			>
+				<Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+					<BrandLogo showLink={false} />
+				</Box>
 				{formContent[type]}
 			</ModalContainer>
 		</Modal>
