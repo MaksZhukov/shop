@@ -41,9 +41,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 						}
                     }}>
 					{reactStringReplace(item.h1, highlightSearchTerms(item.h1, searchValue), (match, i) => (
-						<Typography key={i} component='span' sx={{
-                            color: 'text.primary'
-                        }}>
+						<Typography key={i} component='span' variant='body2' color='text.primary'>
 							{match}
 						</Typography>
 					))}

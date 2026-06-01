@@ -5,6 +5,7 @@ import { SearchIcon } from 'shared/icons';
 import { Loader } from 'shared/ui';
 import { SearchHistoryChips, SearchResults } from '.';
 import type { SparePart } from 'entities/sparePart';
+import { useHeaderSearchPlaceholder } from '../hooks/useHeaderSearchPlaceholder';
 
 interface MobileSearchModalProps {
 	isOpened: boolean;
@@ -33,6 +34,8 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
 	onSearchSelect,
 	onClearSearchHistory
 }) => {
+	const placeholder = useHeaderSearchPlaceholder();
+
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChangeSearchValue(event.target.value);
 	};
@@ -43,8 +46,8 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
 	};
 
 	return (
-        <Modal open={isOpened} onClose={handleClose}>
-            <ModalContainer
+		<Modal open={isOpened} onClose={handleClose}>
+			<ModalContainer
 				px={2}
 				py={1.5}
 				onClose={handleClose}
@@ -54,7 +57,7 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
 						size='medium'
 						startAdornment={<SearchIcon />}
 						value={searchValue}
-						placeholder='Быстрый поиск'
+						placeholder={placeholder}
 						fullWidth
 						onChange={handleInputChange}
 					/>
@@ -62,12 +65,16 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
 				width={'calc(100% - 1em)'}
 				sx={{ mx: 1, my: 1, height: 'calc(100vh - 1em)', position: 'relative' }}
 			>
-				<Box sx={{
-                    position: 'relative'
-                }}>
-					<Box sx={{
-                        mt: 2
-                    }}>
+				<Box
+					sx={{
+						position: 'relative'
+					}}
+				>
+					<Box
+						sx={{
+							mt: 2
+						}}
+					>
 						<SearchHistoryChips
 							searchHistory={searchHistory}
 							onSearchHistoryClick={onChangeSearchValue}
@@ -88,6 +95,6 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
 					)}
 				</Box>
 			</ModalContainer>
-        </Modal>
-    );
+		</Modal>
+	);
 };

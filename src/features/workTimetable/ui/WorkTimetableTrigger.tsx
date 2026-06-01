@@ -10,10 +10,16 @@ import { CLOSED_MINUTES_BEFORE_CLOSE } from '../workTimetableConstants';
 interface WorkTimetableTriggerProps {
 	isMobile: boolean;
 	isOpen: boolean;
+	compact?: boolean;
 	onClick: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const WorkTimetableTrigger: FC<WorkTimetableTriggerProps> = ({ isMobile, isOpen, onClick }) => {
+export const WorkTimetableTrigger: FC<WorkTimetableTriggerProps> = ({
+	isMobile,
+	isOpen,
+	compact = false,
+	onClick
+}) => {
 	const currentSchedule = useCurrentSchedule(WORKING_HOURS);
 	const isOpenNow = useIsCurrentlyOpen(WORKING_HOURS);
 
@@ -47,7 +53,7 @@ export const WorkTimetableTrigger: FC<WorkTimetableTriggerProps> = ({ isMobile, 
 
 	const { text: statusText, color: textColor } = getStatus();
 
-	const mobileStyles = isMobile
+	const mobileStyles = isMobile && !compact
 		? {
 				bgcolor: 'custom.bg-surface-1',
 				cursor: 'pointer',
@@ -67,7 +73,9 @@ export const WorkTimetableTrigger: FC<WorkTimetableTriggerProps> = ({ isMobile, 
                 gap: 1
             }, ...(Array.isArray(mobileStyles) ? mobileStyles : [mobileStyles])]}>
             <ClockIcon />
-            <Typography variant='body2'>{statusText}</Typography>
+            <Typography variant='body2' sx={{ whiteSpace: 'nowrap' }}>
+				{statusText}
+			</Typography>
             {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
         </Box>
     );

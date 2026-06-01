@@ -1,16 +1,24 @@
-import { Box, Button, Popover, Typography } from '@mui/material';
+import { Box, Button, Popover, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'shared/ui';
-import { DashboardFilledIcon, ChevronRightIcon, CloseIcon } from 'shared/icons';
+import { ChevronRightIcon, CloseIcon, MenuIcon } from 'shared/icons';
 import { useQuery } from '@tanstack/react-query';
 import { catalogApi, TopCategory } from 'entities/catalog';
 
 export const CatalogCategories: React.FC = () => {
+	const theme = useTheme();
+	const router = useRouter();
+	const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 	const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
 	const [catalogAnchorEl, setCatalogAnchorEl] = useState<HTMLElement | null>(null);
 	const catalogOpen = Boolean(catalogAnchorEl);
 
 	const handleCatalogClick = (event: React.MouseEvent<HTMLElement>) => {
+		if (isMobile) {
+			router.push('/mobile-catalog');
+			return;
+		}
 		setCatalogAnchorEl(event.currentTarget);
 	};
 
@@ -35,18 +43,35 @@ export const CatalogCategories: React.FC = () => {
 	return (
         <>
             <Button
-				sx={{ display: { xs: 'none', md: 'flex' } }}
+				sx={{
+					display: 'flex',
+					flexShrink: 0,
+					letterSpacing: '0.02em',
+					px: { xs: 1.25, sm: 1.5, md: 2 },
+					py: { xs: 1, md: 1.25 },
+					minWidth: 'auto',
+					whiteSpace: 'nowrap'
+				}}
 				size='medium'
-				startIcon={catalogOpen ? <CloseIcon /> : <DashboardFilledIcon />}
+				startIcon={!isMobile && catalogOpen ? <CloseIcon /> : <MenuIcon />}
 				variant='contained'
 				color='primary'
 				onClick={handleCatalogClick}
 				aria-expanded={catalogOpen ? 'true' : undefined}
 				aria-haspopup='true'
 			>
-				Каталог
+				<Typography
+					component='span'
+					sx={{
+						fontWeight: 600,
+						typography: { xs: 'caption', sm: 'body2', md: 'body1' }
+					}}
+				>
+					КАТАЛОГ
+				</Typography>
 			</Button>
-            <Popover
+            {!isMobile && (
+			<Popover
 				disableScrollLock={true}
 				open={catalogOpen}
 				anchorEl={catalogAnchorEl}
@@ -74,12 +99,7 @@ export const CatalogCategories: React.FC = () => {
                             display: 'flex',
                             flexDirection: 'column'
                         }}>
-						<Typography
-                            variant='h6'
-                            sx={{
-                                fontWeight: 700,
-                                fontSize: 18
-                            }}>
+						<Typography variant='h6' sx={{ fontWeight: 700 }}>
 							Каталог
 						</Typography>
 						{topCategories?.data.data.map((category) => (
@@ -98,17 +118,10 @@ export const CatalogCategories: React.FC = () => {
                                     cursor: 'pointer',
                                     ':hover': { bgcolor: 'custom.bg-surface-3' }
                                 }}>
-								<Typography variant='body1' sx={{
-                                    fontWeight: 500
-                                }}>
+								<Typography variant='body1' sx={{ fontWeight: 500 }}>
 									{category.name}
 								</Typography>
-								<Typography
-                                    variant='body1'
-                                    sx={{
-                                        flex: 1,
-                                        color: 'custom.text-muted'
-                                    }}>
+								<Typography variant='body1' color='custom.text-muted' sx={{ flex: 1 }}>
 									{category.totalSparePartsCount?.toLocaleString()}
 								</Typography>
 								<Box>
@@ -125,12 +138,7 @@ export const CatalogCategories: React.FC = () => {
                             bgcolor: 'custom.bg-surface-1',
                             p: 2
                         }}>
-						<Typography
-                            variant='h6'
-                            sx={{
-                                fontWeight: 700,
-                                fontSize: 18
-                            }}>
+						<Typography variant='h6' sx={{ fontWeight: 700 }}>
 							{hoveredCategory?.name}
 						</Typography>
 						<Box
@@ -151,9 +159,7 @@ export const CatalogCategories: React.FC = () => {
                                         py: 1
                                     }}>
 									<Link href={`/spare-parts/ksp-${item.slug}`}>{item.name}</Link>
-									<Typography sx={{
-                                        color: 'custom.text-muted'
-                                    }}>
+									<Typography variant='body2' color='custom.text-muted'>
 										{item.spareParts.count?.toLocaleString()}
 									</Typography>
 								</Box>
@@ -162,6 +168,7 @@ export const CatalogCategories: React.FC = () => {
 					</Box>
 				</Box>
 			</Popover>
+			)}
         </>
     );
 };

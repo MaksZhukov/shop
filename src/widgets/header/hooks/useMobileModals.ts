@@ -1,18 +1,19 @@
 import { useState } from 'react';
 
 export const useMobileModals = () => {
-	const [isOpenedMobileContacts, setIsOpenedMobileContacts] = useState<boolean>(false);
-	const [isOpenedMobileSearch, setIsOpenedMobileSearch] = useState(false);
+	const [isOpenedMobileMenu, setIsOpenedMobileMenu] = useState(false);
 
-	const handleCloseMobileSearch = () => {
-		setIsOpenedMobileSearch(false);
+	const handleOpenMobileMenu = () => {
+		setIsOpenedMobileMenu(true);
+	};
+
+	const handleCloseMobileMenu = () => {
+		setIsOpenedMobileMenu(false);
 	};
 
 	return {
-		isOpenedMobileContacts,
-		setIsOpenedMobileContacts,
-		isOpenedMobileSearch,
-		setIsOpenedMobileSearch,
-		handleCloseMobileSearch
+		isOpenedMobileMenu,
+		handleOpenMobileMenu,
+		handleCloseMobileMenu
 	};
 };

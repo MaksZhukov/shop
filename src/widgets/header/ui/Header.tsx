@@ -1,21 +1,23 @@
-import { AppBar, Container, useTheme } from '@mui/material';
+import { AppBar, Container } from '@mui/material';
 import router, { useRouter } from 'next/router';
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { observer } from 'mobx-react';
-import { useHeaderScroll, useSearchSpareParts, useAuthModal, useMobileModals, useSearchHistory } from '../hooks';
-import { HeaderTop, HeaderBottom, MobileBottomNav, MobileSearchModal } from '../ui';
-import { MobileContactsModal } from 'features/mobileContacts';
+import { useSearchSpareParts, useAuthModal, useMobileModals, useSearchHistory } from '../hooks';
+import {
+	HeaderMainBar,
+	HeaderMobileMenuModal,
+	HeaderMobileUtilityBar,
+	HeaderUtilityBar
+} from '../ui';
 import { ModalAuth } from 'features/user';
 import { useLoadCart } from 'features/cart';
 import { useLoadFavorites } from 'features/favorites';
 import type { SparePart } from 'entities/sparePart';
 
 export const Header: FC = observer(() => {
-	const theme = useTheme();
 	const { code } = useRouter().query;
 	const isResetPassword = !!code;
 	const [searchValue, setSearchValue] = useState<string>('');
-	const { isScrolled } = useHeaderScroll();
 	const { searchedSpareParts, isFetching } = useSearchSpareParts(searchValue);
 	const { isOpenedAuthModal, setIsOpenedAuthModal, handleClickSignIn, handleClickLogout } =
 		useAuthModal(isResetPassword);
@@ -25,15 +27,8 @@ export const Header: FC = observer(() => {
 	const handleLoginSuccess = async () => {
 		await Promise.all([loadCart(), loadFavorites()]);
 	};
-	const {
-		isOpenedMobileContacts,
-		setIsOpenedMobileContacts,
-		isOpenedMobileSearch,
-		setIsOpenedMobileSearch,
-		handleCloseMobileSearch
-	} = useMobileModals();
-	const { searchHistory, setSearchHistory, deleteSearchHistory, addToSearchHistory, clearSearchHistory } =
-		useSearchHistory();
+	const { isOpenedMobileMenu, handleOpenMobileMenu, handleCloseMobileMenu } = useMobileModals();
+	const { searchHistory, deleteSearchHistory, addToSearchHistory, clearSearchHistory } = useSearchHistory();
 
 	const handleDeleteSearchHistory = (value: string) => {
 		deleteSearchHistory(value);
@@ -43,29 +38,17 @@ export const Header: FC = observer(() => {
 		addToSearchHistory(searchValue);
 		router.push(`/spare-parts/${item.brand?.slug}/${item.slug}`);
 		setSearchValue('');
-		setIsOpenedMobileSearch(false);
-	};
-
-	const handleCloseMobileContacts = () => {
-		setIsOpenedMobileContacts(false);
-	};
-
-	const handleOpenMobileSearch = () => {
-		setIsOpenedMobileSearch(true);
-	};
-
-	const handleOpenMobileContacts = () => {
-		setIsOpenedMobileContacts(true);
 	};
 
 	const searchedSparePartsData = searchedSpareParts?.data?.data || [];
 
 	return (
 		<>
-			<AppBar sx={{ py: theme.spacing(2) }} color='secondary' position='fixed'>
+			<AppBar sx={{ py: { xs: 1.5, md: 2 } }} color='secondary' position='fixed'>
 				<Container>
-					<HeaderTop
-						isScrolled={isScrolled}
+					<HeaderUtilityBar />
+					<HeaderMobileUtilityBar onOpenMenu={handleOpenMobileMenu} />
+					<HeaderMainBar
 						searchValue={searchValue}
 						onChangeSearchValue={setSearchValue}
 						searchHistory={searchHistory}
@@ -76,31 +59,11 @@ export const Header: FC = observer(() => {
 						onDeleteSearchHistory={handleDeleteSearchHistory}
 						onClearSearchHistory={clearSearchHistory}
 						onSearchSelect={handleSearchSelectWithValue}
-						onOpenMobileSearch={handleOpenMobileSearch}
-						onOpenMobileContacts={handleOpenMobileContacts}
 					/>
-
-					<HeaderBottom isScrolled={isScrolled} />
 				</Container>
 			</AppBar>
 
-			<MobileSearchModal
-				isOpened={isOpenedMobileSearch}
-				onClose={handleCloseMobileSearch}
-				searchValue={searchValue}
-				onChangeSearchValue={setSearchValue}
-				searchHistory={searchHistory}
-				onSearchSelect={handleSearchSelectWithValue}
-				setSearchHistory={setSearchHistory}
-				searchedSpareParts={searchedSparePartsData}
-				isFetching={isFetching}
-				onDeleteSearchHistory={handleDeleteSearchHistory}
-				onClearSearchHistory={clearSearchHistory}
-			/>
-
-			<MobileContactsModal isOpened={isOpenedMobileContacts} onClose={handleCloseMobileContacts} />
-
-			<MobileBottomNav onClickSignIn={handleClickSignIn} onClickLogout={handleClickLogout} />
+			<HeaderMobileMenuModal isOpened={isOpenedMobileMenu} onClose={handleCloseMobileMenu} />
 
 			{isOpenedAuthModal && (
 				<ModalAuth

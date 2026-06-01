@@ -4,6 +4,7 @@ export { ViberIcon } from './ViberIcon';
 export { SkypeIcon } from './SkypeIcon';
 export { InstagramIcon } from './InstagramIcon';
 export { DashboardFilledIcon } from './DashboardFilledIcon';
+export { MenuIcon } from './MenuIcon';
 export { CartIcon } from './CartIcon';
 export { CartFilledIcon } from './CartFilledIcon';
 export { PhoneCallIcon } from './PhoneCallIcon';

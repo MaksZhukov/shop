@@ -38,9 +38,9 @@ export const SearchHistoryChips: React.FC<SearchHistoryChipsProps> = ({
                     justifyContent: 'space-between',
                     gap: 1
                 }}>
-				<Typography sx={{
-                    color: 'custom.text-muted'
-                }}>История</Typography>
+				<Typography variant='body2' color='custom.text-muted'>
+					История
+				</Typography>
 				{showClearButton && (
 					<Button color='info' variant='text' size='small' onClick={onClearSearchHistory}>
 						Очистить
