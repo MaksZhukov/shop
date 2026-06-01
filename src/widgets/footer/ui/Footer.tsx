@@ -1,7 +1,6 @@
 import { Box, Container, Divider } from '@mui/material';
 import { FC } from 'react';
 import { ModalAuth } from 'features/user';
-import { MOBILE_BOTTOM_NAV_HEIGHT } from '../footerConstants';
 import { useFooterAuthModal } from '../hooks';
 import { footerDividerSx } from '../lib/dividerSx';
 import { FooterContactBar } from './FooterContactBar';
@@ -19,8 +18,7 @@ export const Footer: FC = () => {
 			sx={{
 				bgcolor: 'background.paper',
 				borderTop: '1px solid',
-				borderColor: 'custom.divider',
-				marginBottom: { xs: `${MOBILE_BOTTOM_NAV_HEIGHT}px`, md: 0 }
+				borderColor: 'custom.divider'
 			}}
 		>
 			<Container>

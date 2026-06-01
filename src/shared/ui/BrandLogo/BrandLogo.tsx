@@ -4,27 +4,29 @@ import { Link } from '../Link';
 
 interface BrandLogoProps {
 	showLink?: boolean;
+	compact?: boolean;
 	sx?: SxProps<Theme>;
 }
 
-export const BrandLogo: FC<BrandLogoProps> = ({ showLink = true, sx }) => {
+export const BrandLogo: FC<BrandLogoProps> = ({ showLink = true, compact = false, sx }) => {
 	const logo = (
 		<Box
 			sx={{
 				bgcolor: '#F6D748',
-				px: { xs: 1.5, md: 2 },
-				py: { xs: 1, md: 1.25 },
+				px: compact ? 1 : { xs: 1.5, md: 2 },
+				py: compact ? 0.75 : { xs: 1, md: 1.25 },
 				display: 'inline-flex',
 				flexDirection: 'column',
 				alignItems: 'center',
-				textAlign: 'center'
+				textAlign: 'center',
+				maxWidth: '100%'
 			}}
 		>
 			<Typography
 				component='span'
 				sx={{
 					fontWeight: 700,
-					fontSize: { xs: '15px', md: '18px' },
+					fontSize: compact ? '13px' : { xs: '15px', md: '18px' },
 					lineHeight: 1.2,
 					color: 'custom.black',
 					letterSpacing: '0.02em',
@@ -37,7 +39,7 @@ export const BrandLogo: FC<BrandLogoProps> = ({ showLink = true, sx }) => {
 			<Typography
 				component='span'
 				sx={{
-					fontSize: { xs: '10px', md: '11px' },
+					fontSize: compact ? '8px' : { xs: '10px', md: '11px' },
 					lineHeight: 1.3,
 					color: 'text.secondary',
 					mt: 0.5,

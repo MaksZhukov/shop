@@ -6,7 +6,11 @@ import { MobileSchedule } from './MobileSchedule';
 import { WorkTimetableTrigger } from './WorkTimetableTrigger';
 import { useWorkTimetableState } from '../hooks/useWorkTimetableState';
 
-export const WorkTimetable: FC = () => {
+interface WorkTimetableProps {
+	compact?: boolean;
+}
+
+export const WorkTimetable: FC<WorkTimetableProps> = ({ compact = false }) => {
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 	const { anchorEl, isOpen, setAnchorEl, setIsOpen, handleClose } = useWorkTimetableState();
@@ -24,9 +28,14 @@ export const WorkTimetable: FC = () => {
 
 	return (
         <Box sx={{
-            width: { xs: '100%', md: 'auto' }
+            width: compact ? 'auto' : { xs: '100%', md: 'auto' }
         }}>
-            <WorkTimetableTrigger isOpen={isOpen || Boolean(anchorEl)} isMobile={isMobile} onClick={handleClick} />
+            <WorkTimetableTrigger
+				compact={compact}
+				isOpen={isOpen || Boolean(anchorEl)}
+				isMobile={isMobile}
+				onClick={handleClick}
+			/>
             {isMobile ? (
 				<MobileSchedule isOpen={isOpen} workingHours={WORKING_HOURS} onClose={handleClose} />
 			) : (
