@@ -2,7 +2,7 @@
 
 Move the whole shop onto [architecture.md](architecture.md) one slice at a time. Do not rename the tree in one pass, and do not replace MobX and a widget in the same change.
 
-`shared/di` provides `DiProvider` and `createModuleInjector`. `app` adds every container to one global container, and `pages/_app.tsx` renders that provider. Each feature exports `inject` from `createModuleInjector`, and that function accepts only the tokens bound for that feature. A port is added only when a page or feature calls another slice. Reading a store the component already owns does not get a port.
+`shared/di` provides `DiProvider` and `createModuleInjector`. `app` adds every container to one global container, and `pages/_app.tsx` renders that provider. Each page or feature that needs DI exports `inject` from `createModuleInjector([...tokens])`, and that function accepts only the tokens listed in the array. A port is added only when a page or feature calls another slice. Reading a store the component already owns does not get a port.
 
 Article is the template: DTO, service map, `ArticleReader`, and no public `articlesApi`. Dictionary entities copy the DTO and map in the service. The index exports the PascalCase API class and its token. It does not export a camelCase `*Api` singleton.
 
@@ -13,7 +13,7 @@ Article is the template: DTO, service map, `ArticleReader`, and no public `artic
 - Outside a slice, import from that slice's `index.ts` only. Do not import `entities/<name>/<name>Api`.
 - An entity `index.ts` exports the model, the port, the service, and the PascalCase API class with its token. It does not export a camelCase `*Api` singleton, the DTO, or the atoms.
 - The DTO holds the fields. The model aliases the DTO (`export type Brand = BrandDto`) until the HTTP payload and the domain shape differ.
-- `app/di/app.container.tsx` writes every `container.bind` and `pages/_app.tsx` renders `AppDiProvider`. A feature narrows that container with `export const inject = createModuleInjector<FeatureToken>()`. The entity exports the implementation class and does not bind it. Server code calls `createRequestContainer().get(Token)`.
+- `app/di/app.container.tsx` writes every `container.bind` and `pages/_app.tsx` renders `AppDiProvider`. A page or feature narrows that container with `export const inject = createModuleInjector([FeatureStore])`. The entity exports the implementation class and does not bind it. Server code calls `createRequestContainer().get(Token)`.
 
 ## 1. Finish the article template
 
@@ -41,7 +41,9 @@ Done. `product`, `sparePart`, `tire`, `wheel`, `cabin`, `car`, and `carOnParts` 
 
 ## 6. MobX to Reatom
 
-Done. `@reatom/core` and `@reatom/react` replace MobX. Atoms stay inside the slice. Public hooks are `useFavoriteStore`, `useCartStore`, `useUserStore`, and `useSparePartsCatalogFiltersStore`. Components that read a store during render use `reatomComponent`. `enableStaticRendering`, the store providers, and the `mobx` and `mobx-react` packages are gone.
+Done. `@reatom/core` and `@reatom/react` replace MobX. Atoms stay inside the slice. Components that read a store during render use `reatomComponent`. `enableStaticRendering`, the store providers, and the `mobx` and `mobx-react` packages are gone.
+
+New stores are injectable classes (see **Stores** in [architecture.md](architecture.md)). `reviews`, `serviceStations`, and `vacancies` already follow that shape. `cart`, `user`, `favorite`, and catalog filter stores still use the older module-level object and `use*Store` hook. Migrate them when you touch the slice.
 
 ## 7. Session and order entities
 
