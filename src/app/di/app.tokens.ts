@@ -15,6 +15,7 @@ import { MODEL_API, ModelApi, ModelService } from 'entities/model';
 import { ORDER_API, OrderApi, OrderService } from 'entities/order';
 import { PAGE_API, PageApi, PageService } from 'entities/page';
 import { REVIEW_API, ReviewApi, ReviewService } from 'entities/review';
+import { ReviewsService, ReviewsStore } from 'features/reviews';
 import { SERVICE_STATION_API, ServiceStationApi, ServiceStationService } from 'entities/serviceStation';
 import { SPARE_PART_API, SparePartApi, SparePartService } from 'entities/sparePart';
 import { TIRE_API, TireApi, TireService } from 'entities/tire';
@@ -29,6 +30,7 @@ import { WHEEL_DIAMETER_CENTER_HOLE_API, WheelDiameterCenterHoleApi, WheelDiamet
 import { WHEEL_DISK_OFFSET_API, WheelDiskOffsetApi, WheelDiskOffsetService } from 'entities/wheelDiskOffset';
 import { WHEEL_NUMBER_HOLE_API, WheelNumberHoleApi, WheelNumberHoleService } from 'entities/wheelNumberHole';
 import { WHEEL_WIDTH_API, WheelWidthApi, WheelWidthService } from 'entities/wheelWidth';
+import { SnackbarService } from 'shared/services';
 
 export const appTokens = [
 	ARTICLE_API,
@@ -65,6 +67,8 @@ export const appTokens = [
 	PageService,
 	REVIEW_API,
 	ReviewService,
+	ReviewsService,
+	ReviewsStore,
 	SERVICE_STATION_API,
 	ServiceStationService,
 	SPARE_PART_API,
@@ -92,7 +96,8 @@ export const appTokens = [
 	WHEEL_NUMBER_HOLE_API,
 	WheelNumberHoleService,
 	WHEEL_WIDTH_API,
-	WheelWidthService
+	WheelWidthService,
+	SnackbarService
 ] as const;
 
 export const appContainer = { getKeys: () => appTokens };

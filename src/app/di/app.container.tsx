@@ -18,6 +18,7 @@ import { MODEL_API, ModelApi, ModelService } from 'entities/model';
 import { ORDER_API, OrderApi, OrderService } from 'entities/order';
 import { PAGE_API, PageApi, PageService } from 'entities/page';
 import { REVIEW_API, ReviewApi, ReviewService } from 'entities/review';
+import { ReviewsService, ReviewsStore } from 'features/reviews';
 import { SERVICE_STATION_API, ServiceStationApi, ServiceStationService } from 'entities/serviceStation';
 import { SPARE_PART_API, SparePartApi, SparePartService } from 'entities/sparePart';
 import { TIRE_API, TireApi, TireService } from 'entities/tire';
@@ -33,6 +34,7 @@ import { WHEEL_DISK_OFFSET_API, WheelDiskOffsetApi, WheelDiskOffsetService } fro
 import { WHEEL_NUMBER_HOLE_API, WheelNumberHoleApi, WheelNumberHoleService } from 'entities/wheelNumberHole';
 import { WHEEL_WIDTH_API, WheelWidthApi, WheelWidthService } from 'entities/wheelWidth';
 import { DiProvider } from 'shared/di/di.context';
+import { SnackbarService } from 'shared/services';
 
 export const createAppContainer = () => {
 	const container = new Container();
@@ -70,6 +72,8 @@ export const createAppContainer = () => {
 	container.bind(PageService).toSelf();
 	container.bind(REVIEW_API).to(ReviewApi);
 	container.bind(ReviewService).toSelf();
+	container.bind(ReviewsService).toSelf();
+	container.bind(ReviewsStore).toSelf().inSingletonScope();
 	container.bind(SERVICE_STATION_API).to(ServiceStationApi);
 	container.bind(ServiceStationService).toSelf();
 	container.bind(SPARE_PART_API).to(SparePartApi);
@@ -98,6 +102,7 @@ export const createAppContainer = () => {
 	container.bind(WheelNumberHoleService).toSelf();
 	container.bind(WHEEL_WIDTH_API).to(WheelWidthApi);
 	container.bind(WheelWidthService).toSelf();
+	container.bind(SnackbarService).toSelf().inSingletonScope();
 	return container;
 };
 

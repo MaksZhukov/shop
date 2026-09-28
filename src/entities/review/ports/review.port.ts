@@ -1,3 +1,6 @@
-import type { ReviewApi } from '../review.api';
+import type { CollectionParams } from 'shared/api/types';
+import type { Review } from '../model/review.model';
 
-export type ReviewReader = Pick<ReviewApi, 'fetchReviews'>;
+export interface ReviewReader {
+	fetchReviews(params?: CollectionParams): Promise<Review[]>;
+}
