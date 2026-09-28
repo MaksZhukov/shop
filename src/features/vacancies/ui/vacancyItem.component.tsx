@@ -1,0 +1,184 @@
+import { Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
+import { Box } from '@mui/material';
+import type { Vacancy } from 'entities/page';
+import { BlockImages, Image, Typography } from 'shared/ui';
+
+type VacancyItemProps = {
+	vacancy: Vacancy;
+	index: number;
+};
+
+export const VacancyItem = ({ vacancy, index }: VacancyItemProps) => {
+	const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+
+	return (
+		<>
+			<Box
+				sx={{
+					display: 'flex',
+					flexDirection: { xs: 'column', md: 'row' }
+				}}
+			>
+				<Typography
+					component={index === 0 ? 'h1' : 'h2'}
+					variant='h4'
+					sx={{
+						display: { xs: 'block', md: 'none' },
+						mb: '1em',
+						textTransform: 'uppercase',
+						fontWeight: 500
+					}}
+				>
+					{vacancy.title}
+				</Typography>
+				<Image
+					title={vacancy.image.caption}
+					src={vacancy.image?.url}
+					alt={vacancy.image.alternativeText}
+					width={500}
+					height={360}
+					style={isMobile ? { height: 'auto' } : {}}
+				></Image>
+				<Box
+					sx={{
+						paddingLeft: { xs: '0', md: '3em' },
+						marginTop: { xs: '1em', md: 0 }
+					}}
+				>
+					<Typography
+						component={index === 0 ? 'h1' : 'h2'}
+						variant='h4'
+						sx={{
+							display: { xs: 'none', md: 'block' },
+							mb: '1em',
+							textTransform: 'uppercase',
+							fontWeight: 500
+						}}
+					>
+						{vacancy.title}
+					</Typography>
+					<Typography color='text.secondary' variant='h5' sx={{ mb: { xs: 0, md: '2em' }, textTransform: 'uppercase' }}>
+						{vacancy.vacancy}
+					</Typography>
+					<Table>
+						<TableBody>
+							{vacancy.description.map((option) => (
+								<TableRow key={option.value}>
+									<TableCell
+										sx={{
+											border: 'none',
+											padding: '0.5em 0 0.5em 0',
+											width: { xs: '50%', md: 300 }
+										}}
+										padding='none'
+									>
+										<Typography>{option.label}</Typography>
+									</TableCell>
+									<TableCell sx={{ border: 'none', padding: '0.5em 0 0.5em 0' }} padding='none'>
+										<Typography sx={{ fontWeight: 500 }}>{option.value}</Typography>
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</Box>
+			</Box>
+			<BlockImages
+				sx={{
+					marginY: { xs: '1em', md: '2em' },
+					padding: { xs: '1em 0', md: '2em 0' }
+				}}
+				withoutOverlay={isMobile}
+				withSlider={isMobile}
+				images={vacancy.images}
+			></BlockImages>
+			<Box sx={{ typography: { xs: 'h6', md: 'h5' } }}>
+				<Typography
+					component='h2'
+					variant='inherit'
+					sx={{
+						mb: { xs: '1em', md: '2em' },
+						textTransform: 'uppercase',
+						fontWeight: 500
+					}}
+				>
+					{vacancy.fullTitle}
+				</Typography>
+			</Box>
+			<Box
+				sx={{
+					display: 'flex',
+					marginBottom: { xs: '3em', md: '4em' },
+					flexDirection: { xs: 'column', md: 'row' }
+				}}
+			>
+				<Box
+					sx={{
+						flex: '1',
+						paddingRight: { xs: 0, md: '5em' }
+					}}
+				>
+					<Typography color='text.secondary' variant='h6' sx={{ textTransform: 'uppercase' }}>
+						Обязаности
+					</Typography>
+					<Box component='ul' sx={{ paddingLeft: { xs: '2em', md: '0' } }}>
+						{vacancy.responsibilities?.split('\n').map((val) => (
+							<Typography key={val} component='li' sx={{ mb: '1em' }}>
+								{val}
+							</Typography>
+						))}
+					</Box>
+					<Box
+						sx={{
+							marginTop: '2em',
+							display: { xs: 'none', md: 'flex' },
+							justifyContent: 'center'
+						}}
+					>
+						<Image
+							src='/logo_medium.png'
+							isOnSSR={false}
+							width={315}
+							height={87}
+							alt='Разборка авто вакансия'
+							title='Разборка авто вакансия'
+						></Image>
+					</Box>
+				</Box>
+				<Box
+					sx={{
+						flex: '1',
+						paddingRight: { xs: '0', md: '10em' }
+					}}
+				>
+					<Typography color='text.secondary' variant='h6' sx={{ textTransform: 'uppercase' }}>
+						Требования
+					</Typography>
+					<Box component='ul' sx={{ paddingLeft: { xs: '2em', md: '0' } }}>
+						{vacancy.requirements?.split('\n').map((val) => (
+							<Typography key={val} component='li' sx={{ mb: '1em' }}>
+								{val}
+							</Typography>
+						))}
+					</Box>
+				</Box>
+				<Box
+					sx={{
+						marginTop: '2em',
+						display: { xs: 'block', md: 'none' },
+						justifyContent: 'center'
+					}}
+				>
+					<Image
+						src='/logo_medium.png'
+						isOnSSR={false}
+						width={315}
+						height={87}
+						alt='Разборка авто вакансия'
+						title='Разборка авто вакансия'
+					></Image>
+				</Box>
+			</Box>
+		</>
+	);
+};

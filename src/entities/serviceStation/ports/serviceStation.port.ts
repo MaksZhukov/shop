@@ -1,3 +1,7 @@
-import type { ServiceStationApi } from '../serviceStation.api';
+import type { CollectionParams } from 'shared/api/types';
+import type { ServiceStation } from '../model/serviceStation.model';
 
-export type ServiceStationReader = Pick<ServiceStationApi, 'fetchServiceStations' | 'fetchServiceStation'>;
+export interface ServiceStationReader {
+	fetchServiceStations(params: CollectionParams): Promise<ServiceStation[]>;
+	fetchServiceStation(slug: string): Promise<ServiceStation>;
+}

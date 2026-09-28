@@ -1,18 +1,24 @@
 import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
-import { SERVICE_STATION_API, ServiceStationApi } from './serviceStation.api';
-import type { ServiceStationReader } from './ports/serviceStation.port';
 import type { CollectionParams } from 'shared/api/types';
+import { SERVICE_STATION_API, ServiceStationApi } from './serviceStation.api';
+import type { ServiceStationDto } from './dto/serviceStation.dto';
+import type { ServiceStation } from './model/serviceStation.model';
+import type { ServiceStationReader } from './ports/serviceStation.port';
+
+const mapServiceStation = (serviceStation: ServiceStationDto): ServiceStation => ({ ...serviceStation });
 
 @injectable()
 export class ServiceStationService implements ServiceStationReader {
 	constructor(@inject(SERVICE_STATION_API) private readonly serviceStationApi: ServiceStationApi) {}
 
-	fetchServiceStations(params: CollectionParams) {
-		return this.serviceStationApi.fetchServiceStations(params);
+	async fetchServiceStations(params: CollectionParams) {
+		const { data } = await this.serviceStationApi.fetchServiceStations(params);
+		return data.data.map(mapServiceStation);
 	}
 
-	fetchServiceStation(slug: string) {
-		return this.serviceStationApi.fetchServiceStation(slug);
+	async fetchServiceStation(slug: string) {
+		const { data } = await this.serviceStationApi.fetchServiceStation(slug);
+		return mapServiceStation(data.data);
 	}
 }

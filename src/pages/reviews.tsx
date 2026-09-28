@@ -1,13 +1,24 @@
 import { createRequestContainer } from 'app/di/app.container';
 import { PageService, type DefaultPage } from 'entities/page';
-import { Reviews } from 'features/reviews';
+import { ReviewsEntry, ReviewsInjector, ReviewsStore } from 'features/reviews';
+import { createModuleInjector } from 'shared/di';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: DefaultPage;
 }
 
-const ReviewsPage = ({ page }: Props) => <Reviews page={page} />;
+export const inject = createModuleInjector<typeof ReviewsStore>();
+
+const ReviewsPage = ({ page }: Props) => {
+	const reviewsStore = inject(ReviewsStore);
+
+	return (
+		<ReviewsInjector value={{ reviewsStore, page }}>
+			<ReviewsEntry />
+		</ReviewsInjector>
+	);
+};
 
 export default ReviewsPage;
 

@@ -17,7 +17,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 
 	return {
 		props: {
-			page: (await serviceStationService.fetchServiceStation(context.params?.slug as string)).data.data
+			page: await serviceStationService.fetchServiceStation(context.params?.slug as string)
 		}
 	};
 });

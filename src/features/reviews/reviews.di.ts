@@ -1,4 +1,4 @@
-import { createModuleInjector } from 'shared/di';
-import type { ReviewsStore } from './reviews.store';
+import { useStrictContext } from 'shared/hooks';
+import { ReviewsContext } from './reviews.context';
 
-export const inject = createModuleInjector<typeof ReviewsStore>();
+export const useDI = () => useStrictContext(ReviewsContext);

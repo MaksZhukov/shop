@@ -1,16 +1,14 @@
 import { reatomComponent } from '@reatom/react';
-import type { DefaultPage } from 'entities/page';
-import { inject } from '../reviews.di';
-import { ReviewsStore } from '../reviews.store';
+import { useDI } from '../reviews.di';
 import { ReviewsHeader } from './reviewsHeader.component';
 import { ReviewsLinks } from './reviewsLinks.component';
 import { ReviewsList } from './reviewsList.component';
 import { ReviewsLoading } from './reviewsLoading.component';
 
-export const Reviews = reatomComponent<{ page: DefaultPage }>(({ page }) => {
-	const { reviews } = inject(ReviewsStore);
-	const items = reviews.data();
-	const isLoading = !reviews.ready();
+export const ReviewsEntry = reatomComponent(() => {
+	const { reviewsStore, page } = useDI();
+	const items = reviewsStore.reviews.data();
+	const isLoading = !reviewsStore.reviews.ready();
 
 	return (
 		<>

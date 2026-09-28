@@ -1,44 +1,34 @@
 import { createRequestContainer } from 'app/di/app.container';
-import { Typography } from '@mui/material';
-import { PageService, DefaultPage } from 'entities/page';
-import { ServiceStationService, ServiceStation } from 'entities/serviceStation';
-import type { ApiResponse } from 'shared/api/types';
-import { CardItem } from 'shared/ui';
-import { WhiteBox } from 'shared/ui';
-import { NextPage } from 'next';
+import { PageService, type DefaultPage } from 'entities/page';
+import { ServiceStationService, type ServiceStation } from 'entities/serviceStation';
+import {
+	ServiceStationsEntry,
+	ServiceStationsInjector,
+	ServiceStationsStore,
+	SERVICE_STATIONS_QUERY
+} from 'features/serviceStations';
+import { createModuleInjector } from 'shared/di';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
 	page: DefaultPage;
-	serviceStations: ApiResponse<ServiceStation[]>;
+	serviceStations: ServiceStation[];
 }
 
-const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
+export const inject = createModuleInjector<typeof ServiceStationsStore>();
+
+const ServiceStationsPage = ({ page, serviceStations }: Props) => {
+	const serviceStationsStore = inject(ServiceStationsStore);
+	serviceStationsStore.syncFromServer(serviceStations);
+
 	return (
-        <WhiteBox>
-            <Typography
-                component='h1'
-                variant='h4'
-                sx={{
-                    textAlign: 'center',
-                    marginBottom: '1em'
-                }}>
-				{page.seo?.h1 || 'СТО'}
-			</Typography>
-            {serviceStations.data.map((item) => (
-				<CardItem
-					key={item.id}
-					name={item.name}
-					description={item.description}
-					image={item.image}
-					link={`/service-stations/${item.slug}`}
-				></CardItem>
-			))}
-        </WhiteBox>
-    );
+		<ServiceStationsInjector value={{ serviceStationsStore, page }}>
+			<ServiceStationsEntry />
+		</ServiceStationsInjector>
+	);
 };
 
-export default Vacancies;
+export default ServiceStationsPage;
 
 export const getStaticProps = getPageProps(undefined, async () => {
 	const container = createRequestContainer();
@@ -49,12 +39,7 @@ export const getStaticProps = getPageProps(undefined, async () => {
 	return {
 		props: {
 			page,
-			serviceStations: (
-				await serviceStationService.fetchServiceStations({
-					populate: 'image',
-					sort: 'updatedAt:desc'
-				})
-			).data,
+			serviceStations: await serviceStationService.fetchServiceStations(SERVICE_STATIONS_QUERY),
 			breadcrumbs: [
 				{ text: 'Главная', href: '/' },
 				{ text: 'СТО', href: '/service-stations' }

@@ -16,6 +16,8 @@ import { ORDER_API, OrderApi, OrderService } from 'entities/order';
 import { PAGE_API, PageApi, PageService } from 'entities/page';
 import { REVIEW_API, ReviewApi, ReviewService } from 'entities/review';
 import { ReviewsService, ReviewsStore } from 'features/reviews';
+import { ServiceStationsService, ServiceStationsStore } from 'features/serviceStations';
+import { VacanciesService, VacanciesStore } from 'features/vacancies';
 import { SERVICE_STATION_API, ServiceStationApi, ServiceStationService } from 'entities/serviceStation';
 import { SPARE_PART_API, SparePartApi, SparePartService } from 'entities/sparePart';
 import { TIRE_API, TireApi, TireService } from 'entities/tire';
@@ -69,6 +71,10 @@ export const appTokens = [
 	ReviewService,
 	ReviewsService,
 	ReviewsStore,
+	ServiceStationsService,
+	ServiceStationsStore,
+	VacanciesService,
+	VacanciesStore,
 	SERVICE_STATION_API,
 	ServiceStationService,
 	SPARE_PART_API,
