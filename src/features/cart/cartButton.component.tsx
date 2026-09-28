@@ -1,6 +1,6 @@
 import { Button, Tooltip } from '@mui/material';
 import type { Product } from 'entities/product';
-import { observer } from 'mobx-react';
+import { reatomComponent } from '@reatom/react';
 import { useToggleCart } from './useToggleCart';
 import { FC } from 'react';
 import { CART_MAX_ITEMS } from 'entities/cart';
@@ -10,7 +10,7 @@ interface CartButtonProps {
 	sx?: object;
 }
 
-export const CartButton: FC<CartButtonProps> = observer(({ product, sx }: CartButtonProps) => {
+export const CartButton = reatomComponent<CartButtonProps>(({ product, sx }) => {
 	const { handleClickCart, isInCart, isSold, isMaxCartItems } = useToggleCart(product);
 
 	const button = (

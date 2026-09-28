@@ -1,4 +1,4 @@
-export { BRAND_API, BrandApi, brandApi } from './brand.api';
+export { BRAND_API, BrandApi } from './brand.api';
 export { BrandService } from './brand.service';
 export type { BrandReader } from './ports/brand.port';
 export type { Brand, BrandWithSparePartsCount, BrandWithCabinsCount, ProductBrandTexts, BrandTextComponent } from './model/brand.model';

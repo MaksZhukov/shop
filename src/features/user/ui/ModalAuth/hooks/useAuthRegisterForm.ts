@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { FormEvent, useState } from 'react';
-import { userApi } from 'entities/user';
-import { useLogin } from 'features/user/useLogin';
+import { UserService } from 'entities/user';
+import { useLogin } from '../../../useLogin';
+import { inject } from '../../../user.di';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 type AuthStep = 'email' | 'password';
@@ -26,6 +27,7 @@ export const useAuthRegisterForm = ({
 	const [password, setPassword] = useState('');
 	const [loginAttempts, setLoginAttempts] = useState(0);
 	const login = useLogin();
+	const userService = inject(UserService);
 	const { enqueueSnackbar } = useSnackbar();
 	const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -38,7 +40,7 @@ export const useAuthRegisterForm = ({
 		e.preventDefault();
 		onChangeIsLoading(true);
 		try {
-			await userApi.register(email, password);
+			await userService.register(email, password);
 			enqueueSnackbar('Вы успешно зарегистрировались', { variant: 'success' });
 			setEmail('');
 			setPassword('');

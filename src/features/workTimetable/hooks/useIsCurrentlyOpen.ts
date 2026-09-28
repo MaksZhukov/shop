@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import type { WorkingHour } from 'features/workTimetable/workTimetableTypes';
+import type { WorkingHour } from '../workTimetableTypes';
 import { getCurrentTimeInGMT3 } from 'shared/utils/dateUtils';
-import { useCurrentSchedule } from 'features/workTimetable/hooks/useCurrentSchedule';
+import { useCurrentSchedule } from './useCurrentSchedule';
 
 export const useIsCurrentlyOpen = (workingHours: WorkingHour[]) => {
 	const currentSchedule = useCurrentSchedule(workingHours);

@@ -1,0 +1,196 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
+import { BrandService } from 'entities/brand';
+import { WheelService } from 'entities/wheel';
+import { ModelService, type ModelWheelsCountWithGenerationsWheelsCount } from 'entities/model';
+import { WheelDiameterService } from 'entities/wheelDiameter';
+import { WheelWidthService } from 'entities/wheelWidth';
+import { WheelNumberHoleService } from 'entities/wheelNumberHole';
+import { WheelDiameterCenterHoleService } from 'entities/wheelDiameterCenterHole';
+import { WheelDiskOffsetService } from 'entities/wheelDiskOffset';
+import { inject } from '../wheelsCatalog.di';
+import type { WheelFilterValues, WheelParsedQueryParams } from '../types';
+import { generateFiltersByQuery } from '../utils';
+import { wheelsBrandsQueryKey } from '../constants';
+import { wheelsPageQueryFns } from '../wheelsPageQueries';
+
+interface UseCatalogDataParams {
+	queryParams: WheelParsedQueryParams;
+	filtersValues: WheelFilterValues;
+}
+
+export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataParams) => {
+	const wheelService = inject(WheelService);
+	const brandService = inject(BrandService);
+	const modelService = inject(ModelService);
+	const wheelDiameterService = inject(WheelDiameterService);
+	const wheelWidthService = inject(WheelWidthService);
+	const wheelNumberHoleService = inject(WheelNumberHoleService);
+	const wheelDiameterCenterHoleService = inject(WheelDiameterCenterHoleService);
+	const wheelDiskOffsetService = inject(WheelDiskOffsetService);
+	const {
+		sort,
+		page,
+		kind,
+		brand,
+		model,
+		width,
+		diameter,
+		numberHoles,
+		diameterCenterHole,
+		distanceBetweenCenters,
+		diskOffset
+	} = queryParams;
+	const [diametersEnabled, setDiametersEnabled] = useState(false);
+	const [widthsEnabled, setWidthsEnabled] = useState(false);
+	const [numberHolesEnabled, setNumberHolesEnabled] = useState(false);
+	const [diameterCenterHolesEnabled, setDiameterCenterHolesEnabled] = useState(false);
+	const [diskOffsetsEnabled, setDiskOffsetsEnabled] = useState(false);
+
+	const filterPayload = {
+		kind: kind || null,
+		brand: brand || null,
+		model: model || null,
+		width: width || null,
+		diameter: diameter || null,
+		numberHoles: numberHoles || null,
+		diameterCenterHole: diameterCenterHole || null,
+		distanceBetweenCenters: distanceBetweenCenters || null,
+		diskOffset: diskOffset || null
+	};
+
+	const { data: wheels, isFetching } = useQuery({
+		queryKey: ['wheels', sort, page, filterPayload],
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			wheelService.fetchWheels({
+				filters: {
+					...generateFiltersByQuery(filterPayload),
+					sold: false
+				},
+				sort,
+				populate: ['brand', 'images', 'model'],
+				pagination: { start: (page - 1) * API_DEFAULT_LIMIT }
+			})
+	});
+	const { data: totalWheels } = useQuery({
+		queryKey: ['total-wheels', filtersValues],
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			wheelService.fetchWheels({
+				filters: { ...generateFiltersByQuery(filtersValues), sold: false },
+				pagination: { limit: 0 }
+			})
+	});
+
+	const { data: brandsData = [], isFetching: isLoadingBrands } = useQuery({
+		queryKey: wheelsBrandsQueryKey({ kind: filtersValues.kind }),
+		queryFn: wheelsPageQueryFns.fetchBrandsData(brandService, { kind: filtersValues.kind })
+	});
+
+	const { data: modelsData, isFetching: isLoadingModels } = useQuery({
+		queryKey: ['models-wheels', brand || filtersValues.brand],
+		enabled: !!(brand || filtersValues.brand),
+		queryFn: () =>
+			modelService.fetchModels<ModelWheelsCountWithGenerationsWheelsCount>({
+				pagination: { limit: API_MAX_LIMIT },
+				sort: 'name',
+				populate: { wheels: { count: true } },
+				filters: {
+					brand: { slug: (brand || filtersValues.brand) ?? '' },
+					wheels: {
+						id: { $notNull: true },
+						sold: false
+					}
+				}
+			})
+	});
+
+	const { data: diametersData, isFetching: isLoadingDiameters } = useQuery({
+		queryKey: ['wheel-diameters'],
+		enabled: diametersEnabled,
+		queryFn: () =>
+			wheelDiameterService.fetchWheelDiameters({
+				pagination: { limit: API_MAX_LIMIT }
+			})
+	});
+
+	const { data: widthsData, isFetching: isLoadingWidths } = useQuery({
+		queryKey: ['wheel-widths'],
+		enabled: widthsEnabled,
+		queryFn: () =>
+			wheelWidthService.fetchWheelWidths({
+				pagination: { limit: API_MAX_LIMIT }
+			}),
+		select: (data) => data.data?.data?.map((item) => ({ id: item.id.toString(), name: item.name.toString() })) ?? []
+	});
+
+	const { data: numberHolesData, isFetching: isLoadingNumberHoles } = useQuery({
+		queryKey: ['wheel-number-holes'],
+		enabled: numberHolesEnabled,
+		queryFn: () =>
+			wheelNumberHoleService.fetchWheelNumberHoles({
+				pagination: { limit: API_MAX_LIMIT }
+			}),
+		select: (data) => data.data?.data?.map((item) => ({ id: item.id.toString(), name: item.name.toString() })) ?? []
+	});
+
+	const { data: diameterCenterHolesData, isFetching: isLoadingDiameterCenterHoles } = useQuery({
+		queryKey: ['wheel-diameter-center-holes'],
+		enabled: diameterCenterHolesEnabled,
+		queryFn: () =>
+			wheelDiameterCenterHoleService.fetchWheelDiameterCenterHoles({
+				pagination: { limit: API_MAX_LIMIT }
+			}),
+		select: (data) => data.data?.data?.map((item) => ({ id: item.id.toString(), name: item.name.toString() })) ?? []
+	});
+
+	const { data: diskOffsetsData, isFetching: isLoadingDiskOffsets } = useQuery({
+		queryKey: ['wheel-disk-offsets'],
+		enabled: diskOffsetsEnabled,
+		queryFn: () =>
+			wheelDiskOffsetService.fetchWheelDiskOffsets({
+				pagination: { limit: API_MAX_LIMIT }
+			}),
+		select: (data) => data.data?.data?.map((item) => ({ id: item.id.toString(), name: item.name.toString() })) ?? []
+	});
+
+	const brands = brandsData ?? [];
+	const models = modelsData?.data?.data ?? [];
+	const diameters = diametersData?.data?.data ?? [];
+	const widths = widthsData ?? [];
+	const numberHolesList = numberHolesData ?? [];
+	const diameterCenterHoles = diameterCenterHolesData ?? [];
+	const diskOffsets = diskOffsetsData ?? [];
+
+	const pageCount = Math.ceil((wheels?.data?.meta?.pagination?.total || 0) / API_DEFAULT_LIMIT);
+	const total = totalWheels?.data?.meta?.pagination?.total;
+
+	return {
+		wheels: wheels?.data?.data || [],
+		isLoading: isFetching,
+		pageCount,
+		total,
+		brands,
+		models,
+		diameters,
+		widths,
+		numberHoles: numberHolesList,
+		diameterCenterHoles,
+		diskOffsets,
+		catalogCategories: [],
+		onOpenDiameterAutocomplete: () => setDiametersEnabled(true),
+		onOpenWidthAutocomplete: () => setWidthsEnabled(true),
+		onOpenNumberHolesAutocomplete: () => setNumberHolesEnabled(true),
+		onOpenDiameterCenterHoleAutocomplete: () => setDiameterCenterHolesEnabled(true),
+		onOpenDiskOffsetAutocomplete: () => setDiskOffsetsEnabled(true),
+		isLoadingBrands,
+		isLoadingModels,
+		isLoadingDiameters,
+		isLoadingWidths,
+		isLoadingNumberHoles,
+		isLoadingDiameterCenterHoles,
+		isLoadingDiskOffsets
+	};
+};

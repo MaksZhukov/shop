@@ -1,16 +1,24 @@
-import { useCartStore } from 'entities/cart';
+import { useCartStore, cartLocalStorage, CartService } from 'entities/cart';
 import { useUserStore } from 'entities/user';
-import { cabinApi } from 'entities/cabin';
-import { sparePartApi } from 'entities/sparePart';
-import { tireApi } from 'entities/tire';
+import { CabinService } from 'entities/cabin';
+import { SparePartService } from 'entities/sparePart';
+import { TireService } from 'entities/tire';
 import type { ApiResponse } from 'shared/api/types';
 import type { CollectionParams } from 'shared/api/types';
 import type { Product } from 'entities/product';
-import { wheelApi } from 'entities/wheel';
+import { WheelService } from 'entities/wheel';
 import type { AxiosResponse } from 'axios';
-import { cartApi, cartLocalStorage } from 'entities/cart';
 import type { Cart, StorageCart } from 'entities/cart';
 import { useCallback } from 'react';
+import { inject } from './cart.di';
+
+type CartLoadServices = {
+	cartService: CartService;
+	sparePartService: SparePartService;
+	wheelService: WheelService;
+	tireService: TireService;
+	cabinService: CabinService;
+};
 
 const getShoppingCartByTypes = async (
 	cartItems: StorageCart[],
@@ -39,13 +47,14 @@ const getShoppingCartByTypes = async (
 
 export const loadCart = async (
 	cartStore: ReturnType<typeof useCartStore>,
-	userStore: ReturnType<typeof useUserStore>
+	userStore: ReturnType<typeof useUserStore>,
+	services: CartLoadServices
 ) => {
 	cartStore.setIsLoading(true);
 	if (userStore.id) {
 		const {
 			data: { data }
-		} = await cartApi.fetchShoppingCart(userStore.id);
+		} = await services.cartService.fetchShoppingCart(userStore.id);
 		const cartItems = data.map((item) => ({
 			id: item.id,
 			product: item.product[0].product
@@ -62,19 +71,19 @@ export const loadCart = async (
 			] = await Promise.all([
 				getShoppingCartByTypes(
 					cartItems.filter((item) => item.product.type === 'sparePart'),
-					sparePartApi.fetchSpareParts
+					(params) => services.sparePartService.fetchSpareParts(params)
 				),
 				getShoppingCartByTypes(
 					cartItems.filter((item) => item.product.type === 'wheel'),
-					wheelApi.fetchWheels
+					(params) => services.wheelService.fetchWheels(params)
 				),
 				getShoppingCartByTypes(
 					cartItems.filter((item) => item.product.type === 'tire'),
-					tireApi.fetchTires
+					(params) => services.tireService.fetchTires(params)
 				),
 				getShoppingCartByTypes(
 					cartItems.filter((item) => item.product.type === 'cabin'),
-					cabinApi.fetchCabins
+					(params) => services.cabinService.fetchCabins(params)
 				)
 			]);
 
@@ -96,5 +105,13 @@ export const loadCart = async (
 export const useLoadCart = () => {
 	const cartStore = useCartStore();
 	const userStore = useUserStore();
-	return useCallback(() => loadCart(cartStore, userStore), [cartStore, userStore]);
+	const cartService = inject(CartService);
+	const sparePartService = inject(SparePartService);
+	const wheelService = inject(WheelService);
+	const tireService = inject(TireService);
+	const cabinService = inject(CabinService);
+	return useCallback(
+		() => loadCart(cartStore, userStore, { cartService, sparePartService, wheelService, tireService, cabinService }),
+		[cartStore, userStore, cartService, sparePartService, wheelService, tireService, cabinService]
+	);
 };

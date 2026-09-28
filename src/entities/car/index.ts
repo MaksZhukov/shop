@@ -1,4 +1,4 @@
-export { CAR_API, CarApi, carApi } from './car.api';
+export { CAR_API, CarApi } from './car.api';
 export { CarService } from './car.service';
 export type { CarReader } from './ports/car.port';
 export type { Car, Fuel } from './model/car.model';

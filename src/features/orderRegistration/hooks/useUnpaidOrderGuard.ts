@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
 import Router, { useRouter } from 'next/router';
-import { orderApi } from 'entities/order';
+import { OrderService } from 'entities/order';
+import { inject } from '../orderRegistration.di';
 import { LEAVE_CONFIRM_MESSAGE } from '../constants';
 
 export function useUnpaidOrderGuard(hasUnpaidOnlineOrder: boolean, checkoutToken: string | null): void {
 	const router = useRouter();
+	const orderService = inject(OrderService);
 	const cancelFiredRef = useRef(false);
 
 	useEffect(() => {
@@ -16,10 +18,9 @@ export function useUnpaidOrderGuard(hasUnpaidOnlineOrder: boolean, checkoutToken
 		};
 
 		const tryCancelOrder = () => {
-			debugger;
 			if (cancelFiredRef.current || checkoutToken == null) return;
 			cancelFiredRef.current = true;
-			orderApi.cancelOrderBeacon(checkoutToken);
+			orderService.cancelOrderBeacon(checkoutToken);
 		};
 
 		const handlePageHide = (e: PageTransitionEvent) => {
@@ -33,7 +34,7 @@ export function useUnpaidOrderGuard(hasUnpaidOnlineOrder: boolean, checkoutToken
 			window.removeEventListener('beforeunload', handleBeforeUnload);
 			window.removeEventListener('pagehide', handlePageHide);
 		};
-	}, [hasUnpaidOnlineOrder, checkoutToken]);
+	}, [hasUnpaidOnlineOrder, checkoutToken, orderService]);
 
 	useEffect(() => {
 		if (!hasUnpaidOnlineOrder) return;
@@ -46,10 +47,10 @@ export function useUnpaidOrderGuard(hasUnpaidOnlineOrder: boolean, checkoutToken
 				throw new Error('Route change aborted by user');
 			}
 			if (checkoutToken != null) {
-				await orderApi.cancelOrder(checkoutToken);
+				await orderService.cancelOrder(checkoutToken);
 			}
 		};
 		Router.events.on('routeChangeStart', handleRouteChangeStart);
 		return () => Router.events.off('routeChangeStart', handleRouteChangeStart);
-	}, [hasUnpaidOnlineOrder, router.asPath, checkoutToken]);
+	}, [hasUnpaidOnlineOrder, router.asPath, checkoutToken, orderService]);
 }

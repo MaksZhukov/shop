@@ -1,14 +1,25 @@
-import type { BrandWithSparePartsCount } from 'entities/brand';
-import type { KindSparePart } from 'entities/kindSparePart';
-import type { DefaultPage, PageProduct, PageProductSparePart } from 'entities/page';
-import type { SparePart } from 'entities/sparePart';
-import { CatalogSpareParts } from 'widgets/catalog';
-import { Product } from 'widgets/product';
+import { BrandService, type BrandWithSparePartsCount } from 'entities/brand';
+import { GenerationService } from 'entities/generation';
+import { KindSparePartService, type KindSparePart } from 'entities/kindSparePart';
+import { ModelService } from 'entities/model';
+import { createRequestContainer } from 'app/di/app.container';
+import { PageService, type DefaultPage, type PageProduct, type PageProductSparePart } from 'entities/page';
+import { SparePartService, type SparePart } from 'entities/sparePart';
+import { CatalogSpareParts } from 'features/catalog';
+import { Product } from 'features/product';
+import { Filters } from 'features/productFilters';
+import { FavoriteButton } from 'features/favorites';
+import { CartButton } from 'features/cart';
+import { ShareButton } from 'features/share';
 import type { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
-import { sparePartsBrandsQueryKey, parseSlugParam, buildPageProps } from 'features/sparePartsCatalog';
-import { sparePartsPageQueryFns } from 'features/sparePartsCatalog/sparePartsPageQueries';
+import {
+	sparePartsBrandsQueryKey,
+	parseSparePartsSlug,
+	buildSparePartsPageProps,
+	sparePartsPageQueryFns
+} from 'features/catalog';
 
 interface Props {
 	data: SparePart;
@@ -21,10 +32,27 @@ interface Props {
 const SpareParts: NextPage<Props> = ({ page, kindSparePart, data, relatedProducts }) => {
 	if (data && relatedProducts) {
 		return (
-			<Product data={data} page={page as PageProduct & PageProductSparePart} relatedProducts={relatedProducts} />
+			<Product
+				data={data}
+				page={page as PageProduct & PageProductSparePart}
+				relatedProducts={relatedProducts}
+				renderShare={(props) => <ShareButton {...props} />}
+				renderFavorite={(product, title) => <FavoriteButton product={product} title={title} />}
+				renderCart={(product, sx) => <CartButton product={product} sx={sx} />}
+			/>
 		);
 	}
-	return <CatalogSpareParts pageData={page} kindSparePart={kindSparePart}></CatalogSpareParts>;
+	return (
+		<CatalogSpareParts
+			pageData={page}
+			kindSparePart={kindSparePart}
+			renderFilters={(props) => <Filters {...props} />}
+			renderHeaderActions={(product) => <FavoriteButton product={product} />}
+			renderBottomActions={(product) => (
+				<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
+			)}
+		/>
+	);
 };
 
 export default SpareParts;
@@ -36,7 +64,7 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 			: context.query.slug
 				? [context.query.slug]
 				: [];
-		const params = parseSlugParam(slug);
+		const params = parseSparePartsSlug(slug);
 		const { volume, fuel, bodyStyle, transmission } = context.query as Record<string, string | undefined>;
 		const brandsFilters = {
 			kindSparePart: params.kindSparePartSlug,
@@ -47,9 +75,24 @@ export const getServerSideProps = getPageProps(undefined, async (context) => {
 			bodyStyle,
 			transmission
 		};
-		const fetchBrands = sparePartsPageQueryFns.fetchBrandsData(brandsFilters);
+		const container = createRequestContainer();
+		const fetchBrands = sparePartsPageQueryFns.fetchBrandsData(container.get(BrandService), brandsFilters);
 		const brands = await fetchBrands();
-		const pageProps = await buildPageProps(params);
+		const pageService = container.get(PageService);
+		const sparePartService = container.get(SparePartService);
+		const brandService = container.get(BrandService);
+		const modelService = container.get(ModelService);
+		const generationService = container.get(GenerationService);
+		const kindSparePartService = container.get(KindSparePartService);
+		const pageProps = await buildSparePartsPageProps(
+			params,
+			pageService,
+			sparePartService,
+			brandService,
+			modelService,
+			generationService,
+			kindSparePartService
+		);
 
 		const queryClient = new QueryClient();
 		queryClient.setQueryData(sparePartsBrandsQueryKey(brandsFilters), brands);

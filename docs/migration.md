@@ -4,16 +4,16 @@ Move the whole shop onto [architecture.md](architecture.md) one slice at a time.
 
 `shared/di` provides `DiProvider` and `createModuleInjector`. `app` adds every container to one global container, and `pages/_app.tsx` renders that provider. Each feature exports `inject` from `createModuleInjector`, and that function accepts only the tokens bound for that feature. A port is added only when a page or feature calls another slice. Reading a store the component already owns does not get a port.
 
-Article is the template: DTO, service map, `ArticleReader`, and no public `articlesApi`. Dictionary entities copy the DTO and map in the service. The index keeps exporting the API client until a port replaces it.
+Article is the template: DTO, service map, `ArticleReader`, and no public `articlesApi`. Dictionary entities copy the DTO and map in the service. The index exports the PascalCase API class and its token. It does not export a camelCase `*Api` singleton.
 
 ## Rules for every change
 
 - New UI goes in `features/`, not `widgets/`.
 - A file you touch gets a lowercase name and a role suffix (`btn.component.tsx`, `cart.store.ts`). A model file is `name.model.ts`, not `nameModel.ts`. Leave untouched files alone.
 - Outside a slice, import from that slice's `index.ts` only. Do not import `entities/<name>/<name>Api`.
-- An entity `index.ts` exports the model. It also exports the API client until a port replaces that client, then it exports the port instead. It does not export the DTO or the atoms.
+- An entity `index.ts` exports the model, the port, the service, and the PascalCase API class with its token. It does not export a camelCase `*Api` singleton, the DTO, or the atoms.
 - The DTO holds the fields. The model aliases the DTO (`export type Brand = BrandDto`) until the HTTP payload and the domain shape differ.
-- `app/di/app.container.tsx` writes every `container.bind` and `pages/_app.tsx` renders `AppDiProvider`. A feature narrows that container with `export const inject = createModuleInjector<FeatureToken>()`. The entity exports the implementation class and does not bind it. Server code calls `createRequestContainer(context)` and `container.get(Token)`.
+- `app/di/app.container.tsx` writes every `container.bind` and `pages/_app.tsx` renders `AppDiProvider`. A feature narrows that container with `export const inject = createModuleInjector<FeatureToken>()`. The entity exports the implementation class and does not bind it. Server code calls `createRequestContainer().get(Token)`.
 
 ## 1. Finish the article template
 
@@ -21,124 +21,50 @@ Done. `ArticleService` lives in `entities/article` next to the `ArticleApi` clas
 
 ## 2. Dictionary entities
 
-Done. Same DTO as article. Each entity has an API class, a service, and a port, and `app/di/app.container.tsx` binds the symbol token and the service. The index still exports the API instance (`brandApi` and the rest) because catalogs still call it.
+Done. Same DTO as article. Each entity has an API class, a service, and a port, and `app/di/app.container.tsx` binds the symbol token and the service. The index exports the PascalCase class and the token. Callers use the service.
 
 `engineVolume`, `kindSparePart`, `generation`, `model`, `tireDiameter`, `tireHeight`, `tireWidth`, `tireBrand`, `wheelDiameter`, `wheelDiameterCenterHole`, `wheelDiskOffset`, `wheelNumberHole`, `wheelWidth`, `brand`, `catalog`.
 
-Each `index.ts` exports the model, the port, the service, and the API client. Helpers and UI that were already public stay public (`BrandItem`, `withGeneration`, `withKindSparePart`). The DTO stays private and holds the fields. The model aliases it (`export type Brand = BrandDto`). Every DTO has a model.
+Each `index.ts` exports the model, the port, the service, and the API class. Helpers and UI that were already public stay public (`BrandItem`, `withGeneration`, `withKindSparePart`). The DTO stays private and holds the fields. The model aliases it (`export type Brand = BrandDto`). Every DTO has a model.
 
 ## 3. Content entities
 
-Same shape. Add a port only where a page or feature still fetches from outside the entity.
-
-1. `page` — used by almost every `getServerSideProps`. This is the first content port (`PageReader`) if those pages keep calling it.
-2. `review`
-3. `email`
-4. `serviceStation`
-5. `autocomise`
-
-Done when those API clients are not imported from outside the entity.
+Done. `page`, `review`, `email`, `serviceStation`, and `autocomise` keep their API classes private. Pages resolve `PageService` and the other services with `createRequestContainer().get`. Client calls use `inject` from `features/content`.
 
 ## 4. Leaf widgets become features
 
-Move the folder, point pages at `features/`, and rename files in that folder only.
-
-1. `widgets/benefits`
-2. `widgets/gallery`
-3. `widgets/viewedProducts`
-4. `widgets/locationEntityCard`
-5. `widgets/pages`
-
-Done when those five paths are gone.
+Done. `benefits`, `gallery`, and `viewedProducts` live in `features/`. `locationEntityCard` and `pages` were already absent.
 
 ## 5. Product entities
 
-These are the payloads catalogs and product pages render. DTO stays private. The model is what features receive. Add a port when a second slice fetches that entity.
-
-1. `product` — shared product model used by cart, favorites, and catalogs
-2. `sparePart` — header search is the first port (`SparePartSearch`), bound by the header feature
-3. `tire`
-4. `wheel`
-5. `cabin`
-6. `car`
-7. `carOnParts`
-
-The header search port is the first `useDi` call. The cart badge stays on the cart hook.
-
-Done when header search works without importing `sparePartApi`, and the other five clients are private to their entity.
+Done. `product`, `sparePart`, `tire`, `wheel`, `cabin`, `car`, and `carOnParts` keep their API classes inside the entity. Header search calls `SparePartService` through `inject`. It does not import `sparePartApi`. The cart and favorites badges read the Reatom stores.
 
 ## 6. MobX to Reatom
 
-Install Reatom once. Replace one store per change. Atoms stay inside the slice. Drop `observer` only on the components that read the store you just replaced.
-
-1. **Favorites.** `entities/favorite/favoriteStore.ts`, `FavoriteStoreProvider`. Readers: favorites page, `FavoriteButton`, header badge.
-2. **Catalog filters.** `features/sparePartsCatalog/store/sparePartsCatalogFilterStore.ts`, `SparePartsCatalogFiltersStoreProvider`.
-3. **Cart.** `entities/cart/cartStore.ts`, `CartStoreProvider`. Readers: cart page, `CartButton`, header badge, order registration. Add a cart port only if order registration must call cart without the cart hook.
-4. **User.** `entities/user/userStore.ts`, `UserStoreProvider`. Last. Readers: profile, login, logout, route shield, API provider, header, footer.
-
-Then remove `enableStaticRendering` and the `mobx` and `mobx-react` packages.
+Done. `@reatom/core` and `@reatom/react` replace MobX. Atoms stay inside the slice. Public hooks are `useFavoriteStore`, `useCartStore`, `useUserStore`, and `useSparePartsCatalogFiltersStore`. Components that read a store during render use `reatomComponent`. `enableStaticRendering`, the store providers, and the `mobx` and `mobx-react` packages are gone.
 
 ## 7. Session and order entities
 
-After the matching Reatom store exists:
-
-1. `favorite` — model and DTO; atoms not exported
-2. `cart`
-3. `user` — `UserReader` only for slices that load or clear the session without the user hook
-4. `order` — used by order registration
+Done. `favorite`, `cart`, `user`, and `order` follow the article shape: private DTO, model alias, service, and no exported atoms. Session reads go through the store hooks. Order registration receives `removeCartMany` from the page.
 
 ## 8. Catalog features and their pages
 
-The feature already exists. Move `getServerSideProps` query building into the feature. The page renders the feature and passes the route. One catalog per change.
+Done. Spare parts, tires, wheels, and cabins live under `features/catalog` and are exported from that index. Articles stay in `features/articlesList`. The main page sections are exported from `features/mainPage`.
 
-1. `features/articlesList` with `pages/articles/index.tsx` and `pages/articles/[slug].tsx` (reader already started)
-2. `features/sparePartsCatalog` with `pages/spare-parts/[[...slug]].tsx`
-3. `features/tiresCatalog` with `pages/tires/[[...slug]].tsx` and `pages/tires/[brand]/[slug].tsx`
-4. `features/wheelsCatalog` with `pages/wheels/[[...slug]].tsx`
-5. `features/cabinsCatalog` with `pages/cabins/[[...slug]].tsx`
-6. `features/mainPage` with `pages/index.tsx`
-
-Each catalog's binds are written in `app/di/app.container.tsx`. The catalog narrows them with `createModuleInjector`. It does not render its own `DiProvider`.
+Each page creates `createRequestContainer()`, passes the services into the feature's `buildPageProps`, and renders the catalog or product feature. Buttons and filters are render props from the page. The catalog does not render its own `DiProvider`. Binds stay in `app/di/app.container.tsx`.
 
 ## 9. Remaining features
 
-Already in `features/`. When you touch one, rename its files and switch any cross-slice fetch to a port. No folder move.
-
-1. `buy`, `share`, `scrollUp`, `workTimetable`, `mobileContacts`
-2. `catalogFilters`, `productFilters`
-3. `cart`, `favorites`, `user`
-4. `orderRegistration`, `routeShield`
-
-`mobileContacts` may keep its current import of `workTimetable` until both are touched. Then `workTimetable` is a port if the contacts modal still embeds it.
+Done. Cross-slice UI is a render prop from the page or from `_app`: cart and favorite buttons, share, filters, auth modal, work timetable, and the mobile contacts modal. `mobileContacts` no longer imports `workTimetable`. Files that were rewritten use the lowercase role suffix. Untouched files keep their names.
 
 ## 10. Large widgets
 
-Move after the leaf widgets, the spare-part port, and the Reatom store that widget reads.
-
-1. `widgets/orderRegistration` — after cart and user atoms exist
-2. `widgets/cart`
-3. `widgets/product`
-4. `widgets/catalog` — spare parts, tires, wheels, and cabins stay behind one feature index
-5. `widgets/main`
-6. `widgets/footer`
-7. `widgets/header` last — search, auth, cart, and favorites
+Done. `widgets/` is gone. Order registration, cart, product, catalog, main page sections, footer, and header live in `features/`. Catalog data and catalog UI share `features/catalog`. Header search filters and the search placeholder are passed from `_app`.
 
 ## 11. Remaining pages
 
-Static pages only compose features and entities. Touch one when its data entity from section 3 is done. No new logic in the page.
-
-`about`, `contacts`, `delivery`, `guarantee`, `payment`, `privacy`, `vacancies`, `installment-plan`, `how-to-get-to`, `company-photo`, `car-dismantling-photos`, `reviews`, `autocomises`, `autocomises/[slug]`, `service-stations`, `service-stations/[slug]`, `mobile-catalog`.
-
-Account pages follow their store: `favorites`, `cart`, `profile`, `order-registration`.
-
-`404` and `500` stay as they are. `_document.tsx` stays the Next document. `_app.tsx` stays the entry: providers, layout, and `AppDiProvider`. Port bindings live in `app/di/app.container.tsx`, not in the page.
+Done. Static pages compose the content services from section 3. `mobile-catalog` resolves `SparePartService` on the server and `KindSparePartService` through `inject` from `features/catalog`. Account pages read the Reatom stores. `404` and `500` stay as they are. `_document.tsx` stays the Next document. `_app.tsx` is the entry: providers, layout, header, footer, and `AppDiProvider`.
 
 ## 12. Turn the rules on
 
-When `widgets/` is empty and MobX is gone:
-
-- Drop the `widgets` element from `eslint.config.mjs`.
-- Reject deep imports of an entity or feature from outside that slice.
-- Reject a public `*Api` export.
-
-Do this last. The linter would only flag slices that are not moved yet.
+Done. `eslint.config.mjs` no longer has a `widgets` layer. A feature or entity import from outside its slice must go through `index.ts`. An entity `index.ts` must not export a camelCase `*Api` client. PascalCase classes such as `ArticleApi` stay exported so `app` can bind them.

@@ -1,4 +1,5 @@
-import { pageApi, DefaultPage } from 'entities/page';
+import { createRequestContainer } from 'app/di/app.container';
+import { PageService, DefaultPage } from 'entities/page';
 import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
@@ -20,9 +21,13 @@ const Contacts = ({ page }: Props) => {
 
 export default Contacts;
 
-export const getStaticProps = getPageProps(pageApi.fetchPage('payment'), async () => {
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (await pageService.fetchPage('payment')()).data.data;
+
 	return {
 		props: {
+			page,
 			breadcrumbs: [
 				{ text: 'Главная', href: '/' },
 				{ text: 'Оплата', href: '/payment' }

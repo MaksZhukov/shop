@@ -1,18 +1,24 @@
-import { useFavoriteStore } from 'entities/favorite';
+import { useFavoriteStore, favoriteLocalStorage, FavoriteService } from 'entities/favorite';
 import { useUserStore } from 'entities/user';
-import { cabinApi } from 'entities/cabin';
-import { sparePartApi } from 'entities/sparePart';
-import { tireApi } from 'entities/tire';
+import { CabinService } from 'entities/cabin';
+import { SparePartService } from 'entities/sparePart';
+import { TireService } from 'entities/tire';
 import type { ApiResponse } from 'shared/api/types';
 import type { CollectionParams } from 'shared/api/types';
 import type { Product } from 'entities/product';
-import { wheelApi } from 'entities/wheel';
+import { WheelService } from 'entities/wheel';
 import type { AxiosResponse } from 'axios';
-import { favoriteApi } from 'entities/favorite';
-import type { Favorite } from 'entities/favorite';
-import type { StorageFavorite } from 'entities/favorite';
-import { favoriteLocalStorage } from 'entities/favorite';
+import type { Favorite, StorageFavorite } from 'entities/favorite';
 import { useCallback } from 'react';
+import { inject } from './favorites.di';
+
+type FavoriteLoadServices = {
+	favoriteService: FavoriteService;
+	sparePartService: SparePartService;
+	wheelService: WheelService;
+	tireService: TireService;
+	cabinService: CabinService;
+};
 
 const getFavoritesByTypes = async (
 	favorites: StorageFavorite[],
@@ -41,13 +47,14 @@ const getFavoritesByTypes = async (
 
 export const loadFavorites = async (
 	favoriteStore: ReturnType<typeof useFavoriteStore>,
-	userStore: ReturnType<typeof useUserStore>
+	userStore: ReturnType<typeof useUserStore>,
+	services: FavoriteLoadServices
 ) => {
 	favoriteStore.setIsLoading(true);
 	if (userStore.id) {
 		const {
 			data: { data }
-		} = await favoriteApi.fetchFavorites();
+		} = await services.favoriteService.fetchFavorites();
 		favoriteStore.setItems(data);
 	} else {
 		const favorites = favoriteLocalStorage.getFavorites();
@@ -60,19 +67,19 @@ export const loadFavorites = async (
 			] = await Promise.all([
 				getFavoritesByTypes(
 					favorites.filter((item) => item.product.type === 'sparePart'),
-					sparePartApi.fetchSpareParts
+					(params) => services.sparePartService.fetchSpareParts(params)
 				),
 				getFavoritesByTypes(
 					favorites.filter((item) => item.product.type === 'wheel'),
-					wheelApi.fetchWheels
+					(params) => services.wheelService.fetchWheels(params)
 				),
 				getFavoritesByTypes(
 					favorites.filter((item) => item.product.type === 'tire'),
-					tireApi.fetchTires
+					(params) => services.tireService.fetchTires(params)
 				),
 				getFavoritesByTypes(
 					favorites.filter((item) => item.product.type === 'cabin'),
-					cabinApi.fetchCabins
+					(params) => services.cabinService.fetchCabins(params)
 				)
 			]);
 
@@ -94,5 +101,20 @@ export const loadFavorites = async (
 export const useLoadFavorites = () => {
 	const favoriteStore = useFavoriteStore();
 	const userStore = useUserStore();
-	return useCallback(() => loadFavorites(favoriteStore, userStore), [favoriteStore, userStore]);
+	const favoriteService = inject(FavoriteService);
+	const sparePartService = inject(SparePartService);
+	const wheelService = inject(WheelService);
+	const tireService = inject(TireService);
+	const cabinService = inject(CabinService);
+	return useCallback(
+		() =>
+			loadFavorites(favoriteStore, userStore, {
+				favoriteService,
+				sparePartService,
+				wheelService,
+				tireService,
+				cabinService
+			}),
+		[favoriteStore, userStore, favoriteService, sparePartService, wheelService, tireService, cabinService]
+	);
 };

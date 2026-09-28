@@ -1,7 +1,8 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Modal, SxProps } from '@mui/material';
 import Button from '@mui/material/Button';
-import { orderApi } from 'entities/order';
+import { OrderService } from 'entities/order';
+import { inject } from '../buy.di';
 import type { Product } from 'entities/product';
 import { Loader } from 'shared/ui';
 import Script from 'next/script';
@@ -26,6 +27,7 @@ export const BuyButton: FC<Props> = ({
 	const [token, setToken] = useState<string>('');
 	const [isLoadingToken, setIsLoadingToken] = useState<boolean>(false);
 	const { enqueueSnackbar } = useSnackbar();
+	const orderService = inject(OrderService);
 
 	const handleClickBuy = async () => {
 		let newToken = token;
@@ -34,7 +36,7 @@ export const BuyButton: FC<Props> = ({
 			try {
 				const {
 					data: { data }
-				} = await orderApi.fetchOrderCheckout(
+				} = await orderService.fetchOrderCheckout(
 					products.map((item) => ({ id: item.id, type: item.type })),
 					paymentMethodType
 				);
@@ -55,7 +57,7 @@ export const BuyButton: FC<Props> = ({
 							setIsLoadingToken(true);
 							const {
 								data: { data }
-							} = await orderApi.fetchOrderCheckout(
+							} = await orderService.fetchOrderCheckout(
 								products.map((item) => ({ id: item.id, type: item.type })),
 								paymentMethodType
 							);

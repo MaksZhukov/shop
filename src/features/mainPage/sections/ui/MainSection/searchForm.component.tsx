@@ -1,0 +1,466 @@
+import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
+import type { Brand } from 'entities/brand';
+import { API_MAX_LIMIT } from 'shared/api/constants';
+import { GenerationService, type Generation } from 'entities/generation';
+import { KindSparePartService, type KindSparePart } from 'entities/kindSparePart';
+import { ModelService, type Model } from 'entities/model';
+import type { ApiResponse, Filters } from 'shared/api/types';
+import axios, { AxiosResponse } from 'axios';
+import Autocomplete from 'shared/ui/Autocomplete';
+import { Typography, WhiteBox } from 'shared/ui';
+import { ChevronDownIcon, ChevronUpIcon } from 'shared/icons';
+import { Button } from 'shared/ui';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import qs from 'qs';
+import { Dispatch, SetStateAction, UIEventHandler, useRef, useState, SyntheticEvent, useCallback } from 'react';
+import { useDebounce, useThrottle } from 'rooks';
+import { OFFSET_SCROLL_LOAD_MORE } from 'shared/constants';
+import { BODY_STYLES_OPTIONS, FUELS_OPTIONS, TRANSMISSIONS_OPTIONS } from 'entities/car';
+import { EngineVolumeService, type EngineVolume } from 'entities/engineVolume';
+import { useQuery } from '@tanstack/react-query';
+import { SparePartService } from 'entities/sparePart';
+import { getParamByRelation } from 'shared/services/ParamsService';
+import { BODY_STYLES_SLUGIFY, FUELS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'entities/car';
+import { SparePart } from 'entities/sparePart';
+import { inject, mainPageQueryFns, mainPageQueryKeys } from 'features/mainPage';
+import { BrandService } from 'entities/brand';
+
+interface FormValues {
+	[key: string]: string | null;
+}
+
+interface AutocompleteOption {
+	label: string;
+	value: string;
+}
+
+interface AutocompleteChangeEvent {
+	value: string;
+	label: string;
+}
+
+type AutocompleteHandler = (
+	event: SyntheticEvent<Element, Event>,
+	value: AutocompleteChangeEvent | string | null
+) => void;
+
+export const SearchForm: React.FC = () => {
+	const brandService = inject(BrandService);
+	const sparePartService = inject(SparePartService);
+	const kindSparePartService = inject(KindSparePartService);
+	const engineVolumeService = inject(EngineVolumeService);
+	const modelService = inject(ModelService);
+	const generationService = inject(GenerationService);
+	const { data: brandsRes } = useQuery({
+		queryKey: mainPageQueryKeys.brands(),
+		queryFn: () => mainPageQueryFns.brands(brandService),
+		select: (res: ApiResponse<Brand[]>) => res.data
+	});
+	const brands = brandsRes ?? [];
+
+	const { data: sparePartsTotalRes } = useQuery({
+		queryKey: mainPageQueryKeys.sparePartsTotal(),
+		queryFn: () => mainPageQueryFns.sparePartsTotal(sparePartService),
+		select: (res: ApiResponse<SparePart[]>) => res.meta?.pagination?.total ?? 0
+	});
+	const sparePartsTotal = sparePartsTotalRes ?? 0;
+	const [isMoreFilters, setIsMoreFilters] = useState(false);
+	const [models, setModels] = useState<Model[]>([]);
+	const [generations, setGenerations] = useState<Generation[]>([]);
+	const [kindSpareParts, setKindSpareParts] = useState<ApiResponse<KindSparePart[]>>({ data: [], meta: {} });
+	const [engineVolumes, setEngineVolumes] = useState<EngineVolume[]>([]);
+	const [values, setValues] = useState<FormValues>({});
+	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingMore, setIsLoadingMore] = useState(false);
+	const abortControllerRef = useRef<AbortController | null>(null);
+
+	const router = useRouter();
+	const { enqueueSnackbar } = useSnackbar();
+
+	const { data: totalSpareParts } = useQuery<AxiosResponse<ApiResponse<SparePart[]>>>({
+		queryKey: [
+			'total-spare-parts',
+			values.brand,
+			values.model,
+			values.generation,
+			values.kindSparePart,
+			values.volume,
+			values.fuel,
+			values.bodyStyle,
+			values.transmission
+		],
+		placeholderData: (prev) => prev,
+		queryFn: () =>
+			sparePartService.fetchSpareParts({
+				filters: { ...generateFiltersByQuery(values), sold: false },
+				pagination: { limit: 0 }
+			})
+	});
+
+	const total = totalSpareParts?.data.meta.pagination?.total ?? sparePartsTotal;
+
+	const generateFiltersByQuery = ({
+		brand,
+		model,
+		generation,
+		kindSparePart,
+		volume,
+		fuel,
+		bodyStyle,
+		transmission
+	}: {
+		[key: string]: string | null;
+	}): Filters => {
+		const filters: Filters = {
+			brand: getParamByRelation(brand, 'slug'),
+			model: getParamByRelation(model, 'slug'),
+			generation: getParamByRelation(generation, 'slug'),
+			kindSparePart: getParamByRelation(kindSparePart, 'slug'),
+			volume: getParamByRelation(volume),
+			fuel: fuel ?? null,
+			bodyStyle: bodyStyle ?? null,
+			transmission: transmission ?? null
+		};
+		return filters;
+	};
+
+	const showError = (message: string) => {
+		enqueueSnackbar(message, { variant: 'error' });
+	};
+
+	const loadKindSpareParts = async () => {
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortControllerRef.current = controller;
+
+		try {
+			const { data } = await kindSparePartService.fetchKindSpareParts(
+				{
+					filters: { spareParts: { sold: false }, type: 'regular' },
+					pagination: { start: kindSpareParts.data.length }
+				},
+				{ abortController: controller }
+			);
+			setKindSpareParts({ data: [...kindSpareParts.data, ...data.data], meta: data.meta });
+		} catch (err) {
+			if (!axios.isCancel(err)) {
+				showError('Произошла ошибка при загрузке данных для автозаполнения');
+			}
+		}
+	};
+
+	const [throttledLoadMoreKindSpareParts] = useThrottle(async () => {
+		setIsLoadingMore(true);
+		await loadKindSpareParts();
+		setIsLoadingMore(false);
+	});
+
+	const fetchKindSpareParts = async (value: string) => {
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortControllerRef.current = controller;
+
+		try {
+			const { data } = await kindSparePartService.fetchKindSpareParts(
+				{ filters: { name: { $contains: value }, type: 'regular' } },
+				{ abortController: controller }
+			);
+			setKindSpareParts(data);
+		} catch (err) {
+			if (!axios.isCancel(err)) {
+				showError('Произошла ошибка при загрузке данных для автозаполнения');
+			}
+		}
+		setIsLoading(false);
+	};
+
+	const debouncedFetchKindSpareParts = useDebounce(fetchKindSpareParts, 300);
+
+	const updateValue = (id: string, selected: AutocompleteChangeEvent | string | null) => {
+		const value = typeof selected === 'string' ? selected : selected?.value || null;
+		setValues((prev) => ({ ...prev, [id]: value }));
+	};
+
+	const createAutocompleteHandler =
+		<T,>(
+			hasData: boolean,
+			setState: Dispatch<SetStateAction<T[]>>,
+			fetchFunc: () => Promise<AxiosResponse<ApiResponse<T[]>>>
+		) =>
+		async () => {
+			if (!hasData) {
+				setIsLoading(true);
+				try {
+					const {
+						data: { data }
+					} = await fetchFunc();
+					setState(data);
+				} catch (err) {
+					showError('Произошла ошибка при загрузке данных для автозаполнения');
+				}
+				setIsLoading(false);
+			}
+		};
+
+	const handleChangeBrandAutocomplete: AutocompleteHandler = (_, selected) => {
+		updateValue('brand', selected);
+		updateValue('model', null);
+		updateValue('generation', null);
+		setModels([]);
+		setGenerations([]);
+	};
+
+	const handleChangeModelAutocomplete: AutocompleteHandler = (_, selected) => {
+		updateValue('model', selected);
+		updateValue('generation', null);
+	};
+
+	const handleChangeAutocomplete =
+		(id: string): AutocompleteHandler =>
+		(_, selected) => {
+			updateValue(id, selected);
+		};
+
+	const handleOpenEngineVolumeAutocomplete = createAutocompleteHandler<EngineVolume>(
+		!!engineVolumes.length,
+		setEngineVolumes,
+		() => engineVolumeService.fetchEngineVolumes({ pagination: { limit: API_MAX_LIMIT } })
+	);
+
+	const handleOpenAutocompleteModel = createAutocompleteHandler<Model>(!!models.length, setModels, () =>
+		modelService.fetchModels({
+			filters: { brand: { slug: values.brand } },
+			pagination: { limit: API_MAX_LIMIT }
+		})
+	);
+
+	const handleOpenAutocompleteGeneration = createAutocompleteHandler<Generation>(
+		!!generations.length,
+		setGenerations,
+		() =>
+			generationService.fetchGenerations({
+				filters: { brand: { slug: values.brand }, model: { slug: values.model } },
+				pagination: { limit: API_MAX_LIMIT }
+			})
+	);
+
+	const handleOpenAutocompleteKindSparePart = async () => {
+		if (!kindSpareParts.data.length) {
+			setIsLoading(true);
+			await loadKindSpareParts();
+			setIsLoading(false);
+		}
+	};
+
+	const handleInputChangeKindSparePart = (_: SyntheticEvent<Element, Event>, value: string) => {
+		setIsLoading(true);
+		debouncedFetchKindSpareParts(value);
+	};
+
+	const handleScrollKindSparePartAutocomplete: UIEventHandler<HTMLDivElement> & UIEventHandler<HTMLUListElement> = (
+		event
+	) => {
+		if (
+			event.currentTarget.scrollTop + event.currentTarget.offsetHeight + OFFSET_SCROLL_LOAD_MORE >=
+			event.currentTarget.scrollHeight
+		) {
+			throttledLoadMoreKindSpareParts();
+		}
+	};
+
+	const buildSearchUrl = (searchValues: FormValues): string => {
+		const { brand, model, generation, kindSparePart, volume, fuel, bodyStyle, transmission } = searchValues;
+
+		const queryParams: Record<string, string> = {};
+		if (volume) {
+			queryParams.volume = volume;
+		}
+		if (fuel) {
+			queryParams.fuel = FUELS_SLUGIFY[fuel] ?? fuel;
+		}
+		if (bodyStyle) {
+			queryParams.bodyStyle = BODY_STYLES_SLUGIFY[bodyStyle] ?? bodyStyle;
+		}
+		if (transmission) {
+			queryParams.transmission = TRANSMISSIONS_SLUGIFY[transmission] ?? transmission;
+		}
+
+		const queryString = qs.stringify(queryParams, { encode: false });
+		const query = queryString ? `?${queryString}` : '';
+
+		const pathSegments = ['/spare-parts'];
+		if (brand) {
+			pathSegments.push(brand);
+			if (model) {
+				pathSegments.push(`model-${model}`);
+			}
+			if (generation) {
+				pathSegments.push(`gen-${generation}`);
+			}
+		}
+		if (kindSparePart) {
+			pathSegments.push(`ksp-${kindSparePart}`);
+		}
+
+		return pathSegments.join('/') + query;
+	};
+
+	const handleClickFind = () => {
+		const url = buildSearchUrl(values);
+		router.push(url);
+	};
+
+	const noOptionsText = isLoading ? <CircularProgress size={20} /> : <>Совпадений нет</>;
+
+	const createAutocompleteProps = (config: {
+		options: AutocompleteOption[];
+		noOptionsText: React.ReactNode;
+		placeholder: string;
+		onChange?: AutocompleteHandler;
+		onOpen?: () => void;
+		onInputChange?: (event: SyntheticEvent<Element, Event>, value: string) => void;
+		onScroll?: UIEventHandler<HTMLDivElement> & UIEventHandler<HTMLUListElement>;
+		loadingMore?: boolean;
+		disabled?: boolean;
+	}) => ({
+		options: config.options,
+		noOptionsText: config.noOptionsText,
+		placeholder: config.placeholder,
+		onChange: config.onChange,
+		onOpen: config.onOpen,
+		onInputChange: config.onInputChange,
+		onScroll: config.onScroll,
+		disabled: config.disabled,
+		fullWidth: true
+	});
+
+	const brandAutocompleteProps = createAutocompleteProps({
+		options: brands.map((item) => ({ label: item.name, value: item.slug })),
+		noOptionsText,
+		placeholder: 'Марка',
+		onChange: handleChangeBrandAutocomplete
+	});
+
+	const modelAutocompleteProps = createAutocompleteProps({
+		options: models.map((item) => ({ label: item.name, value: item.slug })),
+		noOptionsText,
+		placeholder: 'Модель',
+		onChange: handleChangeModelAutocomplete,
+		onOpen: handleOpenAutocompleteModel,
+		disabled: !values.brand
+	});
+
+	const generationAutocompleteProps = createAutocompleteProps({
+		options: generations.map((item) => ({ label: item.name, value: item.slug })),
+		noOptionsText,
+		placeholder: 'Поколение',
+		onOpen: handleOpenAutocompleteGeneration,
+		onChange: handleChangeAutocomplete('generation'),
+		disabled: !values.model
+	});
+
+	// eslint-disable-next-line react-hooks/refs
+	const kindSparePartAutocompleteProps = createAutocompleteProps({
+		options: kindSpareParts.data.map((item) => ({ label: item.name, value: item.slug })),
+		noOptionsText,
+		placeholder: 'Выбрать запчасть',
+		onChange: handleChangeAutocomplete('kindSparePart'),
+		onOpen: handleOpenAutocompleteKindSparePart,
+		onInputChange: handleInputChangeKindSparePart,
+		onScroll: handleScrollKindSparePartAutocomplete,
+		loadingMore: isLoadingMore
+	});
+
+	const engineVolumeAutocompleteProps = createAutocompleteProps({
+		options: engineVolumes.map((item) => ({ label: item.name, value: item.name })),
+		noOptionsText,
+		placeholder: 'Объем двигателя',
+		onChange: handleChangeAutocomplete('volume'),
+		onOpen: handleOpenEngineVolumeAutocomplete
+	});
+
+	const fuelAutocompleteProps = createAutocompleteProps({
+		options: FUELS_OPTIONS,
+		noOptionsText,
+		placeholder: 'Тип топлива',
+		onChange: handleChangeAutocomplete('fuel')
+	});
+
+	const bodyStyleAutocompleteProps = createAutocompleteProps({
+		options: BODY_STYLES_OPTIONS,
+		noOptionsText,
+		placeholder: 'Кузов',
+		onChange: handleChangeAutocomplete('bodyStyle')
+	});
+
+	const transmissionAutocompleteProps = createAutocompleteProps({
+		options: TRANSMISSIONS_OPTIONS,
+		noOptionsText,
+		placeholder: 'Коробка',
+		onChange: handleChangeAutocomplete('transmission')
+	});
+
+	const toggleMoreFilters = () => {
+		setIsMoreFilters(!isMoreFilters);
+	};
+
+	return (
+		<Box
+			sx={{
+				width: { xs: '100%', md: 360 }
+			}}
+		>
+			<Typography variant='h6' color='text.secondary' align='center' sx={{ mb: 1 }}>
+				Поиск автозапчастей
+			</Typography>
+			<WhiteBox withShadow sx={{ px: 2, py: 1, gap: 1 }}>
+				<Tabs sx={{ mb: 2 }} value='brand'>
+					<Tab label='По марке авто' value='brand' />
+				</Tabs>
+				<Box
+					sx={{
+						gap: 1,
+						display: 'flex',
+						flexDirection: 'column'
+					}}
+				>
+					<Box
+						sx={{
+							display: 'flex',
+							gap: 1
+						}}
+					>
+						<Autocomplete {...brandAutocompleteProps} />
+						<Autocomplete {...modelAutocompleteProps} />
+					</Box>
+					<Autocomplete {...generationAutocompleteProps} />
+					<Autocomplete {...kindSparePartAutocompleteProps} />
+					<Button
+						size='small'
+						sx={{ alignSelf: 'flex-start' }}
+						onClick={toggleMoreFilters}
+						endIcon={isMoreFilters ? <ChevronUpIcon /> : <ChevronDownIcon />}
+					>
+						{isMoreFilters ? 'Меньше параметров' : 'Больше параметров поиска'}
+					</Button>
+					{isMoreFilters && (
+						<>
+							<Autocomplete {...engineVolumeAutocompleteProps} />
+							<Autocomplete {...fuelAutocompleteProps} />
+							<Autocomplete {...bodyStyleAutocompleteProps} />
+							<Autocomplete {...transmissionAutocompleteProps} />
+						</>
+					)}
+					<Button onClick={handleClickFind} variant='contained'>
+						Показать : {total}
+					</Button>
+				</Box>
+			</WhiteBox>
+		</Box>
+	);
+};

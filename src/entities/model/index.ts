@@ -1,4 +1,4 @@
-export { MODEL_API, ModelApi, modelApi } from './model.api';
+export { MODEL_API, ModelApi } from './model.api';
 export { ModelService } from './model.service';
 export type { ModelReader } from './ports/model.port';
 export type {

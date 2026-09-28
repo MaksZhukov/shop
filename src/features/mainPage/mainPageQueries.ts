@@ -1,14 +1,14 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { API_MAX_LIMIT } from 'shared/api/constants';
-import { brandApi } from 'entities/brand';
-import { sparePartApi } from 'entities/sparePart';
+import type { BrandService } from 'entities/brand';
+import type { SparePartService } from 'entities/sparePart';
 import type { ArticleReader } from 'entities/article';
-import { carOnPartsApi } from 'entities/carOnParts';
+import type { CarOnPartsService } from 'entities/carOnParts';
 import { mainPageQueryKeys } from './config';
 
 export const mainPageQueryFns = {
-	brands: () =>
-		brandApi
+	brands: (brandService: BrandService) =>
+		brandService
 			.fetchBrands({
 				populate: ['image'],
 				sort: 'name',
@@ -22,8 +22,8 @@ export const mainPageQueryFns = {
 				pagination: { limit: API_MAX_LIMIT }
 			})
 			.then((r) => r.data),
-	newSpareParts: () =>
-		sparePartApi
+	newSpareParts: (sparePartService: SparePartService) =>
+		sparePartService
 			.fetchSpareParts({
 				populate: ['images', 'brand', 'volume'],
 				pagination: { limit: 10 },
@@ -37,15 +37,15 @@ export const mainPageQueryFns = {
 			sort: ['createdAt:desc'],
 			pagination: { limit: 8 }
 		}),
-	carsOnParts: () =>
-		carOnPartsApi
+	carsOnParts: (carOnPartsService: CarOnPartsService) =>
+		carOnPartsService
 			.fetchCarsOnParts({
 				populate: ['images', 'volume', 'brand', 'model', 'generation'],
 				pagination: { limit: 10 }
 			})
 			.then((r) => r.data),
-	sparePartsTotal: () =>
-		sparePartApi
+	sparePartsTotal: (sparePartService: SparePartService) =>
+		sparePartService
 			.fetchSpareParts({
 				pagination: { limit: 0 },
 				filters: { sold: false }
@@ -53,15 +53,21 @@ export const mainPageQueryFns = {
 			.then((r) => r.data)
 };
 
-export const prefetchMainPage = async (queryClient: QueryClient, articleReader: ArticleReader): Promise<void> => {
+export const prefetchMainPage = async (
+	queryClient: QueryClient,
+	articleReader: ArticleReader,
+	brandService: BrandService,
+	sparePartService: SparePartService,
+	carOnPartsService: CarOnPartsService
+): Promise<void> => {
 	await Promise.all([
 		queryClient.prefetchQuery({
 			queryKey: mainPageQueryKeys.brands(),
-			queryFn: mainPageQueryFns.brands
+			queryFn: () => mainPageQueryFns.brands(brandService)
 		}),
 		queryClient.prefetchQuery({
 			queryKey: mainPageQueryKeys.newSpareParts(),
-			queryFn: mainPageQueryFns.newSpareParts
+			queryFn: () => mainPageQueryFns.newSpareParts(sparePartService)
 		}),
 		queryClient.prefetchQuery({
 			queryKey: mainPageQueryKeys.articles(),
@@ -69,11 +75,11 @@ export const prefetchMainPage = async (queryClient: QueryClient, articleReader: 
 		}),
 		queryClient.prefetchQuery({
 			queryKey: mainPageQueryKeys.carsOnParts(),
-			queryFn: mainPageQueryFns.carsOnParts
+			queryFn: () => mainPageQueryFns.carsOnParts(carOnPartsService)
 		}),
 		queryClient.prefetchQuery({
 			queryKey: mainPageQueryKeys.sparePartsTotal(),
-			queryFn: mainPageQueryFns.sparePartsTotal
+			queryFn: () => mainPageQueryFns.sparePartsTotal(sparePartService)
 		})
 	]);
 };

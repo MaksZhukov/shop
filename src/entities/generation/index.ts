@@ -1,4 +1,4 @@
-export { GENERATION_API, GenerationApi, generationApi } from './generation.api';
+export { GENERATION_API, GenerationApi } from './generation.api';
 export { GenerationService } from './generation.service';
 export type { GenerationReader } from './ports/generation.port';
 export type {

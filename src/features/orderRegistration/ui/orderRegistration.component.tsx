@@ -1,0 +1,100 @@
+import { Box, Typography } from '@mui/material';
+import { Link, MobileQuestionsSection } from 'shared/ui';
+import {
+	OrderRegistrationForm,
+	OrderSummary,
+	OrderSuccess,
+	useOrderRegistrationForm,
+	useOrderRegistration,
+	useOrderCheckout
+} from 'features/orderRegistration';
+import type { ReactNode } from 'react';
+import { OrderRegistrationProvider } from '../providers/OrderRegistrationProvider';
+
+export const OrderRegistration = ({
+	isOrdered,
+	onChangeIsOrdered,
+	removeCartMany,
+	renderMobileContacts
+}: {
+	isOrdered: boolean;
+	onChangeIsOrdered: (isOrdered: boolean) => void;
+	removeCartMany: (cartItemIDs: number[]) => Promise<void> | void;
+	renderMobileContacts: (isOpened: boolean, onClose: () => void) => ReactNode;
+}) => {
+	const form = useOrderRegistrationForm();
+	const { checkoutItems, totalAmount, getButtonText } = useOrderRegistration();
+	const { orderCheckout, formattedTime, isExpired, handleCheckout, isReissuingCheckoutToken } = useOrderCheckout({
+		formData: form.formData,
+		checkoutItems,
+		onChangeIsOrdered,
+		isOrdered,
+		removeCartMany
+	});
+
+	const handleCheckoutClick = async () => {
+		const success = form.handleCheckout();
+		if (!success) {
+			return;
+		}
+		await handleCheckout();
+	};
+
+	if (isOrdered) {
+		return <OrderSuccess />;
+	}
+
+	return (
+        <Box
+            sx={{
+                pt: 2,
+                pb: { xs: 0, md: 2 }
+            }}>
+            <Typography variant='h6' component='h1' sx={{
+                mb: 2
+            }}>
+				Оформление заказа
+			</Typography>
+            {orderCheckout?.order && formattedTime && !isExpired && (
+				<Typography
+                    variant='body2'
+                    sx={{
+                        color: 'warning.main',
+                        mb: 2
+                    }}>
+					Время на оплату: {formattedTime}
+				</Typography>
+			)}
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    gap: 1
+                }}>
+				<OrderRegistrationProvider renderMobileContacts={renderMobileContacts}>
+					<OrderRegistrationForm form={form} disabled={!!orderCheckout?.order} />
+				</OrderRegistrationProvider>
+				<OrderSummary
+					selectedItemsCount={checkoutItems.length}
+					totalAmount={totalAmount}
+					onCheckout={handleCheckoutClick}
+					buttonText={getButtonText(form.formData.paymentMethod)}
+					disclaimerText={
+						<>
+							Нажимая на кнопку, вы соглашаетесь с{' '}
+							<Link color={'info.main'} href='/privacy'>
+								Условиями обработки персональных данных
+							</Link>
+							, а так же с{' '}
+							<Link color={'info.main'} href='/terms'>
+								Условиями продажи
+							</Link>
+						</>
+					}
+					disabled={isReissuingCheckoutToken}
+				/>
+			</Box>
+            <MobileQuestionsSection />
+        </Box>
+    );
+};

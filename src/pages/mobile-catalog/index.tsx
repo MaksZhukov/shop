@@ -1,9 +1,11 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { Banners } from 'shared/ui/Banners';
 import { Box, Typography } from '@mui/material';
-import { Benefits } from 'widgets/benefits';
-import { sparePartApi } from 'entities/sparePart';
-import { kindSparePartApi, type KindSparePartWithSparePartsCount } from 'entities/kindSparePart';
+import { Benefits } from 'features/benefits';
+import { SparePartService } from 'entities/sparePart';
+import { KindSparePartService, type KindSparePartWithSparePartsCount } from 'entities/kindSparePart';
+import { inject } from 'features/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRightIcon } from 'shared/icons/ChevronRightIcon';
 import { useState } from 'react';
@@ -14,13 +16,14 @@ interface Props {
 
 export default function MobileCatalog({ sparePartsTotal }: Props) {
 	const [selectedCategory, setSelectedCategory] = useState<KindSparePartWithSparePartsCount | null>(null);
+	const kindSparePartService = inject(KindSparePartService);
 
 	const { data: kindSpareParts } = useQuery({
 		queryKey: ['catalogCategories', selectedCategory?.id],
 		enabled: true,
 		placeholderData: (prev) => prev,
 		queryFn: () =>
-			kindSparePartApi.fetchKindSpareParts<KindSparePartWithSparePartsCount>({
+			kindSparePartService.fetchKindSpareParts<KindSparePartWithSparePartsCount>({
 				pagination: { limit: 15, start: selectedCategory ? Math.floor(Math.random() * 100) : 0 },
 				populate: { spareParts: { count: true } }
 			})
@@ -97,7 +100,7 @@ export const getServerSideProps = getPageProps(undefined, async (context, device
 		};
 	}
 
-	const { data } = await sparePartApi.fetchSpareParts({
+	const { data } = await createRequestContainer().get(SparePartService).fetchSpareParts({
 		pagination: { limit: 0 },
 		filters: {
 			sold: false

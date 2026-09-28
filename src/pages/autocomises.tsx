@@ -1,7 +1,8 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { Typography } from '@mui/material';
-import { autocomiseApi } from 'entities/autocomise';
+import { AutocomiseService } from 'entities/autocomise';
 import { Autocomis } from 'entities/autocomise';
-import { pageApi, DefaultPage } from 'entities/page';
+import { PageService, DefaultPage } from 'entities/page';
 import type { ApiResponse } from 'shared/api/types';
 import { CardItem } from 'shared/ui';
 import { WhiteBox } from 'shared/ui';
@@ -40,17 +41,25 @@ const Vacancies: NextPage<Props> = ({ page, autocomises }) => {
 
 export default Vacancies;
 
-export const getStaticProps = getPageProps(pageApi.fetchPage('autocomis'), async () => ({
-	props: {
-		autocomises: (
-			await autocomiseApi.fetchAutocomises({
-				populate: 'image',
-				sort: 'updatedAt:desc'
-			})
-		).data,
-		breadcrumbs: [
-			{ text: 'Главная', href: '/' },
-			{ text: 'Автокомисы', href: '/autocomises' }
-		]
-	}
-}));
+export const getStaticProps = getPageProps(undefined, async () => {
+	const container = createRequestContainer();
+	const pageService = container.get(PageService);
+	const autocomiseService = container.get(AutocomiseService);
+	const page = (await pageService.fetchPage('autocomis')()).data.data;
+
+	return {
+		props: {
+			page,
+			autocomises: (
+				await autocomiseService.fetchAutocomises({
+					populate: 'image',
+					sort: 'updatedAt:desc'
+				})
+			).data,
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Автокомисы', href: '/autocomises' }
+			]
+		}
+	};
+});

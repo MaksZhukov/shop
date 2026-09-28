@@ -1,15 +1,15 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { Container } from '@mui/material';
-import { observer } from 'mobx-react';
+import { reatomComponent } from '@reatom/react';
 import Head from 'next/head';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, FormEvent } from 'react';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
-import { useSaveUserInfo } from 'features/user/useSaveUserInfo';
+import { useSaveUserInfo } from 'features/user';
 import styles from './profile.module.scss';
 import { useUserStore } from 'entities/user';
 
-const Profile = observer(() => {
+const Profile = reatomComponent(() => {
 	const userStore = useUserStore();
 	const { enqueueSnackbar } = useSnackbar();
 	const saveUserInfo = useSaveUserInfo();

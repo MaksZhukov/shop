@@ -1,5 +1,6 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import { pageApi, DefaultPage } from 'entities/page';
+import { PageService, DefaultPage } from 'entities/page';
 import type { Video } from 'shared/api/types';
 import { ReactMarkdown } from 'shared/ui';
 import { FC } from 'react';
@@ -66,9 +67,13 @@ const HowToGetTo: FC<Props> = ({ page }) => {
 
 export default HowToGetTo;
 
-export const getStaticProps = getPageProps(pageApi.fetchPage('how-to-get-to'), async () => {
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (await pageService.fetchPage('how-to-get-to')()).data.data;
+
 	return {
 		props: {
+			page,
 			breadcrumbs: [
 				{ text: 'Главная', href: '/' },
 				{ text: 'Как добраться', href: '/how-to-get-to' }

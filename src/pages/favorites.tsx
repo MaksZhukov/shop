@@ -1,10 +1,10 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { Loader, Typography, Link } from 'shared/ui';
-import { observer } from 'mobx-react';
+import { reatomComponent } from '@reatom/react';
 import Head from 'next/head';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { ProductItem } from 'entities/product';
-import { ViewedProducts } from 'widgets/viewedProducts';
+import { ViewedProducts } from 'features/viewedProducts';
 import { FavoriteButton } from 'features/favorites';
 import { CartButton } from 'features/cart';
 import { useFavoriteStore } from 'entities/favorite';
@@ -92,12 +92,17 @@ const Favorites = () => {
 					У вас нет товаров в избранном, добавьте их из <Link href='/'>Магазина</Link>
 				</Typography>
 			)}
-			<ViewedProducts />
+			<ViewedProducts
+				renderHeaderActions={(product) => <FavoriteButton product={product} />}
+				renderBottomActions={(product) => (
+					<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
+				)}
+			/>
 		</Box>
 	);
 };
 
-export default observer(Favorites);
+export default reatomComponent(Favorites);
 
 export const getStaticProps = getPageProps(undefined, async () => {
 	return {

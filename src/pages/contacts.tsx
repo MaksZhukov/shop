@@ -1,7 +1,9 @@
 import { Button, Input, Link, ListItemButton, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { emailApi } from 'entities/email';
-import { pageApi, PageContacts } from 'entities/page';
+import { createRequestContainer } from 'app/di/app.container';
+import { EmailService } from 'entities/email';
+import { PageService, type PageContacts } from 'entities/page';
+import { inject } from 'features/content';
 import { BlockImages } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
@@ -16,6 +18,7 @@ interface Props {
 }
 
 const Contacts = ({ page }: Props) => {
+	const emailService = inject(EmailService);
 	const [name, setName] = useState<string>('');
 	const [phone, setPhone] = useState<string>('');
 	const [message, setMessage] = useState<string>('');
@@ -36,7 +39,7 @@ const Contacts = ({ page }: Props) => {
 	const [throttledSubmit] = useThrottle(async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await emailApi.send(
+			await emailService.send(
 				'Вопрос',
 				`<b>Телефон</b>: ${phone} <br /><b>Имя</b>: ${name} <br /><b>Сообщение</b>: ${message} <br />`
 			);
@@ -226,16 +229,17 @@ const Contacts = ({ page }: Props) => {
 
 export default Contacts;
 
-export const getStaticProps = getPageProps(
-	pageApi.fetchPage('contact', { populate: ['seo', 'images', 'requisites'] }),
-	async () => {
-		return {
-			props: {
-				breadcrumbs: [
-					{ text: 'Главная', href: '/' },
-					{ text: 'Контакты', href: '/contacts' }
-				]
-			}
-		};
-	}
-);
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (await pageService.fetchPage('contact', { populate: ['seo', 'images', 'requisites'] })()).data.data;
+
+	return {
+		props: {
+			page,
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Контакты', href: '/contacts' }
+			]
+		}
+	};
+});

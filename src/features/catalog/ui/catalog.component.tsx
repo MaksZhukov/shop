@@ -1,0 +1,131 @@
+import { Box } from '@mui/material';
+import type { SEO } from 'shared/api/types';
+import type { Product } from 'entities/product';
+import type { AutocompleteType, NumberType } from 'features/productFilters';
+import type { TopCategory } from 'entities/catalog';
+import { type ReactNode, useState } from 'react';
+import { CatalogHeader } from './catalogHeader.component';
+import { CatalogSidebar } from './catalogSidebar.component';
+import type { CatalogReference } from './types';
+import { CatalogContent } from './catalogContent.component';
+import { CatalogFiltersModal } from './catalogFiltersModal.component';
+
+export type CatalogFilterPanelProps = {
+	total?: number;
+	config: (AutocompleteType | NumberType)[];
+	onClickFind: () => void;
+	values: { [key: string]: string | null };
+	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
+};
+
+export type CatalogSlots = {
+	renderFilters: (props: CatalogFilterPanelProps) => ReactNode;
+	renderHeaderActions: (product: Product) => ReactNode;
+	renderBottomActions: (product: Product) => ReactNode;
+};
+interface CatalogProps extends CatalogSlots {
+	seo: SEO | null;
+	filtersConfig: (AutocompleteType | NumberType)[];
+	references?: CatalogReference[];
+	showReferencesPanel?: boolean;
+	isReferencesLoading?: boolean;
+	filtersValues: { [key: string]: string | null };
+	total?: number;
+	data: Product[];
+	isLoading: boolean;
+	pageCount: number;
+	page: number;
+	sort: string;
+	onClickFind: () => void;
+	onChangeFilterValues: (values: { [key: string]: string | null }) => void;
+	onChangeSort: (sort: string) => void;
+	onChangeHoveredCategory?: (category: TopCategory | null) => void;
+	catalogCategories?: TopCategory[];
+	hoveredCategory?: TopCategory | null;
+}
+
+export const Catalog: React.FC<CatalogProps> = ({
+	filtersConfig,
+	seo,
+	references,
+	showReferencesPanel,
+	isReferencesLoading,
+	filtersValues,
+	total,
+	onClickFind,
+	onChangeFilterValues,
+	data,
+	isLoading,
+	pageCount,
+	page,
+	sort,
+	onChangeSort,
+	catalogCategories = [],
+	hoveredCategory,
+	onChangeHoveredCategory,
+	renderFilters,
+	renderHeaderActions,
+	renderBottomActions
+}) => {
+	const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+
+	const handleFiltersModalOpen = () => {
+		setFiltersModalOpen(true);
+	};
+
+	const handleFiltersModalClose = () => {
+		setFiltersModalOpen(false);
+	};
+
+	return (
+		<>
+			<CatalogHeader
+				seo={seo}
+				sort={sort}
+				total={total}
+				onChangeSort={onChangeSort}
+				onOpenFiltersModal={handleFiltersModalOpen}
+			/>
+			<Box
+				sx={{
+					display: 'flex',
+					gap: 2,
+					mb: 4
+				}}
+			>
+				<CatalogSidebar
+					filtersConfig={filtersConfig}
+					filtersValues={filtersValues}
+					total={total}
+					onClickFind={onClickFind}
+					onChangeFilterValues={onChangeFilterValues}
+					catalogCategories={catalogCategories}
+					hoveredCategory={hoveredCategory}
+					onChangeHoveredCategory={onChangeHoveredCategory}
+					renderFilters={renderFilters}
+				/>
+				<CatalogContent
+					references={references}
+					showReferencesPanel={showReferencesPanel}
+					isReferencesLoading={isReferencesLoading}
+					data={data}
+					isLoading={isLoading}
+					pageCount={pageCount}
+					page={page}
+					renderHeaderActions={renderHeaderActions}
+					renderBottomActions={renderBottomActions}
+				/>
+			</Box>
+			<CatalogFiltersModal
+				open={filtersModalOpen}
+				filtersConfig={filtersConfig}
+				filtersValues={filtersValues}
+				total={total}
+				onClose={handleFiltersModalClose}
+				onClickFind={onClickFind}
+				onChangeFilterValues={onChangeFilterValues}
+				renderFilters={renderFilters}
+			/>
+		</>
+	);
+};

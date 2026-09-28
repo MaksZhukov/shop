@@ -1,11 +1,13 @@
-import { userApi, useUserStore } from 'entities/user';
+import { useUserStore, UserService } from 'entities/user';
+import { inject } from './user.di';
 
-export const logout = async (userStore: ReturnType<typeof useUserStore>) => {
+export const logout = async (userStore: ReturnType<typeof useUserStore>, userService: UserService) => {
 	userStore.clearUser();
-	await userApi.logout();
+	await userService.logout();
 };
 
 export const useLogout = () => {
 	const userStore = useUserStore();
-	return () => logout(userStore);
+	const userService = inject(UserService);
+	return () => logout(userStore, userService);
 };

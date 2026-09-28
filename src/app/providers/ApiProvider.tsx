@@ -1,8 +1,8 @@
 import { FC, ReactNode, useLayoutEffect } from 'react';
 import { setupApiInterceptors } from 'shared/api';
-import { logout } from 'features/user';
+import { inject, logout } from 'features/user';
 import { useSnackbar } from 'notistack';
-import { useUserStore } from 'entities/user';
+import { useUserStore, UserService } from 'entities/user';
 
 interface ApiProviderProps {
 	children: ReactNode;
@@ -10,11 +10,12 @@ interface ApiProviderProps {
 
 export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
 	const userStore = useUserStore();
+	const userService = inject(UserService);
 	const { enqueueSnackbar } = useSnackbar();
 	useLayoutEffect(() => {
 		const errorResponseUnauthorizedCallback = () => {
 			if (userStore.id) {
-				logout(userStore);
+				logout(userStore, userService);
 			}
 		};
 		const errorResponseTooManyRequestsCallback = () => {
@@ -23,7 +24,7 @@ export const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
 			});
 		};
 		setupApiInterceptors(errorResponseUnauthorizedCallback, errorResponseTooManyRequestsCallback);
-	}, [userStore, enqueueSnackbar]);
+	}, [userStore, userService, enqueueSnackbar]);
 
 	return <>{children}</>;
 };

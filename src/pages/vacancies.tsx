@@ -1,11 +1,13 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { pageApi, PageVacancies, Vacancy } from 'entities/page';
+import { PageService, PageVacancies, Vacancy } from 'entities/page';
 import { BlockImages } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
+
 
 interface Props {
 	page: PageVacancies;
@@ -188,16 +190,21 @@ const Vacancies: NextPage<Props> = ({ page }) => {
 
 export default Vacancies;
 
-export const getStaticProps = getPageProps(
-	pageApi.fetchPage('vacancy', { populate: ['vacancies.image', 'vacancies.images', 'seo', 'vacancies.description'] }),
-	async () => {
-		return {
-			props: {
-				breadcrumbs: [
-					{ text: 'Главная', href: '/' },
-					{ text: 'Вакансии', href: '/vacancies' }
-				]
-			}
-		};
-	}
-);
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (
+		await pageService.fetchPage('vacancy', {
+			populate: ['vacancies.image', 'vacancies.images', 'seo', 'vacancies.description']
+		})()
+	).data.data;
+
+	return {
+		props: {
+			page,
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Вакансии', href: '/vacancies' }
+			]
+		}
+	};
+});

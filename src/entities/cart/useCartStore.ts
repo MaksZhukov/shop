@@ -1,11 +1,3 @@
-import { useContext } from 'react';
-import { CartStore } from './cartStore';
-import { CartStoreContext } from './cartContext';
+import { cartStore } from './cart.store';
 
-export const useCartStore = (): CartStore => {
-	const cartStore = useContext(CartStoreContext);
-	if (!cartStore) {
-		throw new Error('CartStore not found');
-	}
-	return cartStore;
-};
+export const useCartStore = () => cartStore;

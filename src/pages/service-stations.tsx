@@ -1,6 +1,7 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { Typography } from '@mui/material';
-import { pageApi, DefaultPage } from 'entities/page';
-import { serviceStationApi, ServiceStation } from 'entities/serviceStation';
+import { PageService, DefaultPage } from 'entities/page';
+import { ServiceStationService, ServiceStation } from 'entities/serviceStation';
 import type { ApiResponse } from 'shared/api/types';
 import { CardItem } from 'shared/ui';
 import { WhiteBox } from 'shared/ui';
@@ -39,17 +40,25 @@ const Vacancies: NextPage<Props> = ({ page, serviceStations }) => {
 
 export default Vacancies;
 
-export const getStaticProps = getPageProps(pageApi.fetchPage('service-station'), async () => ({
-	props: {
-		serviceStations: (
-			await serviceStationApi.fetchServiceStations({
-				populate: 'image',
-				sort: 'updatedAt:desc'
-			})
-		).data,
-		breadcrumbs: [
-			{ text: 'Главная', href: '/' },
-			{ text: 'СТО', href: '/service-stations' }
-		]
-	}
-}));
+export const getStaticProps = getPageProps(undefined, async () => {
+	const container = createRequestContainer();
+	const pageService = container.get(PageService);
+	const serviceStationService = container.get(ServiceStationService);
+	const page = (await pageService.fetchPage('service-station')()).data.data;
+
+	return {
+		props: {
+			page,
+			serviceStations: (
+				await serviceStationService.fetchServiceStations({
+					populate: 'image',
+					sort: 'updatedAt:desc'
+				})
+			).data,
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'СТО', href: '/service-stations' }
+			]
+		}
+	};
+});

@@ -1,14 +1,16 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { FC } from 'react';
 
 import { SxProps, Table, TableBody, TableCell, TableRow, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { pageApi, PageDelivery } from 'entities/page';
+import { PageService, PageDelivery } from 'entities/page';
 import { BlockImages } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { getUrlByMinFormat } from 'shared/utils/imageUtils';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
+
 
 interface Props {
 	page: PageDelivery;
@@ -137,26 +139,29 @@ const Delivery: FC<Props> = ({ page }) => {
 
 export default Delivery;
 
-export const getStaticProps = getPageProps(
-	pageApi.fetchPage('delivery', {
-		populate: [
-			'seo',
-			'images1',
-			'images2',
-			'mainImageLeft',
-			'deliveryCitiesDescription',
-			'courierDescription',
-			'shipmentImageRight'
-		]
-	}),
-	async () => {
-		return {
-			props: {
-				breadcrumbs: [
-					{ text: 'Главная', href: '/' },
-					{ text: 'Доставка', href: '/delivery' }
-				]
-			}
-		};
-	}
-);
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (
+		await pageService.fetchPage('delivery', {
+			populate: [
+				'seo',
+				'images1',
+				'images2',
+				'mainImageLeft',
+				'deliveryCitiesDescription',
+				'courierDescription',
+				'shipmentImageRight'
+			]
+		})()
+	).data.data;
+
+	return {
+		props: {
+			page,
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Доставка', href: '/delivery' }
+			]
+		}
+	};
+});

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { FormEvent, useState } from 'react';
-import { userApi } from 'entities/user';
+import { UserService } from 'entities/user';
+import { inject } from '../../../user.di';
 
 interface UseForgotFormProps {
 	onChangeIsLoading: (value: boolean) => void;
@@ -12,12 +13,13 @@ interface UseForgotFormProps {
 
 export const useForgotForm = ({ onChangeIsLoading, email, setEmail, onChangeModalOpened }: UseForgotFormProps) => {
 	const { enqueueSnackbar } = useSnackbar();
+	const userService = inject(UserService);
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		onChangeIsLoading(true);
 		try {
-			await userApi.forgotPassword(email);
+			await userService.forgotPassword(email);
 			enqueueSnackbar('Проверьте свою почту', { variant: 'success' });
 			onChangeModalOpened(false);
 		} catch (err) {

@@ -1,6 +1,7 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/material';
-import { pageApi, PageAbout } from 'entities/page';
+import { PageService, PageAbout } from 'entities/page';
 import { BlockImages } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
@@ -176,27 +177,30 @@ const About = ({ page }: Props) => {
 
 export default About;
 
-export const getStaticProps = getPageProps(
-	pageApi.fetchPage('about', {
-		populate: [
-			'seo',
-			'mainImageLeft',
-			'images1',
-			'images2',
-			'mainPrinciplesImageRight',
-			'images3',
-			'images4',
-			'pricesLeftImage'
-		]
-	}),
-	async () => {
-		return {
-			props: {
-				breadcrumbs: [
-					{ text: 'Главная', href: '/' },
-					{ text: 'О компании', href: '/about' }
-				]
-			}
-		};
-	}
-);
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (
+		await pageService.fetchPage('about', {
+			populate: [
+				'seo',
+				'mainImageLeft',
+				'images1',
+				'images2',
+				'mainPrinciplesImageRight',
+				'images3',
+				'images4',
+				'pricesLeftImage'
+			]
+		})()
+	).data.data;
+
+	return {
+		props: {
+			page,
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'О компании', href: '/about' }
+			]
+		}
+	};
+});

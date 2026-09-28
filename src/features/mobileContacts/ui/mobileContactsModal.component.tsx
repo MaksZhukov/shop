@@ -1,8 +1,6 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { Link, ModalContainer } from 'shared/ui';
-// Same-layer feature import: embeds shop hours UI here instead of duplicating providers in every widget.
-import { WorkTimetable } from 'features/workTimetable';
 import { SocialButtons } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { COMPANY_ADDRESS, COMPANY_COORDINATES, SOCIAL_BUTTONS_MOBILE } from '../mobileContactsConstants';
@@ -10,9 +8,10 @@ import { COMPANY_ADDRESS, COMPANY_COORDINATES, SOCIAL_BUTTONS_MOBILE } from '../
 interface MobileContactsModalProps {
 	isOpened: boolean;
 	onClose: () => void;
+	workTimetable: ReactNode;
 }
 
-export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpened, onClose }) => {
+export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpened, onClose, workTimetable }) => {
 	const handleOpenYandexMaps = () => {
 		const { latitude, longitude } = COMPANY_COORDINATES;
 		const yandexMapsUrl = `https://yandex.ru/maps/?pt=${longitude},${latitude}&z=15&l=map&text=${encodeURIComponent(
@@ -46,7 +45,7 @@ export const MobileContactsModal: React.FC<MobileContactsModalProps> = ({ isOpen
                         flexDirection: 'column',
                         gap: 1.5
                     }}>
-					<WorkTimetable />
+					{workTimetable}
 					<Typography
                         sx={{
                             display: 'flex',

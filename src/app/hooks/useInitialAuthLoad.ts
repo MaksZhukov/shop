@@ -1,8 +1,8 @@
 import { useUserStore } from 'entities/user';
-import { useLoadCart } from 'features/cart/useLoadCart';
-import { useLoadFavorites } from 'features/favorites/useLoadFavorites';
+import { useLoadCart } from 'features/cart';
+import { useLoadFavorites } from 'features/favorites';
 import { useEffect } from 'react';
-import { useLoadUserInfo } from 'features/user/useLoadUserInfo';
+import { useLoadUserInfo } from 'features/user';
 
 export const useInitialAuthLoad = () => {
 	const loadFavorites = useLoadFavorites();

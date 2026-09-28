@@ -1,5 +1,6 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { Typography } from '@mui/material';
-import { pageApi, DefaultPage } from 'entities/page';
+import { PageService, DefaultPage } from 'entities/page';
 import { ReactMarkdown } from 'shared/ui';
 import { FC } from 'react';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
@@ -28,9 +29,13 @@ const InstallmentPlan: FC<Props> = ({ page }) => {
 
 export default InstallmentPlan;
 
-export const getStaticProps = getPageProps(pageApi.fetchPage('installment-plan'), async () => {
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (await pageService.fetchPage('installment-plan')()).data.data;
+
 	return {
 		props: {
+			page,
 			breadcrumbs: [
 				{ text: 'Главная', href: '/' },
 				{ text: 'Рассрочка', href: '/installment-plan' }

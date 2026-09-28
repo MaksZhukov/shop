@@ -1,2 +1,0 @@
-export { OrderRegistration } from './ui';
-

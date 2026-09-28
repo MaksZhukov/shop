@@ -1,11 +1,13 @@
+import { createRequestContainer } from 'app/di/app.container';
 import { Box, useMediaQuery } from '@mui/material';
-import { pageApi, PageGuarantee } from 'entities/page';
+import { PageService, PageGuarantee } from 'entities/page';
 import { BlockImages } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
 import { Typography } from 'shared/ui';
 import { getUrlByMinFormat } from 'shared/utils/imageUtils';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
+
 
 interface Props {
 	page: PageGuarantee;
@@ -166,16 +168,21 @@ const Guarantee = ({ page }: Props) => {
 
 export default Guarantee;
 
-export const getStaticProps = getPageProps(
-	pageApi.fetchPage('guarantee', { populate: ['seo', 'mainLeftImage', 'images1', 'images2', 'warningLeftImage'] }),
-	async () => {
-		return {
-			props: {
-				breadcrumbs: [
-					{ text: 'Главная', href: '/' },
-					{ text: 'Гарантия', href: '/guarantee' }
-				]
-			}
-		};
-	}
-);
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (
+		await pageService.fetchPage('guarantee', {
+			populate: ['seo', 'mainLeftImage', 'images1', 'images2', 'warningLeftImage']
+		})()
+	).data.data;
+
+	return {
+		props: {
+			page,
+			breadcrumbs: [
+				{ text: 'Главная', href: '/' },
+				{ text: 'Гарантия', href: '/guarantee' }
+			]
+		}
+	};
+});

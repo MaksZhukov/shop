@@ -1,9 +1,12 @@
 import { Loader } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
-import { observer } from 'mobx-react';
+import { reatomComponent } from '@reatom/react';
 import { useOrderRegistration } from 'features/orderRegistration';
-import { OrderRegistration } from 'widgets/orderRegistration';
+import { OrderRegistration } from 'features/orderRegistration';
+import { useRemoveCartMany } from 'features/cart';
+import { MobileContactsModal } from 'features/mobileContacts';
+import { WorkTimetable } from 'features/workTimetable';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { useQueryClient } from '@tanstack/react-query';
@@ -11,8 +14,9 @@ import { useEffect } from 'react';
 
 interface Props {}
 
-const OrderRegistrationPage: NextPage<Props> = observer(() => {
+const OrderRegistrationPage = reatomComponent(() => {
 	const { isLoading, checkoutItems, isOrdered, setIsOrdered } = useOrderRegistration();
+	const removeCartMany = useRemoveCartMany();
 	const router = useRouter();
 
 	if (!isOrdered && checkoutItems.length === 0 && router.isReady) {
@@ -26,7 +30,14 @@ const OrderRegistrationPage: NextPage<Props> = observer(() => {
 
 	return (
 		<>
-			<OrderRegistration isOrdered={isOrdered} onChangeIsOrdered={setIsOrdered} />
+			<OrderRegistration
+				isOrdered={isOrdered}
+				onChangeIsOrdered={setIsOrdered}
+				removeCartMany={removeCartMany}
+				renderMobileContacts={(isOpened, onClose) => (
+					<MobileContactsModal isOpened={isOpened} onClose={onClose} workTimetable={<WorkTimetable />} />
+				)}
+			/>
 			<Script
 				async
 				id='bepaid'

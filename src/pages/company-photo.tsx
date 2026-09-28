@@ -1,8 +1,10 @@
-import { pageApi, DefaultPage } from 'entities/page';
+import { createRequestContainer } from 'app/di/app.container';
+import { PageService, DefaultPage } from 'entities/page';
 import type { Image as IImage } from 'shared/api/types';
-import { Gallery } from 'widgets/gallery';
+import { Gallery } from 'features/gallery';
 import type { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
+
 interface Props {
 	page: DefaultPage & { images: IImage[] };
 }
@@ -11,4 +13,9 @@ const CompanyPhotos: NextPage<Props> = ({ page }) => <Gallery page={page}></Gall
 
 export default CompanyPhotos;
 
-export const getStaticProps = getPageProps(pageApi.fetchPage('company-photo', { populate: ['images', 'seo.images'] }));
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (await pageService.fetchPage('company-photo', { populate: ['images', 'seo.images'] })()).data.data;
+
+	return { props: { page } };
+});

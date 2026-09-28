@@ -1,14 +1,15 @@
-import { useCartStore } from 'entities/cart';
+import { useCartStore, cartLocalStorage, CartService } from 'entities/cart';
 import { useUserStore } from 'entities/user';
-import { cartApi, cartLocalStorage } from 'entities/cart';
+import { inject } from './cart.di';
 
 export const useRemoveCartMany = () => {
 	const cartStore = useCartStore();
 	const userStore = useUserStore();
+	const cartService = inject(CartService);
 
 	return async (cartItemIDs: number[]) => {
 		if (userStore.id) {
-			await cartApi.removeFromShoppingCartMany(cartItemIDs);
+			await cartService.removeFromShoppingCartMany(cartItemIDs);
 		} else {
 			cartLocalStorage.removeCartItems(cartItemIDs);
 		}

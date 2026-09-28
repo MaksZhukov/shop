@@ -7,21 +7,13 @@ const fsdElements = [
 	{ type: 'app', pattern: 'src/app/**/*', mode: 'full' },
 	{ type: 'pages', pattern: 'src/pages/**/*', mode: 'full' },
 	{
-		type: 'widgets',
-		pattern: 'src/widgets/*/**',
-		mode: 'full',
-		capture: ['widgetSlice']
-	},
-	{
 		type: 'features',
-		pattern: 'src/features/*/**',
-		mode: 'full',
+		pattern: 'src/features/*',
 		capture: ['featureSlice']
 	},
 	{
 		type: 'entities',
-		pattern: 'src/entities/*/**',
-		mode: 'full',
+		pattern: 'src/entities/*',
 		capture: ['entitySlice']
 	},
 	{ type: 'shared', pattern: 'src/shared/**/*', mode: 'full' }
@@ -30,14 +22,14 @@ const fsdElements = [
 const fsdDependencyRules = [
 	{
 		from: { type: 'shared' },
-		disallow: { to: { type: ['app', 'pages', 'widgets', 'features', 'entities'] } },
+		disallow: { to: { type: ['app', 'pages', 'features', 'entities'] } },
 		message:
-			'FSD: `shared` must not import domain layers (app/pages/widgets/features/entities). Move code or depend only on `shared`.'
+			'FSD: `shared` must not import domain layers (app/pages/features/entities). Move code or depend only on `shared`.'
 	},
 	{
 		from: { type: 'entities' },
-		disallow: { to: { type: ['app', 'pages', 'widgets', 'features'] } },
-		message: 'FSD: `entities` must not import upper layers (features/widgets/pages/app).'
+		disallow: { to: { type: ['app', 'pages', 'features'] } },
+		message: 'FSD: `entities` must not import upper layers (features/pages/app).'
 	},
 	{
 		from: { type: 'entities' },
@@ -53,8 +45,8 @@ const fsdDependencyRules = [
 	},
 	{
 		from: { type: 'features' },
-		disallow: { to: { type: ['app', 'pages', 'widgets'] } },
-		message: 'FSD: `features` must not import `widgets`, `pages`, or `app` — compose them from above.'
+		disallow: { to: { type: ['app', 'pages'] } },
+		message: 'FSD: `features` must not import `pages` or `app` — compose them from above.'
 	},
 	{
 		from: { type: 'features' },
@@ -66,37 +58,22 @@ const fsdDependencyRules = [
 			dependency: { kind: 'value' }
 		},
 		message:
-			'FSD: a feature slice must not value-import another feature slice (use `import type { ... }`, `shared`, or compose in pages/widgets).'
-	},
-	// Exception: mobileContacts UI embeds WorkTimetable (value import). Placed after cross-feature disallow so allow wins.
-	{
-		from: { type: 'features', captured: { featureSlice: 'mobileContacts' } },
-		allow: {
-			to: { type: 'features', captured: { featureSlice: 'workTimetable' } },
-			dependency: { kind: 'value' }
-		}
+			'FSD: a feature slice must not value-import another feature slice (use `import type { ... }`, `shared`, or compose in pages).'
 	},
 	{
-		from: { type: 'widgets' },
+		from: { type: ['app', 'pages', 'features', 'entities', 'shared'] },
 		disallow: {
 			to: {
-				type: 'widgets',
-				captured: { widgetSlice: '!{{ from.captured.widgetSlice }}' }
-			},
-			dependency: { kind: 'value' }
+				type: ['features', 'entities'],
+				internalPath: '!index.ts'
+			}
 		},
-		message:
-			'FSD: a widget slice must not import another widget slice (stay under `widgets/{{ from.captured.widgetSlice }}/` or use `features` / `shared`).'
-	},
-	{
-		from: { type: 'widgets' },
-		disallow: { to: { type: ['app', 'pages'] } },
-		message: 'FSD: `widgets` must not import `pages` or `app`.'
+		message: 'FSD: import a feature or entity from its index.ts. Deep imports stay inside that slice.'
 	},
 	{
 		from: { type: 'app' },
-		disallow: { to: { type: ['pages', 'widgets'] } },
-		message: 'FSD: `app` must not import `pages` or `widgets`.'
+		disallow: { to: { type: 'pages' } },
+		message: 'FSD: `app` must not import `pages`.'
 	}
 ];
 
@@ -132,6 +109,20 @@ const eslintConfig = defineConfig([
 					rules: fsdDependencyRules,
 					message:
 						'FSD boundary: {{from.type}} is not allowed to depend on {{to.type}} (import: {{dependency.source}}).'
+				}
+			]
+		}
+	},
+	{
+		files: ['src/entities/*/index.ts'],
+		rules: {
+			'no-restricted-syntax': [
+				'error',
+				{
+					selector:
+						'ExportNamedDeclaration ExportSpecifier[exported.name=/^[a-z].*Api$/], ExportNamedDeclaration > VariableDeclaration > VariableDeclarator[id.name=/^[a-z].*Api$/]',
+					message:
+						'Do not export a public camelCase *Api client. Export the PascalCase class and its token.'
 				}
 			]
 		}

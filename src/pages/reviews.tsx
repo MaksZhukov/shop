@@ -1,9 +1,10 @@
 import { CircularProgress, Divider, Link, Rating } from '@mui/material';
 import { Box } from '@mui/material';
-import { pageApi } from 'entities/page';
-import type { DefaultPage } from 'entities/page';
-import { reviewApi } from 'entities/review';
+import { createRequestContainer } from 'app/di/app.container';
+import { PageService, type DefaultPage } from 'entities/page';
+import { ReviewService } from 'entities/review';
 import type { Review } from 'entities/review';
+import { inject } from 'features/content';
 import { Typography } from 'shared/ui';
 import { useSnackbar } from 'notistack';
 import { Fragment, useEffect, useState } from 'react';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const Reviews = ({ page }: Props) => {
+	const reviewService = inject(ReviewService);
 	const [reviews, setReviews] = useState<Review[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -24,7 +26,7 @@ const Reviews = ({ page }: Props) => {
 			try {
 				const {
 					data: { data }
-				} = await reviewApi.fetchReviews();
+				} = await reviewService.fetchReviews();
 				setReviews(data);
 			} catch (err) {
 				enqueueSnackbar('Произошла какая-то ошибка с загрузкой отзывов, обратитесь в поддержку', {
@@ -34,7 +36,7 @@ const Reviews = ({ page }: Props) => {
 			setIsLoading(false);
 		};
 		fetchData();
-	}, [enqueueSnackbar]);
+	}, [enqueueSnackbar, reviewService]);
 
 	const renderReviews = reviews.map((item, index) => (
 		<Fragment key={item.id}>
@@ -88,9 +90,13 @@ const Reviews = ({ page }: Props) => {
 
 export default Reviews;
 
-export const getStaticProps = getPageProps(pageApi.fetchPage('review'), async () => {
+export const getStaticProps = getPageProps(undefined, async () => {
+	const pageService = createRequestContainer().get(PageService);
+	const page = (await pageService.fetchPage('review')()).data.data;
+
 	return {
 		props: {
+			page,
 			breadcrumbs: [
 				{ text: 'Главная', href: '/' },
 				{ text: 'Отзывы', href: '/reviews' }

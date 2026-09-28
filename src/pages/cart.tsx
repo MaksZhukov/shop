@@ -2,13 +2,13 @@ import { Box, Typography } from '@mui/material';
 import { Loader, MobileQuestionsSection } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
-import { ViewedProducts } from 'widgets/viewedProducts';
-import { observer } from 'mobx-react';
+import { ViewedProducts } from 'features/viewedProducts';
+import { FavoriteButton } from 'features/favorites';
+import { CartButton } from 'features/cart';
+import { reatomComponent } from '@reatom/react';
 import { useState, useEffect } from 'react';
-import { EmptyCart, CartList } from 'widgets/cart';
+import { EmptyCart, CartList, useRemoveCartMany, useRemoveCart } from 'features/cart';
 import { OrderSummary } from 'features/orderRegistration';
-import { useRemoveCartMany } from 'features/cart/useRemoveCartMany';
-import { useRemoveCart } from 'features/cart/useRemoveCart';
 import router from 'next/router';
 import type { Cart } from 'entities/cart';
 import { useUserStore } from 'entities/user';
@@ -16,7 +16,7 @@ import { useCartStore } from 'entities/cart';
 
 interface Props {}
 
-const Cart: NextPage<Props> = observer(() => {
+const Cart = reatomComponent(() => {
 	const userStore = useUserStore();
 	const cartStore = useCartStore();
 	const removeCartMany = useRemoveCartMany();
@@ -102,6 +102,7 @@ const Cart: NextPage<Props> = observer(() => {
 						onDeleteSelected={handleDeleteSelected}
 						onRemoveItem={handleRemoveItem}
 						onClickBuy={handleClickBuy}
+						renderFavorite={(product) => <FavoriteButton product={product} />}
 					/>
 					<OrderSummary
 						selectedItemsCount={selectedCartItems.length}
@@ -121,7 +122,12 @@ const Cart: NextPage<Props> = observer(() => {
                 pb: { xs: 0, md: 2 }
             }}>
             {renderCartContent()}
-            <ViewedProducts />
+            <ViewedProducts
+				renderHeaderActions={(product) => <FavoriteButton product={product} />}
+				renderBottomActions={(product) => (
+					<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
+				)}
+			/>
             <MobileQuestionsSection />
         </Box>
     );

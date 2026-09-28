@@ -1,4 +1,5 @@
-import { autocomiseApi } from 'entities/autocomise';
+import { createRequestContainer } from 'app/di/app.container';
+import { AutocomiseService } from 'entities/autocomise';
 import { Autocomis as IAutocomis } from 'entities/autocomise';
 import { Card } from 'shared/ui';
 import { NextPage } from 'next';
@@ -12,12 +13,16 @@ const Autocomis: NextPage<Props> = ({ page }) => <Card data={page}></Card>;
 
 export default Autocomis;
 
-export const getServerSideProps = getPageProps(undefined, async (context) => ({
-	props: {
-		page: (await autocomiseApi.fetchAutocomis(context.params?.slug as string)).data.data
-	},
-	breadcrumbs: [
-		{ text: 'Главная', href: '/' },
-		{ text: 'Автокомисы', href: '/autocomises' }
-	]
-}));
+export const getServerSideProps = getPageProps(undefined, async (context) => {
+	const autocomiseService = createRequestContainer().get(AutocomiseService);
+
+	return {
+		props: {
+			page: (await autocomiseService.fetchAutocomis(context.params?.slug as string)).data.data
+		},
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Автокомисы', href: '/autocomises' }
+		]
+	};
+});

@@ -1,0 +1,70 @@
+import { Box } from '@mui/material';
+import { CarOnPartsService, type CarOnParts } from 'entities/carOnParts';
+import { Button } from 'shared/ui';
+import { ChevronRightIcon } from 'shared/icons';
+import { Typography } from 'shared/ui';
+import { CarItem } from 'entities/carOnParts';
+import { Carousel } from 'shared/ui';
+import { ApiResponse } from 'shared/api';
+import { inject, mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { useQuery } from '@tanstack/react-query';
+
+export const CarsOnParts: React.FC = () => {
+	const carOnPartsService = inject(CarOnPartsService);
+	const { data: carsOnPartsRes } = useQuery({
+		queryKey: mainPageQueryKeys.carsOnParts(),
+		queryFn: () => mainPageQueryFns.carsOnParts(carOnPartsService),
+		select: (res: ApiResponse<CarOnParts[]>) => res.data
+	});
+	const carsOnParts = carsOnPartsRes ?? [];
+	return (
+        <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'start',
+                    mb: 1
+                }}>
+				<Box
+                    sx={{
+                        flex: 1,
+                        textAlign: { xs: 'center', md: 'left' }
+                    }}>
+					<Typography variant='h6'>Машины на разбор</Typography>
+					<Typography color='text.primary' variant='body2' sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+						Новые поступление машин на разбор
+					</Typography>
+				</Box>
+				<Button
+					sx={{ display: { xs: 'none', md: 'flex' } }}
+					variant='link'
+					href='/awaiting-cars'
+					endIcon={<ChevronRightIcon />}
+				>
+					Смотреть все
+				</Button>
+			</Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    mb: 5
+                }}>
+				<Carousel carouselContainerSx={{ ml: -1 }} showDots={false}>
+					{carsOnParts.map((item) => (
+						<Box
+                            key={item.id}
+                            sx={{
+                                width: { xs: '100%', md: '50%', lg: '25%' },
+                                pl: 1
+                            }}>
+							<CarItem data={item}></CarItem>
+						</Box>
+					))}
+				</Carousel>
+			</Box>
+        </>
+    );
+};

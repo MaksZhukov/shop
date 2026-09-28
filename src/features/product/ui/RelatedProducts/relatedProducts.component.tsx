@@ -1,0 +1,76 @@
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Carousel } from 'shared/ui';
+import { ProductItem } from 'entities/product';
+import type { Product } from 'entities/product';
+import type { ReactNode } from 'react';
+import { isSparePart, isTire, isWheel } from 'entities/product';
+
+interface Props {
+	product: Product;
+	relatedProducts: Product[];
+	renderHeaderActions: (product: Product) => ReactNode;
+	renderBottomActions: (product: Product) => ReactNode;
+}
+
+const getRelatedProductsTitle = (product: Product): string => {
+	const brandName = product.brand?.name || '';
+	const modelName = isSparePart(product) ? product.model?.name : '';
+	const generationName = isSparePart(product) ? product.generation?.name : '';
+
+	let prefix = '';
+	if (isSparePart(product)) {
+		prefix = 'Другие запчасти для';
+	} else if (isTire(product)) {
+		prefix = 'Другие шины для';
+	} else if (isWheel(product)) {
+		prefix = 'Другие диски для';
+	} else if (product.type === 'cabin') {
+		prefix = 'Другие салоны для';
+	}
+
+	return `${prefix} ${brandName} ${modelName} ${generationName}`.trim();
+};
+
+export const RelatedProducts = ({ product, relatedProducts, renderHeaderActions, renderBottomActions }: Props) => {
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+	if (relatedProducts.length === 0) {
+		return null;
+	}
+
+	return (
+        <>
+            <Typography
+                variant='h6'
+                component={'h3'}
+                sx={{
+                    mb: 1,
+                    fontWeight: 'bold'
+                }}>
+				{getRelatedProductsTitle(product)}
+			</Typography>
+            <Carousel
+				sx={{ mb: 3 }}
+				options={{ axis: 'x', watchDrag: false, loop: true }}
+				showArrows={true}
+				showDots={false}
+				carouselContainerSx={{ ml: -1 }}
+			>
+				{relatedProducts.map((item) => (
+					<Box key={item.id} sx={{
+                        pl: 1
+                    }}>
+						<ProductItem
+							data={item}
+							width={isMobile ? 155 : 228}
+							imageHeight={isMobile ? 120 : 180}
+							headerActions={renderHeaderActions(item)}
+							bottomActions={renderBottomActions(item)}
+						/>
+					</Box>
+				))}
+			</Carousel>
+        </>
+    );
+};

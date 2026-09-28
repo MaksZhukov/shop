@@ -1,11 +1,12 @@
-import { useUserStore } from 'entities/user';
-import { userApi } from 'entities/user';
+import { useUserStore, UserService } from 'entities/user';
+import { inject } from './user.di';
 
 export const useSaveUserInfo = () => {
 	const userStore = useUserStore();
+	const userService = inject(UserService);
 
 	return async () => {
-		await userApi.updateUserInfo({
+		await userService.updateUserInfo({
 			phone: userStore.phone,
 			address: userStore.address,
 			username: userStore.username

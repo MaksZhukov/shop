@@ -1,7 +1,7 @@
 import { Button, IconButton, Tooltip, Typography } from '@mui/material';
 import type { Product } from 'entities/product';
 import { HeartFilledIcon, FavoriteAddIcon } from 'shared/icons';
-import { observer } from 'mobx-react';
+import { reatomComponent } from '@reatom/react';
 import { FAVORITES_MAX_ITEMS } from 'entities/favorite';
 import { useToggleFavorite } from './useToggleFavorite';
 import { FC } from 'react';
@@ -11,7 +11,7 @@ interface FavoriteButtonProps {
 	title?: string;
 }
 
-export const FavoriteButton: FC<FavoriteButtonProps> = observer(({ product, title }) => {
+export const FavoriteButton = reatomComponent<FavoriteButtonProps>(({ product, title }) => {
 	const { handleClickFavorite, isMaxFavorites, favorite } = useToggleFavorite(product);
 
 	if (title) {

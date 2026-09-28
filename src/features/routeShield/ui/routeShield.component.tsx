@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react';
+import { reatomComponent } from '@reatom/react';
 import { useRouter } from 'next/router';
 import { FC, ReactNode, useEffect } from 'react';
 import { PRIVATE_PATHS } from 'shared/constants';
@@ -9,7 +9,7 @@ interface RouteShieldProps {
 	children: ReactNode;
 }
 
-export const RouteShield: FC<RouteShieldProps> = observer(({ children }) => {
+export const RouteShield = reatomComponent<RouteShieldProps>(({ children }) => {
 	const userStore = useUserStore();
 	const router = useRouter();
 

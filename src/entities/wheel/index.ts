@@ -1,4 +1,4 @@
-export { WHEEL_API, WheelApi, wheelApi } from './wheel.api';
+export { WHEEL_API, WheelApi } from './wheel.api';
 export { WheelService } from './wheel.service';
 export type { WheelReader } from './ports/wheel.port';
 export type { Wheel } from './model/wheel.model';
