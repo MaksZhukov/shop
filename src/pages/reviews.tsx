@@ -8,7 +8,7 @@ interface Props {
 	page: DefaultPage;
 }
 
-export const inject = createModuleInjector<typeof ReviewsStore>();
+export const inject = createModuleInjector([ReviewsStore]);
 
 const ReviewsPage = ({ page }: Props) => {
 	const reviewsStore = inject(ReviewsStore);

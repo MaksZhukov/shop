@@ -1,4 +1,4 @@
-import type { OrderService } from 'entities/order';
+import { OrderService } from 'entities/order';
 import { createModuleInjector } from 'shared/di';
 
-export const inject = createModuleInjector<typeof OrderService>();
+export const inject = createModuleInjector([OrderService]);

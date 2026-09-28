@@ -15,7 +15,7 @@ interface Props {
 	serviceStations: ServiceStation[];
 }
 
-export const inject = createModuleInjector<typeof ServiceStationsStore>();
+export const inject = createModuleInjector([ServiceStationsStore]);
 
 const ServiceStationsPage = ({ page, serviceStations }: Props) => {
 	const serviceStationsStore = inject(ServiceStationsStore);

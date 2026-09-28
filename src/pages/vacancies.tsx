@@ -9,7 +9,7 @@ interface Props {
 	page: PageVacancies;
 }
 
-export const inject = createModuleInjector<typeof VacanciesStore>();
+export const inject = createModuleInjector([VacanciesStore]);
 
 const VacanciesPage = ({ page }: Props) => {
 	const vacanciesStore = inject(VacanciesStore);
