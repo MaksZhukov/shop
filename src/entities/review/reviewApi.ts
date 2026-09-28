@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { Review } from './model/reviewModel';
+import type { Review } from './model/review.model';
 
 export const reviewApi = {
 	fetchReviews: (params?: CollectionParams) => api.get<ApiResponse<Review[]>>('/reviews', { params })

@@ -1,1 +1,1 @@
-export { ProductInfo } from './ProductInfo';
+export { ProductInfo } from './productInfo.component';

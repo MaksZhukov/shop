@@ -1,1 +1,1 @@
-export { LinkWithImage } from './LinkWithImage';
+export { LinkWithImage } from './linkWithImage.component';

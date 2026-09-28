@@ -1,4 +1,4 @@
-export { EmptyCart } from './EmptyCart';
-export { CartItem } from './CartItem';
-export { CartHeader } from './CartHeader';
-export { CartList } from './CartList';
+export { EmptyCart } from './emptyCart.component';
+export { CartItem } from './cartItem.component';
+export { CartHeader } from './cartHeader.component';
+export { CartList } from './cartList.component';

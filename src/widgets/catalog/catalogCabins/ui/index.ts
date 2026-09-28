@@ -1,1 +1,1 @@
-export { CatalogCabins } from './CatalogCabins';
+export { CatalogCabins } from './catalogCabins.component';

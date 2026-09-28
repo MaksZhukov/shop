@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { Autocomis } from './model/autocomiseModel';
+import type { Autocomis } from './model/autocomise.model';
 
 export const autocomiseApi = {
 	fetchAutocomises: (params: CollectionParams) =>

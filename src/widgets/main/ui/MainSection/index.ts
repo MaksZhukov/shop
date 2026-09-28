@@ -1,2 +1,2 @@
-export { MainSection } from './MainSection';
-export { SearchForm } from './SearchForm';
+export { MainSection } from './mainSection.component';
+export { SearchForm } from './searchForm.component';

@@ -1,2 +1,2 @@
 export { serviceStationApi } from './serviceStationApi';
-export type { ServiceStation } from './model/serviceStationModel';
+export type { ServiceStation } from './model/serviceStation.model';

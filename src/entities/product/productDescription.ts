@@ -1,4 +1,4 @@
-import type { Product } from './model/productModel';
+import type { Product } from './model/product.model';
 import { isCabin, isSparePart, isTire, isWheel } from './productGuards';
 
 export interface ProductDescriptionItem {

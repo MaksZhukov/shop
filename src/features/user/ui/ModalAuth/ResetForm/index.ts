@@ -1,1 +1,1 @@
-export { default } from './ResetForm';
+export { default } from './resetForm.component';

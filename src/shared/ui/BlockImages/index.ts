@@ -1,1 +1,1 @@
-export { BlockImages } from './BlockImages';
+export { BlockImages } from './blockImages.component';

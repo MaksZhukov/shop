@@ -1,11 +1,11 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { Model } from './model/types';
+import type { ModelDto } from './dto/model.dto';
 
 export const modelApi = {
-	fetchModels: <T extends Model>(params: CollectionParams) => api.get<ApiResponse<T[]>>('/models', { params }),
+	fetchModels: <T extends ModelDto>(params: CollectionParams) => api.get<ApiResponse<T[]>>('/models', { params }),
 	fetchModelBySlug: (slug: string, params: CollectionParams) =>
-		api.get<ApiResponse<Model>>(`/models/${slug}`, { params: { field: 'slug', ...params } })
+		api.get<ApiResponse<ModelDto>>(`/models/${slug}`, { params: { field: 'slug', ...params } })
 };
 
 

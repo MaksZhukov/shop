@@ -1,1 +1,1 @@
-export { MobileQuestionsSection } from './MobileQuestionsSection';
+export { MobileQuestionsSection } from './mobileQuestionsSection.component';

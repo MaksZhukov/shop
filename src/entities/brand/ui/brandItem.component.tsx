@@ -1,0 +1,22 @@
+import type { Brand } from '../model/brand.model';
+import { WhiteBox } from 'shared/ui';
+import { LinkWithImage } from 'shared/ui';
+
+interface BrandItemProps {
+	brand: Brand;
+}
+
+export const BrandItem = ({ brand }: BrandItemProps) => {
+	return (
+		<WhiteBox sx={{ p: 1, height: 128, width: 110 }}>
+			<LinkWithImage
+				width={110}
+				height={80}
+				caption={brand.name}
+				link={`/spare-parts/${brand.slug}`}
+				image={brand.image}
+				typographyProps={{ variant: 'body1' }}
+			></LinkWithImage>
+		</WhiteBox>
+	);
+};

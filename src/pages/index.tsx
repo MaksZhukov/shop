@@ -13,6 +13,8 @@ import {
 	Articles
 } from 'widgets/main';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { createRequestContainer } from 'app/di/app.container';
+import { ArticleService } from 'entities/article';
 import { prefetchMainPage } from 'features/mainPage';
 
 const Main: NextPage = () => {
@@ -38,7 +40,8 @@ export const getStaticProps = getPageProps(
 	}),
 	async () => {
 		const queryClient = new QueryClient();
-		await prefetchMainPage(queryClient);
+		const articleReader = createRequestContainer().get(ArticleService);
+		await prefetchMainPage(queryClient, articleReader);
 
 		const dehydratedState = dehydrate(queryClient);
 

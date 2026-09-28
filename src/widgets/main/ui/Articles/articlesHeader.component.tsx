@@ -1,0 +1,26 @@
+import { Box, Typography } from '@mui/material';
+import { ViewAllButton } from './viewAllButton.component';
+
+export const ArticlesHeader: React.FC = () => (
+	<Box
+        sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'start',
+            mb: { xs: 2, md: 1 }
+        }}>
+		<Box
+            sx={{
+                flex: 1,
+                textAlign: { xs: 'center', md: 'left' }
+            }}>
+			<Typography variant='h6'>Новости авторазборки</Typography>
+			<Typography variant='body1' sx={{
+                color: 'text.primary'
+            }}>
+				Все самое актуальное от нашей компании
+			</Typography>
+		</Box>
+		<ViewAllButton title='Смотреть все' visibility='desktop' />
+	</Box>
+);

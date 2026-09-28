@@ -1,10 +1,10 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { TireDiameter } from './model/tireDiameterModel';
+import type { TireDiameterDto } from './dto/tireDiameter.dto';
 
 export const tireDiameterApi = {
 	fetchTireDiameters: (params: CollectionParams) =>
-		api.get<ApiResponse<TireDiameter[]>>('/tire-diameters', { params })
+		api.get<ApiResponse<TireDiameterDto[]>>('/tire-diameters', { params })
 };
 
 

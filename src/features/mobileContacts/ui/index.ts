@@ -1,1 +1,1 @@
-export { MobileContactsModal } from './MobileContactsModal';
+export { MobileContactsModal } from './mobileContactsModal.component';

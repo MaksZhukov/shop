@@ -1,3 +1,4 @@
-export { ArticlesPagination } from './ArticlesPagination';
-export { ArticlesGrid } from './ArticlesGrid';
-export { ArticlesHeader } from './ArticlesHeader';
+export { ArticlesList } from './articlesList.component';
+export { ArticlesPagination } from './articlesPagination.component';
+export { ArticlesGrid } from './articlesGrid.component';
+export { ArticlesHeader } from './articlesHeader.component';

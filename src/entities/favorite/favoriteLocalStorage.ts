@@ -1,6 +1,6 @@
-import type { Favorite } from './model/favoriteModel';
+import type { Favorite } from './model/favorite.model';
 import { BaseStorageService } from 'shared/services';
-import type { StorageFavorite } from './model/favoriteLocalStorageModel';
+import type { StorageFavorite } from './model/favoriteLocalStorage.model';
 
 export class FavoriteLocalStorage extends BaseStorageService {
 	private readonly FAVORITES_KEY = 'favorites';

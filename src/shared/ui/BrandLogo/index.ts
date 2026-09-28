@@ -1,1 +1,1 @@
-export { BrandLogo } from './BrandLogo';
+export { BrandLogo } from './brandLogo.component';

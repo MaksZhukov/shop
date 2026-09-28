@@ -1,1 +1,1 @@
-export { ViewedProducts } from './ui/ViewedProducts';
+export { ViewedProducts } from './ui/viewedProducts.component';

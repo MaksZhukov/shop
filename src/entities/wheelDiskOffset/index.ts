@@ -1,2 +1,2 @@
 export { wheelDiskOffsetApi } from './wheelDiskOffsetApi';
-export type { WheelDiskOffset } from './model/wheelDiskOffsetModel';
+export type { WheelDiskOffset } from './model/wheelDiskOffset.model';

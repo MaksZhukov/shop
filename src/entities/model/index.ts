@@ -6,4 +6,4 @@ export type {
 	ModelCabinsCount,
 	ModelCabinsCountWithGenerationsCabinsCount,
 	ModelWheelsCountWithGenerationsWheelsCount
-} from './model/types';
+} from './model/model.model';

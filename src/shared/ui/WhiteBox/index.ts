@@ -1,1 +1,1 @@
-export { WhiteBox } from './WhiteBox';
+export { WhiteBox } from './whiteBox.component';

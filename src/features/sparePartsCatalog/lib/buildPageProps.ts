@@ -1,10 +1,6 @@
 import { brandApi } from 'entities/brand';
-import { generationApi } from 'entities/generation';
-import type { GenerationWithModelAndBrand } from 'entities/generation';
-import { withGeneration } from 'entities/generation';
-import { kindSparePartApi } from 'entities/kindSparePart';
-import type { KindSparePart } from 'entities/kindSparePart';
-import { withKindSparePart } from 'entities/kindSparePart';
+import { generationApi, withGeneration, type GenerationWithModelAndBrand } from 'entities/generation';
+import { kindSparePartApi, withKindSparePart, type KindSparePart } from 'entities/kindSparePart';
 import { modelApi } from 'entities/model';
 import { pageApi } from 'entities/page';
 import type { DefaultPage, PageProduct, PageProductSparePart } from 'entities/page';

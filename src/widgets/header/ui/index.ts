@@ -1,7 +1,7 @@
-export { HeaderMainBar } from './HeaderMainBar';
-export { HeaderUtilityBar } from './HeaderUtilityBar';
-export { HeaderMobileUtilityBar } from './HeaderMobileUtilityBar';
-export { HeaderMobileMenuModal } from './HeaderMobileMenuModal';
-export { SearchHistoryChips } from './SearchHistoryChips';
-export { SearchResults } from './SearchResults';
-export { Header } from './Header';
+export { HeaderMainBar } from './headerMainBar.component';
+export { HeaderUtilityBar } from './headerUtilityBar.component';
+export { HeaderMobileUtilityBar } from './headerMobileUtilityBar.component';
+export { HeaderMobileMenuModal } from './headerMobileMenuModal.component';
+export { SearchHistoryChips } from './searchHistoryChips.component';
+export { SearchResults } from './searchResults.component';
+export { Header } from './header.component';

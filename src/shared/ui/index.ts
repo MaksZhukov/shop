@@ -1,8 +1,8 @@
 export { BrandLogo } from './BrandLogo';
-export { Link } from './Link';
-export { Button } from './Button';
-export { NavbarButton } from './NavbarButton';
-export { ModalContainer } from './ModalContainer';
+export { Link } from './link.component';
+export { Button } from './button.component';
+export { NavbarButton } from './navbarButton.component';
+export { ModalContainer } from './modalContainer.component';
 export { WhiteBox } from './WhiteBox';
 export { Typography } from './Typography';
 export { Loader } from './Loader';

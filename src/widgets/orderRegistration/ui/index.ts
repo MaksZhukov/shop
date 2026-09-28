@@ -1,2 +1,2 @@
-export { OrderRegistration } from './OrderRegistration';
+export { OrderRegistration } from './orderRegistration.component';
 

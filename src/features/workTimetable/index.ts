@@ -1,1 +1,1 @@
-export { WorkTimetable } from './ui/WorkTimetable';
+export { WorkTimetable } from './ui/workTimetable.component';

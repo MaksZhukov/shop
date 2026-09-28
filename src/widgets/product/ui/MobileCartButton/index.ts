@@ -1,1 +1,1 @@
-export { MobileCartButton } from './MobileCartButton';
+export { MobileCartButton } from './mobileCartButton.component';

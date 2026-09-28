@@ -7,7 +7,7 @@ import {
 	OrderCheckoutResponse,
 	OrderReissueCheckoutTokenResponse,
 	OrderCheckoutParams
-} from './model/orderModel';
+} from './model/order.model';
 
 const CANCEL_ORDER_URL = `${backendUrl}/api/orders-v1/cancel`;
 

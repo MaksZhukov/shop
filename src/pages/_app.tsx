@@ -8,6 +8,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Layout } from 'shared/ui';
 import { RouteShield } from 'features/routeShield';
 import { DehydratedState, HydrationBoundary } from '@tanstack/react-query';
+import { AppDiProvider } from 'app/providers';
 import { QueryProvider } from 'app/providers/QueryProvider';
 import { ThemeProvider } from 'app/providers/ThemeProvider';
 import { StoreProvider } from 'app/providers/StoreProvider';
@@ -83,19 +84,21 @@ function AppContent({ Component, pageProps }: AppProps) {
 
 const App = (props: AppProps<{ dehydratedState: DehydratedState }>) => (
 	<ThemeProvider>
-		<QueryProvider>
-			<RecaptchaProvider>
-				<HydrationBoundary state={props.pageProps?.dehydratedState}>
-					<StoreProvider>
-						<ApiProvider>
-							<SnackbarProvider>
-								<AppContent {...props} />
-							</SnackbarProvider>
-						</ApiProvider>
-					</StoreProvider>
-				</HydrationBoundary>
-			</RecaptchaProvider>
-		</QueryProvider>
+		<AppDiProvider>
+			<QueryProvider>
+				<RecaptchaProvider>
+					<HydrationBoundary state={props.pageProps?.dehydratedState}>
+						<StoreProvider>
+							<ApiProvider>
+								<SnackbarProvider>
+									<AppContent {...props} />
+								</SnackbarProvider>
+							</ApiProvider>
+						</StoreProvider>
+					</HydrationBoundary>
+				</RecaptchaProvider>
+			</QueryProvider>
+		</AppDiProvider>
 	</ThemeProvider>
 );
 

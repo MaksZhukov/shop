@@ -1,1 +1,1 @@
-export { ArticleItem } from './ArticleItem';
+export { ArticleItem } from './articleItem.component';

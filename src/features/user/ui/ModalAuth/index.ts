@@ -1,1 +1,1 @@
-export { ModalAuth } from './ModalAuth';
+export { ModalAuth } from './modalAuth.component';

@@ -1,9 +1,9 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { WheelWidth } from './model/wheelWidthModel';
+import type { WheelWidthDto } from './dto/wheelWidth.dto';
 
 export const wheelWidthApi = {
-	fetchWheelWidths: (params?: CollectionParams) => api.get<ApiResponse<WheelWidth[]>>('/wheel-widths', { params })
+	fetchWheelWidths: (params?: CollectionParams) => api.get<ApiResponse<WheelWidthDto[]>>('/wheel-widths', { params })
 };
 
 

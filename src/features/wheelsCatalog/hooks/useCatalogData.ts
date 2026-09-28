@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { wheelApi } from 'entities/wheel';
-import { modelApi } from 'entities/model';
+import { modelApi, type ModelWheelsCountWithGenerationsWheelsCount } from 'entities/model';
 import { wheelDiameterApi } from 'entities/wheelDiameter';
 import { wheelWidthApi } from 'entities/wheelWidth';
 import { wheelNumberHoleApi } from 'entities/wheelNumberHole';
@@ -10,7 +10,6 @@ import { wheelDiameterCenterHoleApi } from 'entities/wheelDiameterCenterHole';
 import { wheelDiskOffsetApi } from 'entities/wheelDiskOffset';
 import type { WheelFilterValues, WheelParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
-import type { ModelWheelsCountWithGenerationsWheelsCount } from 'entities/model';
 import { wheelsBrandsQueryKey } from '../constants';
 import { wheelsPageQueryFns } from '../wheelsPageQueries';
 

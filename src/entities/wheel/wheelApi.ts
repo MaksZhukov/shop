@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { Wheel } from './model/wheelModel';
+import type { Wheel } from './model/wheel.model';
 
 export const wheelApi = {
 	fetchWheels: (params?: CollectionParams) => api.get<ApiResponse<Wheel[]>>('/wheels', { params }),

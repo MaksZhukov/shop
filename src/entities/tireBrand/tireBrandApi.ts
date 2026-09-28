@@ -1,10 +1,10 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { TireBrand } from './model/tireBrandModel';
+import type { TireBrandDto } from './dto/tireBrand.dto';
 
 export const tireBrandApi = {
-	fetchTireBrands: <T extends TireBrand>(params: CollectionParams) =>
+	fetchTireBrands: <T extends TireBrandDto>(params: CollectionParams) =>
 		api.get<ApiResponse<T[]>>('/tire-brands', { params }),
 	fetchTireBrandBySlug: (slug: string, params: CollectionParams) =>
-		api.get<ApiResponse<TireBrand>>(`/tire-brands/${slug}`, { params })
+		api.get<ApiResponse<TireBrandDto>>(`/tire-brands/${slug}`, { params })
 };

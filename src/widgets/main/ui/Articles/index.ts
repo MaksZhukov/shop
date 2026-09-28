@@ -1,1 +1,1 @@
-export { Articles } from './Articles';
+export { Articles } from './articles.component';

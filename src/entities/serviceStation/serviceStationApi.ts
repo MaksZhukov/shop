@@ -1,6 +1,6 @@
 import { api } from 'shared/api';
 import type { ApiResponse, CollectionParams } from 'shared/api/types';
-import type { ServiceStation } from './model/serviceStationModel';
+import type { ServiceStation } from './model/serviceStation.model';
 
 export const serviceStationApi = {
 	fetchServiceStations: (params: CollectionParams) =>

@@ -1,1 +1,1 @@
-export { BrandItem } from './BrandItem';
+export { BrandItem } from './brandItem.component';

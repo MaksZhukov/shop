@@ -1,6 +1,6 @@
 import { Box, Link, Typography, useMediaQuery } from '@mui/material';
-import { articlesApi } from 'entities/article';
-import type { Article as IArticle } from 'entities/article';
+import { ArticleService, type Article as IArticle } from 'entities/article';
+import { createRequestContainer } from 'app/di/app.container';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
 import { SocialButtons } from 'shared/ui';
@@ -62,11 +62,11 @@ const Article: NextPage<Props> = ({ page }) => {
 export default Article;
 
 export const getServerSideProps = getPageProps(undefined, async (context) => {
-	const article = (
-		await articlesApi.fetchArticle(context.params?.slug as string, {
+	const container = createRequestContainer();
+	const articleReader = container.get(ArticleService);
+	const article = await articleReader.fetchArticle(context.params?.slug as string, {
 			populate: ['mainImage', 'images1', 'images2', 'seo']
-		})
-	).data.data;
+		});
 	const content = article.content || article.rightText + article.content1 + article.content2;
 	const page = { ...article, content };
 

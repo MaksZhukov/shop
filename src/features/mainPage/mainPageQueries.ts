@@ -2,7 +2,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { API_MAX_LIMIT } from 'shared/api/constants';
 import { brandApi } from 'entities/brand';
 import { sparePartApi } from 'entities/sparePart';
-import { articlesApi } from 'entities/article';
+import type { ArticleReader } from 'entities/article';
 import { carOnPartsApi } from 'entities/carOnParts';
 import { mainPageQueryKeys } from './config';
 
@@ -31,14 +31,12 @@ export const mainPageQueryFns = {
 				sort: ['createdAt:desc']
 			})
 			.then((r) => r.data),
-	articles: () =>
-		articlesApi
-			.fetchArticles({
-				populate: ['mainImage'],
-				sort: ['createdAt:desc'],
-				pagination: { limit: 8 }
-			})
-			.then((r) => r.data),
+	articles: (articleReader: ArticleReader) =>
+		articleReader.fetchArticles({
+			populate: ['mainImage'],
+			sort: ['createdAt:desc'],
+			pagination: { limit: 8 }
+		}),
 	carsOnParts: () =>
 		carOnPartsApi
 			.fetchCarsOnParts({
@@ -55,7 +53,7 @@ export const mainPageQueryFns = {
 			.then((r) => r.data)
 };
 
-export const prefetchMainPage = async (queryClient: QueryClient): Promise<void> => {
+export const prefetchMainPage = async (queryClient: QueryClient, articleReader: ArticleReader): Promise<void> => {
 	await Promise.all([
 		queryClient.prefetchQuery({
 			queryKey: mainPageQueryKeys.brands(),
@@ -67,7 +65,7 @@ export const prefetchMainPage = async (queryClient: QueryClient): Promise<void> 
 		}),
 		queryClient.prefetchQuery({
 			queryKey: mainPageQueryKeys.articles(),
-			queryFn: mainPageQueryFns.articles
+			queryFn: () => mainPageQueryFns.articles(articleReader)
 		}),
 		queryClient.prefetchQuery({
 			queryKey: mainPageQueryKeys.carsOnParts(),

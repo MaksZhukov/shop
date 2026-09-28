@@ -1,1 +1,1 @@
-export { default } from './ForgotForm';
+export { default } from './forgotForm.component';

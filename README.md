@@ -1,16 +1,17 @@
 # Shop Frontend
 
-E-commerce frontend application for auto parts and car dismantling services, built with Next.js and following Feature-Sliced Design (FSD) architecture.
+E-commerce frontend application for auto parts and car dismantling services, built with Next.js. Layers are `app`, `pages`, `features`, `entities`, and `shared`. Cross-slice dependencies go through an InversifyJS IoC container. Entities map HTTP DTOs into models, and those models are what other slices use.
 
 ## 🚀 Tech Stack
 
 -   **Framework:** Next.js 16 (with Turbopack)
 -   **Language:** TypeScript 5.9
 -   **UI Library:** Material-UI (MUI) v7
--   **State Management:** MobX 6
+-   **State Management:** Reatom
 -   **Data Fetching:** TanStack Query (React Query) v5
 -   **Styling:** SASS, Emotion (CSS-in-JS)
 -   **HTTP Client:** Axios with retry logic
+-   **DI:** InversifyJS (IoC container, constructor injection)
 -   **Icons:** Material-UI Icons
 -   **Carousel:** Embla Carousel
 -   **Notifications:** Notistack
@@ -18,84 +19,71 @@ E-commerce frontend application for auto parts and car dismantling services, bui
 
 ## 📁 Project Structure
 
-This project follows [Feature-Sliced Design (FSD)](https://feature-sliced.design/) methodology:
+```
+src/
+├── app/                 # Startup and providers
+│   └── providers/
+├── pages/               # Next.js routes. Compose features only
+├── features/            # Product scenarios
+│   └── cart/
+│       ├── ports/       # Interfaces other slices may depend on
+│       ├── ui/
+│       └── index.ts     # Public API: UI and port types, not implementations
+├── entities/            # Domain objects
+│   └── product/
+│       ├── dto/         # HTTP payload, private to the entity
+│       ├── model/       # Domain shape other slices use
+│       ├── ports/
+│       └── index.ts     # Public API: model and port types, not the DTO or API client
+└── shared/              # Technical UI, HTTP client, utils. No product rules
+```
 
-```
-shop/
-├── app/              # Application initialization and providers
-│   ├── providers/    # Global providers (Store, Theme, API, Query)
-│   └── ...
-├── pages/            # Next.js pages (routing layer)
-│   ├── api/          # API routes
-│   └── ...
-├── widgets/          # Composite UI blocks
-│   ├── header/       # Header widget
-│   ├── footer/       # Footer widget
-│   ├── catalog/      # Catalog widget
-│   ├── product/      # Product page widget
-│   └── main/         # Main page widgets
-├── features/         # User interactions and business features
-│   ├── cart/         # Shopping cart operations
-│   ├── favorites/    # Favorites management
-│   ├── user/         # Authentication and user management
-│   ├── buy/          # Purchase flow
-│   └── ...
-├── entities/         # Business entities
-│   ├── product/      # Product entity
-│   ├── cart/         # Cart entity
-│   ├── user/         # User entity
-│   ├── brand/        # Brand entity
-│   └── ...
-└── shared/           # Reusable infrastructure
-    ├── ui/           # Reusable UI components
-    ├── api/           # API configuration
-    ├── utils/         # Utility functions
-    ├── hooks/         # Shared hooks
-    ├── services/      # Services
-    └── icons/         # Icon components
-```
+There is no `widgets` layer. A screen block (header, catalog, product page) is a feature. An entity keeps the HTTP DTO private and exports the model.
+
+`widgets/` is still on disk. New code does not add to it. Fold a widget into `features/<name>` when you touch it.
 
 ## 🏗️ Architecture Principles
 
-### Layer Import Rules
-
-Layers can only import from layers **below** them:
+### Layer import rules
 
 ```
-pages → widgets → features → entities → shared
+app → pages, features, entities, shared
+pages → features, entities, shared
+features → entities, shared, and other features only through the IoC container
+entities → shared, and other entities only through the IoC container
+shared → shared
 ```
 
-**Allowed:**
+Nobody imports `app` except the Next.js entry (`pages/_app.tsx`), which renders the app root.
 
--   ✅ `pages` → `widgets`, `features`, `entities`, `shared`
--   ✅ `widgets` → `features`, `entities`, `shared`
--   ✅ `features` → `entities`, `shared`
--   ✅ `entities` → `shared`, types from other `entities` (types only)
--   ✅ `shared` → only other `shared` modules
+A feature or entity does not value-import another slice. It depends on a port (an interface). `app/di/app.container.tsx` writes every `container.bind` on one container. A feature narrows that container with `inject`. The only values that cross the boundary are entity models.
 
-**Forbidden:**
+An entity does not import a feature. `shared` does not import `app`, `pages`, `features`, or `entities`.
 
--   ❌ `entities` cannot import from `features` or `widgets`
--   ❌ `entities` cannot import non-type exports from other `entities` (only types allowed)
--   ❌ `features` cannot import from `widgets` or `pages`
--   ❌ `shared` cannot import from any other layer
+### IoC, DTOs, models, ports
 
-### Slice Structure
+`app/di/app.container.tsx` creates one [InversifyJS](https://inversify.io/) container, writes every binding there, and passes it to `DiProvider` from `pages/_app.tsx`. A feature exports `inject` from `createModuleInjector`, limited to that feature's tokens. Slice state is Reatom atoms. Features do not call `new` on another feature's class and do not import its atoms or API client.
 
-Each slice follows this structure:
+```typescript
+// app/di/app.container.tsx
+const container = new Container();
+container.bind(ARTICLE_API).to(ArticleApi);
+container.bind(ArticleService).toSelf();
 
+// features/articlesList/articlesList.di.ts
+export const inject = createModuleInjector<ArticlesListToken, ArticlesListBindings>();
 ```
-sliceName/
-├── ui/              # UI components
-├── model/           # Business logic, stores
-├── api/             # API calls
-├── hooks/           # Custom hooks
-├── config/          # Configuration
-├── utils/           # Slice-specific utilities
-├── types.ts         # TypeScript types
-├── constants.ts     # Constants
-└── index.ts         # Public API (exports)
-```
+
+`pages/_app.tsx` renders `AppDiProvider` around the tree. A page calls `inject(ArticleService)`. That function accepts only the tokens bound for that feature. `@inject(token)` works under the app provider. A component that only reads its own store does not get a port.
+
+Rules for the three pieces:
+
+-   **DTO** — HTTP payload. Stays inside the entity. No methods, no Reatom atoms, no Axios types.
+-   **Model** — domain shape. Aliases the DTO while the shapes match (`export type Brand = BrandDto`). This is what ports return and what other slices import.
+-   **Port** — interface other slices depend on. Lives on the feature or entity that owns the behavior.
+-   **Binding** — `app` adds every container. The feature narrows tokens with `createModuleInjector`. `@inject` reads the app container.
+
+Full rules: [docs/architecture.md](docs/architecture.md).
 
 ## 🛠️ Getting Started
 
@@ -174,18 +162,19 @@ NODE_APP_INSTANCE=0
 The project uses TypeScript with strict mode enabled. Path aliases are configured via `baseUrl` in `tsconfig.json`, allowing absolute imports:
 
 ```typescript
-import { Button } from 'shared/ui';
-import { Product } from 'entities/product';
+import { Button } from 'shared/ui/btn.component';
 import { CartButton } from 'features/cart';
+import type { Cart } from 'entities/cart';
 ```
 
 ## 📚 Development Guidelines
 
-1. **Use absolute imports** - Configured via `baseUrl` in `tsconfig.json`
-2. **Maintain public API** - Only export what's needed from `index.ts` files
-3. **Follow layer hierarchy** - Never import from higher layers
-4. **Keep slices independent** - Slices should not depend on each other's internals
-5. **Use shared layer** - Put reusable code in `shared/`, not duplicated across slices
+1. **Use absolute imports** — `baseUrl` in `tsconfig.json`
+2. **Lowercase file names, role after a dot** — `btn.component.tsx`, `cart.service.ts`, `cart.store.ts`, `product.dto.ts`, `article.model.ts`. A model file is `name.model.ts`, not `nameModel.ts`
+3. **Import a feature or entity only from its `index.ts`** — not from `ui/`, `dto/`, `model/`, or `ports/`
+4. **Cross a slice with a port and a model** — the entity maps the DTO and exports the implementation class. The feature or page that calls the port binds it
+5. **Do not add `widgets/`** — put the screen block in `features/`, put the DTO and model on `entities/<name>`
+6. **Keep `shared` technical** — no product rules, no feature imports
 
 ## 🐳 Docker
 
@@ -198,10 +187,11 @@ docker run -p 3000:3000 shop-frontend
 
 ## 📖 Learn More
 
+-   [Architecture](docs/architecture.md)
 -   [Next.js Documentation](https://nextjs.org/docs)
--   [Feature-Sliced Design](https://feature-sliced.design/)
+-   [InversifyJS](https://inversify.io/)
 -   [Material-UI Documentation](https://mui.com/)
--   [MobX Documentation](https://mobx.js.org/)
+-   [Reatom](https://reatom.dev/)
 -   [TanStack Query Documentation](https://tanstack.com/query)
 
 ## 📝 License

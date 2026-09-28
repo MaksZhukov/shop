@@ -1,5 +1,5 @@
 import { BaseStorageService } from 'shared/services';
-import type { ViewedProduct } from './model/productModel';
+import type { ViewedProduct } from './model/product.model';
 
 export class ProductViewedLocalStorage extends BaseStorageService {
 	private readonly VIEWED_PRODUCTS_KEY = 'viewedProducts';

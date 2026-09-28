@@ -1,1 +1,1 @@
-export { ReactMarkdown } from './ReactMarkdown';
+export { ReactMarkdown } from './reactMarkdown.component';

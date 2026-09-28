@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { tireApi } from 'entities/tire';
-import { tireBrandApi } from 'entities/tireBrand';
+import { tireBrandApi, type TireBrandWithCount } from 'entities/tireBrand';
 import { tireWidthApi } from 'entities/tireWidth';
 import { tireHeightApi } from 'entities/tireHeight';
 import { tireDiameterApi } from 'entities/tireDiameter';
 import type { TopCategory } from 'entities/catalog';
 import type { TireFilterValues, TireParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
-import type { TireBrandWithCount } from 'entities/tireBrand';
 
 interface UseCatalogDataParams {
 	queryParams: TireParsedQueryParams;

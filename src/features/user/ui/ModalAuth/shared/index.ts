@@ -1,2 +1,2 @@
-export { AuthFormHeader } from './AuthFormHeader';
-export { PasswordInput } from './PasswordInput';
+export { AuthFormHeader } from './authFormHeader.component';
+export { PasswordInput } from './passwordInput.component';

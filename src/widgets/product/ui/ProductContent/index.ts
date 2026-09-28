@@ -1,1 +1,1 @@
-export { ProductContent } from './ProductContent';
+export { ProductContent } from './productContent.component';

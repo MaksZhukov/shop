@@ -1,1 +1,1 @@
-export { PopularCategories } from './PopularCategories';
+export { PopularCategories } from './popularCategories.component';

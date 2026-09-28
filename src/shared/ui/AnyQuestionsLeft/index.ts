@@ -1,1 +1,1 @@
-export { AnyQuestionsLeft } from './AnyQuestionsLeft';
+export { AnyQuestionsLeft } from './anyQuestionsLeft.component';

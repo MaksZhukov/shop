@@ -1,1 +1,1 @@
-export { RouteShield } from './RouteShield';
+export { RouteShield } from './routeShield.component';

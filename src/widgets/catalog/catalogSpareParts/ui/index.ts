@@ -1,1 +1,1 @@
-export { CatalogSpareParts } from './CatalogSpareParts';
+export { CatalogSpareParts } from './catalogSpareParts.component';

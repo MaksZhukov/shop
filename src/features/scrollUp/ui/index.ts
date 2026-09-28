@@ -1,1 +1,1 @@
-export { ScrollUp } from './ScrollUp';
+export { ScrollUp } from './scrollUp.component';

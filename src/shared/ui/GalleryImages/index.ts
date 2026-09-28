@@ -1,2 +1,2 @@
-export { GalleryImages } from './GalleryImages';
-export { Zoom } from './Zoom';
+export { GalleryImages } from './galleryImages.component';
+export { Zoom } from './zoom.component';

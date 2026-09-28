@@ -1,1 +1,1 @@
-export { ProductImages } from './ProductImages';
+export { ProductImages } from './productImages.component';

@@ -1,6 +1,6 @@
-export { OrderRegistrationForm } from './ui/OrderRegistrationForm';
-export { OrderSummary } from './ui/OrderSummary';
-export { OrderSuccess } from './ui/OrderSuccess';
+export { OrderRegistrationForm } from './ui/orderRegistrationForm.component';
+export { OrderSummary } from './ui/orderSummary.component';
+export { OrderSuccess } from './ui/orderSuccess.component';
 export { useOrderRegistrationForm } from './hooks/useOrderRegistrationForm';
 export { useOrderRegistration } from './hooks/useOrderRegistration';
 export { useOrderTimer } from './hooks/useOrderTimer';

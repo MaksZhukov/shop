@@ -1,2 +1,2 @@
 export { cabinApi } from './cabinApi';
-export type { Cabin } from './model/cabinModel';
+export type { Cabin } from './model/cabin.model';
