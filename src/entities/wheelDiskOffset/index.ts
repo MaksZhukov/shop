@@ -1,2 +1,4 @@
-export { wheelDiskOffsetApi } from './wheelDiskOffsetApi';
+export { WHEEL_DISK_OFFSET_API, WheelDiskOffsetApi, wheelDiskOffsetApi } from './wheelDiskOffset.api';
+export { WheelDiskOffsetService } from './wheelDiskOffset.service';
+export type { WheelDiskOffsetReader } from './ports/wheelDiskOffset.port';
 export type { WheelDiskOffset } from './model/wheelDiskOffset.model';

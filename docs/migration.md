@@ -21,11 +21,11 @@ Done. `ArticleService` lives in `entities/article` next to the `ArticleApi` clas
 
 ## 2. Dictionary entities
 
-Done. Same DTO as article, and no port. The entity exports the API client. A dictionary has no service until a port exists. The catalog, header search, and mobile catalog still fetch them from the entity index (`entities/brand`, `entities/model`, and the rest).
+Done. Same DTO as article. Each entity has an API class, a service, and a port, and `app/di/app.container.tsx` binds the symbol token and the service. The index still exports the API instance (`brandApi` and the rest) because catalogs still call it.
 
 `engineVolume`, `kindSparePart`, `generation`, `model`, `tireDiameter`, `tireHeight`, `tireWidth`, `tireBrand`, `wheelDiameter`, `wheelDiameterCenterHole`, `wheelDiskOffset`, `wheelNumberHole`, `wheelWidth`, `brand`, `catalog`.
 
-Each `index.ts` exports the model and the API client. Helpers and UI that were already public stay public (`BrandItem`, `withGeneration`, `withKindSparePart`). The DTO stays private and holds the fields. The model aliases it (`export type Brand = BrandDto`). Every DTO has a model. A port is added later, when a second slice must call the same fetch without the API client.
+Each `index.ts` exports the model, the port, the service, and the API client. Helpers and UI that were already public stay public (`BrandItem`, `withGeneration`, `withKindSparePart`). The DTO stays private and holds the fields. The model aliases it (`export type Brand = BrandDto`). Every DTO has a model.
 
 ## 3. Content entities
 

@@ -1,4 +1,6 @@
-export { pageApi } from './pageApi';
+export { PAGE_API, PageApi, pageApi } from './page.api';
+export { PageService } from './page.service';
+export type { PageReader } from './ports/page.port';
 export type {
 	DefaultPage,
 	PageMain,

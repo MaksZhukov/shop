@@ -16,7 +16,7 @@ const useDiContext = () => {
 
 export function useInjection<T extends AllowedTokens>(token: T): BoundValue<AppBindings, T> {
 	const container = useDiContext();
-	const [service] = useState(() => container.get(token) as BoundValue<AppBindings, T>);
+	const [service] = useState(() => container.get(token as never) as BoundValue<AppBindings, T>);
 	return service;
 }
 
