@@ -7,7 +7,7 @@ import { FavoriteButton } from 'features/favorites';
 import { CartButton } from 'features/cart';
 import { reatomComponent } from '@reatom/react';
 import { useState, useEffect } from 'react';
-import { EmptyCart, CartList, useRemoveCartMany, useRemoveCart } from 'features/cart';
+import { EmptyCart, CartList, CartListService } from 'features/cart';
 import { OrderSummary } from 'features/orderRegistration';
 import router from 'next/router';
 import { CartStore, type Cart } from 'entities/cart';
@@ -17,15 +17,14 @@ import { createModuleInjector } from 'shared/di';
 
 interface Props {}
 
-export const inject = createModuleInjector([UserStore, CartStore, SparePartService]);
+export const inject = createModuleInjector([UserStore, CartStore, CartListService, SparePartService]);
 
 const CartContent = reatomComponent(() => {
 	const userStore = inject(UserStore);
 	const cartStore = inject(CartStore);
-	const removeCartMany = useRemoveCartMany();
-	const removeCart = useRemoveCart();
+	const cartListService = inject(CartListService);
 	const shoppingCartItems = cartStore.items;
-	const isLoading = cartStore.isLoading || !userStore.isInitialRequestDone;
+	const isLoading = !cartListService.load.ready() || !userStore.isInitialRequestDone;
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
 	const allSelected =
@@ -45,13 +44,13 @@ const CartContent = reatomComponent(() => {
 
 	const handleDeleteSelected = async () => {
 		if (selectedItems.length > 0) {
-			await removeCartMany(selectedItems);
+			await cartListService.removeMany(selectedItems);
 			setSelectedItems([]);
 		}
 	};
 
 	const handleRemoveItem = async (item: (typeof shoppingCartItems)[0]) => {
-		await removeCart(item);
+		await cartListService.remove(item);
 	};
 
 	const selectedCartItems = shoppingCartItems.filter((item) => !item.product.sold && selectedItems.includes(item.id));

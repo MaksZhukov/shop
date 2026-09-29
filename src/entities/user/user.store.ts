@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { atom } from '@reatom/core';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
+import { SessionStore } from 'core/session';
 
 type SessionUser = {
 	id: number | null;
@@ -23,6 +24,8 @@ export class UserStore {
 	private readonly userAtom = atom<SessionUser>(emptyUser, 'user');
 	private readonly isInitialRequestDoneAtom = atom(false, 'user.isInitialRequestDone');
 
+	constructor(@inject(SessionStore) private readonly sessionStore: SessionStore) {}
+
 	get id() {
 		return this.userAtom().id;
 	}
@@ -43,6 +46,7 @@ export class UserStore {
 	}
 	setId(id: number) {
 		this.userAtom.set((user) => ({ ...user, id }));
+		this.sessionStore.set(id);
 	}
 	setEmail(email: string) {
 		this.userAtom.set((user) => ({ ...user, email }));
@@ -58,9 +62,11 @@ export class UserStore {
 	}
 	setUser(user: { id: number; email: string; username: string; phone: string; address: string }) {
 		this.userAtom.set(user);
+		this.sessionStore.set(user.id);
 	}
 	clearUser() {
 		this.userAtom.set(emptyUser);
+		this.sessionStore.clear();
 	}
 	setIsInitialRequestDone() {
 		this.isInitialRequestDoneAtom.set(true);

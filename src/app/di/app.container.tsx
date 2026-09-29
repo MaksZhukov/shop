@@ -7,11 +7,11 @@ import { BRAND_API, BrandApi, BrandService } from 'entities/brand';
 import { CABIN_API, CabinApi, CabinService } from 'entities/cabin';
 import { CAR_API, CarApi, CarService } from 'entities/car';
 import { CAR_ON_PARTS_API, CarOnPartsApi, CarOnPartsService } from 'entities/carOnParts';
-import { CART_API, CartApi, CartService, CartStore } from 'entities/cart';
+import { CART_PRODUCTS, CartStore, LocalCartApi, RemoteCartApi } from 'entities/cart';
 import { CATALOG_API, CatalogApi, CatalogService } from 'entities/catalog';
 import { EMAIL_API, EmailApi, EmailService } from 'entities/email';
 import { ENGINE_VOLUME_API, EngineVolumeApi, EngineVolumeService } from 'entities/engineVolume';
-import { FAVORITE_API, FavoriteApi, FavoriteService, FavoriteStore } from 'entities/favorite';
+import { FAVORITE_PRODUCTS, FavoriteStore, LocalFavoriteApi, RemoteFavoriteApi } from 'entities/favorite';
 import { GENERATION_API, GenerationApi, GenerationService } from 'entities/generation';
 import { KIND_SPARE_PART_API, KindSparePartApi, KindSparePartService } from 'entities/kindSparePart';
 import { MODEL_API, ModelApi, ModelService } from 'entities/model';
@@ -47,11 +47,15 @@ import {
 	HeaderStore,
 	UserMenuStore
 } from 'features/header';
-import { OrderRegistrationStore } from 'features/orderRegistration';
+import { OrderRegistrationService, OrderRegistrationStore } from 'features/orderRegistration';
+import { CartListService } from 'features/cart';
+import { FavoriteListService } from 'features/favorites';
 import { AuthModalStore } from 'features/user';
 import { DiProvider } from 'shared/di/di.context';
 import { HeaderCatalogFiltersAdapter, HeaderSessionAdapter } from './header.adapters';
 import { SnackbarService } from 'shared/services';
+import { SessionStore } from 'core/session';
+import { StoredProductsAdapter } from './storedProducts.adapter';
 
 export const createAppContainer = () => {
 	const container = new Container();
@@ -67,8 +71,6 @@ export const createAppContainer = () => {
 	container.bind(CarService).toSelf();
 	container.bind(CAR_ON_PARTS_API).to(CarOnPartsApi);
 	container.bind(CarOnPartsService).toSelf();
-	container.bind(CART_API).to(CartApi);
-	container.bind(CartService).toSelf();
 	container.bind(CartStore).toSelf().inSingletonScope();
 	container.bind(CATALOG_API).to(CatalogApi);
 	container.bind(CatalogService).toSelf();
@@ -76,8 +78,6 @@ export const createAppContainer = () => {
 	container.bind(EmailService).toSelf();
 	container.bind(ENGINE_VOLUME_API).to(EngineVolumeApi);
 	container.bind(EngineVolumeService).toSelf();
-	container.bind(FAVORITE_API).to(FavoriteApi);
-	container.bind(FavoriteService).toSelf();
 	container.bind(FavoriteStore).toSelf().inSingletonScope();
 	container.bind(GENERATION_API).to(GenerationApi);
 	container.bind(GenerationService).toSelf();
@@ -128,6 +128,10 @@ export const createAppContainer = () => {
 	container.bind(WHEEL_WIDTH_API).to(WheelWidthApi);
 	container.bind(WheelWidthService).toSelf();
 	container.bind(SnackbarService).toSelf().inSingletonScope();
+	container.bind(SessionStore).toSelf().inSingletonScope();
+	container.bind(StoredProductsAdapter).toSelf().inSingletonScope();
+	container.bind(CART_PRODUCTS).toService(StoredProductsAdapter);
+	container.bind(FAVORITE_PRODUCTS).toService(StoredProductsAdapter);
 	container.bind(HEADER_SESSION).to(HeaderSessionAdapter).inSingletonScope();
 	container.bind(HEADER_CATALOG_FILTERS).to(HeaderCatalogFiltersAdapter).inSingletonScope();
 	container.bind(HeaderService).toSelf().inSingletonScope();
@@ -138,7 +142,14 @@ export const createAppContainer = () => {
 	container.bind(HeaderCatalogStore).toSelf().inSingletonScope();
 	container.bind(UserMenuStore).toSelf().inSingletonScope();
 	container.bind(AuthModalStore).toSelf().inSingletonScope();
-	container.bind(OrderRegistrationStore).toSelf();
+	container.bind(OrderRegistrationStore).toSelf().inSingletonScope();
+	container.bind(OrderRegistrationService).toSelf().inSingletonScope();
+	container.bind(RemoteCartApi).toSelf().inSingletonScope();
+	container.bind(LocalCartApi).toSelf().inSingletonScope();
+	container.bind(CartListService).toSelf().inSingletonScope();
+	container.bind(RemoteFavoriteApi).toSelf().inSingletonScope();
+	container.bind(LocalFavoriteApi).toSelf().inSingletonScope();
+	container.bind(FavoriteListService).toSelf().inSingletonScope();
 	return container;
 };
 

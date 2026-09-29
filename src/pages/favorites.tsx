@@ -5,20 +5,21 @@ import Head from 'next/head';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { ProductItem } from 'entities/product';
 import { ViewedProducts, ViewedProductsInjector } from 'features/viewedProducts';
-import { FavoriteButton } from 'features/favorites';
+import { FavoriteButton, FavoriteListService } from 'features/favorites';
 import { CartButton } from 'features/cart';
 import { FavoriteStore } from 'entities/favorite';
 import { SparePartService } from 'entities/sparePart';
 import { UserStore } from 'entities/user';
 import { createModuleInjector } from 'shared/di';
 
-export const inject = createModuleInjector([FavoriteStore, UserStore, SparePartService]);
+export const inject = createModuleInjector([FavoriteStore, FavoriteListService, UserStore, SparePartService]);
 
 const FavoritesContent = reatomComponent(() => {
 	const favoriteStore = inject(FavoriteStore);
+	const favoriteListService = inject(FavoriteListService);
 	const userStore = inject(UserStore);
 	const items = favoriteStore.items;
-	const isLoading = favoriteStore.isLoading || !userStore.isInitialRequestDone;
+	const isLoading = !favoriteListService.load.ready() || !userStore.isInitialRequestDone;
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 

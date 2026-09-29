@@ -1,27 +1,28 @@
-import { useLoadCart } from 'features/cart';
-import { useLoadFavorites } from 'features/favorites';
+import { CartListService } from 'features/cart';
+import { FavoriteListService } from 'features/favorites';
 import { useEffect } from 'react';
 import { useLoadUserInfo } from 'features/user';
 import { UserStore } from 'entities/user';
 import { useInjection } from 'shared/di/di.hook';
 
 export const useInitialAuthLoad = () => {
-	const loadFavorites = useLoadFavorites();
-	const loadCart = useLoadCart();
+	const cartListService = useInjection(CartListService);
+	const favoriteListService = useInjection(FavoriteListService);
 	const loadUserInfo = useLoadUserInfo();
 	const userStore = useInjection(UserStore);
 
 	useEffect(() => {
+		const loadSessionItems = () => Promise.all([cartListService.load(), favoriteListService.load()]);
 		const tryFetchData = async () => {
 			try {
 				await loadUserInfo();
-				await Promise.all([loadCart(), loadFavorites()]);
+				await loadSessionItems();
 			} catch {
 				userStore.clearUser();
-				await Promise.all([loadCart(), loadFavorites()]);
+				await loadSessionItems();
 			}
 			userStore.setIsInitialRequestDone();
 		};
 		tryFetchData();
-	}, [loadFavorites, loadCart, loadUserInfo, userStore]);
+	}, [cartListService, favoriteListService, loadUserInfo, userStore]);
 };

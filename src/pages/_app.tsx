@@ -8,8 +8,9 @@ import { reatomComponent } from '@reatom/react';
 import { HeaderWrapper } from 'features/header';
 import { Footer } from 'features/footer';
 import { AuthModalRoot } from 'features/user';
-import { useLoadFavorites } from 'features/favorites';
-import { useLoadCart } from 'features/cart';
+import { CartListService } from 'features/cart';
+import { FavoriteListService } from 'features/favorites';
+import { createModuleInjector } from 'shared/di';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Layout } from 'shared/ui';
 import { RouteShield } from 'features/routeShield';
@@ -24,11 +25,13 @@ import { ScrollUp } from 'features/scrollUp';
 import { RecaptchaProvider } from 'app/providers/RecaptchaProvider';
 import './app.scss';
 
+const injectApp = createModuleInjector([CartListService, FavoriteListService]);
+
 const AppContent = reatomComponent(({ Component, pageProps }: AppProps) => {
 	const router = useRouter();
 	useInitialAuthLoad();
-	const loadFavorites = useLoadFavorites();
-	const loadCart = useLoadCart();
+	const cartListService = injectApp(CartListService);
+	const favoriteListService = injectApp(FavoriteListService);
 
 	const seoImage = useMemo(() => {
 		const findImage = (obj: any): any => {
@@ -84,7 +87,7 @@ const AppContent = reatomComponent(({ Component, pageProps }: AppProps) => {
 			<Footer />
 			<AuthModalRoot
 				onLoginSuccess={async () => {
-					await Promise.all([loadCart(), loadFavorites()]);
+					await Promise.all([cartListService.load(), favoriteListService.load()]);
 				}}
 			/>
 			<ScrollUp />

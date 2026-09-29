@@ -4,11 +4,11 @@ import { BRAND_API, BrandApi, BrandService } from 'entities/brand';
 import { CABIN_API, CabinApi, CabinService } from 'entities/cabin';
 import { CAR_API, CarApi, CarService } from 'entities/car';
 import { CAR_ON_PARTS_API, CarOnPartsApi, CarOnPartsService } from 'entities/carOnParts';
-import { CART_API, CartApi, CartService, CartStore } from 'entities/cart';
+import { CartStore } from 'entities/cart';
 import { CATALOG_API, CatalogApi, CatalogService } from 'entities/catalog';
 import { EMAIL_API, EmailApi, EmailService } from 'entities/email';
 import { ENGINE_VOLUME_API, EngineVolumeApi, EngineVolumeService } from 'entities/engineVolume';
-import { FAVORITE_API, FavoriteApi, FavoriteService, FavoriteStore } from 'entities/favorite';
+import { FavoriteStore } from 'entities/favorite';
 import { GENERATION_API, GenerationApi, GenerationService } from 'entities/generation';
 import { KIND_SPARE_PART_API, KindSparePartApi, KindSparePartService } from 'entities/kindSparePart';
 import { MODEL_API, ModelApi, ModelService } from 'entities/model';
@@ -46,9 +46,12 @@ import {
 	type HeaderCatalogFilters,
 	type HeaderSession
 } from 'features/header';
-import { OrderRegistrationStore } from 'features/orderRegistration';
+import { OrderRegistrationService, OrderRegistrationStore } from 'features/orderRegistration';
+import { CartListService } from 'features/cart';
+import { FavoriteListService } from 'features/favorites';
 import { AuthModalStore } from 'features/user';
 import { SnackbarService } from 'shared/services';
+import { SessionStore } from 'core/session';
 
 export const appTokens = [
 	ARTICLE_API,
@@ -63,8 +66,6 @@ export const appTokens = [
 	CarService,
 	CAR_ON_PARTS_API,
 	CarOnPartsService,
-	CART_API,
-	CartService,
 	CartStore,
 	CATALOG_API,
 	CatalogService,
@@ -72,8 +73,6 @@ export const appTokens = [
 	EmailService,
 	ENGINE_VOLUME_API,
 	EngineVolumeService,
-	FAVORITE_API,
-	FavoriteService,
 	FavoriteStore,
 	GENERATION_API,
 	GenerationService,
@@ -124,6 +123,7 @@ export const appTokens = [
 	WHEEL_WIDTH_API,
 	WheelWidthService,
 	SnackbarService,
+	SessionStore,
 	HEADER_SESSION,
 	HEADER_CATALOG_FILTERS,
 	HeaderService,
@@ -134,7 +134,10 @@ export const appTokens = [
 	HeaderCatalogStore,
 	UserMenuStore,
 	AuthModalStore,
-	OrderRegistrationStore
+	OrderRegistrationStore,
+	OrderRegistrationService,
+	CartListService,
+	FavoriteListService
 ] as const;
 
 export const appContainer = { getKeys: () => appTokens };
@@ -146,11 +149,9 @@ export type AppBindings = {
 	[CABIN_API]: CabinApi;
 	[CAR_API]: CarApi;
 	[CAR_ON_PARTS_API]: CarOnPartsApi;
-	[CART_API]: CartApi;
 	[CATALOG_API]: CatalogApi;
 	[EMAIL_API]: EmailApi;
 	[ENGINE_VOLUME_API]: EngineVolumeApi;
-	[FAVORITE_API]: FavoriteApi;
 	[GENERATION_API]: GenerationApi;
 	[KIND_SPARE_PART_API]: KindSparePartApi;
 	[MODEL_API]: ModelApi;

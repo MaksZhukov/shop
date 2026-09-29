@@ -1,34 +1,15 @@
 import { Box, Typography } from '@mui/material';
 import { Link, MobileQuestionsSection } from 'shared/ui';
 import { reatomComponent } from '@reatom/react';
-import { useOrderCheckout } from '../hooks/useOrderCheckout';
-import { useOrderRegistrationForm } from '../hooks/useOrderRegistrationForm';
-import { getCheckoutButtonText } from '../lib/getCheckoutButtonText';
 import { useDI } from '../orderRegistration.di';
 import { OrderRegistrationForm } from './orderRegistrationForm.component';
 import { OrderSuccess } from './orderSuccess.component';
 import { OrderSummary } from './orderSummary.component';
 
 export const OrderRegistration = reatomComponent(() => {
-	const { orderRegistrationStore, removeCartMany } = useDI();
+	const { orderRegistrationStore, orderRegistrationService } = useDI();
 	const isOrdered = orderRegistrationStore.isOrdered();
-	const checkoutItems = orderRegistrationStore.checkoutItems();
-	const form = useOrderRegistrationForm();
-	const { orderCheckout, formattedTime, isExpired, handleCheckout, isReissuingCheckoutToken } = useOrderCheckout({
-		formData: form.formData,
-		checkoutItems,
-		onChangeIsOrdered: (value) => orderRegistrationStore.isOrdered.set(value),
-		isOrdered,
-		removeCartMany
-	});
-
-	const handleCheckoutClick = async () => {
-		const success = form.handleCheckout();
-		if (!success) {
-			return;
-		}
-		await handleCheckout();
-	};
+	const formattedRemainingTime = orderRegistrationStore.formattedRemainingTime();
 
 	if (isOrdered) {
 		return <OrderSuccess />;
@@ -45,14 +26,14 @@ export const OrderRegistration = reatomComponent(() => {
             }}>
 				Оформление заказа
 			</Typography>
-            {orderCheckout?.order && formattedTime && !isExpired && (
+            {formattedRemainingTime && (
 				<Typography
                     variant='body2'
                     sx={{
                         color: 'warning.main',
                         mb: 2
                     }}>
-					Время на оплату: {formattedTime}
+					Время на оплату: {formattedRemainingTime}
 				</Typography>
 			)}
             <Box
@@ -61,12 +42,12 @@ export const OrderRegistration = reatomComponent(() => {
                     flexDirection: { xs: 'column', md: 'row' },
                     gap: 1
                 }}>
-				<OrderRegistrationForm form={form} disabled={!!orderCheckout?.order} />
+				<OrderRegistrationForm />
 				<OrderSummary
-					selectedItemsCount={checkoutItems.length}
+					selectedItemsCount={orderRegistrationStore.checkoutItems().length}
 					totalAmount={orderRegistrationStore.totalAmount()}
-					onCheckout={handleCheckoutClick}
-					buttonText={getCheckoutButtonText(form.formData.paymentMethod)}
+					onCheckout={() => orderRegistrationService.checkout()}
+					buttonText={orderRegistrationStore.buttonText()}
 					disclaimerText={
 						<>
 							Нажимая на кнопку, вы соглашаетесь с{' '}
@@ -79,7 +60,7 @@ export const OrderRegistration = reatomComponent(() => {
 							</Link>
 						</>
 					}
-					disabled={isReissuingCheckoutToken}
+					disabled={!orderRegistrationService.checkout.ready() || !orderRegistrationService.reissuePaymentToken.ready()}
 				/>
 			</Box>
             <MobileQuestionsSection />

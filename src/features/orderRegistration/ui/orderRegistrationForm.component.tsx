@@ -2,24 +2,23 @@ import { Box } from '@mui/material';
 import { ContactInfoForm } from './contactInfoForm.component';
 import { DeliveryMethodForm } from './deliveryMethodForm.component';
 import { PaymentMethodForm } from './paymentMethodForm.component';
-import { useOrderRegistrationForm } from '../hooks/useOrderRegistrationForm';
+import { reatomComponent } from '@reatom/react';
+import { useRef, type ChangeEvent } from 'react';
+import { useDI } from '../orderRegistration.di';
 
-interface OrderRegistrationFormProps {
-	form: ReturnType<typeof useOrderRegistrationForm>;
-	disabled?: boolean;
-}
+export const OrderRegistrationForm = reatomComponent(() => {
+	const { orderRegistrationStore } = useDI();
+	const formData = orderRegistrationStore.formData();
+	const disabled = orderRegistrationStore.isFormLocked();
+	// A DOM handle for the hidden file input, not state.
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
-export const OrderRegistrationForm = ({ form, disabled = false }: OrderRegistrationFormProps) => {
-	const {
-		formData,
-		fileInputRef,
-		handleUserTypeChange,
-		handleDeliveryMethodChange,
-		handlePaymentMethodChange,
-		handleFileChange,
-		handleUploadClick,
-		updateField
-	} = form;
+	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			orderRegistrationStore.updateField('uploadedFile', file);
+		}
+	};
 
 	return (
         <Box
@@ -32,23 +31,23 @@ export const OrderRegistrationForm = ({ form, disabled = false }: OrderRegistrat
             <ContactInfoForm
 				formData={formData}
 				fileInputRef={fileInputRef}
-				onUserTypeChange={handleUserTypeChange}
-				onFieldChange={updateField}
-				onUploadClick={handleUploadClick}
+				onUserTypeChange={(userType) => orderRegistrationStore.updateField('userType', userType)}
+				onFieldChange={(field, value) => orderRegistrationStore.updateField(field, value)}
+				onUploadClick={() => fileInputRef.current?.click()}
 				onFileChange={handleFileChange}
 				disabled={disabled}
 			/>
             <DeliveryMethodForm
 				formData={formData}
-				onDeliveryMethodChange={handleDeliveryMethodChange}
-				onFieldChange={updateField}
+				onDeliveryMethodChange={(method) => orderRegistrationStore.changeDeliveryMethod(method)}
+				onFieldChange={(field, value) => orderRegistrationStore.updateField(field, value)}
 				disabled={disabled}
 			/>
             <PaymentMethodForm
 				formData={formData}
-				onPaymentMethodChange={handlePaymentMethodChange}
+				onPaymentMethodChange={(method) => orderRegistrationStore.changePaymentMethod(method)}
 				disabled={disabled}
 			/>
         </Box>
     );
-};
+});

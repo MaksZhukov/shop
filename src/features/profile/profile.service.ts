@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { action, withAsync, wrap } from '@reatom/core';
 import { inject, injectable } from 'inversify';
-import { CartStore, cartLocalStorage } from 'entities/cart';
-import { FavoriteStore, favoriteLocalStorage } from 'entities/favorite';
+import { CartStore, LocalCartApi } from 'entities/cart';
+import { FavoriteStore, LocalFavoriteApi } from 'entities/favorite';
 import { UserService, UserStore } from 'entities/user';
 import { SnackbarService } from 'shared/services';
 import { LOGOUT_ERROR, LOGOUT_SUCCESS } from './profile.constants';
@@ -24,6 +24,8 @@ export class ProfileService {
 		@inject(UserStore) private readonly userStore: UserStore,
 		@inject(CartStore) private readonly cartStore: CartStore,
 		@inject(FavoriteStore) private readonly favoriteStore: FavoriteStore,
+		@inject(LocalCartApi) private readonly localCartApi: LocalCartApi,
+		@inject(LocalFavoriteApi) private readonly localFavoriteApi: LocalFavoriteApi,
 		@inject(SnackbarService) private readonly snackbarService: SnackbarService
 	) {}
 
@@ -31,11 +33,11 @@ export class ProfileService {
 	private clearSession() {
 		this.userStore.clearUser();
 
-		const guestCart = cartLocalStorage.getCart();
+		const guestCart = this.localCartApi.getStored();
 		this.cartStore.setItems(this.cartStore.items.filter((item) => guestCart.some((el) => el.id === item.id)));
 		this.cartStore.clearSelectedItemsForCheckout();
 
-		const guestFavorites = favoriteLocalStorage.getFavorites();
+		const guestFavorites = this.localFavoriteApi.getStored();
 		this.favoriteStore.setItems(
 			this.favoriteStore.items.filter((item) => guestFavorites.some((el) => el.id === item.id))
 		);

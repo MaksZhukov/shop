@@ -1,6 +1,6 @@
 # Architecture
 
-Layers are `app`, `pages`, `features`, `entities`, and `shared`. There is no `widgets` layer.
+Layers are `app`, `pages`, `features`, `entities`, `core`, and `shared`. There is no `widgets` layer.
 
 Cross-feature and cross-entity work goes through an InversifyJS IoC container. The data that crosses that boundary is a model owned by the entity. A DTO exists only at the HTTP edge and is mapped into that model inside the entity.
 
@@ -13,7 +13,8 @@ Cross-feature and cross-entity work goes through an InversifyJS IoC container. T
 | `app` | Startup, app-wide providers, and the one IoC container | `pages`, `features`, `entities`, `shared` |
 | `pages` | One route. Compose feature UI. Load data for that route | `features` and `entities` public API, `shared` |
 | `features` | One product capability: UI and behavior | `entities` public API, `shared`. Other features only by injected ports |
-| `entities` | One domain object: DTO, model, port, and the implementation behind that port | `shared`. Other entities only by injected ports |
+| `entities` | One domain object: DTO, model, port, and the implementation behind that port | `core`, `shared`. Other entities only by injected ports |
+| `core` | Code reused between entities that belongs to no single entity: the session (`core/session`) | `shared`, other `core` slices |
 | `shared` | UI kit, HTTP client, formatters, icons | other `shared` code |
 
 `pages/_app.tsx` is the Next.js entry. It renders the app root. No other file imports `app`.
@@ -196,6 +197,10 @@ Switch between loading, error, and content with `AsyncWrapper` from `shared/ui`.
 
 `loading` wins over `error`. Compute `loading` as `!atom.ready()`, or as `!atom.ready() && isEmpty` when SSR data should stay on screen while the atom reloads. For an error state, pass `error={atom.error() !== undefined}`.
 
+### Loading state
+
+Loading state comes from the async atom or action itself: `!atom.ready()` for a `computed` with `withAsyncData`, `!action.ready()` for an `action` with `withAsync`. Do not keep an `isLoading` atom next to it and do not set one by hand around the call. A feature that needs another feature's loading state gets the action (typed as `{ ready: () => boolean }`) through its context, as `order-registration` gets `cartLoad`.
+
 ### Mutations
 
 A store holds data. A write that holds no data of its own does not get a store. Put it on the service that owns the data as an `action` with `.extend(withAsync())`. When the write belongs to an entity, that is the entity service. The service reads the payload from the injected stores, calls the API, and reports success or failure through `SnackbarService`. The component calls the action and reads `action.ready()` for the pending state. It does not build the payload and does not call `useSnackbar`.
@@ -295,6 +300,32 @@ What the header needs from other features goes through ports, bound in `app/di/h
 The app has one auth modal. `AuthModalStore` in `features/user` holds its state and opens it for a reset-password link. `_app` renders `<AuthModalRoot onLoginSuccess={...} />` once. The header opens it through `HEADER_SESSION`, and the footer through `openAuth` in `FooterContext`, which `FeatureProviders` fills. `WorkTimetable` is plain UI and lives in `shared/ui`.
 
 `AppDiProvider` wraps the whole tree from `pages/_app.tsx`.
+
+## Guest and signed-in storage
+
+When the same data lives in the API for a signed-in user and in local storage for a guest, do not branch on the user in every action. The entity owns one API interface and two implementations. The feature service chooses between them in one getter:
+
+```
+entities/cart/
+├── cart.api.ts                 # interface CartApi: load, add, remove, removeMany
+├── remoteCart.api.ts           # RemoteCartApi: HTTP + DTO mapping, user from SessionStore
+├── localCart.api.ts            # LocalCartApi: local storage, getStored(), products through CART_PRODUCTS
+└── ports/cartProducts.port.ts  # CART_PRODUCTS: findStored(items) → fresh products
+features/cart/cartList.service.ts  # private get api() → remote or local
+```
+
+```typescript
+// features/cart/cartList.service.ts
+private get api(): CartApi {
+	return this.sessionStore.isAuth() ? this.remote : this.local;
+}
+```
+
+- **Who is signed in** comes from `SessionStore` in `core/session`: a `userId` atom, an `isAuth` computed, and `set` / `clear`. `UserStore` calls them when the user signs in or out. Entities and features read the session there and never import `UserStore` for it.
+- **Guest products:** `LocalCartApi` needs products from other entities, so the entity asks through its own port (`CART_PRODUCTS`, `FAVORITE_PRODUCTS`). `app/di/storedProducts.adapter.ts` implements both with `fetchProductsByType` and the product services.
+- **When the choice happens:** on every call, not in the Inversify binding, because a binding resolves once and the user signs in and out while the app runs.
+
+`favorites` has the same shape: `FavoriteApi`, `RemoteFavoriteApi`, and `LocalFavoriteApi` in `entities/favorite`, and `FavoriteListService` in the feature.
 
 ## Sub-features
 

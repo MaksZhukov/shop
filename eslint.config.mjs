@@ -2,7 +2,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import boundaries from 'eslint-plugin-boundaries';
 
-/** Feature-Sliced Design: only lower layers may be imported (no upward/cross leaks). */
+/** Feature-Sliced Design: only lower layers may be imported (no upward/cross leaks). Order: app → pages → features → entities → core → shared. */
 const fsdElements = [
 	{ type: 'app', pattern: 'src/app/**/*', mode: 'full' },
 	{ type: 'pages', pattern: 'src/pages/**/*', mode: 'full' },
@@ -16,15 +16,26 @@ const fsdElements = [
 		pattern: 'src/entities/*',
 		capture: ['entitySlice']
 	},
+	{
+		type: 'core',
+		pattern: 'src/core/*',
+		capture: ['coreSlice']
+	},
 	{ type: 'shared', pattern: 'src/shared/**/*', mode: 'full' }
 ];
 
 const fsdDependencyRules = [
 	{
 		from: { type: 'shared' },
+		disallow: { to: { type: ['app', 'pages', 'features', 'entities', 'core'] } },
+		message:
+			'FSD: `shared` must not import domain layers (app/pages/features/entities/core). Move code or depend only on `shared`.'
+	},
+	{
+		from: { type: 'core' },
 		disallow: { to: { type: ['app', 'pages', 'features', 'entities'] } },
 		message:
-			'FSD: `shared` must not import domain layers (app/pages/features/entities). Move code or depend only on `shared`.'
+			'FSD: `core` holds code shared between entities. It may import only `shared` and other `core` slices.'
 	},
 	{
 		from: { type: 'entities' },
@@ -61,14 +72,14 @@ const fsdDependencyRules = [
 			'FSD: a feature slice must not value-import another feature slice (use `import type { ... }`, `shared`, or compose in pages).'
 	},
 	{
-		from: { type: ['app', 'pages', 'features', 'entities', 'shared'] },
+		from: { type: ['app', 'pages', 'features', 'entities', 'core', 'shared'] },
 		disallow: {
 			to: {
-				type: ['features', 'entities'],
+				type: ['features', 'entities', 'core'],
 				internalPath: '!index.ts'
 			}
 		},
-		message: 'FSD: import a feature or entity from its index.ts. Deep imports stay inside that slice.'
+		message: 'FSD: import a feature, entity, or core slice from its index.ts. Deep imports stay inside that slice.'
 	},
 	{
 		from: { type: 'app' },

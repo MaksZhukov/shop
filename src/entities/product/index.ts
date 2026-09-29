@@ -6,3 +6,4 @@ export type { ProductDescriptionItem } from './productDescription';
 export { getProductDescriptionItems } from './productDescription';
 export { ProductViewedLocalStorage, productViewedLocalStorage } from './productViewedLocalStorage';
 export { ProductPrice, ProductItemImages, ProductItem } from './ui';
+export { fetchProductsByType } from './lib/fetchProductsByType';

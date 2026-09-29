@@ -3,8 +3,7 @@ import type { Product } from 'entities/product';
 import { HeartFilledIcon, FavoriteAddIcon } from 'shared/icons';
 import { reatomComponent } from '@reatom/react';
 import { FAVORITES_MAX_ITEMS } from 'entities/favorite';
-import { useToggleFavorite } from './useToggleFavorite';
-import { FC } from 'react';
+import { useDI } from './favorites.di';
 
 interface FavoriteButtonProps {
 	product: Product;
@@ -12,7 +11,10 @@ interface FavoriteButtonProps {
 }
 
 export const FavoriteButton = reatomComponent<FavoriteButtonProps>(({ product, title }) => {
-	const { handleClickFavorite, isMaxFavorites, favorite } = useToggleFavorite(product);
+	const { favoriteStore, favoriteListService } = useDI();
+	const favorite = favoriteListService.findItem(product);
+	const isMaxFavorites = favoriteStore.items.length >= FAVORITES_MAX_ITEMS;
+	const handleClickFavorite = () => favoriteListService.toggle(product);
 
 	if (title) {
 		const button = (

@@ -1,9 +1,8 @@
 import { Button, Tooltip } from '@mui/material';
-import type { Product } from 'entities/product';
 import { reatomComponent } from '@reatom/react';
-import { useToggleCart } from './useToggleCart';
-import { FC } from 'react';
 import { CART_MAX_ITEMS } from 'entities/cart';
+import type { Product } from 'entities/product';
+import { useDI } from './cart.di';
 
 interface CartButtonProps {
 	product: Product;
@@ -11,16 +10,18 @@ interface CartButtonProps {
 }
 
 export const CartButton = reatomComponent<CartButtonProps>(({ product, sx }) => {
-	const { handleClickCart, isInCart, isSold, isMaxCartItems } = useToggleCart(product);
+	const { cartStore, cartListService } = useDI();
+	const isInCart = !!cartListService.findItem(product);
+	const isMaxCartItems = cartStore.items.length >= CART_MAX_ITEMS;
 
 	const button = (
 		<Button
-			disabled={isMaxCartItems || isSold}
+			disabled={isMaxCartItems || product.sold}
 			sx={sx}
 			variant={isInCart ? 'outlined' : 'contained'}
-			onClick={handleClickCart}
+			onClick={() => cartListService.toggle(product)}
 		>
-			{isInCart ? 'В корзине' : isSold ? 'Продан' : 'Добавить в корзину'}
+			{isInCart ? 'В корзине' : product.sold ? 'Продан' : 'Добавить в корзину'}
 		</Button>
 	);
 	return isMaxCartItems ? (

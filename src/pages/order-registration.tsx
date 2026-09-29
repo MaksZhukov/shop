@@ -1,30 +1,37 @@
-import { CartStore } from 'entities/cart';
-import { OrderService } from 'entities/order';
-import { UserStore } from 'entities/user';
-import { useRemoveCartMany } from 'features/cart';
+import { useQueryClient } from '@tanstack/react-query';
+import { CartListService } from 'features/cart';
 import { MobileContactsModal } from 'features/mobileContacts';
-import { OrderRegistrationEntry, OrderRegistrationInjector, OrderRegistrationStore } from 'features/orderRegistration';
+import {
+	OrderRegistrationEntry,
+	OrderRegistrationInjector,
+	OrderRegistrationService,
+	OrderRegistrationStore
+} from 'features/orderRegistration';
 import { createModuleInjector } from 'shared/di';
 import { WorkTimetable } from 'shared/ui';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 
-export const inject = createModuleInjector([OrderService, OrderRegistrationStore, UserStore, CartStore]);
+export const inject = createModuleInjector([OrderRegistrationStore, OrderRegistrationService, CartListService]);
 
 const OrderRegistrationPage = () => {
-	const orderService = inject(OrderService);
 	const orderRegistrationStore = inject(OrderRegistrationStore);
-	const userStore = inject(UserStore);
-	const cartStore = inject(CartStore);
-	const removeCartMany = useRemoveCartMany();
+	const orderRegistrationService = inject(OrderRegistrationService);
+	const cartListService = inject(CartListService);
+	const queryClient = useQueryClient();
+
+	// Ordered products are sold now, so the cart drops them and cached product lists refetch.
+	const onOrderPlaced = async (cartItemIds: number[]) => {
+		await cartListService.removeMany(cartItemIds);
+		await queryClient.invalidateQueries();
+	};
 
 	return (
 		<OrderRegistrationInjector
 			value={{
-				orderService,
 				orderRegistrationStore,
-				userStore,
-				cartStore,
-				removeCartMany,
+				orderRegistrationService,
+				onOrderPlaced,
+				cartLoad: cartListService.load,
 				renderMobileContacts: (isOpened, onClose) => (
 					<MobileContactsModal isOpened={isOpened} onClose={onClose} workTimetable={<WorkTimetable />} />
 				)

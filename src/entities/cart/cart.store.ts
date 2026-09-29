@@ -6,23 +6,16 @@ import type { Cart } from './model/cart.model';
 @injectable()
 export class CartStore {
 	private readonly itemsAtom = atom<Cart[]>([], 'cart.items');
-	private readonly isLoadingAtom = atom(false, 'cart.isLoading');
 	private readonly selectedItemsForCheckoutAtom = atom<number[]>([], 'cart.selectedItemsForCheckout');
 
 	get items() {
 		return this.itemsAtom();
-	}
-	get isLoading() {
-		return this.isLoadingAtom();
 	}
 	get selectedItemsForCheckout() {
 		return this.selectedItemsForCheckoutAtom();
 	}
 	setItems(items: Cart[]) {
 		this.itemsAtom.set(items);
-	}
-	setIsLoading(isLoading: boolean) {
-		this.isLoadingAtom.set(isLoading);
 	}
 	addItem(item: Cart) {
 		this.itemsAtom.set((items) => [...items, item]);

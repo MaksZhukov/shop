@@ -105,4 +105,28 @@ Done. Pages are thin: they resolve dependencies, fill the feature injector, and 
 
 - `features/payment`: `PaymentInjector` with the CMS `page`, `PaymentEntry` renders the header and markdown. No store, because nothing loads on the client.
 - `features/privacy`: `PrivacyEntry` with `PrivacyHeader`, `PrivacyContent`, `PrivacySectionTitle`, and `PrivacySiteLink`. It has no dependencies, so it has no context.
-- `features/orderRegistration`: `OrderRegistrationStore` holds `isOrdered`, `checkoutItems`, `totalAmount`, `isLoading`, and `hasNothingToCheckout`. It is bound transient, so each visit starts clean. `OrderRegistrationEntry` redirects to the cart, shows the loader through `AsyncWrapper`, and loads the bePaid widget. The page passes `removeCartMany` and `renderMobileContacts` through `OrderRegistrationInjector`. The second `OrderRegistrationContext` (`orderRegistrationContext.ts`, `OrderRegistrationProvider`) and `useOrderRegistration` are gone. `useOrderCheckout` and `useOrderRegistrationForm` are still React hooks with react-query.
+- `features/orderRegistration`: `OrderRegistrationStore` holds `isOrdered`, `checkoutItems`, `totalAmount`, `isLoading`, and `hasNothingToCheckout`. `OrderRegistrationEntry` redirects to the cart, shows the loader through `AsyncWrapper`, and loads the bePaid widget. The page passes `onOrderPlaced` (cart removal and react-query invalidation) and `renderMobileContacts` through `OrderRegistrationInjector`. The second `OrderRegistrationContext` (`orderRegistrationContext.ts`, `OrderRegistrationProvider`) and `useOrderRegistration` are gone. `features/orderRegistration/hooks` is gone:
+
+- `OrderRegistrationStore` holds all state: form data, checkout response, payment token, the timer tick, and the computeds built on them (`remainingTime`, `isExpired`, `unpaidCheckoutToken`, `buttonText`, `isFormLocked`). Form edits go through `updateField`, `changeDeliveryMethod`, and `changePaymentMethod`.
+- `OrderRegistrationService` holds the behavior: `checkout` and `reissuePaymentToken` as `withAsync` actions, form validation with `SnackbarService`, the bePaid widget, the payment timer, the expiry redirect, and the unpaid-order guard (leave confirmation and order cancel).
+- `OrderRegistrationEntry` calls `orderRegistrationService.start()` once per visit. It resets the store, subscribes the timer, expiry, and guard to store atoms, and returns the cleanup for unmount. Store and service are singletons.
+
+## 18. Cart and favorites behind repositories
+
+Done. `features/cart` and `features/favorites` have no hooks. `CartListService` and `FavoriteListService` hold `load` and `toggle` (`withAsync` actions with snackbar messages) and `add`, `remove`, `removeMany`. Each one picks `RemoteCartRepository` / `LocalCartRepository` (or the favorite pair) in one private getter by `userStore.id`. `app/providers/FeatureProviders.tsx` passes `cartStore` + `cartListService` and `favoriteStore` + `favoriteListService` into the contexts. `_app`, `useInitialAuthLoad`, and the `cart` and `order-registration` pages call the list services. `useLoadCart`, `useAddCartLogic`, `useRemoveCart`, `useRemoveCartMany`, `useClearCart`, `useToggleCart`, and the favorites twins are gone, and so is `clearFavorites`.
+
+## 19. Loading state from async actions
+
+Done. `CartStore` and `FavoriteStore` have no `isLoading` atom. `CartListService.load` and `FavoriteListService.load` no longer set one; readers use `!cartListService.load.ready()` and `!favoriteListService.load.ready()`. `OrderRegistrationStore.isLoading` became `isWaitingForSession`, and `OrderRegistrationEntry` adds `!cartLoad.ready()`, which the page passes from `cartListService.load`.
+
+Hooks with `useState` or react-query loading flags (catalog data and autocomplete, the auth modal, the main page search form, `BuyButton`) are not Reatom actions yet, so they keep their own flags.
+
+## 20. Core layer, session, repositories in entities
+
+Done. `src/core` sits between `entities` and `shared`. It holds code that several entities reuse and no single entity owns. `eslint.config.mjs` has a `core` element: `core` may import only `shared` and other `core` slices, `shared` may not import `core`, and `core` slices are imported through their `index.ts`.
+
+- `core/session`: `SessionStore` with a `userId` atom, an `isAuth` computed, and `set` / `clear`. `UserStore` calls them in `setId`, `setUser`, and `clearUser`.
+- `entities/cart` is `CartApi` (interface), `RemoteCartApi` (HTTP, reads `SessionStore.userId`), and `LocalCartApi` (local storage, `getStored()`, `CART_PRODUCTS` port). `CartService`, `CART_API`, the old `CartApi` class, `cartLocalStorage`, `CartReader`, and the repositories are gone. `entities/favorite` has the same shape with `FavoriteApi`, `RemoteFavoriteApi`, `LocalFavoriteApi`, and `FAVORITE_PRODUCTS`.
+- `ProfileService` reads guest items with `LocalCartApi.getStored()` and `LocalFavoriteApi.getStored()`.
+- `app/di/storedProducts.adapter.ts` binds both product ports.
+- `CartListService` and `FavoriteListService` choose the repository with `sessionStore.isAuth()` and no longer inject `UserStore`.
