@@ -8,17 +8,16 @@ import { CartButton } from 'features/cart';
 import { reatomComponent } from '@reatom/react';
 import { useState, useEffect } from 'react';
 import { EmptyCart, CartList, useRemoveCartMany, useRemoveCart } from 'features/cart';
-import { OrderRegistrationInjector, OrderSummary } from 'features/orderRegistration';
+import { OrderSummary } from 'features/orderRegistration';
 import router from 'next/router';
 import { CartStore, type Cart } from 'entities/cart';
-import { OrderService } from 'entities/order';
 import { SparePartService } from 'entities/sparePart';
 import { UserStore } from 'entities/user';
 import { createModuleInjector } from 'shared/di';
 
 interface Props {}
 
-export const inject = createModuleInjector([UserStore, CartStore, OrderService, SparePartService]);
+export const inject = createModuleInjector([UserStore, CartStore, SparePartService]);
 
 const CartContent = reatomComponent(() => {
 	const userStore = inject(UserStore);
@@ -138,17 +137,12 @@ const CartContent = reatomComponent(() => {
 });
 
 const CartPage = () => {
-	const userStore = inject(UserStore);
-	const cartStore = inject(CartStore);
-	const orderService = inject(OrderService);
 	const sparePartService = inject(SparePartService);
 
 	return (
-		<OrderRegistrationInjector value={{ orderService, userStore, cartStore }}>
-			<ViewedProductsInjector value={{ sparePartService }}>
-				<CartContent />
-			</ViewedProductsInjector>
-		</OrderRegistrationInjector>
+		<ViewedProductsInjector value={{ sparePartService }}>
+			<CartContent />
+		</ViewedProductsInjector>
 	);
 };
 

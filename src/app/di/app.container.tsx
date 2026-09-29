@@ -47,6 +47,7 @@ import {
 	HeaderStore,
 	UserMenuStore
 } from 'features/header';
+import { OrderRegistrationStore } from 'features/orderRegistration';
 import { AuthModalStore } from 'features/user';
 import { DiProvider } from 'shared/di/di.context';
 import { HeaderCatalogFiltersAdapter, HeaderSessionAdapter } from './header.adapters';
@@ -137,6 +138,7 @@ export const createAppContainer = () => {
 	container.bind(HeaderCatalogStore).toSelf().inSingletonScope();
 	container.bind(UserMenuStore).toSelf().inSingletonScope();
 	container.bind(AuthModalStore).toSelf().inSingletonScope();
+	container.bind(OrderRegistrationStore).toSelf();
 	return container;
 };
 

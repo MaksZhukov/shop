@@ -88,7 +88,7 @@ The header menu logs out through `HEADER_SESSION`, which calls `ProfileService.l
 Done. Every feature except `header` has `*.context.tsx` with `XContext` and `XInjector`, and `*.di.ts` with only `useDI`. No feature calls `createModuleInjector` or `inject`, and no feature exports a store hook.
 
 - `app/providers/FeatureProviders.tsx` resolves with `useInjection` and renders `UserInjector`, `CartInjector`, `FavoritesInjector`, `FooterInjector`, and `RouteShieldInjector` around the app. `ApiProvider` and `useInitialAuthLoad` resolve `UserService` and `UserStore` with `useInjection`.
-- Pages provide the rest: `index` (`MainPageInjector`, `BenefitsInjector`), `mobile-catalog` (`BenefitsInjector`), `cart` (`OrderRegistrationInjector`, `ViewedProductsInjector`), `favorites` (`ViewedProductsInjector`), `order-registration` (`OrderRegistrationInjector`), `spare-parts`, `cabins`, `tires`, `wheels` (their catalog injectors), `articles` (`ArticlesListContext`), `vacancies`, `reviews`, `service-stations`, `profile`.
+- Pages provide the rest: `index` (`MainPageInjector`, `BenefitsInjector`), `mobile-catalog` (`BenefitsInjector`), `cart` (`ViewedProductsInjector`), `favorites` (`ViewedProductsInjector`), `order-registration` (`OrderRegistrationInjector`), `spare-parts`, `cabins`, `tires`, `wheels` (their catalog injectors), `articles` (`ArticlesListContext`), `vacancies`, `reviews`, `service-stations`, `profile`.
 - `features/buy` has a context, but no page renders `BuyButton` yet.
 
 ## 15. Header on Reatom
@@ -98,3 +98,11 @@ Done. `features/header/hooks` is gone. `HeaderStore` and `HeaderService` replace
 ## 16. Header sub-features, one auth modal
 
 Done. `features/header` has `search`, `catalogMenu`, and `userMenu` sub-features next to the root layout. Every piece of header state is in `HeaderStore`, `HeaderSearchStore`, `HeaderCatalogStore`, or `UserMenuStore`. `HEADER_SLOTS` is gone: `WorkTimetable` moved from `features/workTimetable` to `shared/ui`, and the auth modal renders once from `_app` through `AuthModalRoot` and `AuthModalStore`. `Footer` takes no props; its auth modal and `useFooterAuthModal` are gone.
+
+## 17. Content pages and order registration as features
+
+Done. Pages are thin: they resolve dependencies, fill the feature injector, and render the feature `*Entry`.
+
+- `features/payment`: `PaymentInjector` with the CMS `page`, `PaymentEntry` renders the header and markdown. No store, because nothing loads on the client.
+- `features/privacy`: `PrivacyEntry` with `PrivacyHeader`, `PrivacyContent`, `PrivacySectionTitle`, and `PrivacySiteLink`. It has no dependencies, so it has no context.
+- `features/orderRegistration`: `OrderRegistrationStore` holds `isOrdered`, `checkoutItems`, `totalAmount`, `isLoading`, and `hasNothingToCheckout`. It is bound transient, so each visit starts clean. `OrderRegistrationEntry` redirects to the cart, shows the loader through `AsyncWrapper`, and loads the bePaid widget. The page passes `removeCartMany` and `renderMobileContacts` through `OrderRegistrationInjector`. The second `OrderRegistrationContext` (`orderRegistrationContext.ts`, `OrderRegistrationProvider`) and `useOrderRegistration` are gone. `useOrderCheckout` and `useOrderRegistrationForm` are still React hooks with react-query.

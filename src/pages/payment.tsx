@@ -1,29 +1,23 @@
 import { createRequestContainer } from 'app/di/app.container';
-import { PageService, DefaultPage } from 'entities/page';
-import { ReactMarkdown } from 'shared/ui';
-import { Typography } from 'shared/ui';
+import { PageService } from 'entities/page';
+import { PAYMENT_PAGE_SLUG, PaymentEntry, PaymentInjector, type PaymentPage } from 'features/payment';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 
 interface Props {
-	page: DefaultPage & { content: string };
+	page: PaymentPage;
 }
 
-const Contacts = ({ page }: Props) => {
-	return (
-		<>
-			<Typography component='h1' variant='h4' align='center' sx={{ mb: '1em', textTransform: 'uppercase' }}>
-				{page.seo?.h1 || 'Оплата'}
-			</Typography>
-			<ReactMarkdown content={page.content}></ReactMarkdown>
-		</>
-	);
-};
+const PaymentPageRoute = ({ page }: Props) => (
+	<PaymentInjector value={{ page }}>
+		<PaymentEntry />
+	</PaymentInjector>
+);
 
-export default Contacts;
+export default PaymentPageRoute;
 
 export const getStaticProps = getPageProps(undefined, async () => {
 	const pageService = createRequestContainer().get(PageService);
-	const page = (await pageService.fetchPage('payment')()).data.data;
+	const page = (await pageService.fetchPage(PAYMENT_PAGE_SLUG)()).data.data;
 
 	return {
 		props: {

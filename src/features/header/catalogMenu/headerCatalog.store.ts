@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { action, atom, computed, withAsyncData, wrap } from '@reatom/core';
+import { atom, computed, withAsyncData, wrap } from '@reatom/core';
 import { inject, injectable } from 'inversify';
 import type { TopCategory } from 'entities/catalog';
 import { HeaderCatalogService } from './headerCatalog.service';
@@ -10,7 +10,8 @@ export class HeaderCatalogStore {
 	readonly isMenuOpened = computed(() => this.menuAnchor() !== null, 'headerCatalog.isMenuOpened');
 	private readonly hoveredCategory = atom<TopCategory | null>(null, 'headerCatalog.hoveredCategory');
 
-	readonly topCategories = action(async () => {
+	// Lazy: read only inside the open popover, so the request starts on the first menu open.
+	readonly topCategories = computed(async () => {
 		return await wrap(this.headerCatalogService.fetchTopCategories());
 	}, 'headerCatalog.topCategories').extend(withAsyncData({ initState: [] as TopCategory[] }));
 
@@ -27,7 +28,6 @@ export class HeaderCatalogStore {
 			return;
 		}
 		this.menuAnchor.set(anchor);
-		this.topCategories();
 	}
 
 	closeMenu() {

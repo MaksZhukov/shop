@@ -1,8 +1,7 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 import { reatomComponent } from '@reatom/react';
 import type { FormEvent } from 'react';
 import { useDI } from '../profile.di';
-import styles from './profileForm.module.scss';
 
 export const ProfileForm = reatomComponent(() => {
 	const { userService, userStore } = useDI();
@@ -14,35 +13,29 @@ export const ProfileForm = reatomComponent(() => {
 	};
 
 	return (
-		<Box component='form' onSubmit={handleSubmit} className={styles.content} sx={{ marginBottom: '2em' }}>
-			<TextField value={userStore.email} placeholder='Почта' disabled variant='standard' margin='normal' fullWidth />
+		<Stack component='form' onSubmit={handleSubmit} spacing={2}>
+			<TextField label='Почта' value={userStore.email} disabled fullWidth />
 			<TextField
+				label='ФИО'
 				value={userStore.username}
 				onChange={(e) => userStore.setUsername(e.target.value)}
-				placeholder='ФИО'
-				variant='standard'
-				margin='normal'
 				fullWidth
 			/>
 			<TextField
+				label='Телефон'
 				value={userStore.phone}
 				onChange={(e) => userStore.setPhone(e.target.value)}
-				placeholder='Телефон'
-				variant='standard'
-				margin='normal'
 				fullWidth
 			/>
 			<TextField
+				label='Адрес'
 				value={userStore.address}
 				onChange={(e) => userStore.setAddress(e.target.value)}
-				placeholder='Адрес'
-				variant='standard'
-				margin='normal'
 				fullWidth
 			/>
-			<Button fullWidth type='submit' variant='contained' disabled={isSaving}>
+			<Button fullWidth type='submit' variant='contained' size='large' disabled={isSaving} sx={{ mt: 1 }}>
 				Сохранить
 			</Button>
-		</Box>
+		</Stack>
 	);
 });

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Router, { useRouter } from 'next/router';
 import { useDI } from '../orderRegistration.di';
-import { LEAVE_CONFIRM_MESSAGE } from '../constants';
+import { LEAVE_CONFIRM_MESSAGE } from '../orderRegistration.constants';
 
 export function useUnpaidOrderGuard(hasUnpaidOnlineOrder: boolean, checkoutToken: string | null): void {
 	const router = useRouter();

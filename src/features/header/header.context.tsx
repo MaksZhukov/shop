@@ -3,9 +3,9 @@ import type { CartStore } from 'entities/cart';
 import type { FavoriteStore } from 'entities/favorite';
 import type { UserStore } from 'entities/user';
 import type { HeaderStore } from './header.store';
-import type { HeaderCatalogStore } from './catalogMenu/headerCatalog.store';
-import type { HeaderSearchStore } from './search/headerSearch.store';
-import type { UserMenuStore } from './userMenu/userMenu.store';
+import type { HeaderCatalogStore } from './catalogMenu';
+import type { HeaderSearchStore } from './search';
+import type { UserMenuStore } from './userMenu';
 
 export type HeaderContextValue = {
 	headerStore: HeaderStore;

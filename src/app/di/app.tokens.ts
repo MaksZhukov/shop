@@ -46,6 +46,7 @@ import {
 	type HeaderCatalogFilters,
 	type HeaderSession
 } from 'features/header';
+import { OrderRegistrationStore } from 'features/orderRegistration';
 import { AuthModalStore } from 'features/user';
 import { SnackbarService } from 'shared/services';
 
@@ -132,7 +133,8 @@ export const appTokens = [
 	HeaderCatalogService,
 	HeaderCatalogStore,
 	UserMenuStore,
-	AuthModalStore
+	AuthModalStore,
+	OrderRegistrationStore
 ] as const;
 
 export const appContainer = { getKeys: () => appTokens };

@@ -7,7 +7,7 @@ import type { Cart } from 'entities/cart';
 import { useOrderTimer } from './useOrderTimer';
 import { useUnpaidOrderGuard } from './useUnpaidOrderGuard';
 import { openPaymentWidget } from '../lib/openPaymentWidget';
-import { BEPAID_CHECKOUT_URL } from '../constants';
+import { BEPAID_CHECKOUT_URL } from '../orderRegistration.constants';
 import type { OrderRegistrationFormData } from '../types';
 
 interface UseOrderCheckoutParams {

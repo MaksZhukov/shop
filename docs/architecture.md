@@ -282,7 +282,7 @@ All header state lives in these stores, including menu anchors and dropdown flag
 | --- | --- | --- |
 | `HeaderStore` | `isMobileMenuOpened` | `HeaderService`: `logout` action with `withAsync`, `openAuth`, `navigate` |
 | `HeaderSearchStore` | `searchValue`, `searchHistory`, `isDropdownOpened`, `searchResults` (300 ms `sleep`, reruns on catalog filters), `sparePartsTotal`, `placeholder` | `HeaderSearchService`: search request, total, placeholder text, history rules and local storage |
-| `HeaderCatalogStore` | `menuAnchor`, `activeCategory`, `topCategories` action with `withAsyncData` | `HeaderCatalogService`: top categories, cached after the first request |
+| `HeaderCatalogStore` | `menuAnchor`, `activeCategory`, `topCategories` (lazy `computed` with `withAsyncData`, read only inside the open popover) | `HeaderCatalogService`: top categories request, mobile catalog navigation |
 | `UserMenuStore` | `menuAnchor` | uses `HeaderService` |
 
 What the header needs from other features goes through ports, bound in `app/di/header.adapters.tsx`:
@@ -295,6 +295,19 @@ What the header needs from other features goes through ports, bound in `app/di/h
 The app has one auth modal. `AuthModalStore` in `features/user` holds its state and opens it for a reset-password link. `_app` renders `<AuthModalRoot onLoginSuccess={...} />` once. The header opens it through `HEADER_SESSION`, and the footer through `openAuth` in `FooterContext`, which `FeatureProviders` fills. `WorkTimetable` is plain UI and lives in `shared/ui`.
 
 `AppDiProvider` wraps the whole tree from `pages/_app.tsx`.
+
+## Sub-features
+
+A feature that composes several capabilities, and is rendered as one block, may split into sub-features. `header` (`search`, `catalogMenu`, `userMenu`) and `catalog` (`spareParts`, `cabins`, `tires`, `wheels`) do this. There is no `widgets` layer, and separate features could not compose each other, so this is the place for a composite block.
+
+- A sub-feature is a folder with its own `index.ts`, stores, services, and `ui/`.
+- A sub-feature depends only on the feature root (`header.di.ts`, `ports/`, root services) and on its own files. It never imports a sibling sub-feature.
+- Only the root composes sub-features, and it imports each one through its `index.ts`.
+- Code outside the feature imports only the feature `index.ts`, never a sub-feature path.
+- Sub-features share the root context unless they need isolation. Then each gets its own `*Injector`, nested in the root wrapper or page.
+- When something outside the feature needs a sub-feature, promote it to a top-level feature and give the old owner a port.
+
+`eslint.config.mjs` enforces the header rules with `subFeatureOverrides('src/features/header', headerSubFeatures)`: a sibling import and a deep import from the root into a sub-feature are both errors. Add a feature there when it gets sub-features.
 
 ## What a feature or entity may not do
 

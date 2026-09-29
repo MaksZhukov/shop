@@ -1,33 +1,23 @@
 import { Box, Typography } from '@mui/material';
 import { Link, MobileQuestionsSection } from 'shared/ui';
-import {
-	OrderRegistrationForm,
-	OrderSummary,
-	OrderSuccess,
-	useOrderRegistrationForm,
-	useOrderRegistration,
-	useOrderCheckout
-} from 'features/orderRegistration';
-import type { ReactNode } from 'react';
-import { OrderRegistrationProvider } from '../providers/OrderRegistrationProvider';
+import { reatomComponent } from '@reatom/react';
+import { useOrderCheckout } from '../hooks/useOrderCheckout';
+import { useOrderRegistrationForm } from '../hooks/useOrderRegistrationForm';
+import { getCheckoutButtonText } from '../lib/getCheckoutButtonText';
+import { useDI } from '../orderRegistration.di';
+import { OrderRegistrationForm } from './orderRegistrationForm.component';
+import { OrderSuccess } from './orderSuccess.component';
+import { OrderSummary } from './orderSummary.component';
 
-export const OrderRegistration = ({
-	isOrdered,
-	onChangeIsOrdered,
-	removeCartMany,
-	renderMobileContacts
-}: {
-	isOrdered: boolean;
-	onChangeIsOrdered: (isOrdered: boolean) => void;
-	removeCartMany: (cartItemIDs: number[]) => Promise<void> | void;
-	renderMobileContacts: (isOpened: boolean, onClose: () => void) => ReactNode;
-}) => {
+export const OrderRegistration = reatomComponent(() => {
+	const { orderRegistrationStore, removeCartMany } = useDI();
+	const isOrdered = orderRegistrationStore.isOrdered();
+	const checkoutItems = orderRegistrationStore.checkoutItems();
 	const form = useOrderRegistrationForm();
-	const { checkoutItems, totalAmount, getButtonText } = useOrderRegistration();
 	const { orderCheckout, formattedTime, isExpired, handleCheckout, isReissuingCheckoutToken } = useOrderCheckout({
 		formData: form.formData,
 		checkoutItems,
-		onChangeIsOrdered,
+		onChangeIsOrdered: (value) => orderRegistrationStore.isOrdered.set(value),
 		isOrdered,
 		removeCartMany
 	});
@@ -71,14 +61,12 @@ export const OrderRegistration = ({
                     flexDirection: { xs: 'column', md: 'row' },
                     gap: 1
                 }}>
-				<OrderRegistrationProvider renderMobileContacts={renderMobileContacts}>
-					<OrderRegistrationForm form={form} disabled={!!orderCheckout?.order} />
-				</OrderRegistrationProvider>
+				<OrderRegistrationForm form={form} disabled={!!orderCheckout?.order} />
 				<OrderSummary
 					selectedItemsCount={checkoutItems.length}
-					totalAmount={totalAmount}
+					totalAmount={orderRegistrationStore.totalAmount()}
 					onCheckout={handleCheckoutClick}
-					buttonText={getButtonText(form.formData.paymentMethod)}
+					buttonText={getCheckoutButtonText(form.formData.paymentMethod)}
 					disclaimerText={
 						<>
 							Нажимая на кнопку, вы соглашаетесь с{' '}
@@ -97,4 +85,4 @@ export const OrderRegistration = ({
             <MobileQuestionsSection />
         </Box>
     );
-};
+});

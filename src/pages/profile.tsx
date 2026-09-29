@@ -26,4 +26,11 @@ const ProfilePage = () => {
 
 export default ProfilePage;
 
-export const getStaticProps = getPageProps();
+export const getStaticProps = getPageProps(undefined, async () => ({
+	props: {
+		breadcrumbs: [
+			{ text: 'Главная', href: '/' },
+			{ text: 'Профиль', href: '/profile' }
+		]
+	}
+}));

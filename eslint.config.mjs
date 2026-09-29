@@ -77,6 +77,41 @@ const fsdDependencyRules = [
 	}
 ];
 
+/** Sub-features of a composite feature: they depend on the feature root, never on each other. */
+const headerSubFeatures = ['search', 'catalogMenu', 'userMenu'];
+
+const subFeatureImports = (subFeatures) =>
+	subFeatures.map((subFeature) => ({
+		group: [`**/${subFeature}`, `**/${subFeature}/**`],
+		message: `Header sub-features must not import each other. Move shared code to the header root, or compose \`${subFeature}\` in the root UI.`
+	}));
+
+const subFeatureOverrides = (featureRoot, subFeatures) => [
+	...subFeatures.map((subFeature) => ({
+		files: [`${featureRoot}/${subFeature}/**/*.{ts,tsx}`],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{ patterns: subFeatureImports(subFeatures.filter((other) => other !== subFeature)) }
+			]
+		}
+	})),
+	{
+		files: [`${featureRoot}/*.{ts,tsx}`, `${featureRoot}/!(${subFeatures.join('|')})/**/*.{ts,tsx}`],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: subFeatures.map((subFeature) => ({
+						group: [`**/${subFeature}/**`],
+						message: `Import \`${subFeature}\` from its index.ts. Deep imports stay inside the sub-feature.`
+					}))
+				}
+			]
+		}
+	}
+];
+
 const eslintConfig = defineConfig([
 	...nextVitals,
 	globalIgnores([
@@ -113,6 +148,7 @@ const eslintConfig = defineConfig([
 			]
 		}
 	},
+	...subFeatureOverrides('src/features/header', headerSubFeatures),
 	{
 		files: ['src/entities/*/index.ts'],
 		rules: {
