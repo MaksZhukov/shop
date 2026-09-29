@@ -4,15 +4,19 @@ import { reatomComponent } from '@reatom/react';
 import Head from 'next/head';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { ProductItem } from 'entities/product';
-import { ViewedProducts } from 'features/viewedProducts';
+import { ViewedProducts, ViewedProductsInjector } from 'features/viewedProducts';
 import { FavoriteButton } from 'features/favorites';
 import { CartButton } from 'features/cart';
-import { useFavoriteStore } from 'entities/favorite';
-import { useUserStore } from 'entities/user';
+import { FavoriteStore } from 'entities/favorite';
+import { SparePartService } from 'entities/sparePart';
+import { UserStore } from 'entities/user';
+import { createModuleInjector } from 'shared/di';
 
-const Favorites = () => {
-	const favoriteStore = useFavoriteStore();
-	const userStore = useUserStore();
+export const inject = createModuleInjector([FavoriteStore, UserStore, SparePartService]);
+
+const FavoritesContent = reatomComponent(() => {
+	const favoriteStore = inject(FavoriteStore);
+	const userStore = inject(UserStore);
 	const items = favoriteStore.items;
 	const isLoading = favoriteStore.isLoading || !userStore.isInitialRequestDone;
 	const theme = useTheme();
@@ -100,9 +104,19 @@ const Favorites = () => {
 			/>
 		</Box>
 	);
+});
+
+const FavoritesPage = () => {
+	const sparePartService = inject(SparePartService);
+
+	return (
+		<ViewedProductsInjector value={{ sparePartService }}>
+			<FavoritesContent />
+		</ViewedProductsInjector>
+	);
 };
 
-export default reatomComponent(Favorites);
+export default FavoritesPage;
 
 export const getStaticProps = getPageProps(undefined, async () => {
 	return {

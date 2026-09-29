@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Link } from 'shared/ui';
-import { HEADER_UTILITY_LINKS } from '../headerConstants';
+import { HEADER_UTILITY_LINKS } from '../header.constants';
 
 export const HeaderUtilityLinks: FC = () => (
 	<Box

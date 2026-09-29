@@ -1,9 +1,9 @@
 import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
 import type { Brand } from 'entities/brand';
 import { API_MAX_LIMIT } from 'shared/api/constants';
-import { GenerationService, type Generation } from 'entities/generation';
-import { KindSparePartService, type KindSparePart } from 'entities/kindSparePart';
-import { ModelService, type Model } from 'entities/model';
+import { type Generation } from 'entities/generation';
+import { type KindSparePart } from 'entities/kindSparePart';
+import { type Model } from 'entities/model';
 import type { ApiResponse, Filters } from 'shared/api/types';
 import axios, { AxiosResponse } from 'axios';
 import Autocomplete from 'shared/ui/Autocomplete';
@@ -17,14 +17,13 @@ import { Dispatch, SetStateAction, UIEventHandler, useRef, useState, SyntheticEv
 import { useDebounce, useThrottle } from 'rooks';
 import { OFFSET_SCROLL_LOAD_MORE } from 'shared/constants';
 import { BODY_STYLES_OPTIONS, FUELS_OPTIONS, TRANSMISSIONS_OPTIONS } from 'entities/car';
-import { EngineVolumeService, type EngineVolume } from 'entities/engineVolume';
+import { type EngineVolume } from 'entities/engineVolume';
 import { useQuery } from '@tanstack/react-query';
-import { SparePartService } from 'entities/sparePart';
 import { getParamByRelation } from 'shared/services/ParamsService';
 import { BODY_STYLES_SLUGIFY, FUELS_SLUGIFY, TRANSMISSIONS_SLUGIFY } from 'entities/car';
 import { SparePart } from 'entities/sparePart';
-import { inject, mainPageQueryFns, mainPageQueryKeys } from 'features/mainPage';
-import { BrandService } from 'entities/brand';
+import { mainPageQueryFns, mainPageQueryKeys } from 'features/mainPage';
+import { useDI } from '../../../mainPage.di';
 
 interface FormValues {
 	[key: string]: string | null;
@@ -46,12 +45,7 @@ type AutocompleteHandler = (
 ) => void;
 
 export const SearchForm: React.FC = () => {
-	const brandService = inject(BrandService);
-	const sparePartService = inject(SparePartService);
-	const kindSparePartService = inject(KindSparePartService);
-	const engineVolumeService = inject(EngineVolumeService);
-	const modelService = inject(ModelService);
-	const generationService = inject(GenerationService);
+	const { brandService, sparePartService, kindSparePartService, engineVolumeService, modelService, generationService } = useDI();
 	const { data: brandsRes } = useQuery({
 		queryKey: mainPageQueryKeys.brands(),
 		queryFn: () => mainPageQueryFns.brands(brandService),

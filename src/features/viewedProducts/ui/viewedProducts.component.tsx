@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { SparePartService, type SparePart } from 'entities/sparePart';
+import { type SparePart } from 'entities/sparePart';
 import { productViewedLocalStorage } from 'entities/product';
 import { ProductItem } from 'entities/product';
 import { Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Box } from '@mui/material';
 import { Carousel } from 'shared/ui';
-import { inject } from '../viewedProducts.di';
+import { useDI } from '../viewedProducts.di';
 
 type ViewedProductsProps = {
 	renderHeaderActions?: (product: SparePart) => ReactNode;
@@ -14,7 +14,7 @@ type ViewedProductsProps = {
 };
 
 export const ViewedProducts = ({ renderHeaderActions, renderBottomActions }: ViewedProductsProps) => {
-	const sparePartService = inject(SparePartService);
+	const { sparePartService } = useDI();
 	const viewedProducts = productViewedLocalStorage.getViewedProducts();
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('md'));

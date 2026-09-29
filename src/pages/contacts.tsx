@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { createRequestContainer } from 'app/di/app.container';
 import { EmailService } from 'entities/email';
 import { PageService, type PageContacts } from 'entities/page';
-import { inject } from 'features/content';
+import { createModuleInjector } from 'shared/di';
 import { BlockImages } from 'shared/ui';
 import { Image } from 'shared/ui';
 import { ReactMarkdown } from 'shared/ui';
@@ -16,6 +16,8 @@ import { getPageProps } from 'shared/utils/pagePropsUtils';
 interface Props {
 	page: PageContacts;
 }
+
+export const inject = createModuleInjector([EmailService]);
 
 const Contacts = ({ page }: Props) => {
 	const emailService = inject(EmailService);

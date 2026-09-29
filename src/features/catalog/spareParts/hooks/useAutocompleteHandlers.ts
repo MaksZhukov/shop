@@ -3,10 +3,10 @@ import { useSnackbar } from 'notistack';
 import { useDebounce, useThrottle } from 'rooks';
 import axios, { AxiosResponse } from 'axios';
 import type { ApiResponse } from 'shared/api/types';
-import { KindSparePartService, type KindSparePart } from 'entities/kindSparePart';
-import { EngineVolumeService, type EngineVolume } from 'entities/engineVolume';
-import { GenerationService, type Generation } from 'entities/generation';
-import { inject } from '../sparePartsCatalog.di';
+import { type KindSparePart } from 'entities/kindSparePart';
+import { type EngineVolume } from 'entities/engineVolume';
+import { type Generation } from 'entities/generation';
+import { useDI } from '../sparePartsCatalog.di';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { OFFSET_SCROLL_LOAD_MORE } from 'shared/constants';
 import type { FilterValues } from '../types';
@@ -39,9 +39,7 @@ export const useAutocompleteHandlers = ({
 	onBrandChange,
 	onModelChange
 }: UseAutocompleteHandlersParams) => {
-	const kindSparePartService = inject(KindSparePartService);
-	const engineVolumeService = inject(EngineVolumeService);
-	const generationService = inject(GenerationService);
+	const { kindSparePartService, engineVolumeService, generationService } = useDI();
 	const { enqueueSnackbar } = useSnackbar();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingMore, setIsLoadingMore] = useState(false);

@@ -1,4 +1,4 @@
-export { inject } from './sparePartsCatalog.di';
+export { SparePartsCatalogContext, SparePartsCatalogInjector } from './sparePartsCatalog.context';
 export {
 	useCatalogData,
 	useAutocompleteHandlers,
@@ -7,6 +7,7 @@ export {
 	useSyncSparePartsCatalogFiltersFromRouter
 } from './hooks';
 export { generateFiltersByQuery, parseRouterQuery, parseSlugParam } from './utils';
+export { sparePartsCatalogFilterStore } from './sparePartsCatalogFilter.store';
 export { getSparePartsFiltersConfig } from './config';
 export { buildPageProps } from './lib/buildPageProps';
 export type { SparePartsPagePropsResult } from './lib/buildPageProps';

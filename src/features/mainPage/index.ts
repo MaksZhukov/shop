@@ -7,6 +7,7 @@ export {
 	CarBuyback,
 	Articles
 } from './sections';
-export { inject } from './mainPage.di';
+export { MainPageContext, MainPageInjector } from './mainPage.context';
+export { useDI } from './mainPage.di';
 export { mainPageQueryFns, prefetchMainPage } from './mainPageQueries';
 export { mainPageQueryKeys } from './config';

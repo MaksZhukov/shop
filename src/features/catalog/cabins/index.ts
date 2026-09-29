@@ -1,3 +1,4 @@
+export { CabinsCatalogContext, CabinsCatalogInjector } from './cabinsCatalog.context';
 export {
 	useCabinsCatalogFilters,
 	useCabinsCatalogData,

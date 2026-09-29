@@ -1,6 +1,7 @@
 export { EmptyCart, CartItem, CartHeader, CartList } from './ui';
-export { inject } from './cart.di';
-export { useLoadCart } from './useLoadCart';
+export { CartContext, CartInjector } from './cart.context';
+export { useDI } from './cart.di';
+export { useLoadCart, loadCart } from './useLoadCart';
 export { useAddCartLogic } from './useAddCartLogic';
 export { useRemoveCart } from './useRemoveCart';
 export { useRemoveCartMany } from './useRemoveCartMany';

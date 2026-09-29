@@ -1,5 +1,5 @@
-import { useCartStore, cartLocalStorage, CartService } from 'entities/cart';
-import { useUserStore } from 'entities/user';
+import { cartLocalStorage, CartService, type CartStore } from 'entities/cart';
+import { type UserStore } from 'entities/user';
 import { CabinService } from 'entities/cabin';
 import { SparePartService } from 'entities/sparePart';
 import { TireService } from 'entities/tire';
@@ -10,7 +10,7 @@ import { WheelService } from 'entities/wheel';
 import type { AxiosResponse } from 'axios';
 import type { Cart, StorageCart } from 'entities/cart';
 import { useCallback } from 'react';
-import { inject } from './cart.di';
+import { useDI } from './cart.di';
 
 type CartLoadServices = {
 	cartService: CartService;
@@ -46,8 +46,8 @@ const getShoppingCartByTypes = async (
 };
 
 export const loadCart = async (
-	cartStore: ReturnType<typeof useCartStore>,
-	userStore: ReturnType<typeof useUserStore>,
+	cartStore: CartStore,
+	userStore: UserStore,
 	services: CartLoadServices
 ) => {
 	cartStore.setIsLoading(true);
@@ -103,13 +103,7 @@ export const loadCart = async (
 };
 
 export const useLoadCart = () => {
-	const cartStore = useCartStore();
-	const userStore = useUserStore();
-	const cartService = inject(CartService);
-	const sparePartService = inject(SparePartService);
-	const wheelService = inject(WheelService);
-	const tireService = inject(TireService);
-	const cabinService = inject(CabinService);
+	const { cartStore, userStore, cartService, sparePartService, wheelService, tireService, cabinService } = useDI();
 	return useCallback(
 		() => loadCart(cartStore, userStore, { cartService, sparePartService, wheelService, tireService, cabinService }),
 		[cartStore, userStore, cartService, sparePartService, wheelService, tireService, cabinService]

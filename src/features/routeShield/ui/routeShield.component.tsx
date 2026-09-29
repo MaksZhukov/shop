@@ -2,15 +2,15 @@ import { reatomComponent } from '@reatom/react';
 import { useRouter } from 'next/router';
 import { FC, ReactNode, useEffect } from 'react';
 import { PRIVATE_PATHS } from 'shared/constants';
-import { useUserStore } from 'entities/user';
 import { Loader } from 'shared/ui';
+import { useDI } from '../routeShield.di';
 
 interface RouteShieldProps {
 	children: ReactNode;
 }
 
 export const RouteShield = reatomComponent<RouteShieldProps>(({ children }) => {
-	const userStore = useUserStore();
+	const { userStore } = useDI();
 	const router = useRouter();
 
 	useEffect(() => {

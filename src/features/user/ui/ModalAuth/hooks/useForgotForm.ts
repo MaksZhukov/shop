@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { FormEvent, useState } from 'react';
-import { UserService } from 'entities/user';
-import { inject } from '../../../user.di';
+import { useDI } from '../../../user.di';
 
 interface UseForgotFormProps {
 	onChangeIsLoading: (value: boolean) => void;
@@ -13,7 +12,7 @@ interface UseForgotFormProps {
 
 export const useForgotForm = ({ onChangeIsLoading, email, setEmail, onChangeModalOpened }: UseForgotFormProps) => {
 	const { enqueueSnackbar } = useSnackbar();
-	const userService = inject(UserService);
+	const { userService } = useDI();
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();

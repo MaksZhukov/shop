@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
-import { FC, type ReactNode } from 'react';
+import { FC } from 'react';
 import { HeaderUtilityContact } from './headerUtilityContact.component';
 import { HeaderUtilityLinks } from './headerUtilityLinks.component';
 
-export const HeaderUtilityBar: FC<{ workTimetable: ReactNode }> = ({ workTimetable }) => (
+export const HeaderUtilityBar: FC = () => (
 	<Box
 		sx={{
 			display: { xs: 'none', lg: 'flex' },
@@ -14,6 +14,6 @@ export const HeaderUtilityBar: FC<{ workTimetable: ReactNode }> = ({ workTimetab
 		}}
 	>
 		<HeaderUtilityLinks />
-		<HeaderUtilityContact workTimetable={workTimetable} />
+		<HeaderUtilityContact />
 	</Box>
 );

@@ -4,3 +4,4 @@ export { QueryProvider } from './QueryProvider';
 export { ThemeProvider } from './ThemeProvider';
 export { SnackbarProvider } from './SnackbarProvider';
 export { RecaptchaProvider } from './RecaptchaProvider';
+export { FeatureProviders } from './FeatureProviders';

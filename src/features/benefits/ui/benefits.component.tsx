@@ -3,13 +3,13 @@ import type { BenefitsProps } from '../benefitsTypes';
 import { getBenefitsData } from '../benefitsConfig';
 import { BenefitsGrid } from './benefitsGrid.component';
 import { BenefitsCarousel } from './benefitsCarousel.component';
-import { SparePartService, type SparePart } from 'entities/sparePart';
+import { type SparePart } from 'entities/sparePart';
 import { useQuery } from '@tanstack/react-query';
 import { ApiResponse } from 'shared/api';
-import { inject } from '../benefits.di';
+import { useDI } from '../benefits.di';
 
 export const Benefits: React.FC<BenefitsProps> = ({ view = 'grid' }) => {
-	const sparePartService = inject(SparePartService);
+	const { sparePartService } = useDI();
 	const benefitsData = useMemo(() => getBenefitsData(), []);
 	const { data: sparePartsTotalRes } = useQuery({
 		queryKey: ['benefits', 'sparePartsTotal'],

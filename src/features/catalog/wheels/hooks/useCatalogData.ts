@@ -1,15 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
-import { BrandService } from 'entities/brand';
-import { WheelService } from 'entities/wheel';
-import { ModelService, type ModelWheelsCountWithGenerationsWheelsCount } from 'entities/model';
-import { WheelDiameterService } from 'entities/wheelDiameter';
-import { WheelWidthService } from 'entities/wheelWidth';
-import { WheelNumberHoleService } from 'entities/wheelNumberHole';
-import { WheelDiameterCenterHoleService } from 'entities/wheelDiameterCenterHole';
-import { WheelDiskOffsetService } from 'entities/wheelDiskOffset';
-import { inject } from '../wheelsCatalog.di';
+import { type ModelWheelsCountWithGenerationsWheelsCount } from 'entities/model';
+import { useDI } from '../wheelsCatalog.di';
 import type { WheelFilterValues, WheelParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
 import { wheelsBrandsQueryKey } from '../constants';
@@ -21,14 +14,7 @@ interface UseCatalogDataParams {
 }
 
 export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataParams) => {
-	const wheelService = inject(WheelService);
-	const brandService = inject(BrandService);
-	const modelService = inject(ModelService);
-	const wheelDiameterService = inject(WheelDiameterService);
-	const wheelWidthService = inject(WheelWidthService);
-	const wheelNumberHoleService = inject(WheelNumberHoleService);
-	const wheelDiameterCenterHoleService = inject(WheelDiameterCenterHoleService);
-	const wheelDiskOffsetService = inject(WheelDiskOffsetService);
+	const { wheelService, brandService, modelService, wheelDiameterService, wheelWidthService, wheelNumberHoleService, wheelDiameterCenterHoleService, wheelDiskOffsetService } = useDI();
 	const {
 		sort,
 		page,

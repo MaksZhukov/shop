@@ -1,5 +1,6 @@
-import { ArticleService, type Article } from 'entities/article';
-import { inject, mainPageQueryFns, mainPageQueryKeys } from 'features/mainPage';
+import { type Article } from 'entities/article';
+import { mainPageQueryFns, mainPageQueryKeys } from 'features/mainPage';
+import { useDI } from '../../../mainPage.di';
 import { ArticlesHeader } from './articlesHeader.component';
 import { ArticlesGrid } from './articlesGrid.component';
 import { ApiResponse } from 'shared/api';
@@ -8,7 +9,7 @@ import { useDeviceType } from 'shared/hooks/useDeviceType';
 
 export const Articles: React.FC = () => {
 	const deviceType = useDeviceType();
-	const articleReader = inject(ArticleService);
+	const { articleService: articleReader } = useDI();
 	const { data: articlesRes } = useQuery({
 		queryKey: mainPageQueryKeys.articles(),
 		queryFn: () => mainPageQueryFns.articles(articleReader),

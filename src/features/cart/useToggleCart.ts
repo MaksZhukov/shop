@@ -1,12 +1,12 @@
-import { useCartStore } from 'entities/cart';
 import { useSnackbar } from 'notistack';
 import { CART_MAX_ITEMS } from 'entities/cart';
 import type { Product } from 'entities/product';
 import { useAddCartLogic } from './useAddCartLogic';
 import { useRemoveCart } from './useRemoveCart';
+import { useDI } from './cart.di';
 
 export const useToggleCart = (product: Product) => {
-	const cartStore = useCartStore();
+	const { cartStore } = useDI();
 	const { enqueueSnackbar } = useSnackbar();
 	const addCart = useAddCartLogic();
 	const removeCart = useRemoveCart();

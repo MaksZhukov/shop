@@ -1,10 +1,8 @@
-import { useUserStore, UserService } from 'entities/user';
 import { useCallback } from 'react';
-import { inject } from './user.di';
+import { useDI } from './user.di';
 
 export const useLoadUserInfo = () => {
-	const userStore = useUserStore();
-	const userService = inject(UserService);
+	const { userStore, userService } = useDI();
 
 	return useCallback(async () => {
 		const { data } = await userService.getUserInfo();

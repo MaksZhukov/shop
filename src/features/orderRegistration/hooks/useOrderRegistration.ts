@@ -1,11 +1,9 @@
 import { useMemo, useState } from 'react';
 import type { OrderRegistrationFormData } from '../types';
-import { useUserStore } from 'entities/user';
-import { useCartStore } from 'entities/cart';
+import { useDI } from '../orderRegistration.di';
 
 export const useOrderRegistration = () => {
-	const userStore = useUserStore();
-	const cartStore = useCartStore();
+	const { userStore, cartStore } = useDI();
 
 	const [isOrdered, setIsOrdered] = useState(false);
 	const shoppingCartItems = cartStore.items;

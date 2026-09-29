@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react';
 import Router, { useRouter } from 'next/router';
-import { OrderService } from 'entities/order';
-import { inject } from '../orderRegistration.di';
+import { useDI } from '../orderRegistration.di';
 import { LEAVE_CONFIRM_MESSAGE } from '../constants';
 
 export function useUnpaidOrderGuard(hasUnpaidOnlineOrder: boolean, checkoutToken: string | null): void {
 	const router = useRouter();
-	const orderService = inject(OrderService);
+	const { orderService } = useDI();
 	const cancelFiredRef = useRef(false);
 
 	useEffect(() => {

@@ -1,4 +1,4 @@
-export { inject } from './articlesList.di';
+export { useDI } from './articlesList.di';
 export { ArticlesListContext } from './articlesList.context';
 export { ArticlesList, ArticlesHeader } from './ui';
 export { ArticlesGrid } from './ui';

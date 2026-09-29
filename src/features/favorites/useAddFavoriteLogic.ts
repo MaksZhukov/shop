@@ -1,12 +1,9 @@
-import { useFavoriteStore, favoriteLocalStorage, FavoriteService } from 'entities/favorite';
-import { useUserStore } from 'entities/user';
+import { favoriteLocalStorage } from 'entities/favorite';
 import type { Favorite } from 'entities/favorite';
-import { inject } from './favorites.di';
+import { useDI } from './favorites.di';
 
 export const useAddFavoriteLogic = () => {
-	const favoriteStore = useFavoriteStore();
-	const userStore = useUserStore();
-	const favoriteService = inject(FavoriteService);
+	const { favoriteStore, userStore, favoriteService } = useDI();
 
 	return async (favorite: Favorite) => {
 		if (userStore.id) {

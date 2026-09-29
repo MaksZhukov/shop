@@ -1,13 +1,11 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
-import { BrandService } from 'entities/brand';
-import { SparePartService } from 'entities/sparePart';
-import { ModelService, type ModelSparePartsCount } from 'entities/model';
-import { GenerationService, type Generation, type GenerationWithSparePartsCount } from 'entities/generation';
+import { type ModelSparePartsCount } from 'entities/model';
+import { type Generation, type GenerationWithSparePartsCount } from 'entities/generation';
 import { EngineVolume } from 'entities/engineVolume';
-import { CatalogService, type TopCategory } from 'entities/catalog';
-import { inject } from '../sparePartsCatalog.di';
+import { type TopCategory } from 'entities/catalog';
+import { useDI } from '../sparePartsCatalog.di';
 import type { FilterValues, ParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
 import { sparePartsBrandsQueryKey } from '../constants';
@@ -21,11 +19,7 @@ interface UseCatalogDataParams {
 const brandSlug = (brand: string | undefined, filtersBrand: string | null) => filtersBrand || brand || '';
 
 export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataParams) => {
-	const sparePartService = inject(SparePartService);
-	const modelService = inject(ModelService);
-	const generationService = inject(GenerationService);
-	const catalogService = inject(CatalogService);
-	const brandService = inject(BrandService);
+	const { sparePartService, modelService, generationService, catalogService, brandService } = useDI();
 	const { sort, page, brand, model, generation, kindSparePartSlug, volume, fuel, bodyStyle, transmission } =
 		queryParams;
 	const queryClient = useQueryClient();

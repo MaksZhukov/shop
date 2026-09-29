@@ -1,5 +1,6 @@
 export { OrderRegistration } from './ui/orderRegistration.component';
-export { inject } from './orderRegistration.di';
+export { OrderRegistrationContext, OrderRegistrationInjector } from './orderRegistration.context';
+export { useDI } from './orderRegistration.di';
 export { OrderRegistrationForm } from './ui/orderRegistrationForm.component';
 export { OrderSummary } from './ui/orderSummary.component';
 export { OrderSuccess } from './ui/orderSuccess.component';

@@ -1,100 +1,29 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { Container } from '@mui/material';
-import { reatomComponent } from '@reatom/react';
 import Head from 'next/head';
-import { useSnackbar } from 'notistack';
-import { ChangeEvent, FormEvent } from 'react';
+import { UserService, UserStore } from 'entities/user';
+import { ProfileEntry, ProfileInjector, ProfileService } from 'features/profile';
+import { createModuleInjector } from 'shared/di';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
-import { useSaveUserInfo } from 'features/user';
-import styles from './profile.module.scss';
-import { useUserStore } from 'entities/user';
 
-const Profile = reatomComponent(() => {
-	const userStore = useUserStore();
-	const { enqueueSnackbar } = useSnackbar();
-	const saveUserInfo = useSaveUserInfo();
+export const inject = createModuleInjector([ProfileService, UserService, UserStore]);
 
-	const handleChangeUsername = (e: ChangeEvent<HTMLInputElement>) => {
-		userStore.setUsername(e.target.value);
-	};
-	const handleChangePhone = (e: ChangeEvent<HTMLInputElement>) => {
-		userStore.setPhone(e.target.value);
-	};
-
-	const handleChangeAddress = (e: ChangeEvent<HTMLInputElement>) => {
-		userStore.setAddress(e.target.value);
-	};
-
-	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		try {
-			await saveUserInfo();
-			enqueueSnackbar('Данные успешно обновлены', {
-				variant: 'success'
-			});
-		} catch (err) {
-			enqueueSnackbar('Произошла какая-то ошибка с обновлением данных, обратитесь в поддержку', {
-				variant: 'error'
-			});
-		}
-	};
+const ProfilePage = () => {
+	const profileService = inject(ProfileService);
+	const userService = inject(UserService);
+	const userStore = inject(UserStore);
 
 	return (
-        <>
-            <Head>
+		<>
+			<Head>
 				<title>Профиль</title>
 				<meta name='description' content='Профиль пользователя'></meta>
 			</Head>
-            <Container>
-				<Typography variant='h4' component='h1' sx={{
-                    textAlign: 'center'
-                }}>
-					Профиль
-				</Typography>
-				<Box component='form' onSubmit={handleSubmit} className={styles.content} sx={{
-                    marginBottom: '2em'
-                }}>
-					<TextField
-						value={userStore.email}
-						placeholder='Почта'
-						disabled
-						variant='standard'
-						margin='normal'
-						fullWidth
-					></TextField>
-					<TextField
-						value={userStore.username}
-						onChange={handleChangeUsername}
-						placeholder='ФИО'
-						margin='normal'
-						variant='standard'
-						fullWidth
-					></TextField>
-					<TextField
-						margin='normal'
-						placeholder='Телефон'
-						variant='standard'
-						fullWidth
-						value={userStore.phone}
-						onChange={handleChangePhone}
-					/>
-					<TextField
-						value={userStore.address}
-						onChange={handleChangeAddress}
-						placeholder='Адрес'
-						margin='normal'
-						variant='standard'
-						fullWidth
-					></TextField>
-					<Button fullWidth type='submit' variant='contained'>
-						Сохранить
-					</Button>
-				</Box>
-			</Container>
-        </>
-    );
-});
+			<ProfileInjector value={{ profileService, userService, userStore }}>
+				<ProfileEntry />
+			</ProfileInjector>
+		</>
+	);
+};
 
-export default Profile;
+export default ProfilePage;
 
 export const getStaticProps = getPageProps();

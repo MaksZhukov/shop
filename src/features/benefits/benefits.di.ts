@@ -1,4 +1,4 @@
-import { SparePartService } from 'entities/sparePart';
-import { createModuleInjector } from 'shared/di';
+import { useStrictContext } from 'shared/hooks';
+import { BenefitsContext } from './benefits.context';
 
-export const inject = createModuleInjector([SparePartService]);
+export const useDI = () => useStrictContext(BenefitsContext);

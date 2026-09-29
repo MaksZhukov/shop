@@ -57,7 +57,7 @@ File names are lowercase. The role sits after a dot: `btn.component.tsx`, `cart.
 | `.hook.ts` | React hook |
 | `.container.ts` | Server `get` when a feature still builds a container. The app container in `app/di/app.container.tsx` is the one client and articles server code use. Not on an entity |
 
-A feature `index.ts` exports the component, the store class, and the bound-context pieces (`*Injector`, `useDI`). `app/di/app.container.tsx` writes every `container.bind(TOKEN).to(Impl)`. `pages/_app.tsx` renders `AppDiProvider`. The page defines `inject` with `createModuleInjector([StoreClass])` and passes only tokens listed in that array. An entity `index.ts` exports the model, the port, and the implementation class. When another slice still fetches through the API client, the index exports that client too. After a port replaces the client, the index stops exporting the API. It does not export the DTO, Reatom atoms, or a container.
+A feature `index.ts` exports the component, the store or service class, and the bound-context pieces (`VacanciesInjector`, `useDI`). `app/di/app.container.tsx` writes every `container.bind(TOKEN).to(Impl)`. `pages/_app.tsx` renders `AppDiProvider`. The feature's `*.di.ts` holds only `useDI`, which reads the feature context. The feature does not call `createModuleInjector` or `inject`. An entity `index.ts` exports the model, the port, and the implementation class. When another slice still fetches through the API client, the index exports that client too. After a port replaces the client, the index stops exporting the API. It does not export the DTO, Reatom atoms, or a container.
 
 Inside the slice, import with relative paths. From outside, import `features/cart` or `entities/product` only. Do not import an API file by its path.
 
@@ -85,7 +85,7 @@ export type Brand = BrandDto;
 
 ## IoC container
 
-`app/di/app.container.tsx` creates one container and writes every `container.bind` there. `pages/_app.tsx` renders that provider around the tree. A feature does not create the provider. It narrows the global container with `createModuleInjector`, so `inject` accepts only that feature's tokens. The entity does not create a container and does not bind.
+`app/di/app.container.tsx` creates one container and writes every `container.bind` there. `pages/_app.tsx` renders that provider around the tree. A feature does not create the provider and does not resolve from the container. The page (or `app`) narrows the container with `createModuleInjector`, resolves what the feature needs, and passes it into the feature `*Injector`. The entity does not create a container and does not bind.
 
 ```
 shared/di/
@@ -103,7 +103,7 @@ export const createAppContainer = () => {
 	return container;
 };
 
-// features/articlesList/articlesList.di.ts
+// pages/articles/index.tsx
 export const inject = createModuleInjector([ArticleService]);
 ```
 
@@ -146,7 +146,7 @@ container.bind(VacanciesService).toSelf().inSingletonScope();
 container.bind(VacanciesStore).toSelf().inSingletonScope();
 ```
 
-The page resolves the store, syncs SSR data, and passes the instance into the feature context. Feature UI reads the store through `useDI`, not through props.
+The page resolves the store with its own `inject`, syncs SSR data, and passes the instance into the feature `*Injector`. Feature UI reads it with `useDI` from `*.di.ts`.
 
 ```tsx
 // pages/vacancies.tsx
@@ -165,20 +165,79 @@ const VacanciesPage = ({ page }: Props) => {
 ```
 
 ```tsx
+// features/vacancies/vacancies.di.ts
+export const useDI = () => useStrictContext(VacanciesContext);
+
 // features/vacancies/ui/vacancies.component.tsx
 export const VacanciesEntry = reatomComponent(() => {
 	const { vacanciesStore } = useDI();
 	const page = vacanciesStore.page.data();
 	const isLoading = !vacanciesStore.page.ready() && page.vacancies.length === 0;
-	// ...
+
+	return (
+		<AsyncWrapper loading={isLoading} fallback={<VacanciesLoading />}>
+			<VacanciesList vacancies={page.vacancies} />
+		</AsyncWrapper>
+	);
 });
 ```
 
-`cart`, `user`, and `favorite` still use the older module-level object store (`cartStore`, `useCartStore`). New stores follow the injectable class shape above. When you touch an old store, migrate it to a class and bind it in the app container.
+### AsyncWrapper
+
+Switch between loading, error, and content with `AsyncWrapper` from `shared/ui`. Do not write the `if` or the ternary in the component. `AsyncWrapper` does not know about Reatom. The `reatomComponent` that reads the store works out the state and passes plain values:
+
+| Prop | Meaning |
+| --- | --- |
+| `loading` | `true` renders `fallback` |
+| `fallback` | Loading UI |
+| `error` | Optional. `true` renders `errorFallback` |
+| `errorFallback` | Optional. Error UI. Renders nothing when left out |
+| `children` | Content, rendered when neither `loading` nor `error` is `true` |
+
+`loading` wins over `error`. Compute `loading` as `!atom.ready()`, or as `!atom.ready() && isEmpty` when SSR data should stay on screen while the atom reloads. For an error state, pass `error={atom.error() !== undefined}`.
+
+### Mutations
+
+A store holds data. A write that holds no data of its own does not get a store. Put it on the service that owns the data as an `action` with `.extend(withAsync())`. When the write belongs to an entity, that is the entity service. The service reads the payload from the injected stores, calls the API, and reports success or failure through `SnackbarService`. The component calls the action and reads `action.ready()` for the pending state. It does not build the payload and does not call `useSnackbar`.
+
+Bind that service with `inSingletonScope()`, so every consumer shares one action and one pending state. The page resolves the service with its own `inject` and passes it into the feature `*Injector`. Feature UI reads it with `useDI`.
+
+```typescript
+// entities/user/user.service.ts
+@injectable()
+export class UserService implements UserReader {
+	readonly saveUserInfo = action(async () => {
+		try {
+			await wrap(this.updateUserInfo({ username: this.userStore.username /* ... */ }));
+			this.snackbarService.success(SAVE_SUCCESS);
+		} catch {
+			this.snackbarService.error(SAVE_ERROR);
+		}
+	}, 'user.saveUserInfo').extend(withAsync());
+
+	constructor(
+		@inject(USER_API) private readonly userApi: UserApi,
+		@inject(UserStore) private readonly userStore: UserStore,
+		@inject(SnackbarService) private readonly snackbarService: SnackbarService
+	) {}
+}
+```
+
+The session stores `UserStore`, `CartStore`, and `FavoriteStore` live in their entities as injectable classes bound as singletons. An entity exports the class and no hook. A feature that reads one lists it in its context value. Pages resolve it with their own `inject`. `app` code resolves it with `useInjection`. Services receive it with `@inject(UserStore)`. New stores follow the injectable class shape above. When you touch an old store, migrate it to a class and bind it in the app container.
 
 ## Bound context
 
-The page resolves dependencies with `inject` and passes them into a feature `*Injector`. Feature UI reads them with `useDI`. `useInjection` accepts only tokens returned by `appContainer.getKeys`. `createModuleInjector([...tokens])` narrows that list at the type level and at runtime. Page and feature code do not import `useInjection` from `shared/di`.
+A feature reads its dependencies only through bound context: `*.context.tsx` defines `XContext` and `XInjector`, and `*.di.ts` exports `useDI`. Whoever renders the feature resolves the dependencies and passes them into `XInjector`:
+
+| Renderer | Resolves with | Example |
+| --- | --- | --- |
+| A page | its own `export const inject = createModuleInjector([...])` | `pages/profile.tsx` → `ProfileInjector`, `pages/spare-parts/[[...slug]].tsx` → `SparePartsCatalogInjector` |
+| `app`, for features used on every page | `useInjection` in `app/providers/FeatureProviders.tsx` | `UserInjector`, `CartInjector`, `FavoritesInjector`, `FooterInjector`, `RouteShieldInjector` |
+| The feature itself, only when `_app` renders it | a `*Wrapper` with `createModuleInjector` | `HeaderWrapper` → `HeaderInjector` |
+
+`header` is the only feature that calls `createModuleInjector`. A page component that calls a feature hook itself (`useOrderRegistration`) renders a `*Content` child inside the injector, because the hook needs the context.
+
+`useInjection` accepts only tokens returned by `appContainer.getKeys`. Page and feature code do not import `useInjection` from `shared/di`. Only `app` does.
 
 `@inject(token)` is the other way, on a class that the container constructs.
 
@@ -203,9 +262,39 @@ class HeaderSearch {
 }
 ```
 
-The cart badge still reads `useCartStore` and has no port. `AppDiProvider` wraps the whole tree from `pages/_app.tsx`.
+`header` uses bound context through a wrapper, because no page renders it. `features/header/ui/headerWrapper.component.tsx` defines `createModuleInjector([...])`, resolves every store, and renders `Header` inside `HeaderInjector`. `HeaderWrapper` takes no props, and `_app` renders `<HeaderWrapper />`. The feature index exports `HeaderWrapper`, not `Header`. A `*Wrapper` exists only for a feature that `_app` renders.
 
-Bindings that need a React hook (router, snackbar, Query client) are created in `app` and registered there. The feature depends on the port, not on `next/router` or `notistack`, when that call exists so another feature can be swapped in tests.
+The header is split into sub-features, the same way `catalog` is. They all read the one `HeaderContext` with `useDI` from `header.di.ts`:
+
+```
+features/header/
+├── header.store.ts / header.service.ts   # mobile menu, navigation, logout, open auth
+├── ports/header.port.ts                  # HEADER_SESSION, HEADER_CATALOG_FILTERS
+├── ui/                                   # Header, HeaderWrapper, layout bars, mobile menu drawer
+├── search/                               # HeaderSearchStore, HeaderSearchService, search box, history
+├── catalogMenu/                          # HeaderCatalogStore, HeaderCatalogService, catalog button and menu
+└── userMenu/                             # UserMenuStore, profile button and menu, cart and favorites badges
+```
+
+All header state lives in these stores, including menu anchors and dropdown flags. Header components do not use `useState` or react-query. A menu that has several buttons (desktop and mobile layouts) renders once in `Header` (`CatalogMenu`, `UserMenu`, `HeaderMobileMenuModal`), and the buttons only call the store. The search box renders twice, so its outside-click handler ignores the copy hidden by CSS.
+
+| Store | State | Service |
+| --- | --- | --- |
+| `HeaderStore` | `isMobileMenuOpened` | `HeaderService`: `logout` action with `withAsync`, `openAuth`, `navigate` |
+| `HeaderSearchStore` | `searchValue`, `searchHistory`, `isDropdownOpened`, `searchResults` (300 ms `sleep`, reruns on catalog filters), `sparePartsTotal`, `placeholder` | `HeaderSearchService`: search request, total, placeholder text, history rules and local storage |
+| `HeaderCatalogStore` | `menuAnchor`, `activeCategory`, `topCategories` action with `withAsyncData` | `HeaderCatalogService`: top categories, cached after the first request |
+| `UserMenuStore` | `menuAnchor` | uses `HeaderService` |
+
+What the header needs from other features goes through ports, bound in `app/di/header.adapters.tsx`:
+
+| Token | Port | Bound in `app` to |
+| --- | --- | --- |
+| `HEADER_SESSION` | `HeaderSession`: `logout()`, `openAuth()` | `HeaderSessionAdapter`: `ProfileService.logout`, `AuthModalStore.open` |
+| `HEADER_CATALOG_FILTERS` | `HeaderCatalogFilters`: `getFilters()` | `HeaderCatalogFiltersAdapter`: spare parts filters while the catalog is mounted, otherwise `{}` |
+
+The app has one auth modal. `AuthModalStore` in `features/user` holds its state and opens it for a reset-password link. `_app` renders `<AuthModalRoot onLoginSuccess={...} />` once. The header opens it through `HEADER_SESSION`, and the footer through `openAuth` in `FooterContext`, which `FeatureProviders` fills. `WorkTimetable` is plain UI and lives in `shared/ui`.
+
+`AppDiProvider` wraps the whole tree from `pages/_app.tsx`.
 
 ## What a feature or entity may not do
 

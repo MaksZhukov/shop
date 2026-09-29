@@ -3,9 +3,9 @@ import { useSnackbar } from 'notistack';
 import { useDebounce, useThrottle } from 'rooks';
 import axios from 'axios';
 import type { ApiResponse } from 'shared/api/types';
-import { KindSparePartService, type KindSparePart } from 'entities/kindSparePart';
-import { GenerationService, type Generation } from 'entities/generation';
-import { inject } from '../cabinsCatalog.di';
+import { type KindSparePart } from 'entities/kindSparePart';
+import { type Generation } from 'entities/generation';
+import { useDI } from '../cabinsCatalog.di';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
 import { OFFSET_SCROLL_LOAD_MORE } from 'shared/constants';
 import type { CabinsFilterValues } from '../types';
@@ -28,8 +28,7 @@ export const useCabinsAutocompleteHandlers = ({
 	onBrandChange,
 	onModelChange
 }: UseCabinsAutocompleteHandlersParams) => {
-	const kindSparePartService = inject(KindSparePartService);
-	const generationService = inject(GenerationService);
+	const { kindSparePartService, generationService } = useDI();
 	const { enqueueSnackbar } = useSnackbar();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingMore, setIsLoadingMore] = useState(false);

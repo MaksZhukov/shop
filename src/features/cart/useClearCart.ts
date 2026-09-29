@@ -1,10 +1,10 @@
-import { useCartStore, cartLocalStorage, CartService } from 'entities/cart';
-import { useUserStore } from 'entities/user';
-import { inject } from './cart.di';
+import { cartLocalStorage, CartService, type CartStore } from 'entities/cart';
+import { type UserStore } from 'entities/user';
+import { useDI } from './cart.di';
 
 export const clearCart = async (
-	cartStore: ReturnType<typeof useCartStore>,
-	userStore: ReturnType<typeof useUserStore>,
+	cartStore: CartStore,
+	userStore: UserStore,
 	cartService: CartService
 ) => {
 	if (userStore.id) {
@@ -19,8 +19,6 @@ export const clearCart = async (
 };
 
 export const useClearCart = () => {
-	const cartStore = useCartStore();
-	const userStore = useUserStore();
-	const cartService = inject(CartService);
+	const { cartStore, userStore, cartService } = useDI();
 	return () => clearCart(cartStore, userStore, cartService);
 };

@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { OrderService, type OrderCheckoutResponse } from 'entities/order';
-import { inject } from '../orderRegistration.di';
+import { type OrderCheckoutResponse } from 'entities/order';
+import { useDI } from '../orderRegistration.di';
 import type { Cart } from 'entities/cart';
 import { useOrderTimer } from './useOrderTimer';
 import { useUnpaidOrderGuard } from './useUnpaidOrderGuard';
@@ -29,7 +29,7 @@ export function useOrderCheckout({
 	const [token, setToken] = useState<string | null>(null);
 	const tokenRef = useRef<string | null>(null);
 	const orderIdRef = useRef<number | null>(null);
-	const orderService = inject(OrderService);
+	const { orderService } = useDI();
 	const queryClient = useQueryClient();
 	const router = useRouter();
 	const { formattedTime, isExpired } = useOrderTimer(orderCheckout?.order);

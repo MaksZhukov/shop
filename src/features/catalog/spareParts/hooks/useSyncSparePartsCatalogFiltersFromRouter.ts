@@ -8,6 +8,11 @@ export const useSyncSparePartsCatalogFiltersFromRouter = () => {
 	const sparePartsCatalogFiltersStore = useSparePartsCatalogFiltersStore();
 
 	useEffect(() => {
+		sparePartsCatalogFiltersStore.setIsActive(true);
+		return () => sparePartsCatalogFiltersStore.setIsActive(false);
+	}, [sparePartsCatalogFiltersStore]);
+
+	useEffect(() => {
 		sparePartsCatalogFiltersStore.syncFromQueryParams(parseRouterQuery(router.query));
 	}, [router.query, sparePartsCatalogFiltersStore]);
 };

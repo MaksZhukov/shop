@@ -1,3 +1,4 @@
+export { TiresCatalogContext, TiresCatalogInjector } from './tiresCatalog.context';
 export { useCatalogFilters, useCatalogData, useCatalogRouter } from './hooks';
 export { generateFiltersByQuery, parseRouterQuery } from './utils';
 export { getTiresFiltersConfig } from './config';

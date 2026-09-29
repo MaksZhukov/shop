@@ -1,4 +1,5 @@
-export { inject } from './favorites.di';
+export { FavoritesContext, FavoritesInjector } from './favorites.context';
+export { useDI } from './favorites.di';
 export { useLoadFavorites } from './useLoadFavorites';
 export { loadFavorites } from './useLoadFavorites';
 export { FavoriteButton } from './favoriteButton.component';

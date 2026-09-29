@@ -2,14 +2,14 @@ import { useState, useRef, ChangeEvent } from 'react';
 import { useSnackbar } from 'notistack';
 import type { OrderRegistrationFormData } from '../types';
 import type { UserType, DeliveryMethod, PaymentMethod } from 'entities/order';
-import { useUserStore } from 'entities/user';
+import { useDI } from '../orderRegistration.di';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const isValidEmail = (email: string): boolean => EMAIL_REGEX.test(email.trim());
 
 export const useOrderRegistrationForm = () => {
-	const userStore = useUserStore();
+	const { userStore } = useDI();
 	const [formData, setFormData] = useState<OrderRegistrationFormData>({
 		userType: 'individual',
 		username: '',

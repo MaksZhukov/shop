@@ -1,6 +1,12 @@
+import { createModuleInjector } from 'shared/di';
+import { WheelWidthService } from 'entities/wheelWidth';
+import { WheelNumberHoleService } from 'entities/wheelNumberHole';
+import { WheelDiskOffsetService } from 'entities/wheelDiskOffset';
+import { WheelDiameterCenterHoleService } from 'entities/wheelDiameterCenterHole';
+import { WheelDiameterService } from 'entities/wheelDiameter';
 import { createRequestContainer } from 'app/di/app.container';
 import { PageService, type DefaultPage, type PageProduct, type PageProductWheel } from 'entities/page';
-import { CatalogWheels } from 'features/catalog';
+import { CatalogWheels, WheelsCatalogInjector } from 'features/catalog';
 import { Product } from 'features/product';
 import { Filters } from 'features/productFilters';
 import { FavoriteButton } from 'features/favorites';
@@ -20,7 +26,26 @@ interface Props {
 	relatedProducts?: Wheel[];
 }
 
+export const inject = createModuleInjector([
+	BrandService,
+	ModelService,
+	WheelService,
+	WheelDiameterService,
+	WheelDiameterCenterHoleService,
+	WheelDiskOffsetService,
+	WheelNumberHoleService,
+	WheelWidthService
+]);
+
 const Wheels: NextPage<Props> = ({ page, data, relatedProducts }) => {
+	const brandService = inject(BrandService);
+	const modelService = inject(ModelService);
+	const wheelService = inject(WheelService);
+	const wheelDiameterService = inject(WheelDiameterService);
+	const wheelDiameterCenterHoleService = inject(WheelDiameterCenterHoleService);
+	const wheelDiskOffsetService = inject(WheelDiskOffsetService);
+	const wheelNumberHoleService = inject(WheelNumberHoleService);
+	const wheelWidthService = inject(WheelWidthService);
 	if (data && relatedProducts) {
 		return (
 			<Product
@@ -34,14 +59,16 @@ const Wheels: NextPage<Props> = ({ page, data, relatedProducts }) => {
 		);
 	}
 	return (
-		<CatalogWheels
-			pageData={page}
-			renderFilters={(props) => <Filters {...props} />}
-			renderHeaderActions={(product) => <FavoriteButton product={product} />}
-			renderBottomActions={(product) => (
-				<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
-			)}
-		/>
+		<WheelsCatalogInjector value={{ brandService, modelService, wheelService, wheelDiameterService, wheelDiameterCenterHoleService, wheelDiskOffsetService, wheelNumberHoleService, wheelWidthService }}>
+			<CatalogWheels
+				pageData={page}
+				renderFilters={(props) => <Filters {...props} />}
+				renderHeaderActions={(product) => <FavoriteButton product={product} />}
+				renderBottomActions={(product) => (
+					<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
+				)}
+			/>
+		</WheelsCatalogInjector>
 	);
 };
 

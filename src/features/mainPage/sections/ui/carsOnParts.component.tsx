@@ -1,16 +1,17 @@
 import { Box } from '@mui/material';
-import { CarOnPartsService, type CarOnParts } from 'entities/carOnParts';
+import { type CarOnParts } from 'entities/carOnParts';
 import { Button } from 'shared/ui';
 import { ChevronRightIcon } from 'shared/icons';
 import { Typography } from 'shared/ui';
 import { CarItem } from 'entities/carOnParts';
 import { Carousel } from 'shared/ui';
 import { ApiResponse } from 'shared/api';
-import { inject, mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { useDI } from '../../mainPage.di';
 import { useQuery } from '@tanstack/react-query';
 
 export const CarsOnParts: React.FC = () => {
-	const carOnPartsService = inject(CarOnPartsService);
+	const { carOnPartsService } = useDI();
 	const { data: carsOnPartsRes } = useQuery({
 		queryKey: mainPageQueryKeys.carsOnParts(),
 		queryFn: () => mainPageQueryFns.carsOnParts(carOnPartsService),

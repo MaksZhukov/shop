@@ -1,10 +1,10 @@
 import { Box, Typography } from '@mui/material';
-import { FC, type ReactNode } from 'react';
-import { Link } from 'shared/ui';
-import { HEADER_CONTACT } from '../headerConstants';
+import { FC } from 'react';
+import { Link, WorkTimetable } from 'shared/ui';
+import { HEADER_CONTACT } from '../header.constants';
 import { HeaderCallButton } from './headerCallButton.component';
 
-export const HeaderUtilityContact: FC<{ workTimetable: ReactNode }> = ({ workTimetable }) => (
+export const HeaderUtilityContact: FC = () => (
 	<Box
 		sx={{
 			display: 'flex',
@@ -13,7 +13,7 @@ export const HeaderUtilityContact: FC<{ workTimetable: ReactNode }> = ({ workTim
 			flexShrink: 0
 		}}
 	>
-		{workTimetable}
+		<WorkTimetable />
 		<Typography
 			component={Link}
 			href={`tel:${HEADER_CONTACT.phone}`}

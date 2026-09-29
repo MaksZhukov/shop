@@ -1,12 +1,12 @@
-import { useFavoriteStore } from 'entities/favorite';
 import { FAVORITES_MAX_ITEMS } from 'entities/favorite';
 import type { Product } from 'entities/product';
 import { useSnackbar } from 'notistack';
 import { useAddFavoriteLogic } from './useAddFavoriteLogic';
 import { useRemoveFavorite } from './useRemoveFavorite';
+import { useDI } from './favorites.di';
 
 export const useToggleFavorite = (product: Product) => {
-	const favoriteStore = useFavoriteStore();
+	const { favoriteStore } = useDI();
 	const { enqueueSnackbar } = useSnackbar();
 	const addFavorite = useAddFavoriteLogic();
 	const removeFavorite = useRemoveFavorite();

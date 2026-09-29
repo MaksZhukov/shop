@@ -1,12 +1,13 @@
 import { Box } from '@mui/material';
-import { BrandItem, BrandService, type Brand } from 'entities/brand';
+import { BrandItem, type Brand } from 'entities/brand';
 import { Typography } from 'shared/ui';
-import { inject, mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { useDI } from '../../mainPage.di';
 import { useQuery } from '@tanstack/react-query';
 import { ApiResponse } from 'shared/api/types';
 
 export const BrandSelection: React.FC = () => {
-	const brandService = inject(BrandService);
+	const { brandService } = useDI();
 	const { data: brandsRes } = useQuery({
 		queryKey: mainPageQueryKeys.brands(),
 		queryFn: () => mainPageQueryFns.brands(brandService),

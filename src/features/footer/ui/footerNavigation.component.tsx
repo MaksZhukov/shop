@@ -5,11 +5,7 @@ import { FOOTER_CATALOG_LINKS, FOOTER_INFO_LINKS } from '../footerConstants';
 import { FooterAuthLink } from './footerAuthLink.component';
 import { NavigationLinks } from './navigationLinks.component';
 
-interface FooterNavigationProps {
-	onSignInClick: () => void;
-}
-
-export const FooterNavigation: FC<FooterNavigationProps> = ({ onSignInClick }) => (
+export const FooterNavigation: FC = () => (
 	<Box sx={{ py: { xs: 1, md: 2 } }}>
 		<Box
 			sx={{
@@ -31,7 +27,7 @@ export const FooterNavigation: FC<FooterNavigationProps> = ({ onSignInClick }) =
 					<NavigationLinks links={FOOTER_INFO_LINKS.columnA} />
 					<Box sx={{ display: 'flex', flexDirection: 'column' }}>
 						<NavigationLinks links={FOOTER_INFO_LINKS.columnB} />
-						<FooterAuthLink onSignInClick={onSignInClick} />
+						<FooterAuthLink />
 						<NavigationLinks links={FOOTER_INFO_LINKS.columnBAfterAuth} />
 					</Box>
 				</Box>

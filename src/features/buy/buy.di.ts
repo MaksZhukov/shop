@@ -1,4 +1,4 @@
-import { OrderService } from 'entities/order';
-import { createModuleInjector } from 'shared/di';
+import { useStrictContext } from 'shared/hooks';
+import { BuyContext } from './buy.context';
 
-export const inject = createModuleInjector([OrderService]);
+export const useDI = () => useStrictContext(BuyContext);

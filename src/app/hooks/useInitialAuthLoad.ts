@@ -1,14 +1,15 @@
-import { useUserStore } from 'entities/user';
 import { useLoadCart } from 'features/cart';
 import { useLoadFavorites } from 'features/favorites';
 import { useEffect } from 'react';
 import { useLoadUserInfo } from 'features/user';
+import { UserStore } from 'entities/user';
+import { useInjection } from 'shared/di/di.hook';
 
 export const useInitialAuthLoad = () => {
 	const loadFavorites = useLoadFavorites();
 	const loadCart = useLoadCart();
 	const loadUserInfo = useLoadUserInfo();
-	const userStore = useUserStore();
+	const userStore = useInjection(UserStore);
 
 	useEffect(() => {
 		const tryFetchData = async () => {

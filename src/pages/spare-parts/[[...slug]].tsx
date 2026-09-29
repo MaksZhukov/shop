@@ -1,3 +1,6 @@
+import { createModuleInjector } from 'shared/di';
+import { EngineVolumeService } from 'entities/engineVolume';
+import { CatalogService } from 'entities/catalog';
 import { BrandService, type BrandWithSparePartsCount } from 'entities/brand';
 import { GenerationService } from 'entities/generation';
 import { KindSparePartService, type KindSparePart } from 'entities/kindSparePart';
@@ -5,7 +8,7 @@ import { ModelService } from 'entities/model';
 import { createRequestContainer } from 'app/di/app.container';
 import { PageService, type DefaultPage, type PageProduct, type PageProductSparePart } from 'entities/page';
 import { SparePartService, type SparePart } from 'entities/sparePart';
-import { CatalogSpareParts } from 'features/catalog';
+import { CatalogSpareParts, SparePartsCatalogInjector } from 'features/catalog';
 import { Product } from 'features/product';
 import { Filters } from 'features/productFilters';
 import { FavoriteButton } from 'features/favorites';
@@ -29,7 +32,24 @@ interface Props {
 	kindSparePart?: KindSparePart;
 }
 
+export const inject = createModuleInjector([
+	BrandService,
+	CatalogService,
+	EngineVolumeService,
+	GenerationService,
+	KindSparePartService,
+	ModelService,
+	SparePartService
+]);
+
 const SpareParts: NextPage<Props> = ({ page, kindSparePart, data, relatedProducts }) => {
+	const brandService = inject(BrandService);
+	const catalogService = inject(CatalogService);
+	const engineVolumeService = inject(EngineVolumeService);
+	const generationService = inject(GenerationService);
+	const kindSparePartService = inject(KindSparePartService);
+	const modelService = inject(ModelService);
+	const sparePartService = inject(SparePartService);
 	if (data && relatedProducts) {
 		return (
 			<Product
@@ -43,15 +63,17 @@ const SpareParts: NextPage<Props> = ({ page, kindSparePart, data, relatedProduct
 		);
 	}
 	return (
-		<CatalogSpareParts
-			pageData={page}
-			kindSparePart={kindSparePart}
-			renderFilters={(props) => <Filters {...props} />}
-			renderHeaderActions={(product) => <FavoriteButton product={product} />}
-			renderBottomActions={(product) => (
-				<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
-			)}
-		/>
+		<SparePartsCatalogInjector value={{ brandService, catalogService, engineVolumeService, generationService, kindSparePartService, modelService, sparePartService }}>
+			<CatalogSpareParts
+				pageData={page}
+				kindSparePart={kindSparePart}
+				renderFilters={(props) => <Filters {...props} />}
+				renderHeaderActions={(product) => <FavoriteButton product={product} />}
+				renderBottomActions={(product) => (
+					<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
+				)}
+			/>
+		</SparePartsCatalogInjector>
 	);
 };
 

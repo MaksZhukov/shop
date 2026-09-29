@@ -1,11 +1,8 @@
-import { useCartStore, cartLocalStorage, CartService } from 'entities/cart';
-import { useUserStore } from 'entities/user';
-import { inject } from './cart.di';
+import { cartLocalStorage } from 'entities/cart';
+import { useDI } from './cart.di';
 
 export const useRemoveCartMany = () => {
-	const cartStore = useCartStore();
-	const userStore = useUserStore();
-	const cartService = inject(CartService);
+	const { cartStore, userStore, cartService } = useDI();
 
 	return async (cartItemIDs: number[]) => {
 		if (userStore.id) {

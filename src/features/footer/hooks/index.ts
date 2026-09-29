@@ -1,1 +1,0 @@
-export { useFooterAuthModal } from './useFooterAuthModal';

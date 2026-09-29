@@ -1,11 +1,12 @@
 import { Box } from '@mui/material';
-import { SparePartService, type SparePart } from 'entities/sparePart';
+import { type SparePart } from 'entities/sparePart';
 import { Button } from 'shared/ui';
 import { ChevronRightIcon } from 'shared/icons';
 import { Typography, Carousel } from 'shared/ui';
 import { ProductItem } from 'entities/product';
 import type { ReactNode } from 'react';
-import { inject, mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { mainPageQueryKeys, mainPageQueryFns } from 'features/mainPage';
+import { useDI } from '../../mainPage.di';
 import { useQuery } from '@tanstack/react-query';
 import { ApiResponse } from 'shared/api';
 
@@ -15,7 +16,7 @@ interface NewArrivalsProps {
 }
 
 export const NewArrivals: React.FC<NewArrivalsProps> = ({ renderHeaderActions, renderBottomActions }) => {
-	const sparePartService = inject(SparePartService);
+	const { sparePartService } = useDI();
 	const { data: newSparePartsRes } = useQuery({
 		queryKey: mainPageQueryKeys.newSpareParts(),
 		queryFn: () => mainPageQueryFns.newSpareParts(sparePartService),

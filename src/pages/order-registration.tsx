@@ -3,10 +3,14 @@ import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { reatomComponent } from '@reatom/react';
 import { useOrderRegistration } from 'features/orderRegistration';
-import { OrderRegistration } from 'features/orderRegistration';
+import { OrderRegistration, OrderRegistrationInjector } from 'features/orderRegistration';
+import { CartStore } from 'entities/cart';
+import { OrderService } from 'entities/order';
+import { UserStore } from 'entities/user';
+import { createModuleInjector } from 'shared/di';
 import { useRemoveCartMany } from 'features/cart';
 import { MobileContactsModal } from 'features/mobileContacts';
-import { WorkTimetable } from 'features/workTimetable';
+import { WorkTimetable } from 'shared/ui';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { useQueryClient } from '@tanstack/react-query';
@@ -14,7 +18,9 @@ import { useEffect } from 'react';
 
 interface Props {}
 
-const OrderRegistrationPage = reatomComponent(() => {
+export const inject = createModuleInjector([OrderService, UserStore, CartStore]);
+
+const OrderRegistrationContent = reatomComponent(() => {
 	const { isLoading, checkoutItems, isOrdered, setIsOrdered } = useOrderRegistration();
 	const removeCartMany = useRemoveCartMany();
 	const router = useRouter();
@@ -47,6 +53,18 @@ const OrderRegistrationPage = reatomComponent(() => {
 		</>
 	);
 });
+
+const OrderRegistrationPage = () => {
+	const orderService = inject(OrderService);
+	const userStore = inject(UserStore);
+	const cartStore = inject(CartStore);
+
+	return (
+		<OrderRegistrationInjector value={{ orderService, userStore, cartStore }}>
+			<OrderRegistrationContent />
+		</OrderRegistrationInjector>
+	);
+};
 
 export default OrderRegistrationPage;
 

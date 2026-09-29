@@ -1,4 +1,5 @@
 import { reatomComponent } from '@reatom/react';
+import { AsyncWrapper } from 'shared/ui';
 import { useDI } from '../reviews.di';
 import { ReviewsHeader } from './reviewsHeader.component';
 import { ReviewsLinks } from './reviewsLinks.component';
@@ -7,20 +8,15 @@ import { ReviewsLoading } from './reviewsLoading.component';
 
 export const ReviewsEntry = reatomComponent(() => {
 	const { reviewsStore, page } = useDI();
-	const items = reviewsStore.reviews.data();
-	const isLoading = !reviewsStore.reviews.ready();
+	const reviews = reviewsStore.reviews.data();
 
 	return (
 		<>
 			<ReviewsHeader title={page.seo?.h1 || 'Отзывы'} />
-			{isLoading ? (
-				<ReviewsLoading />
-			) : (
-				<>
-					<ReviewsList reviews={items} />
-					<ReviewsLinks />
-				</>
-			)}
+			<AsyncWrapper loading={!reviewsStore.reviews.ready()} fallback={<ReviewsLoading />}>
+				<ReviewsList reviews={reviews} />
+				<ReviewsLinks />
+			</AsyncWrapper>
 		</>
 	);
 });

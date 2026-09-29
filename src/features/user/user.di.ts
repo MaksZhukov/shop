@@ -1,4 +1,4 @@
-import { UserService } from 'entities/user';
-import { createModuleInjector } from 'shared/di';
+import { useStrictContext } from 'shared/hooks';
+import { UserContext } from './user.context';
 
-export const inject = createModuleInjector([UserService]);
+export const useDI = () => useStrictContext(UserContext);

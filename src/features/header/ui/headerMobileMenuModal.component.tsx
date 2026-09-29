@@ -1,21 +1,14 @@
 import { Box, Button, Drawer, List, ListItem, ListItemButton, Typography } from '@mui/material';
-import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { reatomComponent } from '@reatom/react';
 import { CloseIcon } from 'shared/icons';
-import { HEADER_UTILITY_LINKS } from '../headerConstants';
+import { useDI } from '../header.di';
+import { HEADER_UTILITY_LINKS } from '../header.constants';
 
-interface HeaderMobileMenuModalProps {
-	isOpened: boolean;
-	onClose: () => void;
-}
-
-export const HeaderMobileMenuModal: FC<HeaderMobileMenuModalProps> = ({ isOpened, onClose }) => {
-	const router = useRouter();
-
-	const handleLinkClick = (href: string) => () => {
-		onClose();
-		router.push(href);
-	};
+export const HeaderMobileMenuModal = reatomComponent(() => {
+	const { headerStore } = useDI();
+	const isOpened = headerStore.isMobileMenuOpened();
+	const onClose = () => headerStore.isMobileMenuOpened.setFalse();
+	const handleLinkClick = (href: string) => () => headerStore.openMobileMenuLink(href);
 
 	return (
 		<Drawer anchor='left' open={isOpened} onClose={onClose}>
@@ -40,4 +33,4 @@ export const HeaderMobileMenuModal: FC<HeaderMobileMenuModalProps> = ({ isOpened
 			</Box>
 		</Drawer>
 	);
-};
+});

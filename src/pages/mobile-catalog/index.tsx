@@ -2,10 +2,10 @@ import { createRequestContainer } from 'app/di/app.container';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
 import { Banners } from 'shared/ui/Banners';
 import { Box, Typography } from '@mui/material';
-import { Benefits } from 'features/benefits';
+import { Benefits, BenefitsInjector } from 'features/benefits';
 import { SparePartService } from 'entities/sparePart';
 import { KindSparePartService, type KindSparePartWithSparePartsCount } from 'entities/kindSparePart';
-import { inject } from 'features/catalog';
+import { createModuleInjector } from 'shared/di';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRightIcon } from 'shared/icons/ChevronRightIcon';
 import { useState } from 'react';
@@ -14,7 +14,10 @@ interface Props {
 	sparePartsTotal: number;
 }
 
+export const inject = createModuleInjector([KindSparePartService, SparePartService]);
+
 export default function MobileCatalog({ sparePartsTotal }: Props) {
+	const sparePartService = inject(SparePartService);
 	const [selectedCategory, setSelectedCategory] = useState<KindSparePartWithSparePartsCount | null>(null);
 	const kindSparePartService = inject(KindSparePartService);
 
@@ -42,7 +45,9 @@ export default function MobileCatalog({ sparePartsTotal }: Props) {
                 py: 2,
                 pl: 2
             }}>
-            <Benefits view='carousel' />
+            <BenefitsInjector value={{ sparePartService }}>
+                <Benefits view='carousel' />
+            </BenefitsInjector>
             <Box
                 sx={{
                     mt: 2,

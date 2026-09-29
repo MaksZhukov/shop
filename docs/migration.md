@@ -29,7 +29,7 @@ Each `index.ts` exports the model, the port, the service, and the API class. Hel
 
 ## 3. Content entities
 
-Done. `page`, `review`, `email`, `serviceStation`, and `autocomise` keep their API classes private. Pages resolve `PageService` and the other services with `createRequestContainer().get`. Client calls use `inject` from `features/content`.
+Done. `page`, `review`, `email`, `serviceStation`, and `autocomise` keep their API classes private. Pages resolve `PageService` and the other services with `createRequestContainer().get`. Client calls resolve through the page's own `inject` (`pages/contacts.tsx` resolves `EmailService`). `features/content` is gone.
 
 ## 4. Leaf widgets become features
 
@@ -43,7 +43,7 @@ Done. `product`, `sparePart`, `tire`, `wheel`, `cabin`, `car`, and `carOnParts` 
 
 Done. `@reatom/core` and `@reatom/react` replace MobX. Atoms stay inside the slice. Components that read a store during render use `reatomComponent`. `enableStaticRendering`, the store providers, and the `mobx` and `mobx-react` packages are gone.
 
-New stores are injectable classes (see **Stores** in [architecture.md](architecture.md)). `reviews`, `serviceStations`, and `vacancies` already follow that shape. `cart`, `user`, `favorite`, and catalog filter stores still use the older module-level object and `use*Store` hook. Migrate them when you touch the slice.
+New stores are injectable classes (see **Stores** in [architecture.md](architecture.md)). `reviews`, `serviceStations`, `vacancies`, `user`, `cart`, and `favorite` already follow that shape. Catalog filter stores still use the older module-level object and `use*Store` hook. Migrate them when you touch the slice.
 
 ## 7. Session and order entities
 
@@ -70,3 +70,31 @@ Done. Static pages compose the content services from section 3. `mobile-catalog`
 ## 12. Turn the rules on
 
 Done. `eslint.config.mjs` no longer has a `widgets` layer. A feature or entity import from outside its slice must go through `index.ts`. An entity `index.ts` must not export a camelCase `*Api` client. PascalCase classes such as `ArticleApi` stay exported so `app` can bind them.
+
+## 13. Account pages on injectable stores
+
+`profile` is done. `features/profile` has UI, bound context, and `ProfileService`. The save is `UserService.saveUserInfo` in `entities/user`, an `action` with `withAsync`. It reads the form values from `UserStore`, calls `updateUserInfo`, and reports through `SnackbarService`. `UserService` is bound with `inSingletonScope()`. `ProfileService.logout` is an `action` with `withAsync`. It clears `UserStore`, keeps only the guest cart and favorites found in local storage, clears the checkout selection, calls `UserService.logout`, and reports through `SnackbarService`. `RouteShield` then redirects away from `/profile`. `pages/profile.tsx` defines `inject` with `createModuleInjector([ProfileService, UserService, UserStore])` and passes all three into `ProfileInjector` (`profile.context.tsx`). `ProfileForm` and `ProfileLogout` read them with `useDI` from `profile.di.ts`. `useSaveUserInfo` is gone from `features/user`.
+
+`UserStore` in `entities/user` is an injectable class bound with `inSingletonScope()`. The module-level `userStore` object is gone. `entities/user` exports only the class, with no hook.
+
+`CartStore` and `FavoriteStore` follow the same shape. The module-level `cartStore` and `favoriteStore` objects and the `useCartStore` and `useFavoriteStore` entity hooks are gone. `header` gets `UserStore`, `CartStore`, `FavoriteStore`, `CatalogService`, `SparePartService`, and the `HEADER_SESSION`, `HEADER_CATALOG_FILTERS`, and `HEADER_SLOTS` ports from `HeaderWrapper` through `HeaderInjector`, and reads them with `useDI`. `_app` renders `<HeaderWrapper />` with no props. The `cart` and `favorites` pages resolve them with their own `inject`.
+
+The header menu logs out through `HEADER_SESSION`, which calls `ProfileService.logout`. The footer still receives `loadCart` and `loadFavorites` as props from `_app`.
+
+`reviews`, `serviceStations`, and `vacancies` switch between loading and content with `AsyncWrapper` from `shared/ui`. The entry component computes `loading` from the store and passes it in.
+
+## 14. Features read only bound context
+
+Done. Every feature except `header` has `*.context.tsx` with `XContext` and `XInjector`, and `*.di.ts` with only `useDI`. No feature calls `createModuleInjector` or `inject`, and no feature exports a store hook.
+
+- `app/providers/FeatureProviders.tsx` resolves with `useInjection` and renders `UserInjector`, `CartInjector`, `FavoritesInjector`, `FooterInjector`, and `RouteShieldInjector` around the app. `ApiProvider` and `useInitialAuthLoad` resolve `UserService` and `UserStore` with `useInjection`.
+- Pages provide the rest: `index` (`MainPageInjector`, `BenefitsInjector`), `mobile-catalog` (`BenefitsInjector`), `cart` (`OrderRegistrationInjector`, `ViewedProductsInjector`), `favorites` (`ViewedProductsInjector`), `order-registration` (`OrderRegistrationInjector`), `spare-parts`, `cabins`, `tires`, `wheels` (their catalog injectors), `articles` (`ArticlesListContext`), `vacancies`, `reviews`, `service-stations`, `profile`.
+- `features/buy` has a context, but no page renders `BuyButton` yet.
+
+## 15. Header on Reatom
+
+Done. `features/header/hooks` is gone. `HeaderStore` and `HeaderService` replace `useSearchSpareParts`, `useHeaderSearchPlaceholder`, `useAuthModal`, `useMobileModals`, `useSearchHistory`, and the react-query calls in `CatalogCategories`. Both are bound with `inSingletonScope()` in `app/di/app.container.tsx`. The header's search and categories no longer share the react-query cache with the main page.
+
+## 16. Header sub-features, one auth modal
+
+Done. `features/header` has `search`, `catalogMenu`, and `userMenu` sub-features next to the root layout. Every piece of header state is in `HeaderStore`, `HeaderSearchStore`, `HeaderCatalogStore`, or `UserMenuStore`. `HEADER_SLOTS` is gone: `WorkTimetable` moved from `features/workTimetable` to `shared/ui`, and the auth modal renders once from `_app` through `AuthModalRoot` and `AuthModalStore`. `Footer` takes no props; its auth modal and `useFooterAuthModal` are gone.

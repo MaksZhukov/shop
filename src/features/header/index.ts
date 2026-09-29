@@ -1,2 +1,10 @@
-export { Header } from './ui';
-export { getHeaderSearchPlaceholder } from './hooks';
+export { HeaderWrapper } from './ui/headerWrapper.component';
+export { HeaderService } from './header.service';
+export { HeaderStore } from './header.store';
+export { HeaderSearchService, HeaderSearchStore } from './search';
+export { HeaderCatalogService, HeaderCatalogStore } from './catalogMenu';
+export { UserMenuStore } from './userMenu';
+export { HeaderContext, HeaderInjector } from './header.context';
+export { useDI } from './header.di';
+export { HEADER_CATALOG_FILTERS, HEADER_SESSION } from './ports/header.port';
+export type { HeaderCatalogFilters, HeaderSession } from './ports/header.port';

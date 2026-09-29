@@ -1,5 +1,4 @@
-import { CatalogService } from 'entities/catalog';
-import { SparePartService } from 'entities/sparePart';
-import { createModuleInjector } from 'shared/di';
+import { useStrictContext } from 'shared/hooks';
+import { HeaderContext } from './header.context';
 
-export const inject = createModuleInjector([CatalogService, SparePartService]);
+export const useDI = () => useStrictContext(HeaderContext);

@@ -6,9 +6,13 @@ export { CatalogSpareParts } from './catalogSpareParts';
 export { CatalogCabins } from './catalogCabins';
 export { CatalogTires } from './catalogTires';
 export { CatalogWheels } from './catalogWheels';
-export { inject } from './spareParts';
+export { SparePartsCatalogInjector } from './spareParts';
+export { CabinsCatalogInjector } from './cabins';
+export { TiresCatalogInjector } from './tires';
+export { WheelsCatalogInjector } from './wheels';
 export {
 	generateFiltersByQuery as generateSparePartsFiltersByQuery,
+	sparePartsCatalogFilterStore,
 	useSparePartsCatalogFiltersStore
 } from './spareParts';
 export {

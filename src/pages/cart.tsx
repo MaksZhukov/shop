@@ -2,23 +2,27 @@ import { Box, Typography } from '@mui/material';
 import { Loader, MobileQuestionsSection } from 'shared/ui';
 import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
-import { ViewedProducts } from 'features/viewedProducts';
+import { ViewedProducts, ViewedProductsInjector } from 'features/viewedProducts';
 import { FavoriteButton } from 'features/favorites';
 import { CartButton } from 'features/cart';
 import { reatomComponent } from '@reatom/react';
 import { useState, useEffect } from 'react';
 import { EmptyCart, CartList, useRemoveCartMany, useRemoveCart } from 'features/cart';
-import { OrderSummary } from 'features/orderRegistration';
+import { OrderRegistrationInjector, OrderSummary } from 'features/orderRegistration';
 import router from 'next/router';
-import type { Cart } from 'entities/cart';
-import { useUserStore } from 'entities/user';
-import { useCartStore } from 'entities/cart';
+import { CartStore, type Cart } from 'entities/cart';
+import { OrderService } from 'entities/order';
+import { SparePartService } from 'entities/sparePart';
+import { UserStore } from 'entities/user';
+import { createModuleInjector } from 'shared/di';
 
 interface Props {}
 
-const Cart = reatomComponent(() => {
-	const userStore = useUserStore();
-	const cartStore = useCartStore();
+export const inject = createModuleInjector([UserStore, CartStore, OrderService, SparePartService]);
+
+const CartContent = reatomComponent(() => {
+	const userStore = inject(UserStore);
+	const cartStore = inject(CartStore);
 	const removeCartMany = useRemoveCartMany();
 	const removeCart = useRemoveCart();
 	const shoppingCartItems = cartStore.items;
@@ -133,7 +137,22 @@ const Cart = reatomComponent(() => {
     );
 });
 
-export default Cart;
+const CartPage = () => {
+	const userStore = inject(UserStore);
+	const cartStore = inject(CartStore);
+	const orderService = inject(OrderService);
+	const sparePartService = inject(SparePartService);
+
+	return (
+		<OrderRegistrationInjector value={{ orderService, userStore, cartStore }}>
+			<ViewedProductsInjector value={{ sparePartService }}>
+				<CartContent />
+			</ViewedProductsInjector>
+		</OrderRegistrationInjector>
+	);
+};
+
+export default CartPage;
 
 export const getStaticProps = getPageProps(undefined, async () => ({
 	props: {

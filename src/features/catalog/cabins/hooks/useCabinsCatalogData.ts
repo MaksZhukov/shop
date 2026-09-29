@@ -1,10 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
-import { BrandService } from 'entities/brand';
-import { CabinService } from 'entities/cabin';
-import { ModelService, type ModelCabinsCount } from 'entities/model';
-import { GenerationService, type Generation, type GenerationWithCabinsCount } from 'entities/generation';
-import { inject } from '../cabinsCatalog.di';
+import { type ModelCabinsCount } from 'entities/model';
+import { type Generation, type GenerationWithCabinsCount } from 'entities/generation';
+import { useDI } from '../cabinsCatalog.di';
 import type { CabinsFilterValues, CabinsParsedQueryParams } from '../types';
 import { generateCabinsFiltersByQuery } from '../utils';
 import type { Dispatch, SetStateAction } from 'react';
@@ -19,10 +17,7 @@ interface UseCabinsCatalogDataParams {
 const brandSlug = (brand: string | undefined, filtersBrand: string | null) => filtersBrand || brand || '';
 
 export const useCabinsCatalogData = ({ queryParams, filtersValues }: UseCabinsCatalogDataParams) => {
-	const cabinService = inject(CabinService);
-	const brandService = inject(BrandService);
-	const modelService = inject(ModelService);
-	const generationService = inject(GenerationService);
+	const { cabinService, brandService, modelService, generationService } = useDI();
 	const { sort, page, brand, model, generation, kindSparePartSlug } = queryParams;
 	const queryClient = useQueryClient();
 

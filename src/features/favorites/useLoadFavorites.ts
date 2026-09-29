@@ -1,5 +1,5 @@
-import { useFavoriteStore, favoriteLocalStorage, FavoriteService } from 'entities/favorite';
-import { useUserStore } from 'entities/user';
+import { favoriteLocalStorage, FavoriteService, type FavoriteStore } from 'entities/favorite';
+import { type UserStore } from 'entities/user';
 import { CabinService } from 'entities/cabin';
 import { SparePartService } from 'entities/sparePart';
 import { TireService } from 'entities/tire';
@@ -10,7 +10,7 @@ import { WheelService } from 'entities/wheel';
 import type { AxiosResponse } from 'axios';
 import type { Favorite, StorageFavorite } from 'entities/favorite';
 import { useCallback } from 'react';
-import { inject } from './favorites.di';
+import { useDI } from './favorites.di';
 
 type FavoriteLoadServices = {
 	favoriteService: FavoriteService;
@@ -46,8 +46,8 @@ const getFavoritesByTypes = async (
 };
 
 export const loadFavorites = async (
-	favoriteStore: ReturnType<typeof useFavoriteStore>,
-	userStore: ReturnType<typeof useUserStore>,
+	favoriteStore: FavoriteStore,
+	userStore: UserStore,
 	services: FavoriteLoadServices
 ) => {
 	favoriteStore.setIsLoading(true);
@@ -99,13 +99,7 @@ export const loadFavorites = async (
 };
 
 export const useLoadFavorites = () => {
-	const favoriteStore = useFavoriteStore();
-	const userStore = useUserStore();
-	const favoriteService = inject(FavoriteService);
-	const sparePartService = inject(SparePartService);
-	const wheelService = inject(WheelService);
-	const tireService = inject(TireService);
-	const cabinService = inject(CabinService);
+	const { favoriteStore, userStore, favoriteService, sparePartService, wheelService, tireService, cabinService } = useDI();
 	return useCallback(
 		() =>
 			loadFavorites(favoriteStore, userStore, {

@@ -1,15 +1,10 @@
 import { Box, Typography } from '@mui/material';
-import { useUserStore } from 'entities/user';
 import { reatomComponent } from '@reatom/react';
-import { FC } from 'react';
 import { Link } from 'shared/ui';
+import { useDI } from '../footer.di';
 
-interface FooterAuthLinkProps {
-	onSignInClick: () => void;
-}
-
-export const FooterAuthLink = reatomComponent<FooterAuthLinkProps>(({ onSignInClick }) => {
-	const userStore = useUserStore();
+export const FooterAuthLink = reatomComponent(() => {
+	const { userStore, openAuth } = useDI();
 
 	return (
 		<Box component='nav' sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -22,7 +17,7 @@ export const FooterAuthLink = reatomComponent<FooterAuthLinkProps>(({ onSignInCl
 					<Box
 						component='button'
 						type='button'
-						onClick={onSignInClick}
+						onClick={openAuth}
 						sx={{
 							border: 'none',
 							background: 'none',

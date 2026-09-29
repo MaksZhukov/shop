@@ -1,9 +1,7 @@
-import { useUserStore, UserService } from 'entities/user';
-import { inject } from './user.di';
+import { useDI } from './user.di';
 
 export const useLogin = () => {
-	const userStore = useUserStore();
-	const userService = inject(UserService);
+	const { userStore, userService } = useDI();
 
 	return async (email: string, password: string, recaptchaToken?: string) => {
 		const { data } = await userService.login(email, password, recaptchaToken);

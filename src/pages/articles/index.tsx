@@ -4,10 +4,10 @@ import { PageService, type DefaultPage } from 'entities/page';
 import type { ApiResponse } from 'shared/api/types';
 import { NextPage } from 'next';
 import { getPageProps } from 'shared/utils/pagePropsUtils';
+import { createModuleInjector } from 'shared/di';
 import {
 	ArticlesList,
 	ArticlesListContext,
-	inject,
 	LIMIT,
 	DEFAULT_SORT
 } from 'features/articlesList';
@@ -17,6 +17,8 @@ interface Props {
 	articles: ApiResponse<Article[]>;
 	serverQueryPage: string;
 }
+
+export const inject = createModuleInjector([ArticleService]);
 
 const Articles: NextPage<Props> = ({ articles, serverQueryPage }) => {
 	const articleReader = inject(ArticleService);

@@ -1,5 +1,5 @@
 import { reatomComponent } from '@reatom/react';
-import { WhiteBox } from 'shared/ui';
+import { AsyncWrapper, WhiteBox } from 'shared/ui';
 import { useDI } from '../serviceStations.di';
 import { ServiceStationsHeader } from './serviceStationsHeader.component';
 import { ServiceStationsList } from './serviceStationsList.component';
@@ -13,7 +13,9 @@ export const ServiceStationsEntry = reatomComponent(() => {
 	return (
 		<WhiteBox>
 			<ServiceStationsHeader title={page.seo?.h1 || 'СТО'} />
-			{isLoading ? <ServiceStationsLoading /> : <ServiceStationsList serviceStations={items} />}
+			<AsyncWrapper loading={isLoading} fallback={<ServiceStationsLoading />}>
+				<ServiceStationsList serviceStations={items} />
+			</AsyncWrapper>
 		</WhiteBox>
 	);
 });

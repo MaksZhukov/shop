@@ -1,3 +1,4 @@
+import { createModuleInjector } from 'shared/di';
 import { BrandService, type BrandWithCabinsCount } from 'entities/brand';
 import { GenerationService } from 'entities/generation';
 import { KindSparePartService, type KindSparePart } from 'entities/kindSparePart';
@@ -5,7 +6,7 @@ import { ModelService } from 'entities/model';
 import { createRequestContainer } from 'app/di/app.container';
 import { PageService, type DefaultPage, type PageProduct, type PageProductCabin } from 'entities/page';
 import { CabinService, type Cabin } from 'entities/cabin';
-import { CatalogCabins } from 'features/catalog';
+import { CatalogCabins, CabinsCatalogInjector } from 'features/catalog';
 import { Product } from 'features/product';
 import { Filters } from 'features/productFilters';
 import { FavoriteButton } from 'features/favorites';
@@ -29,7 +30,20 @@ interface Props {
 	kindSparePart?: KindSparePart;
 }
 
+export const inject = createModuleInjector([
+	BrandService,
+	CabinService,
+	GenerationService,
+	KindSparePartService,
+	ModelService
+]);
+
 const Cabins: NextPage<Props> = ({ page, kindSparePart, data, relatedProducts }) => {
+	const brandService = inject(BrandService);
+	const cabinService = inject(CabinService);
+	const generationService = inject(GenerationService);
+	const kindSparePartService = inject(KindSparePartService);
+	const modelService = inject(ModelService);
 	if (data && relatedProducts) {
 		return (
 			<Product
@@ -43,15 +57,17 @@ const Cabins: NextPage<Props> = ({ page, kindSparePart, data, relatedProducts })
 		);
 	}
 	return (
-		<CatalogCabins
-			pageData={page}
-			kindSparePart={kindSparePart}
-			renderFilters={(props) => <Filters {...props} />}
-			renderHeaderActions={(product) => <FavoriteButton product={product} />}
-			renderBottomActions={(product) => (
-				<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
-			)}
-		/>
+		<CabinsCatalogInjector value={{ brandService, cabinService, generationService, kindSparePartService, modelService }}>
+			<CatalogCabins
+				pageData={page}
+				kindSparePart={kindSparePart}
+				renderFilters={(props) => <Filters {...props} />}
+				renderHeaderActions={(product) => <FavoriteButton product={product} />}
+				renderBottomActions={(product) => (
+					<CartButton product={product} sx={{ display: { xs: 'none', md: 'block' }, width: '100%' }} />
+				)}
+			/>
+		</CabinsCatalogInjector>
 	);
 };
 

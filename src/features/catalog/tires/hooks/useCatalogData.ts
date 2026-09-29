@@ -1,12 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { API_DEFAULT_LIMIT, API_MAX_LIMIT } from 'shared/api/constants';
-import { TireService } from 'entities/tire';
-import { TireBrandService, type TireBrandWithCount } from 'entities/tireBrand';
-import { TireWidthService } from 'entities/tireWidth';
-import { TireHeightService } from 'entities/tireHeight';
-import { TireDiameterService } from 'entities/tireDiameter';
-import { inject } from '../tiresCatalog.di';
+import { type TireBrandWithCount } from 'entities/tireBrand';
+import { useDI } from '../tiresCatalog.di';
 import type { TopCategory } from 'entities/catalog';
 import type { TireFilterValues, TireParsedQueryParams } from '../types';
 import { generateFiltersByQuery } from '../utils';
@@ -17,11 +13,7 @@ interface UseCatalogDataParams {
 }
 
 export const useCatalogData = ({ queryParams, filtersValues }: UseCatalogDataParams) => {
-	const tireService = inject(TireService);
-	const tireBrandService = inject(TireBrandService);
-	const tireWidthService = inject(TireWidthService);
-	const tireHeightService = inject(TireHeightService);
-	const tireDiameterService = inject(TireDiameterService);
+	const { tireService, tireBrandService, tireWidthService, tireHeightService, tireDiameterService } = useDI();
 	const { sort, page, brand, width, height, diameter, season } = queryParams;
 	const [widthsEnabled, setWidthsEnabled] = useState(false);
 	const [heightsEnabled, setHeightsEnabled] = useState(false);

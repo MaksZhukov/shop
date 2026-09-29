@@ -2,8 +2,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { FormEvent, useState } from 'react';
-import { UserService } from 'entities/user';
-import { inject } from '../../../user.di';
+import { useDI } from '../../../user.di';
 
 interface UseResetFormProps {
 	onChangeIsLoading: (value: boolean) => void;
@@ -14,7 +13,7 @@ export const useResetForm = ({ onChangeIsLoading, onChangeType }: UseResetFormPr
 	const [password, setPassword] = useState('');
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
-	const userService = inject(UserService);
+	const { userService } = useDI();
 	const { code } = router.query as { code: string };
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

@@ -1,11 +1,34 @@
 import 'reflect-metadata';
+import { action, withAsync, wrap } from '@reatom/core';
 import { inject, injectable } from 'inversify';
+import { SnackbarService } from 'shared/services';
 import { USER_API, UserApi } from './user.api';
+import { SAVE_ERROR, SAVE_SUCCESS } from './user.constants';
 import type { UserReader } from './ports/user.port';
+import { UserStore } from './user.store';
 
 @injectable()
 export class UserService implements UserReader {
-	constructor(@inject(USER_API) private readonly userApi: UserApi) {}
+	constructor(
+		@inject(USER_API) private readonly userApi: UserApi,
+		@inject(UserStore) private readonly userStore: UserStore,
+		@inject(SnackbarService) private readonly snackbarService: SnackbarService
+	) {}
+
+	readonly saveUserInfo = action(async () => {
+		try {
+			await wrap(
+				this.updateUserInfo({
+					username: this.userStore.username,
+					phone: this.userStore.phone,
+					address: this.userStore.address
+				})
+			);
+			this.snackbarService.success(SAVE_SUCCESS);
+		} catch {
+			this.snackbarService.error(SAVE_ERROR);
+		}
+	}, 'user.saveUserInfo').extend(withAsync());
 
 	login(email: string, password: string, recaptchaToken?: string) {
 		return this.userApi.login(email, password, recaptchaToken);

@@ -1,16 +1,16 @@
 import { Box, Button, IconButton, Typography } from '@mui/material';
-import { FC, type ReactNode } from 'react';
+import { FC } from 'react';
 import { MenuIcon } from 'shared/icons';
-import { Link } from 'shared/ui';
-import { HEADER_CONTACT } from '../headerConstants';
+import { Link, WorkTimetable } from 'shared/ui';
+import { useDI } from '../header.di';
+import { HEADER_CONTACT } from '../header.constants';
 import { HeaderCallButton } from './headerCallButton.component';
 
-interface HeaderMobileUtilityBarProps {
-	onOpenMenu: () => void;
-	workTimetable: ReactNode;
-}
+export const HeaderMobileUtilityBar: FC = () => {
+	const { headerStore } = useDI();
+	const onOpenMenu = () => headerStore.isMobileMenuOpened.setTrue();
 
-export const HeaderMobileUtilityBar: FC<HeaderMobileUtilityBarProps> = ({ onOpenMenu, workTimetable }) => (
+	return (
 	<>
 		<Box
 			sx={{
@@ -70,7 +70,7 @@ export const HeaderMobileUtilityBar: FC<HeaderMobileUtilityBarProps> = ({ onOpen
 			</Button>
 
 			<Box sx={{ justifySelf: 'end', minWidth: 0 }}>
-				{workTimetable}
+				<WorkTimetable compact />
 			</Box>
 
 			<Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, justifySelf: 'end' }}>
@@ -91,4 +91,5 @@ export const HeaderMobileUtilityBar: FC<HeaderMobileUtilityBarProps> = ({ onOpen
 			</Box>
 		</Box>
 	</>
-);
+	);
+};

@@ -10,6 +10,10 @@ export class SnackbarService {
 		this.enqueue = enqueueSnackbar;
 	}
 
+	success(message: string) {
+		this.enqueue?.(message, { variant: 'success' });
+	}
+
 	error(message: string) {
 		this.enqueue?.(message, { variant: 'error' });
 	}
